@@ -1,0 +1,375 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import { publications } from "@/data/publications";
+import { site } from "@/data/site";
+
+const thesisPublications = publications.filter((publication) =>
+  [
+    "global-carbon-concentration",
+    "noise-pollution-madrid",
+    "global-aerosol-optical-depth",
+    "inter-city-air-quality"
+  ].includes(publication.slug)
+);
+
+const thesisJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "@id": `${site.url}/thesis/#thesis`,
+  name: "Modelado espacio-temporal con redes neuronales para la predicción de fenómenos ambientales",
+  alternateName:
+    "Spatiotemporal modelling with neural networks for forecasting environmental phenomena",
+  author: { "@id": `${site.url}/#person`, "@type": "Person", name: site.name },
+  datePublished: "2025-12-11",
+  inLanguage: "es",
+  about: [
+    "Spatiotemporal artificial intelligence",
+    "Graph neural networks",
+    "Environmental forecasting"
+  ],
+  publisher: {
+    "@type": "CollegeOrUniversity",
+    name: "University of Alicante"
+  }
+};
+---
+
+<BaseLayout
+  title="Doctoral thesis"
+  description="Doctoral thesis by Marc Semper Lloret on spatiotemporal neural modelling for forecasting environmental phenomena."
+  jsonLd={thesisJsonLd}
+  alternatePath="/es/tesis/"
+>
+  <header class="thesis-hero">
+    <div class="container">
+      <div class="thesis-meta">
+        <span>Doctoral thesis</span>
+        <span>Computer Science</span>
+        <span>University of Alicante</span>
+        <span>2025</span>
+      </div>
+      <h1 lang="es">
+        Modelado espacio-temporal con redes neuronales para la predicción de
+        fenómenos ambientales
+      </h1>
+      <p>
+        Spatiotemporal modelling with neural networks for forecasting
+        environmental phenomena.
+      </p>
+    </div>
+  </header>
+
+  <section class="thesis-facts">
+    <div class="container facts-grid">
+      <div>
+        <span>Author</span>
+        <strong>Marc Semper Lloret</strong>
+      </div>
+      <div>
+        <span>Supervisors</span>
+        <strong>Manuel Curado Navarro<br />Jose Francisco Vicent Francés</strong>
+      </div>
+      <div>
+        <span>Defended</span>
+        <strong>11 December 2025</strong>
+      </div>
+      <div>
+        <span>Programme</span>
+        <strong>PhD in Computer Science</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section thesis-overview">
+    <div class="container overview-grid">
+      <div>
+        <p class="eyebrow">Research scope</p>
+        <h2 class="section-title">Learning the dynamics of environmental systems.</h2>
+      </div>
+      <div class="prose">
+        <p>
+          The thesis investigates neural approaches to environmental
+          forecasting when observations are distributed across space and evolve
+          through time. Its central applications include air-quality networks,
+          atmospheric aerosols, greenhouse-gas concentrations and urban noise.
+        </p>
+        <p>
+          Graph representations provide a natural way to connect monitoring
+          stations, cities or global observation points. Temporal models then
+          learn how the corresponding signals change at different horizons and
+          scales.
+        </p>
+        <p>
+          The resulting research programme links model architecture with the
+          quality of observational data and the reliability of the decisions
+          made after training.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="thesis-pillars">
+    <div class="container">
+      <p class="eyebrow">Core themes</p>
+      <div class="pillar-grid">
+        <article>
+          <span>01</span>
+          <h2>Spatial structure</h2>
+          <p>
+            Sensor relationships represented as graphs, from urban monitoring
+            networks to global environmental grids.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Temporal dynamics</h2>
+          <p>
+            Recurrent, convolutional and multi-scale mechanisms for short- and
+            long-range environmental behaviour.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Environmental context</h2>
+          <p>
+            Integration of pollutant, meteorological, geographical, satellite
+            and contextual variables.
+          </p>
+        </article>
+        <article>
+          <span>04</span>
+          <h2>Reliable evaluation</h2>
+          <p>
+            Analysis of how data imperfections and evaluation references affect
+            model comparison and deployment choice.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section thesis-outputs">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Related outputs</p>
+          <h2 class="section-title">Research from the thesis.</h2>
+        </div>
+        <p>
+          Selected peer-reviewed outputs connected to its environmental and
+          methodological themes.
+        </p>
+      </div>
+      {thesisPublications.map((publication, index) => (
+        <PublicationCard publication={publication} index={index} compact />
+      ))}
+    </div>
+  </section>
+
+  <section class="official-record">
+    <div class="container official-grid">
+      <div>
+        <p class="eyebrow">Institutional record</p>
+        <h2>Verified by the University of Alicante.</h2>
+      </div>
+      <div>
+        <p>
+          The title, doctoral programme, supervisors and defence date can be
+          checked against the university’s public records.
+        </p>
+        <a
+          class="button primary"
+          href="https://eidua.ua.es/en/4-estudiantes-y-tesis/phd-thesisin-process-of-handling/marc-semper-lloret.html"
+          target="_blank"
+          rel="noopener"
+        >
+          View official record
+        </a>
+        <a
+          class="text-link"
+          href={site.profiles.rua}
+          target="_blank"
+          rel="noopener"
+        >
+          RUA author record ↗
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thesis-hero {
+    padding: 90px 0 80px;
+    color: white;
+    background:
+      radial-gradient(circle at 83% 35%, rgba(235, 93, 68, 0.4), transparent 19rem),
+      var(--ink);
+  }
+
+  .thesis-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 70px;
+  }
+
+  .thesis-meta span {
+    padding: 5px 9px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 100px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.63rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .thesis-hero h1 {
+    max-width: 1100px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    line-height: 0.96;
+  }
+
+  .thesis-hero > .container > p {
+    max-width: 760px;
+    margin: 38px 0 0;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 1.1rem;
+  }
+
+  .thesis-facts {
+    background: var(--blue);
+    color: white;
+  }
+
+  .facts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .facts-grid div {
+    min-height: 135px;
+    padding: 25px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .facts-grid div:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .facts-grid span {
+    display: block;
+    margin-bottom: 22px;
+    color: var(--gold);
+    font-size: 0.59rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .facts-grid strong {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.72fr;
+    gap: 100px;
+  }
+
+  .thesis-pillars {
+    padding: 105px 0;
+    background: var(--paper-deep);
+  }
+
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line-strong);
+  }
+
+  .pillar-grid article {
+    min-height: 300px;
+    padding: 35px;
+    border-right: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .pillar-grid span {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 1.4rem;
+  }
+
+  .pillar-grid h2 {
+    margin: 65px 0 10px;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+  }
+
+  .pillar-grid p {
+    max-width: 510px;
+    color: var(--ink-soft);
+  }
+
+  .official-record {
+    padding: 95px 0;
+    color: white;
+    background: var(--ink);
+  }
+
+  .official-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr;
+    gap: 100px;
+  }
+
+  .official-record .eyebrow {
+    color: var(--gold);
+  }
+
+  .official-record h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .official-record p {
+    margin-top: 0;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  @media (max-width: 900px) {
+    .facts-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .overview-grid,
+    .official-grid {
+      grid-template-columns: 1fr;
+      gap: 50px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .facts-grid,
+    .pillar-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

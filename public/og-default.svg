@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f3f0e8"/>
+  <path d="M0 0h1200v14H0z" fill="#2857df"/>
+  <g fill="none" stroke="#bcc7e5" stroke-width="2">
+    <path d="M815 110 978 170 1091 322 963 476 778 421 708 259Z"/>
+    <path d="m815 110 148 366M978 170 778 421m313-99-383-63"/>
+    <circle cx="899" cy="293" r="182"/>
+  </g>
+  <g fill="#2857df">
+    <circle cx="815" cy="110" r="11"/><circle cx="978" cy="170" r="8"/>
+    <circle cx="1091" cy="322" r="13"/><circle cx="963" cy="476" r="9"/>
+    <circle cx="778" cy="421" r="10"/><circle cx="708" cy="259" r="7"/>
+  </g>
+  <circle cx="899" cy="293" r="20" fill="#eb5d44"/>
+  <text x="76" y="118" fill="#2857df" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="3">SPATIOTEMPORAL AI</text>
+  <text x="72" y="250" fill="#121a2a" font-family="Georgia, serif" font-size="82">Marc Semper</text>
+  <text x="72" y="333" fill="#121a2a" font-family="Georgia, serif" font-size="82">Lloret</text>
+  <text x="78" y="405" fill="#465064" font-family="Arial, sans-serif" font-size="27">Reliable forecasting. Environmental data.</text>
+  <text x="78" y="450" fill="#465064" font-family="Arial, sans-serif" font-size="27">Graph neural networks.</text>
+  <rect x="78" y="520" width="280" height="4" fill="#eb5d44"/>
+</svg>

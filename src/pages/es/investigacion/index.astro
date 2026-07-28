@@ -1,0 +1,209 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import { researchAreas } from "@/data/site";
+---
+
+<BaseLayout
+  lang="es"
+  title="Investigación"
+  description="Programa de investigación de Marc Semper Lloret en IA espacio-temporal fiable, grafos, calidad de datos y predicción ambiental."
+  alternatePath="/research/"
+>
+  <header class="page-hero research-hero">
+    <div class="container page-hero-grid">
+      <div>
+        <p class="eyebrow">Programa de investigación</p>
+        <h1 class="page-title">Inteligencia fiable a través del espacio y del tiempo.</h1>
+      </div>
+      <p class="page-intro">
+        La investigación estudia el sistema predictivo como una cadena
+        completa: observaciones distribuidas, estructura espacial aprendida,
+        evaluación, selección del modelo y decisión de despliegue.
+      </p>
+    </div>
+  </header>
+
+  <section class="page-section">
+    <div class="container premise-grid">
+      <div>
+        <p class="eyebrow">Premisa central</p>
+        <h2 class="section-title">
+          La precisión es necesaria. La fiabilidad convierte una predicción en
+          una acción defendible.
+        </h2>
+      </div>
+      <div class="prose">
+        <p>
+          La predicción ambiental combina sensores, satélites, productos de
+          reanálisis y variables contextuales. Estas fuentes no están siempre
+          completas, alineadas ni estables.
+        </p>
+        <p>
+          El objetivo es representar las relaciones espaciales, aprender
+          dinámicas temporales y hacer explícita la incertidumbre que rodea la
+          selección final del modelo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="areas-section">
+    <div class="container">
+      <p class="eyebrow">Cuatro áreas conectadas</p>
+      <div class="area-list">
+        {researchAreas.map((area) => (
+          <article>
+            <span>{area.number}</span>
+            <div>
+              <h2>{area.titleEs}</h2>
+              <p>{area.descriptionEs}</p>
+              <ul>{area.topics.map((topic) => <li>{topic}</li>)}</ul>
+              <ArrowLink href={`/es/investigacion/${area.slug}/`}>Explorar esta área</ArrowLink>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      <p class="eyebrow">Cadena de investigación</p>
+      <h2 class="section-title">De la observación a la decisión.</h2>
+      <ol class="chain">
+        <li><span>01</span><strong>Observar</strong><p>Sensores, satélites y variables ambientales.</p></li>
+        <li><span>02</span><strong>Representar</strong><p>Grafos, ventanas temporales y dependencias multiescala.</p></li>
+        <li><span>03</span><strong>Predecir</strong><p>Arquitecturas neuronales sobre conjuntos realistas.</p></li>
+        <li><span>04</span><strong>Evaluar</strong><p>Ausencias, desalineación, degradación e incertidumbre.</p></li>
+        <li><span>05</span><strong>Decidir</strong><p>Selección trazable bajo restricciones explícitas.</p></li>
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .research-hero {
+    background:
+      linear-gradient(90deg, transparent 69%, rgba(40, 87, 223, 0.08) 69%),
+      var(--paper);
+  }
+
+  .premise-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr;
+    gap: 90px;
+  }
+
+  .prose {
+    color: var(--ink-soft);
+  }
+
+  .areas-section {
+    padding: 110px 0;
+    color: var(--white);
+    background: var(--ink);
+  }
+
+  .areas-section > .container > .eyebrow {
+    color: var(--gold);
+  }
+
+  .area-list {
+    margin-top: 45px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .area-list article {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 38px;
+    padding: 50px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .area-list article > span {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 1.8rem;
+  }
+
+  .area-list h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+  }
+
+  .area-list p {
+    max-width: 780px;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .area-list ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .area-list li {
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 100px;
+    font-size: 0.68rem;
+  }
+
+  .area-list :global(.arrow-link) {
+    margin-top: 22px;
+    color: var(--white);
+  }
+
+  .chain {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin: 42px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line-strong);
+    list-style: none;
+  }
+
+  .chain li {
+    min-height: 235px;
+    padding: 24px;
+    border-right: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .chain span {
+    color: var(--coral);
+    font-family: var(--serif);
+  }
+
+  .chain strong {
+    display: block;
+    margin-top: 48px;
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    font-weight: 400;
+  }
+
+  .chain p {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 800px) {
+    .premise-grid,
+    .chain {
+      grid-template-columns: 1fr;
+    }
+
+    .area-list article {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

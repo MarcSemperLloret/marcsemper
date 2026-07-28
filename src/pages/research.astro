@@ -1,0 +1,397 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import { researchAreas } from "@/data/site";
+import { publications } from "@/data/publications";
+
+const relatedPublications = publications.filter((publication) =>
+  [
+    "robust-post-training-model-selection",
+    "global-aerosol-optical-depth",
+    "inter-city-air-quality"
+  ].includes(publication.slug)
+);
+---
+
+<BaseLayout
+  title="Research"
+  description="Research programme in reliable spatiotemporal artificial intelligence, graph neural networks, environmental data quality and forecasting."
+  alternatePath="/es/investigacion/"
+>
+  <header class="page-hero research-hero">
+    <div class="container page-hero-grid">
+      <div>
+        <p class="eyebrow">Research programme</p>
+        <h1 class="page-title">Reliable intelligence across space and time.</h1>
+      </div>
+      <p class="page-intro">
+        My research studies forecasting systems as a complete chain: from
+        distributed observations and learned spatial structure to evaluation,
+        model selection and deployment decisions.
+      </p>
+    </div>
+  </header>
+
+  <section class="page-section">
+    <div class="container premise-grid">
+      <div class="premise-mark" aria-hidden="true">
+        <span>R</span>
+        <i></i>
+      </div>
+      <div>
+        <p class="eyebrow">Central premise</p>
+        <h2 class="section-title">
+          Accuracy is necessary. Reliability is what makes a forecast actionable.
+        </h2>
+        <div class="premise-copy">
+          <p>
+            Environmental forecasting combines observations from sensors,
+            satellites, reanalysis products and contextual data. Those sources
+            are neither perfectly aligned nor permanently stable.
+          </p>
+          <p>
+            I develop and evaluate models that represent spatial relationships
+            explicitly, learn temporal dynamics at the appropriate scales and
+            expose the uncertainty behind the final model-selection decision.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="areas-section">
+    <div class="container">
+      <div class="areas-heading">
+        <p class="eyebrow">Four connected areas</p>
+        <p>
+          The areas below are not separate silos. Each contributes to a
+          forecasting system that can be inspected from observation to action.
+        </p>
+      </div>
+
+      <div class="area-list">
+        {researchAreas.map((area) => (
+          <article id={area.slug}>
+            <div class="area-index">{area.number}</div>
+            <div>
+              <h2>{area.title}</h2>
+              <p>{area.description}</p>
+              <ul>
+                {area.topics.map((topic) => <li>{topic}</li>)}
+              </ul>
+              <ArrowLink href={`/research/${area.slug}/`}>Explore this research area</ArrowLink>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section research-chain">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Research chain</p>
+          <h2 class="section-title">Observation to decision.</h2>
+        </div>
+        <p>
+          Reliability can fail at any point, so each stage is treated as part of
+          the research problem.
+        </p>
+      </div>
+      <ol class="chain">
+        <li>
+          <span>01</span>
+          <strong>Observe</strong>
+          <p>Sensor, satellite and contextual environmental variables.</p>
+        </li>
+        <li>
+          <span>02</span>
+          <strong>Represent</strong>
+          <p>Graphs, temporal windows and multi-scale dependencies.</p>
+        </li>
+        <li>
+          <span>03</span>
+          <strong>Forecast</strong>
+          <p>Neural architectures evaluated across realistic datasets.</p>
+        </li>
+        <li>
+          <span>04</span>
+          <strong>Stress-test</strong>
+          <p>Missingness, misalignment, degradation and reference uncertainty.</p>
+        </li>
+        <li>
+          <span>05</span>
+          <strong>Decide</strong>
+          <p>Traceable model selection under explicit constraints.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="related-work">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Related publications</p>
+          <h2 class="section-title">Research in practice.</h2>
+        </div>
+        <ArrowLink href="/publications/">Complete publication record</ArrowLink>
+      </div>
+      {relatedPublications.map((publication, index) => (
+        <PublicationCard publication={publication} index={index} compact />
+      ))}
+    </div>
+  </section>
+
+  <section class="collaboration-section">
+    <div class="container collaboration-grid">
+      <div>
+        <p class="eyebrow">Collaboration</p>
+        <h2>Problems that benefit from connected data and careful evaluation.</h2>
+      </div>
+      <div>
+        <p>
+          I am interested in research involving large environmental
+          observational datasets, sensor-network quality control, graph-based
+          forecasting, robustness under distribution shift, meteorological
+          extremes and reproducible environmental AI.
+        </p>
+        <a class="button primary" href="mailto:marc.semper@ua.es">Discuss a collaboration</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .research-hero {
+    background:
+      linear-gradient(90deg, transparent 69%, rgba(40, 87, 223, 0.08) 69%),
+      var(--paper);
+  }
+
+  .premise-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 80px;
+  }
+
+  .premise-mark {
+    position: relative;
+    display: grid;
+    height: 180px;
+    color: white;
+    background: var(--blue);
+    font-family: var(--serif);
+    font-size: 7rem;
+    place-items: center;
+    transform: rotate(-3deg);
+  }
+
+  .premise-mark i {
+    position: absolute;
+    right: -22px;
+    bottom: -22px;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--coral);
+  }
+
+  .premise-copy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 38px;
+    max-width: 850px;
+    margin-top: 42px;
+    color: var(--ink-soft);
+  }
+
+  .areas-section {
+    padding: 110px 0;
+    color: var(--white);
+    background: var(--ink);
+  }
+
+  .areas-heading {
+    display: grid;
+    grid-template-columns: 1fr 0.6fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 60px;
+  }
+
+  .areas-heading .eyebrow {
+    color: var(--gold);
+  }
+
+  .areas-heading > p:last-child {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.56);
+  }
+
+  .area-list {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .area-list article {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 48px;
+    padding: 55px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .area-index {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 2rem;
+  }
+
+  .area-list h2 {
+    max-width: 750px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .area-list p {
+    max-width: 780px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .area-list ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 25px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .area-list li {
+    padding: 6px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 100px;
+    font-size: 0.67rem;
+    font-weight: 750;
+  }
+
+  .research-chain {
+    background: var(--paper-deep);
+  }
+
+  .chain {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line-strong);
+    list-style: none;
+  }
+
+  .chain li {
+    min-height: 260px;
+    padding: 25px;
+    border-right: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .chain span {
+    color: var(--coral);
+    font-family: var(--serif);
+  }
+
+  .chain strong {
+    display: block;
+    margin-top: 55px;
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+
+  .chain p {
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+  }
+
+  .related-work {
+    padding: 110px 0;
+  }
+
+  .collaboration-section {
+    padding: 100px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .collaboration-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.75fr;
+    gap: 100px;
+  }
+
+  .collaboration-section .eyebrow {
+    color: var(--gold);
+  }
+
+  .collaboration-section h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 6vw, 5.4rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 0.98;
+  }
+
+  .collaboration-section p {
+    margin-top: 0;
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  .collaboration-section .button {
+    margin-top: 18px;
+    color: var(--ink);
+    border-color: var(--white);
+    background: var(--white);
+  }
+
+  @media (max-width: 900px) {
+    .premise-grid,
+    .areas-heading,
+    .collaboration-grid {
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+
+    .premise-mark {
+      width: 160px;
+      height: 160px;
+    }
+
+    .chain {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .premise-copy,
+    .area-list article,
+    .chain {
+      grid-template-columns: 1fr;
+    }
+
+    .area-list article {
+      gap: 18px;
+    }
+
+    .chain li {
+      min-height: 220px;
+    }
+  }
+</style>

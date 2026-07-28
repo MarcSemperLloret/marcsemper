@@ -1,0 +1,282 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { publications, publicationCitation } from "@/data/publications";
+import { formatSiteDate, site } from "@/data/site";
+
+const lastUpdated = formatSiteDate("es-ES");
+---
+
+<BaseLayout
+  lang="es"
+  title="Curriculum vitae"
+  description="Curriculum vitae académico de Marc Semper Lloret, investigador en inteligencia artificial espacio-temporal en la Universidad de Alicante."
+  alternatePath="/cv/"
+>
+  <header class="cv-hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Curriculum vitae</p>
+        <h1>Marc Semper<br /><em>Lloret</em></h1>
+      </div>
+      <div>
+        <p>
+          Profesor asociado e investigador en inteligencia artificial
+          espacio-temporal fiable, redes neuronales de grafos y predicción
+          ambiental.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="/marc-semper-lloret-cv.pdf">Descargar PDF</a>
+          <a class="button" href={`mailto:${site.email}`}>Correo electrónico</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="identity">
+    <div class="container identity-grid">
+      <div><span>Puesto</span><strong>Profesor asociado e investigador</strong></div>
+      <div><span>Institución</span><strong>Universidad de Alicante</strong></div>
+      <div><span>Departamento</span><strong>Ciencia de la Computación e Inteligencia Artificial</strong></div>
+      <div><span>Grupo</span><strong>ANVIDA</strong></div>
+    </div>
+  </section>
+
+  <div class="container cv-layout">
+    <aside>
+      <section>
+        <h2>Contacto</h2>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <span>Alicante, España</span>
+      </section>
+      <section>
+        <h2>Identificadores</h2>
+        <a href={site.profiles.orcid}>ORCID</a>
+        <a href={site.profiles.university}>Portal UA</a>
+        <a href={site.profiles.cvnet}>CVNet</a>
+        <a href={site.profiles.scholar}>Google Scholar</a>
+        <a href={site.profiles.scopus}>Scopus</a>
+        <a href={site.profiles.webOfScience}>Web of Science</a>
+      </section>
+      <section>
+        <h2>Áreas</h2>
+        <span>IA espacio-temporal</span>
+        <span>Redes neuronales de grafos</span>
+        <span>Predicción ambiental</span>
+        <span>Calidad de datos e incertidumbre</span>
+      </section>
+    </aside>
+
+    <main class="cv-main">
+      <section class="cv-section">
+        <div><span>01</span><h2>Perfil</h2></div>
+        <div>
+          <p>
+            Marc Semper Lloret es profesor asociado e investigador del
+            Departamento de Ciencia de la Computación e Inteligencia Artificial
+            de la Universidad de Alicante y miembro del grupo ANVIDA.
+          </p>
+          <p>
+            Investiga IA espacio-temporal fiable para monitorización,
+            predicción y apoyo a la decisión ambiental. Publica trabajo
+            científico como <strong>Marc Semper</strong>.
+          </p>
+        </div>
+      </section>
+
+      <section class="cv-section">
+        <div><span>02</span><h2>Experiencia</h2></div>
+        <article><strong>Actualidad</strong><div><h3>Profesor asociado</h3><p>Universidad de Alicante · Departamento de Ciencia de la Computación e Inteligencia Artificial · ANVIDA</p></div></article>
+      </section>
+
+      <section class="cv-section">
+        <div><span>03</span><h2>Formación</h2></div>
+        <article><strong>2025</strong><div><h3>Doctorado en Informática</h3><p>Universidad de Alicante</p><small>Tesis: <em>Modelado espacio-temporal con redes neuronales para la predicción de fenómenos ambientales</em>.</small></div></article>
+      </section>
+
+      <section class="cv-section">
+        <div><span>04</span><h2>Publicaciones</h2></div>
+        <div class="publication-list">
+          {publications.map((publication) => (
+            <article>
+              <strong>{publication.year}</strong>
+              <div>
+                <h3><a href={`/es/publicaciones/${publication.slug}/`}>{publication.title}</a></h3>
+                <p>{publication.authors.join(", ")}</p>
+                <small>{publicationCitation(publication)} · DOI: {publication.doi}</small>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="cv-section">
+        <div><span>05</span><h2>Docencia</h2></div>
+        <p>Experiencia docente universitaria y de formación profesional en inteligencia artificial, programación, matemáticas, redes, sistemas y ciencia de datos.</p>
+      </section>
+
+      <p class="updated">Última actualización: {lastUpdated}</p>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .cv-hero {
+    padding: 95px 0 76px;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.65fr;
+    gap: 90px;
+    align-items: end;
+  }
+
+  .cv-hero h1 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(5rem, 11vw, 10rem);
+    font-weight: 400;
+    letter-spacing: -0.065em;
+    line-height: 0.78;
+  }
+
+  .cv-hero em {
+    color: var(--coral);
+    font-weight: 400;
+  }
+
+  .cv-hero p {
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .identity {
+    padding: 28px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .identity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+  }
+
+  .identity-grid div {
+    display: grid;
+    gap: 5px;
+  }
+
+  .identity-grid span {
+    color: rgba(255, 255, 255, 0.64);
+    font-size: 0.63rem;
+    text-transform: uppercase;
+  }
+
+  .identity-grid strong {
+    font-family: var(--serif);
+    font-weight: 500;
+  }
+
+  .cv-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 80px;
+    padding-top: 85px;
+    padding-bottom: 110px;
+  }
+
+  aside {
+    display: grid;
+    align-content: start;
+    gap: 36px;
+  }
+
+  aside section {
+    display: grid;
+    gap: 8px;
+  }
+
+  aside h2 {
+    margin: 0 0 8px;
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  aside a,
+  aside span {
+    color: var(--ink-soft);
+    font-size: 0.75rem;
+  }
+
+  .cv-main {
+    display: grid;
+    gap: 72px;
+  }
+
+  .cv-section {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 45px;
+    padding-top: 25px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .cv-section > div:first-child > span {
+    color: var(--coral);
+    font-family: var(--serif);
+  }
+
+  .cv-section h2 {
+    font-family: var(--serif);
+    font-size: 1.7rem;
+    font-weight: 400;
+  }
+
+  .cv-section article,
+  .publication-list article {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 25px;
+  }
+
+  .publication-list {
+    display: grid;
+    gap: 32px;
+  }
+
+  .publication-list h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 500;
+  }
+
+  .publication-list p,
+  .publication-list small {
+    color: var(--ink-soft);
+  }
+
+  .updated {
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 780px) {
+    .hero-grid,
+    .identity-grid,
+    .cv-layout,
+    .cv-section {
+      grid-template-columns: 1fr;
+      gap: 35px;
+    }
+  }
+</style>

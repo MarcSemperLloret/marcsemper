@@ -1,0 +1,623 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { publications, publicationCitation } from "@/data/publications";
+import { formatSiteDate, site } from "@/data/site";
+
+const lastUpdated = formatSiteDate("en-GB");
+---
+
+<BaseLayout
+  title="Curriculum vitae"
+  description="Academic curriculum vitae of Marc Semper Lloret, researcher in spatiotemporal artificial intelligence at the University of Alicante."
+  alternatePath="/es/cv/"
+>
+  <header class="cv-hero">
+    <div class="container cv-hero-grid">
+      <div>
+        <p class="eyebrow">Curriculum vitae</p>
+        <h1>Marc Semper<br /><em>Lloret</em></h1>
+      </div>
+      <div class="cv-intro">
+        <p>
+          Associate lecturer and researcher working on reliable spatiotemporal
+          artificial intelligence, graph neural networks and environmental
+          forecasting.
+        </p>
+        <div class="cv-actions">
+          <a class="button primary" href="/marc-semper-lloret-cv.pdf">Download PDF</a>
+          <a class="button" href={`mailto:${site.email}`}>Email</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="cv-identity">
+    <div class="container identity-grid">
+      <div>
+        <span>Position</span>
+        <strong>Associate Lecturer and Researcher</strong>
+      </div>
+      <div>
+        <span>Institution</span>
+        <strong>University of Alicante</strong>
+      </div>
+      <div>
+        <span>Department</span>
+        <strong>Computer Science and Artificial Intelligence</strong>
+      </div>
+      <div>
+        <span>Research group</span>
+        <strong>ANVIDA</strong>
+      </div>
+    </div>
+  </section>
+
+  <div class="container cv-layout">
+    <aside class="cv-sidebar">
+      <section>
+        <h2>Contact</h2>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <span>Alicante, Spain</span>
+      </section>
+      <section>
+        <h2>Identifiers</h2>
+        <a href={site.profiles.orcid}>ORCID</a>
+        <a href={site.profiles.university}>UA research portal</a>
+        <a href={site.profiles.cvnet}>CVNet</a>
+        <a href={site.profiles.scholar}>Google Scholar</a>
+        <a href={site.profiles.scopus}>Scopus</a>
+        <a href={site.profiles.webOfScience}>Web of Science</a>
+        <a href={site.profiles.rua}>RUA repository</a>
+      </section>
+      <section>
+        <h2>Research interests</h2>
+        <span>Spatiotemporal AI</span>
+        <span>Graph neural networks</span>
+        <span>Environmental forecasting</span>
+        <span>Data quality and uncertainty</span>
+        <span>Robust model evaluation</span>
+        <span>Decision support</span>
+      </section>
+    </aside>
+
+    <div class="cv-main">
+      <section class="cv-section">
+        <div class="cv-section-label">
+          <span>01</span>
+          <h2>Profile</h2>
+        </div>
+        <div class="cv-section-content prose">
+          <p>
+            Marc Semper Lloret is an associate lecturer and researcher in the
+            Department of Computer Science and Artificial Intelligence at the
+            University of Alicante, where he is a member of the Network Data
+            Analysis and Visualisation research group.
+          </p>
+          <p>
+            His research focuses on reliable spatiotemporal artificial
+            intelligence for environmental monitoring, forecasting and decision
+            support. His work covers graph neural networks, robustness under
+            evaluation uncertainty, sensor data quality and applications to air
+            quality, atmospheric observations, greenhouse gases and urban noise.
+            He publishes scientific work as <strong>Marc Semper</strong>.
+          </p>
+        </div>
+      </section>
+
+      <section class="cv-section">
+        <div class="cv-section-label">
+          <span>02</span>
+          <h2>Appointments</h2>
+        </div>
+        <div class="cv-section-content">
+          <article class="timeline-entry">
+            <div><strong>Current</strong></div>
+            <div>
+              <h3>Associate Lecturer</h3>
+              <p>University of Alicante</p>
+              <small>
+                Department of Computer Science and Artificial Intelligence ·
+                Network Data Analysis and Visualisation (ANVIDA)
+              </small>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="cv-section">
+        <div class="cv-section-label">
+          <span>03</span>
+          <h2>Education</h2>
+        </div>
+        <div class="cv-section-content">
+          <article class="timeline-entry">
+            <div><strong>2025</strong></div>
+            <div>
+              <h3>PhD in Computer Science</h3>
+              <p>University of Alicante</p>
+              <small>
+                Thesis: <em>Modelado espacio-temporal con redes neuronales para
+                la predicción de fenómenos ambientales</em>. Supervised by
+                Manuel Curado Navarro and Jose Francisco Vicent Francés.
+              </small>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="cv-section publications-section">
+        <div class="cv-section-label">
+          <span>04</span>
+          <h2>Publications</h2>
+        </div>
+        <div class="cv-section-content publication-list">
+          {publications.map((publication) => (
+            <article>
+              <span>{publication.year}</span>
+              <div>
+                <h3>
+                  <a href={`/publications/${publication.slug}/`}>{publication.title}</a>
+                </h3>
+                <p>
+                  {publication.authors.map((author, index) => (
+                    <>
+                      {author === "Marc Semper" ? <strong>{author}</strong> : author}
+                      {index < publication.authors.length - 1 ? ", " : ""}
+                    </>
+                  ))}
+                </p>
+                <small>
+                  {publicationCitation(publication)} · DOI: {publication.doi}
+                </small>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="cv-section">
+        <div class="cv-section-label">
+          <span>05</span>
+          <h2>Teaching</h2>
+        </div>
+        <div class="cv-section-content prose">
+          <p>
+            University and vocational teaching experience across artificial
+            intelligence, programming, mathematics, networks, systems and data
+            science.
+          </p>
+        </div>
+      </section>
+
+      <p class="cv-updated">Last updated: {lastUpdated}</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .cv-hero {
+    padding: 100px 0 80px;
+  }
+
+  .cv-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.65fr;
+    gap: 90px;
+    align-items: end;
+  }
+
+  .cv-hero h1 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(5rem, 11vw, 10rem);
+    font-weight: 400;
+    letter-spacing: -0.065em;
+    line-height: 0.78;
+  }
+
+  .cv-hero h1 em {
+    color: var(--blue);
+    font-weight: 400;
+  }
+
+  .cv-intro > p {
+    max-width: 520px;
+    color: var(--ink-soft);
+    font-size: 1.07rem;
+  }
+
+  .cv-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .cv-identity {
+    color: white;
+    background: var(--blue);
+  }
+
+  .identity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .identity-grid div {
+    min-height: 125px;
+    padding: 24px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .identity-grid div:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .identity-grid span {
+    display: block;
+    margin-bottom: 20px;
+    color: var(--gold);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .identity-grid strong {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .cv-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 820px);
+    gap: 110px;
+    justify-content: center;
+    padding-top: 110px;
+    padding-bottom: 120px;
+  }
+
+  .cv-sidebar {
+    display: grid;
+    gap: 35px;
+    align-content: start;
+  }
+
+  .cv-sidebar section {
+    display: grid;
+    gap: 8px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cv-sidebar h2 {
+    margin: 0 0 8px;
+    color: var(--coral);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .cv-sidebar a,
+  .cv-sidebar span {
+    color: var(--ink-soft);
+    font-size: 0.77rem;
+    text-decoration: none;
+  }
+
+  .cv-sidebar a:hover {
+    color: var(--blue);
+  }
+
+  .cv-section {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 45px;
+    padding: 55px 0 70px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .cv-section-label span {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 1.35rem;
+  }
+
+  .cv-section-label h2 {
+    margin: 16px 0 0;
+    font-family: var(--serif);
+    font-size: 1.65rem;
+    font-weight: 400;
+  }
+
+  .cv-section-content.prose p:first-child {
+    margin-top: 0;
+  }
+
+  .timeline-entry,
+  .publication-list article {
+    display: grid;
+    grid-template-columns: 85px 1fr;
+    gap: 28px;
+  }
+
+  .timeline-entry > div:first-child strong,
+  .publication-list article > span {
+    color: var(--blue);
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 400;
+  }
+
+  .timeline-entry h3,
+  .publication-list h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  .timeline-entry p {
+    margin: 7px 0 0;
+    color: var(--ink-soft);
+  }
+
+  .timeline-entry small,
+  .publication-list small {
+    display: block;
+    margin-top: 8px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  .publication-list article {
+    padding: 0 0 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .publication-list h3 a {
+    text-decoration: none;
+  }
+
+  .publication-list h3 a:hover {
+    color: var(--blue);
+  }
+
+  .publication-list p {
+    margin: 8px 0 0;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+  }
+
+  .publication-list p strong {
+    color: var(--ink);
+  }
+
+  .cv-updated {
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+    text-align: right;
+  }
+
+  @media (max-width: 900px) {
+    .cv-hero-grid,
+    .cv-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .cv-layout {
+      gap: 60px;
+    }
+
+    .identity-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cv-sidebar {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .identity-grid,
+    .cv-sidebar,
+    .cv-section {
+      grid-template-columns: 1fr;
+    }
+
+    .cv-section {
+      gap: 25px;
+    }
+
+    .timeline-entry,
+    .publication-list article {
+      grid-template-columns: 60px 1fr;
+    }
+  }
+
+  @media print {
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.skip-link),
+    .cv-actions {
+      display: none !important;
+    }
+
+    :global(html),
+    :global(body) {
+      background: white !important;
+      font-size: 9pt;
+    }
+
+    :global(.container) {
+      width: 100%;
+      max-width: none;
+    }
+
+    .cv-hero {
+      padding: 0 0 7mm;
+      break-inside: avoid;
+    }
+
+    .cv-hero-grid {
+      grid-template-columns: 1fr 0.8fr;
+      gap: 10mm;
+    }
+
+    .cv-hero :global(.eyebrow) {
+      margin-bottom: 4mm;
+    }
+
+    .cv-hero h1 {
+      font-size: 38pt;
+      line-height: 0.82;
+    }
+
+    .cv-intro > p {
+      margin: 0;
+      font-size: 9pt;
+      line-height: 1.45;
+    }
+
+    .identity-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .identity-grid div {
+      min-height: 0;
+      padding: 4mm;
+    }
+
+    .identity-grid span {
+      margin-bottom: 2mm;
+      font-size: 5.5pt;
+    }
+
+    .identity-grid strong {
+      font-size: 8pt;
+      line-height: 1.25;
+    }
+
+    .cv-layout {
+      display: block;
+      padding: 7mm 0 0;
+    }
+
+    .cv-sidebar {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6mm;
+      margin-bottom: 7mm;
+      break-inside: avoid;
+    }
+
+    .cv-sidebar section {
+      gap: 1mm;
+      padding: 0 0 3mm;
+    }
+
+    .cv-sidebar h2 {
+      margin-bottom: 1mm;
+      font-size: 6pt;
+    }
+
+    .cv-sidebar a,
+    .cv-sidebar span {
+      font-size: 7pt;
+      line-height: 1.35;
+    }
+
+    .cv-section {
+      grid-template-columns: 25mm 1fr;
+      gap: 6mm;
+      padding: 5mm 0;
+      break-inside: avoid-page;
+    }
+
+    .cv-section-label span {
+      font-size: 11pt;
+    }
+
+    .cv-section-label h2 {
+      margin-top: 2mm;
+      font-size: 12pt;
+    }
+
+    .cv-section-content.prose {
+      font-size: 8pt;
+      line-height: 1.45;
+    }
+
+    .cv-section-content.prose p {
+      margin: 0 0 2mm;
+    }
+
+    .timeline-entry {
+      grid-template-columns: 18mm 1fr;
+      gap: 4mm;
+    }
+
+    .timeline-entry h3 {
+      font-size: 11pt;
+    }
+
+    .timeline-entry p {
+      margin-top: 1mm;
+      font-size: 8pt;
+    }
+
+    .timeline-entry small {
+      margin-top: 1mm;
+      font-size: 7pt;
+      line-height: 1.4;
+    }
+
+    .publications-section {
+      break-before: page;
+      break-inside: auto;
+    }
+
+    .publication-list article {
+      grid-template-columns: 14mm 1fr;
+      gap: 4mm;
+      margin-bottom: 0;
+      padding: 0 0 3.5mm;
+      break-inside: avoid-page;
+    }
+
+    .publication-list article > span {
+      font-size: 9pt;
+    }
+
+    .publication-list h3 {
+      font-size: 10pt;
+      line-height: 1.15;
+    }
+
+    .publication-list p {
+      margin-top: 1mm;
+      font-size: 6.8pt;
+      line-height: 1.35;
+    }
+
+    .publication-list small {
+      margin-top: 1mm;
+      font-size: 6.5pt;
+      line-height: 1.35;
+    }
+
+    .cv-updated {
+      margin-top: 4mm;
+      font-size: 6.5pt;
+    }
+
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+  }
+</style>

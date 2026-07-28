@@ -1,0 +1,378 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import {
+  publications,
+  publicationBibtex,
+  publicationCitation,
+  type Publication
+} from "@/data/publications";
+import { site } from "@/data/site";
+
+export function getStaticPaths() {
+  return publications.map((publication) => ({
+    params: { slug: publication.slug },
+    props: { publication }
+  }));
+}
+
+interface Props {
+  publication: Publication;
+}
+
+const { publication } = Astro.props;
+const bibtex = publicationBibtex(publication);
+const onlineDate = new Date(`${publication.onlineDate}T00:00:00`);
+const onlineDateLabel = onlineDate.toLocaleDateString("es-ES", {
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
+const related = publication.relatedSlugs
+  .map((slug) => publications.find((candidate) => candidate.slug === slug))
+  .filter((candidate): candidate is Publication => Boolean(candidate));
+
+const jsonLd = {
+  "@type": "ScholarlyArticle",
+  "@id": `${site.url}/publications/${publication.slug}/#article`,
+  url: `${site.url}/publications/${publication.slug}/`,
+  headline: publication.title,
+  name: publication.title,
+  description: publication.abstract,
+  abstract: publication.abstract,
+  datePublished: publication.onlineDate,
+  author: publication.authors.map((author) =>
+    author === "Marc Semper"
+      ? { "@id": `${site.url}/#person`, "@type": "Person", name: author, url: site.url }
+      : { "@type": "Person", name: author }
+  ),
+  sameAs: `https://doi.org/${publication.doi}`,
+  identifier: {
+    "@type": "PropertyValue",
+    propertyID: "DOI",
+    value: publication.doi
+  },
+  isPartOf: { "@type": "Periodical", name: publication.venue },
+  keywords: publication.topics.join(", "),
+  inLanguage: "en"
+};
+---
+
+<BaseLayout
+  lang="es"
+  title={publication.title}
+  description={publication.plainSummaryEs ?? publication.metaDescription}
+  publication={publication}
+  jsonLd={jsonLd}
+  alternatePath={`/publications/${publication.slug}/`}
+>
+  <header class="article-hero">
+    <div class="container">
+      <a class="back-link" href="/es/publicaciones/">← Todas las publicaciones</a>
+      <div class="heading-grid">
+        <div>
+          <div class="kicker">
+            <span>Artículo científico</span>
+            <span>Volumen {publication.year}</span>
+            {publication.status && <span>{publication.status}</span>}
+          </div>
+          <h1>{publication.title}</h1>
+        </div>
+        <div class="topics">{publication.topics.map((topic) => <span>{topic}</span>)}</div>
+      </div>
+      <div class="byline">
+        <p>
+          {publication.authors.map((author, index) => (
+            <>
+              {author === "Marc Semper" ? <strong>{author}</strong> : author}
+              {index < publication.authors.length - 1 ? ", " : ""}
+            </>
+          ))}
+        </p>
+        <p>{publicationCitation(publication)}</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="action-bar">
+    <div class="container">
+      <span>DOI {publication.doi}</span>
+      <div>
+        <a href={`https://doi.org/${publication.doi}`} target="_blank" rel="noopener">Publicación original ↗</a>
+        {publication.manuscriptUrl && (
+          <a href={publication.manuscriptUrl} target="_blank" rel="noopener">Manuscrito</a>
+        )}
+        <a href="#citar">BibTeX</a>
+      </div>
+    </div>
+  </section>
+
+  <article class="article-content">
+    <div class="container article-layout">
+      <aside>
+        <div><span>Publicado online</span><strong>{onlineDateLabel}</strong></div>
+        <div><span>Revista</span><strong>{publication.venue}</strong></div>
+        <div><span>Año del volumen</span><strong>{publication.year}</strong></div>
+      </aside>
+      <div class="main">
+        <section class="summary">
+          <p class="eyebrow">En breve</p>
+          <p>{publication.plainSummaryEs ?? publication.plainSummary}</p>
+        </section>
+
+        <div class="contribution-grid">
+          <section>
+            <span>01</span><h2>Contribución</h2>
+            <p>{publication.contributionEs ?? publication.contribution}</p>
+          </section>
+          <section>
+            <span>02</span><h2>Resultado principal</h2>
+            <p>{publication.findingEs ?? publication.finding}</p>
+          </section>
+        </div>
+
+        <section class="evidence">
+          <p class="eyebrow">Modelos y datos</p>
+          <h2>Elementos distintivos</h2>
+          <div>
+            <ul>{publication.models?.map((model) => <li>{model}</li>)}</ul>
+            <ul>{publication.dataSources?.map((source) => <li>{source}</li>)}</ul>
+          </div>
+        </section>
+
+        <section class="citation" id="citar">
+          <p class="eyebrow">Citar este trabajo</p>
+          <h2>BibTeX</h2>
+          <pre><code>{bibtex}</code></pre>
+          <p>Comprueba siempre el registro editorial antes de citar.</p>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  <section class="related">
+    <div class="container">
+      <div class="section-header">
+        <div><p class="eyebrow">Seguir explorando</p><h2 class="section-title">Trabajos relacionados.</h2></div>
+        <ArrowLink href="/es/publicaciones/">Todas las publicaciones</ArrowLink>
+      </div>
+      {related.map((item, index) => (
+        <PublicationCard publication={item} index={index} compact lang="es" />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .article-hero {
+    padding: 72px 0 58px;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 65px;
+    color: var(--ink-soft);
+    font-size: 0.74rem;
+    text-decoration: none;
+  }
+
+  .heading-grid {
+    display: grid;
+    grid-template-columns: 1fr 210px;
+    gap: 65px;
+    align-items: end;
+  }
+
+  .kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 22px;
+  }
+
+  .kicker span {
+    padding: 5px 9px;
+    color: var(--blue);
+    border: 1px solid rgba(40, 87, 223, 0.36);
+    border-radius: 100px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .article-hero h1 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(3rem, 7vw, 6.8rem);
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+
+  .topics {
+    display: grid;
+    gap: 7px;
+  }
+
+  .topics span {
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.67rem;
+    text-transform: uppercase;
+  }
+
+  .byline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+    margin-top: 48px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.84rem;
+  }
+
+  .action-bar {
+    padding: 20px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .action-bar .container,
+  .action-bar div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .action-bar a {
+    color: var(--white);
+    font-size: 0.72rem;
+  }
+
+  .article-content {
+    padding: 95px 0;
+  }
+
+  .article-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 80px;
+  }
+
+  aside {
+    display: grid;
+    align-content: start;
+    gap: 26px;
+  }
+
+  aside div {
+    display: grid;
+    gap: 5px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  aside span {
+    color: var(--ink-soft);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+  }
+
+  aside strong {
+    font-family: var(--serif);
+    font-weight: 500;
+  }
+
+  .summary {
+    padding: 34px;
+    background: var(--paper-deep);
+  }
+
+  .summary > p:last-child {
+    margin-bottom: 0;
+    font-family: var(--serif);
+    font-size: 1.55rem;
+    line-height: 1.4;
+  }
+
+  .contribution-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 48px;
+    border-top: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line-strong);
+  }
+
+  .contribution-grid section {
+    padding: 28px;
+    border-right: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .contribution-grid span {
+    color: var(--coral);
+    font-family: var(--serif);
+  }
+
+  .contribution-grid h2,
+  .evidence h2,
+  .citation h2 {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 400;
+  }
+
+  .evidence,
+  .citation {
+    padding-top: 50px;
+  }
+
+  .evidence > div {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .evidence ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .evidence li {
+    padding: 7px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+    font-size: 0.7rem;
+  }
+
+  pre {
+    overflow-x: auto;
+    padding: 24px;
+    color: var(--white);
+    background: var(--ink);
+  }
+
+  .related {
+    padding: 100px 0;
+    background: var(--paper-deep);
+  }
+
+  @media (max-width: 760px) {
+    .heading-grid,
+    .byline,
+    .article-layout,
+    .contribution-grid,
+    .evidence > div {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

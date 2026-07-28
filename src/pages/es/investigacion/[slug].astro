@@ -1,0 +1,238 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import { researchAreas, site, type ResearchArea } from "@/data/site";
+import { publications } from "@/data/publications";
+
+export function getStaticPaths() {
+  return researchAreas.map((area) => ({
+    params: { slug: area.slug },
+    props: { area }
+  }));
+}
+
+interface Props {
+  area: ResearchArea;
+}
+
+const { area } = Astro.props;
+const areaPublications = area.publicationSlugs
+  .map((slug) => publications.find((publication) => publication.slug === slug))
+  .filter((publication): publication is (typeof publications)[number] => Boolean(publication));
+
+const jsonLd = {
+  "@type": "CollectionPage",
+  "@id": `${site.url}/es/investigacion/${area.slug}/#area`,
+  url: `${site.url}/es/investigacion/${area.slug}/`,
+  name: area.titleEs,
+  description: area.descriptionEs,
+  inLanguage: "es",
+  about: area.topics,
+  author: { "@id": `${site.url}/#person` }
+};
+---
+
+<BaseLayout
+  lang="es"
+  title={area.titleEs}
+  description={area.descriptionEs}
+  jsonLd={jsonLd}
+  alternatePath={`/research/${area.slug}/`}
+>
+  <header class="area-hero">
+    <div class="container">
+      <a class="back-link" href="/es/investigacion/">← Programa de investigación</a>
+      <div class="area-heading">
+        <span>{area.number}</span>
+        <div>
+          <p class="eyebrow">Área de investigación</p>
+          <h1>{area.titleEs}</h1>
+          <p>{area.descriptionEs}</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="page-section">
+    <div class="container overview">
+      <div>
+        <p class="eyebrow">Planteamiento</p>
+        <h2 class="section-title">El problema de investigación.</h2>
+      </div>
+      <p>{area.overviewEs}</p>
+    </div>
+  </section>
+
+  <section class="questions">
+    <div class="container questions-grid">
+      <div>
+        <p class="eyebrow">Preguntas de investigación</p>
+        <h2>Preguntas que orientan esta área.</h2>
+      </div>
+      <ol>
+        {area.questionsEs.map((question, index) => (
+          <li><span>{String(index + 1).padStart(2, "0")}</span><p>{question}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      <p class="eyebrow">Métodos, sistemas y fuentes</p>
+      <h2 class="section-title">Elementos concretos de investigación.</h2>
+      <ul class="methods">
+        {area.methods.map((method) => <li>{method}</li>)}
+        {area.topics.map((topic) => <li>{topic}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="publications">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Evidencia</p>
+          <h2 class="section-title">Publicaciones de esta área.</h2>
+        </div>
+        <ArrowLink href="/es/publicaciones/">Registro completo</ArrowLink>
+      </div>
+      {areaPublications.map((publication, index) => (
+        <PublicationCard publication={publication} index={index} compact lang="es" />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .area-hero {
+    padding: 72px 0 90px;
+    color: var(--white);
+    background:
+      radial-gradient(circle at 88% 18%, rgba(235, 93, 68, 0.35), transparent 20rem),
+      var(--ink);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 70px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.75rem;
+    text-decoration: none;
+  }
+
+  .area-heading,
+  .overview,
+  .questions-grid {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 45px;
+  }
+
+  .area-heading > span {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 2.3rem;
+  }
+
+  .area-heading .eyebrow {
+    color: var(--gold);
+  }
+
+  .area-heading h1 {
+    margin: 12px 0 24px;
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    line-height: 0.95;
+  }
+
+  .area-heading div > p:last-child {
+    max-width: 760px;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .overview {
+    grid-template-columns: 0.7fr 1fr;
+  }
+
+  .overview > p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    line-height: 1.35;
+  }
+
+  .questions {
+    padding: 105px 0;
+    background: var(--paper-deep);
+  }
+
+  .questions-grid {
+    grid-template-columns: 0.7fr 1fr;
+    gap: 90px;
+  }
+
+  .questions h2 {
+    font-family: var(--serif);
+    font-size: clamp(2.6rem, 5vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .questions ol {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+    list-style: none;
+  }
+
+  .questions li {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 22px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .questions li span {
+    color: var(--coral);
+    font-family: var(--serif);
+  }
+
+  .questions li p {
+    margin: 0;
+  }
+
+  .methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 35px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .methods li {
+    padding: 8px 13px;
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+    font-size: 0.74rem;
+  }
+
+  .publications {
+    padding: 110px 0;
+  }
+
+  @media (max-width: 760px) {
+    .area-heading,
+    .overview,
+    .questions-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+</style>

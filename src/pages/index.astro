@@ -1,0 +1,753 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import { researchAreas, site } from "@/data/site";
+import { publications, selectedPublications } from "@/data/publications";
+
+const homeJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${site.url}/#website`,
+      url: site.url,
+      name: site.name,
+      inLanguage: "en",
+      publisher: { "@id": `${site.url}/#person` }
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": `${site.url}/#profile`,
+      url: site.url,
+      name: `${site.name} — academic profile`,
+      mainEntity: { "@id": `${site.url}/#person` },
+      dateModified: site.lastUpdated
+    },
+    {
+      "@type": "Person",
+      "@id": `${site.url}/#person`,
+      name: site.name,
+      alternateName: site.publishingName,
+      description: site.shortDescription,
+      url: site.url,
+      image: {
+        "@type": "ImageObject",
+        url: new URL(site.portrait, site.url).toString(),
+        width: 500,
+        height: 500
+      },
+      email: `mailto:${site.email}`,
+      jobTitle: "Associate Lecturer and Researcher",
+      affiliation: {
+        "@type": "CollegeOrUniversity",
+        name: site.affiliation,
+        url: "https://www.ua.es/"
+      },
+      memberOf: {
+        "@type": "ResearchOrganization",
+        name: site.group,
+        url: "https://observatorio-cientifico.ua.es/grupos/24505/detalle"
+      },
+      sameAs: Object.values(site.profiles),
+      knowsAbout: researchAreas.flatMap((area) => area.topics)
+    }
+  ]
+};
+---
+
+<BaseLayout jsonLd={homeJsonLd} alternatePath="/es/">
+  <section class="home-hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Researcher · University of Alicante</p>
+        <h1 class="display-title">
+          <span class="display-name">Marc Semper Lloret</span>
+          Reliable AI for a world <em>in motion.</em>
+        </h1>
+        <p class="hero-intro">
+          I study how spatiotemporal AI systems can make dependable forecasts
+          when sensors, data and deployment conditions are imperfect.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="/publications/">Explore publications</a>
+          <a class="button" href="/research/">Research programme</a>
+        </div>
+        <div class="identity-row" aria-label="Academic identity">
+          <div>
+            <span>Publishing as</span>
+            <strong>Marc Semper</strong>
+          </div>
+          <div>
+            <span>Research group</span>
+            <strong>ANVIDA</strong>
+          </div>
+          <div>
+            <span>Based in</span>
+            <strong>Alicante, Spain</strong>
+          </div>
+        </div>
+      </div>
+      <figure class="portrait-frame">
+        <img
+          src={site.portrait}
+          width="500"
+          height="500"
+          alt="Portrait of Marc Semper Lloret"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption>
+          <span>Marc Semper Lloret</span>
+          <strong>Spatiotemporal AI researcher</strong>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="positioning-strip" aria-label="Research themes">
+    <div class="container strip-inner">
+      <span>Spatiotemporal AI</span>
+      <i aria-hidden="true"></i>
+      <span>Graph neural networks</span>
+      <i aria-hidden="true"></i>
+      <span>Environmental forecasting</span>
+      <i aria-hidden="true"></i>
+      <span>Reliable evaluation</span>
+    </div>
+  </section>
+
+  <section class="page-section introduction">
+    <div class="container intro-grid">
+      <div>
+        <p class="eyebrow">Research perspective</p>
+        <h2 class="section-title">Forecasting is only useful when the decision survives reality.</h2>
+      </div>
+      <div class="intro-copy">
+        <p>
+          Marc Semper Lloret is an associate lecturer and researcher in the
+          Department of Computer Science and Artificial Intelligence at the
+          University of Alicante, and a member of the Network Data Analysis and
+          Visualisation research group.
+        </p>
+        <p>
+          His work connects graph learning, environmental observation and
+          robust evaluation. The aim is not only to improve predictive
+          accuracy, but to understand whether the selected model remains a
+          defensible choice under realistic data and deployment uncertainty.
+        </p>
+        <ArrowLink href="/research/">Read the research overview</ArrowLink>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Research areas</p>
+          <h2 class="section-title">From sensor networks to deployment decisions.</h2>
+        </div>
+        <p>
+          Four connected lines of work centred on environmental systems,
+          imperfect observations and accountable model choice.
+        </p>
+      </div>
+
+      <div class="research-grid">
+        {researchAreas.map((area) => (
+          <article>
+            <span class="area-number">{area.number}</span>
+            <h3>{area.title}</h3>
+            <p>{area.description}</p>
+            <div class="topic-list">
+              {area.topics.map((topic) => <span>{topic}</span>)}
+            </div>
+            <ArrowLink href={`/research/${area.slug}/`}>Explore area</ArrowLink>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section selected-work">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2 class="section-title">Recent publications.</h2>
+        </div>
+        <ArrowLink href="/publications/">
+          Browse all {publications.length} journal articles
+        </ArrowLink>
+      </div>
+      <div>
+        {selectedPublications.map((publication, index) => (
+          <PublicationCard publication={publication} index={index} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="thesis-feature">
+    <div class="container thesis-grid">
+      <div class="thesis-year" aria-hidden="true">2025</div>
+      <div>
+        <p class="eyebrow">Doctoral thesis</p>
+        <h2>Modelado espacio-temporal con redes neuronales para la predicción de fenómenos ambientales</h2>
+        <p>
+          Spatiotemporal modelling with neural networks for forecasting
+          environmental phenomena. Defended at the University of Alicante on
+          11 December 2025.
+        </p>
+        <ArrowLink href="/thesis/">Explore the thesis</ArrowLink>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section profiles">
+    <div class="container profiles-grid">
+      <div>
+        <p class="eyebrow">Academic identity</p>
+        <h2 class="section-title">One researcher. One connected record.</h2>
+      </div>
+      <div class="profile-links">
+        <a href={site.profiles.university} target="_blank" rel="me noopener">
+          <span>01</span><strong>UA research portal</strong><small>Institutional research profile</small>
+        </a>
+        <a href={site.profiles.cvnet} target="_blank" rel="me noopener">
+          <span>02</span><strong>CVNet</strong><small>University curriculum</small>
+        </a>
+        <a href={site.profiles.orcid} target="_blank" rel="me noopener">
+          <span>03</span><strong>ORCID</strong><small>0009-0002-5552-1420</small>
+        </a>
+        <a href={site.profiles.scholar} target="_blank" rel="me noopener">
+          <span>04</span><strong>Google Scholar</strong><small>Publications & citations</small>
+        </a>
+        <a href={site.profiles.rua} target="_blank" rel="me noopener">
+          <span>05</span><strong>RUA repository</strong><small>Open research outputs</small>
+        </a>
+        <a href={site.profiles.github} target="_blank" rel="me noopener">
+          <span>06</span><strong>GitHub</strong><small>Code & reproducibility</small>
+        </a>
+        <a href={site.profiles.researchgate} target="_blank" rel="me noopener">
+          <span>07</span><strong>ResearchGate</strong><small>Research profile</small>
+        </a>
+        <a href={site.profiles.academia} target="_blank" rel="me noopener">
+          <span>08</span><strong>Academia.edu</strong><small>Academic profile</small>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-banner">
+    <div class="container contact-inner">
+      <div>
+        <p class="eyebrow">Collaboration</p>
+        <h2>Working with complex environmental data?</h2>
+      </div>
+      <div>
+        <p>
+          I am interested in collaborations involving observational datasets,
+          sensor-network quality control, robust forecasting and reproducible
+          environmental AI.
+        </p>
+        <a class="button primary" href={`mailto:${site.email}`}>Start a conversation</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .home-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 76px 0 72px;
+  }
+
+  .home-hero::after {
+    position: absolute;
+    right: -7vw;
+    bottom: -180px;
+    width: 420px;
+    height: 420px;
+    border: 1px solid rgba(40, 87, 223, 0.17);
+    border-radius: 50%;
+    content: "";
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(410px, 0.8fr);
+    gap: 64px;
+    align-items: center;
+  }
+
+  .hero-grid > * {
+    min-width: 0;
+  }
+
+  .portrait-frame {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(18, 26, 42, 0.18);
+    background: var(--paper-deep);
+    box-shadow: 0 28px 80px rgba(30, 48, 92, 0.14);
+  }
+
+  .portrait-frame::after {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    background:
+      linear-gradient(180deg, transparent 56%, rgba(18, 26, 42, 0.56)),
+      linear-gradient(90deg, rgba(40, 87, 223, 0.1), transparent 42%);
+  }
+
+  .portrait-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: 54% center;
+  }
+
+  .display-name {
+    display: block;
+    margin-bottom: 18px;
+    color: var(--blue);
+    font-family: var(--sans);
+    font-size: clamp(0.88rem, 1.4vw, 1.1rem);
+    font-style: normal;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .portrait-frame figcaption {
+    position: absolute;
+    right: 28px;
+    bottom: 26px;
+    left: 28px;
+    z-index: 1;
+    display: grid;
+    gap: 2px;
+    color: var(--white);
+  }
+
+  .portrait-frame figcaption span {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+  }
+
+  .portrait-frame figcaption strong {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .display-title {
+    max-width: 760px;
+    margin: 0;
+    font-size: clamp(5.1rem, 8.2vw, 9.1rem);
+  }
+
+  .display-title em {
+    display: block;
+    color: var(--blue);
+    font-weight: 400;
+  }
+
+  .hero-intro {
+    max-width: 650px;
+    margin: 32px 0 0;
+    color: var(--ink-soft);
+    font-size: clamp(1.08rem, 1.5vw, 1.3rem);
+    line-height: 1.55;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 34px;
+  }
+
+  .identity-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    max-width: 700px;
+    margin-top: 58px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  .identity-row div {
+    display: grid;
+    gap: 3px;
+  }
+
+  .identity-row span {
+    color: var(--ink-soft);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .identity-row strong {
+    font-family: var(--serif);
+    font-size: 1.03rem;
+    font-weight: 400;
+  }
+
+  .positioning-strip {
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .strip-inner {
+    display: flex;
+    min-height: 62px;
+    gap: 30px;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .strip-inner span {
+    font-size: 0.71rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .strip-inner i {
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.7fr;
+    gap: 100px;
+  }
+
+  .intro-copy {
+    padding-top: 40px;
+    color: var(--ink-soft);
+    font-size: 1.04rem;
+  }
+
+  .intro-copy p:first-child {
+    margin-top: 0;
+  }
+
+  .intro-copy .arrow-link {
+    margin-top: 18px;
+  }
+
+  .research-section {
+    padding: 110px 0;
+    background: var(--paper-deep);
+  }
+
+  .research-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line-strong);
+  }
+
+  .research-grid article {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 360px;
+    padding: 38px;
+    overflow: hidden;
+    border-right: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+    transition: color 220ms ease, background 220ms ease;
+  }
+
+  .research-grid article::after {
+    position: absolute;
+    right: -90px;
+    bottom: -90px;
+    width: 190px;
+    height: 190px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    content: "";
+    opacity: 0.13;
+    transition: transform 300ms ease;
+  }
+
+  .research-grid article:hover {
+    color: var(--white);
+    background: var(--ink);
+  }
+
+  .research-grid article:hover::after {
+    transform: scale(1.45);
+  }
+
+  .area-number {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 1.45rem;
+  }
+
+  .research-grid h3 {
+    max-width: 440px;
+    margin: 45px 0 16px;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 3.2vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.03;
+  }
+
+  .research-grid p {
+    max-width: 530px;
+    color: var(--ink-soft);
+  }
+
+  .research-grid article:hover p {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .topic-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: auto;
+    padding-top: 24px;
+  }
+
+  .topic-list span {
+    padding: 4px 9px;
+    border: 1px solid currentColor;
+    border-radius: 100px;
+    font-size: 0.62rem;
+    font-weight: 700;
+  }
+
+  .thesis-feature {
+    padding: 95px 0;
+    color: var(--white);
+    background: var(--ink);
+  }
+
+  .thesis-grid {
+    display: grid;
+    grid-template-columns: 0.45fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .thesis-year {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: clamp(7rem, 16vw, 14rem);
+    letter-spacing: -0.08em;
+    line-height: 0.8;
+  }
+
+  .thesis-feature .eyebrow {
+    color: var(--gold);
+  }
+
+  .thesis-feature h2 {
+    max-width: 760px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+  }
+
+  .thesis-feature p:not(.eyebrow) {
+    max-width: 650px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .thesis-feature .arrow-link {
+    margin-top: 14px;
+    color: var(--gold);
+  }
+
+  .profiles-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1fr;
+    gap: 110px;
+  }
+
+  .profile-links {
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .profile-links a {
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+    gap: 18px;
+    align-items: center;
+    min-height: 88px;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    transition: padding 180ms ease, color 180ms ease;
+  }
+
+  .profile-links a:hover {
+    padding-inline: 10px;
+    color: var(--blue);
+  }
+
+  .profile-links span {
+    color: var(--coral);
+    font-family: var(--serif);
+  }
+
+  .profile-links strong {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 400;
+  }
+
+  .profile-links small {
+    color: var(--ink-soft);
+  }
+
+  .contact-banner {
+    padding: 85px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 0.8fr;
+    gap: 90px;
+    align-items: end;
+  }
+
+  .contact-banner .eyebrow {
+    color: var(--gold);
+  }
+
+  .contact-banner h2 {
+    max-width: 720px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 0.98;
+  }
+
+  .contact-banner p:not(.eyebrow) {
+    margin-top: 0;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .contact-banner .button {
+    margin-top: 16px;
+    color: var(--ink);
+    border-color: var(--white);
+    background: var(--white);
+  }
+
+  @media (max-width: 1040px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-copy {
+      max-width: 800px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .intro-grid,
+    .thesis-grid,
+    .profiles-grid,
+    .contact-inner {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .intro-copy {
+      max-width: 640px;
+      padding-top: 0;
+    }
+
+    .research-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .thesis-year {
+      font-size: 8rem;
+    }
+
+    .portrait-frame img {
+      aspect-ratio: 1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .home-hero {
+      padding-top: 60px;
+    }
+
+    .display-title {
+      font-size: clamp(3.7rem, 17vw, 5.4rem);
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .hero-actions .button {
+      width: 100%;
+    }
+
+    .identity-row {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .strip-inner {
+      justify-content: flex-start;
+      overflow-x: auto;
+    }
+
+    .research-grid article {
+      min-height: 360px;
+      padding: 28px;
+    }
+
+    .topic-list {
+      padding-top: 20px;
+    }
+
+    .profile-links a {
+      grid-template-columns: 38px 1fr;
+    }
+
+    .profile-links small {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,255 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import {
+  publications,
+  publicationRecordReviewed
+} from "@/data/publications";
+import { site } from "@/data/site";
+
+const publicationsByYear = publications.reduce((groups, publication) => {
+  const group = groups.get(publication.year) ?? [];
+  group.push(publication);
+  groups.set(publication.year, group);
+  return groups;
+}, new Map<number, typeof publications>());
+const years = [...publicationsByYear.keys()].sort((a, b) => b - a);
+const publicationsJsonLd = {
+  "@type": ["CollectionPage", "ItemList"],
+  "@id": `${site.url}/publications/#collection`,
+  name: `Publications by ${site.name}`,
+  url: `${site.url}/publications/`,
+  numberOfItems: publications.length,
+  itemListElement: publications.map((publication, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    url: `${site.url}/publications/${publication.slug}/`,
+    name: publication.title
+  }))
+};
+---
+
+<BaseLayout
+  title="Publications"
+  description="Complete journal publication record of Marc Semper on spatiotemporal AI, graph neural networks and environmental forecasting."
+  jsonLd={publicationsJsonLd}
+  alternatePath="/es/publicaciones/"
+>
+  <header class="page-hero publications-hero">
+    <div class="container page-hero-grid">
+      <div>
+        <p class="eyebrow">Academic record</p>
+        <h1 class="page-title">Publications.</h1>
+      </div>
+      <div>
+        <p class="page-intro">
+          A cumulative archive of peer-reviewed journal articles on reliable
+          model selection, graph learning and environmental forecasting.
+        </p>
+        <div class="record-stats">
+          <span><strong>{publications.length}</strong> journal articles</span>
+          <span><strong>{years.length}</strong> years</span>
+          <span><strong>{publications.length}</strong> DOI records</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="publication-note">
+    <div class="container note-grid">
+      <p>
+        <strong>Author identity:</strong> Marc Semper Lloret publishes scientific
+        work as <strong>Marc Semper</strong>. Journal record reviewed
+        {` ${publicationRecordReviewed}`}.
+      </p>
+      <div>
+        <a href="/rss.xml">RSS</a>
+        <a href="https://scholar.google.com/citations?user=yQoG3_kAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://orcid.org/0009-0002-5552-1420" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container publication-years">
+    {years.map((year) => (
+      <section class="year-section" aria-labelledby={`year-${year}`}>
+        <div class="year-heading">
+          <h2 id={`year-${year}`}>{year}</h2>
+          <span>{publicationsByYear.get(year)?.length} journal articles</span>
+        </div>
+        <div class="year-publications">
+          {publicationsByYear.get(year)?.map((publication, index) => (
+            <PublicationCard publication={publication} index={index} />
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <section class="citation-help">
+    <div class="container citation-help-grid">
+      <div>
+        <p class="eyebrow">Reproducible citation</p>
+        <h2>Each publication has its own permanent overview.</h2>
+      </div>
+      <p>
+        Individual pages provide the full bibliographic record, author-written
+        abstract where available, plain-language context, DOI links and
+        exportable BibTeX.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .publications-hero {
+    background:
+      radial-gradient(circle at 84% 20%, rgba(235, 93, 68, 0.12), transparent 18rem),
+      var(--paper);
+  }
+
+  .record-stats {
+    display: flex;
+    gap: 28px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  .record-stats span {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .record-stats strong {
+    margin-right: 3px;
+    color: var(--blue);
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+
+  .publication-note {
+    padding: 24px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .note-grid {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .note-grid p {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+
+  .note-grid > div {
+    display: flex;
+    gap: 24px;
+  }
+
+  .note-grid a {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .publication-years {
+    padding-top: 110px;
+    padding-bottom: 120px;
+  }
+
+  .year-section {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 45px;
+    margin-bottom: 100px;
+  }
+
+  .year-heading {
+    position: sticky;
+    top: 110px;
+    align-self: start;
+  }
+
+  .year-heading h2 {
+    margin: 0;
+    color: var(--blue);
+    font-family: var(--serif);
+    font-size: clamp(4.5rem, 8vw, 7rem);
+    font-weight: 400;
+    letter-spacing: -0.07em;
+    line-height: 0.85;
+  }
+
+  .year-heading span {
+    display: block;
+    margin-top: 20px;
+    color: var(--ink-soft);
+    font-size: 0.65rem;
+    font-weight: 750;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .citation-help {
+    padding: 100px 0;
+    background: var(--paper-deep);
+  }
+
+  .citation-help-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.6fr;
+    gap: 90px;
+    align-items: end;
+  }
+
+  .citation-help h2 {
+    max-width: 750px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.7rem, 5vw, 4.8rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .citation-help-grid > p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 900px) {
+    .year-section,
+    .citation-help-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .year-heading {
+      position: static;
+    }
+
+    .year-section {
+      gap: 25px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .note-grid {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .publication-years {
+      padding-top: 80px;
+    }
+  }
+</style>

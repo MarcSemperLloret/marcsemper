@@ -1,0 +1,193 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { site } from "@/data/site";
+import type { Publication } from "@/data/publications";
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  publication?: Publication;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+  noindex?: boolean;
+  lang?: "en" | "es";
+  alternatePath?: string;
+}
+
+const {
+  title,
+  description = site.shortDescription,
+  image = site.defaultSocialImage,
+  publication,
+  jsonLd,
+  noindex = false,
+  lang = "en",
+  alternatePath
+} = Astro.props;
+
+const pageTitle = title
+  ? publication
+    ? title
+    : `${title} — ${site.name}`
+  : lang === "es"
+    ? `${site.name} — Investigador en IA espacio-temporal`
+    : `${site.name} — Spatiotemporal AI Researcher`;
+const canonical = new URL(Astro.url.pathname, site.url);
+const socialImage = new URL(image, site.url);
+const alternateUrl = alternatePath ? new URL(alternatePath, site.url) : undefined;
+const citationPdfUrl = publication?.pdfUrl
+  ? new URL(publication.pdfUrl, site.url)
+  : undefined;
+const canExposeCitationPdf =
+  citationPdfUrl?.origin === canonical.origin &&
+  citationPdfUrl.pathname.startsWith(canonical.pathname);
+const isProduction = import.meta.env.PROD;
+
+const defaultJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${site.url}/#website`,
+      url: site.url,
+      name: site.name,
+      inLanguage: lang,
+      publisher: { "@id": `${site.url}/#person` }
+    },
+    {
+      "@type": "Person",
+      "@id": `${site.url}/#person`,
+      name: site.name,
+      alternateName: site.publishingName,
+      url: site.url,
+      image: new URL(site.portrait, site.url).toString(),
+      email: `mailto:${site.email}`,
+      jobTitle: "Associate Lecturer and Researcher",
+      affiliation: {
+        "@type": "CollegeOrUniversity",
+        name: site.affiliation,
+        url: "https://www.ua.es/"
+      },
+      memberOf: {
+        "@type": "ResearchOrganization",
+        name: site.group,
+        url: "https://observatorio-cientifico.ua.es/grupos/24505/detalle"
+      },
+      sameAs: Object.values(site.profiles),
+      knowsAbout: [
+        "Spatiotemporal artificial intelligence",
+        "Graph neural networks",
+        "Environmental forecasting",
+        "Sensor data quality",
+        "Distribution shift",
+        "Air quality forecasting"
+      ]
+    }
+  ]
+};
+
+const customNodes = !jsonLd
+  ? []
+  : Array.isArray(jsonLd)
+    ? jsonLd
+    : Array.isArray(jsonLd["@graph"])
+      ? (jsonLd["@graph"] as Array<Record<string, unknown>>)
+      : [{ ...jsonLd, "@context": undefined }];
+
+const mergedNodes: Array<Record<string, unknown>> = [...defaultJsonLd["@graph"]];
+for (const node of customNodes) {
+  const nodeId = typeof node["@id"] === "string" ? node["@id"] : undefined;
+  const existingIndex = nodeId
+    ? mergedNodes.findIndex((candidate) => candidate["@id"] === nodeId)
+    : -1;
+  if (existingIndex >= 0) {
+    mergedNodes[existingIndex] = { ...mergedNodes[existingIndex], ...node };
+  } else {
+    mergedNodes.push(node);
+  }
+}
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": mergedNodes
+};
+const serializedStructuredData = JSON.stringify(structuredData).replaceAll("<", "\\u003c");
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    {isProduction && (
+      <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self'; script-src 'none'; form-action 'self'; upgrade-insecure-requests"
+      />
+    )}
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternateUrl && (
+      <>
+        <link rel="alternate" hreflang={lang === "en" ? "es" : "en"} href={alternateUrl} />
+        <link rel="alternate" hreflang={lang} href={canonical} />
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={lang === "en" ? canonical : alternateUrl}
+        />
+      </>
+    )}
+    <meta name="author" content={site.name} />
+    <meta name="theme-color" content="#f3f0e8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title={`${site.name} publications`} />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content={publication ? "article" : "website"} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:locale" content={lang === "es" ? "es_ES" : "en_US"} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+
+    {publication && (
+      <>
+        <meta name="citation_title" content={publication.title} />
+        {publication.authors.map((author) => (
+          <meta name="citation_author" content={author} />
+        ))}
+        <meta name="citation_publication_date" content={String(publication.year)} />
+        <meta name="citation_journal_title" content={publication.venue} />
+        {publication.volume && <meta name="citation_volume" content={publication.volume} />}
+        {publication.issue && <meta name="citation_issue" content={publication.issue} />}
+        {publication.pages && <meta name="citation_firstpage" content={publication.pages.split("–")[0]} />}
+        <meta name="citation_doi" content={publication.doi} />
+        {canExposeCitationPdf && citationPdfUrl && (
+          <meta name="citation_pdf_url" content={citationPdfUrl} />
+        )}
+        <meta property="article:published_time" content={publication.onlineDate} />
+      </>
+    )}
+
+    <script is:inline type="application/ld+json" set:html={serializedStructuredData} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header pathname={Astro.url.pathname} lang={lang} alternatePath={alternatePath} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

@@ -1,0 +1,230 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import { publications } from "@/data/publications";
+import { site } from "@/data/site";
+
+const thesisPublications = publications.filter((publication) =>
+  [
+    "global-carbon-concentration",
+    "noise-pollution-madrid",
+    "global-aerosol-optical-depth",
+    "inter-city-air-quality"
+  ].includes(publication.slug)
+);
+
+const jsonLd = {
+  "@type": "CreativeWork",
+  "@id": `${site.url}/thesis/#thesis`,
+  name: "Modelado espacio-temporal con redes neuronales para la predicción de fenómenos ambientales",
+  alternateName: "Spatiotemporal modelling with neural networks for forecasting environmental phenomena",
+  author: { "@id": `${site.url}/#person`, "@type": "Person", name: site.name, url: site.url },
+  datePublished: "2025-12-11",
+  inLanguage: "es",
+  about: ["Inteligencia artificial espacio-temporal", "Redes neuronales de grafos", "Predicción ambiental"],
+  publisher: { "@type": "CollegeOrUniversity", name: "Universidad de Alicante" }
+};
+---
+
+<BaseLayout
+  lang="es"
+  title="Tesis doctoral"
+  description="Tesis doctoral de Marc Semper Lloret sobre modelado espacio-temporal con redes neuronales para predecir fenómenos ambientales."
+  jsonLd={jsonLd}
+  alternatePath="/thesis/"
+>
+  <header class="thesis-hero">
+    <div class="container">
+      <div class="meta">
+        <span>Tesis doctoral</span><span>Informática</span>
+        <span>Universidad de Alicante</span><span>2025</span>
+      </div>
+      <h1>Modelado espacio-temporal con redes neuronales para la predicción de fenómenos ambientales</h1>
+      <p lang="en">Spatiotemporal modelling with neural networks for forecasting environmental phenomena.</p>
+    </div>
+  </header>
+
+  <section class="facts">
+    <div class="container facts-grid">
+      <div><span>Autor</span><strong>Marc Semper Lloret</strong></div>
+      <div><span>Directores</span><strong>Manuel Curado Navarro<br />Jose Francisco Vicent Francés</strong></div>
+      <div><span>Defensa</span><strong>11 de diciembre de 2025</strong></div>
+      <div><span>Programa</span><strong>Doctorado en Informática</strong></div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container overview">
+      <div>
+        <p class="eyebrow">Ámbito de investigación</p>
+        <h2 class="section-title">Aprender la dinámica de los sistemas ambientales.</h2>
+      </div>
+      <div>
+        <p>
+          La tesis investiga métodos neuronales para predicción ambiental cuando
+          las observaciones están distribuidas en el espacio y evolucionan con
+          el tiempo. Sus aplicaciones incluyen calidad del aire, aerosoles
+          atmosféricos, gases de efecto invernadero y ruido urbano.
+        </p>
+        <p>
+          Las representaciones en forma de grafo conectan estaciones, ciudades
+          o puntos de observación global. Los modelos temporales aprenden después
+          cómo cambian las señales a distintas escalas y horizontes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="outputs">
+    <div class="container">
+      <div class="section-header">
+        <div><p class="eyebrow">Resultados relacionados</p><h2 class="section-title">Investigación de la tesis.</h2></div>
+      </div>
+      {thesisPublications.map((publication, index) => (
+        <PublicationCard publication={publication} index={index} compact lang="es" />
+      ))}
+    </div>
+  </section>
+
+  <section class="official">
+    <div class="container official-grid">
+      <div>
+        <p class="eyebrow">Registro institucional</p>
+        <h2>Verificado por la Universidad de Alicante.</h2>
+      </div>
+      <div>
+        <p>El título, el programa, los directores y el depósito pueden comprobarse en los registros públicos de la universidad.</p>
+        <a
+          class="button primary"
+          href="https://eidua.ua.es/es/4-estudiantes-y-tesis/tesis-en-tramitacion/marc-semper-lloret.html"
+          target="_blank"
+          rel="noopener"
+        >Ver registro oficial</a>
+        <a class="text-link" href={site.profiles.rua} target="_blank" rel="noopener">Registro de autor en RUA ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thesis-hero {
+    padding: 88px 0 78px;
+    color: var(--white);
+    background:
+      radial-gradient(circle at 83% 35%, rgba(235, 93, 68, 0.4), transparent 19rem),
+      var(--ink);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  .meta span {
+    padding: 5px 9px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 100px;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+  }
+
+  .thesis-hero h1 {
+    max-width: 1100px;
+    margin: 48px 0 26px;
+    font-family: var(--serif);
+    font-size: clamp(3.4rem, 7vw, 7rem);
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+
+  .thesis-hero > .container > p {
+    color: rgba(255, 255, 255, 0.64);
+  }
+
+  .facts {
+    padding: 30px 0;
+    background: var(--paper-deep);
+  }
+
+  .facts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+  }
+
+  .facts-grid div {
+    display: grid;
+    gap: 6px;
+  }
+
+  .facts-grid span {
+    color: var(--ink-soft);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+  }
+
+  .facts-grid strong {
+    font-family: var(--serif);
+    font-weight: 500;
+  }
+
+  .overview,
+  .official-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.75fr;
+    gap: 90px;
+  }
+
+  .overview > div:last-child {
+    color: var(--ink-soft);
+  }
+
+  .outputs {
+    padding: 105px 0;
+    background: var(--paper-deep);
+  }
+
+  .official {
+    padding: 100px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .official .eyebrow {
+    color: var(--gold);
+  }
+
+  .official h2 {
+    margin: 8px 0 0;
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+  }
+
+  .official p {
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  .official .button {
+    color: var(--ink);
+    border-color: var(--white);
+    background: var(--white);
+  }
+
+  .official .text-link {
+    display: block;
+    margin-top: 18px;
+    color: var(--white);
+  }
+
+  @media (max-width: 780px) {
+    .facts-grid,
+    .overview,
+    .official-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

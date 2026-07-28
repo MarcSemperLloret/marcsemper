@@ -1,0 +1,586 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import {
+  publications,
+  publicationBibtex,
+  publicationCitation,
+  type Publication
+} from "@/data/publications";
+import { site } from "@/data/site";
+
+export function getStaticPaths() {
+  return publications.map((publication) => ({
+    params: { slug: publication.slug },
+    props: { publication }
+  }));
+}
+
+interface Props {
+  publication: Publication;
+}
+
+const { publication } = Astro.props;
+const bibtex = publicationBibtex(publication);
+const publicationDate = new Date(
+  `${publication.onlineDate}T00:00:00`
+);
+const publicationDateLabel = publicationDate.toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
+const related = publication.relatedSlugs
+  .map((slug) => publications.find((candidate) => candidate.slug === slug))
+  .filter((candidate): candidate is Publication => Boolean(candidate));
+
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "@id": `${site.url}/publications/${publication.slug}/#article`,
+  url: `${site.url}/publications/${publication.slug}/`,
+  headline: publication.title,
+  name: publication.title,
+  description: publication.metaDescription,
+  abstract: publication.abstract,
+  datePublished: publication.onlineDate,
+  author: publication.authors.map((author) =>
+    author === "Marc Semper"
+      ? { "@id": `${site.url}/#person`, "@type": "Person", name: author, url: site.url }
+      : { "@type": "Person", name: author }
+  ),
+  sameAs: `https://doi.org/${publication.doi}`,
+  identifier: {
+    "@type": "PropertyValue",
+    propertyID: "DOI",
+    value: publication.doi
+  },
+  isPartOf: {
+    "@type": "Periodical",
+    name: publication.venue
+  },
+  keywords: publication.topics.join(", "),
+  inLanguage: "en"
+};
+---
+
+<BaseLayout
+  title={publication.title}
+  description={publication.metaDescription}
+  publication={publication}
+  jsonLd={articleJsonLd}
+  alternatePath={`/es/publicaciones/${publication.slug}/`}
+>
+  <header class="article-hero">
+    <div class="container">
+      <a class="back-link" href="/publications/">← All publications</a>
+      <div class="article-heading-grid">
+        <div>
+          <div class="article-kicker">
+            <span>{publication.type}</span>
+            <span>Volume year {publication.year}</span>
+            {publication.status && <span>{publication.status}</span>}
+          </div>
+          <h1>{publication.title}</h1>
+        </div>
+        <div class="article-topics" aria-label="Topics">
+          {publication.topics.map((topic) => <span>{topic}</span>)}
+        </div>
+      </div>
+
+      <div class="article-byline">
+        <p>
+          {publication.authors.map((author, index) => (
+            <>
+              {author === "Marc Semper" ? <strong>{author}</strong> : author}
+              {index < publication.authors.length - 1 ? ", " : ""}
+            </>
+          ))}
+        </p>
+        <p>{publicationCitation(publication)}</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="article-action-bar">
+    <div class="container action-inner">
+      <span>DOI {publication.doi}</span>
+      <div>
+        <a href={`https://doi.org/${publication.doi}`} target="_blank" rel="noopener">
+          Original publication ↗
+        </a>
+        {publication.manuscriptUrl && (
+          <a href={publication.manuscriptUrl} target="_blank" rel="noopener">Manuscript</a>
+        )}
+        {publication.codeUrl && (
+          <a href={publication.codeUrl} target="_blank" rel="noopener">Code</a>
+        )}
+        <a href="#cite">BibTeX</a>
+      </div>
+    </div>
+  </section>
+
+  <article class="article-content">
+    <div class="container article-layout">
+      <aside>
+        <div>
+          <span>Published online</span>
+          <strong>{publicationDateLabel}</strong>
+        </div>
+        <div>
+          <span>Venue</span>
+          <strong>
+            <a href={`https://doi.org/${publication.doi}`} target="_blank" rel="noopener">
+              {publication.venue} ↗
+            </a>
+          </strong>
+        </div>
+        <div>
+          <span>Identifier</span>
+          <strong>
+            <a href={`https://doi.org/${publication.doi}`} target="_blank" rel="noopener">
+              {publication.doi}
+            </a>
+          </strong>
+        </div>
+      </aside>
+
+      <div class="article-main">
+        {publication.plainSummary && (
+          <section class="plain-summary">
+            <p class="eyebrow">In brief</p>
+            <p>{publication.plainSummary}</p>
+          </section>
+        )}
+
+        <div class="contribution-grid">
+          {publication.contribution && (
+            <section>
+              <span>01</span>
+              <h2>Contribution</h2>
+              <p>{publication.contribution}</p>
+            </section>
+          )}
+          {publication.finding && (
+            <section>
+              <span>02</span>
+              <h2>Key finding</h2>
+              <p>{publication.finding}</p>
+            </section>
+          )}
+        </div>
+
+        {(publication.models?.length || publication.dataSources?.length) && (
+          <section class="evidence-section" aria-labelledby="models-data-heading">
+            <p class="eyebrow">Models and data</p>
+            <h2 id="models-data-heading">Distinctive research elements</h2>
+            <div class="evidence-grid">
+              {publication.models?.length && (
+                <div>
+                  <h3>Models and methods</h3>
+                  <ul>{publication.models.map((model) => <li>{model}</li>)}</ul>
+                </div>
+              )}
+              {publication.dataSources?.length && (
+                <div>
+                  <h3>Data and evaluation</h3>
+                  <ul>{publication.dataSources.map((source) => <li>{source}</li>)}</ul>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {publication.abstract ? (
+          <section class="abstract-section">
+            <p class="eyebrow">Author-written overview</p>
+            <h2>Research overview</h2>
+            <p>{publication.abstract}</p>
+          </section>
+        ) : (
+          <section class="abstract-section">
+            <p class="eyebrow">Publication overview</p>
+            <h2>About this work</h2>
+            <p>
+              A complete author-written abstract is not yet reproduced on this
+              page. Follow the DOI to consult the publisher’s definitive record.
+            </p>
+          </section>
+        )}
+
+        <section class="citation-section" id="cite">
+          <p class="eyebrow">Cite this work</p>
+          <h2>BibTeX</h2>
+          <pre><code>{bibtex}</code></pre>
+          <p class="citation-note">
+            Always check the publisher record for final volume, issue and page
+            information before citing.
+          </p>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="related-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Continue exploring</p>
+            <h2 class="section-title">Related work.</h2>
+          </div>
+          <ArrowLink href="/publications/">All publications</ArrowLink>
+        </div>
+        {related.map((item, index) => (
+          <PublicationCard publication={item} index={index} compact />
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .article-hero {
+    padding: 72px 0 58px;
+  }
+
+  .evidence-section {
+    padding: 44px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .evidence-section h2 {
+    margin-top: 8px;
+  }
+
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 28px;
+  }
+
+  .evidence-grid h3 {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .evidence-grid ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .evidence-grid li {
+    padding: 7px 11px;
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+    font-size: 0.72rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 70px;
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    font-weight: 750;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--blue);
+  }
+
+  .article-heading-grid {
+    display: grid;
+    grid-template-columns: 1fr 210px;
+    gap: 70px;
+    align-items: end;
+  }
+
+  .article-kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .article-kicker span {
+    padding: 5px 9px;
+    color: var(--blue);
+    border: 1px solid rgba(40, 87, 223, 0.36);
+    border-radius: 100px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .article-hero h1 {
+    max-width: 1020px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(3.1rem, 7vw, 7rem);
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    line-height: 0.99;
+  }
+
+  .article-topics {
+    display: grid;
+    gap: 7px;
+    padding-bottom: 10px;
+  }
+
+  .article-topics span {
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.67rem;
+    font-weight: 750;
+    text-transform: uppercase;
+  }
+
+  .article-byline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 50px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.86rem;
+  }
+
+  .article-byline p {
+    margin: 0;
+  }
+
+  .article-byline strong {
+    color: var(--ink);
+  }
+
+  .article-action-bar {
+    color: white;
+    background: var(--blue);
+  }
+
+  .action-inner {
+    display: flex;
+    min-height: 66px;
+    gap: 30px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .action-inner > span {
+    font-size: 0.67rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+  }
+
+  .action-inner > div {
+    display: flex;
+    gap: 24px;
+  }
+
+  .action-inner a {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .article-content {
+    padding: 105px 0 120px;
+  }
+
+  .article-layout {
+    display: grid;
+    grid-template-columns: 210px minmax(0, 800px);
+    gap: 100px;
+    justify-content: center;
+  }
+
+  .article-main {
+    min-width: 0;
+  }
+
+  .article-layout aside {
+    display: grid;
+    gap: 28px;
+    align-content: start;
+  }
+
+  .article-layout aside div {
+    display: grid;
+    gap: 7px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .article-layout aside span {
+    color: var(--coral);
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .article-layout aside strong {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .article-layout aside a {
+    color: inherit;
+    text-decoration-color: rgba(40, 87, 223, 0.35);
+    text-underline-offset: 3px;
+  }
+
+  .article-layout aside a:hover {
+    color: var(--blue);
+  }
+
+  .plain-summary {
+    padding-bottom: 70px;
+  }
+
+  .plain-summary > p:last-child {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+  }
+
+  .contribution-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    margin-bottom: 95px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .contribution-grid section {
+    min-height: 280px;
+    padding: 28px;
+    background: var(--paper-deep);
+  }
+
+  .contribution-grid span {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 1.4rem;
+  }
+
+  .contribution-grid h2 {
+    margin: 45px 0 12px;
+    font-family: var(--serif);
+    font-size: 1.7rem;
+    font-weight: 400;
+  }
+
+  .contribution-grid p {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  .abstract-section h2,
+  .citation-section h2 {
+    margin: 0 0 24px;
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+  }
+
+  .abstract-section > p:last-child {
+    color: var(--ink-soft);
+    font-size: 1.03rem;
+    line-height: 1.85;
+  }
+
+  .citation-section {
+    margin-top: 100px;
+    padding-top: 90px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  pre {
+    max-width: 100%;
+    margin: 0;
+    padding: 25px;
+    overflow-x: auto;
+    color: #dfe7ff;
+    background: var(--ink);
+    font-size: 0.76rem;
+    line-height: 1.6;
+  }
+
+  .citation-note {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+  }
+
+  .related-section {
+    padding: 105px 0;
+    background: var(--paper-deep);
+  }
+
+  @media (max-width: 900px) {
+    .article-heading-grid,
+    .article-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .article-layout {
+      gap: 55px;
+    }
+
+    .article-layout aside {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .article-topics {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .article-topics span {
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 100px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .back-link {
+      margin-bottom: 45px;
+    }
+
+    .article-byline,
+    .contribution-grid,
+    .article-layout aside {
+      grid-template-columns: 1fr;
+    }
+
+    .action-inner {
+      align-items: flex-start;
+      flex-direction: column;
+      padding-block: 18px;
+    }
+
+    .action-inner > div {
+      flex-wrap: wrap;
+    }
+  }
+</style>

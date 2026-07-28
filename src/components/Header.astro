@@ -1,0 +1,66 @@
+---
+interface Props {
+  pathname: string;
+  lang?: "en" | "es";
+  alternatePath?: string;
+}
+
+const { pathname, lang = "en", alternatePath } = Astro.props;
+const isSpanish = lang === "es";
+const navigation = isSpanish
+  ? [
+      { href: "/es/investigacion/", label: "Investigación" },
+      { href: "/es/publicaciones/", label: "Publicaciones" },
+      { href: "/es/tesis/", label: "Tesis" },
+      { href: "/es/cv/", label: "CV" }
+    ]
+  : [
+      { href: "/research/", label: "Research" },
+      { href: "/publications/", label: "Publications" },
+      { href: "/thesis/", label: "Thesis" },
+      { href: "/cv/", label: "CV" }
+    ];
+
+const isActive = (href: string) =>
+  href === "/"
+    ? pathname === href
+    : pathname === href || pathname.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="wordmark" href={isSpanish ? "/es/" : "/"} aria-label={`Marc Semper Lloret, ${isSpanish ? "inicio" : "home"}`}>
+      <span class="wordmark-mark" aria-hidden="true">MS</span>
+      <span class="wordmark-name">Marc Semper <em>Lloret</em></span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      {navigation.map((item) => (
+        <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+          {item.label}
+        </a>
+      ))}
+      <a class="nav-language" href={alternatePath ?? (isSpanish ? "/" : "/es/")} lang={isSpanish ? "en" : "es"}>
+        {isSpanish ? "EN" : "ES"}
+      </a>
+      <a class="nav-contact" href="mailto:marc.semper@ua.es">{isSpanish ? "Contacto" : "Contact"}</a>
+    </nav>
+
+    <details class="mobile-nav">
+      <summary aria-label="Open navigation">
+        <span></span><span></span>
+      </summary>
+      <nav aria-label="Mobile navigation">
+        {navigation.map((item) => (
+          <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+            {item.label}
+          </a>
+        ))}
+        <a href={alternatePath ?? (isSpanish ? "/" : "/es/")} lang={isSpanish ? "en" : "es"}>
+          {isSpanish ? "English" : "Español"}
+        </a>
+        <a href="mailto:marc.semper@ua.es">{isSpanish ? "Contacto" : "Contact"}</a>
+      </nav>
+    </details>
+  </div>
+</header>

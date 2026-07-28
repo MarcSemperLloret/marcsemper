@@ -1,0 +1,47 @@
+---
+import { site } from "@/data/site";
+
+interface Props {
+  lang?: "en" | "es";
+}
+
+const { lang = "en" } = Astro.props;
+const isSpanish = lang === "es";
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="footer-name" href={isSpanish ? "/es/" : "/"}>{site.name}</a>
+      <p>
+        {isSpanish
+          ? "IA espacio-temporal fiable para monitorización ambiental, predicción y apoyo a la decisión."
+          : "Reliable spatiotemporal AI for environmental monitoring, forecasting and decision support."}
+      </p>
+    </div>
+
+    <div class="footer-links">
+      <div>
+        <h2>{isSpanish ? "Navegación" : "Navigate"}</h2>
+        <a href={isSpanish ? "/es/investigacion/" : "/research/"}>{isSpanish ? "Investigación" : "Research"}</a>
+        <a href={isSpanish ? "/es/publicaciones/" : "/publications/"}>{isSpanish ? "Publicaciones" : "Publications"}</a>
+        <a href={isSpanish ? "/es/tesis/" : "/thesis/"}>{isSpanish ? "Tesis doctoral" : "Doctoral thesis"}</a>
+        <a href={isSpanish ? "/es/cv/" : "/cv/"}>Curriculum vitae</a>
+      </div>
+      <div>
+        <h2>{isSpanish ? "Perfiles" : "Profiles"}</h2>
+        <a href={site.profiles.orcid} rel="me">ORCID</a>
+        <a href={site.profiles.scholar} rel="me">Google Scholar</a>
+        <a href={site.profiles.university} rel="me">University profile</a>
+        <a href={site.profiles.cvnet} rel="me">CVNet</a>
+        <a href={site.profiles.github} rel="me">GitHub</a>
+        <a href={site.profiles.researchgate} rel="me">ResearchGate</a>
+      </div>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© {new Date().getFullYear()} {site.name}</span>
+    <span>{isSpanish ? "Publica académicamente como" : "Publishing academically as"} {site.publishingName}</span>
+    <a href="mailto:marc.semper@ua.es">{site.email}</a>
+  </div>
+</footer>

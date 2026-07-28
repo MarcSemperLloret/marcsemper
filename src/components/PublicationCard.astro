@@ -1,0 +1,56 @@
+---
+import type { Publication } from "@/data/publications";
+import { publicationCitation } from "@/data/publications";
+import ArrowLink from "./ArrowLink.astro";
+
+interface Props {
+  publication: Publication;
+  index?: number;
+  compact?: boolean;
+  lang?: "en" | "es";
+}
+
+const { publication, index, compact = false, lang = "en" } = Astro.props;
+const isSpanish = lang === "es";
+const publicationPath = `${isSpanish ? "/es/publicaciones" : "/publications"}/${publication.slug}/`;
+---
+
+<article class:list={["publication-card", { compact }]}>
+  <div class="publication-card-meta">
+    {typeof index === "number" && (
+      <span class="publication-index">{String(index + 1).padStart(2, "0")}</span>
+    )}
+    <span>{publication.type}</span>
+    <span>{publication.year}</span>
+  </div>
+  <div class="publication-card-body">
+    <h3>
+      <a href={publicationPath}>{publication.title}</a>
+    </h3>
+    <p class="authors">
+      {publication.authors.map((author, authorIndex) => (
+        <>
+          {author === "Marc Semper" ? <strong>{author}</strong> : author}
+          {authorIndex < publication.authors.length - 1 ? ", " : ""}
+        </>
+      ))}
+    </p>
+    <p class="citation">{publicationCitation(publication)}</p>
+    {!compact && publication.plainSummary && (
+      <p class="publication-summary">
+        {isSpanish ? publication.plainSummaryEs ?? publication.plainSummary : publication.plainSummary}
+      </p>
+    )}
+    <div class="publication-card-actions">
+      <ArrowLink href={publicationPath}>{isSpanish ? "Resumen y contribución" : "Overview & abstract"}</ArrowLink>
+      <a
+        class="doi-link"
+        href={`https://doi.org/${publication.doi}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {isSpanish ? "Publicación original ↗" : "Original publication ↗"}
+      </a>
+    </div>
+  </div>
+</article>
