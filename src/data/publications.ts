@@ -2,6 +2,15 @@ import { formatSiteDate } from "./site";
 
 export type PublicationType = "Journal article";
 
+export interface PublicationDataset {
+  name: string;
+  description: string;
+  descriptionEs?: string;
+  url?: string;
+  sameAs?: string;
+  license?: string;
+}
+
 export interface Publication {
   slug: string;
   title: string;
@@ -32,9 +41,63 @@ export interface Publication {
   manuscriptUrl?: string;
   pdfUrl?: string;
   codeUrl?: string;
+  dataset?: PublicationDataset;
 }
 
 export const publications: Publication[] = [
+  {
+    slug: "gpm-imerg-precipitation-extremes-valencia",
+    title:
+      "Performance limits of GPM IMERG for sub-daily precipitation extremes over the Comunitat Valenciana, eastern Spain: Representativeness, attenuation, and pixel-scale displacement",
+    authors: [
+      "Marc Semper",
+      "Manuel Curado",
+      "Jose F. Vicent",
+      "Leandro Tortosa"
+    ],
+    year: 2026,
+    onlineDate: "2026-08-07",
+    type: "Journal article",
+    venue: "Atmospheric Research",
+    articleNumber: "109244",
+    doi: "10.1016/j.atmosres.2026.109244",
+    status: "Available online",
+    selected: true,
+    metaDescription:
+      "Evaluation of GPM IMERG satellite precipitation limits under sub-daily extreme rainfall events in the Comunitat Valenciana.",
+    plainSummary:
+      "This study evaluates the operational boundaries and fidelity of GPM IMERG satellite precipitation estimates during sub-daily extreme rainfall events across eastern Spain. By auditing half-hourly gauge co-availability, spatial displacement, and peak attenuation, the work establishes where satellite observations reliably capture extreme dynamics and where observational uncertainty requires auditable correction.",
+    plainSummaryEs:
+      "Este estudio evalúa los límites operativos y la fidelidad del producto satelital GPM IMERG en episodios de precipitación extrema subdiaria en el levante español. Mediante una auditoría de coincidencia de pluviómetros semihorarios, desplazamiento espacial y atenuación de picos, el trabajo establece en qué condiciones la observación satelital representa los extremos locales y dónde exige corrección auditable.",
+    contribution:
+      "A rigorous empirical audit of sub-daily GPM IMERG satellite estimates during Mediterranean extreme precipitation, quantifying pixel displacement, peak attenuation, and gauge representation uncertainty.",
+    contributionEs:
+      "Una auditoría empírica rigurosa de las estimaciones satelitales GPM IMERG subdiarias durante eventos extremos mediterráneos, cuantificando el desplazamiento por píxel, la atenuación de picos y la incertidumbre de representación.",
+    finding:
+      "GPM IMERG captures general temporal dynamics during extreme events but exhibits significant peak attenuation and spatial misalignment at half-hourly resolution, setting empirical bounds for operational flood and hydrological risk modeling.",
+    findingEs:
+      "GPM IMERG captura la dinámica temporal general durante eventos extremos, pero muestra una atenuación de picos y una desalineación espacial significativas en resolución semihoraria, fijando límites empíricos para la modelización hidrológica.",
+    topics: [
+      "Precipitation extremes",
+      "GPM IMERG",
+      "Observational uncertainty",
+      "Remote sensing"
+    ],
+    models: ["GPM IMERG V07", "Sub-daily coarsening audit", "Displacement & attenuation diagnostics"],
+    dataSources: ["GPM IMERG half-hourly precipitation", "AEMET & CHJ rain-gauge network"],
+    relatedSlugs: [
+      "robust-post-training-model-selection",
+      "global-aerosol-optical-depth"
+    ],
+    codeUrl: "https://github.com/MarcSemperLloret/Operational-limits-of-GPM-IMERG",
+    dataset: {
+      name: "GPM IMERG Sub-daily Extreme Precipitation & Rain-Gauge Audit Dataset (Comunitat Valenciana)",
+      description: "Matched high-resolution rain-gauge observation series and GPM IMERG half-hourly satellite grid records for sub-daily extreme precipitation evaluation in eastern Spain.",
+      descriptionEs: "Series observacionales de pluviómetros de alta resolución y registros de la malla satelital GPM IMERG semihorarios para la evaluación de precipitación extrema subdiaria en el levante español.",
+      url: "https://doi.org/10.1016/j.atmosres.2026.109244",
+      license: "https://creativecommons.org/licenses/by/4.0/"
+    }
+  },
   {
     slug: "robust-post-training-model-selection",
     title:
@@ -80,7 +143,15 @@ export const publications: Publication[] = [
       "inter-city-air-quality",
       "multi-dataset-training-spatiotemporal"
     ],
-    manuscriptUrl: "https://ssrn.com/abstract=6677988"
+    manuscriptUrl: "https://ssrn.com/abstract=6677988",
+    codeUrl: "https://github.com/MarcSemperLloret/Decision-Support-Protocol-for-Spatiotemporal-Forecasting",
+    dataset: {
+      name: "EEA-PM25-ES & Spatiotemporal Post-Training Selection Benchmark",
+      description: "Spatiotemporal air quality monitoring dataset (EEA PM2.5 in Spain) and decision-support prediction bundles for evaluating model selection under reference perturbations.",
+      descriptionEs: "Series de observación de calidad del aire (PM2.5 de la EEA en España) y paquetes de predicción para evaluar la selección de modelos bajo perturbaciones de referencia.",
+      url: "https://doi.org/10.1016/j.knosys.2026.116673",
+      license: "https://creativecommons.org/licenses/by/4.0/"
+    }
   },
   {
     slug: "multi-dataset-training-spatiotemporal",
@@ -237,7 +308,15 @@ export const publications: Publication[] = [
     manuscriptUrl:
       "https://rua.ua.es/server/api/core/bitstreams/63d1155c-813e-460a-a187-ca270d6945e3/content",
     pdfUrl:
-      "https://rua.ua.es/server/api/core/bitstreams/63d1155c-813e-460a-a187-ca270d6945e3/content"
+      "https://rua.ua.es/server/api/core/bitstreams/63d1155c-813e-460a-a187-ca270d6945e3/content",
+    dataset: {
+      name: "Madrid Urban Noise Observation Network Dataset",
+      description: "Spatio-temporal urban noise pollution observations and graph structures across monitoring stations in Madrid.",
+      descriptionEs: "Observaciones espacio-temporales de contaminación acústica urbana y estructuras de grafos en estaciones de monitorización en Madrid.",
+      url: "https://doi.org/10.3390/app15105576",
+      sameAs: "https://rua.ua.es/server/api/core/bitstreams/63d1155c-813e-460a-a187-ca270d6945e3/content",
+      license: "https://creativecommons.org/licenses/by/4.0/"
+    }
   },
   {
     slug: "global-carbon-concentration",

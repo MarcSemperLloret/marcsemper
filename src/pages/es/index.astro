@@ -228,7 +228,7 @@ const homeJsonLd = {
   .themes .container {
     display: flex;
     flex-wrap: wrap;
-    gap: 18px 40px;
+    gap: 12px 24px;
     justify-content: space-between;
     font-size: 0.7rem;
     font-weight: 750;
@@ -284,7 +284,7 @@ const homeJsonLd = {
   }
 
   .research-grid p {
-    color: rgba(255, 255, 255, 0.62);
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .research-grid :global(.arrow-link) {
@@ -297,17 +297,21 @@ const homeJsonLd = {
     background: var(--blue);
   }
 
+  .contact-section .eyebrow {
+    color: #ffffff;
+  }
+
   .contact-section h2 {
     margin: 8px 0 0;
     font-family: var(--serif);
-    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-size: clamp(2.4rem, 6vw, 5rem);
     font-weight: 400;
     letter-spacing: -0.05em;
     line-height: 0.98;
   }
 
   .contact-section p {
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.92);
   }
 
   .contact-section .button {
@@ -326,7 +330,8 @@ const homeJsonLd = {
     }
 
     h1 {
-      font-size: clamp(3.25rem, 15vw, 4.8rem);
+      font-size: clamp(2.4rem, 11vw, 4.2rem);
+      word-break: break-word;
     }
 
     .hero-actions {
@@ -338,6 +343,11 @@ const homeJsonLd = {
       width: 100%;
       text-align: center;
       white-space: normal;
+    }
+
+    .themes .container {
+      gap: 10px 16px;
+      justify-content: flex-start;
     }
   }
 </style>

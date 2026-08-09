@@ -50,7 +50,39 @@ const homeJsonLd = {
         url: "https://observatorio-cientifico.ua.es/grupos/24505/detalle"
       },
       sameAs: Object.values(site.profiles),
-      knowsAbout: researchAreas.flatMap((area) => area.topics)
+      knowsAbout: [
+        {
+          "@type": "DefinedTerm",
+          name: "Spatiotemporal artificial intelligence",
+          sameAs: "https://www.wikidata.org/wiki/Q105639148"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Graph neural networks",
+          sameAs: "https://www.wikidata.org/wiki/Q105639148"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Environmental forecasting",
+          sameAs: "https://www.wikidata.org/wiki/Q1140801"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Sensor data quality",
+          sameAs: "https://www.wikidata.org/wiki/Q1067520"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Distribution shift",
+          sameAs: "https://www.wikidata.org/wiki/Q10857317"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Air quality forecasting",
+          sameAs: "https://www.wikidata.org/wiki/Q407553"
+        },
+        ...researchAreas.flatMap((area) => area.topics)
+      ]
     }
   ]
 };
@@ -581,7 +613,7 @@ const homeJsonLd = {
 
   .thesis-feature p:not(.eyebrow) {
     max-width: 650px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .thesis-feature .arrow-link {
@@ -644,14 +676,14 @@ const homeJsonLd = {
   }
 
   .contact-banner .eyebrow {
-    color: var(--gold);
+    color: #ffffff;
   }
 
   .contact-banner h2 {
     max-width: 720px;
     margin: 0;
     font-family: var(--serif);
-    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-size: clamp(2.4rem, 6vw, 5.5rem);
     font-weight: 400;
     letter-spacing: -0.05em;
     line-height: 0.98;
@@ -659,7 +691,7 @@ const homeJsonLd = {
 
   .contact-banner p:not(.eyebrow) {
     margin-top: 0;
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(255, 255, 255, 0.90);
   }
 
   .contact-banner .button {

@@ -118,7 +118,11 @@ export const researchAreas = [
     ],
     methods: ["Reference perturbation", "Missing-data analysis", "Provenance", "Sensitivity analysis"],
     topics: ["Data quality", "Uncertainty", "Provenance"],
-    publicationSlugs: ["robust-post-training-model-selection", "inter-city-air-quality"]
+    publicationSlugs: [
+      "gpm-imerg-precipitation-extremes-valencia",
+      "robust-post-training-model-selection",
+      "inter-city-air-quality"
+    ]
   },
   {
     number: "04",
@@ -146,6 +150,7 @@ export const researchAreas = [
     methods: ["CAMS", "ERA5", "Satellite observations", "Environmental sensor networks"],
     topics: ["Air quality", "Climate data", "Decision support"],
     publicationSlugs: [
+      "gpm-imerg-precipitation-extremes-valencia",
       "global-aerosol-optical-depth",
       "inter-city-air-quality",
       "noise-pollution-madrid",

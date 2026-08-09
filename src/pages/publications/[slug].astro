@@ -61,15 +61,33 @@ const articleJsonLd = {
     name: publication.venue
   },
   keywords: publication.topics.join(", "),
+  ...(publication.codeUrl ? { codeRepository: publication.codeUrl } : {}),
   inLanguage: "en"
 };
+
+const datasetJsonLd = publication.dataset
+  ? {
+      "@type": "Dataset",
+      "@id": `${site.url}/publications/${publication.slug}/#dataset`,
+      name: publication.dataset.name,
+      description: publication.dataset.description,
+      url: publication.dataset.url || `${site.url}/publications/${publication.slug}/`,
+      sameAs: publication.dataset.sameAs,
+      creator: { "@id": `${site.url}/#person` },
+      license: publication.dataset.license || "https://creativecommons.org/licenses/by/4.0/",
+      keywords: publication.topics.join(", "),
+      inLanguage: "en"
+    }
+  : undefined;
+
+const pageJsonLd = datasetJsonLd ? [articleJsonLd, datasetJsonLd] : articleJsonLd;
 ---
 
 <BaseLayout
   title={publication.title}
   description={publication.metaDescription}
   publication={publication}
-  jsonLd={articleJsonLd}
+  jsonLd={pageJsonLd}
   alternatePath={`/es/publicaciones/${publication.slug}/`}
 >
   <header class="article-hero">
@@ -114,7 +132,7 @@ const articleJsonLd = {
           <a href={publication.manuscriptUrl} target="_blank" rel="noopener">Manuscript</a>
         )}
         {publication.codeUrl && (
-          <a href={publication.codeUrl} target="_blank" rel="noopener">Code</a>
+          <a href={publication.codeUrl} target="_blank" rel="noopener">Code on GitHub ↗</a>
         )}
         <a href="#cite">BibTeX</a>
       </div>

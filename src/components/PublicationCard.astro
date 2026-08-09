@@ -51,6 +51,16 @@ const publicationPath = `${isSpanish ? "/es/publicaciones" : "/publications"}/${
       >
         {isSpanish ? "Publicación original ↗" : "Original publication ↗"}
       </a>
+      {publication.codeUrl && (
+        <a
+          class="doi-link code-link"
+          href={publication.codeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {isSpanish ? "Código en GitHub ↗" : "Code on GitHub ↗"}
+        </a>
+      )}
     </div>
   </div>
 </article>

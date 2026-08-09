@@ -55,8 +55,26 @@ const jsonLd = {
   },
   isPartOf: { "@type": "Periodical", name: publication.venue },
   keywords: publication.topics.join(", "),
-  inLanguage: "en"
+  ...(publication.codeUrl ? { codeRepository: publication.codeUrl } : {}),
+  inLanguage: "es"
 };
+
+const datasetJsonLd = publication.dataset
+  ? {
+      "@type": "Dataset",
+      "@id": `${site.url}/publications/${publication.slug}/#dataset`,
+      name: publication.dataset.name,
+      description: publication.dataset.descriptionEs || publication.dataset.description,
+      url: publication.dataset.url || `${site.url}/es/publicaciones/${publication.slug}/`,
+      sameAs: publication.dataset.sameAs,
+      creator: { "@id": `${site.url}/#person` },
+      license: publication.dataset.license || "https://creativecommons.org/licenses/by/4.0/",
+      keywords: publication.topics.join(", "),
+      inLanguage: "es"
+    }
+  : undefined;
+
+const pageJsonLd = datasetJsonLd ? [jsonLd, datasetJsonLd] : jsonLd;
 ---
 
 <BaseLayout
@@ -64,7 +82,7 @@ const jsonLd = {
   title={publication.title}
   description={publication.plainSummaryEs ?? publication.metaDescription}
   publication={publication}
-  jsonLd={jsonLd}
+  jsonLd={pageJsonLd}
   alternatePath={`/publications/${publication.slug}/`}
 >
   <header class="article-hero">
@@ -102,6 +120,9 @@ const jsonLd = {
         <a href={`https://doi.org/${publication.doi}`} target="_blank" rel="noopener">Publicación original ↗</a>
         {publication.manuscriptUrl && (
           <a href={publication.manuscriptUrl} target="_blank" rel="noopener">Manuscrito</a>
+        )}
+        {publication.codeUrl && (
+          <a href={publication.codeUrl} target="_blank" rel="noopener">Código en GitHub ↗</a>
         )}
         <a href="#citar">BibTeX</a>
       </div>

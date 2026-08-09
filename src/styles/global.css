@@ -21,7 +21,7 @@
   --ink-soft: #465064;
   --blue: #2857df;
   --blue-dark: #17369b;
-  --coral: #eb5d44;
+  --coral: #c93b24;
   --gold: #f4c967;
   --white: #fcfbf7;
   --line: rgba(18, 26, 42, 0.16);
@@ -325,7 +325,7 @@ select {
 .footer-grid > div:first-child p {
   max-width: 480px;
   margin: 20px 0 0;
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.84);
 }
 
 .footer-links {
@@ -336,7 +336,7 @@ select {
 
 .footer-links h2 {
   margin: 0 0 18px;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -361,7 +361,7 @@ select {
   justify-content: space-between;
   padding-top: 25px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.48);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 0.74rem;
 }
 

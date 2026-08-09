@@ -32,17 +32,16 @@ const pageTitle = title
     ? title
     : `${title} — ${site.name}`
   : lang === "es"
-    ? `${site.name} — Investigador en IA espacio-temporal`
-    : `${site.name} — Spatiotemporal AI Researcher`;
+    ? `${site.name} — IA Espacio-Temporal y Redes Neuronales de Grafos | Universidad de Alicante`
+    : `${site.name} — Spatiotemporal AI & Graph Neural Networks | University of Alicante`;
 const canonical = new URL(Astro.url.pathname, site.url);
 const socialImage = new URL(image, site.url);
 const alternateUrl = alternatePath ? new URL(alternatePath, site.url) : undefined;
 const citationPdfUrl = publication?.pdfUrl
   ? new URL(publication.pdfUrl, site.url)
-  : undefined;
-const canExposeCitationPdf =
-  citationPdfUrl?.origin === canonical.origin &&
-  citationPdfUrl.pathname.startsWith(canonical.pathname);
+  : publication?.manuscriptUrl
+    ? new URL(publication.manuscriptUrl, site.url)
+    : undefined;
 const isProduction = import.meta.env.PROD;
 
 const defaultJsonLd = {
@@ -77,12 +76,36 @@ const defaultJsonLd = {
       },
       sameAs: Object.values(site.profiles),
       knowsAbout: [
-        "Spatiotemporal artificial intelligence",
-        "Graph neural networks",
-        "Environmental forecasting",
-        "Sensor data quality",
-        "Distribution shift",
-        "Air quality forecasting"
+        {
+          "@type": "DefinedTerm",
+          name: "Spatiotemporal artificial intelligence",
+          sameAs: "https://www.wikidata.org/wiki/Q105639148"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Graph neural networks",
+          sameAs: "https://www.wikidata.org/wiki/Q105639148"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Environmental forecasting",
+          sameAs: "https://www.wikidata.org/wiki/Q1140801"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Sensor data quality",
+          sameAs: "https://www.wikidata.org/wiki/Q1067520"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Distribution shift",
+          sameAs: "https://www.wikidata.org/wiki/Q10857317"
+        },
+        {
+          "@type": "DefinedTerm",
+          name: "Air quality forecasting",
+          sameAs: "https://www.wikidata.org/wiki/Q407553"
+        }
       ]
     }
   ]
@@ -173,8 +196,8 @@ const serializedStructuredData = JSON.stringify(structuredData).replaceAll("<", 
         {publication.issue && <meta name="citation_issue" content={publication.issue} />}
         {publication.pages && <meta name="citation_firstpage" content={publication.pages.split("–")[0]} />}
         <meta name="citation_doi" content={publication.doi} />
-        {canExposeCitationPdf && citationPdfUrl && (
-          <meta name="citation_pdf_url" content={citationPdfUrl} />
+        {citationPdfUrl && (
+          <meta name="citation_pdf_url" content={citationPdfUrl.toString()} />
         )}
         <meta property="article:published_time" content={publication.onlineDate} />
       </>
