@@ -2,15 +2,6 @@ import { formatSiteDate } from "./site";
 
 export type PublicationType = "Journal article";
 
-export interface PublicationDataset {
-  name: string;
-  description: string;
-  descriptionEs?: string;
-  url?: string;
-  sameAs?: string;
-  license?: string;
-}
-
 export interface Publication {
   slug: string;
   title: string;
@@ -41,7 +32,6 @@ export interface Publication {
   manuscriptUrl?: string;
   pdfUrl?: string;
   codeUrl?: string;
-  dataset?: PublicationDataset;
 }
 
 export const publications: Publication[] = [
@@ -89,14 +79,7 @@ export const publications: Publication[] = [
       "robust-post-training-model-selection",
       "global-aerosol-optical-depth"
     ],
-    codeUrl: "https://github.com/MarcSemperLloret/Operational-limits-of-GPM-IMERG",
-    dataset: {
-      name: "GPM IMERG Sub-daily Extreme Precipitation & Rain-Gauge Audit Dataset (Comunitat Valenciana)",
-      description: "Matched high-resolution rain-gauge observation series and GPM IMERG half-hourly satellite grid records for sub-daily extreme precipitation evaluation in eastern Spain.",
-      descriptionEs: "Series observacionales de pluviómetros de alta resolución y registros de la malla satelital GPM IMERG semihorarios para la evaluación de precipitación extrema subdiaria en el levante español.",
-      url: "https://doi.org/10.1016/j.atmosres.2026.109244",
-      license: "https://creativecommons.org/licenses/by/4.0/"
-    }
+    codeUrl: "https://github.com/MarcSemperLloret/Operational-limits-of-GPM-IMERG"
   },
   {
     slug: "robust-post-training-model-selection",
@@ -144,14 +127,7 @@ export const publications: Publication[] = [
       "multi-dataset-training-spatiotemporal"
     ],
     manuscriptUrl: "https://ssrn.com/abstract=6677988",
-    codeUrl: "https://github.com/MarcSemperLloret/Decision-Support-Protocol-for-Spatiotemporal-Forecasting",
-    dataset: {
-      name: "EEA-PM25-ES & Spatiotemporal Post-Training Selection Benchmark",
-      description: "Spatiotemporal air quality monitoring dataset (EEA PM2.5 in Spain) and decision-support prediction bundles for evaluating model selection under reference perturbations.",
-      descriptionEs: "Series de observación de calidad del aire (PM2.5 de la EEA en España) y paquetes de predicción para evaluar la selección de modelos bajo perturbaciones de referencia.",
-      url: "https://doi.org/10.1016/j.knosys.2026.116673",
-      license: "https://creativecommons.org/licenses/by/4.0/"
-    }
+    codeUrl: "https://github.com/MarcSemperLloret/Decision-Support-Protocol-for-Spatiotemporal-Forecasting"
   },
   {
     slug: "multi-dataset-training-spatiotemporal",
@@ -308,15 +284,7 @@ export const publications: Publication[] = [
     manuscriptUrl:
       "https://rua.ua.es/server/api/core/bitstreams/63d1155c-813e-460a-a187-ca270d6945e3/content",
     pdfUrl:
-      "https://rua.ua.es/server/api/core/bitstreams/63d1155c-813e-460a-a187-ca270d6945e3/content",
-    dataset: {
-      name: "Madrid Urban Noise Observation Network Dataset",
-      description: "Spatio-temporal urban noise pollution observations and graph structures across monitoring stations in Madrid.",
-      descriptionEs: "Observaciones espacio-temporales de contaminación acústica urbana y estructuras de grafos en estaciones de monitorización en Madrid.",
-      url: "https://doi.org/10.3390/app15105576",
-      sameAs: "https://rua.ua.es/server/api/core/bitstreams/63d1155c-813e-460a-a187-ca270d6945e3/content",
-      license: "https://creativecommons.org/licenses/by/4.0/"
-    }
+      "https://rua.ua.es/server/api/core/bitstreams/63d1155c-813e-460a-a187-ca270d6945e3/content"
   },
   {
     slug: "global-carbon-concentration",

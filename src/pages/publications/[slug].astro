@@ -64,30 +64,13 @@ const articleJsonLd = {
   ...(publication.codeUrl ? { codeRepository: publication.codeUrl } : {}),
   inLanguage: "en"
 };
-
-const datasetJsonLd = publication.dataset
-  ? {
-      "@type": "Dataset",
-      "@id": `${site.url}/publications/${publication.slug}/#dataset`,
-      name: publication.dataset.name,
-      description: publication.dataset.description,
-      url: publication.dataset.url || `${site.url}/publications/${publication.slug}/`,
-      sameAs: publication.dataset.sameAs,
-      creator: { "@id": `${site.url}/#person` },
-      license: publication.dataset.license || "https://creativecommons.org/licenses/by/4.0/",
-      keywords: publication.topics.join(", "),
-      inLanguage: "en"
-    }
-  : undefined;
-
-const pageJsonLd = datasetJsonLd ? [articleJsonLd, datasetJsonLd] : articleJsonLd;
 ---
 
 <BaseLayout
   title={publication.title}
   description={publication.metaDescription}
   publication={publication}
-  jsonLd={pageJsonLd}
+  jsonLd={articleJsonLd}
   alternatePath={`/es/publicaciones/${publication.slug}/`}
 >
   <header class="article-hero">

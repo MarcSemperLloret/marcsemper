@@ -50,39 +50,7 @@ const homeJsonLd = {
         url: "https://observatorio-cientifico.ua.es/grupos/24505/detalle"
       },
       sameAs: Object.values(site.profiles),
-      knowsAbout: [
-        {
-          "@type": "DefinedTerm",
-          name: "Spatiotemporal artificial intelligence",
-          sameAs: "https://www.wikidata.org/wiki/Q105639148"
-        },
-        {
-          "@type": "DefinedTerm",
-          name: "Graph neural networks",
-          sameAs: "https://www.wikidata.org/wiki/Q105639148"
-        },
-        {
-          "@type": "DefinedTerm",
-          name: "Environmental forecasting",
-          sameAs: "https://www.wikidata.org/wiki/Q1140801"
-        },
-        {
-          "@type": "DefinedTerm",
-          name: "Sensor data quality",
-          sameAs: "https://www.wikidata.org/wiki/Q1067520"
-        },
-        {
-          "@type": "DefinedTerm",
-          name: "Distribution shift",
-          sameAs: "https://www.wikidata.org/wiki/Q10857317"
-        },
-        {
-          "@type": "DefinedTerm",
-          name: "Air quality forecasting",
-          sameAs: "https://www.wikidata.org/wiki/Q407553"
-        },
-        ...researchAreas.flatMap((area) => area.topics)
-      ]
+      knowsAbout: researchAreas.flatMap((area) => area.topics)
     }
   ]
 };
