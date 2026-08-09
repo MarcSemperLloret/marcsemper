@@ -93,8 +93,8 @@ const homeJsonLd = {
       <figure class="portrait-frame">
         <img
           src={site.portrait}
-          width="500"
-          height="500"
+          width="400"
+          height="400"
           alt="Portrait of Marc Semper Lloret"
           loading="eager"
           fetchpriority="high"
@@ -506,9 +506,14 @@ const homeJsonLd = {
   }
 
   .area-number {
-    color: var(--coral);
+    color: #a32a15;
     font-family: var(--serif);
     font-size: 1.45rem;
+    font-weight: 700;
+  }
+
+  .research-grid article:hover .area-number {
+    color: #fca5a5;
   }
 
   .research-grid h3 {
@@ -586,9 +591,9 @@ const homeJsonLd = {
     color: rgba(255, 255, 255, 0.85);
   }
 
-  .thesis-feature .arrow-link {
+  .thesis-feature :global(.arrow-link) {
     margin-top: 14px;
-    color: var(--gold);
+    color: #f4c967;
   }
 
   .profiles-grid {
