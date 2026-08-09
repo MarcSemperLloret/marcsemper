@@ -2,13 +2,13 @@ export const site = {
   name: "Marc Semper Lloret",
   publishingName: "Marc Semper",
   shortDescription:
-    "Researcher in reliable spatiotemporal artificial intelligence, graph neural networks, sensor data quality and environmental forecasting.",
+    "Marc Semper Lloret is a researcher at the University of Alicante working on spatiotemporal AI, graph neural networks, environmental forecasting and sensor data quality.",
   shortDescriptionEs:
-    "Investigador en inteligencia artificial espacio-temporal fiable, redes neuronales de grafos, calidad de datos de sensores y predicción ambiental.",
+    "Marc Semper Lloret es investigador en la Universidad de Alicante centrado en IA espacio-temporal, redes neuronales en grafos, predicción ambiental y calidad de datos de sensores.",
   url: "https://marcsemperlloret.com",
   portrait: "/marc-semper-lloret.jpg",
   defaultSocialImage: "/og-default.png",
-  lastUpdated: "2026-07-29",
+  lastUpdated: "2026-08-09",
   email: "marc.semper@ua.es",
   affiliation: "University of Alicante",
   department: "Department of Computer Science and Artificial Intelligence",
