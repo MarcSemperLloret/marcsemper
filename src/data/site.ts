@@ -28,7 +28,8 @@ export const site = {
     scopus:
       "https://www.scopus.com/authid/detail.uri?authorId=59404623900",
     webOfScience:
-      "https://www.webofscience.com/wos/author/record/QAY-4055-2026"
+      "https://www.webofscience.com/wos/author/record/QAY-4055-2026",
+    wikidata: "https://www.wikidata.org/wiki/Q140953650"
   }
 } as const;
 

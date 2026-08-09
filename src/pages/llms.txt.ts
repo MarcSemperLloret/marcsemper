@@ -38,6 +38,7 @@ ${publicationLinks}
 - [Full Research Context](${site.url}/llms-full.txt): Complete author-written summaries, contributions, and key findings for all publications.
 - [ORCID Record](${site.profiles.orcid}): Verified academic identity and publication history.
 - [Google Scholar Profile](${site.profiles.scholar}): Citation index and scholarly activity.
+- [Wikidata Entity](${site.profiles.wikidata}): Knowledge Graph entity record (Q140953650).
 - [GitHub Repositories](${site.profiles.github}): Open-source code, benchmarks, and model implementations.
 `;
 
