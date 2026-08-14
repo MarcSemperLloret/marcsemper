@@ -5,7 +5,7 @@ export default defineConfig({
   site: "https://marcsemperlloret.com",
   integrations: [
     sitemap({
-      lastmod: new Date("2026-08-09")
+      lastmod: new Date("2026-08-14")
     })
   ],
   build: {

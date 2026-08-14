@@ -8,7 +8,7 @@ export const site = {
   url: "https://marcsemperlloret.com",
   portrait: "/marc-semper-lloret.jpg",
   defaultSocialImage: "/og-default.png",
-  lastUpdated: "2026-08-09",
+  lastUpdated: "2026-08-14",
   email: "marc.semper@ua.es",
   affiliation: "University of Alicante",
   department: "Department of Computer Science and Artificial Intelligence",
@@ -120,6 +120,7 @@ export const researchAreas = [
     methods: ["Reference perturbation", "Missing-data analysis", "Provenance", "Sensitivity analysis"],
     topics: ["Data quality", "Uncertainty", "Provenance"],
     publicationSlugs: [
+      "out-of-sample-correctability-limits-imerg-precipitation-extremes",
       "gpm-imerg-precipitation-extremes-valencia",
       "robust-post-training-model-selection",
       "inter-city-air-quality"
@@ -151,6 +152,7 @@ export const researchAreas = [
     methods: ["CAMS", "ERA5", "Satellite observations", "Environmental sensor networks"],
     topics: ["Air quality", "Climate data", "Decision support"],
     publicationSlugs: [
+      "out-of-sample-correctability-limits-imerg-precipitation-extremes",
       "gpm-imerg-precipitation-extremes-valencia",
       "global-aerosol-optical-depth",
       "inter-city-air-quality",

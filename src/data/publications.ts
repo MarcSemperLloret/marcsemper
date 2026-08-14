@@ -36,6 +36,56 @@ export interface Publication {
 
 export const publications: Publication[] = [
   {
+    slug: "out-of-sample-correctability-limits-imerg-precipitation-extremes",
+    title:
+      "Out-of-sample statistical correctability limits under an uncertain operational reference: the case of IMERG sub-daily areal precipitation extremes",
+    authors: [
+      "Marc Semper",
+      "Manuel Curado",
+      "Jose F. Vicent",
+      "Leandro Tortosa"
+    ],
+    year: 2026,
+    onlineDate: "2026-08-14",
+    type: "Journal article",
+    venue: "Stochastic Environmental Research and Risk Assessment",
+    volume: "40",
+    issue: "8",
+    articleNumber: "202",
+    doi: "10.1007/s00477-026-03336-6",
+    status: "Available online",
+    selected: true,
+    abstract:
+      "We present a statistical assessment of out-of-sample correctability limits under observational uncertainty, using GPM IMERG Final V07 sub-daily areal precipitation extremes over the Comunitat Valenciana (eastern Spain) and the dense AVAMET network (556 gauges, 2019–2025). Rather than treating gauges as point truth, we construct a gauge-derived multi-station operational areal reference proxy at 30 min over 126 IMERG cells and build a closed benchmark at 1, 3, and 6 h under year-holdout, province-holdout, and event-fold validation. The benchmark compares raw IMERG (M0), two simple statistical corrections (M1–M2), a continuous LightGBM corrector (M3), a two-stage tail-oriented LightGBM model (M3b), and a conservative patch-based CNN specialist (M4). We further evaluate reference sensitivity under alternative proxy definitions and pseudo leave-one-gauge-out perturbations, and we treat direct probabilistic exceedance modelling as a core benchmark component alongside deterministic correction. Under the main operational-median proxy, M3 is the best global continuous corrector at all scales, reducing event-fold RMSE from 0.461 to 0.360 at 1 h, from 0.801 to 0.578 at 3 h, and from 1.445 to 1.259 at 6 h. However, these gains do not translate into clean recovery of severe and extreme events under fixed operational thresholds. Tail-oriented models improve severe-event skill relative to M3 at 3 h and 6 h, but only modestly, while fixed extreme recovery remains weak across reference perturbations and hard holdouts. The conservative local deep-learning specialist does not materially improve the tail-oriented tabular baseline. About half of the severe and extreme cases occur in cells with the minimum observational support of two gauges, and local jackknife diagnostics show increasing proxy sensitivity in the upper tail. Peak and alignment-oracle diagnostics indicate that residual error is only partly explained by local spatiotemporal misalignment; substantial amplitude underestimation persists even after temporal and neighborhood tolerance, and IMERG often enters far below the operational threshold in observed extreme cases. Importantly, direct probabilistic exceedance modelling emerges as the main positive result: it provides robust out-of-sample risk ranking for severe and extreme exceedance across split families, although operational precision remains limited by event rarity. Overall, the results support partial out-of-sample correctability of IMERG sub-daily areal extremes under an operational areal proxy, while probabilistic risk ranking emerges as the central operational output when clean deterministic recovery of the fixed extreme tail remains unattained. For operational use, the most cautious interpretation is to pair continuous correction with direct probabilistic risk ranking rather than rely on corrected satellite estimates alone for threshold-based event detection in early-warning or hazard-screening applications.",
+    metaDescription:
+      "Out-of-sample statistical correctability limits of GPM IMERG sub-daily areal precipitation extremes under observational reference uncertainty.",
+    plainSummary:
+      "This study investigates how well machine learning and statistical models can correct sub-daily satellite precipitation extremes (GPM IMERG V07) when the ground reference itself is subject to spatial and density uncertainties across eastern Spain. Evaluating tabular (LightGBM) and deep learning (CNN) models under strict spatial and temporal holdouts, the work reveals that continuous correction significantly improves general error metrics, but clean deterministic tail recovery remains constrained. Direct probabilistic exceedance modeling emerges as the most reliable operational output for extreme event hazard screening.",
+    plainSummaryEs:
+      "Este estudio investiga hasta qué punto los modelos estadísticos y de aprendizaje automático pueden corregir estimaciones satelitales subdiarias de precipitación extrema (GPM IMERG V07) cuando la propia referencia de superficie presenta incertidumbre observacional en la Comunitat Valenciana. Evaluando modelos tabulares (LightGBM) y de aprendizaje profundo (CNN) bajo validaciones estrictas por año, provincia y evento, el trabajo demuestra que la corrección continua mejora los errores globales, pero la recuperación determinista de colas extremas encuentra límites claros, convirtiendo el modelado probabilístico de superación de umbrales en la salida operativa más fiable para alerta temprana.",
+    contribution:
+      "A systematic evaluation of satellite precipitation extreme correctability limits under operational reference uncertainty, benchmarking tabular, deep learning, and probabilistic exceedance models across out-of-sample validation splits.",
+    contributionEs:
+      "Una evaluación sistemática de los límites de corregibilidad de precipitación satelital extrema bajo incertidumbre de referencia operativa, comparando modelos tabulares, de aprendizaje profundo y de superación probabilística bajo particiones fuera de muestra.",
+    finding:
+      "Continuous correction with LightGBM reduces global RMSE significantly across sub-daily timescales (e.g. from 0.461 to 0.360 at 1 h), but fixed extreme events remain difficult to reconstruct deterministically. Direct probabilistic exceedance modeling provides the most robust risk ranking for operational hazard screening.",
+    findingEs:
+      "La corrección continua con LightGBM reduce sustancialmente el RMSE global en escalas subdiarias (de 0.461 a 0.360 a 1 h), pero los eventos extremos fijos son difíciles de reconstruir de forma determinista. El modelado probabilístico directo ofrece la ordenación de riesgo más robusta para sistemas de alerta temprana.",
+    topics: [
+      "Precipitation extremes",
+      "GPM IMERG",
+      "Correctability limits",
+      "Probabilistic risk ranking",
+      "Remote sensing"
+    ],
+    models: ["LightGBM (M3/M3b)", "CNN spatial specialist (M4)", "Probabilistic exceedance model"],
+    dataSources: ["GPM IMERG Final V07", "AVAMET rain-gauge network (556 gauges, 2019-2025)"],
+    relatedSlugs: [
+      "gpm-imerg-precipitation-extremes-valencia",
+      "robust-post-training-model-selection"
+    ]
+  },
+  {
     slug: "gpm-imerg-precipitation-extremes-valencia",
     title:
       "Performance limits of GPM IMERG for sub-daily precipitation extremes over the Comunitat Valenciana, eastern Spain: Representativeness, attenuation, and pixel-scale displacement",
