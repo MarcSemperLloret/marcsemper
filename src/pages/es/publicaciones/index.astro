@@ -1,7 +1,10 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PublicationCard from "@/components/PublicationCard.astro";
-import { publications } from "@/data/publications";
+import {
+  publications,
+  publicationRecordReviewed
+} from "@/data/publications";
 import { formatSiteDate, site } from "@/data/site";
 
 const publicationsByYear = publications.reduce((groups, publication) => {
@@ -32,7 +35,7 @@ const jsonLd = {
 <BaseLayout
   lang="es"
   title="Publicaciones"
-  description="Registro de publicaciones científicas de Marc Semper sobre IA espacio-temporal, redes neuronales de grafos y predicción ambiental."
+  description="Registro completo de publicaciones científicas de Marc Semper sobre IA espacio-temporal, redes neuronales de grafos y predicción ambiental."
   jsonLd={jsonLd}
   alternatePath="/publications/"
 >
@@ -48,7 +51,7 @@ const jsonLd = {
           fiable de modelos, aprendizaje en grafos y predicción ambiental.
         </p>
         <div class="record-stats">
-          <span><strong>{publications.length}</strong> artículos</span>
+          <span><strong>{publications.length}</strong> artículos científicos</span>
           <span><strong>{years.length}</strong> años</span>
           <span><strong>{publications.length}</strong> registros DOI</span>
         </div>
@@ -60,8 +63,8 @@ const jsonLd = {
     <div class="container note-grid">
       <p>
         <strong>Identidad de autor:</strong> Marc Semper Lloret publica su
-        trabajo científico como <strong>Marc Semper</strong>. Registro revisado
-        el {publicationRecordReviewedEs}.
+        trabajo científico como <strong>Marc Semper</strong>. Registro revisado el
+        {` ${publicationRecordReviewedEs}`}.
       </p>
       <div>
         <a href="/rss.xml">RSS</a>
@@ -76,9 +79,9 @@ const jsonLd = {
       <section class="year-section" aria-labelledby={`year-${year}`}>
         <div class="year-heading">
           <h2 id={`year-${year}`}>{year}</h2>
-          <span>{publicationsByYear.get(year)?.length} artículos</span>
+          <span>{publicationsByYear.get(year)?.length} artículos científicos</span>
         </div>
-        <div>
+        <div class="year-publications">
           {publicationsByYear.get(year)?.map((publication, index) => (
             <PublicationCard publication={publication} index={index} lang="es" />
           ))}
@@ -86,6 +89,18 @@ const jsonLd = {
       </section>
     ))}
   </div>
+
+  <section class="citation-help">
+    <div class="container citation-help-grid">
+      <div>
+        <p class="eyebrow">Citación reproducible</p>
+        <h2>Cada publicación tiene su propia vista permanente.</h2>
+      </div>
+      <p>
+        Las páginas individuales proporcionan el registro bibliográfico completo, el resumen del autor, contexto en lenguaje claro, enlaces DOI y formato BibTeX exportable.
+      </p>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
@@ -97,7 +112,6 @@ const jsonLd = {
 
   .record-stats {
     display: flex;
-    flex-wrap: wrap;
     gap: 28px;
     margin-top: 28px;
     padding-top: 20px;
@@ -106,13 +120,21 @@ const jsonLd = {
 
   .record-stats span {
     color: var(--ink-soft);
-    font-size: 0.7rem;
-    font-weight: 750;
+    font-size: 0.72rem;
+    font-weight: 700;
     text-transform: uppercase;
   }
 
+  .record-stats strong {
+    margin-right: 3px;
+    color: var(--blue);
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+
   .publication-note {
-    padding: 25px 0;
+    padding: 24px 0;
     color: var(--white);
     background: var(--blue);
   }
@@ -126,52 +148,111 @@ const jsonLd = {
 
   .note-grid p {
     margin: 0;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
   }
 
   .note-grid > div {
     display: flex;
-    gap: 18px;
+    gap: 24px;
   }
 
   .note-grid a {
     color: var(--white);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
   }
 
   .publication-years {
-    padding-top: 80px;
-    padding-bottom: 110px;
+    padding-top: 110px;
+    padding-bottom: 120px;
   }
 
-  .year-section + .year-section {
-    margin-top: 75px;
+  .year-section {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 45px;
+    margin-bottom: 100px;
   }
 
   .year-heading {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--line-strong);
+    position: sticky;
+    top: 110px;
+    align-self: start;
   }
 
   .year-heading h2 {
     margin: 0;
+    color: var(--blue);
     font-family: var(--serif);
-    font-size: 3.6rem;
+    font-size: clamp(4.5rem, 8vw, 7rem);
     font-weight: 400;
+    letter-spacing: -0.07em;
+    line-height: 0.85;
   }
 
   .year-heading span {
+    display: block;
+    margin-top: 20px;
     color: var(--ink-soft);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
+    font-weight: 750;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
-  @media (max-width: 700px) {
+  .citation-help {
+    padding: 100px 0;
+    background: var(--paper-deep);
+  }
+
+  .citation-help-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.6fr;
+    gap: 90px;
+    align-items: end;
+  }
+
+  .citation-help h2 {
+    max-width: 750px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.7rem, 5vw, 4.8rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .citation-help-grid > p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 900px) {
+    .year-section,
+    .citation-help-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .year-heading {
+      position: static;
+    }
+
+    .year-section {
+      gap: 25px;
+    }
+  }
+
+  @media (max-width: 640px) {
     .note-grid {
-      display: grid;
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .publication-years {
+      padding-top: 80px;
     }
   }
 </style>
