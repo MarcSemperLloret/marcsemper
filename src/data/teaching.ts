@@ -58,7 +58,11 @@ export interface TeachingCourse {
   titleEs: string;
   level: string;
   levelEs: string;
-  /** Teaching centre. Omit while it is not confirmed. */
+  /**
+   * Teaching centre. Optional on purpose: leaving it out keeps a course
+   * reusable across the centres where the same module is taught, so an empty
+   * value here is a decision rather than a gap waiting to be filled.
+   */
   institution?: string;
   institutionEs?: string;
   /** Academic year, e.g. "2025/2026". */
