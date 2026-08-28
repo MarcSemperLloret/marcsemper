@@ -1,0 +1,54 @@
+---
+import { render } from "astro:content";
+import SessionLayout from "@/layouts/SessionLayout.astro";
+import { getSessions, sessionPath, type Session } from "@/data/sessions";
+import { publishedCourses, type TeachingCourse } from "@/data/teaching";
+
+export async function getStaticPaths() {
+  const sessions = await getSessions();
+  return sessions
+    .filter(
+      (session) =>
+        session.lang === "en" &&
+        publishedCourses.some((course) => course.slug === session.courseSlug)
+    )
+    .map((session) => {
+      const course = publishedCourses.find(
+        (candidate) => candidate.slug === session.courseSlug
+      ) as TeachingCourse;
+      const siblings = sessions.filter(
+        (candidate) =>
+          candidate.courseSlug === session.courseSlug && candidate.lang === "en"
+      );
+      return {
+        params: { course: session.courseSlug, session: session.sessionSlug },
+        props: {
+          session,
+          course,
+          siblings,
+          siblingPaths: siblings.map(sessionPath)
+        }
+      };
+    });
+}
+
+interface Props {
+  session: Session;
+  course: TeachingCourse;
+  siblings: Session[];
+  siblingPaths: string[];
+}
+
+const { session, course, siblings, siblingPaths } = Astro.props;
+const { Content, headings } = await render(session.entry);
+---
+
+<SessionLayout
+  session={session}
+  course={course}
+  siblings={siblings}
+  siblingPaths={siblingPaths}
+  headings={headings}
+>
+  <Content />
+</SessionLayout>

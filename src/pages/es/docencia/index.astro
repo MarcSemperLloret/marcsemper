@@ -1,0 +1,445 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import {
+  publishedCourses,
+  currentCourses,
+  archivedCourses,
+  courseResourceCount,
+  formatTeachingDate
+} from "@/data/teaching";
+import {
+  getSessions,
+  sessionsOfCourse,
+  latestSessionDate
+} from "@/data/sessions";
+import { site } from "@/data/site";
+
+const sessions = await getSessions();
+
+/**
+ * La tarjeta cuenta todo lo que el alumnado puede abrir: las sesiones escritas
+ * para la asignatura y los archivos publicados en ella.
+ */
+function materialSummary(course: (typeof publishedCourses)[number]): string {
+  const sessionCount = sessionsOfCourse(sessions, course.slug).length;
+  const fileCount = courseResourceCount(course);
+  const parts: string[] = [];
+
+  if (sessionCount > 0) {
+    parts.push(sessionCount === 1 ? "1 sesión" : `${sessionCount} sesiones`);
+  }
+  if (fileCount > 0) {
+    parts.push(fileCount === 1 ? "1 archivo" : `${fileCount} archivos`);
+  }
+
+  return parts.length > 0 ? parts.join(" · ") : "Todavía sin material publicado";
+}
+
+function updatedLabel(course: (typeof publishedCourses)[number]): string | undefined {
+  const date =
+    course.updatedAt ?? latestSessionDate(sessionsOfCourse(sessions, course.slug));
+  return date ? ` · actualizado el ${formatTeachingDate(date, "es")}` : undefined;
+}
+
+const jsonLd = {
+  "@type": "CollectionPage",
+  "@id": `${site.url}/teaching/#teaching`,
+  url: `${site.url}/es/docencia/`,
+  name: "Docencia",
+  description:
+    "Material docente publicado por Marc Semper Lloret para las asignaturas y módulos de formación profesional que imparte.",
+  inLanguage: "es",
+  author: { "@id": `${site.url}/#person` },
+  hasPart: publishedCourses.map((course) => ({
+    "@type": "Course",
+    "@id": `${site.url}/teaching/${course.slug}/#course`,
+    url: `${site.url}/es/docencia/${course.slug}/`,
+    name: course.titleEs,
+    description: course.summaryEs,
+    ...(course.institutionEs
+      ? { provider: { "@type": "EducationalOrganization", name: course.institutionEs } }
+      : {})
+  }))
+};
+---
+
+<BaseLayout
+  lang="es"
+  title="Docencia"
+  description="Material docente para el alumnado: apuntes, diapositivas, ejercicios, cuadernos y lecturas de las asignaturas y módulos de formación profesional que imparte Marc Semper Lloret."
+  jsonLd={jsonLd}
+  alternatePath="/teaching/"
+>
+  <header class="page-hero">
+    <div class="container page-hero-grid">
+      <div>
+        <p class="eyebrow">Docencia</p>
+        <h1 class="page-title">Material para mi alumnado.</h1>
+      </div>
+      <p class="page-intro">
+        Un único lugar estable para el material de las asignaturas y módulos
+        que imparto: apuntes, diapositivas, ejercicios, cuadernos y lecturas,
+        organizados por asignatura y por bloques.
+      </p>
+    </div>
+  </header>
+
+  <section class="page-section">
+    <div class="container teaching-intro">
+      <div>
+        <p class="eyebrow">Cómo funciona esta página</p>
+        <h2 class="section-title">Material publicado, no un sustituto de la clase.</h2>
+      </div>
+      <div class="prose">
+        <p>
+          Todo lo que se publica aquí sirve de apoyo a una asignatura o módulo
+          concreto. Complementa la guía docente oficial y el aula virtual del
+          centro correspondiente, pero no sustituye a ninguno de los dos.
+        </p>
+        <p>
+          Los criterios de evaluación, las fechas y los avisos oficiales son
+          siempre los que constan en los sistemas oficiales del centro. El
+          material de esta página puede revisarse durante el curso, así que
+          conviene consultar la página de la asignatura antes de trabajar con
+          una copia antigua.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="courses-section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Asignaturas</p>
+          <h2 class="section-title">Asignaturas y material.</h2>
+        </div>
+        <p>
+          Cada asignatura tiene su propia página, con el material agrupado en
+          los bloques que le convienen.
+        </p>
+      </div>
+
+      {publishedCourses.length === 0 ? (
+        <div class="empty-state">
+          <p class="empty-mark" aria-hidden="true">D</p>
+          <div>
+            <h3>Material en preparación.</h3>
+            <p>
+              Todavía no se ha publicado material docente. Las asignaturas que
+              imparto y su material aparecerán aquí en cuanto se publiquen para
+              el curso actual.
+            </p>
+            <p>
+              Mientras tanto, el alumnado puede escribirme por correo para
+              cualquier cuestión relacionada con una asignatura.
+            </p>
+            <a class="button primary" href={`mailto:${site.email}`}>
+              Escribir a {site.email}
+            </a>
+          </div>
+        </div>
+      ) : (
+        <div class="course-list">
+          {currentCourses.map((course) => (
+            <article>
+              <div class="course-meta">
+                <span>{course.term}</span>
+                {course.code && <span>{course.code}</span>}
+              </div>
+              <div>
+                <h3>
+                  <a href={`/es/docencia/${course.slug}/`}>{course.titleEs}</a>
+                </h3>
+                <p class="course-level">
+                  {[course.levelEs, course.institutionEs].filter(Boolean).join(" · ")}
+                </p>
+                <p>{course.summaryEs}</p>
+                {course.topicsEs.length > 0 && (
+                  <ul class="topic-list">
+                    {course.topicsEs.map((topic) => <li>{topic}</li>)}
+                  </ul>
+                )}
+                <p class="course-stats">
+                  {materialSummary(course)}
+                  {updatedLabel(course)}
+                </p>
+                <ArrowLink href={`/es/docencia/${course.slug}/`}>
+                  Ver el material de la asignatura
+                </ArrowLink>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {archivedCourses.length > 0 && (
+    <section class="page-section archive-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Archivo</p>
+            <h2 class="section-title">Cursos anteriores.</h2>
+          </div>
+          <p>
+            Se conservan como referencia. Los contenidos y la evaluación pueden
+            haber cambiado desde entonces.
+          </p>
+        </div>
+        <ul class="archive-list">
+          {archivedCourses.map((course) => (
+            <li>
+              <a href={`/es/docencia/${course.slug}/`}>
+                <span class="archive-term">{course.term}</span>
+                <span>{course.titleEs}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="teaching-contact">
+    <div class="container contact-grid">
+      <div>
+        <p class="eyebrow">Dudas</p>
+        <h2>Preguntar sobre una asignatura.</h2>
+      </div>
+      <div>
+        <p>
+          Para dudas sobre contenidos, ejercicios o material, escríbeme desde
+          tu cuenta del centro indicando la asignatura o el módulo en el que
+          estás matriculado.
+        </p>
+        <a class="button primary" href={`mailto:${site.email}`}>{site.email}</a>
+        <a class="text-link" href="/es/investigacion/">Programa de investigación ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .teaching-intro {
+    display: grid;
+    grid-template-columns: 1fr 0.72fr;
+    gap: 100px;
+  }
+
+  .courses-section {
+    padding: 105px 0;
+    background: var(--paper-deep);
+  }
+
+  .empty-state {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 40px;
+    padding: 45px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+  }
+
+  .empty-mark {
+    margin: 0;
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 5rem;
+    line-height: 0.8;
+  }
+
+  .empty-state h3 {
+    margin: 0 0 16px;
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+
+  .empty-state p {
+    max-width: 560px;
+    color: var(--ink-soft);
+  }
+
+  .empty-state .button {
+    margin-top: 18px;
+  }
+
+  .course-list {
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .course-list article {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .course-meta {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    color: var(--ink-soft);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .course-list h3 {
+    margin: 0 0 8px;
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    overflow-wrap: break-word;
+  }
+
+  .course-list h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .course-list h3 a:hover {
+    color: var(--blue-dark);
+  }
+
+  .course-level {
+    margin: 0 0 14px;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  .topic-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .topic-list li {
+    padding: 5px 11px;
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 750;
+  }
+
+  .course-stats {
+    margin: 0 0 18px;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .archive-list {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+    list-style: none;
+  }
+
+  .archive-list a {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 30px;
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    transition: color 160ms ease;
+  }
+
+  .archive-list a:hover {
+    color: var(--blue-dark);
+  }
+
+  .archive-term {
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .teaching-contact {
+    padding: 100px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr;
+    gap: 100px;
+  }
+
+  .teaching-contact .eyebrow {
+    color: var(--gold);
+  }
+
+  .teaching-contact h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .teaching-contact p {
+    margin-top: 0;
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  .teaching-contact .button {
+    color: var(--ink);
+    border-color: var(--white);
+    background: var(--white);
+  }
+
+  .teaching-contact .text-link {
+    display: block;
+    margin-top: 18px;
+    color: var(--white);
+  }
+
+  @media (max-width: 900px) {
+    .teaching-intro,
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 50px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .empty-state,
+    .course-list article,
+    .archive-list a {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .archive-list a {
+      gap: 6px;
+    }
+
+    .empty-state {
+      padding: 30px;
+    }
+  }
+</style>

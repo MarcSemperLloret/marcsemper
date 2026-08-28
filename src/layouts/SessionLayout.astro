@@ -1,0 +1,321 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/data/site";
+import { formatTeachingDate, type TeachingCourse } from "@/data/teaching";
+import type { Session } from "@/data/sessions";
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  session: Session;
+  course: TeachingCourse;
+  /** Sibling sessions of the same course, in order. */
+  siblings: Session[];
+  siblingPaths: string[];
+  headings: MarkdownHeading[];
+}
+
+const { session, course, siblings, siblingPaths, headings } = Astro.props;
+const tableOfContents = headings.filter((heading) => heading.depth === 2);
+const { data } = session.entry;
+const isSpanish = session.lang === "es";
+const courseTitle = isSpanish ? course.titleEs : course.title;
+const coursePath = isSpanish
+  ? `/es/docencia/${course.slug}/`
+  : `/teaching/${course.slug}/`;
+// The session exists in one language only, so the switcher goes to the course
+// page in the other language rather than dropping the reader on the homepage.
+const otherLanguageCoursePath = isSpanish
+  ? `/teaching/${course.slug}/`
+  : `/es/docencia/${course.slug}/`;
+
+const index = siblings.findIndex(
+  (candidate) => candidate.sessionSlug === session.sessionSlug
+);
+const previous = index > 0 ? siblings[index - 1] : undefined;
+const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
+const previousPath = index > 0 ? siblingPaths[index - 1] : undefined;
+const nextPath =
+  index >= 0 && index < siblingPaths.length - 1 ? siblingPaths[index + 1] : undefined;
+
+const facts = [
+  data.duration && {
+    label: isSpanish ? "Duración" : "Duration",
+    value: data.duration
+  },
+  data.modality && {
+    label: isSpanish ? "Modalidad" : "Format",
+    value: data.modality
+  },
+  data.deliverable && {
+    label: isSpanish ? "Producto final" : "Deliverable",
+    value: data.deliverable
+  }
+].filter(Boolean) as Array<{ label: string; value: string }>;
+
+const jsonLd = {
+  "@type": "LearningResource",
+  "@id": `${site.url}${Astro.url.pathname}#session`,
+  url: `${site.url}${Astro.url.pathname}`,
+  name: data.title,
+  description: data.summary,
+  inLanguage: session.lang,
+  learningResourceType: isSpanish ? "Actividad de aula" : "Classroom activity",
+  isPartOf: { "@id": `${site.url}/teaching/${course.slug}/#course` },
+  author: { "@id": `${site.url}/#person` },
+  ...(data.date ? { datePublished: data.date } : {})
+};
+---
+
+<BaseLayout
+  lang={session.lang}
+  title={data.title}
+  description={data.summary}
+  jsonLd={jsonLd}
+  languagePath={otherLanguageCoursePath}
+>
+  <header class="session-hero">
+    <div class="container">
+      <a class="back-link" href={coursePath}>← {courseTitle}</a>
+      {data.label && <p class="eyebrow">{data.label}</p>}
+      <h1>{data.title}</h1>
+      <p class="session-summary">{data.summary}</p>
+    </div>
+  </header>
+
+  {facts.length > 0 && (
+    <section class="session-facts">
+      <div class="container facts-grid">
+        {facts.map((fact) => (
+          <div>
+            <span>{fact.label}</span>
+            <strong>{fact.value}</strong>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <article class="session-body">
+    <div class="container session-grid">
+      {tableOfContents.length > 2 && (
+        <nav class="session-toc" aria-label={isSpanish ? "Contenido de la sesión" : "Session contents"}>
+          <p class="toc-title">{isSpanish ? "Contenido" : "Contents"}</p>
+          <ol>
+            {tableOfContents.map((heading) => (
+              <li>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
+      <div class="session-column">
+        <div class="session-content">
+          <slot />
+        </div>
+
+        {data.date && (
+          <p class="session-updated">
+            {isSpanish ? "Publicado el" : "Published on"}{" "}
+            {formatTeachingDate(data.date, session.lang)}.
+          </p>
+        )}
+      </div>
+    </div>
+  </article>
+
+  <nav class="session-nav" aria-label={isSpanish ? "Sesiones" : "Sessions"}>
+    <div class="container nav-grid">
+      {previousPath && previous ? (
+        <a class="nav-previous" href={previousPath}>
+          <span>{isSpanish ? "Anterior" : "Previous"}</span>
+          <strong>{previous.entry.data.title}</strong>
+        </a>
+      ) : (
+        <span></span>
+      )}
+      {nextPath && next ? (
+        <a class="nav-next" href={nextPath}>
+          <span>{isSpanish ? "Siguiente" : "Next"}</span>
+          <strong>{next.entry.data.title}</strong>
+        </a>
+      ) : (
+        <span></span>
+      )}
+    </div>
+    <div class="container nav-back">
+      <a href={coursePath}>
+        {isSpanish ? "Volver a" : "Back to"} {courseTitle} ↗
+      </a>
+    </div>
+  </nav>
+</BaseLayout>
+
+<style>
+  .session-hero {
+    padding: 70px 0 60px;
+    color: var(--white);
+    background:
+      radial-gradient(circle at 83% 35%, rgba(235, 93, 68, 0.4), transparent 19rem),
+      var(--ink);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 40px;
+    color: rgba(255, 255, 255, 0.62);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 750;
+  }
+
+  .back-link:hover {
+    color: var(--white);
+  }
+
+  .session-hero .eyebrow {
+    color: var(--gold);
+  }
+
+  .session-hero h1 {
+    max-width: 900px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5.5vw, 4.8rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 1.02;
+    overflow-wrap: break-word;
+  }
+
+  .session-summary {
+    max-width: 680px;
+    margin: 24px 0 0;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 1.04rem;
+  }
+
+  .session-facts {
+    background: var(--blue);
+    color: var(--white);
+  }
+
+  .facts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .facts-grid div {
+    padding: 22px 25px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .facts-grid div:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .facts-grid span {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--gold);
+    font-size: 0.59rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .facts-grid strong {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .session-body {
+    display: block;
+    padding: 70px 0 90px;
+  }
+
+  .session-updated {
+    max-width: 760px;
+    margin: 60px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .session-nav {
+    padding: 50px 0 70px;
+    background: var(--paper-deep);
+  }
+
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .nav-grid a {
+    display: grid;
+    gap: 8px;
+    padding: 22px 24px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 160ms ease, transform 160ms ease;
+  }
+
+  .nav-grid a:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .nav-next {
+    text-align: right;
+  }
+
+  .nav-grid span {
+    color: var(--ink-soft);
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-grid strong {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .nav-back {
+    margin-top: 26px;
+  }
+
+  .nav-back a {
+    color: var(--blue-dark);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
+  @media (max-width: 780px) {
+    .facts-grid,
+    .nav-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .facts-grid div {
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-next {
+      text-align: left;
+    }
+  }
+</style>

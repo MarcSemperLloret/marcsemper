@@ -29,6 +29,7 @@
   --shadow: 0 24px 70px rgba(27, 36, 62, 0.12);
   --sans: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
   --serif: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --container: min(1180px, calc(100% - 48px));
 }
 
@@ -263,7 +264,7 @@ select {
 
 .desktop-nav {
   display: flex;
-  gap: 30px;
+  gap: clamp(18px, 2.2vw, 30px);
   align-items: center;
 }
 
@@ -681,4 +682,940 @@ select {
   body::before {
     display: none;
   }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Teaching session content
+
+   Markdown rendered from src/content/sessions. These rules are global because
+   the rendered HTML arrives through a slot, which scoped styles do not reach.
+   --------------------------------------------------------------------------- */
+
+.session-content {
+  max-width: min(760px, 100%);
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+  line-height: 1.62;
+}
+
+.session-content > *:first-child {
+  margin-top: 0;
+}
+
+.session-content h2,
+.session-content h3,
+.session-content h4 {
+  /* The site header is sticky, so anchor jumps must clear it. */
+  scroll-margin-top: 96px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.session-content h2 {
+  margin: 64px 0 18px;
+  font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+}
+
+.session-content h3 {
+  margin: 44px 0 14px;
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+}
+
+.session-content h4 {
+  margin: 32px 0 10px;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.session-content p {
+  margin: 0 0 18px;
+}
+
+.session-content strong {
+  color: var(--ink);
+  font-weight: 750;
+}
+
+.session-content a {
+  color: var(--blue-dark);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.session-content ul,
+.session-content ol {
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+
+.session-content li {
+  margin-bottom: 7px;
+}
+
+.session-content hr {
+  height: 1px;
+  margin: 44px 0;
+  border: 0;
+  background: var(--line);
+}
+
+.session-content blockquote {
+  margin: 30px 0;
+  padding: 22px 26px;
+  border-left: 3px solid var(--coral);
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.16rem;
+  line-height: 1.45;
+}
+
+.session-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.session-content pre {
+  margin: 22px 0;
+  padding: 20px 22px;
+  overflow-x: auto;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-deep);
+}
+
+.session-content pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+.session-content code {
+  padding: 2px 5px;
+  border: 1px solid var(--line);
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.session-content .table-scroll {
+  margin: 22px 0;
+  overflow-x: auto;
+}
+
+.session-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.94rem;
+}
+
+.session-content th,
+.session-content td {
+  padding: 11px 14px;
+  border: 1px solid var(--line-strong);
+  text-align: left;
+  vertical-align: top;
+}
+
+.session-content th {
+  color: var(--ink);
+  background: var(--paper-deep);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Empty cells are answer boxes students fill in, so keep them tall enough. */
+.session-content td:empty {
+  min-width: 120px;
+  height: 44px;
+}
+
+/* Numbered writing lines: <ol class="fill-in"> in the Markdown source. */
+.session-content .fill-in {
+  margin: 20px 0 24px;
+  padding-left: 22px;
+}
+
+.session-content .fill-in li {
+  /* The items are intentionally empty: they are lines to write on, so they
+     need an explicit height or they collapse and the rule disappears. */
+  min-height: 38px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .session-content {
+    font-size: 0.98rem;
+  }
+
+  .session-content pre {
+    padding: 16px;
+  }
+}
+
+/* Sessions listed inside a course page. */
+.session-list {
+  margin: 22px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line-strong);
+  list-style: none;
+}
+
+.session-list a {
+  display: grid;
+  grid-template-columns: 150px 1fr auto;
+  gap: 20px;
+  align-items: baseline;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.session-list a:hover {
+  color: var(--blue-dark);
+}
+
+.session-kind {
+  color: var(--coral);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.session-body {
+  display: grid;
+  gap: 5px;
+}
+
+.session-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+
+.session-body small {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+.session-meta {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.loose-sessions {
+  margin-top: 55px;
+}
+
+@media (max-width: 640px) {
+  .session-list a {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .session-meta {
+    white-space: normal;
+  }
+}
+
+/* Table alignment from Markdown, rewritten to classes by rehype-table-align. */
+.session-content .align-left {
+  text-align: left;
+}
+
+.session-content .align-center {
+  text-align: center;
+}
+
+.session-content .align-right {
+  text-align: right;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Session diagrams
+
+   Process flows are real markup, not ASCII art: an ordered list is the honest
+   structure for a sequence of steps, it stays selectable and readable by
+   assistive technology, and it reflows on narrow screens. The one branching
+   diagram is inline SVG. Nothing here needs JavaScript, which the site's
+   Content-Security-Policy (script-src 'none') would block anyway.
+   --------------------------------------------------------------------------- */
+
+.session-content .diagram {
+  margin: 38px 0 42px;
+}
+
+.session-content .diagram figcaption {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.session-content .flow {
+  counter-reset: flow-step;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.session-content .flow li {
+  position: relative;
+  margin: 0;
+  padding: 8px 0 22px 58px;
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.session-content .flow li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--blue);
+  content: counter(flow-step);
+  counter-increment: flow-step;
+  font-size: 0.76rem;
+  font-weight: 800;
+  place-items: center;
+}
+
+.session-content .flow li::after {
+  position: absolute;
+  top: 41px;
+  bottom: 2px;
+  left: 18px;
+  width: 1px;
+  content: "";
+  background: var(--line-strong);
+}
+
+.session-content .flow li:last-child {
+  padding-bottom: 0;
+}
+
+.session-content .flow li:last-child::after {
+  display: none;
+}
+
+/* The "before" flow is the process being replaced, so it reads as muted. */
+.session-content .flow--before li::before {
+  background: var(--ink-soft);
+}
+
+.session-content .flow--before li {
+  color: var(--ink-soft);
+}
+
+/* Short chains read better laid out horizontally. */
+.session-content .flow--row {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.session-content .flow--row li {
+  display: grid;
+  padding: 15px 20px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  text-align: center;
+  place-items: center;
+}
+
+.session-content .flow--row li::before {
+  display: none;
+}
+
+.session-content .flow--row li::after {
+  top: auto;
+  bottom: -26px;
+  left: 50%;
+  width: auto;
+  height: auto;
+  color: var(--coral);
+  background: none;
+  content: "↓";
+  font-size: 1.15rem;
+  font-weight: 700;
+  transform: translateX(-50%);
+}
+
+.session-content .flow--chain li {
+  border-color: var(--coral);
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-weight: 400;
+}
+
+@media (min-width: 700px) {
+  .session-content .flow--row {
+    flex-flow: row wrap;
+    gap: 42px;
+    justify-content: center;
+  }
+
+  .session-content .flow--row li {
+    flex: 1 1 0;
+  }
+
+  .session-content .flow--chain li {
+    flex: 0 1 auto;
+    min-width: 120px;
+  }
+
+  .session-content .flow--row li::after {
+    top: 50%;
+    right: -29px;
+    bottom: auto;
+    left: auto;
+    content: "→";
+    transform: translateY(-50%);
+  }
+}
+
+/* IT / OT markers inside a flow step. */
+.session-content .tag {
+  display: inline-block;
+  margin-left: 9px;
+  padding: 2px 9px;
+  border-radius: 100px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  vertical-align: 2px;
+}
+
+.session-content .tag--ot {
+  color: var(--white);
+  background: var(--coral);
+}
+
+.session-content .tag--it {
+  color: var(--ink);
+  background: var(--gold);
+}
+
+/* Branching diagram, drawn as inline SVG. */
+.session-content .diagram-svg {
+  width: 100%;
+  height: auto;
+}
+
+.session-content .diagram-edges path {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.session-content .diagram-arrowhead {
+  fill: var(--line-strong);
+  stroke: none;
+}
+
+.session-content .diagram-node rect {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.2;
+}
+
+.session-content .diagram-node text {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  dominant-baseline: central;
+  text-anchor: middle;
+}
+
+.session-content .diagram-node--accent rect {
+  fill: var(--blue);
+  stroke: var(--blue);
+}
+
+.session-content .diagram-node--accent text {
+  fill: var(--white);
+}
+
+.session-content .diagram-node--data rect {
+  fill: var(--paper-deep);
+}
+
+/* ---------------------------------------------------------------------------
+   Session page shell: sticky contents rail beside the reading column.
+   --------------------------------------------------------------------------- */
+
+.session-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 760px);
+  gap: 56px;
+}
+
+.session-toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: toc;
+}
+
+.session-toc li {
+  margin-bottom: 9px;
+}
+
+.session-toc a {
+  display: block;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.session-toc a:hover {
+  color: var(--blue-dark);
+}
+
+.session-toc .toc-title {
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 1060px) {
+  .session-grid {
+    grid-template-columns: 224px minmax(0, 760px);
+  }
+
+  .session-toc {
+    align-self: start;
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 1059px) {
+  .session-toc {
+    padding: 22px 24px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper-deep);
+  }
+}
+
+@media (max-width: 640px) {
+  .session-content .flow li {
+    padding-left: 50px;
+  }
+
+  .session-content th,
+  .session-content td {
+    padding: 9px 10px;
+    overflow-wrap: break-word;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Session content, additional pieces used from UD2 onwards
+   --------------------------------------------------------------------------- */
+
+/* A term being defined, where the source used a bare heading for emphasis.
+   It is not a section, so it stays out of the table of contents. */
+.session-content .term {
+  display: inline-block;
+  margin: 26px 0 18px;
+  padding: 9px 20px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--serif);
+  font-size: 1.25rem;
+}
+
+/* A single system drawn on its own, with nothing connected to it yet. */
+.session-content .single-node {
+  display: inline-block;
+  margin: 18px 0;
+  padding: 13px 24px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Yes / no answers inside a polling illustration. */
+.session-content .tag--yes {
+  color: var(--white);
+  background: var(--blue);
+}
+
+.session-content .tag--no {
+  color: var(--white);
+  background: var(--coral);
+}
+
+/* A step that fails. */
+.session-content .flow li.is-error {
+  color: var(--coral);
+  font-weight: 750;
+}
+
+.session-content .flow li.is-error::before {
+  background: var(--coral);
+  content: "!";
+}
+
+/* Role marker inside a flow step: EVENTO, ACCIÓN. */
+.session-content .flow-role {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink-soft);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* A ruled line for students to write an answer on. */
+.session-content .write-line {
+  display: block;
+  min-height: 34px;
+  margin: 4px 0 6px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+/* Labelled answer slots, e.g. "Elección" / "Motivo". */
+.session-content .answer {
+  margin: 20px 0 26px;
+}
+
+.session-content .answer dt {
+  color: var(--ink-soft);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.session-content .answer dd {
+  min-height: 34px;
+  margin: 4px 0 18px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+/* Smaller labels inside a diagram, such as queued messages. */
+.session-content .diagram-node--small text {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* A container that holds other nodes, drawn with a dashed outline. */
+.session-content .diagram-node--container rect {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-dasharray: 5 4;
+}
+
+.session-content .diagram-node--container text {
+  fill: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+/* Free-standing labels on an edge, e.g. "webhook", "se repite". */
+.session-content .diagram-label {
+  fill: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.session-content .diagram-label--accent {
+  fill: var(--coral);
+}
+
+/* A repeated or deferred connection. */
+.session-content .diagram-edges .is-dashed {
+  stroke-dasharray: 5 4;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Session content, pieces introduced by UD3 (hands-on lab)
+   --------------------------------------------------------------------------- */
+
+/* A literal value the text points at: a URL, a hostname, a port. */
+.session-content .single-node--mono {
+  font-family: var(--mono);
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+/* Secondary line inside a diagram node, e.g. the hostname under "Nombre DNS". */
+.session-content .diagram-node .diagram-subtext {
+  fill: var(--ink-soft);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.session-content .diagram-node--accent .diagram-subtext {
+  fill: rgba(255, 255, 255, 0.75);
+}
+
+/* Outcome nodes in a decision diagram. */
+.session-content .diagram-node--ok rect {
+  fill: var(--blue);
+  stroke: var(--blue);
+}
+
+.session-content .diagram-node--ok text {
+  fill: var(--white);
+}
+
+.session-content .diagram-node--danger rect {
+  fill: var(--coral);
+  stroke: var(--coral);
+}
+
+.session-content .diagram-node--danger text {
+  fill: var(--white);
+}
+
+/* Command blocks carry a language chip, so a reader can tell a shell command
+   from a configuration file at a glance. */
+.session-content pre {
+  position: relative;
+}
+
+/* Room for the language chip. Applied unconditionally rather than through
+   :has(), which older browsers ignore, leaving the chip over the first line. */
+.session-content pre {
+  padding-top: 34px;
+}
+
+.session-content pre code[class*="language-"]::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 4px 11px;
+  color: var(--white);
+  background: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.session-content pre code.language-bash::before {
+  content: "Terminal";
+}
+
+.session-content pre code.language-nginx::before {
+  content: "Nginx";
+}
+
+.session-content pre code.language-json::before {
+  content: "JSON";
+}
+
+
+/* ---------------------------------------------------------------------------
+   Session content, pieces introduced by UD4
+   --------------------------------------------------------------------------- */
+
+/* Two concepts set side by side, e.g. prompt versus instructions. */
+.session-content .compare-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 26px 0 30px;
+}
+
+.session-content .compare-pair > div {
+  padding: 20px 22px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-deep);
+}
+
+.session-content .compare-pair p {
+  margin: 0;
+}
+
+.session-content .compare-label {
+  margin-bottom: 10px !important;
+  color: var(--coral);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.session-content .compare-pair .compare-body {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 640px) {
+  .session-content .compare-pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Severity levels used when classifying review findings. */
+.session-content .tag--low {
+  color: var(--ink);
+  background: var(--paper-deep);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.session-content .tag--mid {
+  color: var(--ink);
+  background: var(--gold);
+}
+
+.session-content .tag--high {
+  color: var(--white);
+  background: var(--coral);
+}
+
+/* Language chips for the remaining block types used in the sessions. */
+.session-content pre code.language-javascript::before {
+  content: "JavaScript";
+}
+
+.session-content pre code.language-markdown::before {
+  content: "Markdown";
+}
+
+.session-content pre code.language-text::before {
+  content: "Texto";
+}
+
+.session-content pre code.language-python::before {
+  content: "Python";
+}
+
+
+/* ---------------------------------------------------------------------------
+   Session content, pieces introduced by UD5
+   --------------------------------------------------------------------------- */
+
+/* A sample record from a dataset: field names next to their values. */
+.session-content .record {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 7px 20px;
+  margin: 24px 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-deep);
+}
+
+.session-content .record dt {
+  align-self: center;
+  color: var(--ink-soft);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.session-content .record dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.92rem;
+}
+
+/* A worked example of a prompt, shown as something to reuse rather than run. */
+.session-content .prompt {
+  margin: 28px 0;
+  padding: 24px 26px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.session-content .prompt-label {
+  margin: 0 0 18px !important;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--coral);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.session-content .prompt p:last-child {
+  margin-bottom: 0;
+}
+
+.session-content .prompt ol {
+  margin-bottom: 0;
+}
+
+/* Capabilities list, where each item is something the tool can already do. */
+.session-content .checklist {
+  padding-left: 0;
+  list-style: none;
+}
+
+.session-content .checklist li {
+  position: relative;
+  padding-left: 28px;
+}
+
+.session-content .checklist li::before {
+  position: absolute;
+  left: 0;
+  color: var(--blue);
+  content: "✓";
+  font-weight: 800;
 }

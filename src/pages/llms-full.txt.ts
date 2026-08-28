@@ -1,8 +1,41 @@
 import type { APIRoute } from "astro";
 import { publications } from "@/data/publications";
 import { researchAreas, site } from "@/data/site";
+import { publishedCourses } from "@/data/teaching";
+import { getSessions, sessionPath, sessionsOfCourse } from "@/data/sessions";
 
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async () => {
+  const sessions = await getSessions();
+
+  const teaching = publishedCourses
+    .map((course) => {
+      const courseSessions = sessionsOfCourse(sessions, course.slug);
+      const sessionLines = courseSessions.length
+        ? courseSessions
+            .map(
+              (session) =>
+                `- ${session.entry.data.title} (${session.entry.data.lang}): ${site.url}${sessionPath(session)}
+  ${session.entry.data.summary}`
+            )
+            .join("\n")
+        : "- No session material published yet.";
+
+      return `## ${course.title}
+
+URL: ${site.url}/teaching/${course.slug}/
+Level: ${course.level}${course.institution ? `, ${course.institution}` : ""}
+Academic year: ${course.term}
+
+${course.overview}
+
+Topics: ${course.topics.join("; ")}
+
+Sessions:
+${sessionLines}
+`;
+    })
+    .join("\n");
+
   const research = researchAreas
     .map(
       (area) => `## ${area.title}
@@ -67,6 +100,12 @@ English title: Spatiotemporal modelling with neural networks for forecasting env
 Defended: 11 December 2025
 Institution: University of Alicante
 Canonical overview: ${site.url}/thesis/
+
+# Teaching
+
+Course material published for students. Overview: ${site.url}/teaching/ (Spanish: ${site.url}/es/docencia/). Teaching material is published in the language each subject is taught in and is not translated.
+
+${teaching}
 `;
 
   return new Response(text, {

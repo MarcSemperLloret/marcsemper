@@ -1,0 +1,647 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  publishedCourses,
+  isExternalResource,
+  resourceKindLabel,
+  formatTeachingDate,
+  type TeachingCourse,
+  type TeachingResource
+} from "@/data/teaching";
+import { getCourseSessions, sessionPath, sessionLabel } from "@/data/sessions";
+import { site } from "@/data/site";
+
+export function getStaticPaths() {
+  return publishedCourses.map((course) => ({
+    params: { course: course.slug },
+    props: { course }
+  }));
+}
+
+interface Props {
+  course: TeachingCourse;
+}
+
+const { course } = Astro.props;
+const announcements = course.announcements ?? [];
+const sessions = await getCourseSessions(course.slug);
+const looseSessions = sessions.filter(
+  (session) =>
+    !session.entry.data.section ||
+    !course.sections.some((section) => section.id === session.entry.data.section)
+);
+// The section titles are translated, but the material itself may be published
+// only in Spanish. Say so rather than letting the English page imply otherwise.
+const materialIsSpanishOnly =
+  sessions.length > 0 && sessions.every((session) => session.lang !== "en");
+
+const courseJsonLd = {
+  "@type": "Course",
+  "@id": `${site.url}/teaching/${course.slug}/#course`,
+  url: `${site.url}/teaching/${course.slug}/`,
+  name: course.title,
+  description: course.summary,
+  inLanguage: "en",
+  courseCode: course.code,
+  about: course.topics,
+  ...(course.institution
+    ? { provider: { "@type": "EducationalOrganization", name: course.institution } }
+    : {}),
+  instructor: { "@id": `${site.url}/#person` },
+  ...(course.updatedAt ? { dateModified: course.updatedAt } : {})
+};
+
+const resourceMeta = (resource: TeachingResource) =>
+  [resource.format, resource.date && formatTeachingDate(resource.date, "en")]
+    .filter(Boolean)
+    .join(" · ");
+---
+
+<BaseLayout
+  title={course.title}
+  description={course.summary}
+  jsonLd={courseJsonLd}
+  alternatePath={`/es/docencia/${course.slug}/`}
+>
+  <header class="course-hero">
+    <div class="container">
+      <a class="back-link" href="/teaching/">← Teaching</a>
+      <p class="eyebrow">Course material</p>
+      <h1>{course.title}</h1>
+      <p class="course-summary">{course.summary}</p>
+      <div class="course-meta">
+        <span>{course.term}</span>
+        {course.code && <span>{course.code}</span>}
+        <span>{course.level}</span>
+        {course.institution && <span>{course.institution}</span>}
+        {course.status === "archived" && <span class="archived">Archived course</span>}
+      </div>
+    </div>
+  </header>
+
+  <section class="page-section">
+    <div class="container course-overview">
+      <div>
+        <p class="eyebrow">About the course</p>
+        <h2 class="section-title">What this course covers.</h2>
+        {course.updatedAt && (
+          <p class="updated">
+            Material last updated on {formatTeachingDate(course.updatedAt, "en")}.
+          </p>
+        )}
+      </div>
+      <div class="prose">
+        <p>{course.overview}</p>
+        {course.topics.length > 0 && (
+          <ul class="topic-list">
+            {course.topics.map((topic) => <li>{topic}</li>)}
+          </ul>
+        )}
+        {course.sections.length > 1 && (
+          <nav class="section-nav" aria-label="Course sections">
+            <p>On this page</p>
+            <ul>
+              {course.sections.map((section) => (
+                <li>
+                  <a href={`#${section.id}`}>
+                    {section.number ? `${section.number} · ` : ""}{section.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </div>
+    </div>
+  </section>
+
+  {announcements.length > 0 && (
+    <section class="announcements">
+      <div class="container">
+        <p class="eyebrow">Course notes</p>
+        <ul>
+          {announcements.map((announcement) => (
+            <li>
+              <time datetime={announcement.date}>
+                {formatTeachingDate(announcement.date, "en")}
+              </time>
+              <p>{announcement.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {course.resources.length > 0 && (
+    <section class="course-resources">
+      <div class="container">
+        <p class="eyebrow">Course documents</p>
+        <h2 class="section-title">General material.</h2>
+        <ul class="resource-list">
+          {course.resources.map((resource) => (
+            <li>
+              <a
+                href={resource.href}
+                target={isExternalResource(resource.href) ? "_blank" : undefined}
+                rel={isExternalResource(resource.href) ? "noopener noreferrer" : undefined}
+              >
+                <span class="resource-kind">{resourceKindLabel(resource.kind, "en")}</span>
+                <span class="resource-body">
+                  <span class="resource-label">{resource.label}</span>
+                  {resource.description && <small>{resource.description}</small>}
+                </span>
+                {resourceMeta(resource) && (
+                  <span class="resource-meta">{resourceMeta(resource)}</span>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="sections-block">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Contents</p>
+          <h2 class="section-title">Material by section.</h2>
+        </div>
+      </div>
+
+      {materialIsSpanishOnly && (
+        <p class="language-notice">
+          This module is taught in Spanish and its material is published in
+          Spanish. The section titles below are translated for reference.
+        </p>
+      )}
+
+      {course.sections.length === 0 ? (
+        <p class="sections-empty">
+          The material for this course has not been released yet. It will be
+          published section by section during the term.
+        </p>
+      ) : (
+        <div class="section-list">
+          {course.sections.map((section) => {
+            const sectionSessions = sessions.filter(
+              (session) => session.entry.data.section === section.id
+            );
+            return (
+            <article id={section.id}>
+              <div class="section-index">{section.number ?? "—"}</div>
+              <div>
+                <h3>{section.title}</h3>
+                {section.description && <p>{section.description}</p>}
+                {sectionSessions.length > 0 && (
+                  <ul class="session-list">
+                    {sectionSessions.map((session) => (
+                      <li>
+                        <a href={sessionPath(session)}>
+                          <span class="session-kind">
+                            {sessionLabel(session)}
+                            {session.lang !== "en" && " · in Spanish"}
+                          </span>
+                          <span class="session-body">
+                            <span class="session-title">{session.entry.data.title}</span>
+                            <small>{session.entry.data.summary}</small>
+                          </span>
+                          {session.entry.data.duration && (
+                            <span class="session-meta">{session.entry.data.duration}</span>
+                          )}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {section.resources.length === 0 && sectionSessions.length === 0 ? (
+                  <p class="section-pending">Material not published yet.</p>
+                ) : section.resources.length === 0 ? null : (
+                  <ul class="resource-list">
+                    {section.resources.map((resource) => (
+                      <li>
+                        <a
+                          href={resource.href}
+                          target={isExternalResource(resource.href) ? "_blank" : undefined}
+                          rel={isExternalResource(resource.href) ? "noopener noreferrer" : undefined}
+                        >
+                          <span class="resource-kind">{resourceKindLabel(resource.kind, "en")}</span>
+                          <span class="resource-body">
+                            <span class="resource-label">{resource.label}</span>
+                            {resource.description && <small>{resource.description}</small>}
+                          </span>
+                          {resourceMeta(resource) && (
+                            <span class="resource-meta">{resourceMeta(resource)}</span>
+                          )}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </article>
+            );
+          })}
+        </div>
+      )}
+
+      {looseSessions.length > 0 && (
+        <div class="container loose-sessions">
+          <p class="eyebrow">Other sessions</p>
+          <ul class="session-list">
+            {looseSessions.map((session) => (
+              <li>
+                <a href={sessionPath(session)}>
+                  <span class="session-kind">
+                    {sessionLabel(session)}
+                    {session.lang !== "en" && " · in Spanish"}
+                  </span>
+                  <span class="session-body">
+                    <span class="session-title">{session.entry.data.title}</span>
+                    <small>{session.entry.data.summary}</small>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="course-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="eyebrow">Official record</p>
+        <h2>Course guide and assessment.</h2>
+      </div>
+      <div>
+        <p>
+          Syllabus, assessment criteria and deadlines are those published by
+          the teaching centre. This page only hosts supporting material.
+        </p>
+        {course.officialUrl && (
+          <a class="button primary" href={course.officialUrl} target="_blank" rel="noopener">
+            Official course guide
+          </a>
+        )}
+        <a class="text-link" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .course-hero {
+    padding: 80px 0 70px;
+    color: var(--white);
+    background:
+      radial-gradient(circle at 83% 35%, rgba(235, 93, 68, 0.4), transparent 19rem),
+      var(--ink);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 45px;
+    color: rgba(255, 255, 255, 0.62);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 750;
+  }
+
+  .back-link:hover {
+    color: var(--white);
+  }
+
+  .course-hero .eyebrow {
+    color: var(--gold);
+  }
+
+  .course-hero h1 {
+    max-width: 1000px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 6.5vw, 6rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    overflow-wrap: break-word;
+  }
+
+  .course-summary {
+    max-width: 700px;
+    margin: 28px 0 40px;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 1.06rem;
+  }
+
+  .course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  .course-meta span {
+    padding: 5px 9px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 100px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.63rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .course-meta .archived {
+    color: var(--ink);
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+
+  .course-overview {
+    display: grid;
+    grid-template-columns: 1fr 0.75fr;
+    gap: 90px;
+  }
+
+  .updated {
+    margin: 22px 0 0;
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .topic-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .topic-list li {
+    padding: 5px 11px;
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+    color: var(--ink);
+    font-size: 0.72rem;
+    font-weight: 750;
+  }
+
+  .section-nav {
+    margin-top: 34px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  .section-nav p {
+    margin: 0 0 12px;
+    color: var(--ink-soft);
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .section-nav ul {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .section-nav a {
+    color: var(--blue-dark);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .section-nav a:hover {
+    text-decoration: underline;
+  }
+
+  .announcements {
+    padding: 60px 0;
+    background: var(--paper-deep);
+  }
+
+  .announcements ul {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+    list-style: none;
+  }
+
+  .announcements li {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .announcements time {
+    color: var(--ink-soft);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .announcements p {
+    margin: 0;
+  }
+
+  .course-resources {
+    padding: 80px 0;
+  }
+
+  .resource-list {
+    margin: 26px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+    list-style: none;
+  }
+
+  .resource-list a {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    gap: 20px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+
+  .resource-list a:hover {
+    color: var(--blue-dark);
+  }
+
+  .resource-kind {
+    color: var(--ink-soft);
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .resource-body {
+    display: grid;
+    gap: 4px;
+  }
+
+  .resource-label {
+    font-weight: 700;
+  }
+
+  .resource-body small {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    font-weight: 400;
+  }
+
+  .resource-meta {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .sections-block {
+    padding: 95px 0;
+    background: var(--paper-deep);
+  }
+
+  .sections-empty {
+    max-width: 640px;
+    color: var(--ink-soft);
+  }
+
+  .language-notice {
+    max-width: 640px;
+    margin: 0 0 34px;
+    padding: 14px 18px;
+    border-left: 3px solid var(--coral);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 0.92rem;
+  }
+
+  .section-list {
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .section-list article {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line-strong);
+    scroll-margin-top: 90px;
+  }
+
+  .section-index {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 1.5rem;
+  }
+
+  .section-list h3 {
+    margin: 0 0 10px;
+    font-family: var(--serif);
+    font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    overflow-wrap: break-word;
+  }
+
+  .section-list p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  .section-pending {
+    font-size: 0.88rem;
+    font-style: italic;
+  }
+
+  .course-footer {
+    padding: 95px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr;
+    gap: 90px;
+  }
+
+  .course-footer .eyebrow {
+    color: var(--gold);
+  }
+
+  .course-footer h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .course-footer p {
+    margin-top: 0;
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  .course-footer .button {
+    color: var(--ink);
+    border-color: var(--white);
+    background: var(--white);
+  }
+
+  .course-footer .text-link {
+    display: block;
+    margin-top: 18px;
+    color: var(--white);
+  }
+
+  @media (max-width: 900px) {
+    .course-overview,
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 50px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .section-list article,
+    .announcements li {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .section-list article {
+      gap: 18px;
+    }
+
+    .resource-list a {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .resource-meta {
+      white-space: normal;
+    }
+  }
+</style>

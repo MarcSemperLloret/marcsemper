@@ -13,7 +13,14 @@ interface Props {
   jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
   noindex?: boolean;
   lang?: "en" | "es";
+  /** Path of the translated page. Drives hreflang and the language switcher. */
   alternatePath?: string;
+  /**
+   * Where the language switcher should go when this page has no translation,
+   * such as a teaching session published in one language only. It never emits
+   * hreflang, because the target is not an equivalent page.
+   */
+  languagePath?: string;
 }
 
 const {
@@ -24,7 +31,8 @@ const {
   jsonLd,
   noindex = false,
   lang = "en",
-  alternatePath
+  alternatePath,
+  languagePath
 } = Astro.props;
 
 const pageTitle = title
@@ -37,6 +45,7 @@ const pageTitle = title
 const canonical = new URL(Astro.url.pathname, site.url);
 const socialImage = new URL(image, site.url);
 const alternateUrl = alternatePath ? new URL(alternatePath, site.url) : undefined;
+const switcherPath = alternatePath ?? languagePath;
 const citationPdfUrl = publication?.pdfUrl
   ? new URL(publication.pdfUrl, site.url)
   : undefined;
@@ -183,7 +192,7 @@ const serializedStructuredData = JSON.stringify(structuredData).replaceAll("<", 
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <Header pathname={Astro.url.pathname} lang={lang} alternatePath={alternatePath} />
+    <Header pathname={Astro.url.pathname} lang={lang} alternatePath={switcherPath} />
     <main id="main-content">
       <slot />
     </main>
