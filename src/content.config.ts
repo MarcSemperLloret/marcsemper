@@ -34,4 +34,28 @@ const sessions = defineCollection({
   })
 });
 
-export const collections = { sessions };
+/**
+ * Blog posts written as Markdown or MDX.
+ *
+ * One file per post, stored under `src/content/posts/<post-slug>.md`.
+ */
+const posts = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/posts" }),
+  schema: z.object({
+    title: z.string(),
+    /** Optional compact or targeted SEO title for the <title> tag. */
+    seoTitle: z.string().optional(),
+    description: z.string(),
+    /** ISO date the post was published, e.g. "2026-08-28". */
+    date: z.string(),
+    /** ISO date of the last revision if applicable. */
+    updatedDate: z.string().optional(),
+    lang: z.enum(["es", "en"]).default("es"),
+    tags: z.array(z.string()).default([]),
+    author: z.string().default("Marc Semper Lloret"),
+    draft: z.boolean().default(false),
+    image: z.string().optional()
+  })
+});
+
+export const collections = { sessions, posts };

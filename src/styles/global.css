@@ -264,7 +264,7 @@ select {
 
 .desktop-nav {
   display: flex;
-  gap: clamp(18px, 2.2vw, 30px);
+  gap: clamp(12px, 1.6vw, 24px);
   align-items: center;
 }
 
@@ -538,7 +538,7 @@ select {
   color: var(--ink);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 940px) {
   :root {
     --container: min(100% - 34px, 720px);
   }

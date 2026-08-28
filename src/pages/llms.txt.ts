@@ -36,6 +36,7 @@ ${publicationLinks}
 - [Curriculum Vitae](${site.url}/cv/): Academic appointment, teaching, and research achievements.
 - [Doctoral Thesis](${site.url}/thesis/): Spatiotemporal modelling with neural networks for environmental forecasting.
 - [Teaching](${site.url}/teaching/): Course material published for students at the University of Alicante.
+- [Blog](${site.url}/blog/): Technical essays, explainers, and academic reflections.
 - [Full Research Context](${site.url}/llms-full.txt): Complete author-written summaries, contributions, and key findings for all publications.
 - [ORCID Record](${site.profiles.orcid}): Verified academic identity and publication history.
 - [Google Scholar Profile](${site.profiles.scholar}): Citation index and scholarly activity.

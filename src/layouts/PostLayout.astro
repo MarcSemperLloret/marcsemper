@@ -1,0 +1,377 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/data/site";
+import { formatPostDate, type Post } from "@/data/posts";
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  post: Post;
+  siblings: Post[];
+  headings: MarkdownHeading[];
+}
+
+const { post, siblings, headings } = Astro.props;
+const { data } = post.entry;
+const isSpanish = post.lang === "es";
+
+const blogPath = isSpanish ? "/es/blog/" : "/blog/";
+const otherLangBlogPath = isSpanish ? "/blog/" : "/es/blog/";
+
+const tableOfContents = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+
+const index = siblings.findIndex((p) => p.slug === post.slug);
+const previous = index > 0 ? siblings[index - 1] : undefined;
+const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
+const previousPath = previous ? (previous.lang === "es" ? `/es/blog/${previous.slug}/` : `/blog/${previous.slug}/`) : undefined;
+const nextPath = next ? (next.lang === "es" ? `/es/blog/${next.slug}/` : `/blog/${next.slug}/`) : undefined;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": `${site.url}${Astro.url.pathname}#post`,
+  url: `${site.url}${Astro.url.pathname}`,
+  headline: data.title,
+  name: data.title,
+  description: data.description,
+  inLanguage: post.lang,
+  datePublished: data.date,
+  ...(data.updatedDate ? { dateModified: data.updatedDate } : { dateModified: data.date }),
+  author: {
+    "@type": "Person",
+    "@id": `${site.url}/#person`,
+    name: data.author || site.name,
+    url: site.url
+  },
+  publisher: {
+    "@type": "Person",
+    "@id": `${site.url}/#person`
+  },
+  keywords: data.tags?.join(", ")
+};
+---
+
+<BaseLayout
+  lang={post.lang}
+  title={data.seoTitle || data.title}
+  description={data.description}
+  jsonLd={jsonLd}
+  languagePath={otherLangBlogPath}
+>
+  <header class="post-hero">
+    <div class="container">
+      <a class="back-link" href={blogPath}>
+        ← {isSpanish ? "Volver al blog" : "Back to blog"}
+      </a>
+
+      {data.tags && data.tags.length > 0 && (
+        <div class="post-tags" aria-label={isSpanish ? "Etiquetas" : "Tags"}>
+          {data.tags.map((tag) => (
+            <span class="post-tag">{tag}</span>
+          ))}
+        </div>
+      )}
+
+      <h1>{data.title}</h1>
+      <p class="post-summary">{data.description}</p>
+
+      <div class="post-meta-row">
+        <span class="meta-item">
+          <strong>{isSpanish ? "Publicado:" : "Published:"}</strong>{" "}
+          <time datetime={data.date}>{formatPostDate(data.date, post.lang)}</time>
+        </span>
+        <span class="meta-item">
+          <strong>{isSpanish ? "Lectura:" : "Read time:"}</strong> {post.readingTime}
+        </span>
+        <span class="meta-item">
+          <strong>{isSpanish ? "Autor:" : "Author:"}</strong> {data.author || site.publishingName}
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <article class="post-body">
+    <div class="container post-grid">
+      {tableOfContents.length > 2 && (
+        <aside class="post-sidebar">
+          <nav class="post-toc" aria-label={isSpanish ? "Índice del artículo" : "Table of contents"}>
+            <p class="toc-title">{isSpanish ? "En este artículo" : "In this article"}</p>
+            <ol>
+              {tableOfContents.map((heading) => (
+                <li class={`toc-depth-${heading.depth}`}>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </aside>
+      )}
+
+      <div class="post-column">
+        <div class="post-content session-content">
+          <slot />
+        </div>
+
+        {data.updatedDate && (
+          <p class="post-updated-notice">
+            {isSpanish ? "Última actualización:" : "Last updated:"}{" "}
+            {formatPostDate(data.updatedDate, post.lang)}.
+          </p>
+        )}
+      </div>
+    </div>
+  </article>
+
+  <nav class="post-nav" aria-label={isSpanish ? "Navegación entre artículos" : "Post navigation"}>
+    <div class="container nav-grid">
+      {previousPath && previous ? (
+        <a class="nav-previous" href={previousPath}>
+          <span>{isSpanish ? "Artículo anterior" : "Previous article"}</span>
+          <strong>{previous.entry.data.title}</strong>
+        </a>
+      ) : (
+        <span></span>
+      )}
+      {nextPath && next ? (
+        <a class="nav-next" href={nextPath}>
+          <span>{isSpanish ? "Siguiente artículo" : "Next article"}</span>
+          <strong>{next.entry.data.title}</strong>
+        </a>
+      ) : (
+        <span></span>
+      )}
+    </div>
+    <div class="container nav-back">
+      <a href={blogPath}>
+        ← {isSpanish ? "Ver todos los artículos del blog" : "View all blog posts"}
+      </a>
+    </div>
+  </nav>
+</BaseLayout>
+
+<style>
+  .post-hero {
+    padding: 70px 0 55px;
+    color: var(--white);
+    background:
+      radial-gradient(circle at 85% 30%, rgba(40, 87, 223, 0.4), transparent 22rem),
+      var(--ink);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 28px;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 0.84rem;
+    font-weight: 750;
+    transition: color 150ms ease;
+  }
+
+  .back-link:hover {
+    color: var(--white);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .post-tag {
+    display: inline-block;
+    padding: 4px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--gold);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .post-hero h1 {
+    max-width: 900px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5vw, 4.2rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    overflow-wrap: break-word;
+  }
+
+  .post-summary {
+    max-width: 720px;
+    margin: 24px 0 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 1.12rem;
+    line-height: 1.6;
+  }
+
+  .post-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+  }
+
+  .meta-item strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .post-body {
+    display: block;
+    padding: 70px 0 90px;
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  @media (min-width: 980px) {
+    .post-grid:has(.post-sidebar) {
+      grid-template-columns: 240px 1fr;
+      gap: 60px;
+    }
+  }
+
+  .post-sidebar {
+    position: relative;
+  }
+
+  .post-toc {
+    position: sticky;
+    top: 30px;
+    padding: 24px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper-deep);
+  }
+
+  .toc-title {
+    margin: 0 0 14px;
+    color: var(--ink);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .post-toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .post-toc a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    transition: color 150ms ease;
+  }
+
+  .post-toc a:hover {
+    color: var(--blue);
+  }
+
+  .toc-depth-3 {
+    padding-left: 14px;
+    font-size: 0.8rem;
+  }
+
+  .post-column {
+    max-width: 760px;
+  }
+
+  .post-updated-notice {
+    margin-top: 50px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .post-nav {
+    padding: 50px 0 70px;
+    background: var(--paper-deep);
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .nav-grid a {
+    display: grid;
+    gap: 8px;
+    padding: 22px 24px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 160ms ease, transform 160ms ease;
+  }
+
+  .nav-grid a:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .nav-next {
+    text-align: right;
+  }
+
+  .nav-grid span {
+    color: var(--ink-soft);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-grid strong {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .nav-back {
+    margin-top: 26px;
+  }
+
+  .nav-back a {
+    color: var(--blue-dark);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
+  .nav-back a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 780px) {
+    .nav-grid {
+      grid-template-columns: 1fr;
+    }
+    .nav-next {
+      text-align: left;
+    }
+  }
+</style>

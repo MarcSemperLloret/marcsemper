@@ -114,6 +114,44 @@ Two constraints on the Markdown, both from the site's Content-Security-Policy
 - Syntax highlighting is off in `astro.config.mjs` for the same reason. Fenced
   code blocks render as plain `<pre>`, which suits ASCII process diagrams.
 
+## Writing a blog post
+
+Blog posts live in:
+
+```
+src/content/posts/<post-slug>.md
+```
+
+To create a new post, create a `.md` (or `.mdx`) file inside `src/content/posts/` with the following frontmatter:
+
+```yaml
+---
+title: "Título de la entrada"
+description: "Resumen breve que aparecerá en el listado y en los metadatos SEO."
+date: "2026-08-28"
+lang: "es" # "es" o "en"
+tags:
+  - "Inteligencia Artificial"
+  - "Investigación"
+draft: false # true para mantenerla oculta mientras se redacta
+---
+```
+
+Frontmatter fields:
+
+| Field | Required | Purpose |
+| --- | --- | --- |
+| `title` | yes | Page heading, browser title and RSS headline |
+| `description` | yes | Intro summary and meta description |
+| `date` | yes | ISO publication date (`YYYY-MM-DD`) used for ordering |
+| `updatedDate` | no | ISO date of last significant revision |
+| `lang` | no | `es` (default) or `en` |
+| `tags` | no | Array of tags displayed on the post and cards |
+| `author` | no | Author name (defaults to Marc Semper Lloret) |
+| `draft` | no | `true` keeps the post off the public site |
+
+Posts published in Spanish appear at `/es/blog/<post-slug>/` and in English at `/blog/<post-slug>/`. Both language indexes list all posts with language badges.
+
 Start headings at `##`. The `#` level is reserved for the page title generated
 from `title`. For blank numbered lines students write on, use
 `<ol class="fill-in">` with empty `<li>` items.

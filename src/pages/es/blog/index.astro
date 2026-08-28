@@ -1,0 +1,214 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import { getPosts, formatPostDate, postPath } from "@/data/posts";
+import { site } from "@/data/site";
+
+const posts = await getPosts();
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": ["Blog", "CollectionPage"],
+  "@id": `${site.url}/es/blog/#blog`,
+  name: `Blog — ${site.name}`,
+  url: `${site.url}/es/blog/`,
+  description: "Artículos, notas técnicas y reflexiones sobre inteligencia artificial espacio-temporal, investigación y docencia.",
+  inLanguage: "es",
+  author: { "@id": `${site.url}/#person` },
+  numberOfItems: posts.length,
+  blogPost: posts.map((post) => ({
+    "@type": "BlogPosting",
+    headline: post.entry.data.title,
+    description: post.entry.data.description,
+    datePublished: post.entry.data.date,
+    url: `${site.url}${postPath(post)}`
+  }))
+};
+---
+
+<BaseLayout
+  lang="es"
+  title="Blog"
+  description="Artículos, notas técnicas y reflexiones sobre inteligencia artificial espacio-temporal, investigación y docencia por Marc Semper Lloret."
+  jsonLd={jsonLd}
+  alternatePath="/blog/"
+>
+  <header class="page-hero">
+    <div class="container page-hero-grid">
+      <div>
+        <p class="eyebrow">Cuaderno de notas</p>
+        <h1 class="page-title">Blog.</h1>
+      </div>
+      <div>
+        <p class="page-intro">
+          Reflexiones, divulgación técnica y notas metodológicas sobre inteligencia artificial,
+          redes neuronales de grafos, calidad de datos y docencia universitaria.
+        </p>
+        <div class="record-stats">
+          <span><strong>{posts.length}</strong> {posts.length === 1 ? "artículo publicado" : "artículos publicados"}</span>
+          <span><strong>Actualizado</strong> regularmente</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container blog-container">
+    {posts.length > 0 ? (
+      <div class="blog-grid">
+        {posts.map((post) => (
+          <article class="blog-card">
+            <div class="blog-card-meta">
+              <time datetime={post.entry.data.date}>
+                {formatPostDate(post.entry.data.date, "es")}
+              </time>
+              <span class="meta-dot">·</span>
+              <span>{post.readingTime}</span>
+              {post.lang !== "es" && (
+                <>
+                  <span class="meta-dot">·</span>
+                  <span class="lang-tag">{post.lang.toUpperCase()}</span>
+                </>
+              )}
+            </div>
+
+            <h2 class="blog-card-title">
+              <a href={postPath(post)}>{post.entry.data.title}</a>
+            </h2>
+
+            <p class="blog-card-summary">{post.entry.data.description}</p>
+
+            {post.entry.data.tags && post.entry.data.tags.length > 0 && (
+              <div class="blog-card-tags">
+                {post.entry.data.tags.map((tag) => (
+                  <span class="tag-pill">{tag}</span>
+                ))}
+              </div>
+            )}
+
+            <div class="blog-card-action">
+              <ArrowLink href={postPath(post)}>
+                Leer artículo completo
+              </ArrowLink>
+            </div>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <div class="blog-empty-state">
+        <p>No hay artículos publicados todavía. Vuelve pronto para nuevas lecturas.</p>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-container {
+    padding: 70px 0 100px;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 32px;
+  }
+
+  @media (max-width: 720px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    padding: 36px 32px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper-deep);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .blog-card:hover {
+    border-color: var(--blue);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(18, 26, 42, 0.08);
+  }
+
+  .blog-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: var(--ink-soft);
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  .meta-dot {
+    opacity: 0.5;
+  }
+
+  .lang-tag {
+    padding: 1px 6px;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 800;
+  }
+
+  .blog-card-title {
+    margin: 0 0 14px;
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+
+  .blog-card-title a {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .blog-card-title a:hover {
+    color: var(--blue);
+  }
+
+  .blog-card-summary {
+    margin: 0 0 24px;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    flex-grow: 1;
+  }
+
+  .blog-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  .tag-pill {
+    padding: 2px 9px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .blog-card-action {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .blog-empty-state {
+    padding: 60px 40px;
+    text-align: center;
+    border: 1px dashed var(--line-strong);
+    color: var(--ink-soft);
+  }
+</style>
