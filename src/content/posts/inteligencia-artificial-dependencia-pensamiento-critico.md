@@ -312,3 +312,18 @@ A medida que podamos externalizar más partes de nuestra cognición, tendremos q
 Porque puede llegar un momento en el que una máquina haga algo mejor que nosotros y, aun así, siga existiendo una buena razón para aprender a hacerlo.
 
 **La cuestión no será cuánto puede pensar la inteligencia artificial por nosotros, sino qué merece la pena que sigamos sabiendo pensar por nosotros mismos.**
+
+---
+
+## Referencias y lecturas complementarias
+
+- **Risko, E. F., & Gilbert, S. J. (2016).** *Cognitive Offloading*. Trends in Cognitive Sciences, 20(9), 676–688. [DOI: 10.1016/j.tics.2016.07.002](https://doi.org/10.1016/j.tics.2016.07.002)
+- **Sparrow, B., Liu, J., & Wegner, D. M. (2011).** *Google Effects on Memory: Cognitive Consequences of Having Information at Our Fingertips*. Science, 333(6043), 776–778. [DOI: 10.1126/science.1207745](https://doi.org/10.1126/science.1207745) · [PubMed](https://pubmed.ncbi.nlm.nih.gov/21764755/)
+- **Dahmani, L., & Bohbot, V. D. (2020).** *Habitual use of GPS negatively impacts spatial memory during self-guided navigation*. Scientific Reports, 10, 6311. [DOI: 10.1038/s41598-020-62877-0](https://doi.org/10.1038/s41598-020-62877-0) · [PubMed](https://pubmed.ncbi.nlm.nih.gov/32286340/)
+- **Deng, X., et al. (2025).** *Does ChatGPT enhance student learning? A systematic review and meta-analysis of experimental studies*. Computers & Education, 226, 105224. [DOI: 10.1016/j.compedu.2024.105224](https://doi.org/10.1016/j.compedu.2024.105224)
+- **Wu, X., et al. (2026).** *ChatGPT’s impact on student learning outcomes: a meta-analysis of 35 experimental studies*. Humanities and Social Sciences Communications, 13, 201. [DOI: 10.1057/s41599-026-07019-z](https://doi.org/10.1057/s41599-026-07019-z)
+- **Yan, L., et al. (2025).** *Distinguishing performance gains from learning when using generative AI*. Nature Reviews Psychology, 4, 381–383. [DOI: 10.1038/s44159-025-00467-5](https://doi.org/10.1038/s44159-025-00467-5)
+- **Parasuraman, R., & Manzey, D. H. (2010).** *Complacency and bias in human use of automation: an attentional integration*. Human Factors, 52(3), 381–410. [DOI: 10.1177/0018720810376055](https://doi.org/10.1177/0018720810376055) · [PubMed](https://pubmed.ncbi.nlm.nih.gov/21077562/)
+- **Lee, U., et al. (2025).** *The Impact of Generative AI on Critical Thinking*. In Proceedings of the 2025 CHI Conference on Human Factors in Computing Systems (CHI '25). [DOI: 10.1145/3706598.3713778](https://doi.org/10.1145/3706598.3713778)
+- **Geng, M., & Trotta, A. (2025).** *Human-LLM Coevolution: Evidence from Academic Writing*. In Findings of the Association for Computational Linguistics: ACL 2025. [ACL Anthology](https://aclanthology.org/2025.findings-acl.657/)
+- **Yakura, H., et al. (2024).** *Empirical evidence of Large Language Model's influence on human spoken communication*. arXiv:2409.01754. [arXiv:2409.01754](https://arxiv.org/abs/2409.01754)
