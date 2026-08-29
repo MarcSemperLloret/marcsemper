@@ -67,7 +67,7 @@ const jsonLd = {
 <BaseLayout
   lang="es"
   title="Docencia"
-  description="Material docente para el alumnado: apuntes, diapositivas, ejercicios, cuadernos y lecturas de las asignaturas y módulos de formación profesional que imparte Marc Semper Lloret."
+  description="Material docente: apuntes, diapositivas, ejercicios, cuadernos y lecturas de las asignaturas y módulos que imparte Marc Semper Lloret."
   jsonLd={jsonLd}
   alternatePath="/teaching/"
 >
@@ -75,7 +75,7 @@ const jsonLd = {
     <div class="container page-hero-grid">
       <div>
         <p class="eyebrow">Docencia</p>
-        <h1 class="page-title">Material para mi alumnado.</h1>
+        <h1 class="page-title">Material docente.</h1>
       </div>
       <p class="page-intro">
         Un único lugar estable para el material de las asignaturas y módulos
@@ -84,29 +84,6 @@ const jsonLd = {
       </p>
     </div>
   </header>
-
-  <section class="page-section">
-    <div class="container teaching-intro">
-      <div>
-        <p class="eyebrow">Cómo funciona esta página</p>
-        <h2 class="section-title">Material publicado, no un sustituto de la clase.</h2>
-      </div>
-      <div class="prose">
-        <p>
-          Todo lo que se publica aquí sirve de apoyo a una asignatura o módulo
-          concreto. Complementa la guía docente oficial y el aula virtual del
-          centro correspondiente, pero no sustituye a ninguno de los dos.
-        </p>
-        <p>
-          Los criterios de evaluación, las fechas y los avisos oficiales son
-          siempre los que constan en los sistemas oficiales del centro. El
-          material de esta página puede revisarse durante el curso, así que
-          conviene consultar la página de la asignatura antes de trabajar con
-          una copia antigua.
-        </p>
-      </div>
-    </div>
-  </section>
 
   <section class="courses-section">
     <div class="container">
@@ -152,9 +129,9 @@ const jsonLd = {
                 <h3>
                   <a href={`/es/docencia/${course.slug}/`}>{course.titleEs}</a>
                 </h3>
-                <p class="course-level">
-                  {[course.levelEs, course.institutionEs].filter(Boolean).join(" · ")}
-                </p>
+                {course.institutionEs && (
+                  <p class="course-level">{course.institutionEs}</p>
+                )}
                 <p>{course.summaryEs}</p>
                 {course.topicsEs.length > 0 && (
                   <ul class="topic-list">
@@ -223,10 +200,24 @@ const jsonLd = {
 </BaseLayout>
 
 <style>
-  .teaching-intro {
-    display: grid;
-    grid-template-columns: 1fr 0.72fr;
-    gap: 100px;
+  /* The teaching index leads with the courses, so its hero stays out of the
+     way instead of taking a full screen like the research pages. */
+  .page-hero {
+    padding: 74px 0 46px;
+  }
+
+  .page-title {
+    font-size: clamp(2.6rem, 5.4vw, 4.4rem);
+  }
+
+  @media (max-width: 640px) {
+    .page-hero {
+      padding: 56px 0 38px;
+    }
+
+    .page-title {
+      font-size: clamp(2.3rem, 11vw, 3.4rem);
+    }
   }
 
   .courses-section {
@@ -419,7 +410,6 @@ const jsonLd = {
   }
 
   @media (max-width: 900px) {
-    .teaching-intro,
     .contact-grid {
       grid-template-columns: 1fr;
       gap: 50px;

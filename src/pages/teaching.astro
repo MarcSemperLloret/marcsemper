@@ -66,7 +66,7 @@ const teachingJsonLd = {
 
 <BaseLayout
   title="Teaching"
-  description="Course material for students: notes, slides, exercises, notebooks and reading lists for the subjects and vocational training modules taught by Marc Semper Lloret."
+  description="Teaching material: notes, slides, exercises, notebooks and reading lists for the subjects and modules taught by Marc Semper Lloret."
   jsonLd={teachingJsonLd}
   alternatePath="/es/docencia/"
 >
@@ -74,7 +74,7 @@ const teachingJsonLd = {
     <div class="container page-hero-grid">
       <div>
         <p class="eyebrow">Teaching</p>
-        <h1 class="page-title">Material for my students.</h1>
+        <h1 class="page-title">Teaching material.</h1>
       </div>
       <p class="page-intro">
         A single, stable place for the material of the subjects and modules I
@@ -83,28 +83,6 @@ const teachingJsonLd = {
       </p>
     </div>
   </header>
-
-  <section class="page-section">
-    <div class="container teaching-intro">
-      <div>
-        <p class="eyebrow">How this page works</p>
-        <h2 class="section-title">Published material, not a substitute for class.</h2>
-      </div>
-      <div class="prose">
-        <p>
-          Everything published here supports the teaching of one specific
-          subject. It complements the official course guide and the virtual
-          campus of the corresponding centre; it does not replace either.
-        </p>
-        <p>
-          Assessment rules, deadlines and official announcements are always
-          those stated in the centre's own systems. Material on this page may be
-          revised during the term, so check the subject page before working from
-          an older copy.
-        </p>
-      </div>
-    </div>
-  </section>
 
   <section class="courses-section">
     <div class="container">
@@ -150,9 +128,9 @@ const teachingJsonLd = {
                 <h3>
                   <a href={`/teaching/${course.slug}/`}>{course.title}</a>
                 </h3>
-                <p class="course-level">
-                  {[course.level, course.institution].filter(Boolean).join(" · ")}
-                </p>
+                {course.institution && (
+                  <p class="course-level">{course.institution}</p>
+                )}
                 <p>{course.summary}</p>
                 {course.topics.length > 0 && (
                   <ul class="topic-list">
@@ -220,10 +198,24 @@ const teachingJsonLd = {
 </BaseLayout>
 
 <style>
-  .teaching-intro {
-    display: grid;
-    grid-template-columns: 1fr 0.72fr;
-    gap: 100px;
+  /* The teaching index leads with the courses, so its hero stays out of the
+     way instead of taking a full screen like the research pages. */
+  .page-hero {
+    padding: 74px 0 46px;
+  }
+
+  .page-title {
+    font-size: clamp(2.6rem, 5.4vw, 4.4rem);
+  }
+
+  @media (max-width: 640px) {
+    .page-hero {
+      padding: 56px 0 38px;
+    }
+
+    .page-title {
+      font-size: clamp(2.3rem, 11vw, 3.4rem);
+    }
   }
 
   .courses-section {
@@ -410,7 +402,6 @@ const teachingJsonLd = {
   }
 
   @media (max-width: 900px) {
-    .teaching-intro,
     .contact-grid {
       grid-template-columns: 1fr;
       gap: 50px;

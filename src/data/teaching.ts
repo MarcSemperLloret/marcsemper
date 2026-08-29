@@ -63,8 +63,13 @@ export interface TeachingCourse {
   code?: string;
   title: string;
   titleEs: string;
-  level: string;
-  levelEs: string;
+  /**
+   * Education level the course belongs to, e.g. a degree or a training cycle.
+   * Optional on purpose, like `institution`: a module can be taught at more
+   * than one level, and pinning one here would tie the material to it.
+   */
+  level?: string;
+  levelEs?: string;
   /**
    * Teaching centre. Optional on purpose: leaving it out keeps a course
    * reusable across the centres where the same module is taught, so an empty
@@ -169,8 +174,6 @@ export const teachingCourses: TeachingCourse[] = [
     slug: "digitalizacion",
     title: "Digitalización",
     titleEs: "Digitalización",
-    level: "Higher Vocational Training",
-    levelEs: "Ciclo Formativo de Grado Superior",
     term: "2026/2027",
     status: "current",
     updatedAt: "2026-08-29",
@@ -322,8 +325,6 @@ export const teachingCourses: TeachingCourse[] = [
     slug: "sostenibilidad",
     title: "Sostenibilidad",
     titleEs: "Sostenibilidad",
-    level: "Higher Vocational Training",
-    levelEs: "Ciclo Formativo de Grado Superior",
     term: "2026/2027",
     status: "current",
     summary:

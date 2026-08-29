@@ -90,7 +90,6 @@ const resourceMeta = (resource: TeachingResource) =>
       <div class="course-meta">
         <span>{course.term}</span>
         {course.code && <span>{course.code}</span>}
-        <span>{course.level}</span>
         {course.institution && <span>{course.institution}</span>}
         {course.status === "archived" && <span class="archived">Archived course</span>}
       </div>

@@ -20,11 +20,15 @@ export const GET: APIRoute = async () => {
             .join("\n")
         : "- No session material published yet.";
 
+      // Both are optional, so the line is dropped rather than left as an
+      // empty label when a course declares neither.
+      const level = [course.level, course.institution].filter(Boolean).join(", ");
+      const levelLine = level ? `Level: ${level}\n` : "";
+
       return `## ${course.title}
 
 URL: ${site.url}/teaching/${course.slug}/
-Level: ${course.level}${course.institution ? `, ${course.institution}` : ""}
-Academic year: ${course.term}
+${levelLine}Academic year: ${course.term}
 
 ${course.overview}
 
