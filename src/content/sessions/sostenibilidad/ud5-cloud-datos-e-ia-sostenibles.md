@@ -13,7 +13,7 @@ outcomes:
   - "Detectar infraestructura sobredimensionada y recursos olvidados."
   - "Aplicar la idea de right-sizing sin caer en dimensionar por debajo."
   - "Decidir qué datos merece la pena guardar y durante cuánto tiempo."
-  - "Escribir una política de retención sencilla y defendible."
+  - "Escribir una política de retención sencilla y defendible, contando con lo que exige la normativa."
   - "Elegir entre una regla, un algoritmo, un modelo pequeño y uno generativo."
   - "Justificar una decisión técnica por utilidad, coste y recursos a la vez."
 requirements:
@@ -22,6 +22,7 @@ requirements:
   - "Acceso a un asistente de IA."
 priorKnowledge:
   - "Qué hay detrás del cloud y qué consume un centro de datos (UD2)."
+  - "Qué es PixelStore y qué infraestructura tiene (UD1)."
   - "El principio de no procesar lo que no se necesita (UD3)."
   - "Las tres dimensiones ASG (UD1)."
 date: "2026-08-29"
@@ -227,6 +228,29 @@ En el caso E hay algo más que sostenibilidad. ¿Qué es, y en qué dirección e
   </ol>
 </details>
 
+### Tercera tarea · El almacenamiento de PixelStore
+
+Revisando su infraestructura, PixelStore encuentra esto. Decidid qué hacer con cada cosa y por qué. Ahora sí tenéis las herramientas: ciclo de vida del dato, hot y cold, y política de retención.
+
+| Recurso          | Mantener / archivar / eliminar / investigar | Motivo |
+| ---------------- | ------------------------------------------- | ------ |
+| Máquinas virtuales que nadie usa | | |
+| Logs de hace cinco años | | |
+| Un backup que se sabe necesario | | |
+| Un backup duplicado | | |
+| Almacenamiento de proyectos antiguos | | |
+| Datos de clientes que se dieron de baja | | |
+
+Y una tentación que conviene nombrar: **no se eliminan datos solo para ahorrar recursos**. La última fila no es como las demás.
+
+<div class="rule">
+  <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
+  <p>En cuanto aparecen datos personales, la decisión deja de ser vuestra del todo. El <strong>RGPD</strong> establece dos principios que afectan directamente a lo que estáis haciendo:</p>
+  <p><strong>Limitación del plazo de conservación.</strong> Los datos personales no se guardan indefinidamente por si acaso: se conservan el tiempo necesario para la finalidad por la que se recogieron. «Quizá algún día sirvan para entrenar algo» no es una finalidad.</p>
+  <p><strong>Minimización.</strong> Se recogen los datos adecuados y limitados a lo necesario. Guardar treinta campos cuando la aplicación usa cinco no es solo desperdicio de almacenamiento: es un problema de cumplimiento y, si hay una brecha, de daño.</p>
+  <p>Fijaos en lo que ocurre aquí: por una vez, la sostenibilidad y la normativa empujan en la misma dirección. Menos datos guardados es menos infraestructura y también menos riesgo.</p>
+</div>
+
 ### Datos duplicados
 
 <p class="single-node single-node--mono">clientes-final.csv · clientes-final2.csv · clientes-definitivo.csv · clientes-definitivo-bueno.csv</p>
@@ -382,7 +406,7 @@ Y lo mismo con lo que pedimos de vuelta: generar veinte alternativas cuando nece
 
 > **No procesar lo que no necesitamos.**
 
-### Tercera tarea · ¿Usarías IA?
+### Cuarta tarea · ¿Usarías IA?
 
 De cada caso: regla, algoritmo, modelo pequeño o modelo generativo. Y por qué.
 
@@ -407,8 +431,8 @@ El caso F no es una cuestión de eficiencia, es de seguridad: una decisión de a
   <summary>Estoy atascado · todas mis respuestas acaban en IA</summary>
   <ol>
     <li>Preguntaos qué entrada tiene el problema. Si es un número o un formato fijo, casi nunca hace falta un modelo.</li>
-    <li>Preguntaos si la respuesta correcta es siempre la misma para la misma entrada. Si lo es, queréis un algoritmo, no un modelo.</li>
-    <li>Preguntaos si podríais escribir las reglas. Si podéis escribirlas todas, escribidlas.</li>
+    <li>Preguntaos si podríais escribir las reglas completas. No unas cuantas: todas, y de forma que sigan valiendo dentro de un año. Si podéis, escribidlas.</li>
+    <li>Si la lista de reglas no acaba nunca, o cambia cada mes, o nadie sabe enunciarlas aunque reconozca los casos al verlos, ahí es donde tiene sentido aprender la función a partir de datos.</li>
     <li>Preguntaos si os importa poder explicar la decisión. Cuanto más lo necesitéis, más arriba en la escalera.</li>
     <li>Y una comprobación final: si la solución falla, ¿qué pasa? Cuanto peor sea la consecuencia, menos margen hay para algo probabilístico.</li>
   </ol>
@@ -456,9 +480,9 @@ No usar IA no es ser menos moderno. Puede ser, sencillamente, haber elegido bien
 
 ## Sesión 4 · Arquitectos tecnológicos
 
-### El reto · NovaApps
+### El reto · PixelStore
 
-NovaApps desarrolla varios servicios digitales. La dirección quiere modernizar la infraestructura y usar más inteligencia artificial. Vuestra misión es **proponer soluciones proporcionadas**.
+Volvemos a la tienda. Ya conocéis su web, sus barreras y su hardware; hoy toca lo que hay debajo. La dirección quiere modernizar la infraestructura y usar más inteligencia artificial, y vuestra misión es **proponer soluciones proporcionadas**.
 
 No puntúa más quien use más cloud, más servidores, más datos o más IA. Puntúa más quien elige la solución adecuada al problema y sabe decir por qué descartó las otras.
 
@@ -466,15 +490,15 @@ No puntúa más quien use más cloud, más servidores, más datos o más IA. Pun
 
 | # | Caso | Situación |
 | - | ---- | --------- |
-| 1 | Web corporativa | 3.000 visitas al mes sobre 4 máquinas permanentemente activas, al 5 % de CPU y 12 % de RAM |
-| 2 | Black Friday | 2.000 usuarios simultáneos habituales, 40.000 en campaña. Dirección quiere infraestructura para 40.000 todo el año |
+| 1 | Web corporativa | La web institucional, distinta de la tienda: 3.000 visitas al mes sobre 4 máquinas permanentemente activas, al 5 % de CPU y 12 % de RAM |
+| 2 | Black Friday | La tienda: 2.000 usuarios simultáneos habituales, 40.000 en campaña. Dirección quiere infraestructura para 40.000 todo el año |
 | 3 | Logs | 500 GB al mes, conservados indefinidamente. Se consultan los últimos 30 días |
 | 4 | Backups | Backup completo diario, todos conservados desde hace 6 años |
 | 5 | Atención al cliente | 20.000 mensajes al mes a clasificar en cuatro categorías. Dirección quiere «el modelo generativo más potente» |
 | 6 | Contraseñas | Dirección propone un LLM para decidir si una contraseña cumple los requisitos |
 | 7 | Documentación | Miles de páginas. Quieren preguntar «¿cómo se configura el sistema X?» |
 
-### Primera tarea · Resolver los siete
+### Quinta tarea · Resolver los siete casos
 
 El primero lo hacemos juntos, con el razonamiento a la vista.
 
@@ -488,7 +512,7 @@ El primero lo hacemos juntos, con el razonamiento a la vista.
   <dt>¿Reduzco directamente?</dt>
   <dd>No. Si dos de las cuatro están para que la web no se caiga cuando una falla, quitarlas ahorra recursos y compra una caída.</dd>
   <dt>Propuesta</dt>
-  <dd>Una web corporativa de 3.000 visitas es contenido casi estático: sitio estático servido desde almacenamiento con CDN, o un plan gestionado pequeño. Cero máquinas que mantener.</dd>
+  <dd>Una web corporativa de 3.000 visitas es contenido casi estático: sitio estático servido desde almacenamiento con CDN, o un plan gestionado pequeño. Cero máquinas que administrar directamente — que no es lo mismo que cero máquinas: siguen existiendo, pero las opera el proveedor y se comparten con otros.</dd>
   <dt>¿Qué he ganado y qué he perdido?</dt>
   <dd>Gano coste, mantenimiento y recursos. Pierdo control sobre el servidor, que en una web corporativa no me hacía falta.</dd>
 </dl>
@@ -522,7 +546,7 @@ Los cinco restantes.
 | Contraseñas | | | |
 | Documentación | | | |
 
-### Segunda tarea · Las cuatro dimensiones
+### Sexta tarea · Las cuatro dimensiones
 
 Elegid tres casos y decid cómo afecta vuestra solución a cada cosa:
 
@@ -535,7 +559,7 @@ Elegid tres casos y decid cómo afecta vuestra solución a cada cosa:
 
 Una solución sostenible no se juzga solo por lo ambiental. También tiene que funcionar, ser viable y poder mantenerse. Una arquitectura preciosa que nadie sabe operar no es sostenible: es un problema aplazado.
 
-### Tercera tarea · La solución mínima suficiente
+### Séptima tarea · La solución mínima suficiente
 
 Coged uno de los casos y proponed tres soluciones: **A**, la más sencilla que podría funcionar; **B**, algo más elaborada; **C**, la más avanzada que se os ocurra.
 
@@ -548,7 +572,7 @@ Coged uno de los casos y proponed tres soluciones: **A**, la más sencilla que p
 
 Y entonces la pregunta que importa: **¿cuál usaríais de verdad?** Casi siempre la respuesta es B, y casi siempre el motivo por el que no es C merece estar escrito.
 
-### Cuarta tarea · Que la IA cuestione vuestra solución
+### Octava tarea · Que la IA cuestione vuestra solución
 
 <div class="prompt">
   <p class="prompt-label">Prompt estructurado</p>
@@ -621,11 +645,14 @@ Unos **3 minutos** por pareja, para responder a cuatro preguntas:
 | Uso crítico de IA                               |      1 |
 | Claridad de la entrega                          |    0,5 |
 
+Durante la exposición se preguntará **individualmente** a cualquiera de los dos miembros por una decisión del trabajo.
+
 No puntúa más quien propone Kubernetes, microservicios, IA y veinte servidores. Tampoco quien propone siempre usar menos. Buscamos **la solución adecuada al problema**, y la capacidad de defender por qué lo es.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · entrega</p>
   <ul class="checklist">
+    <li>Las decisiones y su justificación están en vuestro repositorio de evidencias.</li>
     <li>Habéis justificado los recursos cloud que proponéis.</li>
     <li>No habéis reducido infraestructura sin mirar los picos.</li>
     <li>Tenéis una política de retención escrita, con plazos.</li>

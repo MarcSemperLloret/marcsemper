@@ -5,7 +5,7 @@ section: "ud-03"
 order: 3
 lang: "es"
 summary: "Una web no necesita consumir más recursos de los necesarios para dar un buen servicio. Aprendemos a medir una página, detectar el desperdicio, optimizarla y demostrar con datos si de verdad la hemos mejorado."
-duration: "7 horas · 7 sesiones"
+duration: "6 horas · 6 sesiones"
 modality: "Parejas"
 deliverable: "Una página web optimizada y la comparación técnica antes/después que lo demuestra."
 outcomes:
@@ -24,19 +24,19 @@ requirements:
   - "PixelStore, el proyecto de partida. Se clona en la sesión 2."
 priorKnowledge:
   - "El ciclo de vida y la idea de no gastar recursos de más (UD2)."
+  - "Que PixelStore es la empresa del módulo (UD1)."
   - "Leer un diff y revisar lo que propone un agente (Digitalización, UD4)."
   - "Qué es un indicador y por qué hace falta una medida de partida (UD1)."
 date: "2026-08-29"
 ---
 
 <div class="checkpoint">
-  <p class="checkpoint-label">La misión · siete pasos hasta una web demostrablemente mejor</p>
+  <p class="checkpoint-label">La misión · seis pasos hasta una web demostrablemente mejor</p>
   <ol>
     <li>Entender qué consume una web.</li>
     <li>Medir el estado inicial y guardarlo.</li>
     <li>Optimizar imágenes y multimedia.</li>
-    <li>Revisar JavaScript, CSS, fuentes y terceros.</li>
-    <li>Entender caché, compresión y datos.</li>
+    <li>Revisar código, terceros, caché y datos.</li>
     <li>Aplicar los cambios sobre el proyecto.</li>
     <li>Volver a medir y comprobar que nada se ha roto.</li>
   </ol>
@@ -407,7 +407,9 @@ Y una observación que conviene tener presente: si una imagen baja de 5 MB a 400
 
 ---
 
-## Sesión 4 · JavaScript, CSS, fuentes y terceros
+## Sesión 4 · Código, terceros, caché y datos
+
+Todo lo que queda por revisar comparte una idea: **se transfiere o se ejecuta algo que nadie necesitaba**. Vamos a recorrerlo de fuera hacia dentro, del navegador al servidor.
 
 ### Más código no es mejor aplicación
 
@@ -474,37 +476,6 @@ Ahora sí, Copilot. Pero primero habéis hecho la revisión vosotros, igual que 
 </div>
 
 Clasificad cada propuesta como **aceptar**, **rechazar** o **investigar**, y elegid al menos una que **no** aplicaríais, explicando por qué. Esa es la que más cuenta: rechazar bien una optimización demuestra más criterio que aceptarlas todas.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
-  <ul class="checklist">
-    <li>Habéis identificado JavaScript reducible y CSS que sobra.</li>
-    <li>Sabéis cuántas fuentes se descargan y cuántas se usan.</li>
-    <li>Tenéis la lista de terceros y qué aporta cada uno.</li>
-    <li>Tenéis las propuestas de la IA clasificadas.</li>
-    <li>Tenéis al menos una recomendación rechazada, con su motivo escrito.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué revisáis vosotros antes de preguntar a la IA?</li>
-    <li>Un mapa al final de la página, ¿cuándo debería cargarse?</li>
-    <li>¿Qué coste tiene una dependencia, aparte de sus kilobytes?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Para desarrollar criterio. Si empezáis por la IA solo aprendéis a leer su respuesta, no a encontrar el problema.</p>
-  <p>2 · Cuando el usuario lo pida. Si la mayoría no lo abre, cargarlo siempre es trabajo desperdiciado en todas esas visitas.</p>
-  <p>3 · Mantenimiento, actualizaciones, superficie de vulnerabilidad y tiempo de ejecución. Los kilobytes suelen ser lo de menos.</p>
-</details>
-
----
-
-## Sesión 5 · Caché, compresión y datos
 
 ### ¿Hay que descargar siempre lo mismo?
 
@@ -581,34 +552,38 @@ Vuelve a aparecer el principio de la unidad: **procesar y transferir solo lo nec
 | Se descargan 40 imágenes que están fuera de pantalla    |                |
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
   <ul class="checklist">
-    <li>Sabes explicar qué resuelve la caché y qué problema introduce.</li>
-    <li>Sabes qué tipo de recursos se comprimen y cuáles no merece la pena.</li>
-    <li>Entiendes por qué paginar reduce recursos en los dos extremos.</li>
-    <li>Has localizado en el proyecto al menos un caso de datos de más.</li>
+    <li>Habéis identificado JavaScript reducible y CSS que sobra.</li>
+    <li>Sabéis cuántas fuentes se descargan y cuántas se usan de verdad.</li>
+    <li>Tenéis la lista de terceros y qué aporta cada uno.</li>
+    <li>Sabéis explicar qué resuelve la caché y qué problema introduce.</li>
+    <li>Habéis localizado al menos un caso de datos que se transfieren de más.</li>
+    <li>Tenéis las propuestas de la IA clasificadas, y una rechazada con su motivo.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
+    <li>Un mapa al final de la página, ¿cuándo debería cargarse?</li>
+    <li>¿Qué coste tiene una dependencia, aparte de sus kilobytes?</li>
     <li>Habéis cambiado el CSS y algunos usuarios siguen viendo el diseño viejo. ¿Qué ha pasado?</li>
-    <li>¿Por qué no tiene sentido comprimir un AVIF otra vez?</li>
     <li>¿Qué gana el servidor al paginar, además del ancho de banda?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Su navegador tiene cacheada la versión anterior y todavía la considera válida. Es el precio de la caché mal gestionada.</p>
-  <p>2 · Porque ya está fuertemente comprimido: se gasta CPU para ahorrar prácticamente nada.</p>
-  <p>3 · Trabajo. Consultar y serializar 20 registros en lugar de 50.000 ahorra base de datos, memoria y tiempo de proceso.</p>
+  <p>1 · Cuando el usuario lo pida. Si la mayoría no lo abre, cargarlo siempre es trabajo desperdiciado en todas esas visitas.</p>
+  <p>2 · Mantenimiento, actualizaciones, superficie de vulnerabilidad y tiempo de ejecución. Los kilobytes suelen ser lo de menos.</p>
+  <p>3 · Su navegador tiene cacheada la versión anterior y la considera válida. Es el precio de la caché mal gestionada.</p>
+  <p>4 · Trabajo. Consultar y serializar 20 registros en lugar de 50.000 ahorra base de datos, memoria y tiempo de proceso.</p>
 </details>
 
 ---
 
-## Sesión 6 · Optimizar nuestra web
+## Sesión 5 · Optimizar nuestra web
 
 Ya tenemos suficiente información. Volvemos al proyecto con un objetivo: **reducir recursos sin empeorar el servicio**.
 
@@ -672,7 +647,7 @@ git diff
 Tenéis que poder responder en todo momento a una pregunta: **¿qué hemos modificado exactamente?** Si no lo sabéis, tampoco podréis explicar a qué se debe la mejora.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 6</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
   <ul class="checklist">
     <li>Tenéis el plan escrito antes de los cambios, con el resultado esperado.</li>
     <li>Al menos cinco optimizaciones aplicadas, en varias categorías.</li>
@@ -699,7 +674,7 @@ Tenéis que poder responder en todo momento a una pregunta: **¿qué hemos modif
 
 ---
 
-## Sesión 7 · ¿Realmente hemos mejorado?
+## Sesión 6 · ¿Realmente hemos mejorado?
 
 Repetid la medición inicial **exactamente igual**: mismas herramientas, mismas condiciones, misma configuración de caché.
 
@@ -769,6 +744,10 @@ Existen herramientas que estiman gramos de CO₂ por página. Pueden servir como
 
 En esta unidad damos prioridad a lo que podemos observar directamente: bytes transferidos, número de peticiones, tamaños por categoría y rendimiento. Si además queréis dar una estimación de CO₂, decid con qué herramienta y con qué supuestos. Eso es exactamente lo contrario del greenwashing de la primera unidad.
 
+Y decidlo también en la entrega, porque es lo que hace defendible vuestro trabajo:
+
+> **Estamos demostrando una reducción del uso de determinados recursos —transferencia, peticiones y procesamiento—, no calculando la huella de carbono de la web.** Para eso haría falta un modelo adicional y sus supuestos.
+
 ---
 
 ### Producto final
@@ -824,11 +803,14 @@ Unos **3 minutos** por pareja, para responder a cuatro preguntas:
 | Uso crítico de IA                          |    0,5 |
 | Claridad de la entrega                     |    0,5 |
 
+Durante la exposición se preguntará **individualmente** a cualquiera de los dos miembros por una decisión del trabajo.
+
 No obtiene mejor nota quien consigue la página más pequeña, ni quien saca un Lighthouse de 100. La obtiene quien logra **una mejora importante y demostrable sin degradar el producto**.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · entrega</p>
   <ul class="checklist">
+    <li>Las mediciones están guardadas en vuestro repositorio de evidencias.</li>
     <li>Guardasteis las métricas iniciales y volvisteis a medir en condiciones comparables.</li>
     <li>Habéis optimizado varias categorías, no solo imágenes.</li>
     <li>La página sigue funcionando en móvil y en escritorio, sin errores en consola.</li>

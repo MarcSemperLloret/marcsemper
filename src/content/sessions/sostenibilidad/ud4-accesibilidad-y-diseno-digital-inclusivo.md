@@ -589,9 +589,11 @@ Si necesitan que les expliquéis cómo se usa vuestra web, todavía hay un probl
 
 La accesibilidad no es solo una buena práctica voluntaria. En Europa hay requisitos legales para determinados productos y servicios digitales.
 
-Desde el **28 de junio de 2025**, el Acta Europea de Accesibilidad aplica requisitos comunes a servicios de comercio electrónico, banca, transporte, comunicaciones electrónicas y libros electrónicos, entre otros ámbitos. No todas las empresas ni todas las situaciones tienen las mismas obligaciones, y no hace falta que os convirtáis en abogados.
-
-Pero sí conviene entender esto:
+<div class="rule">
+  <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
+  <p>Desde el <strong>28 de junio de 2025</strong>, el Acta Europea de Accesibilidad aplica requisitos comunes a servicios de comercio electrónico, banca, transporte, comunicaciones electrónicas y libros electrónicos, entre otros ámbitos.</p>
+  <p>PixelStore vende por Internet, así que está justo en el primero de esa lista. No todas las empresas ni todas las situaciones tienen las mismas obligaciones —hay excepciones por tamaño y por tipo de servicio—, y no hace falta que os convirtáis en abogados. Lo que cambia para vosotros es el estatus de la decisión: hasta aquí, la accesibilidad era criterio profesional; a partir de aquí, además, puede ser un requisito exigible.</p>
+</div>
 
 > **La accesibilidad puede ser un requisito técnico, social y legal del producto que estáis desarrollando.**
 
@@ -622,6 +624,8 @@ Las correcciones realizadas, el resultado posterior y la comparación antes/desp
 | Uso crítico de IA                              |    0,5 |
 | Claridad de la entrega                         |      1 |
 
+Durante la exposición se preguntará **individualmente** a cualquiera de los miembros por una decisión del trabajo.
+
 No obtiene mejor nota quien saque un Lighthouse de 100: una puntuación automática no demuestra por sí sola que una página sea accesible. Lo que se evalúa es esta cadena completa:
 
 <figure class="diagram">
@@ -639,6 +643,7 @@ No obtiene mejor nota quien saque un Lighthouse de 100: una puntuación automát
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · entrega</p>
   <ul class="checklist">
+    <li>La auditoría, antes y después, está guardada en vuestro repositorio de evidencias.</li>
     <li>Auditoría inicial guardada, automática y manual.</li>
     <li>Entre cinco y ocho barreras, cada una con su usuario afectado.</li>
     <li>Correcciones aplicadas y verificadas una a una.</li>
@@ -659,7 +664,7 @@ No obtiene mejor nota quien saque un Lighthouse de 100: una puntuación automát
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Apartar el ratón e intentar usar la web solo con el teclado.</p>
+  <p>1 · Apartar el ratón e intentar usar la web solo con el teclado. Es la que más encuentra en menos tiempo, aunque no lo encuentra todo.</p>
   <p>2 · Porque trae foco, activación con teclado y anuncio correcto en tecnologías asistivas sin escribir una línea. Reconstruirlo significa reimplementar todo eso.</p>
   <p>3 · Alguien que no sabe cómo funciona vuestra interfaz. Vosotros ya no podéis no saberlo.</p>
 </details>
@@ -684,7 +689,9 @@ No hacen falta cientos de criterios WCAG. Bastan cuatro preguntas:
 
 Y antes de publicar cualquier web:
 
-> **Aparta el ratón e intenta usarla solo con el teclado.** Es la mejor prueba de accesibilidad que se puede hacer en menos de cinco minutos.
+> **Aparta el ratón e intenta usarla solo con el teclado.** Es la prueba que más barreras destapa por minuto invertido.
+
+Pero no las destapa todas. El teclado no dice si un `alt` describe la imagen, si un lector de pantalla anuncia bien un control, si el texto se entiende o si el contraste llega. Es por donde se empieza, no donde se termina.
 
 ### La checklist para vuestro trabajo
 

@@ -640,7 +640,7 @@ La dirección quiere anunciar:
 Vuestra misión hoy es comprobar si hay información suficiente para afirmarlo. En las unidades siguientes iréis comprobando, una a una, las piezas concretas: su hardware, su web, su accesibilidad y su infraestructura.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Vuestro cuaderno de evidencias</p>
+  <p class="checkpoint-label">Vuestro repositorio de evidencias</p>
   <p>Cread hoy un repositorio de grupo con una carpeta por unidad. Todo lo que midáis y decidáis durante el módulo va ahí.</p>
   <p>No es burocracia: en la UD6 tendréis que construir el plan de sostenibilidad de PixelStore <strong>con las evidencias reales que hayáis reunido</strong>. Lo que no esté guardado, no existirá.</p>
 </div>

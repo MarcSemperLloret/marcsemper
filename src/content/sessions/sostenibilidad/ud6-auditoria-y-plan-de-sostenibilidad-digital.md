@@ -17,7 +17,7 @@ outcomes:
   - "Ordenar un roadmap por impacto y esfuerzo."
   - "Defender el plan ante preguntas incómodas, con evidencias."
 requirements:
-  - "Todo lo de las unidades anteriores: es el proyecto que las junta."
+  - "Vuestro repositorio de evidencias, con lo medido en UD1 a UD5."
   - "Herramienta de presentaciones y hoja de cálculo."
   - "Acceso a Internet y a un asistente de IA."
   - "El código de PixelStore, que ya conocéis de UD3 y UD4."
@@ -157,9 +157,11 @@ La última es la más difícil a propósito. «IA sostenible» no significa nada
 
 ## Sesión 2 · La empresa · PixelStore
 
-Ya conocéis PixelStore: la habéis optimizado en la UD3 y le habéis quitado barreras en la UD4. Ahora dejamos de mirar solo su código. Es una empresa.
+Ya conocéis PixelStore. La habéis analizado como empresa en la UD1, mirado su hardware en la UD2, optimizado su web en la UD3, quitado sus barreras en la UD4 y dimensionado su infraestructura en la UD5.
 
-### Qué es PixelStore
+Hoy no empezáis de cero: **abrid vuestro repositorio de evidencias**. Todo lo que medisteis durante el módulo es el diagnóstico de este plan, y lo que no anotasteis entonces habrá que estimarlo ahora, que es bastante peor.
+
+### Lo que ya sabéis de ella
 
 Vende productos tecnológicos por Internet. Tiene **45 trabajadores** y unas **300.000 visitas al mes**.
 
@@ -182,7 +184,13 @@ Una empresa no afecta solo a sus propietarios. Afecta a sus:
 
 <p class="term">Stakeholders</p>
 
-Clientes, trabajadores, proveedores, empresa de transporte, proveedor cloud, administraciones, la sociedad y el medio ambiente.
+Clientes, trabajadores, proveedores, empresa de transporte, proveedor cloud, administraciones y la sociedad: personas y organizaciones que pueden afectar a PixelStore o verse afectadas por ella.
+
+Y afecta además a algo que no es un grupo de interés pero recibe las consecuencias igual:
+
+<p class="term">Los sistemas afectados</p>
+
+Las personas y el medio ambiente. La diferencia no es un tecnicismo: un stakeholder puede quejarse, negociar o marcharse. El medio ambiente no puede hacer ninguna de las tres cosas, y por eso su impacto hay que buscarlo activamente en lugar de esperar a que llegue una reclamación.
 
 ### Segunda tarea · Mapa de stakeholders
 
@@ -219,7 +227,7 @@ Mejorar un aspecto puede empeorar otro. Un plan honesto **reconoce los trade-off
   <ol>
     <li>¿Qué es un stakeholder?</li>
     <li>Poned un trade-off de PixelStore que afecte a dos grupos distintos.</li>
-    <li>¿Por qué el medio ambiente cuenta como grupo de interés?</li>
+    <li>¿Por qué tratamos al medio ambiente aparte de los grupos de interés?</li>
   </ol>
 </div>
 
@@ -227,7 +235,7 @@ Mejorar un aspecto puede empeorar otro. Un plan honesto **reconoce los trade-off
   <summary>Ver respuestas</summary>
   <p>1 · Quien puede afectar o verse afectado por la actividad de la organización.</p>
   <p>2 · Por ejemplo: entrega en dos horas mejora la experiencia del cliente y empeora el transporte y la carga del almacén.</p>
-  <p>3 · Porque recibe consecuencias de las decisiones y no puede reclamar. Alguien tiene que representarlo en la mesa.</p>
+  <p>3 · No es exactamente un grupo de interés: es un sistema afectado. Recibe las consecuencias igual, pero no puede reclamar, así que su impacto hay que ir a buscarlo.</p>
 </details>
 
 ---
@@ -254,7 +262,7 @@ Analizamos PixelStore desde las tres dimensiones de la UD1. Cada una tiene sus p
 
 ¿Protegemos bien los sistemas? ¿Sabemos qué datos conservamos y por qué? ¿De qué proveedores dependemos? ¿Quién responde de lo que decide la IA? ¿Podemos justificar lo que afirmamos sobre nuestra sostenibilidad?
 
-Esa última pregunta cierra el círculo con la UD1: si no podéis justificarlo, es greenwashing aunque sea cierto.
+Esa última pregunta cierra el círculo con la UD1. Y conviene decirla con precisión: si no podéis justificarlo, **no podéis presentarlo como evidencia**. Se convierte en greenwashing cuando además induce a pensar que la empresa está mejor de lo que los datos permiten sostener — que es lo que ocurre casi siempre, porque nadie exagera hacia abajo.
 
 ### Tercera tarea · La auditoría
 
@@ -278,7 +286,7 @@ Identificad **al menos doce aspectos**, repartidos entre las tres dimensiones.
     <li><strong>UD5:</strong> ¿cloud, datos e IA están dimensionados? Máquinas ociosas, logs eternos, backups de seis años.</li>
     <li>Y añadid lo que no vimos: transporte, embalajes, proveedores, condiciones de trabajo en el almacén.</li>
   </ol>
-  <p>Si un problema ya apareció durante el curso, es un candidato legítimo. Este proyecto junta el curso, no lo sustituye.</p>
+  <p>Si un problema ya apareció durante el curso, es un candidato legítimo: los mejores son los que traéis medidos. Este proyecto junta el curso, no lo sustituye.</p>
 </details>
 
 <div class="checkpoint">
@@ -286,7 +294,7 @@ Identificad **al menos doce aspectos**, repartidos entre las tres dimensiones.
   <ul class="checklist">
     <li>Doce aspectos como mínimo, con las tres dimensiones representadas.</li>
     <li>Cada uno con su impacto posible descrito, no solo nombrado.</li>
-    <li>Al menos cuatro vienen de lo que ya trabajasteis en UD2 a UD5.</li>
+    <li>Al menos cuatro salen de vuestro repositorio de evidencias, con su medición.</li>
     <li>Al menos dos son de gobernanza, que es la que siempre se queda corta.</li>
   </ul>
 </div>
@@ -317,18 +325,33 @@ Tenéis doce o más impactos. Ahora viene la decisión más difícil del proyect
 
 <p class="term">Materialidad</p>
 
-Identificar los aspectos suficientemente importantes como para formar parte de las prioridades de la organización. Se valora cruzando dos preguntas: qué importancia tiene el impacto en sí, y qué importancia tiene para los stakeholders.
+Identificar los aspectos suficientemente importantes como para formar parte de las prioridades de la organización. Y como vimos en la UD1, se valora en **dos direcciones**, no en una:
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Materialidad de impacto</p>
+    <p class="compare-body">De dentro hacia fuera. ¿Cuánto afecta este asunto a las personas o al medio ambiente?</p>
+  </div>
+  <div>
+    <p class="compare-label">Materialidad financiera</p>
+    <p class="compare-body">De fuera hacia dentro. ¿Cuánto riesgo o cuánta oportunidad supone para PixelStore?</p>
+  </div>
+</div>
+
+A eso se le llama **doble materialidad**, y es la lógica de los estándares europeos que veréis en la sesión 6. Un asunto es material si pesa en cualquiera de las dos: no hace falta que pese en las dos a la vez, y decir en cuál pesa forma parte del análisis.
 
 ### La matriz
 
-Puntuad cada aspecto de 1 (baja) a 3 (alta) en las dos dimensiones:
+Puntuad cada aspecto de 1 (baja) a 3 (alta) en las dos direcciones, y anotad de qué riesgo u oportunidad concreta habláis:
 
-| Aspecto          | Impacto | Stakeholders |
-| ---------------- | ------: | -----------: |
-| Accesibilidad    |       3 |            3 |
-| Papel de oficina |       1 |            1 |
-| Privacidad       |       3 |            3 |
-| Optimización web |       2 |            2 |
+| Aspecto          | Impacto | Riesgo / oportunidad | ¿Cuál, concretamente? |
+| ---------------- | ------: | -------------------: | --------------------- |
+| Accesibilidad    |       3 |                    3 | Clientes que no pueden comprar; requisito legal; mercado desatendido |
+| Papel de oficina |       1 |                    1 | Ninguno relevante |
+| Privacidad       |       3 |                    3 | Sanción, pérdida de confianza |
+| Optimización web |       2 |                    2 | Coste de infraestructura, conversión |
+
+La última columna es la que evita que esto se convierta en poner números. Si no sabéis nombrar el riesgo, probablemente el 3 era un 1.
 
 No pretendemos hacer una evaluación profesional. Queremos aprender a **justificar prioridades**.
 
@@ -352,6 +375,7 @@ Y una regla que no admite excepciones: **no vale decir que todos son prioritario
     <li>Todos los aspectos puntuados en las dos dimensiones.</li>
     <li>Exactamente cinco prioridades, ordenadas.</li>
     <li>Cada una con una justificación que no repite la puntuación.</li>
+    <li>De cada prioridad sabéis decir si pesa por impacto, por riesgo, o por las dos.</li>
     <li>Sabéis nombrar un aspecto importante que habéis dejado fuera, y por qué.</li>
   </ul>
 </div>
@@ -359,7 +383,7 @@ Y una regla que no admite excepciones: **no vale decir que todos son prioritario
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Qué dos preguntas se cruzan en la materialidad?</li>
+    <li>¿Qué dos direcciones se cruzan en la doble materialidad?</li>
     <li>¿Por qué no vale que todo sea prioritario?</li>
     <li>Un aspecto con impacto alto pero que a nadie le importa, ¿es material?</li>
   </ol>
@@ -367,7 +391,7 @@ Y una regla que no admite excepciones: **no vale decir que todos son prioritario
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Cuánto pesa el impacto en sí, y cuánto le importa a los grupos de interés.</p>
+  <p>1 · De dentro hacia fuera, cuánto afecta la empresa al entorno y a las personas. De fuera hacia dentro, cuánto riesgo u oportunidad le supone a ella.</p>
   <p>2 · Porque los recursos son limitados. Una lista donde todo es urgente es una lista sin decisiones.</p>
   <p>3 · Puede serlo igualmente. Que nadie lo reclame no lo hace pequeño: solo lo hace más fácil de ignorar, que es distinto.</p>
 </details>
@@ -498,6 +522,13 @@ Las empresas no inventan cada indicador desde cero. Existen marcos para organiza
 | ISO 14001 | Norma de sistemas de gestión ambiental |
 
 No hay que aprenderlos. Lo importante es saber que existen y que permiten **estructurar y comparar** información entre organizaciones.
+
+<div class="rule">
+  <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
+  <p>GRI e ISO 14001 son voluntarios: una empresa los adopta si quiere. Los <strong>ESRS</strong> no siempre lo son. En la Unión Europea existe una obligación de informar sobre sostenibilidad que se aplica por tramos según el tamaño de la empresa, y que usa esos estándares como formato.</p>
+  <p>PixelStore, con 45 trabajadores, probablemente no esté obligada. Pero si vende a clientes grandes o a administraciones, esos sí lo están, y para informar necesitan datos de sus proveedores. Ahí es donde un plan de sostenibilidad deja de ser una buena intención y pasa a ser un requisito comercial.</p>
+  <p>Y esa es la respuesta práctica a por qué hacéis este trabajo: no para publicar un folleto, sino porque llegará el día en que alguien pida los números.</p>
+</div>
 
 ### Séptima tarea · Un indicador real
 
@@ -678,6 +709,8 @@ Y luego llegan las preguntas: ¿por qué esto es prioritario?, ¿qué evidencia 
 | Priorización y roadmap                       |      1 |
 | Uso crítico de IA y fuentes                  |    0,5 |
 | Claridad de la presentación                  |    0,5 |
+
+Durante la presentación se preguntará **individualmente** a cualquier miembro del grupo por una decisión del plan. Un plan que solo puede defender una persona del grupo no es un plan del grupo.
 
 No puntúa más quien propone más acciones, ni quien mete más ODS, ni quien anuncia que PixelStore será carbono neutral en 2030 sin explicar cómo. Puntúa quien construye una cadena que se sostiene entera:
 

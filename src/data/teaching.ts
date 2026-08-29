@@ -343,6 +343,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Measure a website, optimise it and prove the improvement with data.",
       "Find and fix the barriers that stop people using an interface.",
       "Size infrastructure, data and AI in proportion to the problem.",
+      "Relate an ESG issue to a risk or an opportunity for the company.",
       "Turn a diagnosis into a plan with objectives, indicators, owners and dates."
     ],
     outcomesEs: [
@@ -352,6 +353,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Medir una web, optimizarla y demostrar la mejora con datos.",
       "Encontrar y corregir las barreras que impiden usar una interfaz.",
       "Dimensionar infraestructura, datos e IA de forma proporcional al problema.",
+      "Relacionar un asunto ASG con un riesgo o una oportunidad para la empresa.",
       "Convertir un diagnóstico en un plan con objetivos, indicadores, responsables y plazos."
     ],
     topics: [
