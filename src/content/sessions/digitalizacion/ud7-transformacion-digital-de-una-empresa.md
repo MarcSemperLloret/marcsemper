@@ -389,7 +389,9 @@ Añadid únicamente los elementos que necesitéis. Una arquitectura con tres caj
 
 ### Para cada tecnología debe existir una razón
 
-No vale «usaremos cloud porque es moderno». Debéis poder recorrer la cadena completa:
+No vale «usaremos cloud porque es moderno». Hay que poder recorrer una cadena de cuatro pasos. Hacemos la primera juntos, con el razonamiento a la vista.
+
+<p class="stage">Paso 1 · Te enseño uno</p>
 
 <figure class="diagram">
   <figcaption>La cadena que justifica una decisión</figcaption>
@@ -401,16 +403,38 @@ No vale «usaremos cloud porque es moderno». Debéis poder recorrer la cadena c
   </ol>
 </figure>
 
-Completad una fila por necesidad:
+<dl class="worked">
+  <dt>¿De dónde sale la necesidad?</dt>
+  <dd>De un hecho de la empresa, no de una idea nuestra: los once técnicos están fuera de la oficina todo el día.</dd>
+  <dt>¿Por qué esa solución y no otra?</dt>
+  <dd>Podrían llevar la información en papel, o seguir con WhatsApp. Pero entonces la actualización del estado no llega a administración hasta que el técnico vuelve, que es justo el problema que queremos quitar.</dd>
+  <dt>¿Por qué cloud y no un servidor en la oficina?</dt>
+  <dd>Un servidor propio también serviría. Cloud gana aquí porque la empresa tiene 18 personas y nadie a quien encargar el mantenimiento, no porque sea más moderno.</dd>
+  <dt>¿Cómo sabremos que ha servido?</dt>
+  <dd>Si el tiempo entre que el técnico termina y administración lo sabe deja de medirse en horas.</dd>
+</dl>
 
-| Necesidad                                | Solución | Tecnología | Beneficio |
-| ---------------------------------------- | -------- | ---------- | --------- |
-| Técnicos necesitan consultar trabajos    |          |            |           |
-| Clientes preguntan constantemente estado |          |            |           |
-| Información repartida                    |          |            |           |
-| Muchas tareas repetitivas                |          |            |           |
-| Datos sin analizar                       |          |            |           |
-|                                          |          |            |           |
+Fijaos en la tercera pregunta. Ahí es donde suspende la mayoría de las propuestas: no en elegir mal, sino en no haber considerado la alternativa sencilla.
+
+<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
+
+Completad estas dos filas con la pista al lado. Contestad antes las cuatro preguntas de arriba.
+
+| Necesidad                                | Solución | Tecnología | Beneficio | Pista |
+| ---------------------------------------- | -------- | ---------- | --------- | ----- |
+| Clientes preguntan constantemente estado |          |            |           | ¿Quién sabe primero que el estado ha cambiado? |
+| Información repartida                    |          |            |           | ¿El problema es dónde está guardada, o que está en seis sitios a la vez? |
+
+<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
+
+Ahora sin pistas, y añadid las necesidades que hayáis detectado vosotros.
+
+| Necesidad                     | Solución | Tecnología | Beneficio |
+| ----------------------------- | -------- | ---------- | --------- |
+| Muchas tareas repetitivas     |          |            |           |
+| Datos sin analizar            |          |            |           |
+|                               |          |            |           |
+|                               |          |            |           |
 
 ### Fase 5 · Datos
 

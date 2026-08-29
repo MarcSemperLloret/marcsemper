@@ -417,6 +417,18 @@ Siempre que sea posible utilizaremos **autenticación mediante clave SSH** en lu
 
 ---
 
+<details class="aside aside--help">
+  <summary>Estoy atascado · no consigo entrar por SSH</summary>
+  <ol>
+    <li>¿La máquina está encendida en el portal de Azure? Una VM detenida no responde.</li>
+    <li>¿Estáis usando la IP pública, y no la privada?</li>
+    <li>¿El puerto 22 está permitido en el Network Security Group?</li>
+    <li>¿Apuntáis a la clave correcta con <code>-i</code>, y es la privada y no la <code>.pub</code>?</li>
+    <li>¿El usuario es el que creasteis al montar la VM? No es <code>root</code> ni vuestro usuario de Windows.</li>
+    <li>Si dice «permissions are too open», el problema son los permisos del fichero de la clave en vuestro ordenador, no el servidor.</li>
+  </ol>
+</details>
+
 ### Preparar el servidor
 
 Una vez conectados:
@@ -732,6 +744,20 @@ Es una buena práctica que aparece continuamente en administración de sistemas.
 
 ---
 
+<details class="aside aside--help">
+  <summary>Estoy atascado · escribo la IP y no veo mi web</summary>
+  <p>Comprobadlo en este orden, de dentro hacia fuera. Casi siempre falla en el paso 3 o en el 4.</p>
+  <ol>
+    <li>¿Nginx está arrancado? <code>systemctl status nginx</code>.</li>
+    <li>¿La configuración es válida? <code>nginx -t</code>.</li>
+    <li>¿El puerto 80 está abierto en el Network Security Group de Azure?</li>
+    <li>¿UFW permite HTTP dentro de la máquina? Son dos cortafuegos distintos y hay que pasar los dos.</li>
+    <li>¿La IP que escribís es la pública de la VM, y no ha cambiado al reiniciarla?</li>
+    <li>¿Escribís <code>http://</code> y no <code>https://</code>? Todavía no hay certificado.</li>
+    <li>Si veis la página por defecto de Nginx, el servidor funciona: lo que falla es a qué directorio apunta.</li>
+  </ol>
+</details>
+
 ### Ya tenemos nuestra web en Internet
 
 Acceded de nuevo a <code>http://IP_PUBLICA</code>.
@@ -863,6 +889,17 @@ Comprobad <code>http://alumno-daw.duckdns.org</code>.
 
 ---
 
+<details class="aside aside--help">
+  <summary>Estoy atascado · mi nombre DNS no lleva a mi web</summary>
+  <ol>
+    <li>¿Habéis puesto la IP pública correcta en el proveedor del nombre?</li>
+    <li>Dad tiempo: un cambio de DNS puede tardar en propagarse.</li>
+    <li>Comprobad a qué IP resuelve de verdad, antes de tocar nada más.</li>
+    <li>¿La IP sigue funcionando por sí sola? Si tampoco, el problema no es el DNS.</li>
+    <li>¿Habéis puesto el nombre en <code>server_name</code> de Nginx y recargado el servicio?</li>
+  </ol>
+</details>
+
 ### Todavía tenemos un problema
 
 Nuestro navegador muestra <code>HTTP</code>.
@@ -953,6 +990,17 @@ Después probad:
 <p class="single-node single-node--mono">https://alumno-daw.duckdns.org</p>
 
 ---
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · Certbot falla al emitir el certificado</summary>
+  <ol>
+    <li>Certbot necesita llegar a vuestro servidor por el nombre: comprobad primero que el nombre ya funciona por HTTP.</li>
+    <li>¿El puerto 80 sigue abierto? La validación lo usa, aunque el objetivo sea el 443.</li>
+    <li>¿El <code>server_name</code> de Nginx coincide exactamente con el nombre que le pasáis a Certbot?</li>
+    <li>¿Habéis abierto el 443 en Azure y en UFW? Si no, el certificado se emite y la web sigue sin cargar.</li>
+    <li>Si habéis reintentado muchas veces seguidas puede haber un límite temporal de emisión. Esperad antes de insistir.</li>
+  </ol>
+</details>
 
 ### ¿Qué ha cambiado realmente?
 
@@ -1417,3 +1465,20 @@ Un despliegue web que parecía simplemente «subir mi página a Internet» en re
 Cuando en una oferta de trabajo aparezcan conceptos como **Azure, AWS, VM, IaaS, Linux, Nginx, SSH, DNS, TLS o CI/CD**, ya no serán palabras abstractas.
 
 Habréis utilizado buena parte de ellos para publicar vuestra propia aplicación.
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| -------- | --------- |
+| IaaS | Os dan la máquina; el sistema lo administráis vosotros |
+| PaaS | Os dan la plataforma; solo entregáis la aplicación |
+| SaaS | Os dan el programa terminado |
+| Máquina virtual | Un ordenador que no está en vuestra mesa |
+| SSH | La forma de entrar a ese ordenador desde el vuestro |
+| Nginx | El servidor web que entrega vuestros ficheros |
+| NSG | El cortafuegos de la red de Azure, delante de la máquina |
+| UFW | El cortafuegos del sistema, dentro de la máquina |
+| IP pública | La dirección por la que Internet llega a vuestro servidor |
+| DNS | La traducción de un nombre a esa dirección |
+| TLS | El cifrado del tráfico entre navegador y servidor |
+| Certificado | La prueba de que el servidor es quien dice ser |

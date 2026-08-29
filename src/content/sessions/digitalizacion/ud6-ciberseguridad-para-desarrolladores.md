@@ -826,6 +826,10 @@ Y no este otro:
   </ol>
 </figure>
 
+Los tres ejemplos que vienen ahora van de más a menos apoyo: el primero lo resolvemos nosotros entero, el segundo lo hacéis con guion, y el tercero es vuestro.
+
+<p class="stage">Paso 1 · Te enseño uno</p>
+
 #### Ejemplo · secreto en código
 
 Encontramos:
@@ -839,6 +843,8 @@ No basta con escribir «hay una vulnerabilidad». Debemos explicar las tres cosa
 * **Problema:** el secreto está almacenado en el código fuente.
 * **Riesgo:** puede acabar en GitHub, en copias del proyecto, en logs o en los equipos de otros desarrolladores.
 * **Solución:** moverlo a una variable de entorno y asegurarnos de que no aparece en Git.
+
+<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
 
 #### Ejemplo · autorización
 
@@ -856,6 +862,8 @@ La pregunta no es qué línea tocar, sino qué comprobación falta:
   </ol>
 </figure>
 
+<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
+
 #### Ejemplo · SQL Injection
 
 Si encontráis algo parecido a:
@@ -868,11 +876,25 @@ db.query(
 );
 ```
 
-pedid:
+escribid vosotros las tres partes, antes de preguntar nada a Copilot:
 
-> Explica exactamente por qué esta construcción es peligrosa y reescríbela utilizando consultas parametrizadas.
+<dl class="answer">
+  <dt>Problema</dt>
+  <dd></dd>
+  <dt>Riesgo</dt>
+  <dd></dd>
+  <dt>Solución</dt>
+  <dd></dd>
+</dl>
 
-Después comprobad que la solución separa código y datos, y que mantiene la funcionalidad.
+Y escribid vosotros la petición que le haríais al agente. Después comprobad dos cosas en su respuesta: que separa código y datos, y que mantiene la funcionalidad.
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · no sé cómo pedirlo</summary>
+  <p>Una petición que funciona bien aquí:</p>
+  <blockquote><p>Explica exactamente por qué esta construcción es peligrosa y reescríbela utilizando consultas parametrizadas.</p></blockquote>
+  <p>Fijaos en lo que pide: primero la explicación, después el cambio. Si pedís solo el cambio, os quedáis sin la parte que se evalúa.</p>
+</details>
 
 ### Fase 6 · Dependencias
 

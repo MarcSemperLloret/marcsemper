@@ -389,6 +389,17 @@ Comparad ambos resultados y responded:
 
 ---
 
+<details class="aside aside--help">
+  <summary>Estoy atascado · Copilot me responde cualquier cosa</summary>
+  <ol>
+    <li>¿Le habéis dicho el objetivo, o solo la acción? «Arregla esto» no es un objetivo.</li>
+    <li>¿Sabe en qué ficheros tiene que mirar? Si no se lo decís, se lo inventa.</li>
+    <li>¿Le habéis dado alguna restricción? Sin ellas hará lo más habitual, que rara vez es lo vuestro.</li>
+    <li>¿Le habéis dicho cómo sabréis que ha terminado bien? Sin criterio de aceptación, cualquier respuesta le vale.</li>
+    <li>Si la respuesta es genérica, vuestra petición también lo era. Reescribidla antes de volver a preguntar.</li>
+  </ol>
+</details>
+
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
   <ul class="checklist">
@@ -1545,6 +1556,17 @@ Obtiene mejor nota quien demuestra que sabe dirigir el trabajo de un agente:
 
 ---
 
+<details class="aside aside--help">
+  <summary>Estoy atascado · el agente ha tocado cosas que yo no pedí</summary>
+  <ol>
+    <li>No aceptéis el cambio entero. Mirad el diff fichero por fichero.</li>
+    <li>Revertid lo que no forme parte de la tarea, aunque parezca una mejora.</li>
+    <li>Si ha añadido una dependencia, preguntadle qué problema creía resolver con ella.</li>
+    <li>Volved a pedirlo acotando el alcance: qué ficheros puede tocar y cuáles no.</li>
+    <li>Si ha reformateado medio proyecto, el problema no es el agente: faltaba esa restricción en las instrucciones del repositorio.</li>
+  </ol>
+</details>
+
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · entrega</p>
   <ul class="checklist">
@@ -1691,3 +1713,19 @@ Significa exactamente lo contrario:
 El objetivo de esta unidad no es que la IA programe por vosotros.
 
 El objetivo es que aprendáis a **dirigir una herramienta que puede programar con vosotros**.
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| -------- | --------- |
+| Prompt | Qué quiero ahora |
+| Contexto | Qué necesita saber para hacerlo |
+| Instructions | Cómo trabajamos siempre en este proyecto |
+| Skill | Cómo hacemos una tarea especializada concreta |
+| Modelo | Lo que genera el texto |
+| Agente | El modelo que además puede actuar |
+| Tool | Una acción que el agente puede ejecutar |
+| MCP | La forma estándar de conectarlo con herramientas y datos |
+| Criterio de aceptación | Cómo sabremos que ha terminado bien |
+| Diff | Qué ha cambiado exactamente |
+| Verificación | Lo único que no se delega nunca |

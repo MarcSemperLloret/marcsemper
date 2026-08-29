@@ -470,6 +470,18 @@ No es obligatorio utilizar todos.
 
 ---
 
+<details class="aside aside--help">
+  <summary>Estoy atascado · no se me ocurre qué tecnología proponer</summary>
+  <p>La tecnología no se elige de una lista: sale del proceso que acabáis de dibujar.</p>
+  <ol>
+    <li>Volved a vuestra lista de problemas. Si no sale de ahí, no hace falta.</li>
+    <li>Mirad dónde la información cambia de manos: de una persona a otra, de un papel a una pantalla. Casi siempre hay algo que conectar.</li>
+    <li>Mirad qué se escribe dos veces. Eso suele ser integración, no una aplicación nueva.</li>
+    <li>Mirad qué espera a que alguien se acuerde. Eso suele ser una automatización.</li>
+    <li>Si una necesidad se resuelve con una hoja de cálculo compartida, proponed la hoja de cálculo. No se puntúa por cantidad de tecnología.</li>
+  </ol>
+</details>
+
 ### Cuarta tarea — ¿Realmente necesitamos esa tecnología?
 
 Una empresa os propone utilizar:
@@ -794,3 +806,19 @@ Después:
 </figure>
 
 Ese razonamiento será útil independientemente de las tecnologías que aparezcan en el futuro.
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| -------- | --------- |
+| Digitalizar | Cambiar el soporte, manteniendo el proceso |
+| Transformación digital | Cambiar el proceso, con la tecnología como medio |
+| Proceso | La secuencia de pasos por la que pasa el trabajo |
+| Necesidad | Lo que hace falta para resolver un problema, todavía sin tecnología |
+| Aplicación web | El programa al que se accede desde el navegador |
+| API | La puerta por la que otro sistema habla con el nuestro |
+| Cloud | Infraestructura de otro, disponible por Internet |
+| Automatización | Que algo ocurra solo cuando pasa otra cosa |
+| IT | Los sistemas que gestionan información |
+| OT | Los sistemas que actúan sobre el mundo físico |
+| Arquitectura conceptual | Qué piezas hay y cómo se conectan, sin productos concretos |

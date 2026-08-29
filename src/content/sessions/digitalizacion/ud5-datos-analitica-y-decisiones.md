@@ -298,6 +298,17 @@ También preguntaremos:
 
 ---
 
+<details class="aside aside--help">
+  <summary>Estoy atascado · no consigo cargar el fichero</summary>
+  <ol>
+    <li>¿La ruta es correcta? Empezad por el nombre exacto, mayúsculas incluidas.</li>
+    <li>Si da un error de codificación, el fichero no está en UTF-8: probad otra codificación al leerlo.</li>
+    <li>Si todas las columnas salen en una, el separador no es el que se está suponiendo.</li>
+    <li>Si los códigos de producto salen como números, indicad el tipo al leer en lugar de arreglarlo después.</li>
+    <li>Si las fechas salen como texto, convertidlas explícitamente: casi todo lo de la sesión 2 depende de eso.</li>
+  </ol>
+</details>
+
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
   <ul class="checklist">
@@ -633,6 +644,17 @@ Después elegid una:
 <p class="write-line"></p>
 
 ---
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · el código que me da la IA falla</summary>
+  <ol>
+    <li>Leed el error entero, no la última línea. Suele decir qué columna o qué tipo no encaja.</li>
+    <li>Comprobad que las columnas que usa existen con ese nombre exacto en vuestro dataframe.</li>
+    <li>Comprobad que trabaja sobre el dataset ya limpio, y no sobre el original.</li>
+    <li>Pegadle el error tal cual y pedidle que explique la causa antes de proponer otro código.</li>
+    <li>Si el código funciona pero el resultado es raro, el problema no es el código: revisad qué filas está contando.</li>
+  </ol>
+</details>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
@@ -1113,3 +1135,20 @@ Lo importante es que sepáis formular preguntas como:
 Una herramienta puede generar el código.
 
 **La responsabilidad de entender qué significa el resultado sigue siendo del desarrollador.**
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| -------- | --------- |
+| Dataset | El conjunto de datos tal como llega, antes de tocarlo |
+| Calidad | Qué está mal, qué falta y qué es raro pero correcto |
+| Variable derivada | La columna que no viene y hay que calcular |
+| Métrica | Lo que decidimos medir; cambiarla cambia la respuesta |
+| Mes incompleto | El tramo parcial que finge ser una caída |
+| Pareto | Que una parte pequeña suele concentrar una parte grande |
+| Correlación | Que dos cosas se mueven juntas |
+| Causalidad | Que una provoca la otra; hace falta mucho más para afirmarlo |
+| Hecho | Lo que dicen los datos |
+| Interpretación | Lo que creemos que significa |
+| Supuesto | Lo que damos por cierto sin haberlo comprobado |
+| Limitación | Lo que estos datos no pueden responder |

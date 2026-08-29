@@ -1287,3 +1287,18 @@ Y especialmente:
 Cuando trabajéis como desarrolladores, probablemente cambiarán las herramientas.
 
 Pero estos problemas seguirán existiendo.
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| -------- | --------- |
+| Integrar | Conseguir que dos sistemas intercambien información |
+| API | La puerta de una aplicación: qué se le puede pedir y cómo |
+| Polling | Preguntar cada cierto tiempo si ha pasado algo |
+| Webhook | Que el otro sistema nos avise cuando pasa algo |
+| Evento | El hecho concreto que dispara una reacción |
+| Cola de mensajes | Un intermediario que guarda el aviso hasta que se pueda atender |
+| Automatización | Evento, acción y beneficio: los tres a la vez |
+| Low-Code | Montar la lógica sin escribir casi código |
+| Reintento | Volver a intentarlo cuando el destino no estaba disponible |
+| Idempotencia | Que repetir la misma acción no duplique el resultado |
