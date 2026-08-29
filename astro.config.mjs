@@ -8,7 +8,7 @@ export default defineConfig({
       // Site-wide content date. It tracks changes to the pages themselves and
       // is deliberately separate from `site.lastUpdated`, which records when
       // the academic publication record was last verified.
-      lastmod: new Date("2026-08-28")
+      lastmod: new Date("2026-08-29")
     })
   ],
   markdown: {
