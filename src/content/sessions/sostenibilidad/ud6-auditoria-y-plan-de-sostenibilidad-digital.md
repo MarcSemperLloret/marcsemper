@@ -519,7 +519,7 @@ Las empresas no inventan cada indicador desde cero. Existen marcos para organiza
 | ----- | ------ |
 | GRI | Global Reporting Initiative, ampliamente usado para informes de sostenibilidad |
 | ESRS | Los estándares europeos de información sobre sostenibilidad |
-| ISO 14001 | Norma de sistemas de gestión ambiental |
+| ISO 14001 | Norma de sistemas de gestión ambiental. La edición vigente es la de 2026, que sustituyó a la de 2015 |
 
 No hay que aprenderlos. Lo importante es saber que existen y que permiten **estructurar y comparar** información entre organizaciones.
 
@@ -533,6 +533,8 @@ No hay que aprenderlos. Lo importante es saber que existen y que permiten **estr
 ### Séptima tarea · Un indicador real
 
 Elegid uno de vuestros cinco aspectos y buscad si existe un estándar, una guía o una métrica reconocida relacionada con él. Podéis usar la IA para localizarla, pero tenéis que **comprobar la fuente original**: si el asistente cita un estándar y no aparece al buscarlo, no existe.
+
+Un aviso práctico sobre dónde mirar. **GRI** publica sus estándares gratuitamente, y **EFRAG** hace lo mismo con los **ESRS**: en los dos casos podéis llegar al documento y citarlo. Con **ISO 14001** no: la web oficial de ISO os confirma que existe, en qué versión, para qué sirve y cuál es su alcance, pero el texto normativo completo requiere licencia de pago. Si elegís ISO, verificad ahí lo que sí es público y decid explícitamente hasta dónde habéis podido llegar. Eso también es parte del trabajo: **una fuente que no se puede consultar no se cita como si se hubiera leído**.
 
 <dl class="answer">
   <dt>Fuente</dt>
@@ -815,7 +817,7 @@ Y la frase que resume el módulo entero: **la sostenibilidad no se declara, se d
 | SMART | Que un objetivo se pueda comprobar |
 | GRI | Marco muy usado para informes de sostenibilidad |
 | ESRS | Los estándares europeos de información sobre sostenibilidad |
-| ISO 14001 | Norma de sistemas de gestión ambiental |
+| ISO 14001 | Norma de sistemas de gestión ambiental; edición vigente, 2026 |
 | Trade-off | Cuando mejorar una cosa empeora otra, y hay que reconocerlo |
 | Quick win | Impacto alto, esfuerzo bajo. Por donde se empieza |
 | Mejora continua | Medir, actuar, revisar y volver a empezar |

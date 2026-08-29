@@ -16,7 +16,7 @@ outcomes:
   - "Comparar decisiones tecnológicas mirando todo el ciclo de vida, no solo el consumo."
   - "Evitar la conclusión fácil de que «nuevo es más sostenible»."
   - "Proponer medidas para alargar la vida útil de los equipos."
-  - "Decidir el destino de un equipo retirado contando con lo que exige la normativa."
+  - "Decidir el destino de un equipo retirado aplicando la normativa que le corresponde."
 requirements:
   - "Calculadora u hoja de cálculo."
   - "Herramienta de presentaciones o un documento."
@@ -305,6 +305,21 @@ No puede repararse de forma razonable.
 
 ---
 
+### Y ahora, lo vuestro
+
+La misma lógica, aplicada a lo que tenéis en el bolsillo y en la mochila. Responded individualmente, sin justificaros:
+
+<dl class="answer">
+  <dt>¿Cuántos años tiene vuestro móvil actual, y qué haréis con él cuando lo cambiéis?</dt>
+  <dd></dd>
+  <dt>¿Dónde acabó el anterior? ¿Lo sabéis con certeza?</dt>
+  <dd></dd>
+  <dt>De todo lo visto hoy, ¿qué decisión reduciría de verdad el impacto de vuestros propios dispositivos?</dt>
+  <dd></dd>
+</dl>
+
+No es una encuesta de conciencia ambiental. Es la comprobación de que el mecanismo se entiende: si sabéis por qué a PixelStore le conviene alargar la vida de sus 45 portátiles, sabéis por qué os conviene a vosotros con uno.
+
 ### Circular no significa «para siempre»
 
 Economía circular **no** significa usar los dispositivos el máximo número de años posible. Puede llegar un momento en que un equipo no sea seguro, no reciba actualizaciones, falle constantemente o impida trabajar.
@@ -394,11 +409,11 @@ Podemos entenderla como cuántas emisiones lleva asociadas producir una cantidad
 <div class="compare-pair">
   <div>
     <p class="compare-label">Consumo</p>
-    <p class="compare-body">Cuánta electricidad usamos. Se mide en kWh.</p>
+    <p class="compare-body">Cuánta energía eléctrica se utiliza. Se mide en kWh.</p>
   </div>
   <div>
     <p class="compare-label">Emisiones</p>
-    <p class="compare-body">Lo que costó producir esa electricidad. Depende de la red y de la hora.</p>
+    <p class="compare-body">Los gases de efecto invernadero asociados a generar esa electricidad. Dependen del mix eléctrico, y varían según el lugar y el momento.</p>
   </div>
 </div>
 
@@ -573,9 +588,20 @@ PixelStore retira unos quince equipos al año y no sabe qué pasa con ellos. Dec
 
 Y una pregunta que casi siempre falta: antes de que salgan por la puerta, **¿qué hacemos con los datos que contienen?**
 
+Después, coged uno de esos portátiles retirados y responded las tres preguntas con la norma delante:
+
+<dl class="answer">
+  <dt>¿Puede ir a la basura convencional? ¿Por qué?</dt>
+  <dd></dd>
+  <dt>¿Qué canal de gestión le corresponde?</dt>
+  <dd></dd>
+  <dt>¿Qué norma respalda vuestra respuesta?</dt>
+  <dd></dd>
+</dl>
+
 <div class="rule">
   <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
-  <p>Un ordenador retirado no es basura corriente. Los <strong>residuos de aparatos eléctricos y electrónicos</strong> —los RAEE— están regulados: hay que entregarlos a un gestor autorizado, no pueden ir al contenedor común, y la empresa responde de que acaben donde deben.</p>
+  <p>Un ordenador retirado no es basura corriente. Los <strong>residuos de aparatos eléctricos y electrónicos</strong> —los RAEE— están regulados en España por el <strong>Real Decreto 110/2015</strong>: hay que entregarlos a un gestor autorizado, no pueden ir al contenedor común, y la empresa responde de que acaben donde deben.</p>
   <p>Antes de eso hay otro requisito. Si el equipo contiene datos personales, hay que borrarlos de forma segura. Vender un portátil con el disco intacto no es reutilizar: es una brecha de datos con buena intención.</p>
   <p>Y por el otro extremo de la vida del producto está el <strong>ecodiseño</strong>, que también tiene requisitos regulados. Que un fabricante deba ofrecer piezas de repuesto y facilitar la reparación durante unos años no es una cortesía suya: es lo que hace posible que vuestra política de alargar la vida útil se pueda cumplir de verdad.</p>
 </div>
@@ -775,4 +801,3 @@ Sin olvidar la seguridad, el rendimiento, el mantenimiento y las necesidades rea
 | Intensidad de carbono | Las emisiones asociadas a generar una cantidad de electricidad |
 | Centro de datos | La instalación donde viven servidores, almacenamiento y redes |
 | PUE | Cuánta energía usa el centro de datos frente a la que usan sus servidores |
-| Retención de datos | Cuánto tiempo se conserva una información, y por qué |

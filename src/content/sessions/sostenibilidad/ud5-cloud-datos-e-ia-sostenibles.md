@@ -570,7 +570,9 @@ Coged uno de los casos y proponed tres soluciones: **A**, la más sencilla que p
 | Recursos    | | | |
 | Beneficio   | | | |
 
-Y entonces la pregunta que importa: **¿cuál usaríais de verdad?** Casi siempre la respuesta es B, y casi siempre el motivo por el que no es C merece estar escrito.
+Y entonces la pregunta que importa: **¿cuál usaríais de verdad?**
+
+No hay una opción preferida de antemano. Elegid la solución mínima que satisfaga los requisitos, y escribid el motivo por el que descartáis las otras dos. Ese motivo vale más que la elección.
 
 ### Octava tarea · Que la IA cuestione vuestra solución
 

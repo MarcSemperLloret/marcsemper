@@ -17,7 +17,8 @@ outcomes:
   - "Corregir y demostrar la mejora con evidencia, no con una puntuación."
 requirements:
   - "Chrome o Chromium, con DevTools y Lighthouse."
-  - "La extensión axe DevTools."
+  - "La extensión axe DevTools: la versión gratuita basta para todo lo que se pide."
+  - "Conexión a Internet: la web carga tipografías de Google y un mapa externo."
   - "Editor de código y Git."
   - "PixelStore, rama barreras. Se clona en la sesión 1."
 priorKnowledge:
@@ -203,6 +204,8 @@ Existe un conjunto internacional de recomendaciones:
 
 <p class="term">WCAG · Web Content Accessibility Guidelines</p>
 
+La versión vigente es la **WCAG 2.2**, publicada por el W3C. Es la referencia que usan las herramientas y la que citan los requisitos legales.
+
 No vamos a memorizar sus criterios. Nos interesan los cuatro principios que los ordenan, y que se recuerdan por sus iniciales en inglés:
 
 <p class="term">POUR</p>
@@ -363,7 +366,7 @@ Volvemos a la web problemática, ahora con método. No vamos a comprobarlo todo:
 
 ### Lo que detecta una herramienta, y lo que no
 
-Lighthouse y axe DevTools encuentran contraste insuficiente, atributos ausentes, estructura incorrecta, nombres accesibles que faltan y algunos problemas de ARIA. Es mucho, y en poco tiempo.
+Lighthouse y axe DevTools encuentran contraste insuficiente, atributos ausentes, estructura incorrecta, nombres accesibles que faltan y algunos problemas de ARIA. Es mucho, y en poco tiempo. La versión gratuita de axe cubre todo el escaneo automático que necesitáis; sus pruebas guiadas son de pago y no hacen falta aquí.
 
 Pero supongamos que sacáis esto:
 

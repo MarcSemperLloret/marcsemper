@@ -19,6 +19,7 @@ outcomes:
   - "Comparar una web antes y después con datos comparables."
 requirements:
   - "Chrome o Chromium, con DevTools y Lighthouse."
+  - "Conexión a Internet: la web carga tipografías de Google y un mapa externo."
   - "Visual Studio Code y Git."
   - "GitHub Copilot u otro asistente de IA."
   - "PixelStore, el proyecto de partida. Se clona en la sesión 2."
@@ -476,6 +477,12 @@ Ahora sí, Copilot. Pero primero habéis hecho la revisión vosotros, igual que 
 </div>
 
 Clasificad cada propuesta como **aceptar**, **rechazar** o **investigar**, y elegid al menos una que **no** aplicaríais, explicando por qué. Esa es la que más cuenta: rechazar bien una optimización demuestra más criterio que aceptarlas todas.
+
+<div class="rule">
+  <p class="rule-label">Hasta dónde llega esta práctica</p>
+  <p>Lo que viene ahora —caché y compresión— <strong>se estudia conceptualmente, no se implementa</strong>. El servidor con el que trabajáis, <code>python -m http.server</code>, sirve ficheros y poco más: no configura <code>Cache-Control</code>, no comprime con gzip ni Brotli y no tiene CDN detrás.</p>
+  <p>Configurar eso de verdad es trabajo de servidor —Nginx, Apache o un servicio gestionado— y no es lo que optimizamos aquí. En la entrega solo se evalúa lo que depende del código y de los recursos del proyecto. Saber qué problema resuelve la caché y cuál crea sí entra; haberla configurado, no.</p>
+</div>
 
 ### ¿Hay que descargar siempre lo mismo?
 
