@@ -1805,3 +1805,34 @@ select {
 .session-content .worked dd:last-child {
   margin-bottom: 0;
 }
+
+
+/* ---------------------------------------------------------------------------
+   Where the decision stops being only technical
+
+   A module that teaches judgement has to say where judgement runs out. These
+   boxes mark the point at which a criterion becomes a requirement: the student
+   can optimise as they see fit up to here, and past here there is also a rule.
+   They name the instrument rather than asking anyone to memorise it.
+   --------------------------------------------------------------------------- */
+
+.session-content .rule {
+  margin: 34px 0;
+  padding: 24px 26px;
+  border: 1px solid var(--line-strong);
+  border-left: 4px solid var(--gold);
+  background: var(--paper);
+}
+
+.session-content .rule-label {
+  margin: 0 0 14px !important;
+  color: var(--ink);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.session-content .rule > :last-child {
+  margin-bottom: 0;
+}

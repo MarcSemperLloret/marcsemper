@@ -5,7 +5,7 @@ section: "ud-01"
 order: 1
 lang: "es"
 summary: "Entender la sostenibilidad más allá de «reciclar» o «ser verde». Analizamos los impactos ambientales, sociales y de gobernanza de una empresa y, sobre todo, aprendemos a distinguir una mejora real de una afirmación sin evidencias."
-duration: "3 horas · 3 sesiones"
+duration: "4 horas · 4 sesiones"
 modality: "Parejas"
 deliverable: "Una evaluación visual de la sostenibilidad de una empresa tecnológica."
 outcomes:
@@ -16,10 +16,13 @@ outcomes:
   - "Priorizar los problemas importantes y defender esa prioridad."
   - "Proponer indicadores que permitan comprobar una mejora."
   - "Detectar afirmaciones de sostenibilidad sin evidencia detrás."
+  - "Relacionar un reto global con un riesgo o una oportunidad para la empresa."
+  - "Decir qué puede hacer al respecto un desarrollador, en su trabajo y fuera de él."
 requirements:
   - "Herramienta de presentaciones, un documento o papel."
   - "Acceso a Internet, si queréis consultar información adicional."
   - "Ganas de preguntar y de desconfiar de las afirmaciones demasiado bonitas."
+  - "Un repositorio de grupo: será vuestro cuaderno de evidencias durante todo el módulo."
 date: "2026-08-29"
 ---
 
@@ -213,7 +216,151 @@ Relacionar una actividad con un ODS **no demuestra que estemos mejorando nada**.
 
 ---
 
-## Sesión 2 · Impactos, datos y greenwashing
+## Sesión 2 · Del reto global a tu trabajo
+
+### Los retos que hay detrás
+
+Cuando hablamos de sostenibilidad no hablamos de una preferencia estética. Hablamos de un puñado de problemas concretos que ya están cambiando cómo operan las empresas:
+
+| Reto | Qué significa en la práctica |
+| ---- | ---------------------------- |
+| Cambio climático | Emisiones, energía y episodios extremos que interrumpen la actividad |
+| Recursos limitados | Materiales críticos para fabricar dispositivos, agua para refrigerar |
+| Residuos | Lo que ocurre con todo lo que se sustituye |
+| Desigualdad | Condiciones de trabajo a lo largo de la cadena de suministro |
+| Brecha digital | Quién se queda fuera cuando un servicio pasa a ser solo digital |
+
+Ninguno de esos retos es «de medio ambiente» a secas. Tres de los cinco son sociales, y todos acaban siendo también económicos.
+
+### Cómo llegan al sector digital
+
+Es tentador pensar que esto va de fábricas y camiones. Pero el sector digital participa en los cinco:
+
+<figure class="diagram">
+  <figcaption>De un reto global a una decisión vuestra</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Reto global</li>
+    <li>Sector digital</li>
+    <li>Una empresa concreta</li>
+    <li>Una decisión técnica</li>
+  </ol>
+</figure>
+
+Los dispositivos que usáis se fabrican con materiales que hay que extraer. Los centros de datos consumen electricidad y a veces agua. Los equipos retirados son residuos. Y una web que no se puede usar sin ratón deja gente fuera.
+
+La cadena termina siempre en el mismo sitio: **alguien elige un formato de imagen, un tamaño de máquina o una etiqueta de formulario**. Ese alguien sois vosotros.
+
+### De reto a riesgo y a oportunidad
+
+Aquí hay un giro que cambia la conversación. Hasta ahora hemos mirado **de dentro hacia fuera**: cómo afecta la empresa a las personas y al entorno. Pero también existe la dirección contraria.
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">De dentro hacia fuera</p>
+    <p class="compare-body">¿Cómo afecta la empresa a las personas y al medio ambiente?</p>
+  </div>
+  <div>
+    <p class="compare-label">De fuera hacia dentro</p>
+    <p class="compare-body">¿Cómo puede este asunto convertirse en un riesgo o en una oportunidad para la empresa?</p>
+  </div>
+</div>
+
+Y no son la misma pregunta. Un ejemplo con algo que ya conocéis:
+
+<dl class="worked">
+  <dt>El asunto</dt>
+  <dd>La web de una tienda no se puede usar con teclado.</dd>
+  <dt>De dentro hacia fuera</dt>
+  <dd>Hay personas que no pueden comprar. Ese es el impacto, y existe aunque a nadie le salga caro.</dd>
+  <dt>De fuera hacia dentro · riesgo</dt>
+  <dd>Clientes que se van sin comprar, incumplimiento de requisitos legales, reclamaciones, daño reputacional si alguien lo cuenta.</dd>
+  <dt>De fuera hacia dentro · oportunidad</dt>
+  <dd>Un mercado que ahora mismo no se está atendiendo, y un argumento comercial cuando el cliente sea una administración que lo exija en el pliego.</dd>
+</dl>
+
+Fijaos en que el impacto y el riesgo **no siempre van juntos**. Puede haber un impacto grande que a la empresa no le cueste nada, y un riesgo enorme por algo cuyo impacto real es pequeño. Un análisis honesto mira las dos direcciones y dice cuál está mirando.
+
+### Qué puede hacer un desarrollador
+
+No hace falta ser director de sostenibilidad para que vuestras decisiones cuenten. En vuestro trabajo:
+
+| Decisión cotidiana | Lo que cambia |
+| ------------------ | ------------- |
+| Cómo servís una imagen | Datos transferidos en cada visita, multiplicados por todas las visitas |
+| Si el botón es un `button` | Si media clase de usuarios puede comprar |
+| Cuánto tiempo guardáis un log | Almacenamiento, copias y riesgo si algo se filtra |
+| Qué tamaño de máquina pedís | Infraestructura reservada durante meses |
+| Si añadís una dependencia | Código, mantenimiento y superficie de riesgo |
+| Si esa tarea necesita IA | Procesamiento, y a veces datos personales |
+
+Y fuera del trabajo, la misma lógica aplicada a lo vuestro: cuánto dura vuestro móvil, qué hacéis con el portátil que sustituís, si reparáis antes de comprar, cuántos servicios tenéis contratados que no usáis.
+
+No es una lista para sentirse culpable. Es la comprobación de que **entendéis el mecanismo**: si sabéis por qué importa alargar la vida útil de los servidores de una empresa, sabéis por qué importa la del vuestro.
+
+### Nadie lo resuelve solo
+
+Una empresa no controla su propia cadena. PixelStore no fabrica los portátiles que compra, no gestiona el centro de datos donde vive su web y no conduce las furgonetas que reparten sus pedidos.
+
+Por eso el ODS 17 se llama precisamente **alianzas para lograr los objetivos**, y por eso buena parte de lo que puede hacer una empresa pasa por otros:
+
+* exigir criterios a sus proveedores, y comprobarlos;
+* elegir proveedor cloud también por lo que publica sobre su energía;
+* trabajar con un gestor autorizado de residuos electrónicos;
+* participar en acuerdos del sector;
+* responder a lo que le piden clientes y administraciones.
+
+Trabajar con otros no es un adorno del final de la lista: en tecnología, casi todo vuestro impacto ocurre en infraestructura y hardware que son de otro.
+
+### Por qué preguntan los inversores, los clientes y los reguladores
+
+Hace quince años esto era voluntario. Hoy a una empresa le preguntan por su sostenibilidad tres actores distintos, y por motivos distintos.
+
+| Quién pregunta | Qué quiere saber |
+| -------------- | ---------------- |
+| Inversores | Si hay riesgos que puedan afectar al valor de la empresa a medio plazo |
+| Clientes | Si pueden comprar o contratar sin heredar un problema, sobre todo si son administraciones |
+| Reguladores | Si la empresa cumple lo que se le exige, y si lo que afirma es cierto |
+
+Al primero se le llama **inversión socialmente responsable**: fondos y entidades que incorporan criterios ASG a sus decisiones, además de los financieros. No hace falta saber cómo funciona un fondo. Sí hace falta entender la consecuencia práctica: **la sostenibilidad de una empresa dejó de ser solo una cuestión de conciencia y pasó a ser también información que alguien evalúa**.
+
+Y como todos preguntan, hicieron falta formatos comunes para responder. De ahí los estándares —GRI, ESRS, ISO 14001— que veremos en la última unidad. Su función es que dos empresas no se inventen cada una sus propios indicadores y luego nadie pueda compararlas.
+
+<div class="rule">
+  <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
+  <p>Informar sobre sostenibilidad ya no siempre es voluntario. En la Unión Europea existe una obligación de reporte que se aplica por tramos a empresas según su tamaño, y que se apoya en los estándares europeos <strong>ESRS</strong>.</p>
+  <p>PixelStore, con 45 trabajadores, probablemente no esté obligada. Pero sus clientes grandes sí pueden estarlo, y entonces le pedirán datos a ella. Así es como una obligación llega a una empresa pequeña: por la cadena de suministro, no por la ley directamente.</p>
+</div>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <ul class="checklist">
+    <li>Sabes nombrar cinco retos y decir cuáles no son ambientales.</li>
+    <li>Distingues la mirada de dentro hacia fuera de la de fuera hacia dentro.</li>
+    <li>Puedes poner tres decisiones tuyas de desarrollador que tengan impacto.</li>
+    <li>Sabes por qué buena parte del impacto de una empresa tecnológica está en manos de otros.</li>
+    <li>Sabes quién le pregunta a una empresa por su sostenibilidad, y por qué motivo cada uno.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué diferencia hay entre el impacto de un asunto y su riesgo para la empresa?</li>
+    <li>Poned una decisión que toméis programando y que tenga impacto ambiental.</li>
+    <li>¿Por qué a PixelStore le pueden acabar exigiendo datos que la ley no le exige?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · El impacto es lo que la empresa provoca fuera. El riesgo es lo que ese asunto puede provocarle a ella. Pueden ser muy distintos de tamaño.</p>
+  <p>2 · Por ejemplo: el formato y el tamaño de una imagen, cuánto tiempo se guarda un log, o pedir una máquina más grande de la necesaria.</p>
+  <p>3 · Porque sus clientes grandes sí están obligados a informar, y para informar necesitan datos de sus proveedores. La obligación viaja por la cadena.</p>
+</details>
+
+---
+
+## Sesión 3 · Impactos, datos y greenwashing
 
 ### Una empresa afecta a muchas personas
 
@@ -280,7 +427,22 @@ Para eso existe el concepto de:
 
 <p class="term">Materialidad</p>
 
-No hace falta una definición complicada. Podemos entenderlo como **identificar qué aspectos son realmente importantes para una empresa y para las personas o sistemas afectados por ella**.
+No hace falta una definición complicada. Podemos entenderlo como **identificar qué aspectos son lo bastante importantes como para merecer atención y recursos**.
+
+Y para decidirlo hacen falta las dos preguntas de la sesión anterior, no una:
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Materialidad de impacto</p>
+    <p class="compare-body">¿Cuánto afecta este asunto a las personas o al medio ambiente?</p>
+  </div>
+  <div>
+    <p class="compare-label">Materialidad financiera</p>
+    <p class="compare-body">¿Cuánto puede afectar este asunto a la empresa, como riesgo o como oportunidad?</p>
+  </div>
+</div>
+
+A mirar las dos se le llama **doble materialidad**, y es la lógica que siguen los estándares europeos. Un asunto es material si pesa en cualquiera de las dos direcciones: no hace falta que pese en las dos.
 
 Para una empresa que ofrece un servicio web a millones de personas podría quedar así:
 
@@ -424,7 +586,7 @@ Podría ser excelente. Pero necesitamos saber respecto a qué año, si se está 
 Sin contexto, **una cifra también puede engañar**.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
   <ul class="checklist">
     <li>Entiendes qué es un stakeholder y sabes nombrar seis de una plataforma real.</li>
     <li>Sabes que no todos los impactos tienen la misma importancia.</li>
@@ -454,21 +616,38 @@ Sin contexto, **una cifra también puede engañar**.
 
 ---
 
-## Sesión 3 · ¿Es GreenByte una empresa sostenible?
+## Sesión 4 · ¿Es PixelStore una empresa sostenible?
 
-### El caso · GreenByte
+### El caso · PixelStore
 
-GreenByte es una empresa tecnológica que desarrolla aplicaciones web y servicios SaaS. Tiene 70 trabajadores, 150.000 usuarios, infraestructura cloud, ordenadores portátiles, oficinas, varios proveedores tecnológicos y algunos servicios que utilizan inteligencia artificial.
+Esta es la empresa con la que vais a trabajar **durante todo el módulo**. Conviene conocerla bien ahora, porque volveréis a ella cinco veces.
 
-La empresa quiere anunciar:
+PixelStore vende productos tecnológicos por Internet. Tiene:
 
-> GreenByte es una empresa tecnológica sostenible.
+| Área | Lo que tiene |
+| ---- | ------------ |
+| Personas | 45 trabajadores: desarrollo, atención al cliente, almacén y administración |
+| Clientes | Unas 300.000 visitas al mes |
+| Producto | Aplicación web, backend, base de datos y un sistema de recomendaciones con IA |
+| Infraestructura | Servidores cloud, almacenamiento de imágenes, backups y logs |
+| Equipos | Portátiles y móviles de empresa, renovados por calendario |
+| Terceros | Proveedor cloud, pasarela de pagos, analítica y empresa de transporte |
 
-Vuestra misión será comprobar si de verdad hay información suficiente para afirmarlo.
+La dirección quiere anunciar:
+
+> PixelStore es una empresa tecnológica sostenible.
+
+Vuestra misión hoy es comprobar si hay información suficiente para afirmarlo. En las unidades siguientes iréis comprobando, una a una, las piezas concretas: su hardware, su web, su accesibilidad y su infraestructura.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Vuestro cuaderno de evidencias</p>
+  <p>Cread hoy un repositorio de grupo con una carpeta por unidad. Todo lo que midáis y decidáis durante el módulo va ahí.</p>
+  <p>No es burocracia: en la UD6 tendréis que construir el plan de sostenibilidad de PixelStore <strong>con las evidencias reales que hayáis reunido</strong>. Lo que no esté guardado, no existirá.</p>
+</div>
 
 ### Primera tarea · Analizar las afirmaciones
 
-GreenByte ha preparado ocho afirmaciones. Para cada una decidid:
+PixelStore ha preparado ocho afirmaciones. Para cada una decidid:
 
 | Etiqueta | Significa |
 | -------- | --------- |
@@ -480,7 +659,7 @@ GreenByte ha preparado ocho afirmaciones. Para cada una decidid:
 
 > Somos una empresa comprometida con el medio ambiente porque hemos eliminado prácticamente todo el papel de nuestras oficinas.
 
-¿Es una acción positiva? ¿A qué dimensión ASG pertenece? ¿Demuestra por sí sola que GreenByte sea sostenible? ¿Qué otros impactos preguntaríais?
+¿Es una acción positiva? ¿A qué dimensión ASG pertenece? ¿Demuestra por sí sola que PixelStore sea sostenible? ¿Qué otros impactos preguntaríais?
 
 #### Afirmación 2
 
@@ -490,7 +669,7 @@ GreenByte ha preparado ocho afirmaciones. Para cada una decidid:
 
 #### Afirmación 3
 
-> Todos nuestros empleados reciben un ordenador portátil nuevo cada dos años para garantizar que utilizan equipos eficientes.
+> Renovamos los portátiles de toda la plantilla cada dos años para garantizar que trabajan con equipos eficientes.
 
 ¿Qué ventajas puede tener? ¿Qué problemas puede generar? ¿Qué información necesitaríamos? ¿Qué alternativa estudiaríais?
 
@@ -502,13 +681,13 @@ GreenByte ha preparado ocho afirmaciones. Para cada una decidid:
 
 #### Afirmación 5
 
-> GreenByte contribuye al ODS 13 porque utiliza herramientas digitales.
+> PixelStore contribuye al ODS 13 porque utiliza herramientas digitales.
 
 ¿Utilizar tecnología digital demuestra que se contribuye al ODS 13? ¿Qué evidencia pediríais?
 
 #### Afirmación 6
 
-> Utilizamos inteligencia artificial para ofrecer una mejor experiencia de usuario.
+> Usamos inteligencia artificial para recomendar productos y ofrecer una mejor experiencia de compra.
 
 Esta merece analizarse por las tres dimensiones:
 
@@ -536,7 +715,7 @@ Y una última pregunta, que es la que casi nunca se hace:
 
 ---
 
-### Segunda tarea · El mapa ASG de GreenByte
+### Segunda tarea · El mapa ASG de PixelStore
 
 Identificad los principales aspectos de sostenibilidad. Podéis añadir los que faltan.
 
@@ -571,7 +750,7 @@ Aquí viene la parte importante. No vale decir «todo es muy importante». Elegi
     <li>¿Qué tamaño puede tener el impacto?</li>
     <li>¿Puede provocar consecuencias graves?</li>
     <li>¿Ocurre a menudo?</li>
-    <li>¿Es algo central para la actividad de GreenByte?</li>
+    <li>¿Es algo central para la actividad de PixelStore?</li>
   </ol>
   <p>El consumo de papel existe, seguro. Pero en una empresa SaaS probablemente haya que mirar antes la infraestructura cloud, la privacidad, la seguridad, la accesibilidad y el hardware.</p>
 </details>
@@ -604,7 +783,7 @@ Para cada problema importante, proponed una acción. Por ejemplo: si los portát
 
 ### Sexta tarea · Detectar greenwashing
 
-Elegid las **dos afirmaciones** de GreenByte que más dudas os generen. De cada una: qué afirma, qué información falta, qué dato pediríais y qué tendría que demostrar GreenByte para que resultara convincente.
+Elegid las **dos afirmaciones** de PixelStore que más dudas os generen. De cada una: qué afirma, qué información falta, qué dato pediríais y qué tendría que demostrar PixelStore para que resultara convincente.
 
 ---
 
@@ -640,15 +819,15 @@ Ordenados de mayor a menor importancia.
 
 #### D · Greenwashing
 
-Dos afirmaciones de GreenByte y, en una línea cada una, qué información falta para poder aceptarlas.
+Dos afirmaciones de PixelStore y, en una línea cada una, qué información falta para poder aceptarlas.
 
 ### Presentación
 
 Cada pareja dispone de unos **3 minutos**. No hay que explicar toda la actividad: hay que responder a cuatro preguntas.
 
-* ¿Cuál es el principal impacto de GreenByte?
+* ¿Cuál es el principal impacto de PixelStore?
 * ¿Qué aspecto habéis descartado como poco prioritario, y por qué?
-* ¿Qué afirmación de GreenByte os genera más dudas?
+* ¿Qué afirmación de PixelStore os genera más dudas?
 * ¿Qué dato pediríais primero?
 
 ### Evaluación
@@ -662,7 +841,9 @@ Cada pareja dispone de unos **3 minutos**. No hay que explicar toda la actividad
 | **Análisis crítico y detección de afirmaciones débiles** | **2** |
 | Claridad del producto final                          |    0,5 |
 
-No obtiene mejor nota quien encuentra más problemas, quien relaciona GreenByte con más ODS o quien usa más vocabulario técnico. La obtiene quien identifica los impactos que de verdad importan, sabe explicar por qué, propone una forma razonable de medirlos y distingue una afirmación de una evidencia.
+No obtiene mejor nota quien encuentra más problemas, quien relaciona PixelStore con más ODS o quien usa más vocabulario técnico. La obtiene quien identifica los impactos que de verdad importan, sabe explicar por qué, propone una forma razonable de medirlos y distingue una afirmación de una evidencia.
+
+Durante la exposición se preguntará **individualmente** a cualquiera de los dos miembros por una decisión concreta del trabajo. No es un examen: es la comprobación de que la pareja decidió junta y no se repartió el documento.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · entrega</p>
@@ -671,7 +852,7 @@ No obtiene mejor nota quien encuentra más problemas, quien relaciona GreenByte 
     <li>Habéis priorizado únicamente cinco aspectos.</li>
     <li>Cada aspecto importante tiene al menos un indicador.</li>
     <li>Las acciones propuestas responden a problemas concretos.</li>
-    <li>Habéis cuestionado al menos dos afirmaciones de GreenByte.</li>
+    <li>Habéis cuestionado al menos dos afirmaciones de PixelStore.</li>
     <li>Podéis explicar vuestra diapositiva sin leerla.</li>
   </ul>
 </div>
