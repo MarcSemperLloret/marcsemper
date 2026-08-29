@@ -426,7 +426,18 @@ export const teachingCourses: TeachingCourse[] = [
           "Finding the barriers that stop people using a site, fixing them and proving the site is better afterwards.",
         descriptionEs:
           "Encontrar las barreras que impiden usar un sitio, corregirlas y demostrar que después es mejor.",
-        resources: []
+        resources: [
+          {
+            label: "PixelStore · starting project, barriers branch",
+            labelEs: "PixelStore · proyecto de partida, rama barreras",
+            href: "https://github.com/MarcSemperLloret/webssos/tree/barreras",
+            kind: "code",
+            description:
+              "The same shop, now with a cart and a modal, and unusable without a mouse.",
+            descriptionEs:
+              "La misma tienda, ahora con carrito y modal, e inservible sin ratón."
+          }
+        ]
       },
       {
         id: "ud-05",

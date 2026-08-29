@@ -19,7 +19,7 @@ requirements:
   - "Chrome o Chromium, con DevTools y Lighthouse."
   - "La extensión axe DevTools."
   - "Editor de código y Git."
-  - "La web con barreras que entrega el profesor."
+  - "PixelStore, rama barreras. Se clona en la sesión 1."
 priorKnowledge:
   - "HTML y CSS a nivel de escribir una página completa."
   - "Medir con DevTools y guardar un estado inicial (UD3)."
@@ -47,9 +47,17 @@ No tiene mucho sentido construir un servicio muy eficiente, muy rápido y muy mo
 
 ### Primero, úsala normal
 
-Antes de estudiar ninguna norma vamos a hacer otra cosa. El profesor entrega una web que aparentemente funciona: tiene menú, productos, imágenes, formulario, botones, modal y carrito.
+Antes de estudiar ninguna norma vamos a hacer otra cosa. Volvemos a **PixelStore**, la tienda de la unidad anterior, en la rama que trae carrito y modal:
 
-Usadla unos minutos con normalidad, como usuarios.
+```bash
+git clone -b barreras https://github.com/MarcSemperLloret/webssos.git pixelstore-a11y
+cd pixelstore-a11y
+python -m http.server 8080
+```
+
+Si ya la teníais clonada, basta con `git fetch origin` y `git switch barreras`.
+
+Aparentemente funciona: tiene menú, productos, imágenes, formulario, botones, modal y carrito. Usadla unos minutos con normalidad, como usuarios.
 
 <dl class="answer">
   <dt>¿Parece fácil de utilizar?</dt>
