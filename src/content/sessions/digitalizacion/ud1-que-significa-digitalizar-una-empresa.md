@@ -1,17 +1,27 @@
 ---
 title: "¿Qué significa digitalizar una empresa?"
-label: "UD1 · Sesión 1"
+label: "UD1 · Actividad"
 section: "ud-01"
 order: 1
 lang: "es"
 summary: "De una empresa tradicional a una empresa digital. Recorremos el camino problema → necesidad → solución tecnológica, y no al revés."
-duration: "2 horas"
+duration: "2 horas · 2 sesiones"
 modality: "Parejas"
 deliverable: "Una propuesta visual de transformación digital de una pequeña empresa."
 date: "2026-08-28"
+outcomes:
+  - "Distinguir digitalizar un dato de rediseñar un proceso."
+  - "Recorrer el camino problema → necesidad → tecnología, y no al revés."
+  - "Reconocer las tecnologías habituales de una empresa y para qué sirve cada una."
+  - "Justificar por qué una tecnología hace falta, o por qué no."
+requirements:
+  - "Herramienta de diagramas, o papel y rotulador."
+  - "Herramienta de presentaciones."
 ---
 
-## 1. ¿Qué vamos a aprender?
+## Sesión 1 · Qué cambia realmente al digitalizar
+
+### ¿Qué vamos a aprender?
 
 Cuando trabajes como desarrollador, normalmente no te pedirán simplemente:
 
@@ -37,7 +47,7 @@ y no al revés.
 
 ---
 
-## 2. Digitalizar no es simplemente utilizar ordenadores
+### Digitalizar no es simplemente utilizar ordenadores
 
 Imagina una pequeña empresa en la que las citas se apuntan en una libreta.
 
@@ -80,7 +90,7 @@ A esto lo llamamos **transformación digital**.
 
 ---
 
-## 3. Una idea importante: la tecnología no es el objetivo
+### Una idea importante: la tecnología no es el objetivo
 
 Una empresa no necesita inteligencia artificial, cloud, IoT o Big Data simplemente porque sean tecnologías modernas.
 
@@ -102,11 +112,11 @@ Por tanto, durante esta actividad utilizaremos siempre esta regla:
 
 ---
 
-## 4. Algunas tecnologías que encontrarás en las empresas
+### Algunas tecnologías que encontrarás en las empresas
 
 No necesitas conocerlas en profundidad todavía. Solo necesitas entender qué función pueden tener.
 
-### Aplicación web
+#### Aplicación web
 
 Permite que clientes o trabajadores interactúen con un sistema utilizando un navegador.
 
@@ -119,7 +129,7 @@ Ejemplos:
 
 ---
 
-### API
+#### API
 
 Una API permite que **dos aplicaciones intercambien información**.
 
@@ -138,7 +148,7 @@ La tienda puede enviar automáticamente a la empresa de transporte los datos nec
 
 ---
 
-### Base de datos
+#### Base de datos
 
 Permite almacenar información de forma organizada.
 
@@ -153,7 +163,7 @@ Por ejemplo:
 
 ---
 
-### Cloud
+#### Cloud
 
 En lugar de ejecutar una aplicación únicamente en los ordenadores de la empresa, podemos utilizar infraestructura accesible a través de Internet.
 
@@ -168,7 +178,7 @@ Más adelante estudiaremos este concepto con mayor profundidad.
 
 ---
 
-### Automatización
+#### Automatización
 
 Una automatización permite que ciertas tareas se ejecuten sin que una persona tenga que hacerlas manualmente cada vez.
 
@@ -186,7 +196,7 @@ Por ejemplo:
 
 ---
 
-### Datos y analítica
+#### Datos y analítica
 
 Las aplicaciones generan datos.
 
@@ -199,7 +209,7 @@ Estos datos pueden utilizarse para responder preguntas:
 
 ---
 
-### Inteligencia artificial
+#### Inteligencia artificial
 
 La IA puede utilizarse para tareas concretas como:
 
@@ -218,11 +228,11 @@ Utilizar IA donde una solución sencilla funciona mejor puede aumentar el coste 
 
 ---
 
-## 5. IT y OT
+### IT y OT
 
 Hay dos conceptos que aparecen frecuentemente cuando hablamos de digitalización.
 
-### IT — Information Technology
+#### IT — Information Technology
 
 Son los sistemas utilizados principalmente para gestionar información.
 
@@ -234,7 +244,7 @@ Por ejemplo:
 * correo electrónico;
 * software empresarial.
 
-### OT — Operational Technology
+#### OT — Operational Technology
 
 Son tecnologías que interactúan con procesos físicos.
 
@@ -266,15 +276,44 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 
 ---
 
-## 6. El caso
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <ul class="checklist">
+    <li>Sabes explicar con un ejemplo la diferencia entre digitalizar y transformar.</li>
+    <li>Puedes nombrar cuatro tecnologías de empresa y para qué sirve cada una.</li>
+    <li>Distingues un sistema IT de un sistema OT.</li>
+  </ul>
+</div>
 
-### Reparaciones Rápidas S.L.
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>Sustituir una libreta por un Excel, ¿es transformación digital?</li>
+    <li>¿Qué va primero, la tecnología o el proceso?</li>
+    <li>Pon un ejemplo de sistema OT.</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · No. Se ha cambiado el soporte, pero el proceso sigue siendo el mismo. Es digitalización.</p>
+  <p>2 · El proceso. La tecnología se elige después, cuando ya sabemos qué necesidad tiene que cubrir.</p>
+  <p>3 · Una máquina de producción, un sensor de temperatura, un autómata de una línea de montaje: sistemas que actúan sobre el mundo físico.</p>
+</details>
+
+---
+
+## Sesión 2 · Rediseña una empresa
+
+### El caso
+
+#### Reparaciones Rápidas S.L.
 
 Es una pequeña empresa dedicada a reparar ordenadores, móviles y tablets.
 
 Actualmente trabaja de la siguiente forma.
 
-#### Entrada de reparaciones
+##### Entrada de reparaciones
 
 Los clientes llaman por teléfono o acuden presencialmente.
 
@@ -289,7 +328,7 @@ Lo escribe en una hoja de papel.
 
 ---
 
-#### Organización
+##### Organización
 
 Cada mañana, los técnicos revisan las reparaciones pendientes.
 
@@ -299,7 +338,7 @@ Algunas veces también utiliza WhatsApp.
 
 ---
 
-#### Fotografías
+##### Fotografías
 
 Los técnicos hacen fotografías de los dispositivos antes de comenzar la reparación.
 
@@ -307,7 +346,7 @@ Las fotografías quedan guardadas en sus teléfonos móviles.
 
 ---
 
-#### Estado de la reparación
+##### Estado de la reparación
 
 Los clientes no pueden consultar el estado de su dispositivo.
 
@@ -319,7 +358,7 @@ Los trabajadores reciben muchas llamadas de este tipo.
 
 ---
 
-#### Finalización
+##### Finalización
 
 Cuando termina una reparación:
 
@@ -330,7 +369,7 @@ Cuando termina una reparación:
 
 ---
 
-#### Información histórica
+##### Información histórica
 
 La empresa conserva muchos documentos, hojas de cálculo y mensajes.
 
@@ -343,7 +382,7 @@ Sin embargo, le resulta difícil responder preguntas como:
 
 ---
 
-## 7. Primera tarea — Detectar problemas
+### Primera tarea — Detectar problemas
 
 Antes de hablar de tecnología, identifica los problemas.
 
@@ -366,7 +405,7 @@ Ahora vosotros:
 
 ---
 
-## 8. Segunda tarea — Diseñar el nuevo proceso
+### Segunda tarea — Diseñar el nuevo proceso
 
 Pensad cómo podría funcionar la empresa después de digitalizar sus procesos.
 
@@ -402,7 +441,7 @@ Debe entenderse el proceso simplemente mirándolo.
 
 ---
 
-## 9. Tercera tarea — Elegir tecnologías
+### Tercera tarea — Elegir tecnologías
 
 Ahora sí podemos introducir tecnología.
 
@@ -431,7 +470,7 @@ No es obligatorio utilizar todos.
 
 ---
 
-## 10. Cuarta tarea — ¿Realmente necesitamos esa tecnología?
+### Cuarta tarea — ¿Realmente necesitamos esa tecnología?
 
 Una empresa os propone utilizar:
 
@@ -465,7 +504,7 @@ Por ejemplo:
 
 ---
 
-## 11. Quinta tarea — Arquitectura conceptual
+### Quinta tarea — Arquitectura conceptual
 
 Ahora dibujad cómo se relacionarían los diferentes componentes.
 
@@ -564,7 +603,7 @@ Podéis añadir otros componentes si los consideráis necesarios.
 
 ---
 
-## 12. Pregunta importante
+### Pregunta importante
 
 Observad vuestra propuesta.
 
@@ -578,43 +617,43 @@ Si no podéis responder, quizá esa tecnología no sea necesaria.
 
 ---
 
-## 13. Producto final
+### Producto final
 
 Cada pareja entregará **una única página o diapositiva**.
 
 Debe contener:
 
-### A. Situación actual
+#### A. Situación actual
 
 Un pequeño esquema del funcionamiento actual.
 
-#### AS-IS
+##### AS-IS
 
 > Cómo funciona la empresa ahora.
 
 ---
 
-### B. Principales problemas
+#### B. Principales problemas
 
 Entre **4 y 6 problemas**.
 
 ---
 
-### C. Nuevo proceso
+#### C. Nuevo proceso
 
-#### TO-BE
+##### TO-BE
 
 > Cómo proponéis que funcione después de la transformación.
 
 ---
 
-### D. Arquitectura
+#### D. Arquitectura
 
 Un dibujo sencillo mostrando las principales tecnologías.
 
 ---
 
-### E. Tecnologías elegidas
+#### E. Tecnologías elegidas
 
 Tabla:
 
@@ -626,7 +665,7 @@ Tabla:
 
 ---
 
-### F. Tecnologías descartadas
+#### F. Tecnologías descartadas
 
 Elegid al menos **dos tecnologías que NO utilizaríais**.
 
@@ -634,7 +673,7 @@ Explicad por qué.
 
 ---
 
-## 14. Presentación
+### Presentación
 
 Cada pareja dispondrá de aproximadamente **2 minutos** para explicar su propuesta.
 
@@ -642,15 +681,15 @@ No hay que explicar todos los detalles.
 
 Solamente responder a tres preguntas:
 
-#### 1. ¿Cuál era el principal problema?
+##### 1. ¿Cuál era el principal problema?
 
-#### 2. ¿Qué cambio consideráis más importante?
+##### 2. ¿Qué cambio consideráis más importante?
 
-#### 3. ¿Qué tecnología habéis decidido no utilizar y por qué?
+##### 3. ¿Qué tecnología habéis decidido no utilizar y por qué?
 
 ---
 
-## 15. Evaluación
+### Evaluación
 
 La actividad se calificará sobre **10 puntos**.
 
@@ -685,7 +724,7 @@ La actividad se calificará sobre **10 puntos**.
   </tbody>
 </table>
 
-### Importante
+#### Importante
 
 **No obtiene mejor nota quien utiliza más tecnologías.**
 
@@ -697,7 +736,36 @@ Obtiene mejor nota quien:
 
 ---
 
-## 16. Lo importante que debes recordar
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · entrega</p>
+  <ul class="checklist">
+    <li>Proceso actual y proceso rediseñado, los dos dibujados.</li>
+    <li>Cada tecnología propuesta tiene escrito el problema que resuelve.</li>
+    <li>Al menos una tecnología descartada, con su motivo.</li>
+    <li>Arquitectura conceptual que se entiende sin explicarla.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué preguntáis primero a una empresa que quiere digitalizarse?</li>
+    <li>¿Por qué se valora descartar una tecnología?</li>
+    <li>Vuestra propuesta tiene una caja que no sabéis defender. ¿Qué hacéis?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Qué problema tiene y cómo trabaja ahora. Nunca qué tecnología quiere.</p>
+  <p>2 · Porque demuestra que evaluáis si resuelve un problema real. Una propuesta que lo incluye todo no ha decidido nada.</p>
+  <p>3 · Quitarla. Es justo la que os van a preguntar.</p>
+</details>
+
+---
+
+## Lo que debes recordar
+
 
 Cuando trabajes como desarrollador, probablemente escucharás nombres de tecnologías constantemente:
 

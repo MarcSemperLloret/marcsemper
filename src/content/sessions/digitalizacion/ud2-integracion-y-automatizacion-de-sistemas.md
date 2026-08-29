@@ -1,17 +1,28 @@
 ---
 title: "Integración y automatización de sistemas"
-label: "UD2 · Sesión 1"
+label: "UD2 · Actividad"
 section: "ud-02"
 order: 2
 lang: "es"
 summary: "Cuando las aplicaciones tienen que hablar entre ellas. API, polling, webhook, eventos, colas y automatización: qué problema resuelve cada mecanismo y cuándo tiene sentido usarlo."
-duration: "2 horas"
+duration: "2 horas · 2 sesiones"
 modality: "Parejas"
 deliverable: "Diseño de un flujo de integración y automatización para una empresa."
 date: "2026-08-28"
+outcomes:
+  - "Explicar qué es una API y qué no es una API."
+  - "Elegir entre polling y webhook con un argumento, no por costumbre."
+  - "Identificar el evento que dispara una automatización."
+  - "Decidir qué NO conviene automatizar."
+requirements:
+  - "Herramienta de diagramas, o papel y rotulador."
+priorKnowledge:
+  - "El camino problema → necesidad → tecnología (UD1)."
 ---
 
-## 1. ¿Qué vamos a aprender?
+## Sesión 1 · Cómo se comunican las aplicaciones
+
+### ¿Qué vamos a aprender?
 
 Una aplicación real rara vez funciona completamente sola.
 
@@ -46,7 +57,7 @@ El objetivo es entender:
 
 ---
 
-## 2. Una aplicación no vive sola
+### Una aplicación no vive sola
 
 Imagina una tienda online.
 
@@ -77,11 +88,11 @@ Pero cuanto más crece una empresa:
 
 Por eso aparecen dos conceptos fundamentales:
 
-### Integración
+#### Integración
 
 Conseguir que **dos o más sistemas puedan intercambiar información**.
 
-### Automatización
+#### Automatización
 
 Conseguir que **una tarea pueda realizarse sin intervención manual cada vez que ocurre**.
 
@@ -89,7 +100,7 @@ Son conceptos relacionados, pero no son exactamente lo mismo.
 
 ---
 
-## 3. ¿Qué significa integrar aplicaciones?
+### ¿Qué significa integrar aplicaciones?
 
 Supongamos que tenemos:
 
@@ -141,7 +152,7 @@ Los datos pasan automáticamente de una aplicación a otra.
 
 ---
 
-## 4. API: una puerta para comunicarse con una aplicación
+### API: una puerta para comunicarse con una aplicación
 
 Ya conocéis las APIs desde el punto de vista de programación.
 
@@ -185,7 +196,7 @@ Solo necesitamos conocer:
 
 ---
 
-## 5. Pero aparece un problema
+### Pero aparece un problema
 
 Imaginemos ahora una empresa de reparaciones.
 
@@ -193,7 +204,7 @@ Queremos avisar al cliente cuando su ordenador esté reparado.
 
 Tenemos dos posibilidades.
 
-### Opción A
+#### Opción A
 
 Nuestra aplicación pregunta continuamente:
 
@@ -216,7 +227,7 @@ La aplicación pregunta periódicamente si ha ocurrido algo.
 
 ---
 
-## 6. Polling
+### Polling
 
 El funcionamiento puede representarse así:
 
@@ -259,7 +270,7 @@ Estamos realizando miles de preguntas innecesarias.
 
 ---
 
-## 7. Otra posibilidad: webhook
+### Otra posibilidad: webhook
 
 En lugar de preguntar continuamente:
 
@@ -313,15 +324,15 @@ El servicio de pago avisa automáticamente a nuestra aplicación.
 
 ---
 
-## 8. Polling vs webhook
+### Polling vs webhook
 
 Una forma sencilla de recordarlo:
 
-### Polling
+#### Polling
 
 > Yo te pregunto periódicamente si ha ocurrido algo.
 
-### Webhook
+#### Webhook
 
 > Tú me avisas cuando ocurra.
 
@@ -341,7 +352,7 @@ Depende del problema.
 
 ---
 
-## 9. Los eventos
+### Los eventos
 
 Muchas aplicaciones modernas funcionan alrededor de acontecimientos.
 
@@ -413,7 +424,7 @@ Una única acción puede desencadenar muchas otras.
 
 ---
 
-## 10. Automatización
+### Automatización
 
 Supongamos que cada vez que termina una reparación debemos:
 
@@ -447,29 +458,29 @@ Por tanto son buenas candidatas para automatizarse.
 
 ---
 
-## 11. ¿Todo debería automatizarse?
+### ¿Todo debería automatizarse?
 
 No.
 
 Antes de automatizar una tarea debemos preguntarnos:
 
-#### ¿Se repite con frecuencia?
+##### ¿Se repite con frecuencia?
 
-#### ¿Sigue reglas claras?
+##### ¿Sigue reglas claras?
 
-#### ¿Consume tiempo?
+##### ¿Consume tiempo?
 
-#### ¿Es fácil cometer errores?
+##### ¿Es fácil cometer errores?
 
-#### ¿Qué ocurre si la automatización falla?
+##### ¿Qué ocurre si la automatización falla?
 
 Por ejemplo:
 
-### Buena candidata
+#### Buena candidata
 
 > Enviar automáticamente un email cuando un pedido sale del almacén.
 
-### Mala candidata
+#### Mala candidata
 
 > Decidir automáticamente si despedir a un trabajador.
 
@@ -486,7 +497,7 @@ Por tanto:
 
 ---
 
-## 12. ¿Qué pasa cuando intervienen muchos sistemas?
+### ¿Qué pasa cuando intervienen muchos sistemas?
 
 Veamos un pedido online.
 
@@ -578,7 +589,7 @@ También tenemos que pensar:
 
 ---
 
-## 13. Un problema real: el sistema de facturación está caído
+### Un problema real: el sistema de facturación está caído
 
 Supongamos:
 
@@ -608,7 +619,7 @@ Una posibilidad es utilizar una:
 
 ---
 
-## 14. Cola de mensajes
+### Cola de mensajes
 
 Imagina una cola en un supermercado.
 
@@ -675,7 +686,7 @@ Lo importante es entender el problema que solucionan.
 
 ---
 
-## 15. Una arquitectura cada vez más común
+### Una arquitectura cada vez más común
 
 Podemos pasar de:
 
@@ -745,7 +756,7 @@ Lo importante es entender la idea:
 
 ---
 
-## 16. Low-Code y No-Code
+### Low-Code y No-Code
 
 No todas las integraciones tienen que programarse desde cero.
 
@@ -801,9 +812,38 @@ puede ser mejor desarrollar la solución mediante código.
 
 ---
 
-## 17. Actividad
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <ul class="checklist">
+    <li>Sabes explicar qué hace una API sin usar la palabra «API».</li>
+    <li>Puedes dibujar polling y webhook de memoria.</li>
+    <li>Sabes para qué sirve una cola de mensajes.</li>
+    <li>Distingues automatizar de integrar.</li>
+  </ul>
+</div>
 
-### Volvemos a Reparaciones Rápidas S.L.
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué diferencia hay entre webhook y polling?</li>
+    <li>¿Por qué una API no es, por sí sola, una automatización?</li>
+    <li>Pon un ejemplo donde utilizarías una cola.</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · En polling preguntamos cada cierto tiempo si hay novedades; en webhook es el otro sistema el que nos avisa cuando ocurre el evento. Cambia quién lleva la iniciativa.</p>
+  <p>2 · Porque una API solo abre una puerta: alguien tiene que decidir cuándo se cruza y qué se hace después. La automatización es esa decisión, ejecutada sola.</p>
+  <p>3 · Cuando el sistema que recibe puede estar caído o saturado: la cola guarda el mensaje y lo entrega cuando vuelva, en lugar de perderlo.</p>
+</details>
+
+---
+
+## Sesión 2 · Diseña la automatización de una empresa
+
+
+#### Volvemos a Reparaciones Rápidas S.L.
 
 La empresa que analizamos en la actividad anterior ya dispone ahora de:
 
@@ -818,7 +858,7 @@ Pero todavía realiza muchas tareas manualmente.
 
 ---
 
-## 18. Situación actual
+### Situación actual
 
 Cuando llega una reparación:
 
@@ -835,7 +875,7 @@ Cuando llega una reparación:
 
 ---
 
-## 19. Primera tarea — ¿Qué automatizarías?
+### Primera tarea — ¿Qué automatizarías?
 
 Identificad al menos **cinco tareas** que podrían automatizarse.
 
@@ -853,7 +893,7 @@ Podéis añadir otras.
 
 ---
 
-## 20. Segunda tarea — Identificar eventos
+### Segunda tarea — Identificar eventos
 
 Pensad qué acontecimientos importantes ocurren durante una reparación.
 
@@ -874,45 +914,75 @@ Identificad al menos **cuatro eventos**.
 
 ---
 
-## 21. Tercera tarea — ¿Polling o webhook?
+### Tercera tarea — ¿Polling o webhook?
 
-Analizad las siguientes situaciones.
+Vamos a resolver la primera situación juntos, con el razonamiento a la vista. Después iréis quedándoos solos.
 
-### Situación A
+<p class="stage">Paso 1 · Te enseño uno</p>
 
-Queremos saber cuándo un pago online ha sido confirmado.
+#### Situación A · saber cuándo se confirma un pago online
 
-¿Utilizaríais polling o webhook? ¿Por qué?
+La decisión no se toma por costumbre. Se toma respondiendo a tres preguntas, siempre las mismas.
+
+<dl class="worked">
+  <dt>¿Quién sabe primero que ha ocurrido?</dt>
+  <dd>La pasarela de pago. Nosotros no podemos saberlo antes que ella.</dd>
+  <dt>¿Cuánto puedo tardar en enterarme?</dt>
+  <dd>Casi nada: el cliente está esperando en la pantalla de confirmación.</dd>
+  <dt>¿Con qué frecuencia ocurre?</dt>
+  <dd>Rara vez comparado con lo que tardaríamos preguntando. Un pago concreto se confirma una sola vez.</dd>
+</dl>
+
+Con eso ya está decidido: **webhook**. La pasarela sabe cuándo ocurre, necesitamos enterarnos al instante, y preguntar cada pocos segundos por un evento que sucede una vez sería tirar miles de peticiones a la basura.
+
+Fijaos en que no hemos elegido webhook porque sea más moderno. Lo hemos elegido porque quien tiene la información es el otro sistema, y el coste de preguntar es absurdo comparado con el de ser avisado.
+
+<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
+
+Ahora vosotros, pero con las mismas tres preguntas delante. Respondedlas antes de decidir.
+
+#### Situación B · consultar cada 30 minutos el precio de una moneda
+
+<dl class="answer">
+  <dt>¿Quién sabe primero que ha cambiado?</dt>
+  <dd></dd>
+  <dt>¿Cuánto podemos tardar en enterarnos?</dt>
+  <dd></dd>
+  <dt>Decisión y motivo</dt>
+  <dd></dd>
+</dl>
+
+#### Situación C · saber inmediatamente que un cliente cancela una reserva
+
+<dl class="answer">
+  <dt>¿Quién sabe primero que ha ocurrido?</dt>
+  <dd></dd>
+  <dt>¿Cuánto podemos tardar en enterarnos?</dt>
+  <dd></dd>
+  <dt>Decisión y motivo</dt>
+  <dd></dd>
+</dl>
+
+<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
+
+Sin guion esta vez.
+
+#### Situación D · cada noche, cuántos pedidos se han hecho durante el día
+
+¿Polling, webhook o ninguna de las dos? Justificadlo.
 
 <p class="write-line"></p>
-
-### Situación B
-
-Una aplicación consulta cada 30 minutos el precio actual de una moneda.
-
-¿Polling o webhook? ¿Por qué?
-
 <p class="write-line"></p>
 
-### Situación C
-
-Queremos saber inmediatamente cuándo un cliente cancela una reserva en una plataforma externa.
-
-¿Polling o webhook? ¿Por qué?
-
-<p class="write-line"></p>
-
-### Situación D
-
-Cada noche necesitamos consultar cuántos pedidos se han realizado durante el día.
-
-¿Polling, webhook o ninguna de las dos opciones? ¿Por qué?
-
-<p class="write-line"></p>
+<details class="aside aside--help">
+  <summary>Estoy atascado · no sé si la D es una de las dos</summary>
+  <p>Volved a la primera pregunta: ¿hay un evento del que enterarse? Un webhook avisa <em>cuando pasa algo</em>. Y el polling pregunta <em>si ya ha pasado algo</em>.</p>
+  <p>Aquí no estamos esperando a que ocurra nada: hemos decidido nosotros mirar a una hora fija. Eso tiene otro nombre, y lo habéis visto en esta misma sesión.</p>
+</details>
 
 ---
 
-## 22. Cuarta tarea — Diseñar una automatización
+### Cuarta tarea — Diseñar una automatización
 
 Diseñad el flujo que debería producirse cuando:
 
@@ -940,7 +1010,7 @@ Podéis dibujarlo en diagrams.net, Canva, PowerPoint o papel.
 
 ---
 
-## 23. Quinta tarea — Algo falla
+### Quinta tarea — Algo falla
 
 Ahora aparece un problema.
 
@@ -959,19 +1029,19 @@ Vuestro flujo era:
 
 Responded:
 
-#### A. ¿Qué debería ocurrir con la reparación?
+##### A. ¿Qué debería ocurrir con la reparación?
 
 <p class="write-line"></p>
 
-#### B. ¿Deberíamos perder la solicitud de factura?
+##### B. ¿Deberíamos perder la solicitud de factura?
 
 <p class="write-line"></p>
 
-#### C. ¿Podría tener sentido utilizar una cola?
+##### C. ¿Podría tener sentido utilizar una cola?
 
 <p class="write-line"></p>
 
-#### D. ¿Cuándo debería volver a intentarse?
+##### D. ¿Cuándo debería volver a intentarse?
 
 <p class="write-line"></p>
 
@@ -981,7 +1051,7 @@ Buscamos una **solución razonable**.
 
 ---
 
-## 24. Sexta tarea — ¿Programar o utilizar Low-Code?
+### Sexta tarea — ¿Programar o utilizar Low-Code?
 
 La empresa necesita estas cuatro automatizaciones.
 
@@ -991,7 +1061,7 @@ Decidid si utilizaríais:
 * una herramienta low-code/no-code;
 * cualquiera de las dos.
 
-### Caso 1
+#### Caso 1
 
 Cada vez que alguien rellena un formulario:
 
@@ -1004,7 +1074,7 @@ Cada vez que alguien rellena un formulario:
   <dd></dd>
 </dl>
 
-### Caso 2
+#### Caso 2
 
 Sistema bancario que procesa 10.000 transacciones por segundo.
 
@@ -1015,7 +1085,7 @@ Sistema bancario que procesa 10.000 transacciones por segundo.
   <dd></dd>
 </dl>
 
-### Caso 3
+#### Caso 3
 
 Cuando llega una incidencia interna:
 
@@ -1028,7 +1098,7 @@ Cuando llega una incidencia interna:
   <dd></dd>
 </dl>
 
-### Caso 4
+#### Caso 4
 
 Motor principal de una tienda online con miles de usuarios simultáneos.
 
@@ -1041,7 +1111,7 @@ Motor principal de una tienda online con miles de usuarios simultáneos.
 
 ---
 
-## 25. Producto final
+### Producto final
 
 Cada pareja entregará **una única página o diapositiva** titulada:
 
@@ -1049,17 +1119,17 @@ Cada pareja entregará **una única página o diapositiva** titulada:
 
 Debe contener:
 
-### 1. Evento inicial
+#### 1. Evento inicial
 
 Por ejemplo:
 
 > Reparación terminada.
 
-### 2. Flujo automatizado
+#### 2. Flujo automatizado
 
 Representado visualmente.
 
-### 3. Sistemas implicados
+#### 3. Sistemas implicados
 
 Por ejemplo:
 
@@ -1068,7 +1138,7 @@ Por ejemplo:
 * facturación;
 * correo.
 
-### 4. Tipo de comunicación
+#### 4. Tipo de comunicación
 
 Indicad dónde tendría sentido utilizar:
 
@@ -1079,31 +1149,31 @@ Indicad dónde tendría sentido utilizar:
 
 No es necesario utilizar todas.
 
-### 5. Gestión de un fallo
+#### 5. Gestión de un fallo
 
 Explicad qué ocurriría si uno de los sistemas no estuviera disponible.
 
-### 6. Una tarea que NO automatizaríais
+#### 6. Una tarea que NO automatizaríais
 
 Y justificad por qué.
 
 ---
 
-## 26. Presentación
+### Presentación
 
 Cada pareja dispondrá de aproximadamente **2 minutos**.
 
 Debe responder únicamente:
 
-#### ¿Qué evento habéis elegido?
+##### ¿Qué evento habéis elegido?
 
-#### ¿Qué habéis automatizado?
+##### ¿Qué habéis automatizado?
 
-#### ¿Qué ocurre si una parte del sistema falla?
+##### ¿Qué ocurre si una parte del sistema falla?
 
 ---
 
-## 27. Evaluación
+### Evaluación
 
 La actividad se calificará sobre **10 puntos**.
 
@@ -1140,7 +1210,36 @@ La actividad se calificará sobre **10 puntos**.
 
 ---
 
-## 28. Lo importante que debes recordar
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · entrega</p>
+  <ul class="checklist">
+    <li>Al menos dos automatizaciones con evento, acción y beneficio.</li>
+    <li>Una decisión razonada entre polling y webhook.</li>
+    <li>Un caso de fallo y qué ocurre cuando falla.</li>
+    <li>Una tarea que habéis decidido NO automatizar, con su motivo.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué tres cosas describen una automatización?</li>
+    <li>¿Qué pasa con vuestra automatización si el sistema de destino está caído?</li>
+    <li>¿Cuándo elegiríais Low-Code en lugar de programar?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · El evento que la dispara, la acción que ejecuta y el beneficio que produce.</p>
+  <p>2 · Depende de vuestro diseño: si no hay cola ni reintentos, el mensaje se pierde. Esa es la respuesta que hay que poder dar.</p>
+  <p>3 · Cuando la lógica es sencilla, conecta servicios que ya existen y el coste de mantenerla programada no compensa.</p>
+</details>
+
+---
+
+## Lo que debes recordar
+
 
 No necesitas recordar el nombre de todas las plataformas de automatización.
 
@@ -1161,27 +1260,27 @@ Lo importante es comprender estas ideas:
 
 Y especialmente:
 
-### API
+#### API
 
 > Una aplicación puede comunicarse con otra.
 
-### Polling
+#### Polling
 
 > Pregunto periódicamente si ha ocurrido algo.
 
-### Webhook
+#### Webhook
 
 > Avísame cuando ocurra.
 
-### Evento
+#### Evento
 
 > Ha ocurrido algo relevante.
 
-### Automatización
+#### Automatización
 
 > Cuando ocurre A, ejecutamos automáticamente B.
 
-### Cola
+#### Cola
 
 > Si un sistema no puede procesar algo ahora, podemos conservarlo para procesarlo después.
 

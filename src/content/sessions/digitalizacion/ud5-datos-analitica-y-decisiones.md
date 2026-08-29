@@ -5,13 +5,28 @@ section: "ud-05"
 order: 5
 lang: "es"
 summary: "Los datos tienen algo que contarnos. De un CSV que nadie ha mirado a un informe ejecutivo, usando IA para analizar sin delegar en ella las conclusiones."
-duration: "4–5 horas"
+duration: "4–5 horas · 4 sesiones"
 modality: "Individual o parejas"
 deliverable: "Un pequeño informe ejecutivo basado en un dataset real."
 date: "2026-08-28"
+outcomes:
+  - "Explorar un dataset real y detectar sus problemas de calidad antes de tocarlo."
+  - "Convertir una pregunta de negocio en un análisis."
+  - "Distinguir hecho, interpretación, recomendación y supuesto."
+  - "Auditar una conclusión generada por IA."
+  - "Decir qué NO pueden responder los datos que tenéis."
+requirements:
+  - "Python con pandas y un entorno de notebooks."
+  - "El fichero online_retail.csv."
+  - "Visual Studio Code con Copilot activado."
+priorKnowledge:
+  - "Ejecutar Python y abrir un notebook."
+  - "Dirigir a un agente con contexto y criterios (UD4)."
 ---
 
-## 1. El reto
+## Sesión 1 · Conoce los datos
+
+### El reto
 
 Imaginad que empezáis a trabajar como desarrolladores en una empresa.
 
@@ -43,7 +58,7 @@ Ese será el objetivo de esta actividad.
 
 ---
 
-## 2. ¿Qué vamos a aprender?
+### ¿Qué vamos a aprender?
 
 No pretendemos convertirnos en científicos de datos.
 
@@ -67,7 +82,7 @@ Al terminar deberíamos saber hacer esto:
 
 ---
 
-## 3. Nuestro dataset
+### Nuestro dataset
 
 Trabajaremos con un dataset real denominado:
 
@@ -86,7 +101,7 @@ Podéis descargarlo del repositorio de la Universidad de California:
 
 ---
 
-## 4. ¿Qué contiene?
+### ¿Qué contiene?
 
 Las principales variables son:
 
@@ -118,7 +133,7 @@ Por ejemplo:
 
 ---
 
-## 5. Una columna que NO existe
+### Una columna que NO existe
 
 Queremos analizar cuánto dinero genera cada operación.
 
@@ -136,7 +151,7 @@ Pero primero tendremos que comprobar si podemos utilizar directamente todos los 
 
 ---
 
-## 6. Primer principio: nunca analices un dataset que todavía no entiendes
+### Primer principio: nunca analices un dataset que todavía no entiendes
 
 Un error muy frecuente sería:
 
@@ -157,7 +172,7 @@ Queremos saber:
 
 ---
 
-## 7. IA como asistente de análisis
+### IA como asistente de análisis
 
 Podemos utilizar Copilot para generar el código que necesitemos.
 
@@ -179,7 +194,7 @@ Pero:
 
 ---
 
-## 8. Primera actividad — Conocer los datos
+### Primera actividad — Conocer los datos
 
 Cargad el dataset utilizando Python.
 
@@ -206,7 +221,7 @@ La primera salida debe responder:
 
 ---
 
-## 9. Ahora buscamos problemas
+### Ahora buscamos problemas
 
 Pedid a la IA:
 
@@ -224,7 +239,7 @@ Este punto es fundamental:
 
 ---
 
-## 10. Un dato extraño no siempre es un error
+### Un dato extraño no siempre es un error
 
 Imaginemos:
 
@@ -248,7 +263,7 @@ Significa comprender qué representa.
 
 ---
 
-## 11. La IA también puede equivocarse
+### La IA también puede equivocarse
 
 Supongamos que preguntamos:
 
@@ -271,7 +286,7 @@ Un programa que ejecuta correctamente puede producir:
 
 ---
 
-## 12. Regla fundamental
+### Regla fundamental
 
 Nunca preguntaremos únicamente:
 
@@ -283,25 +298,55 @@ También preguntaremos:
 
 ---
 
-## 13. Segunda actividad — Crear un dataset analizable
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <ul class="checklist">
+    <li>Dataset cargado y descrito: filas, columnas, tipos, rango de fechas.</li>
+    <li>Lista escrita de problemas de calidad detectados.</li>
+    <li>Una decisión tomada sobre cada problema, con su motivo.</li>
+    <li>Al menos un dato extraño que decidisteis NO borrar, y por qué.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué no se empieza por limpiar el dataset?</li>
+    <li>Encontráis cantidades negativas. ¿Error o información?</li>
+    <li>¿Qué columna importante no existe en el fichero y hay que construir?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque hasta que no entendéis qué significa cada columna no sabéis si un valor raro es un error o un hecho del negocio.</p>
+  <p>2 · Puede ser información: una devolución. Borrarlas sin mirar cambia las ventas totales.</p>
+  <p>3 · El importe de cada línea, que hay que calcular a partir de cantidad y precio unitario.</p>
+</details>
+
+---
+
+## Sesión 2 · Haz preguntas al negocio
+
+### Segunda actividad — Crear un dataset analizable
 
 Pedid a Copilot que os ayude a crear una versión destinada al análisis de ventas.
 
 Pero debéis decidir vosotros:
 
-#### ¿Qué hacemos con las cancelaciones?
+##### ¿Qué hacemos con las cancelaciones?
 
 <p class="write-line"></p>
 
-#### ¿Qué hacemos con cantidades negativas?
+##### ¿Qué hacemos con cantidades negativas?
 
 <p class="write-line"></p>
 
-#### ¿Qué hacemos con precios cero o negativos?
+##### ¿Qué hacemos con precios cero o negativos?
 
 <p class="write-line"></p>
 
-#### ¿Qué hacemos con valores ausentes?
+##### ¿Qué hacemos con valores ausentes?
 
 <p class="write-line"></p>
 
@@ -313,7 +358,7 @@ No vale: «lo hemos borrado porque Copilot lo dijo».
 
 ---
 
-## 14. Crear variables útiles
+### Crear variables útiles
 
 Ahora podemos crear la columna `Revenue`, y extraer de la fecha el año, el mes, el día de la semana y la hora.
 
@@ -325,7 +370,7 @@ Lo importante es comprender qué nos permitirá estudiar cada variable.
 
 ---
 
-## 15. Ya podemos empezar a hacer preguntas
+### Ya podemos empezar a hacer preguntas
 
 Un dataset por sí mismo no responde nada.
 
@@ -349,7 +394,7 @@ Estas preguntas son las que convierten una cosa en la otra:
 
 ---
 
-## 16. De información a decisión
+### De información a decisión
 
 Pero todavía falta algo.
 
@@ -371,45 +416,40 @@ Por tanto:
 
 ---
 
-## 17. Tercera actividad — Analizar el negocio
+### Tercera actividad — Analizar el negocio
 
-Vais a trabajar como pequeños analistas.
+Vais a trabajar como pequeños analistas y responderéis al menos **cinco preguntas**. La primera la resolvemos juntos, con el razonamiento a la vista; en las siguientes iréis quedándoos solos.
 
-Debéis responder al menos **cinco preguntas**.
+<p class="stage">Paso 1 · Te enseño uno</p>
 
-### Pregunta 1 — ¿Cómo evolucionan las ventas?
+#### Pregunta 1 — ¿Cómo evolucionan las ventas?
 
-Analizad los ingresos por mes.
-
-Pedid a la IA:
+Analizamos los ingresos por mes. Pedimos a la IA el cálculo, pero no la conclusión:
 
 > Calcula los ingresos mensuales y genera un gráfico adecuado.
 >
 > No interpretes todavía el resultado.
 
-Observad el gráfico y responded:
+Y ahora leemos el gráfico nosotros, con cuatro preguntas fijas:
 
-#### ¿Hay tendencia?
+<dl class="worked">
+  <dt>¿Hay tendencia?</dt>
+  <dd>Sí, creciente a lo largo del año: los últimos meses facturan bastante más que los primeros.</dd>
+  <dt>¿Existe estacionalidad?</dt>
+  <dd>Sí, y tiene explicación: es un comercio de artículos de regalo, y noviembre concentra las compras previas a Navidad.</dd>
+  <dt>¿Hay algún mes especialmente alto o bajo?</dt>
+  <dd>Noviembre destaca hacia arriba. Y el último mes parece desplomarse.</dd>
+  <dt>¿El último mes contiene todos los días del mes?</dt>
+  <dd>No. El dataset termina el 9 de diciembre. Ese desplome no ha ocurrido: solo estamos comparando nueve días con meses enteros.</dd>
+</dl>
 
-<p class="write-line"></p>
+Fijaos en lo que acaba de pasar. El cálculo era correcto, el gráfico era correcto, y la lectura inmediata era falsa. Nadie mintió: faltaba una pregunta.
 
-#### ¿Existe estacionalidad?
-
-<p class="write-line"></p>
-
-#### ¿Hay algún mes especialmente alto o bajo?
-
-<p class="write-line"></p>
-
-#### ¿El último mes contiene todos los días del mes?
-
-<p class="write-line"></p>
-
-Esta última pregunta es importante.
+Esa cuarta pregunta es la que separa a alguien que mira un gráfico de alguien que lo analiza.
 
 ---
 
-## 18. ¿Por qué importa que un mes esté incompleto?
+### ¿Por qué importa que un mes esté incompleto?
 
 Imaginemos:
 
@@ -450,7 +490,11 @@ Esto demuestra una regla fundamental:
 
 ---
 
-## 19. Pregunta 2 — ¿Qué productos son más importantes?
+<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
+
+Ahora vosotros, pero con las preguntas orientadoras delante. Aplicad a cada análisis las mismas cuatro comprobaciones que acabáis de ver: qué dice el dato, qué explicación tiene, qué destaca, y qué podría estar engañándonos.
+
+### Pregunta 2 — ¿Qué productos son más importantes?
 
 Aquí hay dos preguntas posibles, y no son la misma: qué productos venden más unidades, y qué productos generan más ingresos.
 
@@ -473,7 +517,7 @@ Calculad el top 10 por unidades y el top 10 por ingresos, y comparad ambas lista
 
 ---
 
-## 20. Una lección importante: la métrica cambia la respuesta
+### Una lección importante: la métrica cambia la respuesta
 
 Muchas decisiones dependen de qué medimos.
 
@@ -487,7 +531,7 @@ El desarrollador debe decidir:
 
 ---
 
-## 21. Pregunta 3 — ¿Dónde vendemos?
+### Pregunta 3 — ¿Dónde vendemos?
 
 Analizad los ingresos por país.
 
@@ -499,19 +543,19 @@ Por tanto, haced dos análisis: con todos los países, y excluyendo Reino Unido.
 
 Responded:
 
-#### ¿Cuáles parecen los principales mercados internacionales?
+##### ¿Cuáles parecen los principales mercados internacionales?
 
 <p class="write-line"></p>
 
 ---
 
-## 22. Pregunta 4 — ¿Cuándo compran nuestros clientes?
+### Pregunta 4 — ¿Cuándo compran nuestros clientes?
 
 Analizad el día de la semana y la hora del día.
 
 Generad un gráfico e intentad responder:
 
-#### ¿En qué momentos existe mayor actividad?
+##### ¿En qué momentos existe mayor actividad?
 
 <p class="write-line"></p>
 
@@ -521,21 +565,21 @@ Después proponed una posible utilidad empresarial: atención al cliente, promoc
 
 ---
 
-## 23. Pregunta 5 — ¿Todos los clientes son igual de importantes?
+### Pregunta 5 — ¿Todos los clientes son igual de importantes?
 
 Calculad cuánto ingreso está asociado a cada cliente y ordenadlos.
 
 Responded:
 
-#### ¿Cuánto generan los 10 principales clientes?
+##### ¿Cuánto generan los 10 principales clientes?
 
 <p class="write-line"></p>
 
-#### ¿Qué porcentaje representan?
+##### ¿Qué porcentaje representan?
 
 <p class="write-line"></p>
 
-#### ¿La empresa parece depender mucho de pocos clientes?
+##### ¿La empresa parece depender mucho de pocos clientes?
 
 <p class="write-line"></p>
 
@@ -543,7 +587,7 @@ Aquí podéis pedir a la IA una tabla, un gráfico y el porcentaje acumulado.
 
 ---
 
-## 24. El principio de Pareto
+### El principio de Pareto
 
 En muchas empresas encontramos situaciones aproximadamente parecidas a:
 
@@ -557,7 +601,11 @@ Los datos deben decirnos qué ocurre realmente.
 
 ---
 
-## 25. Pregunta libre
+<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
+
+Sin guion. Formulad vuestra propia pregunta de negocio, decidid qué métrica la responde y comprobad qué podría estar engañándoos.
+
+### Pregunta libre
 
 Ahora llega la parte más importante.
 
@@ -586,7 +634,37 @@ Después elegid una:
 
 ---
 
-## 26. IA como analista: una forma mejor de preguntar
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <ul class="checklist">
+    <li>Dataset analizable, con las variables derivadas que necesitáis.</li>
+    <li>Evolución temporal de las ventas, con el mes incompleto identificado.</li>
+    <li>Productos por unidades y por ingresos, comparados.</li>
+    <li>Análisis por país y por cliente.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué importa que el último mes esté incompleto?</li>
+    <li>El producto que más unidades vende, ¿es el más importante?</li>
+    <li>¿Qué dice el principio de Pareto sobre vuestros clientes?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque en un gráfico aparece como una caída brutal de ventas que no ha ocurrido. Es un artefacto de los datos, no del negocio.</p>
+  <p>2 · Depende de la métrica. Diez mil unidades a 1 € valen menos que mil a 50 €. La métrica elegida cambia la respuesta.</p>
+  <p>3 · Que una parte pequeña de los clientes suele concentrar una parte grande de los ingresos. Hay que comprobarlo, no suponerlo.</p>
+</details>
+
+---
+
+## Sesión 3 · De análisis a decisión
+
+### IA como analista: una forma mejor de preguntar
 
 Evitemos:
 
@@ -618,7 +696,7 @@ Esto obliga al asistente a trabajar de forma más estructurada.
 
 ---
 
-## 27. Los gráficos también pueden engañar
+### Los gráficos también pueden engañar
 
 No todos los gráficos sirven para todo.
 
@@ -636,7 +714,7 @@ Pero debemos comprobar que sea adecuado.
 
 ---
 
-## 28. Cuarta actividad — Detectar una mala visualización
+### Cuarta actividad — Detectar una mala visualización
 
 Pedid deliberadamente:
 
@@ -654,7 +732,7 @@ También podemos utilizarla para **criticar respuestas**.
 
 ---
 
-## 29. Correlación no significa causalidad
+### Correlación no significa causalidad
 
 Supongamos que descubrimos:
 
@@ -680,7 +758,7 @@ No significa que conozca su causa.
 
 ---
 
-## 30. Otro peligro: convertir una asociación en una historia
+### Otro peligro: convertir una asociación en una historia
 
 Los modelos de lenguaje son especialmente buenos construyendo explicaciones convincentes.
 
@@ -698,7 +776,7 @@ Podemos formularlo como hipótesis —«una posible explicación sería…»— 
 
 ---
 
-## 31. Quinta actividad — Auditoría de una conclusión de IA
+### Quinta actividad — Auditoría de una conclusión de IA
 
 Elegid uno de vuestros resultados.
 
@@ -722,7 +800,7 @@ Separad su respuesta en cuatro partes:
 
 ---
 
-## 32. De los datos a una decisión
+### De los datos a una decisión
 
 Una buena recomendación debería tener esta estructura: evidencia, interpretación, decisión, riesgo y métrica de seguimiento.
 
@@ -743,7 +821,7 @@ Esto es mucho mejor que:
 
 ---
 
-## 33. El límite de nuestros datos
+### El límite de nuestros datos
 
 Nuestro dataset es real.
 
@@ -759,7 +837,7 @@ Esta distinción es importante.
 
 ---
 
-## 34. Sexta actividad — ¿Qué NO podemos saber?
+### Sexta actividad — ¿Qué NO podemos saber?
 
 Escribid al menos tres preguntas empresariales que os gustaría responder pero que **no puedan responderse correctamente con este dataset**.
 
@@ -777,7 +855,37 @@ Saber decir «estos datos no permiten responderlo» es una competencia important
 
 ---
 
-## 35. Producto final — Informe para dirección
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
+  <ul class="checklist">
+    <li>Una visualización engañosa detectada y explicada.</li>
+    <li>Una conclusión de la IA auditada: qué afirma, con qué evidencia y qué le falta.</li>
+    <li>Separados hecho, interpretación, recomendación y supuesto.</li>
+    <li>Lista de lo que estos datos NO pueden responder.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué correlación no es causalidad? Poned un ejemplo del dataset.</li>
+    <li>La IA afirma algo con seguridad. ¿Qué le pedís?</li>
+    <li>¿Qué NO podéis saber con este dataset?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque dos cosas pueden subir a la vez por una tercera causa, o por casualidad. Ventas y mes de diciembre suben juntos sin que uno cause al otro.</p>
+  <p>2 · La evidencia: qué filas, qué cálculo, qué margen. Y qué explicación alternativa ha descartado.</p>
+  <p>3 · Por qué compra la gente, qué pasó con quien no compró, si el precio era competitivo, qué hizo la competencia: nada de eso está en el fichero.</p>
+</details>
+
+---
+
+## Sesión 4 · El informe para dirección
+
+### Producto final — Informe para dirección
 
 Imaginad que vuestro responsable no sabe Python.
 
@@ -789,11 +897,11 @@ Quiere saber:
 
 Preparad un informe de aproximadamente **cuatro diapositivas**.
 
-### Diapositiva 1 — ¿Qué datos tenemos?
+#### Diapositiva 1 — ¿Qué datos tenemos?
 
 Muy breve: origen, periodo, número aproximado de registros, variables principales y decisiones de limpieza importantes.
 
-### Diapositiva 2 — Tres hallazgos
+#### Diapositiva 2 — Tres hallazgos
 
 Seleccionad los **tres resultados más relevantes**.
 
@@ -801,7 +909,7 @@ Cada resultado debe tener una frase, una cifra y un gráfico.
 
 No llenéis la diapositiva de tablas.
 
-### Diapositiva 3 — Decisiones
+#### Diapositiva 3 — Decisiones
 
 Proponed **dos decisiones**. Para cada una:
 
@@ -815,13 +923,13 @@ Proponed **dos decisiones**. Para cada una:
   </ol>
 </figure>
 
-### Diapositiva 4 — Lo que todavía no sabemos
+#### Diapositiva 4 — Lo que todavía no sabemos
 
 Incluid las limitaciones, la información adicional que pediríais y una conclusión de la IA que hayáis tenido que corregir o matizar.
 
 ---
 
-## 36. También entregamos el análisis
+### También entregamos el análisis
 
 Entregad vuestro <code>analisis.ipynb</code> o equivalente.
 
@@ -844,7 +952,7 @@ Podéis utilizar IA.
 
 ---
 
-## 37. Entonces, ¿qué se evalúa?
+### Entonces, ¿qué se evalúa?
 
 No evaluaremos principalmente vuestra capacidad para recordar sintaxis de pandas.
 
@@ -852,7 +960,7 @@ Evaluaremos vuestra capacidad para utilizar datos e IA de forma razonada.
 
 ---
 
-## 38. Evaluación
+### Evaluación
 
 <table>
   <thead>
@@ -893,7 +1001,7 @@ Evaluaremos vuestra capacidad para utilizar datos e IA de forma razonada.
   </tbody>
 </table>
 
-### Una norma importante
+#### Una norma importante
 
 Una conclusión no obtiene mejor nota porque sea sorprendente.
 
@@ -901,7 +1009,37 @@ Obtiene mejor nota si está **bien respaldada por los datos**.
 
 ---
 
-## 39. La IA no sustituye el análisis
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · entrega</p>
+  <ul class="checklist">
+    <li>Informe con tres hallazgos y dos decisiones.</li>
+    <li>Cada hallazgo apoyado en una evidencia del análisis.</li>
+    <li>Limitaciones declaradas explícitamente.</li>
+    <li>Notebook o análisis entregado junto al informe.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué diferencia hay entre un hallazgo y una recomendación?</li>
+    <li>¿Por qué se entrega también el análisis y no solo las conclusiones?</li>
+    <li>Si la dirección os pregunta «¿estás seguro?», ¿qué enseñáis?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · El hallazgo es lo que dicen los datos; la recomendación es lo que proponéis hacer con ello, y ya incluye un juicio vuestro.</p>
+  <p>2 · Porque una conclusión sin el camino que lleva a ella no se puede comprobar ni corregir.</p>
+  <p>3 · La evidencia: el cálculo, las filas implicadas y las limitaciones que ya habíais declarado.</p>
+</details>
+
+---
+
+## Lo que debes recordar
+
+### La IA no sustituye el análisis
 
 La IA nos puede ayudar a:
 
@@ -926,7 +1064,7 @@ Pero nosotros debemos decidir:
 
 ---
 
-## 40. El método que queremos aprender
+### El método que queremos aprender
 
 Cuando en el futuro alguien os entregue cualquier dataset:
 
@@ -950,7 +1088,7 @@ Cuando en el futuro alguien os entregue cualquier dataset:
 
 ---
 
-## 41. Lo importante que debes recordar
+### Lo importante que debes recordar
 
 Dentro de unos años probablemente no recordaréis cómo se escribe exactamente:
 

@@ -5,13 +5,27 @@ section: "ud-04"
 order: 4
 lang: "es"
 summary: "Aprende a trabajar con un agente de programación construyendo tu propio portfolio. Contexto, instrucciones, skills, herramientas y MCP: dirigir la IA y verificar lo que produce."
-duration: "4 horas"
+duration: "4 horas · 4 sesiones"
 modality: "Individual o parejas"
 deliverable: "Vuestro portfolio publicado en GitHub, con instrucciones de proyecto, una skill de revisión y evidencias del trabajo con el agente."
 date: "2026-08-28"
+outcomes:
+  - "Escribir una petición con objetivo, contexto, restricciones y criterios de aceptación."
+  - "Configurar las instrucciones del repositorio para que el agente conozca vuestro proyecto."
+  - "Crear una skill reutilizable para una tarea que repetís."
+  - "Explicar qué son las tools y MCP, y por qué no se da acceso a todo."
+  - "Revisar plan, diff y tests antes de aceptar un cambio."
+requirements:
+  - "Visual Studio Code con GitHub Copilot activado (GitHub Student)."
+  - "Git y una cuenta de GitHub."
+priorKnowledge:
+  - "Clonar un repositorio, hacer commits y leer un diff."
+  - "Publicar un sitio estático (UD3)."
 ---
 
-## 1. ¿Qué vamos a aprender?
+## Sesión 1 · Dirige bien a la IA
+
+### ¿Qué vamos a aprender?
 
 La Inteligencia Artificial está cambiando la forma de desarrollar software.
 
@@ -42,7 +56,7 @@ El objetivo es aprender a:
 
 ---
 
-## 2. Activar GitHub Copilot Student
+### Activar GitHub Copilot Student
 
 Los estudiantes que cumplen los requisitos de GitHub Education pueden solicitar **Copilot Student**.
 
@@ -52,13 +66,13 @@ Una vez activado, utilizaremos Copilot desde Visual Studio Code.
 
 ---
 
-## 3. De autocompletado a agente
+### De autocompletado a agente
 
 La forma de utilizar IA para programar ha evolucionado rápidamente.
 
 Podemos simplificarla en cuatro etapas.
 
-### Nivel 1 — Autocompletado
+#### Nivel 1 — Autocompletado
 
 El sistema intenta continuar lo que estamos escribiendo.
 
@@ -76,7 +90,7 @@ return precio * 1.21;
 
 Esto ahorra tiempo, pero el desarrollador sigue realizando casi todo el trabajo.
 
-### Nivel 2 — Chat
+#### Nivel 2 — Chat
 
 Podemos preguntar:
 
@@ -88,7 +102,7 @@ o:
 
 El modelo recibe código y responde con texto o propuestas de modificación.
 
-### Nivel 3 — Edición del proyecto
+#### Nivel 3 — Edición del proyecto
 
 El asistente puede trabajar con diferentes archivos del proyecto.
 
@@ -112,7 +126,7 @@ Esto podría requerir modificar:
 
 Ya no estamos simplemente completando una línea.
 
-### Nivel 4 — Agente
+#### Nivel 4 — Agente
 
 Un agente puede recibir un objetivo y realizar diferentes acciones para intentar conseguirlo.
 
@@ -137,7 +151,7 @@ Aquí aparece una idea fundamental:
 
 ---
 
-## 4. Modelo y agente no son lo mismo
+### Modelo y agente no son lo mismo
 
 Un modelo de lenguaje recibe información y genera una respuesta.
 
@@ -215,7 +229,7 @@ Por tanto:
 
 ---
 
-## 5. La IA no conoce automáticamente nuestro proyecto
+### La IA no conoce automáticamente nuestro proyecto
 
 Imaginad que acabáis de entrar a trabajar en una empresa.
 
@@ -240,17 +254,17 @@ Y puede equivocarse.
 
 ---
 
-## 6. Context engineering
+### Context engineering
 
 Una de las habilidades más importantes al trabajar con IA es proporcionar el **contexto adecuado**.
 
 Comparad:
 
-### Petición A
+#### Petición A
 
 > Haz el login.
 
-### Petición B
+#### Petición B
 
 > Implementa autenticación mediante email y contraseña.
 >
@@ -289,29 +303,29 @@ Consiste en conseguir que el agente tenga disponible **la información correcta 
 
 ---
 
-## 7. Cómo describir una tarea profesionalmente
+### Cómo describir una tarea profesionalmente
 
 Una buena tarea debería contener al menos cuatro partes.
 
-### Objetivo
+#### Objetivo
 
 ¿Qué queremos conseguir?
 
 > Añadir búsqueda de productos por nombre.
 
-### Contexto
+#### Contexto
 
 ¿Qué sistema tenemos?
 
 > La aplicación utiliza Express y PostgreSQL. Existe un endpoint `/products`.
 
-### Restricciones
+#### Restricciones
 
 ¿Qué debe respetarse?
 
 > No cambies el formato actual de las respuestas de la API.
 
-### Criterios de aceptación
+#### Criterios de aceptación
 
 ¿Cómo sabemos que la tarea está terminada?
 
@@ -340,7 +354,7 @@ Es también una buena forma de escribir tareas para otros desarrolladores.
 
 ---
 
-## 8. Primera actividad — El mismo problema con dos peticiones
+### Primera actividad — El mismo problema con dos peticiones
 
 Durante toda la unidad trabajaremos sobre **vuestro propio portfolio**: una web
 personal que iréis construyendo con ayuda del agente y que quedará publicada en
@@ -361,21 +375,51 @@ Ahora cread una segunda petición utilizando objetivo, contexto, restricciones, 
 
 Comparad ambos resultados y responded:
 
-#### ¿Qué diferencias aparecen?
+##### ¿Qué diferencias aparecen?
 
 <p class="write-line"></p>
 
-#### ¿Cuál de las dos respuestas necesita menos correcciones?
+##### ¿Cuál de las dos respuestas necesita menos correcciones?
 
 <p class="write-line"></p>
 
-#### ¿Qué información adicional ha resultado útil?
+##### ¿Qué información adicional ha resultado útil?
 
 <p class="write-line"></p>
 
 ---
 
-## 9. El problema de repetir siempre las mismas instrucciones
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <ul class="checklist">
+    <li>Copilot activado y funcionando en VS Code.</li>
+    <li>Sabes distinguir autocompletado, chat y agente.</li>
+    <li>Sabes distinguir el modelo del agente.</li>
+    <li>Has escrito la misma tarea dos veces, mal y bien, y has comparado los resultados.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué diferencia hay entre un modelo y un agente?</li>
+    <li>¿Qué cuatro cosas debe llevar una petición bien escrita?</li>
+    <li>¿Por qué la IA no conoce vuestro proyecto por defecto?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · El modelo genera texto. El agente puede además actuar: leer ficheros, ejecutar comandos, modificar código.</p>
+  <p>2 · Objetivo, contexto, restricciones y criterios de aceptación.</p>
+  <p>3 · Porque solo ve lo que le entra en el contexto. Si no se lo damos, se lo inventa a partir de lo que suele ser habitual.</p>
+</details>
+
+---
+
+## Sesión 2 · Haz que conozca tu proyecto
+
+### El problema de repetir siempre las mismas instrucciones
 
 Imaginemos que trabajamos en una empresa y siempre tenemos que recordar al agente:
 
@@ -392,7 +436,7 @@ Por eso podemos guardar **instrucciones del proyecto**.
 
 ---
 
-## 10. Instrucciones del repositorio
+### Instrucciones del repositorio
 
 GitHub Copilot permite guardar instrucciones generales en:
 
@@ -417,7 +461,7 @@ El proyecto empieza a **explicar al agente cómo debe trabajar**.
 
 ---
 
-## 11. Ejemplo de instrucciones
+### Ejemplo de instrucciones
 
 Creamos <code>.github/copilot-instructions.md</code>:
 
@@ -465,7 +509,7 @@ Describen:
 
 ---
 
-## 12. Prompt vs instrucciones
+### Prompt vs instrucciones
 
 Es importante distinguirlos.
 
@@ -490,7 +534,7 @@ Las instrucciones describen reglas permanentes:
 
 ---
 
-## 13. Segunda actividad — Enseñar el proyecto al agente
+### Segunda actividad — Enseñar el proyecto al agente
 
 Cread en vuestro repositorio <code>.github/copilot-instructions.md</code>.
 
@@ -505,21 +549,21 @@ Incluid como mínimo:
 
 Después pedid nuevamente a Copilot una pequeña modificación y responded:
 
-#### ¿Ha seguido las instrucciones?
+##### ¿Ha seguido las instrucciones?
 
 <p class="write-line"></p>
 
-#### ¿Qué instrucciones han sido útiles?
+##### ¿Qué instrucciones han sido útiles?
 
 <p class="write-line"></p>
 
-#### ¿Hay alguna que haya ignorado?
+##### ¿Hay alguna que haya ignorado?
 
 <p class="write-line"></p>
 
 ---
 
-## 14. Una instrucción no siempre debe estar cargada
+### Una instrucción no siempre debe estar cargada
 
 Imaginad que tenemos una guía de 100 líneas sobre cómo revisar seguridad.
 
@@ -533,7 +577,7 @@ Por eso existen las:
 
 ---
 
-## 15. ¿Qué es una skill?
+### ¿Qué es una skill?
 
 Una **skill** contiene instrucciones especializadas para realizar bien un determinado tipo de tarea.
 
@@ -556,7 +600,7 @@ GitHub Copilot puede cargar una skill cuando detecta que es relevante para la ta
 
 ---
 
-## 16. Instructions vs Skills
+### Instructions vs Skills
 
 La diferencia puede entenderse fácilmente.
 
@@ -599,7 +643,7 @@ Una **skill** es información útil para una tarea especializada: el procedimien
 
 ---
 
-## 17. Crear nuestra primera skill
+### Crear nuestra primera skill
 
 Crearemos <code>.github/skills/code-review/SKILL.md</code>.
 
@@ -639,7 +683,7 @@ Queremos comprender la idea de:
 
 ---
 
-## 18. Tercera actividad — Crear una skill
+### Tercera actividad — Crear una skill
 
 Cread vuestra propia skill de <code>code-review</code>.
 
@@ -657,21 +701,51 @@ Pedid a Copilot:
 
 Comprobad:
 
-#### ¿Detecta el problema?
+##### ¿Detecta el problema?
 
 <p class="write-line"></p>
 
-#### ¿Utiliza el procedimiento indicado?
+##### ¿Utiliza el procedimiento indicado?
 
 <p class="write-line"></p>
 
-#### ¿Propone una solución razonable?
+##### ¿Propone una solución razonable?
 
 <p class="write-line"></p>
 
 ---
 
-## 19. Las herramientas: darle manos al agente
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <ul class="checklist">
+    <li>Tu repositorio tiene un fichero de instrucciones de proyecto.</li>
+    <li>Las instrucciones dicen cómo se trabaja aquí, no qué hacer ahora.</li>
+    <li>Tienes creada al menos una skill.</li>
+    <li>Sabes cuándo algo es una instrucción y cuándo es una skill.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué diferencia hay entre un prompt y unas instrucciones de proyecto?</li>
+    <li>¿Cuándo conviene una skill en lugar de una instrucción?</li>
+    <li>¿Por qué no metemos todo en las instrucciones?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · El prompt dice qué quiero ahora; las instrucciones dicen cómo trabajamos siempre en este proyecto.</p>
+  <p>2 · Cuando es un procedimiento especializado que solo hace falta a veces: una auditoría, una migración, un tipo de revisión.</p>
+  <p>3 · Porque todo lo que está cargado ocupa contexto y compite con el problema real. Lo que no se usa siempre, no debe estar siempre.</p>
+</details>
+
+---
+
+## Sesión 3 · Dale herramientas
+
+### Las herramientas: darle manos al agente
 
 Hasta ahora el agente conoce información.
 
@@ -757,7 +831,7 @@ Esto cambia mucho lo que puede hacer.
 
 ---
 
-## 20. Una analogía
+### Una analogía
 
 Imaginad dos técnicos.
 
@@ -778,7 +852,7 @@ Con un agente ocurre algo parecido.
 
 ---
 
-## 21. ¿Qué es MCP?
+### ¿Qué es MCP?
 
 Aquí aparece:
 
@@ -843,7 +917,7 @@ La idea importante es:
 
 ---
 
-## 22. Una analogía para MCP
+### Una analogía para MCP
 
 Pensad en USB.
 
@@ -866,7 +940,7 @@ La analogía no es perfecta, pero ayuda a entender la idea.
 
 ---
 
-## 23. MCP no significa «dar acceso a todo»
+### MCP no significa «dar acceso a todo»
 
 Aquí aparece un problema importante.
 
@@ -887,7 +961,7 @@ Siempre debemos pensar en:
 
 ---
 
-## 24. Cuarta actividad — Diseñar un MCP
+### Cuarta actividad — Diseñar un MCP
 
 No vamos a desarrollar un servidor MCP.
 
@@ -895,25 +969,25 @@ Queremos comprender su utilidad.
 
 Para cada situación indicad qué herramientas tendría sentido proporcionar al agente.
 
-#### Caso A — Agente de documentación
+##### Caso A — Agente de documentación
 
 Debe responder preguntas sobre el proyecto. ¿Qué necesitaría?
 
 <p class="write-line"></p>
 
-#### Caso B — Agente de soporte
+##### Caso B — Agente de soporte
 
 Debe consultar incidencias de GitHub. ¿Qué necesitaría?
 
 <p class="write-line"></p>
 
-#### Caso C — Agente de análisis de datos
+##### Caso C — Agente de análisis de datos
 
 Debe responder preguntas sobre una base de datos empresarial. ¿Qué necesitaría?
 
 <p class="write-line"></p>
 
-#### Caso D — Agente programador
+##### Caso D — Agente programador
 
 Debe resolver un Issue y comprobar los tests. ¿Qué herramientas necesitaría?
 
@@ -921,13 +995,13 @@ Debe resolver un Issue y comprobar los tests. ¿Qué herramientas necesitaría?
 
 Después indicad, para todos ellos:
 
-#### ¿Qué permisos NO le daríais?
+##### ¿Qué permisos NO le daríais?
 
 <p class="write-line"></p>
 
 ---
 
-## 25. Custom agents
+### Custom agents
 
 También podemos crear agentes especializados.
 
@@ -978,7 +1052,7 @@ Esta separación puede reducir errores.
 
 ---
 
-## 26. No necesitamos crear diez agentes
+### No necesitamos crear diez agentes
 
 Un error habitual consiste en pensar:
 
@@ -992,7 +1066,37 @@ Utilizaremos agentes especializados únicamente cuando resuelvan un problema con
 
 ---
 
-## 27. El concepto más importante de toda la unidad
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
+  <ul class="checklist">
+    <li>Sabes qué es una tool y qué la diferencia de una respuesta de texto.</li>
+    <li>Puedes explicar MCP con tus palabras.</li>
+    <li>Has diseñado un MCP acotado, con lo que sí puede hacer y lo que no.</li>
+    <li>Sabes cuándo NO hace falta crear un agente propio.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué es MCP, en una frase?</li>
+    <li>¿Por qué un MCP no debería tener acceso a todo?</li>
+    <li>Un agente propone ejecutar un comando destructivo. ¿Qué hacéis?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Una forma estándar de conectar un agente con herramientas y datos externos, para no inventar una integración distinta cada vez.</p>
+  <p>2 · Mínimo privilegio: cada permiso que le dais es un permiso que puede usar mal, o que alguien puede aprovechar a través de él.</p>
+  <p>3 · No aceptarlo. Preguntar qué problema cree que resuelve y buscar la alternativa reversible.</p>
+</details>
+
+---
+
+## Sesión 4 · Nunca delegues la verificación
+
+### El concepto más importante de toda la unidad
 
 La IA puede equivocarse.
 
@@ -1013,7 +1117,7 @@ Nunca como código automáticamente correcto.
 
 ---
 
-## 28. El flujo profesional
+### El flujo profesional
 
 Evitemos esto:
 
@@ -1048,7 +1152,7 @@ Nuestro flujo será:
 
 ---
 
-## 29. Antes de modificar: planificar
+### Antes de modificar: planificar
 
 Para tareas que no sean triviales podemos pedir:
 
@@ -1064,7 +1168,7 @@ Esto permite detectar errores **antes de generar cien líneas incorrectas**.
 
 ---
 
-## 30. Después de modificar: revisar el diff
+### Después de modificar: revisar el diff
 
 Git nos permite comprobar exactamente qué ha cambiado.
 
@@ -1084,7 +1188,7 @@ Revisad vosotros los cambios.
 
 ---
 
-## 31. La IA debe aportar evidencias
+### La IA debe aportar evidencias
 
 En lugar de pedir «implementa esto», es preferible «implementa esto y añade tests que demuestren que funciona».
 
@@ -1105,19 +1209,19 @@ También debe ayudar a proporcionar **evidencias de que la solución funciona**.
 
 ---
 
-## 32. Seguridad al trabajar con IA
+### Seguridad al trabajar con IA
 
-### Nunca compartáis secretos innecesariamente
+#### Nunca compartáis secretos innecesariamente
 
 Por ejemplo: `password`, `API_KEY`, `token`, `.env` o cualquier credencial.
 
-### Revisad comandos
+#### Revisad comandos
 
 Un agente con acceso a terminal puede ejecutar comandos.
 
 Antes de autorizar una acción peligrosa, comprobad qué hace.
 
-### Revisad dependencias
+#### Revisad dependencias
 
 Si propone:
 
@@ -1132,7 +1236,7 @@ preguntaos:
 * ¿es mantenido?
 * ¿podemos resolverlo sin añadir otra dependencia?
 
-### Menos permisos es mejor
+#### Menos permisos es mejor
 
 Si una herramienta únicamente necesita leer, no necesita permisos de escritura.
 
@@ -1142,7 +1246,7 @@ Este principio se denomina:
 
 ---
 
-## 33. Actividad final — Construid vuestro portfolio con un agente
+### Actividad final — Construid vuestro portfolio con un agente
 
 Vais a crear **vuestro propio portfolio profesional** y a publicarlo en GitHub.
 
@@ -1157,7 +1261,7 @@ Un portfolio es un buen proyecto para esto por tres motivos: lo entendéis
 perfectamente, sois vosotros quienes decidís qué debe hacer, y os quedáis con
 algo que podéis enseñar en una entrevista.
 
-### Parte A — Definir qué vais a construir
+#### Parte A — Definir qué vais a construir
 
 Antes de escribir código, decidid qué debe contener vuestro portfolio. Por
 ejemplo: presentación, proyectos, tecnologías, formulario de contacto, versión
@@ -1184,7 +1288,7 @@ Pedid después un plan al agente, **sin dejarle tocar todavía ningún archivo**
 Revisad ese plan antes de continuar. Si algo no os convence, corregidlo ahora:
 es mucho más barato que corregirlo con el proyecto a medio hacer.
 
-### Parte B — Crear el repositorio
+#### Parte B — Crear el repositorio
 
 Cread un repositorio nuevo en vuestra cuenta de GitHub y haced el primer commit
 con la estructura mínima acordada en el plan.
@@ -1192,7 +1296,7 @@ con la estructura mínima acordada en el plan.
 A partir de aquí, cada avance importante debería ser un commit. Así podréis
 enseñar en la memoria qué hizo el agente y qué decidisteis vosotros.
 
-### Parte C — Escribir las instrucciones del proyecto
+#### Parte C — Escribir las instrucciones del proyecto
 
 Cread <code>.github/copilot-instructions.md</code>.
 
@@ -1203,7 +1307,7 @@ No copiéis el ejemplo de la sección 11 literalmente: aquel es de un proyecto
 Node con Express y PostgreSQL, y el vuestro probablemente no lo sea. Las
 instrucciones tienen que describir **vuestro** proyecto.
 
-### Parte D — Implementación asistida
+#### Parte D — Implementación asistida
 
 Construid el portfolio con ayuda del agente. En cada tarea:
 
@@ -1212,7 +1316,7 @@ Construid el portfolio con ayuda del agente. En cada tarea:
 3. abrid la página en el navegador;
 4. comprobad que se ve bien también en móvil.
 
-### Parte E — Crear una skill
+#### Parte E — Crear una skill
 
 Cread <code>.github/skills/code-review/SKILL.md</code>.
 
@@ -1220,7 +1324,7 @@ La skill debe definir vuestro procedimiento de revisión. Para un portfolio web,
 como mínimo debería comprobar HTML semántico, accesibilidad, enlaces rotos,
 duplicación, imágenes sin texto alternativo y seguridad básica.
 
-### Parte F — Revisar el trabajo de la IA
+#### Parte F — Revisar el trabajo de la IA
 
 Utilizad la skill para revisar vuestro propio repositorio.
 
@@ -1230,7 +1334,7 @@ No es obligatorio aceptar todas las recomendaciones del agente.
 
 Para cada recomendación importante decidid si la aceptáis o la rechazáis, y explicad por qué.
 
-### Parte G — Que el agente os explique vuestro propio proyecto
+#### Parte G — Que el agente os explique vuestro propio proyecto
 
 Esta parte es la más interesante, y solo funciona ahora: cuando ya conocéis el
 proyecto mejor que nadie.
@@ -1243,18 +1347,18 @@ Abrid una conversación nueva y pedid:
 
 Contrastad la respuesta con lo que realmente hicisteis y anotad:
 
-#### Una cosa que haya explicado correctamente.
+##### Una cosa que haya explicado correctamente.
 
 <p class="write-line"></p>
 
-#### Una cosa que haya interpretado incorrectamente o con demasiada seguridad.
+##### Una cosa que haya interpretado incorrectamente o con demasiada seguridad.
 
 <p class="write-line"></p>
 
 Aquí es donde se ve por qué importan las instrucciones del proyecto: sobre un
 repositorio que no conoce, un agente deduce, y a veces deduce mal.
 
-### Parte H — MCP
+#### Parte H — MCP
 
 No desarrollaremos todavía un servidor MCP.
 
@@ -1303,23 +1407,23 @@ Dibujad qué conexión MCP podría resultar útil para este proyecto. Por ejempl
 
 Indicad:
 
-#### Qué información podría consultar.
+##### Qué información podría consultar.
 
 <p class="write-line"></p>
 
-#### Qué acciones podría realizar.
+##### Qué acciones podría realizar.
 
 <p class="write-line"></p>
 
-#### Qué permisos le concederíais.
+##### Qué permisos le concederíais.
 
 <p class="write-line"></p>
 
-#### Qué permisos NO le concederíais.
+##### Qué permisos NO le concederíais.
 
 <p class="write-line"></p>
 
-### Parte I — Git y publicación
+#### Parte I — Git y publicación
 
 Antes de terminar:
 
@@ -1345,7 +1449,7 @@ el servidor que montasteis en la UD3.
 
 ---
 
-## 34. Producto final
+### Producto final
 
 Entregaréis el repositorio de vuestro portfolio y una memoria breve.
 
@@ -1353,37 +1457,37 @@ La memoria debe tener aproximadamente **2–3 páginas**, no una documentación 
 
 Debe incluir:
 
-### 1. Tarea
+#### 1. Tarea
 
 Qué querías construir y cómo lo definiste.
 
-### 2. Instrucciones
+#### 2. Instrucciones
 
 Qué información habéis proporcionado al agente y por qué.
 
-### 3. Skill
+#### 3. Skill
 
 Qué procedimiento habéis creado.
 
-### 4. Evidencia
+#### 4. Evidencia
 
 Captura o fragmento donde se observe al agente proponiendo un plan, modificando código y revisando cambios, y cómo comprobasteis vosotros el resultado.
 
-### 5. Error o limitación de la IA
+#### 5. Error o limitación de la IA
 
 Debéis identificar al menos **una cosa que Copilot no haya hecho perfectamente**. Puede ser una mala decisión, código innecesario, una interpretación incorrecta, una recomendación que habéis rechazado o un error detectado mediante tests.
 
-### 6. Verificación
+#### 6. Verificación
 
 Explicad cómo habéis comprobado que el resultado funciona.
 
-### 7. MCP
+#### 7. MCP
 
 Incluid vuestro pequeño diseño conceptual.
 
 ---
 
-## 35. Evaluación
+### Evaluación
 
 <table>
   <thead>
@@ -1420,11 +1524,11 @@ Incluid vuestro pequeño diseño conceptual.
   </tbody>
 </table>
 
-### Lo que NO se evalúa
+#### Lo que NO se evalúa
 
 No obtiene mejor nota quien genera más código con IA, utiliza más prompts, crea más agentes o utiliza más herramientas.
 
-### Lo que SÍ se evalúa
+#### Lo que SÍ se evalúa
 
 Obtiene mejor nota quien demuestra que sabe dirigir el trabajo de un agente:
 
@@ -1441,7 +1545,38 @@ Obtiene mejor nota quien demuestra que sabe dirigir el trabajo de un agente:
 
 ---
 
-## 36. El mapa que debéis recordar
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · entrega</p>
+  <ul class="checklist">
+    <li>Portfolio publicado y accesible.</li>
+    <li>Instrucciones de proyecto en el repositorio.</li>
+    <li>Al menos una skill propia.</li>
+    <li>Evidencias del flujo: plan, diff revisado y comprobaciones.</li>
+    <li>Un cambio del agente que rechazasteis, y por qué.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Cuál es el único paso del flujo que no se delega nunca?</li>
+    <li>¿Qué miráis en un diff antes de aceptar?</li>
+    <li>El agente dice que ha terminado y todo funciona. ¿Os lo creéis?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · La verificación. El plan y el código se pueden delegar; la decisión de que eso entra en el proyecto, no.</p>
+  <p>2 · Que no haya cambios que no pedisteis, dependencias nuevas, ficheros tocados de más ni funcionalidad rota.</p>
+  <p>3 · No hasta comprobarlo. «Funciona» dicho por el agente es una afirmación, no una evidencia.</p>
+</details>
+
+---
+
+## Lo que debes recordar
+
+### El mapa que debéis recordar
 
 Cuando trabajamos con IA para desarrollar software tenemos diferentes piezas:
 
@@ -1541,7 +1676,7 @@ Podemos resumir cada concepto así:
 
 ---
 
-## 37. La idea más importante
+### La idea más importante
 
 La IA puede aumentar muchísimo la productividad de un desarrollador.
 

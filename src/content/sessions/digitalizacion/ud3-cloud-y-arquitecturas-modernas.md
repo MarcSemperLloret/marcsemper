@@ -5,13 +5,42 @@ section: "ud-03"
 order: 3
 lang: "es"
 summary: "Publica tu primera aplicación en Internet. De localhost a un dominio propio con HTTPS, pasando por una máquina virtual, Nginx, reglas de red, DNS y certificados."
-duration: "4–5 horas"
+duration: "4–5 horas · 5 sesiones"
 modality: "Individual o parejas"
 deliverable: "Una página web accesible públicamente mediante HTTPS y una breve memoria técnica."
 date: "2026-08-28"
+outcomes:
+  - "Publicar una web real, accesible desde cualquier dispositivo de Internet."
+  - "Explicar la diferencia entre IaaS, PaaS y SaaS con un ejemplo propio."
+  - "Abrir un puerto en el firewall de la nube y en el del sistema, y saber por qué son dos."
+  - "Asociar un nombre DNS y servir la web por HTTPS."
+  - "Dibujar y defender la arquitectura que habéis montado."
+requirements:
+  - "Cuenta de Azure for Students."
+  - "Git y una cuenta de GitHub."
+  - "Un cliente SSH: el terminal de Windows o el de VS Code sirven."
+priorKnowledge:
+  - "Comandos básicos de terminal."
+  - "Qué es un cliente y qué es un servidor (UD2)."
 ---
 
-## 1. El reto
+<div class="checkpoint">
+  <p class="checkpoint-label">La misión · ocho pasos hasta tu web en Internet</p>
+  <ol>
+    <li>Web funcionando en local.</li>
+    <li>Proyecto guardado en GitHub.</li>
+    <li>Máquina virtual creada en Azure.</li>
+    <li>Nginx instalado y sirviendo.</li>
+    <li>Web accesible por IP pública.</li>
+    <li>Nombre DNS apuntando a esa IP.</li>
+    <li>HTTPS con certificado válido.</li>
+    <li>Web actualizada sin rehacer nada.</li>
+  </ol>
+</div>
+
+## Sesión 1 · Qué es la nube y qué vamos a construir
+
+### El reto
 
 Hasta ahora estamos acostumbrados a desarrollar aplicaciones en nuestro ordenador.
 
@@ -46,7 +75,7 @@ accesible desde cualquier dispositivo conectado a Internet.
 
 ---
 
-## 2. ¿Qué vamos a construir?
+### ¿Qué vamos a construir?
 
 Al terminar tendremos algo parecido a esto:
 
@@ -123,7 +152,7 @@ Y protegeremos la comunicación:
 
 ---
 
-## 3. Antes de empezar: ¿qué es realmente «la nube»?
+### Antes de empezar: ¿qué es realmente «la nube»?
 
 La nube no es algo mágico.
 
@@ -145,11 +174,11 @@ Empresas conocidas que ofrecen servicios cloud son:
 
 ---
 
-## 4. IaaS, PaaS y SaaS
+### IaaS, PaaS y SaaS
 
 Cloud ofrece distintos niveles de control.
 
-### IaaS — Infrastructure as a Service
+#### IaaS — Infrastructure as a Service
 
 El proveedor nos proporciona infraestructura.
 
@@ -178,7 +207,7 @@ Eso es precisamente lo que utilizaremos.
   </ol>
 </figure>
 
-### PaaS — Platform as a Service
+#### PaaS — Platform as a Service
 
 El proveedor administra más componentes.
 
@@ -197,7 +226,7 @@ Por ejemplo:
 
 No necesitamos instalar manualmente Nginx ni administrar todo el servidor.
 
-### SaaS — Software as a Service
+#### SaaS — Software as a Service
 
 Utilizamos directamente una aplicación que administra otra empresa.
 
@@ -208,7 +237,7 @@ Ejemplos:
 * Canva;
 * GitHub.
 
-### Una pregunta importante
+#### Una pregunta importante
 
 ¿Por qué utilizaremos IaaS si PaaS podría ser más sencillo?
 
@@ -229,7 +258,35 @@ Después podremos valorar por qué existen servicios que automatizan todo esto.
 
 ---
 
-## 5. Primera parte — Crear nuestra web
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <ul class="checklist">
+    <li>Sabes qué es realmente «la nube» y dónde está tu servidor.</li>
+    <li>Puedes poner un ejemplo propio de IaaS, PaaS y SaaS.</li>
+    <li>Sabes qué vas a construir y en qué orden.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Quién administra el sistema operativo en IaaS? ¿Y en PaaS?</li>
+    <li>¿Dónde está físicamente «la nube»?</li>
+    <li>¿Por qué empezamos por una máquina virtual y no por un servicio que lo haga todo?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · En IaaS lo administráis vosotros; en PaaS lo administra el proveedor y vosotros solo entregáis la aplicación.</p>
+  <p>2 · En centros de datos de otra empresa. Es el ordenador de otro, al que accedéis por Internet.</p>
+  <p>3 · Porque queremos ver todas las piezas —sistema, servidor web, red, DNS, certificado— antes de que un servicio las esconda.</p>
+</details>
+
+---
+
+## Sesión 2 · Del código local a un servidor en Azure
+
 
 Necesitamos algo que publicar.
 
@@ -260,7 +317,7 @@ No necesitamos backend en esta actividad.
 
 ---
 
-## 6. Guardar el proyecto en GitHub
+### Guardar el proyecto en GitHub
 
 Cuando trabajamos profesionalmente no solemos copiar proyectos mediante pendrive.
 
@@ -286,7 +343,7 @@ Será el lugar desde el cual obtendremos el código.
 
 ---
 
-## 7. Crear un servidor en Azure
+### Crear un servidor en Azure
 
 Vamos a crear una **máquina virtual Linux** en Azure.
 
@@ -308,7 +365,7 @@ Utilizaremos:
 
 ---
 
-## 8. Una advertencia importante: el cloud cuesta dinero
+### Una advertencia importante: el cloud cuesta dinero
 
 En un ordenador del aula podemos dejar una máquina encendida sin pensar demasiado en su coste directo.
 
@@ -335,7 +392,7 @@ Esta también es una competencia profesional: **controlar costes cloud**.
 
 ---
 
-## 9. Acceder al servidor mediante SSH
+### Acceder al servidor mediante SSH
 
 Nuestro servidor no tendrá una pantalla física delante de nosotros.
 
@@ -360,7 +417,7 @@ Siempre que sea posible utilizaremos **autenticación mediante clave SSH** en lu
 
 ---
 
-## 10. Preparar el servidor
+### Preparar el servidor
 
 Una vez conectados:
 
@@ -377,7 +434,38 @@ Mantener el software actualizado es una de las medidas básicas de seguridad.
 
 ---
 
-## 11. Instalar Nginx
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <ul class="checklist">
+    <li>Tu web funciona en local.</li>
+    <li>El proyecto está en un repositorio de GitHub.</li>
+    <li>Tienes una máquina virtual creada en Azure y anotada su IP pública.</li>
+    <li>Entras por SSH sin errores.</li>
+    <li>Sabes cuánto cuesta lo que has creado y cómo apagarlo.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué es la IP pública de vuestra máquina y en qué se diferencia de la privada?</li>
+    <li>¿Por qué usamos clave SSH en lugar de contraseña?</li>
+    <li>Si os vais de fin de semana, ¿qué deberíais hacer con la VM?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · La pública es la dirección por la que Internet llega a la máquina; la privada solo existe dentro de la red virtual de Azure.</p>
+  <p>2 · Porque una clave no se adivina por fuerza bruta y no se puede reutilizar si alguien la ve escrita.</p>
+  <p>3 · Apagarla o liberarla. Una VM encendida consume crédito aunque nadie la use.</p>
+</details>
+
+---
+
+## Sesión 3 · Nginx y abrir la puerta a Internet
+
+### Instalar Nginx
 
 Nuestro servidor existe.
 
@@ -412,7 +500,7 @@ sudo systemctl status nginx
 
 ---
 
-## 12. Primer problema: Internet no puede entrar
+### Primer problema: Internet no puede entrar
 
 Tenemos Nginx instalado.
 
@@ -440,7 +528,7 @@ Para que HTTP funcione necesitamos permitir <code>TCP/80</code>, y posteriorment
 
 ---
 
-## 13. Network Security Group de Azure
+### Network Security Group de Azure
 
 Azure permite controlar qué tráfico puede llegar a nuestra máquina mediante reglas de red.
 
@@ -515,7 +603,7 @@ No debemos abrir puertos simplemente «por si acaso».
 
 ---
 
-## 14. Firewall de Ubuntu
+### Firewall de Ubuntu
 
 También podemos tener un firewall dentro del propio servidor.
 
@@ -535,7 +623,7 @@ Más adelante reflexionaremos sobre por qué podemos tener seguridad tanto **fue
 
 ---
 
-## 15. Primera comprobación
+### Primera comprobación
 
 Acceded a <code>http://IP_PUBLICA</code>.
 
@@ -547,7 +635,7 @@ Pero todavía no contiene nuestro proyecto.
 
 ---
 
-## 16. Llevar nuestro código al servidor
+### Llevar nuestro código al servidor
 
 Instalad Git:
 
@@ -574,7 +662,7 @@ Ahora tenemos:
 
 ---
 
-## 17. Decir a Nginx dónde está nuestra web
+### Decir a Nginx dónde está nuestra web
 
 Crearemos:
 
@@ -620,7 +708,7 @@ sudo systemctl reload nginx
 
 ---
 
-## 18. ¿Por qué hacemos `nginx -t`?
+### ¿Por qué hacemos `nginx -t`?
 
 Imaginad que modificamos la configuración de un servidor utilizado por miles de personas.
 
@@ -644,7 +732,7 @@ Es una buena práctica que aparece continuamente en administración de sistemas.
 
 ---
 
-## 19. Ya tenemos nuestra web en Internet
+### Ya tenemos nuestra web en Internet
 
 Acceded de nuevo a <code>http://IP_PUBLICA</code>.
 
@@ -671,7 +759,37 @@ Vamos a solucionar ambos.
 
 ---
 
-## 20. DNS: los humanos no queremos recordar IP
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
+  <ul class="checklist">
+    <li>Nginx instalado y arrancado.</li>
+    <li>Puerto 80 abierto en el Network Security Group de Azure.</li>
+    <li>Puerto 80 permitido en el firewall de Ubuntu.</li>
+    <li>Tu web se ve escribiendo la IP pública en el navegador.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué hay dos cortafuegos y no uno?</li>
+    <li>¿Qué comprueba exactamente <code>nginx -t</code>?</li>
+    <li>Veis la página por defecto de Nginx en lugar de la vuestra. ¿Qué está pasando?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Uno es de la red de Azure, delante de la máquina; el otro es del sistema operativo, dentro. Un paquete tiene que pasar por los dos.</p>
+  <p>2 · Que el fichero de configuración es sintácticamente válido. No comprueba que la web funcione.</p>
+  <p>3 · Nginx está sirviendo, pero apunta a su directorio por defecto en lugar de al de vuestro proyecto.</p>
+</details>
+
+---
+
+## Sesión 4 · Un nombre propio y HTTPS
+
+### DNS: los humanos no queremos recordar IP
 
 Internet funciona utilizando direcciones IP.
 
@@ -692,7 +810,7 @@ Simplificando:
 
 ---
 
-## 21. Crear nuestro nombre
+### Crear nuestro nombre
 
 Utilizaremos DuckDNS para disponer de un subdominio gratuito.
 
@@ -714,7 +832,7 @@ Estamos realizando conceptualmente algo equivalente a:
 
 ---
 
-## 22. Configurar Nginx para nuestro nombre
+### Configurar Nginx para nuestro nombre
 
 Modificad:
 
@@ -745,7 +863,7 @@ Comprobad <code>http://alumno-daw.duckdns.org</code>.
 
 ---
 
-## 23. Todavía tenemos un problema
+### Todavía tenemos un problema
 
 Nuestro navegador muestra <code>HTTP</code>.
 
@@ -755,25 +873,25 @@ Queremos <code>HTTPS</code>.
 
 ---
 
-## 24. ¿Qué aporta HTTPS?
+### ¿Qué aporta HTTPS?
 
 HTTPS proporciona principalmente tres propiedades.
 
-### Confidencialidad
+#### Confidencialidad
 
 Un tercero no debería poder leer fácilmente la comunicación entre cliente y servidor.
 
-### Integridad
+#### Integridad
 
 Permite detectar modificaciones de la información durante la comunicación.
 
-### Autenticación
+#### Autenticación
 
 El certificado ayuda al navegador a comprobar que está hablando con el servidor correspondiente al nombre solicitado.
 
 ---
 
-## 25. Certificados digitales
+### Certificados digitales
 
 Para utilizar HTTPS necesitamos un certificado válido para nuestro nombre.
 
@@ -801,7 +919,7 @@ Simplificando:
 
 ---
 
-## 26. Instalar Certbot
+### Instalar Certbot
 
 ```bash
 sudo apt install certbot python3-certbot-nginx
@@ -824,7 +942,7 @@ Para que la validación HTTP funcione, el nombre DNS debe resolver correctamente
 
 ---
 
-## 27. Abrir HTTPS
+### Abrir HTTPS
 
 Recordad que disponer de un certificado no hace automáticamente accesible <code>TCP/443</code>.
 
@@ -836,7 +954,7 @@ Después probad:
 
 ---
 
-## 28. ¿Qué ha cambiado realmente?
+### ¿Qué ha cambiado realmente?
 
 Antes:
 
@@ -863,7 +981,7 @@ Ahora:
 
 ---
 
-## 29. Comprobar el certificado
+### Comprobar el certificado
 
 Desde el navegador:
 
@@ -879,7 +997,37 @@ Queremos entender **por qué el navegador confía en nuestra conexión**.
 
 ---
 
-## 30. Actualizar nuestra web
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <ul class="checklist">
+    <li>Tienes un nombre DNS apuntando a tu IP pública.</li>
+    <li>Nginx responde a ese nombre, no solo a la IP.</li>
+    <li>Puerto 443 abierto en Azure y en el sistema.</li>
+    <li>La web carga por HTTPS con candado y sin avisos.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué traduce exactamente el DNS?</li>
+    <li>¿Qué demuestra un certificado y qué NO demuestra?</li>
+    <li>Tenéis HTTPS y una inyección SQL. ¿Es segura vuestra web?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Un nombre legible por personas a la dirección IP de la máquina que responde.</p>
+  <p>2 · Demuestra que estáis hablando con el servidor de ese nombre y que nadie puede leer el tráfico por el camino. No demuestra que la aplicación sea segura ni honesta.</p>
+  <p>3 · No. HTTPS protege el transporte, no la aplicación. Lo veremos en detalle en UD6.</p>
+</details>
+
+---
+
+## Sesión 5 · Mantener y explicar la arquitectura
+
+### Actualizar nuestra web
 
 Ahora modificad algo visible en vuestro proyecto local. Por ejemplo, una versión 2.
 
@@ -933,40 +1081,40 @@ Lo importante es comprender qué problema resuelve.
 
 ---
 
-## 31. Seguridad básica
+### Seguridad básica
 
 Antes de considerar terminado el servidor, revisad:
 
-#### ¿SSH está abierto innecesariamente a todo Internet?
+##### ¿SSH está abierto innecesariamente a todo Internet?
 
 Siempre que sea posible, limitad su acceso.
 
-#### ¿Utilizamos clave SSH?
+##### ¿Utilizamos clave SSH?
 
 Preferible a contraseñas débiles.
 
-#### ¿El sistema está actualizado?
+##### ¿El sistema está actualizado?
 
 ```bash
 sudo apt update
 sudo apt upgrade
 ```
 
-#### ¿Tenemos abiertos únicamente los puertos necesarios?
+##### ¿Tenemos abiertos únicamente los puertos necesarios?
 
 Normalmente <code>22</code>, <code>80</code> y <code>443</code>.
 
-#### ¿HTTPS funciona?
+##### ¿HTTPS funciona?
 
 Debe hacerlo.
 
-#### ¿HTTP redirige a HTTPS?
+##### ¿HTTP redirige a HTTPS?
 
 Comprobadlo.
 
 ---
 
-## 32. Ocultar información innecesaria
+### Ocultar información innecesaria
 
 Podemos evitar que Nginx publique su versión.
 
@@ -995,7 +1143,7 @@ Esto reduce información expuesta, pero recordad:
 
 ---
 
-## 33. El mapa completo
+### El mapa completo
 
 Al terminar habremos construido:
 
@@ -1071,7 +1219,7 @@ Cada elemento resuelve un problema diferente.
 
 ---
 
-## 34. Actividad final: explica tu arquitectura
+### Actividad final: explica tu arquitectura
 
 Incluid en vuestra memoria un dibujo de vuestra arquitectura.
 
@@ -1098,53 +1246,53 @@ Explicadlo como si se lo estuvierais contando a otro alumno.
 
 ---
 
-## 35. Preguntas de reflexión
+### Preguntas de reflexión
 
 Responded brevemente.
 
-#### 1. ¿Por qué nuestra VM de Azure es un ejemplo de IaaS?
+##### 1. ¿Por qué nuestra VM de Azure es un ejemplo de IaaS?
 
 <p class="write-line"></p>
 
-#### 2. ¿Qué diferencia existe entre tener una IP pública y disponer de un dominio?
+##### 2. ¿Qué diferencia existe entre tener una IP pública y disponer de un dominio?
 
 <p class="write-line"></p>
 
-#### 3. ¿Qué ocurriría si cerramos el puerto 80?
+##### 3. ¿Qué ocurriría si cerramos el puerto 80?
 
 <p class="write-line"></p>
 
-#### 4. ¿Qué ocurriría si cerramos el puerto 443?
+##### 4. ¿Qué ocurriría si cerramos el puerto 443?
 
 <p class="write-line"></p>
 
-#### 5. ¿Qué función tiene Nginx?
+##### 5. ¿Qué función tiene Nginx?
 
 <p class="write-line"></p>
 
-#### 6. ¿Por qué necesitamos DNS?
+##### 6. ¿Por qué necesitamos DNS?
 
 <p class="write-line"></p>
 
-#### 7. ¿Por qué necesitamos un certificado para HTTPS?
+##### 7. ¿Por qué necesitamos un certificado para HTTPS?
 
 <p class="write-line"></p>
 
-#### 8. ¿Qué diferencia hay entre el firewall de Ubuntu y las reglas de red de Azure?
+##### 8. ¿Qué diferencia hay entre el firewall de Ubuntu y las reglas de red de Azure?
 
 <p class="write-line"></p>
 
-#### 9. ¿Por qué no es buena idea abrir todos los puertos?
+##### 9. ¿Por qué no es buena idea abrir todos los puertos?
 
 <p class="write-line"></p>
 
-#### 10. ¿Qué ventaja tendría automatizar `git pull` y el despliegue después de cada cambio validado?
+##### 10. ¿Qué ventaja tendría automatizar `git pull` y el despliegue después de cada cambio validado?
 
 <p class="write-line"></p>
 
 ---
 
-## 36. Producto final
+### Producto final
 
 Debe existir realmente:
 
@@ -1173,7 +1321,7 @@ Incluid:
 
 ---
 
-## 37. Evaluación
+### Evaluación
 
 <table>
   <thead>
@@ -1206,7 +1354,7 @@ Incluid:
   </tbody>
 </table>
 
-### Importante
+#### Importante
 
 No basta con copiar comandos hasta que funcione.
 
@@ -1216,7 +1364,36 @@ La parte con mayor peso de la actividad es:
 
 ---
 
-## 38. Lo que debes recordar
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · entrega</p>
+  <ul class="checklist">
+    <li>URL pública con HTTPS, funcionando en el momento de la entrega.</li>
+    <li>Un cambio publicado después del despliegue inicial.</li>
+    <li>Diagrama de la arquitectura completa.</li>
+    <li>Memoria breve: qué habéis montado, qué falló y cómo lo resolvisteis.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>Recorred vuestra arquitectura en voz alta, del navegador al fichero.</li>
+    <li>¿Qué pasa si mañana caduca el certificado?</li>
+    <li>¿Qué parte de todo esto os ahorraría un PaaS, y qué perderíais?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Navegador → DNS → IP pública → NSG → firewall del sistema → Nginx → fichero. Si os saltáis un paso, ahí está vuestro punto ciego.</p>
+  <p>2 · Certbot lo renueva automáticamente, pero solo si el servicio de renovación sigue activo y el puerto sigue abierto.</p>
+  <p>3 · Os ahorraría el sistema operativo, el servidor web y el certificado. Perderíais control sobre la configuración y visibilidad de lo que ocurre por debajo.</p>
+</details>
+
+---
+
+## Lo que debes recordar
+
 
 Un despliegue web que parecía simplemente «subir mi página a Internet» en realidad implica:
 
