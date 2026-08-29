@@ -442,6 +442,19 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-05",
         number: "UD5",
+        verb: "RIGHT-SIZE",
+        verbEs: "DIMENSIONAR",
+        title: "Sustainable cloud, data and artificial intelligence",
+        titleEs: "Cloud, datos e inteligencia artificial sostenibles",
+        description:
+          "Sizing infrastructure to real load, deciding what data is worth keeping, and choosing a solution proportionate to the problem.",
+        descriptionEs:
+          "Ajustar la infraestructura a la carga real, decidir qué datos merece la pena guardar y elegir una solución proporcional al problema.",
+        resources: []
+      },
+      {
+        id: "ud-06",
+        number: "UD6",
         verb: "COMPLY",
         verbEs: "CUMPLIR",
         title: "Regulation and environmental certification",
