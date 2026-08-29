@@ -158,6 +158,7 @@ export const teachingCourses: TeachingCourse[] = [
     levelEs: "Ciclo Formativo de Grado Superior",
     term: "2026/2027",
     status: "current",
+    updatedAt: "2026-08-29",
     summary:
       "Digitalisation applied to production systems: data, connectivity, artificial intelligence and cybersecurity in an industrial setting.",
     summaryEs:
@@ -245,6 +246,28 @@ export const teachingCourses: TeachingCourse[] = [
               "Transacciones reales de un comercio electrónico británico, alojadas en el UCI Machine Learning Repository."
           }
         ]
+      },
+      {
+        id: "ud-06",
+        number: "UD6",
+        title: "Cybersecurity for developers",
+        titleEs: "Ciberseguridad para desarrolladores",
+        description:
+          "Auditing a web application, explaining its risks and correcting common vulnerabilities with AI as a review aid.",
+        descriptionEs:
+          "Auditar una aplicación web, explicar sus riesgos y corregir vulnerabilidades comunes con la IA como apoyo de revisión.",
+        resources: []
+      },
+      {
+        id: "ud-07",
+        number: "UD7",
+        title: "Digital transformation of a company",
+        titleEs: "Transformación digital de una empresa",
+        description:
+          "Final project: analyse a traditional company and design a viable digital transformation proposal.",
+        descriptionEs:
+          "Proyecto final: analizar una empresa tradicional y diseñar una propuesta viable de transformación digital.",
+        resources: []
       }
     ]
   },
