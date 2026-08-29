@@ -327,41 +327,46 @@ export const teachingCourses: TeachingCourse[] = [
     titleEs: "Sostenibilidad",
     term: "2026/2027",
     status: "current",
+    updatedAt: "2026-08-29",
     summary:
-      "Sustainability applied to the production system: environmental impact, circular economy, energy efficiency and applicable regulation.",
+      "Deciding with sustainability criteria inside a digital product: ESG impact, life cycle, a website that consumes less, accessibility, and infrastructure sized to the problem.",
     summaryEs:
-      "Sostenibilidad aplicada al sistema productivo: impacto ambiental, economía circular, eficiencia energética y normativa aplicable.",
+      "Decidir con criterio de sostenibilidad dentro de un producto digital: impactos ASG, ciclo de vida, una web que consume menos, accesibilidad e infraestructura proporcional al problema.",
     overview:
-      "A cross-curricular module on the environmental and social consequences of productive activity, and on the criteria used to reduce them. It works from measurable impact to the decisions and regulation that follow, so sustainability is treated as an operating requirement rather than as a declaration of intent.",
+      "A cross-curricular module on the environmental and social consequences of technology, and on the criteria used to reduce them. Every unit ends in a decision that has to be defended with evidence rather than with intentions: which impacts actually matter, whether a device should be replaced, what a page really costs to load, who cannot use the interface, and how much infrastructure a problem deserves. Regulation appears throughout, where it belongs — as a constraint on a technical decision rather than as a list to memorise.",
     overviewEs:
-      "Módulo transversal sobre las consecuencias ambientales y sociales de la actividad productiva y sobre los criterios para reducirlas. Va del impacto medible a las decisiones y la normativa que se derivan, de modo que la sostenibilidad se trate como un requisito de funcionamiento y no como una declaración de intenciones.",
+      "Módulo transversal sobre las consecuencias ambientales y sociales de la tecnología y sobre los criterios para reducirlas. Cada unidad termina en una decisión que hay que defender con evidencias y no con intenciones: qué impactos importan de verdad, si conviene sustituir un dispositivo, cuánto cuesta realmente cargar una página, quién no puede usar la interfaz y cuánta infraestructura merece un problema. La normativa aparece a lo largo del módulo, donde le corresponde: como límite de una decisión técnica y no como una lista que memorizar.",
     outcomes: [
       "Analyse the environmental, social and governance impacts of a company.",
       "Tell a real improvement from a claim with no evidence behind it.",
-      "Measure the environmental impact of a productive activity.",
-      "Apply circular economy criteria to waste management.",
-      "Read an energy bill and a carbon footprint, and say what would reduce them.",
-      "Recognise the regulation and environmental certifications that apply."
+      "Follow the whole life cycle of a device before deciding what to do with it.",
+      "Measure a website, optimise it and prove the improvement with data.",
+      "Find and fix the barriers that stop people using an interface.",
+      "Size infrastructure, data and AI in proportion to the problem."
     ],
     outcomesEs: [
       "Analizar los impactos ambientales, sociales y de gobernanza de una empresa.",
       "Distinguir una mejora real de una afirmación sin evidencias detrás.",
-      "Medir el impacto ambiental de una actividad productiva.",
-      "Aplicar criterios de economía circular a la gestión de residuos.",
-      "Leer un consumo energético y una huella de carbono, y decir qué los reduciría.",
-      "Reconocer la normativa y las certificaciones ambientales que aplican."
+      "Recorrer el ciclo de vida completo de un dispositivo antes de decidir sobre él.",
+      "Medir una web, optimizarla y demostrar la mejora con datos.",
+      "Encontrar y corregir las barreras que impiden usar una interfaz.",
+      "Dimensionar infraestructura, datos e IA de forma proporcional al problema."
     ],
     topics: [
-      "Sustainable development goals",
-      "Circular economy",
-      "Energy efficiency",
-      "Environmental regulation"
+      "Environmental, social and governance impact",
+      "Life cycle and circular economy",
+      "Sustainable web and software",
+      "Accessibility",
+      "Cloud, data and AI",
+      "Applicable regulation"
     ],
     topicsEs: [
-      "Objetivos de desarrollo sostenible",
-      "Economía circular",
-      "Eficiencia energética",
-      "Normativa ambiental"
+      "Impacto ambiental, social y de gobernanza",
+      "Ciclo de vida y economía circular",
+      "Web y software sostenible",
+      "Accesibilidad",
+      "Cloud, datos e IA",
+      "Normativa aplicable"
     ],
     resources: [],
     sections: [
@@ -450,15 +455,6 @@ export const teachingCourses: TeachingCourse[] = [
           "Sizing infrastructure to real load, deciding what data is worth keeping, and choosing a solution proportionate to the problem.",
         descriptionEs:
           "Ajustar la infraestructura a la carga real, decidir qué datos merece la pena guardar y elegir una solución proporcional al problema.",
-        resources: []
-      },
-      {
-        id: "ud-06",
-        number: "UD6",
-        verb: "COMPLY",
-        verbEs: "CUMPLIR",
-        title: "Regulation and environmental certification",
-        titleEs: "Normativa y certificación ambiental",
         resources: []
       }
     ]
