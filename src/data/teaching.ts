@@ -394,10 +394,14 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-03",
         number: "UD3",
-        verb: "REUSE",
-        verbEs: "REUTILIZAR",
-        title: "Circular economy and waste management",
-        titleEs: "Economía circular y gestión de residuos",
+        verb: "OPTIMISE",
+        verbEs: "OPTIMIZAR",
+        title: "Sustainable web and software development",
+        titleEs: "Desarrollo web y software sostenible",
+        description:
+          "Measuring a web page, finding the waste, optimising it and proving the improvement with data.",
+        descriptionEs:
+          "Medir una web, encontrar el desperdicio, optimizarla y demostrar la mejora con datos.",
         resources: []
       },
       {
