@@ -31,6 +31,24 @@ const looseSessions = sessions.filter(
     !course.sections.some((section) => section.id === session.entry.data.section)
 );
 
+/**
+ * The course route: one step per block, in teaching order. The duration is
+ * read from the block's first session so it stays in sync with the unit page
+ * rather than being repeated here.
+ */
+const route = course.sections.map((section) => {
+  const first = sessions.find(
+    (session) => session.entry.data.section === section.id
+  );
+  return {
+    id: section.id,
+    number: section.number,
+    verb: section.verbEs ?? section.verb,
+    title: section.titleEs,
+    duration: first?.entry.data.duration
+  };
+});
+
 const jsonLd = {
   "@type": "Course",
   "@id": `${site.url}/teaching/${course.slug}/#course`,
@@ -111,6 +129,34 @@ const resourceMeta = (resource: TeachingResource) =>
       </div>
     </div>
   </section>
+
+  {((course.outcomesEs ?? []).length > 0 || route.length > 1) && (
+    <section class="course-plan">
+      <div class="container">
+        <p class="eyebrow">Al terminar el módulo</p>
+        <h2 class="section-title">Lo que serás capaz de hacer.</h2>
+        {(course.outcomesEs ?? []).length > 0 && (
+          <ul class="outcome-list">
+            {(course.outcomesEs ?? []).map((outcome) => <li>{outcome}</li>)}
+          </ul>
+        )}
+        {route.length > 1 && (
+          <ol class="course-route">
+            {route.map((step) => (
+              <li>
+                <a href={`#${step.id}`}>
+                  <span class="route-number">{step.number}</span>
+                  {step.verb && <span class="route-verb">{step.verb}</span>}
+                  <span class="route-title">{step.title}</span>
+                  {step.duration && <span class="route-duration">{step.duration}</span>}
+                </a>
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
+    </section>
+  )}
 
   {announcements.length > 0 && (
     <section class="announcements">
@@ -346,6 +392,121 @@ const resourceMeta = (resource: TeachingResource) =>
     color: var(--ink);
     border-color: var(--gold);
     background: var(--gold);
+  }
+
+  .course-plan {
+    padding: 70px 0 10px;
+  }
+
+  .outcome-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0 46px;
+    margin: 34px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .outcome-list li {
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  .course-route {
+    margin: 54px 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: route-step;
+  }
+
+  .course-route li {
+    position: relative;
+    padding-left: 34px;
+  }
+
+  /* The rail that turns seven separate blocks into one path. */
+  .course-route li::before {
+    position: absolute;
+    top: 26px;
+    bottom: -12px;
+    left: 5px;
+    width: 1px;
+    background: var(--line-strong);
+    content: "";
+  }
+
+  .course-route li:last-child::before {
+    display: none;
+  }
+
+  .course-route li::after {
+    position: absolute;
+    top: 22px;
+    left: 0;
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--blue);
+    border-radius: 100px;
+    background: var(--paper);
+    content: "";
+  }
+
+  .course-route a {
+    display: grid;
+    grid-template-columns: 46px 118px 1fr auto;
+    gap: 18px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .course-route a:hover .route-title {
+    color: var(--blue-dark);
+  }
+
+  .route-number {
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+
+  .route-verb {
+    color: var(--coral);
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .route-title {
+    font-family: var(--serif);
+    font-size: 1.14rem;
+    line-height: 1.25;
+  }
+
+  .route-duration {
+    color: var(--ink-soft);
+    font-size: 0.76rem;
+    font-weight: 750;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .course-route a {
+      grid-template-columns: 46px 1fr;
+      gap: 4px 14px;
+    }
+
+    .route-title,
+    .route-duration {
+      grid-column: 2;
+    }
   }
 
   .course-overview {

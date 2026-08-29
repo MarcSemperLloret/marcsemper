@@ -36,6 +36,13 @@ export interface TeachingSection {
   id: string;
   /** Optional index shown next to the title, e.g. "01". */
   number?: string;
+  /**
+   * One verb naming what the student does in this block, e.g. "PUBLICAR".
+   * Used by the course route, where the sequence of verbs is the story the
+   * blocks tell together. Leave it out and the block is listed without one.
+   */
+  verb?: string;
+  verbEs?: string;
   title: string;
   titleEs: string;
   description?: string;
@@ -75,6 +82,14 @@ export interface TeachingCourse {
   summaryEs: string;
   overview: string;
   overviewEs: string;
+  /**
+   * What the student will be able to do once the course is over, written as
+   * actions rather than as contents. Shown before the syllabus, because a
+   * student decides whether a module is worth the effort from these and not
+   * from a list of topics.
+   */
+  outcomes?: string[];
+  outcomesEs?: string[];
   topics: string[];
   topicsEs: string[];
   /** ISO date (YYYY-MM-DD) of the last change to this course's material. */
@@ -160,30 +175,50 @@ export const teachingCourses: TeachingCourse[] = [
     status: "current",
     updatedAt: "2026-08-29",
     summary:
-      "Digitalisation applied to production systems: data, connectivity, artificial intelligence and cybersecurity in an industrial setting.",
+      "How a developer works in a digital company: publishing to the cloud, directing AI agents, analysing real data, auditing security and designing a digital transformation.",
     summaryEs:
-      "Digitalización aplicada a los sistemas productivos: datos, conectividad, inteligencia artificial y ciberseguridad en el entorno industrial.",
+      "Cómo trabaja hoy un desarrollador en una empresa digital: publicar en cloud, dirigir agentes de IA, analizar datos reales, auditar la seguridad y diseñar una transformación digital.",
     overview:
-      "A cross-curricular module on how digital technologies change the way production systems are operated and managed. It covers where data comes from, how it travels, how it is analysed and what has to be protected, always tied to decisions taken in a real workplace rather than to the technology in isolation.",
+      "A cross-curricular module that follows the real work of a developer inside a company that is digitalising: publishing an application to the cloud, connecting systems that do not talk to each other, directing and verifying a coding agent, turning a dataset into a decision, auditing an application before it goes live and, finally, designing the digital transformation of a whole company. Every unit ends in a real deliverable — a working URL, a repository, an analysis, an audit — rather than in an exam.",
     overviewEs:
-      "Módulo transversal sobre cómo las tecnologías digitales cambian la forma de operar y gestionar los sistemas productivos. Recorre de dónde salen los datos, cómo viajan, cómo se analizan y qué hay que proteger, siempre ligado a decisiones de un entorno de trabajo real y no a la tecnología por separado.",
+      "Módulo transversal que recorre el trabajo real de un desarrollador dentro de una empresa que se digitaliza: publicar una aplicación en cloud, conectar sistemas que no se hablan entre sí, dirigir y verificar a un agente de programación, convertir un dataset en una decisión, auditar una aplicación antes de publicarla y, al final, diseñar la transformación digital de una empresa entera. Cada unidad termina en un producto real —una URL que funciona, un repositorio, un análisis, una auditoría— y no en un examen.",
+    outcomes: [
+      "Publish a real website on the internet, with your own domain and HTTPS.",
+      "Work with a coding agent the way a professional does: context, instructions, tools and verification.",
+      "Analyse a real dataset with AI and defend the conclusions you draw from it.",
+      "Detect, explain and correct the security mistakes a junior developer should recognise.",
+      "Connect systems that do not talk to each other and automate what is worth automating.",
+      "Design the digital transformation of a company, and say what you would not do."
+    ],
+    outcomesEs: [
+      "Publicar una web real en Internet, con nombre propio y HTTPS.",
+      "Trabajar con un agente de programación como se hace profesionalmente: contexto, instrucciones, herramientas y verificación.",
+      "Analizar un dataset real con IA y defender las conclusiones que sacáis de él.",
+      "Detectar, explicar y corregir los errores de seguridad que un desarrollador junior debe reconocer.",
+      "Conectar sistemas que no se hablan entre sí y automatizar lo que merece la pena automatizar.",
+      "Diseñar la transformación digital de una empresa, y saber decir qué no haríais."
+    ],
     topics: [
-      "Industry 4.0",
-      "Data and connectivity",
-      "Artificial intelligence",
-      "Cybersecurity"
+      "Cloud and deployment",
+      "Integration and automation",
+      "AI-assisted development",
+      "Data and decisions",
+      "Application security"
     ],
     topicsEs: [
-      "Industria 4.0",
-      "Datos y conectividad",
-      "Inteligencia artificial",
-      "Ciberseguridad"
+      "Cloud y despliegue",
+      "Integración y automatización",
+      "Desarrollo asistido por IA",
+      "Datos y decisiones",
+      "Seguridad de aplicaciones"
     ],
     resources: [],
     sections: [
       {
         id: "ud-01",
         number: "UD1",
+        verb: "UNDERSTAND",
+        verbEs: "ENTENDER",
         title: "Digitalising a company",
         titleEs: "Digitalizar una empresa",
         description:
@@ -195,6 +230,8 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-02",
         number: "UD2",
+        verb: "CONNECT",
+        verbEs: "CONECTAR",
         title: "Systems integration and automation",
         titleEs: "Integración y automatización de sistemas",
         description:
@@ -206,6 +243,8 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-03",
         number: "UD3",
+        verb: "PUBLISH",
+        verbEs: "PUBLICAR",
         title: "Cloud and modern architectures",
         titleEs: "Cloud y arquitecturas modernas",
         description:
@@ -217,6 +256,8 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-04",
         number: "UD4",
+        verb: "PROGRAM",
+        verbEs: "PROGRAMAR",
         title: "AI-assisted software development",
         titleEs: "Desarrollo de software asistido por IA",
         description:
@@ -228,6 +269,8 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-05",
         number: "UD5",
+        verb: "DECIDE",
+        verbEs: "DECIDIR",
         title: "Data, analytics and decision-making with AI",
         titleEs: "Datos, analítica y toma de decisiones con IA",
         description:
@@ -250,6 +293,8 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-06",
         number: "UD6",
+        verb: "PROTECT",
+        verbEs: "PROTEGER",
         title: "Cybersecurity for developers",
         titleEs: "Ciberseguridad para desarrolladores",
         description:
@@ -261,6 +306,8 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-07",
         number: "UD7",
+        verb: "INTEGRATE",
+        verbEs: "INTEGRAR",
         title: "Digital transformation of a company",
         titleEs: "Transformación digital de una empresa",
         description:
