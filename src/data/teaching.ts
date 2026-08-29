@@ -383,8 +383,12 @@ export const teachingCourses: TeachingCourse[] = [
         number: "UD2",
         verb: "MEASURE",
         verbEs: "MEDIR",
-        title: "Environmental impact of productive activity",
-        titleEs: "Impacto ambiental de la actividad productiva",
+        title: "The environmental footprint of technology",
+        titleEs: "La huella ambiental de la tecnología",
+        description:
+          "The full life cycle of a device, circular economy, and what a data centre actually consumes.",
+        descriptionEs:
+          "El ciclo de vida completo de un dispositivo, economía circular y qué consume de verdad un centro de datos.",
         resources: []
       },
       {
