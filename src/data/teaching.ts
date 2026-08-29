@@ -176,7 +176,7 @@ export const teachingCourses: TeachingCourse[] = [
     titleEs: "Digitalización",
     term: "2026/2027",
     status: "current",
-    updatedAt: "2026-08-29",
+    updatedAt: "2026-08-30",
     summary:
       "How a developer works in a digital company: publishing to the cloud, directing AI agents, analysing real data, auditing security and designing a digital transformation.",
     summaryEs:
@@ -342,7 +342,8 @@ export const teachingCourses: TeachingCourse[] = [
       "Follow the whole life cycle of a device before deciding what to do with it.",
       "Measure a website, optimise it and prove the improvement with data.",
       "Find and fix the barriers that stop people using an interface.",
-      "Size infrastructure, data and AI in proportion to the problem."
+      "Size infrastructure, data and AI in proportion to the problem.",
+      "Turn a diagnosis into a plan with objectives, indicators, owners and dates."
     ],
     outcomesEs: [
       "Analizar los impactos ambientales, sociales y de gobernanza de una empresa.",
@@ -350,7 +351,8 @@ export const teachingCourses: TeachingCourse[] = [
       "Recorrer el ciclo de vida completo de un dispositivo antes de decidir sobre él.",
       "Medir una web, optimizarla y demostrar la mejora con datos.",
       "Encontrar y corregir las barreras que impiden usar una interfaz.",
-      "Dimensionar infraestructura, datos e IA de forma proporcional al problema."
+      "Dimensionar infraestructura, datos e IA de forma proporcional al problema.",
+      "Convertir un diagnóstico en un plan con objetivos, indicadores, responsables y plazos."
     ],
     topics: [
       "Environmental, social and governance impact",
@@ -358,6 +360,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Sustainable web and software",
       "Accessibility",
       "Cloud, data and AI",
+      "Sustainability plan",
       "Applicable regulation"
     ],
     topicsEs: [
@@ -366,6 +369,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Web y software sostenible",
       "Accesibilidad",
       "Cloud, datos e IA",
+      "Plan de sostenibilidad",
       "Normativa aplicable"
     ],
     resources: [],
@@ -455,6 +459,19 @@ export const teachingCourses: TeachingCourse[] = [
           "Sizing infrastructure to real load, deciding what data is worth keeping, and choosing a solution proportionate to the problem.",
         descriptionEs:
           "Ajustar la infraestructura a la carga real, decidir qué datos merece la pena guardar y elegir una solución proporcional al problema.",
+        resources: []
+      },
+      {
+        id: "ud-06",
+        number: "UD6",
+        verb: "PLAN",
+        verbEs: "PLANIFICAR",
+        title: "Audit and digital sustainability plan",
+        titleEs: "Auditoría y plan de sostenibilidad digital",
+        description:
+          "Final project: audit a digital company and turn the diagnosis into objectives, actions, indicators and a roadmap.",
+        descriptionEs:
+          "Proyecto final: auditar una empresa digital y convertir el diagnóstico en objetivos, acciones, indicadores y un roadmap.",
         resources: []
       }
     ]
