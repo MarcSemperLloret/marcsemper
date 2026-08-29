@@ -418,10 +418,14 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-04",
         number: "UD4",
-        verb: "REDUCE",
-        verbEs: "REDUCIR",
-        title: "Energy efficiency and carbon footprint",
-        titleEs: "Eficiencia energética y huella de carbono",
+        verb: "INCLUDE",
+        verbEs: "INCLUIR",
+        title: "Accessibility and inclusive digital design",
+        titleEs: "Accesibilidad y diseño digital inclusivo",
+        description:
+          "Finding the barriers that stop people using a site, fixing them and proving the site is better afterwards.",
+        descriptionEs:
+          "Encontrar las barreras que impiden usar un sitio, corregirlas y demostrar que después es mejor.",
         resources: []
       },
       {
