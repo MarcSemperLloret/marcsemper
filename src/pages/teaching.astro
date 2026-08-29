@@ -208,6 +208,18 @@ const teachingJsonLd = {
     font-size: clamp(2.6rem, 5.4vw, 4.4rem);
   }
 
+  /* The hero aligns its two columns at the bottom, which reads well under a
+     full-height display title. With this smaller one the intro is the taller
+     column, so bottom alignment started it above the title. Align at the top. */
+  .page-hero-grid {
+    align-items: start;
+  }
+
+  .page-intro {
+    margin-bottom: 0;
+    padding-top: 10px;
+  }
+
   @media (max-width: 640px) {
     .page-hero {
       padding: 56px 0 38px;
