@@ -16,12 +16,14 @@ outcomes:
   - "Comparar decisiones tecnológicas mirando todo el ciclo de vida, no solo el consumo."
   - "Evitar la conclusión fácil de que «nuevo es más sostenible»."
   - "Proponer medidas para alargar la vida útil de los equipos."
+  - "Decidir el destino de un equipo retirado contando con lo que exige la normativa."
 requirements:
   - "Calculadora u hoja de cálculo."
   - "Herramienta de presentaciones o un documento."
   - "Disposición a justificar cada decisión, no solo a tomarla."
 priorKnowledge:
   - "Las dimensiones ASG y la idea de materialidad (UD1)."
+  - "Qué es PixelStore y qué tiene (UD1)."
   - "Qué es un indicador y para qué sirve (UD1)."
 date: "2026-08-29"
 ---
@@ -474,13 +476,13 @@ Antes de guardar algo indefinidamente conviene preguntarse: **¿seguimos necesit
 
 ---
 
-## Sesión 4 · TechNova necesita renovar sus equipos
+## Sesión 4 · PixelStore quiere renovar sus equipos
 
-### El caso · TechNova
+### El caso · PixelStore
 
-TechNova es una pequeña empresa de desarrollo web con 30 trabajadores, 30 portátiles, infraestructura cloud, varios monitores, teléfonos de empresa y material de red.
+Volvemos a la empresa de la UD1. Hoy miramos una pieza concreta: **su hardware**. La infraestructura digital —cloud, datos e IA— tiene su propia unidad más adelante, y allí la decidiréis con criterio en lugar de a ojo.
 
-La dirección quiere reducir su impacto ambiental, pero hay varias propuestas sobre la mesa.
+PixelStore tiene 45 trabajadores, 45 portátiles, varios monitores, teléfonos de empresa y material de red.
 
 #### Situación actual
 
@@ -489,7 +491,7 @@ La dirección quiere reducir su impacto ambiental, pero hay varias propuestas so
 | Portátiles | Uno nuevo cada 3 años, aunque muchos funcionan bien. Los anteriores se almacenan, se venden o se desechan |
 | Teléfonos | Se sustituyen cada 2 años |
 | Monitores | Solo se sustituyen cuando fallan |
-| Cloud | La empresa no revisa recursos sin usar, almacenamiento antiguo, backups ni logs |
+| Equipos retirados | Nadie lleva la cuenta de dónde acaban |
 
 Y la dirección afirma:
 
@@ -501,7 +503,7 @@ Vuestra misión es analizar **si esa decisión tiene sentido**.
 
 Elegid un dispositivo —portátil, móvil o monitor— y representad su ciclo de vida completo: materiales, fabricación, transporte, uso, mantenimiento y final de vida.
 
-Después señalad en qué etapas puede actuar TechNova realmente. Son menos de las que parece.
+Después señalad en qué etapas puede actuar PixelStore realmente. Son menos de las que parece.
 
 ### Segunda tarea · Política de renovación
 
@@ -557,31 +559,38 @@ La política actual cabe en una línea: portátil, tres años, sustituir. Propon
 
 Vuestra política tiene que responder a cuatro cosas: cuándo mantener, cuándo reparar, cuándo sustituir y qué se hace con el equipo retirado. La última es la que casi todo el mundo se deja.
 
-### Tercera tarea · Cloud
+### Tercera tarea · ¿Dónde acaban los equipos retirados?
 
-TechNova descubre máquinas virtuales que nadie usa, logs de hace cinco años, backups duplicados y almacenamiento de proyectos antiguos.
+PixelStore retira unos quince equipos al año y no sabe qué pasa con ellos. Decidid el destino de cada lote y qué haría falta para poder darlo.
 
-| Recurso          | Mantener / revisar / eliminar | Motivo |
-| ---------------- | ----------------------------- | ------ |
-| VM sin uso       |                               |        |
-| Logs antiguos    |                               |        |
-| Backup necesario |                               |        |
-| Backup duplicado |                               |        |
-| Proyecto antiguo |                               |        |
+| Equipo retirado | Destino propuesto | Qué hace falta para poder hacerlo |
+| --------------- | ----------------- | --------------------------------- |
+| Portátiles de 3 años que funcionan | | |
+| Portátiles con la batería agotada | | |
+| Monitores antiguos que funcionan | | |
+| Teléfonos de 2 años | | |
+| Equipos averiados sin reparación viable | | |
 
-Ojo con una tentación: no eliminamos datos solo para ahorrar recursos. También hay necesidades legales, de seguridad, de recuperación y de negocio.
+Y una pregunta que casi siempre falta: antes de que salgan por la puerta, **¿qué hacemos con los datos que contienen?**
+
+<div class="rule">
+  <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
+  <p>Un ordenador retirado no es basura corriente. Los <strong>residuos de aparatos eléctricos y electrónicos</strong> —los RAEE— están regulados: hay que entregarlos a un gestor autorizado, no pueden ir al contenedor común, y la empresa responde de que acaben donde deben.</p>
+  <p>Antes de eso hay otro requisito. Si el equipo contiene datos personales, hay que borrarlos de forma segura. Vender un portátil con el disco intacto no es reutilizar: es una brecha de datos con buena intención.</p>
+  <p>Y por el otro extremo de la vida del producto está el <strong>ecodiseño</strong>, que también tiene requisitos regulados. Que un fabricante deba ofrecer piezas de repuesto y facilitar la reparación durante unos años no es una cortesía suya: es lo que hace posible que vuestra política de alargar la vida útil se pueda cumplir de verdad.</p>
+</div>
 
 ### Cuarta tarea · ¿Qué haríais primero?
 
-TechNova tiene presupuesto limitado y seis opciones. Ordenadlas del 1 al 6 y justificad el orden.
+PixelStore tiene presupuesto limitado y seis opciones. Ordenadlas del 1 al 6 y justificad el orden.
 
 | Opción | Acción |
 | ------ | ------ |
 | A | Comprar portátiles nuevos para todos |
 | B | Reparar y alargar la vida de los equipos que siguen siendo adecuados |
-| C | Revisar los recursos cloud sin utilizar |
+| C | Inventariar qué equipos hay y en qué estado |
 | D | Crear una política de reutilización de hardware |
-| E | Optimizar el almacenamiento y las políticas de retención |
+| E | Un procedimiento de borrado seguro y entrega a gestor autorizado |
 | F | Cambiar todos los teléfonos |
 
 | Prioridad | Acción | Justificación |
@@ -601,6 +610,7 @@ TechNova tiene presupuesto limitado y seis opciones. Ordenadlas del 1 al 6 y jus
     <li>¿Cuánto cuesta hacerlo? Hay acciones que no cuestan casi nada y evitan bastante.</li>
     <li>¿Es reversible? Comprar hardware no lo es; revisar recursos cloud sí.</li>
     <li>¿Evita impacto futuro o solo arregla el pasado? Una política vale más que una compra.</li>
+    <li>¿Alguna es obligatoria? Si lo es, deja de competir con las demás por el primer puesto.</li>
   </ol>
   <p>Si una opción no evita ningún impacto y además fabrica dispositivos nuevos, ya sabéis en qué mitad de la lista va.</p>
 </details>
@@ -614,14 +624,14 @@ Elegid al menos tres indicadores. Estos son ejemplos, no la lista cerrada:
 | Vida media de los portátiles | Años por equipo |
 | Equipos reparados | % reparados antes de sustituir |
 | Equipos reutilizados | % de equipos retirados que se reutilizan |
-| Recursos cloud sin uso | Número, o coste mensual |
-| Almacenamiento | GB o TB almacenados |
+| Trazabilidad | % de equipos retirados de los que se sabe dónde acabaron |
+| Borrado seguro | % de equipos retirados con borrado certificado |
 
 ### Sexta tarea · La decisión
 
 Y ahora la pregunta del principio:
 
-> **¿Debería TechNova comprar ordenadores nuevos para todos los trabajadores con el argumento de que consumen menos energía?**
+> **¿Debería PixelStore comprar ordenadores nuevos para todos los trabajadores con el argumento de que consumen menos energía?**
 
 Sí, no o depende. Justificadlo usando ciclo de vida, fabricación, consumo, reparación, vida útil y necesidades reales.
 
@@ -680,11 +690,14 @@ Cada pareja dispone de unos **3 minutos** y responde a cuatro preguntas:
 | Selección de indicadores             |    1,5 |
 | **Justificación de la decisión final** |  **1** |
 
+Durante la exposición se preguntará **individualmente** a cualquiera de los dos miembros por una decisión del trabajo.
+
 No obtiene mejor nota quien afirma que nunca hay que comprar equipos nuevos. Tampoco quien afirma que los dispositivos nuevos siempre son más eficientes. La respuesta que buscamos es que **depende del ciclo de vida, del estado del equipo y de las necesidades reales** — y que sepáis decir de cuáles.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · entrega</p>
   <ul class="checklist">
+    <li>Todo lo medido y decidido está guardado en vuestro repositorio de evidencias.</li>
     <li>Habéis analizado el ciclo de vida completo, no solo el consumo eléctrico.</li>
     <li>Distinguís reparar, reutilizar y reciclar.</li>
     <li>Vuestra política dice también cuándo sustituir.</li>
