@@ -402,7 +402,18 @@ export const teachingCourses: TeachingCourse[] = [
           "Measuring a web page, finding the waste, optimising it and proving the improvement with data.",
         descriptionEs:
           "Medir una web, encontrar el desperdicio, optimizarla y demostrar la mejora con datos.",
-        resources: []
+        resources: [
+          {
+            label: "PixelStore · starting project",
+            labelEs: "PixelStore · proyecto de partida",
+            href: "https://github.com/MarcSemperLloret/webssos",
+            kind: "code",
+            description:
+              "A shop that works and transfers far more than it needs. Clone it, measure it, optimise it.",
+            descriptionEs:
+              "Una tienda que funciona y transfiere mucho más de lo necesario. Clonadla, medidla y optimizadla."
+          }
+        ]
       },
       {
         id: "ud-04",

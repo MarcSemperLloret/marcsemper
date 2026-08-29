@@ -21,7 +21,7 @@ requirements:
   - "Chrome o Chromium, con DevTools y Lighthouse."
   - "Visual Studio Code y Git."
   - "GitHub Copilot u otro asistente de IA."
-  - "El proyecto web que entrega el profesor."
+  - "PixelStore, el proyecto de partida. Se clona en la sesión 2."
 priorKnowledge:
   - "El ciclo de vida y la idea de no gastar recursos de más (UD2)."
   - "Leer un diff y revisar lo que propone un agente (Digitalización, UD4)."
@@ -221,7 +221,17 @@ Un *Performance* de 92 no significa que la web sea «un 92 % sostenible». Y un 
 
 ### Segunda tarea · Auditoría inicial
 
-El profesor entrega una web deliberadamente poco optimizada. **Todavía no modificamos nada.** Primero se anota el punto de partida.
+Trabajaremos sobre **PixelStore**, una tienda de periféricos que funciona perfectamente y transfiere mucho más de lo que necesita.
+
+```bash
+git clone https://github.com/MarcSemperLloret/webssos.git pixelstore
+cd pixelstore
+python -m http.server 8080
+```
+
+Abridla en <http://localhost:8080>. No vale abrir el `index.html` con doble clic: el catálogo se carga con `fetch` y eso no funciona sobre `file://`.
+
+**Todavía no modificamos nada.** Primero se anota el punto de partida.
 
 | Indicador                     | Antes |
 | ----------------------------- | ----: |
