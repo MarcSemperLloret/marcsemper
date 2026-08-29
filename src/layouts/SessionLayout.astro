@@ -52,6 +52,27 @@ const facts = [
   }
 ].filter(Boolean) as Array<{ label: string; value: string }>;
 
+/**
+ * The three columns of the "Before you start" strip. They are deliberately
+ * separate from `facts`: the facts describe the session, while these tell the
+ * student what to do before opening it, which is what stops a one-hour weekly
+ * class from being spent installing things.
+ */
+const brief = [
+  data.outcomes.length > 0 && {
+    label: isSpanish ? "Al terminar serás capaz de" : "By the end you will be able to",
+    items: data.outcomes
+  },
+  data.requirements.length > 0 && {
+    label: isSpanish ? "Necesitas" : "You need",
+    items: data.requirements
+  },
+  data.priorKnowledge.length > 0 && {
+    label: isSpanish ? "Debes saber" : "You should already know",
+    items: data.priorKnowledge
+  }
+].filter(Boolean) as Array<{ label: string; items: string[] }>;
+
 const jsonLd = {
   "@type": "LearningResource",
   "@id": `${site.url}${Astro.url.pathname}#session`,
@@ -91,6 +112,24 @@ const jsonLd = {
             <strong>{fact.value}</strong>
           </div>
         ))}
+      </div>
+    </section>
+  )}
+
+  {brief.length > 0 && (
+    <section class="session-brief">
+      <div class="container">
+        <p class="eyebrow">{isSpanish ? "Antes de empezar" : "Before you start"}</p>
+        <div class="brief-grid">
+          {brief.map((block) => (
+            <div>
+              <p class="brief-label">{block.label}</p>
+              <ul>
+                {block.items.map((item) => <li>{item}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )}
@@ -230,6 +269,48 @@ const jsonLd = {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.4;
+  }
+
+  .session-brief {
+    padding: 46px 0 8px;
+  }
+
+  .session-brief .eyebrow {
+    margin-bottom: 24px;
+  }
+
+  .brief-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .brief-grid > div {
+    padding: 24px 26px;
+    background: var(--paper);
+  }
+
+  .brief-label {
+    margin: 0 0 14px;
+    color: var(--blue-dark);
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .brief-grid ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--ink);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .brief-grid li + li {
+    margin-top: 8px;
   }
 
   .session-body {

@@ -28,6 +28,15 @@ const sessions = defineCollection({
     duration: z.string().optional(),
     modality: z.string().optional(),
     deliverable: z.string().optional(),
+    /**
+     * What the student will be able to do once the session is finished.
+     * Written from the student's point of view, not as a list of contents.
+     */
+    outcomes: z.array(z.string()).default([]),
+    /** Tools that have to be installed and ready before the session starts. */
+    requirements: z.array(z.string()).default([]),
+    /** Skills the session takes for granted, from earlier sessions or modules. */
+    priorKnowledge: z.array(z.string()).default([]),
     /** ISO date the session was published or last revised. */
     date: z.string().optional(),
     draft: z.boolean().default(false)
