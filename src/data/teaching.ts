@@ -335,6 +335,22 @@ export const teachingCourses: TeachingCourse[] = [
       "A cross-curricular module on the environmental and social consequences of productive activity, and on the criteria used to reduce them. It works from measurable impact to the decisions and regulation that follow, so sustainability is treated as an operating requirement rather than as a declaration of intent.",
     overviewEs:
       "Módulo transversal sobre las consecuencias ambientales y sociales de la actividad productiva y sobre los criterios para reducirlas. Va del impacto medible a las decisiones y la normativa que se derivan, de modo que la sostenibilidad se trate como un requisito de funcionamiento y no como una declaración de intenciones.",
+    outcomes: [
+      "Analyse the environmental, social and governance impacts of a company.",
+      "Tell a real improvement from a claim with no evidence behind it.",
+      "Measure the environmental impact of a productive activity.",
+      "Apply circular economy criteria to waste management.",
+      "Read an energy bill and a carbon footprint, and say what would reduce them.",
+      "Recognise the regulation and environmental certifications that apply."
+    ],
+    outcomesEs: [
+      "Analizar los impactos ambientales, sociales y de gobernanza de una empresa.",
+      "Distinguir una mejora real de una afirmación sin evidencias detrás.",
+      "Medir el impacto ambiental de una actividad productiva.",
+      "Aplicar criterios de economía circular a la gestión de residuos.",
+      "Leer un consumo energético y una huella de carbono, y decir qué los reduciría.",
+      "Reconocer la normativa y las certificaciones ambientales que aplican."
+    ],
     topics: [
       "Sustainable development goals",
       "Circular economy",
@@ -350,36 +366,50 @@ export const teachingCourses: TeachingCourse[] = [
     resources: [],
     sections: [
       {
-        id: "bloc-01",
-        number: "01",
-        title: "Sustainability and the sustainable development goals",
-        titleEs: "Sostenibilidad y objetivos de desarrollo sostenible",
+        id: "ud-01",
+        number: "UD1",
+        verb: "UNDERSTAND",
+        verbEs: "ENTENDER",
+        title: "What makes a company sustainable",
+        titleEs: "Qué significa que una empresa sea sostenible",
+        description:
+          "Environmental, social and governance impacts, and how to tell a real improvement from a claim with nothing behind it.",
+        descriptionEs:
+          "Impactos ambientales, sociales y de gobernanza, y cómo distinguir una mejora real de una afirmación sin evidencias.",
         resources: []
       },
       {
-        id: "bloc-02",
-        number: "02",
+        id: "ud-02",
+        number: "UD2",
+        verb: "MEASURE",
+        verbEs: "MEDIR",
         title: "Environmental impact of productive activity",
         titleEs: "Impacto ambiental de la actividad productiva",
         resources: []
       },
       {
-        id: "bloc-03",
-        number: "03",
+        id: "ud-03",
+        number: "UD3",
+        verb: "REUSE",
+        verbEs: "REUTILIZAR",
         title: "Circular economy and waste management",
         titleEs: "Economía circular y gestión de residuos",
         resources: []
       },
       {
-        id: "bloc-04",
-        number: "04",
+        id: "ud-04",
+        number: "UD4",
+        verb: "REDUCE",
+        verbEs: "REDUCIR",
         title: "Energy efficiency and carbon footprint",
         titleEs: "Eficiencia energética y huella de carbono",
         resources: []
       },
       {
-        id: "bloc-05",
-        number: "05",
+        id: "ud-05",
+        number: "UD5",
+        verb: "COMPLY",
+        verbEs: "CUMPLIR",
         title: "Regulation and environmental certification",
         titleEs: "Normativa y certificación ambiental",
         resources: []
