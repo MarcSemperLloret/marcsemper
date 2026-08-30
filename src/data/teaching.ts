@@ -539,6 +539,19 @@ export const teachingCourses: TeachingCourse[] = [
         descriptionEs:
           "Crear documentos HTML modernos, organizados, semánticos y accesibles como base sólida antes de aplicar presentación.",
         resources: []
+      },
+      {
+        id: "ud-02",
+        number: "UD2",
+        verb: "LAY OUT",
+        verbEs: "MAQUETAR",
+        title: "CSS: design, layout and responsive",
+        titleEs: "CSS: diseño, maquetación y responsive",
+        description:
+          "Turn the HTML site into a responsive, accessible one, using Flexbox and Grid rather than a framework.",
+        descriptionEs:
+          "Convertir el sitio HTML en una web adaptable y accesible, maquetada con Flexbox y Grid en lugar de con un framework.",
+        resources: []
       }
     ]
   }
