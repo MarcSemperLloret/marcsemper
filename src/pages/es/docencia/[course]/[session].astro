@@ -1,7 +1,7 @@
 ---
 import { render } from "astro:content";
 import SessionLayout from "@/layouts/SessionLayout.astro";
-import { getSessions, sessionPath, type Session } from "@/data/sessions";
+import { getSessions, sessionOutline, sessionPath, type Session } from "@/data/sessions";
 import { publishedCourses, type TeachingCourse } from "@/data/teaching";
 
 export async function getStaticPaths() {
@@ -40,7 +40,10 @@ interface Props {
 }
 
 const { session, course, siblings, siblingPaths } = Astro.props;
-const { Content, headings } = await render(session.entry);
+const { Content, headings, remarkPluginFrontmatter } = await render(session.entry);
+// `session-parts` reports which `##` sections it folded into the accordion,
+// so the contents rail is built from the same numbering.
+const outline = sessionOutline(headings, remarkPluginFrontmatter.sessionOutline);
 ---
 
 <SessionLayout
@@ -48,7 +51,7 @@ const { Content, headings } = await render(session.entry);
   course={course}
   siblings={siblings}
   siblingPaths={siblingPaths}
-  headings={headings}
+  outline={outline}
 >
   <Content />
 </SessionLayout>

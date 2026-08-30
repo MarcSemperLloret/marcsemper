@@ -1200,28 +1200,16 @@ select {
   gap: 56px;
 }
 
-.session-toc ol {
+.session-toc ol,
+.session-toc ul {
   margin: 0;
   padding: 0;
   list-style: none;
-  counter-reset: toc;
-}
-
-.session-toc li {
-  margin-bottom: 9px;
 }
 
 .session-toc a {
   display: block;
-  color: var(--ink-soft);
   text-decoration: none;
-  font-size: 0.82rem;
-  font-weight: 650;
-  line-height: 1.35;
-}
-
-.session-toc a:hover {
-  color: var(--blue-dark);
 }
 
 .session-toc .toc-title {
@@ -1235,9 +1223,117 @@ select {
   text-transform: uppercase;
 }
 
+/* A heading that only labels the sessions after it, such as "Semana 2". */
+.toc-group a {
+  margin: 22px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.toc-part {
+  /* Defaults for a closed session. The rule further down flips them on the one
+     that is open, which is the only "you are here" signal a page with no
+     client JavaScript can offer. */
+  --toc-mark: transparent;
+  --toc-color: var(--ink-soft);
+  --toc-weight: 650;
+  --toc-sub: none;
+}
+
+.toc-link {
+  padding: 7px 0 7px 13px;
+  border-left: 2px solid var(--toc-mark);
+  color: var(--toc-color);
+  font-size: 0.82rem;
+  font-weight: var(--toc-weight);
+  line-height: 1.3;
+}
+
+.toc-link:hover {
+  color: var(--blue-dark);
+}
+
+.toc-kicker {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--blue-dark);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.toc-sub {
+  display: var(--toc-sub);
+  margin: 2px 0 10px;
+  padding-left: 15px;
+  border-left: 2px solid var(--line);
+}
+
+.toc-sub a {
+  padding: 4px 0;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.toc-sub a:hover {
+  color: var(--blue-dark);
+}
+
+/*
+   Mark the open session in the rail and unfold its subsections.
+
+   `:has()` cannot pair a rail entry with the accordion entry carrying the same
+   number, so the pairing is spelled out once per position. Thirty covers the
+   longest unit written so far, eighteen sessions plus its weekly dividers; a
+   section past that still reads, it is just not tracked in the rail.
+*/
+.session-grid:has(.session-part[data-part="1"][open]) .toc-part[data-part="1"],
+.session-grid:has(.session-part[data-part="2"][open]) .toc-part[data-part="2"],
+.session-grid:has(.session-part[data-part="3"][open]) .toc-part[data-part="3"],
+.session-grid:has(.session-part[data-part="4"][open]) .toc-part[data-part="4"],
+.session-grid:has(.session-part[data-part="5"][open]) .toc-part[data-part="5"],
+.session-grid:has(.session-part[data-part="6"][open]) .toc-part[data-part="6"],
+.session-grid:has(.session-part[data-part="7"][open]) .toc-part[data-part="7"],
+.session-grid:has(.session-part[data-part="8"][open]) .toc-part[data-part="8"],
+.session-grid:has(.session-part[data-part="9"][open]) .toc-part[data-part="9"],
+.session-grid:has(.session-part[data-part="10"][open]) .toc-part[data-part="10"],
+.session-grid:has(.session-part[data-part="11"][open]) .toc-part[data-part="11"],
+.session-grid:has(.session-part[data-part="12"][open]) .toc-part[data-part="12"],
+.session-grid:has(.session-part[data-part="13"][open]) .toc-part[data-part="13"],
+.session-grid:has(.session-part[data-part="14"][open]) .toc-part[data-part="14"],
+.session-grid:has(.session-part[data-part="15"][open]) .toc-part[data-part="15"],
+.session-grid:has(.session-part[data-part="16"][open]) .toc-part[data-part="16"],
+.session-grid:has(.session-part[data-part="17"][open]) .toc-part[data-part="17"],
+.session-grid:has(.session-part[data-part="18"][open]) .toc-part[data-part="18"],
+.session-grid:has(.session-part[data-part="19"][open]) .toc-part[data-part="19"],
+.session-grid:has(.session-part[data-part="20"][open]) .toc-part[data-part="20"],
+.session-grid:has(.session-part[data-part="21"][open]) .toc-part[data-part="21"],
+.session-grid:has(.session-part[data-part="22"][open]) .toc-part[data-part="22"],
+.session-grid:has(.session-part[data-part="23"][open]) .toc-part[data-part="23"],
+.session-grid:has(.session-part[data-part="24"][open]) .toc-part[data-part="24"],
+.session-grid:has(.session-part[data-part="25"][open]) .toc-part[data-part="25"],
+.session-grid:has(.session-part[data-part="26"][open]) .toc-part[data-part="26"],
+.session-grid:has(.session-part[data-part="27"][open]) .toc-part[data-part="27"],
+.session-grid:has(.session-part[data-part="28"][open]) .toc-part[data-part="28"],
+.session-grid:has(.session-part[data-part="29"][open]) .toc-part[data-part="29"],
+.session-grid:has(.session-part[data-part="30"][open]) .toc-part[data-part="30"] {
+  --toc-mark: var(--coral);
+  --toc-color: var(--ink);
+  --toc-weight: 800;
+  --toc-sub: block;
+}
+
 @media (min-width: 1060px) {
   .session-grid {
-    grid-template-columns: 224px minmax(0, 760px);
+    grid-template-columns: 250px minmax(0, 760px);
   }
 
   .session-toc {
@@ -1251,9 +1347,136 @@ select {
 
 @media (max-width: 1059px) {
   .session-toc {
+    /* A unit of eighteen sessions would otherwise push the text off screen. */
+    max-height: 55vh;
     padding: 22px 24px;
+    overflow-y: auto;
     border: 1px solid var(--line-strong);
     background: var(--paper-deep);
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Session accordion
+
+   Each `##` section of a unit is wrapped in a <details> at build time by
+   plugins/session-parts.mjs, so a unit opens as the list of its sessions
+   rather than as an hour of scrolling. They share a `name`, which is what
+   makes the browser close one when another opens: a single session is on
+   screen at a time, and the rail always has one entry to mark.
+   --------------------------------------------------------------------------- */
+
+.session-content .session-part {
+  scroll-margin-top: 88px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.session-content .session-part:last-of-type {
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.session-part-summary {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.session-part-summary::-webkit-details-marker {
+  display: none;
+}
+
+.session-content .session-part-summary h2 {
+  flex: 1;
+  margin: 0;
+  font-size: clamp(1.5rem, 2.9vw, 2.05rem);
+  transition: color 160ms ease;
+}
+
+.session-part-summary::after {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--ink-soft);
+  border-bottom: 2px solid var(--ink-soft);
+  transform: translateY(-3px) rotate(45deg);
+  transition: transform 180ms ease, border-color 160ms ease;
+  content: "";
+}
+
+.session-part[open] > .session-part-summary::after {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.session-part-summary:hover h2 {
+  color: var(--blue-dark);
+}
+
+.session-part-summary:hover::after {
+  border-color: var(--blue-dark);
+}
+
+.session-part-summary:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.session-part-body {
+  padding-bottom: 44px;
+}
+
+.session-content .session-part-body > *:first-child {
+  margin-top: 0;
+}
+
+/* A `##` that only labels the sessions after it. The rule the author wrote
+   under it would double the one drawn here. */
+.session-content .session-part-group {
+  margin: 64px 0 0;
+  padding-bottom: 9px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.session-content .session-part-group + hr {
+  display: none;
+}
+
+.session-content .session-part-group + .session-part,
+.session-content .session-part-group + hr + .session-part {
+  border-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .session-part-summary::after,
+  .session-content .session-part-summary h2 {
+    transition: none;
+  }
+}
+
+@media print {
+  .session-toc {
+    display: none;
+  }
+
+  /* Print the whole unit, not only the session that happened to be open. */
+  @supports selector(::details-content) {
+    .session-part::details-content {
+      content-visibility: visible;
+    }
+  }
+
+  .session-part-summary::after {
+    display: none;
   }
 }
 

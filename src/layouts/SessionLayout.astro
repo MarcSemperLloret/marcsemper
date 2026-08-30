@@ -2,8 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { site } from "@/data/site";
 import { formatTeachingDate, type TeachingCourse } from "@/data/teaching";
-import type { Session } from "@/data/sessions";
-import type { MarkdownHeading } from "astro";
+import type { Session, SessionOutlineEntry } from "@/data/sessions";
 
 interface Props {
   session: Session;
@@ -11,11 +10,11 @@ interface Props {
   /** Sibling sessions of the same course, in order. */
   siblings: Session[];
   siblingPaths: string[];
-  headings: MarkdownHeading[];
+  /** The unit's `##` sections, in the order the accordion renders them. */
+  outline: SessionOutlineEntry[];
 }
 
-const { session, course, siblings, siblingPaths, headings } = Astro.props;
-const tableOfContents = headings.filter((heading) => heading.depth === 2);
+const { session, course, siblings, siblingPaths, outline } = Astro.props;
 const { data } = session.entry;
 const isSpanish = session.lang === "es";
 const courseTitle = isSpanish ? course.titleEs : course.title;
@@ -136,15 +135,35 @@ const jsonLd = {
 
   <article class="session-body">
     <div class="container session-grid">
-      {tableOfContents.length > 2 && (
+      {outline.length > 2 && (
         <nav class="session-toc" aria-label={isSpanish ? "Contenido de la sesión" : "Session contents"}>
           <p class="toc-title">{isSpanish ? "Contenido" : "Contents"}</p>
-          <ol>
-            {tableOfContents.map((heading) => (
-              <li>
-                <a href={`#${heading.slug}`}>{heading.text}</a>
-              </li>
-            ))}
+          <ol class="toc-list">
+            {outline.map((item) =>
+              item.group ? (
+                <li class="toc-group">
+                  {/* The "Semana 2" half is the point of a divider, so it keeps
+                      the whole heading rather than the split title. */}
+                  <a href={`#${item.slug}`}>{item.text}</a>
+                </li>
+              ) : (
+                <li class="toc-part" data-part={String(item.part)}>
+                  <a class="toc-link" href={`#${item.slug}`}>
+                    {item.kicker && <span class="toc-kicker">{item.kicker}</span>}
+                    <span class="toc-name">{item.title}</span>
+                  </a>
+                  {item.children.length > 0 && (
+                    <ul class="toc-sub">
+                      {item.children.map((child) => (
+                        <li>
+                          <a href={`#${child.slug}`}>{child.text}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              )
+            )}
           </ol>
         </nav>
       )}
