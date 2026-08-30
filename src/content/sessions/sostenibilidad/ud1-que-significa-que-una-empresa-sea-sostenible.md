@@ -28,6 +28,15 @@ date: "2026-08-29"
 
 ## Sesión 1 · ¿Qué significa realmente ser sostenible?
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Qué significa realmente la sostenibilidad empresarial y las tres dimensiones ASG (Ambiental, Social y Gobernanza).</li>
+    <li><strong>2. Haz:</strong> Analiza las 3 dimensiones e identifica por qué las acciones aisladas («reciclar», «ser verde») no bastan sin una visión holística.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
+  </ol>
+</div>
+
 ### ¿Qué vamos a aprender?
 
 Escuchamos constantemente frases como:
@@ -218,6 +227,15 @@ Relacionar una actividad con un ODS **no demuestra que estemos mejorando nada**.
 
 ## Sesión 2 · Del reto global a tu trabajo
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La conexión entre los retos globales (ODS, cambio climático), el marco normativo (ESRS/CSRD) y las decisiones técnicas cotidianas.</li>
+    <li><strong>2. Haz:</strong> Identifica el impacto de tus decisiones como programador (imágenes, almacenamiento, cloud) y mapea la cadena de suministro.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre doble materialidad y marco normativo.</li>
+  </ol>
+</div>
+
 ### Los retos que hay detrás
 
 Cuando hablamos de sostenibilidad no hablamos de una preferencia estética. Hablamos de un puñado de problemas concretos que ya están cambiando cómo operan las empresas:
@@ -323,12 +341,12 @@ Hace quince años esto era voluntario. Hoy a una empresa le preguntan por su sos
 
 Al primero se le llama **inversión socialmente responsable**: fondos y entidades que incorporan criterios ASG a sus decisiones, además de los financieros. No hace falta saber cómo funciona un fondo. Sí hace falta entender la consecuencia práctica: **la sostenibilidad de una empresa dejó de ser solo una cuestión de conciencia y pasó a ser también información que alguien evalúa**.
 
-Y como todos preguntan, hicieron falta formatos comunes para responder. De ahí los estándares —GRI, ESRS, ISO 14001— que veremos en la última unidad. Su función es que dos empresas no se inventen cada una sus propios indicadores y luego nadie pueda compararlas.
+Y como todos preguntan, hicieron falta marcos y formatos comunes para responder. Por un lado están los **estándares de reporte** —como **GRI** o los europeos **ESRS**—, cuya función es que las empresas publiquen indicadores estructurados y comparables. Por otro lado están las normas de **sistemas de gestión ambiental** —como **ISO 14001**—, que definen cómo una organización gestiona y mejora sus procesos ambientales internos, aunque no constituyen por sí mismas un estándar de reporte comparable.
 
 <div class="rule">
-  <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
-  <p>Informar sobre sostenibilidad ya no siempre es voluntario. En la Unión Europea existe una obligación de reporte que se aplica por tramos a empresas según su tamaño, y que se apoya en los estándares europeos <strong>ESRS</strong>.</p>
-  <p>PixelStore, con 45 trabajadores, probablemente no esté obligada. Pero sus clientes grandes sí pueden estarlo, y entonces le pedirán datos a ella. Así es como una obligación llega a una empresa pequeña: por la cadena de suministro, no por la ley directamente.</p>
+  <p class="rule-label">Aquí ya no decide solo el criterio técnico · Marco normativo</p>
+  <p>Informar sobre sostenibilidad ya no es solo voluntario. En la Unión Europea, la directiva de reporte CSRD se apoya en los estándares <strong>ESRS</strong>. Con la aprobación del paquete <em>Omnibus I</em> (adoptado definitivamente en febrero de 2026), el umbral general se fijó en grandes empresas (más de 1.000 empleados y más de 450 M€ de facturación neta anual), con el objetivo explícito de reducir la carga burocrática y limitar el «efecto cascada» sobre pymes.</p>
+  <p>PixelStore, con 45 trabajadores, queda claramente fuera de la obligación legal directa. Sin embargo, sus grandes clientes corporativos o administraciones públicas pueden seguir solicitándole datos de su huella para sus propios informes y compras públicas responsables. Así es como los requerimientos de sostenibilidad llegan a una pyme: a través de las relaciones comerciales de la cadena de valor.</p>
 </div>
 
 <div class="checkpoint">
@@ -361,6 +379,15 @@ Y como todos preguntan, hicieron falta formatos comunes para responder. De ahí 
 ---
 
 ## Sesión 3 · Impactos, datos y greenwashing
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo definir indicadores cuantitativos rigurosos y cómo detectar greenwashing (afirmaciones sin evidencia contrastable).</li>
+    <li><strong>2. Haz:</strong> Diseña métricas con numerador, denominador y unidad, y audita las comunicaciones de sostenibilidad de PixelStore.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
+  </ol>
+</div>
 
 ### Una empresa afecta a muchas personas
 
@@ -617,6 +644,15 @@ Sin contexto, **una cifra también puede engañar**.
 ---
 
 ## Sesión 4 · ¿Es PixelStore una empresa sostenible?
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo estructurar una evaluación integral y realista de sostenibilidad para una empresa tecnológica.</li>
+    <li><strong>2. Haz:</strong> Redacta y diseña el informe visual de 3 diapositivas de PixelStore (Diagnóstico ASG, Matriz de prioridades y Plan de mejora).</li>
+    <li><strong>3. Entrega:</strong> Entrega la evaluación visual y el cuaderno de evidencias del grupo.</li>
+  </ol>
+</div>
 
 ### El caso · PixelStore
 

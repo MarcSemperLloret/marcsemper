@@ -46,6 +46,15 @@ No tiene mucho sentido construir un servicio muy eficiente, muy rápido y muy mo
 
 ## Sesión 1 · Experimentar las barreras
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La dimensión social de la sostenibilidad y el diseño digital inclusivo como derecho de acceso universal.</li>
+    <li><strong>2. Haz:</strong> Navega por la web utilizando únicamente el teclado, con alto contraste y mediante lectores de pantalla para experimentar barreras reales.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
+  </ol>
+</div>
+
 ### Primero, úsala normal
 
 Antes de estudiar ninguna norma vamos a hacer otra cosa. Volvemos a **PixelStore**, la tienda de la unidad anterior, en la rama que trae carrito y modal:
@@ -197,6 +206,15 @@ La información no debería depender **únicamente del color**. Se puede reforza
 ---
 
 ## Sesión 2 · Las cuatro ideas de la accesibilidad
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Los 4 principios WCAG (POUR): Perceptible, Operable, Comprensible y Robusto (HTML semántico, ARIA, foco visible, contraste).</li>
+    <li><strong>2. Haz:</strong> Analiza ejemplos de código accesible vs inaccesible e identifica soluciones semánticas estándar.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre principios WCAG.</li>
+  </ol>
+</div>
 
 ### WCAG
 
@@ -353,6 +371,15 @@ WCAG no es una colección arbitraria de reglas. Detrás de cada criterio hay una
 
 ## Sesión 3 · Auditar la web
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Metodología de auditoría de accesibilidad combinando herramientas automáticas (axe, Lighthouse, WAVE) y revisión manual.</li>
+    <li><strong>2. Haz:</strong> Audita la tienda web PixelStore, detecta barreras de accesibilidad y cataloga los hallazgos en la matriz de evaluación.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
+  </ol>
+</div>
+
 Volvemos a la web problemática, ahora con método. No vamos a comprobarlo todo: vamos a combinar tres aproximaciones, y ninguna basta sola.
 
 <figure class="diagram">
@@ -505,6 +532,15 @@ Copilot puede detectar un problema real, pasar otro por alto, exagerar la graved
 ---
 
 ## Sesión 4 · Corregir y comprobar
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Remediación de accesibilidad: corrección semántica de formularios, botones, encabezados, tablas y gestión del foco.</li>
+    <li><strong>2. Haz:</strong> Corrige las barreras detectadas en el código, re-evalúa con herramientas automáticas y verifica con navegación por teclado.</li>
+    <li><strong>3. Entrega:</strong> Entrega el repositorio corregido y el informe de auditoría y remediación WCAG.</li>
+  </ol>
+</div>
 
 El objetivo de hoy es convertir el diagnóstico en evidencia:
 

@@ -5,7 +5,7 @@ section: "ud-03"
 order: 3
 lang: "es"
 summary: "Publica tu primera aplicación en Internet. De localhost a un dominio propio con HTTPS, pasando por una máquina virtual, Nginx, reglas de red, DNS y certificados."
-duration: "4–5 horas · 5 sesiones"
+duration: "5 horas · 5 sesiones"
 modality: "Individual o parejas"
 deliverable: "Una página web accesible públicamente mediante HTTPS y una breve memoria técnica."
 date: "2026-08-28"
@@ -39,6 +39,15 @@ priorKnowledge:
 </div>
 
 ## Sesión 1 · Qué es la nube y qué vamos a construir
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Qué es el cloud computing, la diferencia entre IaaS, PaaS y SaaS, y el mapa de arquitectura que construiremos.</li>
+    <li><strong>2. Haz:</strong> Configura tu cuenta de Azure for Students y comprende los componentes del despliegue en la nube.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
+  </ol>
+</div>
 
 ### El reto
 
@@ -287,6 +296,14 @@ Después podremos valorar por qué existen servicios que automatizan todo esto.
 
 ## Sesión 2 · Del código local a un servidor en Azure
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo crear una máquina virtual en Azure y autenticarte mediante un par de claves SSH asimétricas.</li>
+    <li><strong>2. Haz:</strong> Despliega una VM Ubuntu en Azure, sube tu proyecto web a GitHub y accede al servidor por SSH con tu clave privada.</li>
+    <li><strong>3. Comprueba:</strong> Anota la IP pública de tu servidor y verifica que puedes entrar por SSH sin errores.</li>
+  </ol>
+</div>
 
 Necesitamos algo que publicar.
 
@@ -415,6 +432,8 @@ SSH suele utilizar:
 
 Siempre que sea posible utilizaremos **autenticación mediante clave SSH** en lugar de una contraseña.
 
+Las claves SSH evitan depender de una contraseña que pueda adivinarse o reutilizarse. Pero la clave privada es una credencial: si alguien la roba o la ve escrita, debe considerarse comprometida (y por eso debe protegerse con permisos de archivo estrictos, idealmente cifrarse con passphrase y revocarse de inmediato del servidor si se expone).
+
 ---
 
 <details class="aside aside--help">
@@ -469,13 +488,22 @@ Mantener el software actualizado es una de las medidas básicas de seguridad.
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · La pública es la dirección por la que Internet llega a la máquina; la privada solo existe dentro de la red virtual de Azure.</p>
-  <p>2 · Porque una clave no se adivina por fuerza bruta y no se puede reutilizar si alguien la ve escrita.</p>
+  <p>2 · Las claves SSH evitan depender de una contraseña que pueda adivinarse o reutilizarse, pero la clave privada es una credencial: si alguien la roba, debe considerarse comprometida y revocarse.</p>
   <p>3 · Apagarla o liberarla. Una VM encendida consume crédito aunque nadie la use.</p>
 </details>
 
 ---
 
 ## Sesión 3 · Nginx y abrir la puerta a Internet
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> El rol del servidor web Nginx y por qué existen dos firewalls (el del cloud en Azure y el del sistema en Ubuntu).</li>
+    <li><strong>2. Haz:</strong> Instala y configura Nginx, clona tu repositorio en `/var/www/` y abre el puerto 80 (HTTP) en NSG y UFW.</li>
+    <li><strong>3. Comprueba:</strong> Abre la IP pública en tu navegador y comprueba que la web responde desde Internet.</li>
+  </ol>
+</div>
 
 ### Instalar Nginx
 
@@ -815,6 +843,15 @@ Vamos a solucionar ambos.
 
 ## Sesión 4 · Un nombre propio y HTTPS
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo funciona la resolución DNS y por qué HTTPS requiere certificados TLS emitidos por una autoridad de confianza.</li>
+    <li><strong>2. Haz:</strong> Configura un subdominio en DuckDNS hacia tu IP pública e instala un certificado TLS gratuito con Certbot.</li>
+    <li><strong>3. Comprueba:</strong> Accede a tu dominio con `https://` y verifica el candado verde y la redirección automática desde HTTP.</li>
+  </ol>
+</div>
+
 ### DNS: los humanos no queremos recordar IP
 
 Internet funciona utilizando direcciones IP.
@@ -1074,6 +1111,15 @@ Queremos entender **por qué el navegador confía en nuestra conexión**.
 ---
 
 ## Sesión 5 · Mantener y explicar la arquitectura
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo realizar despliegues continuos con Git y cómo explicar y defender la arquitectura desplegada.</li>
+    <li><strong>2. Haz:</strong> Despliega una actualización de tu web con `git pull`, dibuja el mapa de arquitectura y completa la memoria técnica.</li>
+    <li><strong>3. Entrega:</strong> Entrega la URL pública HTTPS de tu web y la memoria técnica con el diagrama de red y componentes.</li>
+  </ol>
+</div>
 
 ### Actualizar nuestra web
 

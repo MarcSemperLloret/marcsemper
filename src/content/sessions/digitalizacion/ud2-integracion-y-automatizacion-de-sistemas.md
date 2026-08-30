@@ -5,7 +5,7 @@ section: "ud-02"
 order: 2
 lang: "es"
 summary: "Cuando las aplicaciones tienen que hablar entre ellas. API, polling, webhook, eventos, colas y automatización: qué problema resuelve cada mecanismo y cuándo tiene sentido usarlo."
-duration: "2 horas · 2 sesiones"
+duration: "3 horas · 3 sesiones"
 modality: "Parejas"
 deliverable: "Diseño de un flujo de integración y automatización para una empresa."
 date: "2026-08-28"
@@ -21,6 +21,15 @@ priorKnowledge:
 ---
 
 ## Sesión 1 · Cómo se comunican las aplicaciones
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La diferencia entre APIs, polling, webhooks, colas de mensajes y flujos de automatización.</li>
+    <li><strong>2. Haz:</strong> Identifica los eventos disparadores y compara las estrategias de sincronización síncrona vs asíncrona.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
+  </ol>
+</div>
 
 ### ¿Qué vamos a aprender?
 
@@ -842,6 +851,14 @@ puede ser mejor desarrollar la solución mediante código.
 
 ## Sesión 2 · Diseña la automatización de una empresa
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo mapear eventos, condiciones y acciones en los procesos de negocio de Reparaciones Rápidas S.L.</li>
+    <li><strong>2. Haz:</strong> Diseña al menos dos flujos automáticos, elige entre polling/webhook y define la gestión de fallos.</li>
+    <li><strong>3. Comprueba:</strong> Verifica que has justificado qué tarea NO conviene automatizar y completa la checklist de entrega.</li>
+  </ol>
+</div>
 
 #### Volvemos a Reparaciones Rápidas S.L.
 
@@ -1235,6 +1252,29 @@ La actividad se calificará sobre **10 puntos**.
   <p>2 · Depende de vuestro diseño: si no hay cola ni reintentos, el mensaje se pierde. Esa es la respuesta que hay que poder dar.</p>
   <p>3 · Cuando la lógica es sencilla, conecta servicios que ya existen y el coste de mantenerla programada no compensa.</p>
 </details>
+
+---
+
+## Sesión 3 · Pruebas de integración, gestión de fallos y consolidación
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Qué ocurre cuando un servicio externo falla: reintentos, idempotencia, colas de mensajes y alertas.</li>
+    <li><strong>2. Haz:</strong> Simula la caída de la pasarela de pagos o del servicio de mensajería y documenta la estrategia de recuperación.</li>
+    <li><strong>3. Entrega:</strong> Presenta el diagrama de integración definitivo con su matriz de eventos y tratamiento de errores.</li>
+  </ol>
+</div>
+
+### Taller de resiliencia · ¿Qué ocurre cuando algo falla?
+
+En sistemas integrados, los fallos no son una excepción: son la norma. Durante esta sesión trabajamos en parejas para someter el diseño a tres escenarios de estrés:
+
+1. **Destino no disponible:** el servidor de facturación devuelve un error 503 durante dos horas. ¿Se pierden las solicitudes o quedan encoladas?
+2. **Duplicación de eventos:** el webhook de la pasarela de pago envía dos veces la misma confirmación. ¿La automatización genera dos facturas o es **idempotente**?
+3. **Pérdida de conectividad:** ¿cómo se notifica al equipo técnico o al cliente de que una acción automática ha fallado tras agotar los reintentos?
+
+Cada pareja documenta su solución y ajusta el diagrama de arquitectura antes de la entrega final.
 
 ---
 

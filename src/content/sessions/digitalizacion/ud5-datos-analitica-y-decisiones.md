@@ -5,7 +5,7 @@ section: "ud-05"
 order: 5
 lang: "es"
 summary: "Los datos tienen algo que contarnos. De un CSV que nadie ha mirado a un informe ejecutivo, usando IA para analizar sin delegar en ella las conclusiones."
-duration: "4–5 horas · 4 sesiones"
+duration: "4 horas · 4 sesiones"
 modality: "Individual o parejas"
 deliverable: "Un pequeño informe ejecutivo basado en un dataset real."
 date: "2026-08-28"
@@ -25,6 +25,15 @@ priorKnowledge:
 ---
 
 ## Sesión 1 · Conoce los datos
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo explorar un dataset real en bruto, identificar tipos de variables y detectar anomalías de calidad.</li>
+    <li><strong>2. Haz:</strong> Carga `online_retail.csv` con pandas, calcula estadísticas descriptivas e inspecciona valores nulos y negativos.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
+  </ol>
+</div>
 
 ### El reto
 
@@ -338,6 +347,15 @@ También preguntaremos:
 ---
 
 ## Sesión 2 · Haz preguntas al negocio
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo depurar y transformar datos con criterio de negocio (tratamiento de cancelaciones, devoluciones y meses incompletos).</li>
+    <li><strong>2. Haz:</strong> Genera un dataset limpio con pandas y formula preguntas analíticas comerciales clave con el apoyo de Copilot.</li>
+    <li><strong>3. Comprueba:</strong> Valida que los cálculos de ingresos totales y concentración de clientes (Pareto) son rigurosos.</li>
+  </ol>
+</div>
 
 ### Segunda actividad — Crear un dataset analizable
 
@@ -686,6 +704,15 @@ Después elegid una:
 
 ## Sesión 3 · De análisis a decisión
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo emplear la IA como asistente de análisis distinguiendo hechos de interpretaciones, supuestos y recomendaciones.</li>
+    <li><strong>2. Haz:</strong> Diseña prompts analíticos estructurados, contrasta las conclusiones de la IA y verifica las evidencias subyacentes.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre correlación vs causalidad y límites de los datos.</li>
+  </ol>
+</div>
+
 ### IA como analista: una forma mejor de preguntar
 
 Evitemos:
@@ -906,6 +933,15 @@ Saber decir «estos datos no permiten responderlo» es una competencia important
 ---
 
 ## Sesión 4 · El informe para dirección
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo sintetizar hallazgos analíticos en un informe ejecutivo claro y accionable para perfiles no técnicos.</li>
+    <li><strong>2. Haz:</strong> Elabora la presentación de 4 diapositivas estructurando datos, descubrimientos, propuestas y limitaciones.</li>
+    <li><strong>3. Entrega:</strong> Entrega el informe ejecutivo final junto con el código reproducible del análisis.</li>
+  </ol>
+</div>
 
 ### Producto final — Informe para dirección
 

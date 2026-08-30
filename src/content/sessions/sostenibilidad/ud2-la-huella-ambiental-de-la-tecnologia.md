@@ -30,6 +30,15 @@ date: "2026-08-29"
 
 ## Sesión 1 · Lo digital también es físico
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La dimensión física y material de la tecnología y el análisis de ciclo de vida del hardware (ACV).</li>
+    <li><strong>2. Haz:</strong> Mapea las fases del ciclo de vida de un portátil o servidor y desglosa dónde se concentra su huella de carbono embebida.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
+  </ol>
+</div>
+
 ### ¿Qué vamos a aprender?
 
 Cuando utilizamos una aplicación parece que todo ocurre de forma casi invisible. Abrimos una web, una aplicación, un servicio de streaming o una herramienta de IA, y recibimos una respuesta.
@@ -169,6 +178,15 @@ Pero falta información. Para fabricar B también han hecho falta materias prima
 ---
 
 ## Sesión 2 · Economía lineal y economía circular
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Los principios de economía circular aplicados a TI: jerarquía de las 9R (rechazar, reducir, reparar, reutilizar, reciclar).</li>
+    <li><strong>2. Haz:</strong> Evalúa la reparabilidad, disponibilidad de repuestos y soporte de seguridad para extender la vida útil de los equipos.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre economía circular y ecodiseño.</li>
+  </ol>
+</div>
 
 ### El modelo tradicional
 
@@ -377,6 +395,15 @@ El software también puede diseñarse pensando en los recursos que consume. Lo v
 
 ## Sesión 3 · Centros de datos, energía y recursos
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La huella de los centros de datos: eficiencia energética (PUE), mix eléctrico e intensidad hídrica (WUE).</li>
+    <li><strong>2. Haz:</strong> Compara el impacto de alojar servicios en diferentes regiones geográficas y proveedores cloud.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
+  </ol>
+</div>
+
 ### ¿Dónde viven nuestras aplicaciones?
 
 Cuando desplegamos una aplicación en cloud el servidor no desaparece: pasa a estar en infraestructura administrada por otra empresa.
@@ -492,6 +519,15 @@ Antes de guardar algo indefinidamente conviene preguntarse: **¿seguimos necesit
 ---
 
 ## Sesión 4 · PixelStore quiere renovar sus equipos
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo auditar políticas empresariales de adquisición y renovación de equipamiento informático.</li>
+    <li><strong>2. Haz:</strong> Analiza la propuesta de renovación masiva de PixelStore, calcula su impacto real y diseña una política circular alternativa.</li>
+    <li><strong>3. Entrega:</strong> Entrega la propuesta técnica de renovación de hardware y gestión de fin de vida.</li>
+  </ol>
+</div>
 
 ### El caso · PixelStore
 

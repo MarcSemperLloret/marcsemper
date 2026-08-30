@@ -45,6 +45,15 @@ date: "2026-08-29"
 
 ## Sesión 1 · Una web también consume recursos
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo el diseño y desarrollo de una web determinan su consumo de datos, energía y recursos en clientes y servidores.</li>
+    <li><strong>2. Haz:</strong> Inspecciona las peticiones de red y peso total de una página en las herramientas de desarrollo del navegador.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
+  </ol>
+</div>
+
 ### ¿Qué vamos a aprender?
 
 Cuando visitamos una web parece que solo pasa una cosa: escribimos una dirección y aparece la página. Lo que ocurre en realidad es esto:
@@ -165,6 +174,15 @@ Por eso **rendimiento y sostenibilidad suelen apuntar en la misma dirección**. 
 ---
 
 ## Sesión 2 · Primero medir, después optimizar
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> El modelo de medición del impacto digital: Page Weight, transfer size, estimación de carbono (SWD) y Lighthouse.</li>
+    <li><strong>2. Haz:</strong> Audita la web de ejemplo estableciendo una línea base objetiva antes de tocar una sola línea de código.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre metodologías de medición.</li>
+  </ol>
+</div>
 
 ### No podemos mejorar lo que no conocemos
 
@@ -294,6 +312,15 @@ Esto no es un trámite. Al final de la unidad compararéis vuestra hipótesis co
 
 ## Sesión 3 · Imágenes: casi siempre, el primer objetivo
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Optimización de recursos multimedia: formatos modernos (WebP/AVIF), dimensionado responsivo (`srcset`), lazy loading y compresión.</li>
+    <li><strong>2. Haz:</strong> Convierte y optimiza las imágenes de la web reduciendo su peso drásticamente sin perder calidad visual apreciable.</li>
+    <li><strong>3. Comprueba:</strong> Valida el ahorro de bytes en la pestaña Network del navegador.</li>
+  </ol>
+</div>
+
 ### Una imagen puede ser enorme
 
 Una foto de 6000 × 4000 que pesa 8,5 MB y que en la web aparece a 600 × 400. Estamos enviando información que el usuario no puede llegar a ver.
@@ -409,6 +436,15 @@ Y una observación que conviene tener presente: si una imagen baja de 5 MB a 400
 ---
 
 ## Sesión 4 · Código, terceros, caché y datos
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Estrategias de optimización de código: minificación, tree-shaking, reducción de scripts de terceros, políticas de caché HTTP y reducción de consultas.</li>
+    <li><strong>2. Haz:</strong> Audita los scripts externos, configura cabeceras de caché y elimina dependencias y CSS/JS no utilizados.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 4.</li>
+  </ol>
+</div>
 
 Todo lo que queda por revisar comparte una idea: **se transfiere o se ejecuta algo que nadie necesitaba**. Vamos a recorrerlo de fuera hacia dentro, del navegador al servidor.
 
@@ -592,6 +628,15 @@ Vuelve a aparecer el principio de la unidad: **procesar y transferir solo lo nec
 
 ## Sesión 5 · Optimizar nuestra web
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> El ciclo integral de refactorización sostenible en un proyecto real.</li>
+    <li><strong>2. Haz:</strong> Aplica las optimizaciones de imágenes, código y red en la web del proyecto y registra cada cambio en Git.</li>
+    <li><strong>3. Comprueba:</strong> Verifica que la experiencia de usuario y la funcionalidad permanecen intactas.</li>
+  </ol>
+</div>
+
 Ya tenemos suficiente información. Volvemos al proyecto con un objetivo: **reducir recursos sin empeorar el servicio**.
 
 ### Planificar antes de tocar
@@ -682,6 +727,15 @@ Tenéis que poder responder en todo momento a una pregunta: **¿qué hemos modif
 ---
 
 ## Sesión 6 · ¿Realmente hemos mejorado?
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo verificar científicamente el impacto de las optimizaciones comparando métricas antes y después.</li>
+    <li><strong>2. Haz:</strong> Re-ejecuta las auditorías, calcula la reducción porcentual de transferencia y emisiones estimadas, y redacta la memoria.</li>
+    <li><strong>3. Entrega:</strong> Entrega la web optimizada y el informe comparativo de sostenibilidad digital.</li>
+  </ol>
+</div>
 
 Repetid la medición inicial **exactamente igual**: mismas herramientas, mismas condiciones, misma configuración de caché.
 

@@ -30,6 +30,15 @@ date: "2026-08-29"
 
 ## Sesión 1 · Cloud no significa recursos infinitos
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> El impacto ambiental de la computación en la nube: sobredimensionamiento de servidores, recursos ociosos y selección de regiones bajas en carbono.</li>
+    <li><strong>2. Haz:</strong> Analiza la infraestructura cloud de PixelStore y dimensiona máquinas virtuales y escalado automático con criterios de eficiencia.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
+  </ol>
+</div>
+
 ### ¿Qué vamos a aprender?
 
 En Digitalización aprendimos a desplegar aplicaciones en cloud. Conviene recordar una cosa:
@@ -132,6 +141,15 @@ Por eso las empresas hacen inventarios y revisiones periódicas. Y por eso hay u
 ---
 
 ## Sesión 2 · ¿Hay que guardarlo todo para siempre?
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> El ciclo de vida del dato y políticas de retención: almacenamiento en caliente vs frío, acumulación de datos oscuros (<em>dark data</em>) y costes ambientales/seguridad.</li>
+    <li><strong>2. Haz:</strong> Diseña una política de retención y archivado para logs, backups y registros históricos de la empresa.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre ciclo de vida y gestión de datos.</li>
+  </ol>
+</div>
 
 ### Los datos también ocupan infraestructura
 
@@ -297,6 +315,15 @@ Es la justificación de moda, y suele ser mala. Antes de aceptarla, seis pregunt
 ---
 
 ## Sesión 3 · ¿Hace falta de verdad la IA?
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> El coste computacional, hídrico y energético de la IA (entrenamiento vs inferencia) y la regla de adecuación tecnológica (reglas simples vs modelos fundacionales).</li>
+    <li><strong>2. Haz:</strong> Evalúa los casos de uso de IA en PixelStore y determina cuándo un modelo ligero o un algoritmo determinista es más sostenible y eficaz.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
+  </ol>
+</div>
 
 ### Una herramienta, no una respuesta
 
@@ -479,6 +506,15 @@ No usar IA no es ser menos moderno. Puede ser, sencillamente, haber elegido bien
 ---
 
 ## Sesión 4 · Arquitectos tecnológicos
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo integrar sostenibilidad en el diseño de arquitecturas cloud, pipelines de datos y modelos de IA.</li>
+    <li><strong>2. Haz:</strong> Rediseña la infraestructura de PixelStore respondiendo a los 7 casos planteados y dimensionando de forma eficiente.</li>
+    <li><strong>3. Entrega:</strong> Entrega el diagrama de arquitectura sostenible y la justificación técnica de costes y emisiones.</li>
+  </ol>
+</div>
 
 ### El reto · PixelStore
 

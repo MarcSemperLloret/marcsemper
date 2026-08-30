@@ -5,7 +5,7 @@ section: "ud-01"
 order: 1
 lang: "es"
 summary: "De una empresa tradicional a una empresa digital. Recorremos el camino problema → necesidad → solución tecnológica, y no al revés."
-duration: "2 horas · 2 sesiones"
+duration: "3 horas · 3 sesiones"
 modality: "Parejas"
 deliverable: "Una propuesta visual de transformación digital de una pequeña empresa."
 date: "2026-08-28"
@@ -20,6 +20,15 @@ requirements:
 ---
 
 ## Sesión 1 · Qué cambia realmente al digitalizar
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La diferencia entre digitalizar información y rediseñar un proceso (transformación digital).</li>
+    <li><strong>2. Haz:</strong> Identifica el orden problema → proceso → necesidad → solución tecnológica en casos reales.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
+  </ol>
+</div>
 
 ### ¿Qué vamos a aprender?
 
@@ -304,6 +313,15 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 ---
 
 ## Sesión 2 · Rediseña una empresa
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo diagnosticar las ineficiencias del flujo de trabajo de Reparaciones Rápidas S.L.</li>
+    <li><strong>2. Haz:</strong> Dibuja el proceso actual (AS-IS), rediseña el flujo (TO-BE) y selecciona las tecnologías necesarias.</li>
+    <li><strong>3. Comprueba:</strong> Verifica que has descartado al menos una tecnología y que tu arquitectura conceptual es clara.</li>
+  </ol>
+</div>
 
 ### El caso
 
@@ -773,6 +791,29 @@ Obtiene mejor nota quien:
   <p>2 · Porque demuestra que evaluáis si resuelve un problema real. Una propuesta que lo incluye todo no ha decidido nada.</p>
   <p>3 · Quitarla. Es justo la que os van a preguntar.</p>
 </details>
+
+---
+
+## Sesión 3 · Puesta en común, debate y defensa de propuestas
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo defender una propuesta técnica ante clientes y responder a objeciones de viabilidad y costes.</li>
+    <li><strong>2. Haz:</strong> Expón la arquitectura conceptual de tu equipo (3 minutos) y participa en el debate crítico de las soluciones de otros grupos.</li>
+    <li><strong>3. Entrega:</strong> Entrega la versión definitiva del rediseño tras incorporar las mejoras del debate.</li>
+  </ol>
+</div>
+
+### Dinámica de aula · Tribunal de dirección
+
+En esta sesión, cada pareja proyecta su diagrama conceptual y defiende su propuesta ante la clase:
+
+1. **Diagnóstico del problema:** qué cuello de botella de Reparaciones Rápidas S.L. se resuelve primero.
+2. **Justificación de tecnologías:** por qué se eligen esas piezas y qué coste o complejidad conllevan.
+3. **Tecnología descartada:** justificar por qué se rechazó al menos una tecnología tentadora pero innecesaria (por ejemplo, IA o app nativa).
+
+El resto del aula actúa como el equipo directivo del cliente, formulando preguntas sobre mantenimiento, formación de los empleados y riesgos de implantación.
 
 ---
 

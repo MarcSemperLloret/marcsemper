@@ -38,6 +38,15 @@ Ahora vamos a juntarlo todo. Trabajaréis como un pequeño equipo de consultorí
 
 ## Sesión 1 · De hacer cosas sostenibles a tener un plan
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La estructura y ciclo de un Plan de Sostenibilidad Digital: diagnóstico ASG, materialidad, fijación de objetivos, plan de acción y reporte.</li>
+    <li><strong>2. Haz:</strong> Revisa el ciclo metodológico y comprende las fases que articulan la memoria técnica final.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
+  </ol>
+</div>
+
 ### El problema de las acciones sueltas
 
 Una empresa puede reciclar, contratar energía renovable, optimizar su web, reparar ordenadores, mejorar la accesibilidad, reducir almacenamiento y comprar equipos eficientes. Todo eso puede ser positivo.
@@ -157,6 +166,15 @@ La última es la más difícil a propósito. «IA sostenible» no significa nada
 
 ## Sesión 2 · La empresa · PixelStore
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo consolidar el caso empresarial de PixelStore integrando todos los datos recopilados en las 5 unidades previas.</li>
+    <li><strong>2. Haz:</strong> Mapea la cadena de valor completa, equipos, visitas web, proveedores e infraestructura tecnológica.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 2.</li>
+  </ol>
+</div>
+
 Ya conocéis PixelStore. La habéis analizado como empresa en la UD1, mirado su hardware en la UD2, optimizado su web en la UD3, quitado sus barreras en la UD4 y dimensionado su infraestructura en la UD5.
 
 Hoy no empezáis de cero: **abrid vuestro repositorio de evidencias**. Todo lo que medisteis durante el módulo es el diagnóstico de este plan, y lo que no anotasteis entonces habrá que estimarlo ahora, que es bastante peor.
@@ -242,6 +260,15 @@ Mejorar un aspecto puede empeorar otro. Un plan honesto **reconoce los trade-off
 
 ## Sesión 3 · Auditoría ASG
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Metodología de auditoría ASG: catalogación de evidencias empíricas en las dimensiones Ambiental, Social y Gobernanza.</li>
+    <li><strong>2. Haz:</strong> Completa la matriz de auditoría asignando hechos objetivos y niveles de madurez a cada aspecto clave.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
+  </ol>
+</div>
+
 Analizamos PixelStore desde las tres dimensiones de la UD1. Cada una tiene sus preguntas.
 
 ### Ambiental
@@ -318,6 +345,15 @@ Identificad **al menos doce aspectos**, repartidos entre las tres dimensiones.
 ---
 
 ## Sesión 4 · Materialidad · no se puede arreglar todo
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> El principio de doble materialidad: evaluar el impacto hacia el entorno vs el riesgo y oportunidad financiera para la empresa.</li>
+    <li><strong>2. Haz:</strong> Construye la matriz de materialidad y prioriza los 5 asuntos críticos descartando aspectos no materiales.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre materialidad.</li>
+  </ol>
+</div>
 
 Tenéis doce o más impactos. Ahora viene la decisión más difícil del proyecto:
 
@@ -400,6 +436,15 @@ Y una regla que no admite excepciones: **no vale decir que todos son prioritario
 
 ## Sesión 5 · De los problemas a los objetivos
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo traducir problemas de sostenibilidad en objetivos estratégicos SMART (específicos, medibles, alcanzables, relevantes y temporales).</li>
+    <li><strong>2. Haz:</strong> Redacta los objetivos estratégicos para cada asunto material seleccionado con metas cuantitativas.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 5.</li>
+  </ol>
+</div>
+
 Tenéis cinco prioridades. Ahora hay que decidir qué queréis conseguir con cada una.
 
 <div class="compare-pair">
@@ -477,6 +522,15 @@ Cuando escribáis cada objetivo, preguntaos qué comportamiento absurdo permitir
 ---
 
 ## Sesión 6 · Acciones e indicadores
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Definición técnica de acciones operativas y diseño de indicadores KPI con línea base, meta, periodicidad y fuente de datos.</li>
+    <li><strong>2. Haz:</strong> Elabora el catálogo de acciones e indicadores para la optimización web, gestión circular de hardware, accesibilidad y cloud.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 6.</li>
+  </ol>
+</div>
 
 Ya tenéis problema y objetivo. Falta lo que se hace realmente.
 
@@ -575,6 +629,15 @@ Un aviso práctico sobre dónde mirar. **GRI** publica sus estándares gratuitam
 
 ## Sesión 7 · Priorización y roadmap
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Priorización estratégica basada en la matriz impacto vs dificultad y planificación de hitos en un roadmap a 3 años.</li>
+    <li><strong>2. Haz:</strong> Clasifica las iniciativas en corto, medio y largo plazo con estimación de recursos y responsables.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 7.</li>
+  </ol>
+</div>
+
 Tenéis muchas acciones y una empresa no puede hacerlas todas mañana. Hay que ordenar, y se ordena cruzando dos cosas: **impacto esperado** y **esfuerzo**.
 
 <div class="compare-pair">
@@ -629,6 +692,15 @@ No tiene por qué. Un problema puede ser importantísimo y necesitar meses de pr
 ---
 
 ## Sesión 8 · Informe y presentación
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Comunicación ejecutiva de sostenibilidad: síntesis del plan en informe ejecutivo de 6 diapositivas y presentación oral ante tribunal.</li>
+    <li><strong>2. Haz:</strong> Expón la propuesta ante el tribunal (5 minutos), defiende las decisiones y participa en la coevaluación.</li>
+    <li><strong>3. Entrega:</strong> Entrega el Plan de Sostenibilidad Digital definitivo y la presentación de diapositivas.</li>
+  </ol>
+</div>
 
 Reunimos todo. No queremos un documento de cuarenta páginas: queremos algo que la dirección entienda.
 

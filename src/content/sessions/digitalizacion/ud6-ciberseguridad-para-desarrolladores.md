@@ -5,7 +5,7 @@ section: "ud-06"
 order: 6
 lang: "es"
 summary: "¿Publicarías esta aplicación? Aprende a detectar, explicar y corregir vulnerabilidades comunes con criterio propio y con la IA como apoyo de revisión."
-duration: "4 horas · 4 sesiones"
+duration: "5 horas · 5 sesiones"
 modality: "Individual o parejas"
 deliverable: "Auditoría de seguridad y corrección de una pequeña aplicación web."
 outcomes:
@@ -27,6 +27,15 @@ date: "2026-08-29"
 <p><strong>Herramientas:</strong> Visual Studio Code, GitHub Copilot y Git.</p>
 
 ## Sesión 1 · ¿Publicarías esta aplicación?
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Qué significa pensar en seguridad en el ciclo de vida del software (Security by Design) y por qué los tests habituales no bastan.</li>
+    <li><strong>2. Haz:</strong> Inspecciona una aplicación aparentemente funcional y hazte la pregunta clave: <em>¿Qué podría salir mal aquí?</em></li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
+  </ol>
+</div>
 
 ### El reto
 
@@ -185,6 +194,15 @@ No necesitamos realizar un análisis de amenazas complejo. Con estas tres pregun
 ---
 
 ## Sesión 2 · Cinco errores que debes reconocer
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Las 5 familias críticas de vulnerabilidades web: control de acceso (autenticación vs autorización), inyección SQL, almacenamiento de contraseñas, secretos en repositorio y dependencias vulnerables.</li>
+    <li><strong>2. Haz:</strong> Analiza ejemplos de código inseguro, localiza el fallo y redacta la justificación técnica de por qué es vulnerable.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 2.</li>
+  </ol>
+</div>
 
 Toda la teoría de esta unidad cabe en cinco familias de errores. No hay que memorizarlas: hay que ser capaz de reconocerlas cuando aparezcan en un proyecto real.
 
@@ -579,6 +597,15 @@ Si salís de esta unidad detectando estas cosas, ya habremos conseguido bastante
 
 ## Sesión 3 · Primero tu criterio, después la IA
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo dirigir a un asistente de IA para auditar código sin delegar la decisión y cómo filtrar falsos positivos.</li>
+    <li><strong>2. Haz:</strong> Realiza una primera revisión visual manual y posteriormente ejecuta prompts específicos de auditoría con Copilot en el proyecto entregado.</li>
+    <li><strong>3. Comprueba:</strong> Elabora la tabla de hallazgos verificando archivo, línea, evidencia y severidad de cada problema.</li>
+  </ol>
+</div>
+
 ### La IA como ayudante de revisión
 
 Podemos pedir a Copilot que revise el proyecto buscando vulnerabilidades, y nos ayudará muchísimo: detecta SQL Injection, secretos, malas validaciones, problemas de autenticación, dependencias y código inseguro.
@@ -782,6 +809,15 @@ Esta comparación es parte de la actividad, y de la nota.
 ---
 
 ## Sesión 4 · Corregir, verificar y entregar
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> El ciclo profesional de remediación: investigar el fallo, pedir una propuesta guiada a la IA, revisar el diff y verificar que la funcionalidad no se rompe.</li>
+    <li><strong>2. Haz:</strong> Corrige al menos 4 vulnerabilidades en el código, añade tests de validación y redacta el informe de auditoría.</li>
+    <li><strong>3. Comprueba:</strong> Completa la checklist de entrega y responde con argumentos a la pregunta <em>¿Publicarías esta aplicación?</em></li>
+  </ol>
+</div>
 
 ### Fase 4 · Investigar cada problema
 
@@ -1022,6 +1058,30 @@ No obtiene mejor nota quien encuentra treinta supuestas vulnerabilidades generad
     <li>Respuesta razonada a «¿la publicarías?».</li>
   </ul>
 </div>
+
+---
+
+## Sesión 5 · Auditoría cruzada en el aula y consolidación
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo realizar una revisión por pares (peer review) de seguridad y evaluar la solidez de las correcciones de otros compañeros.</li>
+    <li><strong>2. Haz:</strong> Intercambia el repositorio remediado con otra pareja e intenta encontrar vulnerabilidades residuales o fallos introducidos en la corrección.</li>
+    <li><strong>3. Entrega:</strong> Entrega el informe final definitivo con las observaciones recibidas en la auditoría cruzada.</li>
+  </ol>
+</div>
+
+### Dinámica de aula · Bug bounty defensivo
+
+En esta sesión ponemos a prueba la robustez de las aplicaciones:
+
+1. **Intercambio de proyectos:** cada pareja clona el repositorio corregido de otro grupo.
+2. **Búsqueda de fallos residuales:** durante 25 minutos, inspeccionáis el código del compañero buscando:
+   - ¿Se corrigió el problema de raíz o solo se ocultó el síntoma?
+   - ¿La corrección rompió alguna funcionalidad existente?
+   - ¿Quedaron secretos residuales en el historial de Git?
+3. **Puesta en común y retrospectiva:** cada equipo expone un acierto de remediación y un falso positivo que rechazó justificadamente.
 
 ---
 

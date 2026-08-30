@@ -5,7 +5,7 @@ section: "ud-07"
 order: 7
 lang: "es"
 summary: "De una empresa tradicional a una empresa digital. Analiza sus procesos, diseña una solución viable y justifica cómo cloud, datos, automatización, IA y seguridad pueden aportar valor."
-duration: "3 horas · 3 sesiones"
+duration: "6 horas · 6 sesiones"
 modality: "Grupos de 2–3 personas"
 deliverable: "Propuesta de transformación digital en 5 diapositivas y exposición breve."
 outcomes:
@@ -27,6 +27,15 @@ date: "2026-08-29"
 ---
 
 ## Sesión 1 · Entender la empresa antes de proponer nada
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo realizar un diagnóstico integral del estado actual (AS-IS) de una empresa tradicional.</li>
+    <li><strong>2. Haz:</strong> Analiza los procesos, cuellos de botella e ineficiencias de ClimaNorte S.L. y dibuja su flujo actual.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
+  </ol>
+</div>
 
 ### El reto
 
@@ -247,6 +256,15 @@ No hace falta representar todos los detalles. Queremos entender una sola cosa:
 
 ## Sesión 2 · Diseñar la solución
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo rediseñar procesos de negocio (TO-BE) y estructurar una arquitectura conceptual conectada.</li>
+    <li><strong>2. Haz:</strong> Dibuja el nuevo flujo de trabajo y la arquitectura conceptual (Web, Backend, Datos, Automatización, IA).</li>
+    <li><strong>3. Comprueba:</strong> Verifica que no incluyes componentes superfluos y que cada elemento tiene una función definida.</li>
+  </ol>
+</div>
+
 ### Fase 3 · Diseñar el nuevo proceso
 
 Ahora diseñad:
@@ -386,6 +404,19 @@ Cread vuestra arquitectura conceptual. No necesitamos conocer productos concreto
 </figure>
 
 Añadid únicamente los elementos que necesitéis. Una arquitectura con tres cajas bien justificadas vale más que una con doce.
+
+---
+
+## Sesión 3 · Plan de integración, datos y seguridad
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo justificar cada tecnología con la cadena necesidad → solución → tecnología → beneficio y evaluar sus riesgos de ciberseguridad.</li>
+    <li><strong>2. Haz:</strong> Completa la matriz de tecnologías elegidas y descartadas, define el control de accesos (mínimo privilegio) y los flujos de datos.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
+  </ol>
+</div>
 
 ### Para cada tecnología debe existir una razón
 
@@ -532,7 +563,16 @@ Este punto es especialmente importante. Elegid **una tarea que mantendríais pri
 
 ---
 
-## Sesión 3 · Priorizar, medir y defender
+## Sesión 4 · Priorizar, roadmap y propuesta económica
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo priorizar acciones bajo restricciones reales de presupuesto (20.000 € y 6 meses) y cómo definir KPIs medibles.</li>
+    <li><strong>2. Haz:</strong> Construye la matriz de impacto/dificultad, planifica el roadmap en 4 fases y selecciona las métricas de éxito.</li>
+    <li><strong>3. Comprueba:</strong> Valida que el plan es financieramente viable y que los KPIs miden resultados de negocio, no vanidad técnica.</li>
+  </ol>
+</div>
 
 ### Priorizar con un presupuesto real
 
@@ -588,35 +628,29 @@ Elegid **tres indicadores**, y comprobad que se pueden medir:
   </div>
 </div>
 
-Eso es una medida objetiva de mejora, y es mucho más útil que «la transformación ha sido un éxito».
+Definid tres indicadores concretos. Por ejemplo:
 
-<details class="aside aside--help">
-  <summary>Estoy atascado · mis KPI no se pueden medir</summary>
-  <ol>
-    <li>Un KPI tiene que ser un número, no un adjetivo. «Mejor comunicación» no es un KPI; «llamadas semanales preguntando por el estado» sí.</li>
-    <li>Comprobad que el dato existe hoy, o que vuestro sistema lo generará. Si nadie lo apunta, no se puede medir.</li>
-    <li>Comprobad que tenéis el valor de partida. Sin el «antes» no hay mejora que demostrar.</li>
-    <li>Si un KPI mejora siempre haga lo que haga la empresa, no mide vuestra transformación.</li>
-  </ol>
-</details>
+| KPI | Cómo se mide | Objetivo |
+| --- | ------------ | -------- |
+|     |              |          |
+|     |              |          |
+|     |              |          |
 
 ---
 
-### Producto final
+### Formato de entrega
 
-No entregaréis una memoria larga. Prepararéis:
+Una presentación de **exactamente cinco diapositivas**:
 
-<p class="term">5 diapositivas</p>
+#### Diapositiva 1 · Portada y contexto
 
-#### Diapositiva 1 · La empresa hoy
+Nombre del grupo, empresa elegida, sector y los dos problemas más graves que habéis detectado.
 
-El AS-IS y los tres principales problemas.
+#### Diapositiva 2 · El proceso
 
-#### Diapositiva 2 · La empresa transformada
+El diagrama del proceso rediseñado (TO-BE), con las intervenciones digitales marcadas.
 
-El TO-BE y vuestra arquitectura conceptual. Debe poder entenderse visualmente.
-
-#### Diapositiva 3 · Decisiones tecnológicas
+#### Diapositiva 3 · Arquitectura técnica
 
 Cómo utilizaríais integración y automatización, cloud, datos, IA y seguridad. No es obligatorio utilizar todas si alguna no aporta valor.
 
@@ -627,6 +661,19 @@ Tres acciones prioritarias, orden de implantación, dificultad e impacto esperad
 #### Diapositiva 5 · Cómo mediremos el resultado
 
 Tres KPI, un riesgo importante, una tecnología que habéis decidido NO utilizar y por qué.
+
+---
+
+## Sesión 5 · Presentación y defensa de los proyectos
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo comunicar propuestas tecnológicas de alto impacto ante comités de dirección y responder a objeciones técnicas.</li>
+    <li><strong>2. Haz:</strong> Expón la presentación de 5 diapositivas (5 minutos por grupo) y defiende las decisiones y tecnologías descartadas.</li>
+    <li><strong>3. Comprueba:</strong> Participa en la coevaluación y completa la checklist de entrega del proyecto final.</li>
+  </ol>
+</div>
 
 ### Exposición
 
@@ -670,6 +717,27 @@ No obtiene mejor nota el grupo que propone IA más Big Data más Blockchain más
     <li>Tenéis preparada una respuesta a «¿por qué?» para cada decisión de la 3.</li>
   </ul>
 </div>
+
+---
+
+## Sesión 6 · Evaluación, retrospectiva y consolidación
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo conectar los aprendizajes de las 7 unidades del módulo en una visión profesional integrada de la digitalización.</li>
+    <li><strong>2. Haz:</strong> Analiza las calificaciones y el feedback del tribunal, identifica fortalezas y áreas de mejora, y revisa el mapa conceptual completo.</li>
+    <li><strong>3. Entrega:</strong> Entrega el portfolio/dossier final consolidado del módulo de Digitalización.</li>
+  </ol>
+</div>
+
+### Retrospectiva y consolidación del módulo
+
+En esta última sesión cerramos el ciclo formativo con una sesión de reflexión y puesta en común:
+
+1. **Revisión de feedback:** cada grupo analiza las valoraciones recibidas en la rúbrica y las preguntas formuladas por la clase.
+2. **Lecciones aprendidas:** ¿qué tecnología parecía imprescindible al principio del curso y resultó no serlo? ¿Dónde aporta verdadero valor la IA y dónde es un riesgo?
+3. **Síntesis del itinerario:** repasamos el mapa conceptual global que conecta proceso, integración, cloud, desarrollo asistido, analítica de datos y ciberseguridad.
 
 ---
 

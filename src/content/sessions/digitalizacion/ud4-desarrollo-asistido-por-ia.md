@@ -25,6 +25,15 @@ priorKnowledge:
 
 ## Sesión 1 · Dirige bien a la IA
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La diferencia entre autocompletado y agentes autónomos, y cómo estructurar prompts profesionales con objetivo, contexto, restricciones y criterios de aceptación.</li>
+    <li><strong>2. Haz:</strong> Configura GitHub Copilot en VS Code y crea la estructura inicial de tu portfolio mediante peticiones dirigidas.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
+  </ol>
+</div>
+
 ### ¿Qué vamos a aprender?
 
 La Inteligencia Artificial está cambiando la forma de desarrollar software.
@@ -430,6 +439,15 @@ Comparad ambos resultados y responded:
 
 ## Sesión 2 · Haz que conozca tu proyecto
 
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo dotar de reglas persistentes al agente mediante instrucciones de proyecto (`.github/copilot-instructions.md`) y skills especializadas.</li>
+    <li><strong>2. Haz:</strong> Redacta las directrices de tu repositorio y crea una skill de revisión automática de código.</li>
+    <li><strong>3. Comprueba:</strong> Valida que el agente respeta las directrices del proyecto sin tener que repetírselas en cada prompt.</li>
+  </ol>
+</div>
+
 ### El problema de repetir siempre las mismas instrucciones
 
 Imaginemos que trabajamos en una empresa y siempre tenemos que recordar al agente:
@@ -755,6 +773,15 @@ Comprobad:
 ---
 
 ## Sesión 3 · Dale herramientas
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Cómo funcionan las herramientas internas de ejecución y el protocolo MCP (Model Context Protocol) bajo el principio de mínimo privilegio.</li>
+    <li><strong>2. Haz:</strong> Configura herramientas para que el agente pueda inspeccionar ficheros, ejecutar tests y consultar documentación externa de forma controlada.</li>
+    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre seguridad e integración de herramientas.</li>
+  </ol>
+</div>
 
 ### Las herramientas: darle manos al agente
 
@@ -1106,6 +1133,15 @@ Utilizaremos agentes especializados únicamente cuando resuelvan un problema con
 ---
 
 ## Sesión 4 · Nunca delegues la verificación
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> La regla de oro del desarrollo asistido: nunca aceptar código sin revisar su diff, ejecutar tests y verificar que cumple los criterios.</li>
+    <li><strong>2. Haz:</strong> Audita los cambios generados por la IA en tu portfolio, detecta posibles alucinaciones y ejecuta la suite de verificación.</li>
+    <li><strong>3. Entrega:</strong> Publica tu portfolio en GitHub con sus instrucciones de proyecto, la skill de revisión y la memoria técnica.</li>
+  </ol>
+</div>
 
 ### El concepto más importante de toda la unidad
 
