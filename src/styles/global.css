@@ -1702,6 +1702,100 @@ select {
 
 
 /* ---------------------------------------------------------------------------
+   Syntax colours
+
+   Prism marks each token with a class rather than an inline style, which is
+   what lets the code be coloured at all here: the Content-Security-Policy
+   (`style-src 'self'`) drops style attributes, so Shiki's output would arrive
+   uncoloured.
+
+   The hues are darkened until each one clears 4.5:1 against the code block's
+   paper background, because a syntax colour that cannot be read is decoration.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --code-comment: #565e6d;
+  --code-tag: #17369b;
+  --code-attr: #0f6b5c;
+  --code-string: #a3341f;
+  --code-number: #7a3ea3;
+  --code-function: #8a4b0f;
+}
+
+.session-content .token.comment,
+.session-content .token.prolog,
+.session-content .token.cdata,
+.session-content .token.doctype {
+  color: var(--code-comment);
+  font-style: italic;
+}
+
+.session-content .token.punctuation,
+.session-content .token.operator {
+  color: var(--ink-soft);
+}
+
+/* The element name of a tag, and the words that drive a language. */
+.session-content .token.tag,
+.session-content .token.keyword,
+.session-content .token.selector,
+.session-content .token.atrule,
+.session-content .token.builtin,
+.session-content .token.important {
+  color: var(--code-tag);
+  font-weight: 650;
+}
+
+.session-content .token.attr-name,
+.session-content .token.property,
+.session-content .token.class-name {
+  color: var(--code-attr);
+}
+
+.session-content .token.string,
+.session-content .token.attr-value,
+.session-content .token.char,
+.session-content .token.regex,
+.session-content .token.url {
+  color: var(--code-string);
+}
+
+.session-content .token.number,
+.session-content .token.boolean,
+.session-content .token.constant,
+.session-content .token.symbol,
+.session-content .token.entity {
+  color: var(--code-number);
+}
+
+.session-content .token.function,
+.session-content .token.variable {
+  color: var(--code-function);
+}
+
+/* Diffs, where the pair has to read as a pair. `--coral` is the site's red but
+   only reaches 3.97:1 on this background, so the deleted side gets a darker one
+   and the rule that already tells the two apart. */
+.session-content .token.deleted {
+  color: #8f2a17;
+  text-decoration: line-through;
+}
+
+.session-content .token.inserted {
+  color: var(--code-attr);
+}
+
+/* Punctuation inside an attribute value belongs to the value, not to the tag. */
+.session-content .token.attr-value .token.punctuation {
+  color: var(--code-string);
+}
+
+.session-content .token.namespace {
+  opacity: 0.7;
+}
+
+
+/* ---------------------------------------------------------------------------
    Session content, pieces introduced by UD4
    --------------------------------------------------------------------------- */
 

@@ -3,6 +3,7 @@ import sitemap from "@astrojs/sitemap";
 import { satteri } from "@astrojs/markdown-satteri";
 
 import { sessionParts } from "./plugins/session-parts.mjs";
+import { tableAlignment } from "./plugins/table-alignment.mjs";
 
 export default defineConfig({
   site: "https://marcsemperlloret.com",
@@ -15,15 +16,19 @@ export default defineConfig({
     })
   ],
   markdown: {
-    // Shiki emits inline style attributes, which the site's Content-Security-Policy
-    // (style-src 'self') blocks. Session code blocks are ASCII process diagrams,
-    // so plain <pre><code> styled from global.css is what we want anyway.
-    syntaxHighlight: false,
+    // Prism, not Shiki: Shiki colours each token with an inline style attribute
+    // and the site's Content-Security-Policy (style-src 'self') drops it, so the
+    // code would come out unstyled. Prism emits classes instead, which are
+    // themed from global.css like everything else.
+    syntaxHighlight: "prism",
     processor: satteri({
       // Teaching units are long. `sessionParts` folds each of their `##`
       // sections into a native <details>, which is the only accordion available
       // to a site that serves no client JavaScript.
-      hastPlugins: [sessionParts()]
+      // `tableAlignment` runs last: `sessionParts` clones the nodes it folds
+      // into each <details>, and a property removed before that clone comes
+      // back as an empty attribute.
+      hastPlugins: [sessionParts(), tableAlignment()]
     })
   },
   build: {
