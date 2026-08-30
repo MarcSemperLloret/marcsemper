@@ -53,9 +53,9 @@ export const publications: Publication[] = [
     metaDescription:
       "Graph-based multivariable bias correction of ERA5 meteorological variables under strict temporal validation in the Western Mediterranean.",
     plainSummary:
-      "Global atmospheric reanalyses like ERA5 suffer from localized biases over complex terrain, impacting downstream hydrological and risk models. This study develops a multivariable graph neural network (GraphSAGE with Jumping Knowledge) that integrates AVAMET ground station observations with spatial neighborhood context to correct ERA5 biases across the Valencian Community. Evaluated under strict chronological validation, the graph approach reduces errors in pressure, humidity, temperature, and wind by up to 81% compared to classical baselines, while identifying localized extreme precipitation as an ongoing challenge.",
+      "Global atmospheric reanalyses like ERA5 exhibit persistent regional biases over complex terrain that can distort downstream hydrological, energy, and risk models. Combining local weather station networks (AVAMET) with spatial neighborhood graphs via GraphSAGE and Jumping Knowledge enables simultaneous correction across multiple meteorological variables. Rigorous chronological validation shows up to an 81% error reduction in pressure, humidity, temperature, and wind compared to classical baselines, while revealing clear operational boundaries for localized extreme precipitation.",
     plainSummaryEs:
-      "Los reanálisis atmosféricos globales como ERA5 presentan sesgos locales sistemáticos en zonas de orografía compleja, lo que afecta a modelos hidrológicos y de gestión de riesgos. Este estudio desarrolla un marco de redes neuronales en grafos (GraphSAGE con Jumping Knowledge) que combina observaciones de estaciones meteorológicas de AVAMET con la topología espacial de vecindad para corregir múltiples variables de ERA5 en la Comunitat Valenciana. Evaluado bajo una rigurosa validación cronológica sin fugas, el modelo en grafos reduce los errores en presión, humedad, temperatura y viento hasta en un 81% frente a baselines clásicos, señalando además los límites actuales en la corrección de precipitación extrema.",
+      "Los reanálisis atmosféricos globales como ERA5 presentan sesgos orográficos y costeros sistemáticos que distorsionan modelos hidrológicos y de riesgo. Integrar la red de estaciones meteorológicas de AVAMET en una topología de grafo espacial mediante GraphSAGE y Jumping Knowledge permite corregir múltiples variables de forma simultánea. Bajo una estricta partición cronológica, el enfoque en grafos reduce el error hasta en un 81% en presión, humedad, temperatura y viento frente a modelos clásicos, delimitando a su vez las fronteras operativas en precipitación extrema.",
     contribution:
       "A multivariable graph neural network post-processing framework that captures spatial-neighborhood context and inter-variable dependencies to correct ERA5 biases, evaluated under leakage-free chronological splits, uncertainty bounds, and seasonal robustness tests.",
     contributionEs:
@@ -111,9 +111,9 @@ export const publications: Publication[] = [
     metaDescription:
       "Out-of-sample statistical correctability limits of GPM IMERG sub-daily areal precipitation extremes under observational reference uncertainty.",
     plainSummary:
-      "This study investigates how well machine learning and statistical models can correct sub-daily satellite precipitation extremes (GPM IMERG V07) when the ground reference itself is subject to spatial and density uncertainties across eastern Spain. Evaluating tabular (LightGBM) and deep learning (CNN) models under strict spatial and temporal holdouts, the work reveals that continuous correction significantly improves general error metrics, but clean deterministic tail recovery remains constrained. Direct probabilistic exceedance modeling emerges as the most reliable operational output for extreme event hazard screening.",
+      "Correcting sub-daily satellite precipitation extremes (GPM IMERG V07) with machine learning becomes challenging when the ground observational reference itself carries spatial and density uncertainties. Benchmarking tabular models (LightGBM) and spatial deep learning (CNN) across strict temporal, spatial, and event-based holdouts demonstrates that continuous post-processing reliably reduces bulk error, but deterministic recovery of heavy rainfall tails hits fundamental limits. Direct probabilistic exceedance modeling provides the most dependable operational ranking for early warning and hazard screening.",
     plainSummaryEs:
-      "Este estudio investiga hasta qué punto los modelos estadísticos y de aprendizaje automático pueden corregir estimaciones satelitales subdiarias de precipitación extrema (GPM IMERG V07) cuando la propia referencia de superficie presenta incertidumbre observacional en la Comunitat Valenciana. Evaluando modelos tabulares (LightGBM) y de aprendizaje profundo (CNN) bajo validaciones estrictas por año, provincia y evento, el trabajo demuestra que la corrección continua mejora los errores globales, pero la recuperación determinista de colas extremas encuentra límites claros, convirtiendo el modelado probabilístico de superación de umbrales en la salida operativa más fiable para alerta temprana.",
+      "La corrección de extremos satelitales subdiarios de precipitación (GPM IMERG V07) mediante aprendizaje automático se complica cuando la propia referencia en superficie presenta incertidumbre observacional. La evaluación de modelos tabulares (LightGBM) y redes convolucionales (CNN) bajo particiones estrictas por año, provincia y evento demuestra que el post-procesamiento continuo reduce eficazmente el error global, pero la reconstrucción determinista de colas extremas alcanza límites estructurales. En su lugar, el modelado probabilístico de superación de umbrales se consolida como la salida operativa más sólida para alerta temprana.",
     contribution:
       "A systematic evaluation of satellite precipitation extreme correctability limits under operational reference uncertainty, benchmarking tabular, deep learning, and probabilistic exceedance models across out-of-sample validation splits.",
     contributionEs:
@@ -158,9 +158,9 @@ export const publications: Publication[] = [
     metaDescription:
       "Evaluation of GPM IMERG satellite precipitation limits under sub-daily extreme rainfall events in the Comunitat Valenciana.",
     plainSummary:
-      "This study evaluates the operational boundaries and fidelity of GPM IMERG satellite precipitation estimates during sub-daily extreme rainfall events across eastern Spain. By auditing half-hourly gauge co-availability, spatial displacement, and peak attenuation, the work establishes where satellite observations reliably capture extreme dynamics and where observational uncertainty requires auditable correction.",
+      "Operational satellite precipitation products often struggle during Mediterranean flash floods due to rapid convective dynamics and steep orography. Auditing half-hourly GPM IMERG estimates against high-density rain-gauge networks quantifies pixel-scale spatial displacement, severe peak attenuation, and gauge co-availability limits, defining empirical boundaries for satellite-driven hydrological and flood modeling.",
     plainSummaryEs:
-      "Este estudio evalúa los límites operativos y la fidelidad del producto satelital GPM IMERG en episodios de precipitación extrema subdiaria en el levante español. Mediante una auditoría de coincidencia de pluviómetros semihorarios, desplazamiento espacial y atenuación de picos, el trabajo establece en qué condiciones la observación satelital representa los extremos locales y dónde exige corrección auditable.",
+      "Las estimaciones satelitales de precipitación suelen presentar discrepancias críticas durante episodios torrenciales mediterráneos debido a la rápida convección y la orografía escarpada. Auditar el producto semihorario GPM IMERG frente a redes pluviométricas de alta densidad cuantifica desplazamientos espaciales por píxel, atenuaciones severas de picos e incertidumbres de muestreo, delimitando con precisión su validez empírica en modelización hidrológica y alertas por inundación.",
     contribution:
       "A rigorous empirical audit of sub-daily GPM IMERG satellite estimates during Mediterranean extreme precipitation, quantifying pixel displacement, peak attenuation, and gauge representation uncertainty.",
     contributionEs:
@@ -206,9 +206,9 @@ export const publications: Publication[] = [
     metaDescription:
       "A decision-support workflow for robust model selection when spatiotemporal evaluation references are uncertain.",
     plainSummary:
-      "Choosing the best forecasting model from one clean validation set can produce a fragile deployment decision. This work tests whether that decision survives realistic changes to the evaluation reference and turns the diagnosis into an auditable recommendation.",
+      "Selecting the best forecasting model from a single clean validation set often leads to brittle deployment decisions when real-world evaluation data is missing, displaced, or degraded. Re-evaluating fixed predictions across declared reference perturbations, quantifying selection instability relative to training-seed variance, and balancing performance budgets transforms fragile model selection into an auditable decision-support system.",
     plainSummaryEs:
-      "Elegir el mejor modelo predictivo con un único conjunto de validación limpio puede producir una decisión frágil. Este trabajo comprueba si la elección sobrevive a cambios realistas en la referencia de evaluación y convierte el diagnóstico en una recomendación auditable.",
+      "Seleccionar el mejor modelo predictivo a partir de un único conjunto de validación limpio suele generar decisiones de despliegue frágiles ante referencias de evaluación incompletas, degradadas o desplazadas en entornos reales. Reevaluar predicciones fijas bajo perturbaciones plausibles, comparar la inestabilidad de elección con la varianza del entrenamiento y ajustar presupuestos de pérdida controlada convierte la selección de modelos en un sistema auditable de apoyo a la decisión.",
     contribution:
       "A post-training workflow that reevaluates fixed predictions, measures selection instability relative to ordinary training variability, and compares robust decision rules under a declared performance budget.",
     contributionEs:
@@ -256,9 +256,9 @@ export const publications: Publication[] = [
     metaDescription:
       "Multi-dataset graph training improves transferable node embeddings for spatiotemporal traffic forecasting.",
     plainSummary:
-      "This study asks whether a graph forecasting model can learn better node representations by training across several related datasets instead of learning every representation from scratch.",
+      "Graph forecasting architectures typically train individual node embeddings in isolation for every separate dataset. Extracting subgraphs across multiple related spatiotemporal networks and transferring the learned representations enables cross-domain knowledge reuse, improving prediction accuracy on target tasks while providing explainable insights into the shared node space.",
     plainSummaryEs:
-      "Este estudio analiza si un modelo de predicción en grafos puede aprender mejores representaciones de nodos entrenando con varios conjuntos relacionados en lugar de comenzar desde cero en cada uno.",
+      "Las arquitecturas de predicción en grafos suelen entrenar representaciones de nodos desde cero y de forma aislada para cada conjunto de datos. Extraer subgrafos de múltiples redes espacio-temporales y transferir los embeddings aprendidos permite reutilizar conocimiento estructural entre dominios, mejorando la precisión predictiva en tareas de destino y aportando explicabilidad sobre el espacio latente compartido.",
     contribution:
       "A subgraph-based multi-dataset training procedure, followed by embedding transfer and fine-tuning, together with an explainability analysis of the representations.",
     contributionEs:
@@ -294,9 +294,9 @@ export const publications: Publication[] = [
     metaDescription:
       "MultiscaleTCNGraphSAGE combines CAMS, ERA5 and graph learning to forecast global aerosol optical depth.",
     plainSummary:
-      "The work models how atmospheric aerosols evolve across the planet by combining a global graph of observations with temporal patterns at several scales.",
+      "Forecasting global atmospheric aerosols requires capturing both worldwide spatial transport mechanisms and multi-scale temporal dynamics. Combining CAMS aerosol records with ERA5 meteorological forcing in a hybrid architecture (MultiscaleTCNGraphSAGE) outperforms state-of-the-art transformer and graph baselines, yielding superior representation of extreme aerosol episodes.",
     plainSummaryEs:
-      "El trabajo modela la evolución de los aerosoles atmosféricos combinando un grafo global de observaciones con patrones temporales a varias escalas.",
+      "Predecir la distribución global de aerosoles atmosféricos exige capturar tanto el transporte espacial a escala planetaria como dinámicas temporales en múltiples frecuencias. La combinación de observaciones de CAMS con variables meteorológicas de ERA5 en una arquitectura híbrida (MultiscaleTCNGraphSAGE) supera a transformadores y modelos de grafos de referencia, mejorando notablemente la estimación de episodios de polvo y contaminación extrema.",
     contribution:
       "MultiscaleTCNGraphSAGE combines multi-scale temporal convolutions, GraphSAGE spatial learning, CAMS aerosol observations and ERA5 meteorology.",
     contributionEs:
@@ -328,9 +328,9 @@ export const publications: Publication[] = [
     metaDescription:
       "A spectral spatiotemporal graph network forecasts multiple pollutants across Spain's air-quality monitoring network.",
     plainSummary:
-      "Air quality at one monitoring station is connected to conditions elsewhere. This work learns both nearby and long-range relationships across the Spanish monitoring network.",
+      "Air pollutant concentrations at any given station depend simultaneously on local emissions, nearby sensor readings, and long-range atmospheric transport across distant urban centers. Coupling hierarchical message passing with spectral graph representations from adjacency singular value decomposition enables accurate multi-pollutant forecasting across extensive national monitoring networks.",
     plainSummaryEs:
-      "La calidad del aire de una estación está conectada con las condiciones de otros lugares. Este trabajo aprende relaciones cercanas y de largo alcance en la red española de monitorización.",
+      "La concentración de contaminantes atmosféricos en una estación depende tanto de emisiones locales y lecturas de sensores vecinos como del transporte aéreo de largo alcance entre ciudades. Combinar el paso de mensajes jerárquico con información espectral de la matriz de adyacencia (mediante descomposición en valores singulares) permite modelar simultáneamente dinámicas locales y estructurales en la red nacional de monitorización.",
     contribution:
       "A graph architecture that combines hierarchical message passing, spectral information from the adjacency matrix and adaptive fusion of pollutant and meteorological variables.",
     contributionEs:
@@ -368,9 +368,9 @@ export const publications: Publication[] = [
     metaDescription:
       "CNN1D+LSTM+TransformerConv models spatial and temporal urban-noise patterns across Madrid.",
     plainSummary:
-      "Urban noise has both a temporal rhythm and a spatial structure. The study compares deep-learning approaches that represent those two dimensions explicitly across Madrid.",
+      "Urban acoustic pollution exhibits strong cyclic temporal patterns driven by human activity alongside spatial correlations governed by street topology and urban morphology. Integrating 1D temporal convolutions, recurrent LSTM memory, and graph transformer layers (CNN1D+LSTM+TransformerConv) delivers highly accurate predictive mapping across Madrid's urban sensor grid.",
     plainSummaryEs:
-      "El ruido urbano tiene un ritmo temporal y una estructura espacial. El estudio compara métodos de aprendizaje profundo que representan explícitamente ambas dimensiones en Madrid.",
+      "La contaminación acústica en grandes urbes combina ritmos temporales marcados por la actividad humana con dependencias espaciales fijadas por la morfología y el trazado de la ciudad. Una arquitectura híbrida que une convoluciones temporales 1D, memoria recurrente LSTM y capas de transformadores de grafos (CNN1D+LSTM+TransformerConv) alcanza una alta precisión predictiva sobre la red de sensores de Madrid.",
     contribution:
       "A hybrid CNN1D, LSTM and graph-transformer model evaluated against temporal, convolutional and graph-based alternatives.",
     contributionEs:
@@ -406,9 +406,9 @@ export const publications: Publication[] = [
     metaDescription:
       "Graph neural networks forecast global carbon dioxide and methane from satellite and environmental data.",
     plainSummary:
-      "This research tests deep-learning strategies for forecasting global carbon dioxide and methane concentrations six months ahead from satellite and environmental data.",
+      "Projecting global carbon dioxide and methane concentrations up to six months ahead demands architectures capable of synthesizing satellite observations with dynamic and static environmental covariates. Formulating the planetary observation system as an explicit spatiotemporal graph neural network provides superior predictive accuracy over purely temporal methods, underscoring the importance of global spatial connectivity in greenhouse gas dynamics.",
     plainSummaryEs:
-      "Esta investigación evalúa estrategias de aprendizaje profundo para predecir concentraciones globales de dióxido de carbono y metano a seis meses usando datos satelitales y ambientales.",
+      "Proyectar las concentraciones globales de dióxido de carbono y metano a seis meses vista requiere integrar observaciones por satélite con covariables ambientales dinámicas y estáticas. Modelar el sistema de monitorización planetario mediante redes neuronales de grafos espacio-temporales supera a los enfoques exclusivamente temporales, demostrando el valor de representar explícitamente la conectividad espacial global en los gases de efecto invernadero.",
     contribution:
       "A global spatiotemporal forecasting comparison that integrates satellite observations with dynamic and static environmental variables.",
     contributionEs:
