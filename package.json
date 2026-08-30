@@ -8,9 +8,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "node scripts/check-sessions.mjs && astro check && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "check:sessions": "node scripts/check-sessions.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.3.5",
