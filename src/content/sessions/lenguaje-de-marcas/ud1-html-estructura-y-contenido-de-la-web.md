@@ -4,7 +4,7 @@ label: "UD1 · Guía y taller práctico"
 section: "ud-01"
 order: 1
 lang: "es"
-summary: "HTML no es un catálogo de etiquetas que memorizar, sino un conjunto de decisiones sobre qué significa cada trozo de información. Durante 18 sesiones construyes un sitio multipágina real sin una sola línea de CSS, reparando código roto, refactorizando maquetación heredada y auditando webs en producción."
+summary: "HTML no describe cómo se ve una página, sino qué representa cada parte de su contenido. Durante 18 sesiones recorremos el lenguaje completo —texto, listas, enlaces, imágenes, semántica, tablas y formularios— construyendo un sitio multipágina real sin una sola línea de CSS."
 duration: "18 sesiones · 6 semanas"
 modality: "Individual, con retos y revisión en pareja"
 deliverable: "Sitio web multipágina de cuatro páginas enlazadas, escrito solo con HTML semántico, validado en el W3C y revisado por otro alumno."
@@ -12,11 +12,13 @@ outcomes:
   - "Montar un proyecto web en VS Code y detectar errores antes de abrir el navegador."
   - "Escribir documentos HTML5 válidos con los metadatos que de verdad cambian algo: charset, viewport, lang y title."
   - "Ordenar el contenido con una jerarquía de encabezados que funcione como índice del documento."
+  - "Marcar texto por su significado y no por su apariencia, y escribir caracteres especiales con entidades."
+  - "Representar información con el tipo de lista que le corresponde, incluidas las anidadas."
   - "Enlazar archivos con rutas relativas que sigan funcionando al mover el proyecto de sitio."
   - "Elegir el texto alternativo correcto para una imagen, incluido decidir cuándo debe ir vacío."
   - "Sustituir maquetación a base de div por elementos semánticos y justificar cada sustitución."
   - "Construir tablas accesibles y reconocer cuándo unos datos no son una tabla."
-  - "Escribir formularios que se puedan usar con el teclado y con un lector de pantalla."
+  - "Escribir formularios completos que se puedan usar con el teclado y con un lector de pantalla."
   - "Auditar un documento ajeno, localizar sus fallos y proponer la corrección concreta."
 requirements:
   - "Visual Studio Code con la extensión HTMLHint instalada."
@@ -28,11 +30,21 @@ priorKnowledge:
 date: "2026-08-30"
 ---
 
-## ¿Cómo está diseñada esta unidad?
+## ¿Qué vas a aprender?
 
-Aprender HTML no consiste en memorizar cien etiquetas. Consiste en **decidir qué significa cada trozo de información** y marcarlo en consecuencia. La lista de etiquetas está publicada y se consulta; el criterio no.
+Cuando usamos una web vemos textos, imágenes, menús, formularios, botones o tablas. Pero el navegador necesita saber algo más importante que cómo se ven:
 
-Por eso esta unidad no avanza explicando etiquetas una detrás de otra. Avanza planteando decisiones: ¿esto es una lista o un párrafo?, ¿esta imagen aporta información o decora?, ¿esto es una tabla o lo parece?
+> **¿Qué representa cada elemento?**
+
+Un título no es un texto grande. Un menú no es un puñado de palabras seguidas. Una imagen no es un archivo colocado en pantalla.
+
+HTML es el lenguaje con el que **describimos la estructura y el significado del contenido**. En esta unidad aprenderás a escribir documentos modernos, organizados, semánticos y accesibles.
+
+Todavía no vamos a preocuparnos de que sean bonitos. Eso llega con CSS, en la unidad siguiente. Primero hay que construir bien la estructura.
+
+Y aprender HTML no consiste en memorizar cien etiquetas: la lista está publicada y se consulta. Consiste en **decidir qué significa cada trozo de información**. Por eso la unidad no avanza recitando etiquetas, sino planteando decisiones: ¿esto es una lista o un párrafo?, ¿esta imagen informa o decora?, ¿esto es una tabla o solo lo parece?
+
+### Cómo es cada sesión
 
 Cada sesión dura **una hora** y tiene siempre la misma forma:
 
@@ -45,20 +57,49 @@ Cada sesión dura **una hora** y tiene siempre la misma forma:
   </ol>
 </figure>
 
-Tres sesiones por semana, seis semanas, dieciocho horas. Al final tendrás un sitio web de cuatro páginas construido por ti.
+Tres sesiones por semana, seis semanas, dieciocho horas. Cada bloque de teoría termina con un **«Ahora tú»**, y cada dos o tres sesiones hay una tarea mayor que hace avanzar el mismo proyecto.
 
-### El cliente de la unidad
+---
 
-Todo lo que construyas será para la misma empresa ficticia, para que las decisiones tengan un contexto y no sean ejercicios sueltos:
+## El proyecto de la unidad
+
+Durante las próximas semanas construirás progresivamente un pequeño sitio web. **El tema lo eliges tú**: una empresa ficticia, una tienda, una asociación, un evento, un videojuego, un proyecto tecnológico, tu portfolio, o cualquier otra propuesta que acuerdes con el profesor.
+
+Al terminar tendrás algo parecido a esto:
+
+```text
+mi-web/
+│
+├── index.html
+├── productos.html
+├── acerca.html
+├── contacto.html
+│
+└── img/
+    ├── portada.webp
+    ├── producto-1.webp
+    └── producto-2.webp
+```
+
+No vas a recibir el proyecto terminado para completar huecos. Lo construirás a medida que aprendas HTML.
 
 <p class="single-node">PixelStore</p>
 
-Tienda de componentes, periféricos y herramientas para desarrolladores. Cuarenta y cinco trabajadores. Vende hardware por internet y necesita una web que se pueda leer, indexar y usar con un lector de pantalla.
+Los ejemplos de estos apuntes usan siempre la misma empresa ficticia —una tienda de componentes y periféricos para desarrolladores— para que se entiendan en contexto. Tú aplica cada idea a **tu** tema.
+
+### Dos condiciones para toda la unidad
 
 <div class="rule">
-  <p class="rule-label">La condición que define toda la unidad · cero CSS</p>
+  <p class="rule-label">Condición 1 · cero CSS</p>
   <p>Durante estas seis semanas está prohibido escribir estilos: ni ficheros <code>.css</code>, ni etiquetas <code>&lt;style&gt;</code>, ni atributos <code>style="..."</code>.</p>
-  <p>No es un capricho. Si puedes maquillar el resultado, la tentación es resolver los problemas de estructura con apariencia. Sin CSS, la única forma de que un documento se entienda es que <strong>esté bien estructurado</strong>. La página te va a parecer fea, y esa es exactamente la idea: lo que estás evaluando no es cómo se ve, sino qué significa.</p>
+  <p>No es un capricho. Si puedes maquillar el resultado, la tentación es resolver los problemas de estructura con apariencia. Sin CSS, la única forma de que un documento se entienda es que <strong>esté bien estructurado</strong>. Tu web va a parecerte fea, y esa es exactamente la idea: lo que se evalúa no es cómo se ve, sino qué significa.</p>
+</div>
+
+<div class="rule">
+  <p class="rule-label">Condición 2 · la IA se usa para entender, no para entregar</p>
+  <p>Puedes usar IA para preguntar qué significa un error, comparar dos alternativas, revisar accesibilidad, explicarte una etiqueta, generar textos ficticios de relleno o ayudarte a localizar un problema.</p>
+  <p>No para pedir «hazme la web de la práctica». La razón es sencilla: si una IA escribe <code>&lt;article&gt;</code> y tú no sabes decir por qué no es un <code>&lt;section&gt;</code>, no has aprendido HTML, y en la defensa se nota en treinta segundos.</p>
+  <p>Durante las actividades se te pedirán modificaciones pequeñas sobre tu propio código —añade un producto, convierte esto en tabla, corrige esta jerarquía, explica por qué esta imagen lleva <code>alt=""</code>—. No hace falta que lo memorices todo. Sí que sepas <strong>qué estás haciendo y dónde buscar lo que no recuerdas</strong>.</p>
 </div>
 
 ---
@@ -67,13 +108,24 @@ Tienda de componentes, periféricos y herramientas para desarrolladores. Cuarent
 
 | Semana | Bloque temático | Práctica central y entregable semanal | Horas |
 | :---: | :--- | :--- | :---: |
-| **Semana 1** | El editor y el documento HTML | Entorno, reparación de HTML roto e `index.html` inicial | 3 h |
-| **Semana 2** | Texto, listas, rutas y navegación | Laberinto de rutas relativas y sitio multipágina enlazado | 3 h |
-| **Semana 3** | Imágenes y semántica estructural | Criterio de `alt`, refactorización de *div soup* y auditoría | 3 h |
-| **Semana 4** | Tablas para datos tabulares | Tabla comparativa accesible y matriz de idoneidad | 3 h |
-| **Semana 5** | Formularios accesibles | Formulario comercial con validación nativa y auditoría | 3 h |
-| **Semana 6** | Depuración, auditoría y coevaluación | HTML forense, validación W3C y revisión por pares | 3 h |
+| **Semana 1** | El editor y el documento HTML | Entorno, reparación de HTML roto y primera página propia | 3 h |
+| **Semana 2** | Texto, listas, enlaces y navegación | Interpretación de información, sitio multipágina y laberinto de rutas | 3 h |
+| **Semana 3** | Imágenes y semántica estructural | Criterio de `alt`, refactorización de *div soup* y auditoría con DevTools | 3 h |
+| **Semana 4** | Tablas para datos tabulares | Tabla comparativa accesible, tabla compleja y matriz de idoneidad | 3 h |
+| **Semana 5** | Formularios accesibles | Formulario comercial progresivo y auditoría de uno defectuoso | 3 h |
+| **Semana 6** | Depuración, validación y coevaluación | HTML forense, cierre del proyecto y revisión por pares | 3 h |
 | **Total** | | **Sitio multipágina validado y revisado** | **18 h** |
+
+El reparto real del tiempo es aproximadamente este, y conviene que lo sepas desde el principio:
+
+| En qué se va la unidad | Horas |
+| ---------------------- | ----: |
+| Explicación y demostraciones | 5–6 h |
+| Ejercicios guiados | 7–8 h |
+| Proyecto incremental | 3–4 h |
+| Depuración, validación y revisión por pares | 1–2 h |
+
+No son dieciocho horas explicando etiquetas.
 
 ---
 
@@ -81,63 +133,81 @@ Tienda de componentes, periféricos y herramientas para desarrolladores. Cuarent
 
 ---
 
-## Sesión 1 · El editor, el proyecto y el primer documento
+## Sesión 1 · Conociendo Visual Studio Code
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Por qué se trabaja con carpetas de proyecto y no con archivos sueltos, y por qué el navegador no es un buen corrector de HTML.</li>
-    <li><strong>2. Haz:</strong> Monta el entorno con HTMLHint y reconstruye un documento a partir de su resultado visible.</li>
-    <li><strong>3. Comprueba:</strong> El documento se ve correctamente y el panel de problemas está a cero.</li>
+    <li><strong>1. Aprende:</strong> Qué hace un editor de código, por qué se trabaja con carpetas de proyecto y qué es un linter.</li>
+    <li><strong>2. Haz:</strong> Monta el entorno y reconstruye un documento a partir de su resultado visible.</li>
+    <li><strong>3. Comprueba:</strong> El documento se ve como se pedía y el panel de problemas está limpio.</li>
   </ol>
 </div>
 
-### ¿Qué vamos a aprender?
+### Un editor no es un Bloc de notas con colores
 
-Antes de escribir una sola etiqueta hay que resolver algo que casi nadie explica: **por qué un navegador no sirve para saber si tu HTML está bien**.
+Durante el módulo usaremos **Visual Studio Code**. Nos ayuda a organizar proyectos, detectar errores, navegar entre archivos, completar y formatear código, buscar información y ejecutar herramientas.
 
-Prueba mental. Este documento está roto de cuatro formas distintas:
+Si nunca lo has usado, no pasa nada: aprender a manejar herramientas nuevas también es parte del trabajo.
 
-```html
-<html>
-<head>
-<title>PixelStore
-</head>
-<body>
-<h1>Bienvenido
-<p>Componentes para desarrolladores
-</body>
-```
+VS Code ya trae de serie todo lo que necesitamos para HTML: resaltado de sintaxis, sugerencias, cierre automático de etiquetas, documentación al pasar el ratón, formateo, Emmet y previsualización. **No hace falta instalar diez extensiones para empezar.**
 
-Falta el `doctype`, falta el idioma, falta la codificación, y hay tres etiquetas sin cerrar. Ábrelo en cualquier navegador y verás un título grande y un párrafo debajo. **Se ve perfectamente.**
+#### Por qué una carpeta de proyecto y no archivos sueltos
 
-Eso ocurre porque un navegador está diseñado para no fallar nunca delante de un usuario. Ante un documento roto no muestra un error: adivina lo que querías decir y lo repara en silencio.
-
-> **Que una página se vea bien no demuestra que su HTML esté bien. Solo demuestra que el navegador ha sabido disimularlo.**
-
-Y lo que el navegador disimula, otros programas no lo perdonan: un buscador que indexa el contenido, un lector de pantalla que lo lee en voz alta, o el propio CSS cuando en la siguiente unidad intentes seleccionar un elemento que en realidad quedó anidado donde no debía.
-
-Por eso necesitamos una herramienta que sí nos avise:
-
-<p class="term">Linter</p>
-
-Un programa que analiza el código mientras lo escribes y señala errores, etiquetas sin cerrar y malas prácticas, sin ejecutarlo. En esta unidad usaremos **HTMLHint** dentro de VS Code.
-
-#### Y por qué una carpeta de proyecto
-
-Un sitio web no es un archivo: es un conjunto de archivos que se referencian entre sí. Si abres archivos sueltos, el editor no sabe dónde está la raíz del sitio, no puede resolver las rutas que escribes ni autocompletarlas, y el linter solo analiza lo que tengas abierto en ese momento.
+Un sitio web no es un archivo: es un conjunto de archivos que se referencian entre sí. Si abres archivos sueltos, el editor no sabe dónde está la raíz del sitio.
 
 | Si abres... | El editor puede... |
 | ----------- | ------------------ |
 | Un archivo suelto | Colorear la sintaxis de ese archivo |
 | La carpeta del proyecto | Resolver rutas, autocompletar enlaces, buscar en todo el sitio y analizarlo entero |
 
-### Monta el entorno
+### La única extensión obligatoria · HTMLHint
 
-1. Crea en tu equipo una carpeta llamada `pixelstore`.
-2. Abre VS Code y usa `Archivo → Abrir carpeta` para abrir **la carpeta**, no un archivo.
-3. Abre el panel de extensiones con `Ctrl + Shift + X`, busca **HTMLHint** e instálala.
-4. Localiza dos atajos que vas a usar durante seis semanas: `Ctrl + Shift + P` abre la paleta de comandos y `Ctrl + Shift + M` abre el panel de problemas.
+<p class="term">Linter</p>
+
+Un programa que analiza el código **mientras lo escribes** y avisa de errores y malas prácticas, sin llegar a ejecutarlo.
+
+Instala **HTMLHint** desde el panel de extensiones. Analizará tu HTML y avisará de cosas como estas:
+
+```html
+<h1>Mi web
+```
+
+```html
+<img src="">
+```
+
+Los avisos aparecen en el panel de problemas:
+
+```text
+View → Problems
+```
+
+<div class="rule">
+  <p class="rule-label">Qué significa «arreglar un aviso»</p>
+  <p>El objetivo no es que la herramienta deje de quejarse pulsando cosas al azar hasta que el panel se ponga verde. El objetivo es <strong>entender por qué existe el problema y corregirlo</strong>. Un aviso que no entiendes es un aviso que volverá.</p>
+</div>
+
+#### Prettier · opcional, y todavía no
+
+También existe **Prettier**, que aplica automáticamente un formato consistente. Puedes instalarlo, pero durante las primeras sesiones no vamos a depender de él: primero tienes que aprender a escribir código legible tú. Automatizar lo que no sabes hacer a mano solo esconde el problema.
+
+### El entorno, paso a paso
+
+1. Crea una carpeta para tu proyecto. Por ejemplo `mi-web`.
+2. En VS Code, `Archivo → Abrir carpeta`, y selecciona **la carpeta**, no un archivo.
+3. En el explorador lateral, crea `index.html`. Ese nombre no es casual: es el que los servidores sirven por defecto como página principal.
+4. Instala HTMLHint desde `Ctrl + Shift + X`.
+
+Localiza también estas zonas, porque las vas a usar seis semanas: Explorer, Search, Extensions, el editor, la barra de estado y el panel Problems.
+
+#### La paleta de comandos
+
+```text
+Ctrl + Shift + P
+```
+
+Permite ejecutar prácticamente cualquier acción de VS Code escribiendo su nombre. En lugar de memorizar en qué menú está cada opción, la buscas. Pruébalo con `Format Document`.
 
 ### Tarea 1 · Reconstruye este documento
 
@@ -160,9 +230,9 @@ La palabra importante es **mínimo**. Si has escrito una etiqueta que no aporta 
   <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
   <ul class="checklist">
     <li>Tienes la carpeta del proyecto abierta en VS Code, no archivos sueltos.</li>
-    <li>HTMLHint está instalado y ves su salida en el panel de problemas.</li>
-    <li>Entiendes por qué el navegador no sirve para validar HTML.</li>
-    <li>Tu <code>index.html</code> se ve como el resultado pedido y no genera avisos.</li>
+    <li>HTMLHint está instalado y ves su salida en el panel Problems.</li>
+    <li>Sabes abrir la paleta de comandos.</li>
+    <li>Tu <code>index.html</code> se ve como el resultado pedido.</li>
   </ul>
 </div>
 
@@ -170,54 +240,114 @@ La palabra importante es **mínimo**. Si has escrito una etiqueta que no aporta 
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué se abre la carpeta entera en el editor y no el archivo?</li>
-    <li>Una página se ve perfectamente en Chrome. ¿Demuestra eso que su HTML es correcto?</li>
-    <li>¿Qué hace un linter que no hace el navegador?</li>
+    <li>¿Qué hace un linter?</li>
+    <li>¿Por qué se llama <code>index.html</code> la página principal?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Para que el editor conozca la raíz del proyecto: así resuelve y autocompleta las rutas relativas, busca en todos los archivos y aplica el linter a todo el sitio.</p>
-  <p>2 · No. El navegador repara en silencio el HTML roto para no fallar delante del usuario, así que una página rota puede verse igual que una correcta.</p>
-  <p>3 · Avisar de errores sin ejecutar el documento: etiquetas sin cerrar, anidaciones imposibles, atributos inválidos y malas prácticas.</p>
+  <p>2 · Analiza el código mientras lo escribes y avisa de errores y malas prácticas sin ejecutarlo.</p>
+  <p>3 · Porque es el nombre que los servidores web sirven por defecto cuando se pide una carpeta sin especificar archivo.</p>
 </details>
 
 ---
 
-## Sesión 2 · Anatomía de un elemento y HTML roto
+## Sesión 2 · Nuestra primera página y la anatomía del HTML
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es exactamente un elemento, en qué se diferencia de una etiqueta y de un atributo, y qué regla gobierna la anidación.</li>
-    <li><strong>2. Haz:</strong> Diagnostica y repara un documento defectuoso justificando cada corrección.</li>
+    <li><strong>1. Aprende:</strong> Qué es un elemento, en qué se diferencia de una etiqueta y de un atributo, y por qué el navegador no sirve para validar HTML.</li>
+    <li><strong>2. Haz:</strong> Escribe tu primera página completa a mano y repara un documento roto.</li>
     <li><strong>3. Comprueba:</strong> El panel de problemas queda en cero errores.</li>
   </ol>
 </div>
 
-### Elemento, etiqueta y atributo no son lo mismo
+### Escríbela entera, a mano
 
-Se usan como sinónimos y no lo son. Mira esta línea:
+Todavía no vamos a usar atajos. Escribe esto letra a letra:
 
 ```html
-<p class="destacado">Texto con <strong>énfasis</strong>.</p>
+<!doctype html>
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mi primera web</title>
+</head>
+
+<body>
+    <h1>Mi primera página web</h1>
+
+    <p>
+        Esta página está construida utilizando HTML.
+    </p>
+</body>
+
+</html>
 ```
 
-| Pieza | Qué es |
-| ----- | ------ |
-| `<p ...>` | La **etiqueta de apertura** |
-| `class="destacado"` | Un **atributo**, con su nombre y su valor entre comillas |
-| `Texto con <strong>énfasis</strong>.` | El **contenido**, que aquí incluye otro elemento dentro |
-| `</p>` | La **etiqueta de cierre** |
-| Todo junto | El **elemento** |
+Guarda con `Ctrl + S` y ábrelo en el navegador, o usa la previsualización de VS Code. Durante el desarrollo tendrás normalmente estas dos cosas a la vista:
+
+<figure class="diagram">
+  <figcaption>El ciclo de trabajo</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Escribes en VS Code</li>
+    <li>Guardas</li>
+    <li>Miras el resultado en el navegador</li>
+  </ol>
+</figure>
+
+### Elemento, etiqueta y atributo no son lo mismo
+
+Se usan como sinónimos y no lo son.
+
+```html
+<p>Hola</p>
+```
+
+```text
+<p>       etiqueta de apertura
+Hola      contenido
+</p>      etiqueta de cierre
+```
 
 <p class="term">Elemento</p>
 
-La unidad completa: apertura, contenido y cierre. La etiqueta es solo la marca que lo delimita. Cuando decimos «un párrafo» hablamos del elemento; cuando decimos «se te ha olvidado el `</p>`» hablamos de la etiqueta.
+La unidad completa: apertura, contenido y cierre. La etiqueta es solo la marca que lo delimita. Cuando decimos «un párrafo» hablamos del elemento; cuando decimos «falta el `</p>`» hablamos de la etiqueta.
+
+#### Los elementos contienen otros elementos
+
+```html
+<p>
+    Estoy estudiando <strong>DAW</strong>.
+</p>
+```
+
+Aquí `strong` está **dentro** de `p`. Eso crea una estructura jerárquica, un árbol, y ese árbol es lo que después leerán el CSS, el buscador y el lector de pantalla.
+
+#### Los elementos tienen atributos
+
+```html
+<html lang="es">
+```
+
+```text
+elemento    html
+atributo    lang
+valor       es
+```
+
+Los atributos aportan información adicional sobre el elemento. Vas a ver muchos durante la unidad.
 
 #### Elementos vacíos
 
-Algunos elementos no tienen contenido, porque no lo necesitan: no envuelven nada, aportan algo por sí mismos. Se escriben con una sola etiqueta y **no se cierran**.
+Algunos elementos no envuelven nada: aportan algo por sí mismos. Se escriben con una sola etiqueta y **no se cierran**.
 
 ```html
 <meta charset="UTF-8">
@@ -226,61 +356,67 @@ Algunos elementos no tienen contenido, porque no lo necesitan: no envuelven nada
 <hr>
 ```
 
-Escribir `</img>` no es un estilo distinto: es un error.
+Escribir `</img>` no es otro estilo: es un error.
 
 #### La regla de la anidación
 
-Los elementos se abren y se cierran como paréntesis: **el último que se abre es el primero que se cierra**.
+Los elementos se cierran como los paréntesis: **el último que se abre es el primero que se cierra**.
 
 ```html
+<!-- Correcto -->
 <p>Un <strong>teclado <em>mecánico</em></strong> compacto.</p>
-```
 
-Ese documento es correcto: `em` se cierra dentro de `strong`, y `strong` dentro de `p`. Este otro no:
-
-```html
+<!-- Incorrecto -->
 <p>Un <strong>teclado <em>mecánico</strong></em> compacto.</p>
 ```
 
-Aquí `strong` se cierra antes que `em`, que se abrió después. El navegador lo mostrará parecido, porque volverá a adivinar, pero la estructura que construye internamente ya no es la que escribiste.
+En el segundo, `strong` se cierra antes que `em`, que se abrió después. El navegador lo mostrará parecido, porque adivinará, pero el árbol que construya ya no es el que escribiste.
 
-### Tarea 2 · Repara el HTML roto
+### El navegador no es un corrector
 
-Copia este fragmento en un archivo `roto.html` dentro de tu proyecto:
+Este documento está roto de cuatro formas: falta el `doctype`, falta el idioma, falta la codificación y hay tres etiquetas sin cerrar.
 
 ```html
 <html>
 <head>
-<title>Mi web
+<title>PixelStore
 </head>
 <body>
-<h1>Mi web
-<p>Hola
+<h1>Bienvenido
+<p>Componentes para desarrolladores
 </body>
 ```
 
-<p class="stage">Paso 1 · Te enseño uno</p>
+Ábrelo. **Se ve perfectamente.** Un navegador está diseñado para no fallar nunca delante de un usuario: ante un documento roto no muestra un error, adivina lo que querías decir y lo repara en silencio.
 
-El primer fallo lo diagnostico yo, para que veas el formato de respuesta que espero:
+> **Que una página se vea bien no demuestra que su HTML esté bien. Solo demuestra que el navegador ha sabido disimularlo.**
+
+Recuerda esta frase, porque es el hilo de toda la unidad y volveremos a ella en la sesión 16.
+
+### Tarea 2 · Repara el HTML roto
+
+Copia ese mismo fragmento en un archivo `roto.html`.
+
+<p class="stage">Paso 1 · Te enseño uno</p>
 
 <dl class="worked">
   <dt>¿Qué está mal?</dt>
-  <dd>La etiqueta <code>&lt;title&gt;</code> se abre pero nunca se cierra antes de <code>&lt;/head&gt;</code>.</dd>
+  <dd>La etiqueta <code>&lt;title&gt;</code> se abre y nunca se cierra antes de <code>&lt;/head&gt;</code>.</dd>
   <dt>¿Qué hace el navegador con eso?</dt>
   <dd>Cierra el título por su cuenta al encontrar <code>&lt;/head&gt;</code>. La pestaña se ve bien, así que el fallo pasa inadvertido.</dd>
   <dt>¿A quién perjudica?</dt>
-  <dd>A cualquier programa que lea el documento tal cual está escrito en lugar de repararlo: buscadores, lectores de pantalla, validadores.</dd>
+  <dd>A cualquier programa que lea el documento tal como está escrito en lugar de repararlo: buscadores, lectores de pantalla, validadores.</dd>
   <dt>Corrección</dt>
-  <dd><code>&lt;title&gt;Mi web&lt;/title&gt;</code></dd>
+  <dd><code>&lt;title&gt;PixelStore&lt;/title&gt;</code></dd>
 </dl>
 
-Fíjate en el orden de las preguntas. No basta con decir «falta una etiqueta»: interesa qué consecuencia tiene, porque es lo que te permitirá priorizar cuando encuentres veinte fallos a la vez.
+No basta con decir «falta una etiqueta»: interesa qué consecuencia tiene, porque es lo que te permitirá priorizar cuando encuentres veinte fallos a la vez.
 
-<p class="stage stage--solo">Paso 2 · Hazlo tú</p>
+<p class="stage stage--solo">Paso 2 · Ahora tú</p>
 
-1. Abre el panel de problemas con `Ctrl + Shift + M` y anota qué detecta HTMLHint y qué no.
-2. Repara el documento: añade `<!doctype html>`, el atributo `lang="es"`, la codificación, el *viewport*, y cierra todas las etiquetas pendientes.
-3. Al final del archivo escribe un comentario HTML explicando los **tres fallos más graves** del original y por qué lo eran.
+1. Abre el panel de problemas con `Ctrl + Shift + M` y anota qué detecta HTMLHint **y qué no**.
+2. Repara el documento entero: `doctype`, `lang`, codificación, viewport y todas las etiquetas pendientes.
+3. Al final del archivo, escribe un comentario HTML explicando los **tres fallos más graves** del original y por qué lo eran.
 
 <details class="aside aside--help">
   <summary>Estoy atascado · no sé cuáles son los «más graves»</summary>
@@ -294,16 +430,6 @@ Fíjate en el orden de las preguntas. No basta con decir «falta una etiqueta»:
   <p>Los tres primeros grupos pesan más que el cuarto, aunque el cuarto sea el que más veces aparece.</p>
 </details>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Distingues elemento, etiqueta y atributo, y sabes cuál es cuál en una línea de código.</li>
-    <li>Sabes qué elementos no se cierran y por qué.</li>
-    <li>Sabes explicar la regla de anidación con un ejemplo correcto y uno incorrecto.</li>
-    <li>Tu <code>roto.html</code> queda a cero errores y con el comentario justificativo.</li>
-  </ul>
-</div>
-
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
@@ -315,73 +441,152 @@ Fíjate en el orden de las preguntas. No basta con decir «falta una etiqueta»:
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · El elemento es la unidad completa: apertura, contenido y cierre. La etiqueta es solo la marca que lo delimita.</p>
-  <p>2 · Por ejemplo <code>&lt;meta&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;br&gt;</code> o <code>&lt;hr&gt;</code>: elementos vacíos, sin contenido que envolver.</p>
-  <p>3 · Porque rompe el orden de anidación: <code>em</code> se abrió el último y debería cerrarse el primero. El navegador reconstruye una estructura distinta de la escrita, y esa estructura es la que verán el CSS, el buscador y el lector de pantalla.</p>
+  <p>1 · El elemento es la unidad completa: apertura, contenido y cierre. La etiqueta es la marca que lo delimita.</p>
+  <p>2 · Por ejemplo <code>&lt;meta&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;br&gt;</code> o <code>&lt;hr&gt;</code>.</p>
+  <p>3 · Porque rompe el orden de anidación: <code>em</code> se abrió el último y debería cerrarse el primero. El navegador reconstruye un árbol distinto del escrito, y ese árbol es el que verán el CSS, el buscador y el lector de pantalla.</p>
 </details>
 
 ---
 
-## Sesión 3 · La estructura completa y el primer documento del proyecto
+## Sesión 3 · La estructura de un documento HTML
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué hace cada pieza del esqueleto de un documento y qué se rompe exactamente cuando falta.</li>
-    <li><strong>2. Haz:</strong> Escribe la portada de PixelStore con la estructura completa y resuelve el primer reto.</li>
-    <li><strong>3. Comprueba:</strong> Los acentos se ven bien y la página es legible en la vista de móvil de DevTools.</li>
+    <li><strong>1. Aprende:</strong> Qué declara cada pieza del esqueleto y qué se rompe exactamente cuando falta.</li>
+    <li><strong>2. Haz:</strong> Rompe deliberadamente tu página, observa qué pasa, y empieza la portada de tu proyecto.</li>
+    <li><strong>3. Comprueba:</strong> Los acentos se ven bien y la página es legible en la vista de móvil.</li>
   </ol>
 </div>
 
-### El esqueleto de cualquier página
+### Pieza por pieza
+
+#### `<!doctype html>`
 
 ```html
 <!doctype html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixelStore | Componentes y tecnología para desarrolladores</title>
-</head>
-<body>
-    <h1>PixelStore</h1>
-    <p>Especialistas en hardware, periféricos y herramientas de desarrollo.</p>
-</body>
-</html>
 ```
 
-Cinco líneas que se copian siempre y casi nunca se explican. Vamos a explicarlas, porque cada una responde a una pregunta distinta y cada omisión tiene un síntoma distinto:
+Le dice al navegador que el documento es HTML moderno. Sin él, el navegador entra en *modo compatibilidad* y aplica reglas de hace veinte años.
+
+#### `<html lang="es">`
+
+Es el elemento raíz: todo lo demás va dentro. El atributo `lang` declara el idioma principal, y lo usan los lectores de pantalla para elegir la voz y la pronunciación, los navegadores para ofrecer traducción, y los buscadores para clasificar la página.
+
+Sin `lang="es"`, un lector de pantalla lee el español con fonética inglesa y se vuelve incomprensible.
+
+#### `<head>`
+
+Contiene información **sobre** el documento. Nada de lo que hay aquí se ve en la ventana.
+
+```html
+<meta charset="UTF-8">
+```
+
+Define la codificación: cómo se traducen los bytes del archivo a caracteres. Gracias a UTF-8 podemos escribir correctamente:
+
+```text
+á é í ó ú
+ñ
+€
+¿ ?
+```
+
+Si falta, «Programación» se muestra como «ProgramaciÃ³n».
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+
+Indica al navegador que use el ancho real del dispositivo. Sin él, un móvil muestra la página de escritorio encogida e ilegible. Lo entenderemos del todo al estudiar CSS responsive; por ahora forma parte de la estructura fija.
+
+```html
+<title>PixelStore | Componentes para desarrolladores</title>
+```
+
+No aparece dentro de la página: aparece en la pestaña, en los favoritos y como titular en un buscador. Compara:
+
+```html
+<title>Inicio</title>
+<title>PixelStore | Componentes para desarrolladores</title>
+```
+
+¿Cuál te dice de qué web es, si lo ves en una lista de veinte pestañas?
+
+#### `<body>`
+
+Contiene el contenido que verá el usuario.
+
+<div class="rule">
+  <p class="rule-label">La prueba para no confundir <code>head</code> y <code>body</code></p>
+  <p>Si es algo que una persona debería <strong>leer</strong>, va en el <code>body</code>. Si es algo que el navegador necesita <strong>saber</strong> antes de dibujar nada, va en el <code>head</code>.</p>
+</div>
 
 | Pieza | Qué declara | Qué pasa si falta |
 | ----- | ----------- | ----------------- |
-| `<!doctype html>` | Que el documento es HTML estándar | El navegador entra en *modo compatibilidad* y aplica reglas antiguas de hace veinte años |
-| `lang="es"` | El idioma del contenido | Un lector de pantalla lo pronuncia con fonética inglesa y se vuelve incomprensible |
-| `charset="UTF-8"` | Cómo se traducen los bytes a caracteres | «Programación» se muestra como «ProgramaciÃ³n» |
-| `viewport` | Que se adapte al ancho real del dispositivo | En un móvil se muestra la página de escritorio encogida, ilegible |
-| `<title>` | El nombre del documento | Es lo que se ve en la pestaña, en los favoritos y como titular en un buscador |
+| `<!doctype html>` | Que el documento es HTML estándar | Modo compatibilidad, con reglas antiguas |
+| `lang="es"` | El idioma del contenido | El lector de pantalla lo pronuncia en inglés |
+| `charset="UTF-8"` | Cómo se traducen los bytes a caracteres | «Programación» se ve como «ProgramaciÃ³n» |
+| `viewport` | Que se adapte al ancho del dispositivo | En móvil se ve la página de escritorio encogida |
+| `<title>` | El nombre del documento | Pestaña, favorito y buscador sin identificar |
 
-#### Head y body no compiten
+### Práctica guiada · Destruye la página
 
-<figure class="diagram">
-  <figcaption>Las dos mitades del documento</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>head · información sobre la página</li>
-    <li>body · contenido de la página</li>
-  </ol>
-</figure>
+Vamos a aprender provocando errores. Sobre una copia de tu página, haz estas seis cosas, **de una en una**, y anota qué ocurre:
 
-En el `<head>` va lo que el navegador necesita saber **antes** de dibujar nada: idioma, codificación, título, comportamiento en móviles. Nada de lo que hay ahí se ve en la ventana. En el `<body>` va todo lo que sí se ve.
+1. Elimina `</h1>`.
+2. Elimina `</body>`.
+3. Escribe una etiqueta que no existe, como `<titulo>`.
+4. Duplica un elemento.
+5. Cambia `UTF-8` por `ISO-8859-1`.
+6. Elimina `lang`.
 
-Un error típico de las primeras semanas es meter contenido en el `head` porque «también es información». La prueba es sencilla: si es algo que un lector debería leer, va en el `body`.
+Para cada una, tres columnas:
 
-### Proyecto · La portada de PixelStore
+| Qué he roto | Qué hace el navegador | Qué dice HTMLHint |
+| ----------- | --------------------- | ----------------- |
+| | | |
 
-Crea `index.html` en la raíz de tu carpeta `pixelstore` y constrúyela con:
+Al terminar, deja el documento correcto otra vez. Lo que quiero que veas es cuántas de las seis **el navegador no delata en absoluto**. Esa es la razón por la que existen los linters y los validadores.
+
+### Emmet · atajos, cuando ya sabes escribirlo
+
+Ahora que has escrito el esqueleto a mano, puedes abreviarlo. VS Code incluye **Emmet**:
+
+```text
+!
+```
+
+y `Tab` genera la estructura completa de un documento. O:
+
+```text
+ul>li*3
+```
+
+que se expande a:
+
+```html
+<ul>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+```
+
+<div class="rule">
+  <p class="rule-label">La regla de Emmet</p>
+  <p><strong>No uses una abreviatura cuyo resultado no seas capaz de escribir y explicar a mano.</strong> Emmet es una herramienta de productividad: te ahorra tecleo, no conocimiento.</p>
+</div>
+
+### Ahora tú · La portada de tu proyecto
+
+Crea `index.html` en la raíz de tu carpeta y constrúyela con:
 
 * El esqueleto completo y los cuatro metadatos correctos.
+* Un `<title>` descriptivo, con el tema de tu proyecto.
 * Un **único** `<h1>` con el nombre del proyecto.
 * Al menos tres `<h2>` que dividan la portada en áreas temáticas.
-* Párrafos descriptivos reales, con `<strong>` y `<em>` solo donde aporten significado.
+* Párrafos descriptivos reales, con una descripción del proyecto.
 
 Este archivo no es un ejercicio desechable: es la primera página del sitio que entregarás dentro de seis semanas.
 
@@ -390,133 +595,295 @@ Este archivo no es un ejercicio desechable: es la primera página del sitio que 
   <p>Escribe en algún párrafo la palabra «Programación». Si se ve correctamente, tu <code>charset</code> está bien. Después abre DevTools con <code>F12</code>, activa la vista de dispositivo móvil y comprueba que el texto se lee sin hacer zoom: si hay que ampliar, falta el <em>viewport</em>.</p>
 </div>
 
-### Reto 1 · Los módulos de DAW (10 min)
-
-Representa esta estructura con **el mínimo HTML razonable y semánticamente correcto**:
-
-```text
-DAW
- ├ Lenguajes de Marcas
- ├ Programación
- └ Bases de Datos
-```
-
-<details class="aside aside--extra">
-  <summary>Ver respuesta del Reto 1</summary>
-  <p>Es una relación de pertenencia sin orden, o sea una lista dentro de otra lista:</p>
-  <pre><code>&lt;ul&gt;
-  &lt;li&gt;DAW
-    &lt;ul&gt;
-      &lt;li&gt;Lenguajes de Marcas&lt;/li&gt;
-      &lt;li&gt;Programación&lt;/li&gt;
-      &lt;li&gt;Bases de Datos&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-  <p>La lista anidada va <strong>dentro</strong> del <code>&lt;li&gt;</code> de DAW, no detrás de él. Si la sacas fuera, estás diciendo que los tres módulos son hermanos de DAW en lugar de partes suyas.</p>
-</details>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
-  <ul class="checklist">
-    <li>Sabes escribir el esqueleto de memoria.</li>
-    <li>Sabes decir qué se rompe al quitar cada uno de los cuatro metadatos.</li>
-    <li>Distingues qué va en <code>head</code> y qué va en <code>body</code>.</li>
-    <li>Tu portada tiene un solo <code>h1</code> y al menos tres <code>h2</code>.</li>
-  </ul>
-</div>
-
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Qué síntoma concreto delata que falta el <code>charset</code>?</li>
     <li>¿A quién perjudica que falte <code>lang="es"</code>?</li>
-    <li>¿Cuántos <code>h1</code> debería tener una página y por qué?</li>
+    <li>De las seis cosas que rompiste, ¿cuántas delató el navegador?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Los caracteres no ingleses se muestran mal: acentos, eñes y signos de apertura aparecen como símbolos extraños.</p>
-  <p>2 · Sobre todo a quien usa un lector de pantalla, que elige la voz y la fonética según el idioma declarado y leerá el español con pronunciación inglesa. También a los buscadores, que lo usan para clasificar la página.</p>
-  <p>3 · Uno. Es el título del documento entero; si hay dos, ya no hay forma de saber cuál es el tema de la página.</p>
+  <p>2 · Sobre todo a quien usa un lector de pantalla, que elige voz y fonética según el idioma declarado. También a los buscadores.</p>
+  <p>3 · Prácticamente ninguna, salvo el cambio de codificación. Ese es justo el punto de la práctica.</p>
 </details>
 
 ---
 
-## Semana 2 · Texto, listas, rutas y navegación
+## Semana 2 · Texto, listas, enlaces y navegación
 
 ---
 
-## Sesión 4 · Jerarquía de encabezados y listas
+## Sesión 4 · Texto y jerarquía de contenido
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Que los encabezados son el índice del documento y no una escala de tamaños, y qué distingue a cada tipo de lista.</li>
-    <li><strong>2. Haz:</strong> Convierte información en bruto en una estructura marcada y resuelve el segundo reto.</li>
+    <li><strong>1. Aprende:</strong> Que los encabezados son el índice del documento, qué elementos marcan significado en el texto y cómo se escriben los caracteres especiales.</li>
+    <li><strong>2. Haz:</strong> Resuelve el reto de anidación y aplica la jerarquía correcta a tu portada.</li>
     <li><strong>3. Comprueba:</strong> Ningún encabezado se salta un nivel.</li>
   </ol>
 </div>
 
-### Los encabezados son un índice, no unos tamaños
+### HTML no sirve para decir «quiero esto grande»
 
-Este es el malentendido más caro de toda la unidad. Como `h1` se ve grande y `h4` se ve pequeño, es tentador elegir el número por el tamaño que queda bonito.
+Sirve para decir:
 
-No es para lo que sirven. Los encabezados construyen el **índice** del documento: la misma estructura que un lector de pantalla usa para saltar de sección en sección, y que un buscador usa para entender de qué habla la página.
+> «Esto es el título principal del documento.»
 
-<figure class="diagram">
-  <figcaption>Lo que declara una jerarquía de encabezados</figcaption>
-  <ol class="flow">
-    <li>h1 · el tema del documento entero, una sola vez</li>
-    <li>h2 · cada sección principal</li>
-    <li>h3 · cada apartado dentro de una sección</li>
-    <li>h4 · subdivisiones, si de verdad hacen falta</li>
-  </ol>
-</figure>
+Es la diferencia entre describir la apariencia y describir el significado, y explica casi todos los errores de esta unidad.
 
-La regla práctica es una: **no se salta ningún nivel hacia abajo**. Después de un `h1` viene un `h2`, no un `h3`. Saltar equivale a escribir un índice con el capítulo 1, el apartado 1.1.1 y nada en medio: quien lo lea de forma secuencial se pierde.
+### Encabezados
+
+Hay seis niveles, de `h1` a `h6`:
+
+```html
+<h1>PixelStore</h1>
+
+<h2>Productos</h2>
+
+<h3>Ordenadores portátiles</h3>
+```
+
+Los niveles indican **jerarquía**, no tamaño. Construyen el índice del documento:
+
+```text
+h1 PixelStore
+
+    h2 Productos
+
+        h3 Portátiles
+
+        h3 Monitores
+
+    h2 Servicios
+
+        h3 Reparaciones
+
+    h2 Contacto
+```
+
+Ese índice es exactamente lo que usa un lector de pantalla para saltar de sección en sección, y lo que usa un buscador para entender de qué habla la página.
 
 <div class="rule">
   <p class="rule-label">Cómo elegir el nivel sin equivocarse</p>
-  <p>No preguntes «¿qué tamaño quiero?». Pregunta <strong>«¿de qué es esto una parte?»</strong>. Si es una parte de la sección anterior, baja un nivel. Si es una sección nueva del mismo rango, usa el mismo nivel. Si el tamaño resultante no te gusta, es un problema de CSS, y el CSS lo veremos en la siguiente unidad.</p>
+  <p>No preguntes «¿qué tamaño quiero?». Pregunta <strong>«¿de qué es esto una parte?»</strong>. Si es parte de la sección anterior, baja un nivel. Si es una sección nueva del mismo rango, usa el mismo nivel.</p>
+  <p>Y no saltes niveles hacia abajo: después de un <code>h1</code> viene un <code>h2</code>, no un <code>h3</code>. Saltar es como escribir un índice con el capítulo 1, el apartado 1.1.1 y nada en medio.</p>
+  <p>Si el tamaño resultante no te gusta, es un problema de CSS. Con CSS podrás dar a cualquier encabezado el tamaño que necesites.</p>
 </div>
 
-#### Párrafos y saltos de línea
-
-Otro clásico: separar párrafos con `<br>`.
+### Párrafos
 
 ```html
-<!-- Mal -->
-Componentes para desarrolladores.<br><br>Envíos en 24 horas.
-
-<!-- Bien -->
-<p>Componentes para desarrolladores.</p>
-<p>Envíos en 24 horas.</p>
+<p>
+    PixelStore es una tienda especializada en tecnología.
+</p>
 ```
 
-Las dos versiones se ven casi igual. La diferencia es que la primera dice «aquí hay un texto suelto con dos saltos de línea» y la segunda dice «aquí hay dos párrafos». `<br>` existe para saltos que forman parte del contenido, como los versos de un poema o las líneas de una dirección postal, no para separar bloques.
+No uses varios `<br>` para crear párrafos:
 
-#### Tres listas para tres relaciones
+```html
+<!-- Incorrecto -->
+Texto uno
+<br>
+<br>
+Texto dos
 
-| Lista | Se usa cuando | Ejemplo en PixelStore |
-| ----- | ------------- | --------------------- |
-| `<ul>` | El orden no cambia el significado | Los componentes que vende la tienda |
-| `<ol>` | El orden **es** el significado | Los pasos para tramitar una devolución |
-| `<dl>` | Cada elemento es un término y su definición | El glosario técnico de la ficha de producto |
+<!-- Correcto -->
+<p>Texto uno.</p>
+<p>Texto dos.</p>
+```
 
-La prueba para distinguir `ul` de `ol` es directa: si reordenas los elementos y la información sigue siendo correcta, es `ul`. Si al reordenarlos el contenido pasa a ser falso, es `ol`.
+Las dos versiones se ven casi igual. La primera dice «un texto suelto con saltos de línea»; la segunda dice «dos párrafos». `<br>` existe para saltos que forman parte del contenido: los versos de un poema, las líneas de una dirección postal. HTML describe la estructura; CSS controlará el espacio.
 
-La lista de descripción funciona por pares:
+### Énfasis y significado
+
+```html
+<strong>Importante</strong>
+<em>énfasis</em>
+```
+
+`strong` indica importancia; `em` indica énfasis. No pienses:
+
+```text
+strong = negrita
+em = cursiva
+```
+
+Eso describe su apariencia habitual, no su significado. Con CSS podrías hacer que `strong` se viera de cualquier otra forma, y seguiría significando lo mismo.
+
+#### Otros elementos de texto útiles
+
+```html
+<mark>texto destacado</mark>
+```
+
+```html
+<small>información secundaria</small>
+```
+
+```html
+<del>49,99 €</del> <ins>39,99 €</ins>
+```
+
+```html
+<abbr title="HyperText Markup Language">HTML</abbr>
+```
+
+```html
+<code>index.html</code>
+```
+
+| Elemento | Significa |
+| -------- | --------- |
+| `mark` | Resaltado por relevancia en el contexto actual, como un subrayador |
+| `small` | Letra pequeña en el sentido legal: avisos, notas al pie |
+| `del` / `ins` | Contenido eliminado y contenido añadido. El par es perfecto para un precio rebajado |
+| `abbr` | Una abreviatura, con su significado en `title` |
+| `code` | Un fragmento de código o un nombre de archivo |
+
+### Entidades HTML
+
+¿Cómo escribimos un `<` si `<` es lo que abre una etiqueta? Con **entidades**:
+
+| Escribes | Se ve |
+| -------- | ----- |
+| `&lt;` | `<` |
+| `&gt;` | `>` |
+| `&amp;` | `&` |
+| `&quot;` | `"` |
+| `&nbsp;` | Un espacio que no se parte al final de línea |
+| `&copy;` | © |
+
+Esto es imprescindible cuando quieres **mostrar código HTML dentro de una página**, que es justo lo que hacen estos apuntes. Si escribieras `<p>` tal cual, el navegador lo interpretaría como un párrafo en lugar de mostrarlo.
+
+### Reto 1 · ¿Qué está mal aquí? (10 min)
+
+```html
+<p>
+    <h2>Nuestros productos</h2>
+</p>
+```
+
+¿Qué principio de HTML se está incumpliendo y qué hará el navegador con esto?
+
+<details class="aside aside--extra">
+  <summary>Ver respuesta del Reto 1</summary>
+  <p>Un <code>&lt;p&gt;</code> solo puede contener contenido en línea: texto, <code>strong</code>, <code>em</code>, <code>a</code>, <code>img</code>… Un encabezado es un elemento de bloque y no cabe dentro de un párrafo.</p>
+  <p>El navegador no muestra un error: cierra el párrafo por su cuenta justo antes del <code>&lt;h2&gt;</code> y deja suelto el <code>&lt;/p&gt;</code> final. Acabas con un párrafo vacío, un encabezado que no está donde creías y una etiqueta huérfana. Otra vez el mismo patrón: se ve bien, y la estructura real no es la que escribiste.</p>
+</details>
+
+### Ahora tú · Revisa la jerarquía de tu portada
+
+1. Dibuja en papel el índice de tu `index.html`: qué es `h1`, qué es `h2`, qué es `h3`.
+2. Comprueba que no hay ningún salto de nivel y que solo hay un `h1`.
+3. Sustituye cualquier `<br><br>` que hayas usado para separar por párrafos reales.
+4. Añade al menos un `abbr`, un `code` o un par `del`/`ins` donde tenga sentido de verdad. Si no lo tiene en tu tema, no lo fuerces: dilo en un comentario.
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué está mal pasar de <code>h2</code> a <code>h4</code>?</li>
+    <li>¿Cuál es la diferencia de significado entre <code>strong</code> y <code>em</code>?</li>
+    <li>¿Cómo escribirías «&lt;p&gt;» para que se vea tal cual en la página?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque los encabezados forman el índice del documento y saltar deja un hueco: quien navegue por encabezados no sabrá de qué es parte ese <code>h4</code>.</p>
+  <p>2 · <code>strong</code> marca importancia; <code>em</code> marca énfasis, el matiz que cambiaría el tono al leer la frase en voz alta. Ninguno de los dos significa «negrita» o «cursiva».</p>
+  <p>3 · <code>&amp;lt;p&amp;gt;</code>.</p>
+</details>
+
+---
+
+## Sesión 5 · Listas
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Los tres tipos de lista, qué relación expresa cada uno y cómo se anidan correctamente.</li>
+    <li><strong>2. Haz:</strong> Interpreta información en bruto y decide con qué se marca cada parte.</li>
+    <li><strong>3. Comprueba:</strong> Resuelve el reto de la lista anidada.</li>
+  </ol>
+</div>
+
+### Tres listas para tres relaciones
+
+#### Lista no ordenada
+
+```html
+<ul>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li>JavaScript</li>
+</ul>
+```
+
+#### Lista ordenada
+
+```html
+<ol>
+    <li>Crear el proyecto</li>
+    <li>Escribir HTML</li>
+    <li>Validar</li>
+</ol>
+```
+
+Aquí el orden **tiene significado**: no puedes validar antes de escribir.
+
+<div class="rule">
+  <p class="rule-label">La prueba que distingue <code>ul</code> de <code>ol</code></p>
+  <p>Reordena mentalmente los elementos. <strong>Si la información sigue siendo cierta, es <code>ul</code>. Si deja de serlo, es <code>ol</code>.</strong></p>
+  <p>No decide el hecho de que se vean números: los números son apariencia, y con CSS se pueden poner y quitar.</p>
+</div>
+
+#### Listas anidadas
+
+```html
+<ul>
+    <li>
+        Hardware
+
+        <ul>
+            <li>Portátiles</li>
+            <li>Monitores</li>
+        </ul>
+    </li>
+
+    <li>
+        Software
+    </li>
+</ul>
+```
+
+Fíjate bien en la jerarquía: el segundo `<ul>` está **dentro** del primer `<li>`, no detrás de él. Es el error más común de la sesión. Si lo sacas fuera, estás diciendo que «Portátiles» es hermano de «Hardware» en lugar de una parte suya.
+
+#### Listas de descripción
+
+Para pares de término y definición:
 
 ```html
 <dl>
-  <dt>SSD</dt>
-  <dd>Unidad de almacenamiento sin partes móviles.</dd>
-  <dt>RAM</dt>
-  <dd>Memoria de trabajo, volátil, que se vacía al apagar.</dd>
+    <dt>HTML</dt>
+    <dd>Lenguaje utilizado para estructurar contenido web.</dd>
+
+    <dt>CSS</dt>
+    <dd>Lenguaje utilizado para definir su presentación.</dd>
 </dl>
 ```
+
+`dt` es el término y `dd` su descripción. Un mismo `dt` puede tener varios `dd`, y varios `dt` pueden compartir un `dd`.
+
+| Lista | Se usa cuando | Ejemplo |
+| ----- | ------------- | ------- |
+| `<ul>` | El orden no cambia el significado | Los componentes que vende la tienda |
+| `<ol>` | El orden **es** el significado | Los pasos para tramitar una devolución |
+| `<dl>` | Cada elemento es un término y su definición | El glosario de la ficha técnica |
 
 ### Tarea 3 · De texto plano a estructura
 
@@ -536,95 +903,235 @@ Completar el asistente de instalación
 Reiniciar y actualizar controladores
 ```
 
-Tu trabajo:
+Esto no es «escribir etiquetas»: es **interpretar la información**. Tu trabajo:
 
-1. Decide qué elemento representa el título de cada bloque, y con qué nivel.
-2. Marca cada bloque con el tipo de lista que le corresponde, y **escribe en un comentario por qué** uno es `ul` y el otro es `ol`. Aplica la prueba de reordenar.
+1. Decide qué es título de bloque y con qué nivel de encabezado, teniendo en cuenta dónde va a vivir dentro de tu página.
+2. Decide qué bloque es `ul` y cuál es `ol`, y **escribe en un comentario por qué**, aplicando la prueba de reordenar.
 3. Añade debajo una `<dl>` que defina tres conceptos: CPU, RAM y SSD.
 
-### Reto 2 · ¿Qué está mal aquí? (10 min)
+<details class="aside aside--help">
+  <summary>Estoy atascado · no sé si los componentes van ordenados</summary>
+  <p>Aplica literalmente la prueba. Si escribes «Memoria RAM, Almacenamiento SSD, Procesador», ¿sigue siendo verdad que esos son los componentes de un ordenador? Sí. ¿Y si escribes «Reiniciar, Descargar la imagen, Arrancar desde el USB»? Ya no describe una instalación posible.</p>
+</details>
 
-```html
-<p>
-    <h2>Nuestros productos</h2>
-</p>
+### Reto 2 · Los módulos de DAW (10 min)
+
+Representa esta estructura con **el mínimo HTML razonable y semánticamente correcto**:
+
+```text
+DAW
+ ├ Lenguajes de Marcas
+ ├ Programación
+ └ Bases de Datos
 ```
-
-¿Qué principio de HTML se está incumpliendo y qué hará el navegador con esto?
 
 <details class="aside aside--extra">
   <summary>Ver respuesta del Reto 2</summary>
-  <p>Un <code>&lt;p&gt;</code> solo puede contener contenido en línea: texto, <code>strong</code>, <code>em</code>, <code>a</code>, <code>img</code>… Un encabezado es un elemento de bloque y no cabe dentro de un párrafo.</p>
-  <p>El navegador no muestra un error: cierra el párrafo por su cuenta justo antes del <code>&lt;h2&gt;</code> y deja suelto el <code>&lt;/p&gt;</code> del final. El resultado es que acabas con un párrafo vacío, un encabezado que no está donde creías y una etiqueta de cierre huérfana. Es el mismo patrón de la sesión 1: se ve bien, y la estructura real no es la que escribiste.</p>
+  <p>Es una relación de pertenencia sin orden, o sea una lista dentro de otra lista:</p>
+  <pre><code>&lt;ul&gt;
+  &lt;li&gt;DAW
+    &lt;ul&gt;
+      &lt;li&gt;Lenguajes de Marcas&lt;/li&gt;
+      &lt;li&gt;Programación&lt;/li&gt;
+      &lt;li&gt;Bases de Datos&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+  <p>La lista anidada va <strong>dentro</strong> del <code>&lt;li&gt;</code> de DAW. Si la sacas fuera, estás diciendo que los tres módulos son hermanos de DAW en lugar de partes suyas.</p>
 </details>
 
+### Ahora tú · Crea `productos.html`
+
+Crea la segunda página de tu proyecto. Debe contener:
+
+* Un encabezado principal y al menos dos niveles de encabezado.
+* Varios párrafos.
+* Una lista no ordenada.
+* Una lista ordenada, donde el orden importe de verdad.
+* Una lista anidada.
+* Al menos dos elementos de significado textual de la sesión anterior.
+
+Todavía no la enlazaremos con la portada: eso es la sesión que viene.
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
   <ul class="checklist">
-    <li>Eliges el nivel de encabezado por pertenencia, no por tamaño.</li>
-    <li>Tu portada no salta ningún nivel.</li>
     <li>Sabes aplicar la prueba de reordenar para decidir entre <code>ul</code> y <code>ol</code>.</li>
-    <li>No estás usando <code>&lt;br&gt;</code> para separar párrafos.</li>
+    <li>Sabes dónde va exactamente una lista anidada.</li>
+    <li>Conoces <code>dl</code>, <code>dt</code> y <code>dd</code>.</li>
+    <li>Tienes <code>productos.html</code> con las tres clases de lista.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué está mal pasar de <code>h2</code> a <code>h4</code>?</li>
     <li>Da la prueba de una frase que distingue <code>ul</code> de <code>ol</code>.</li>
-    <li>¿Para qué sirve entonces <code>&lt;br&gt;</code>?</li>
+    <li>¿Dónde va el <code>&lt;ul&gt;</code> de una lista anidada?</li>
+    <li>¿Para qué sirve <code>&lt;dl&gt;</code>?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque los encabezados forman el índice del documento y saltar un nivel deja un hueco: quien navegue por encabezados no sabrá de qué es parte ese <code>h4</code>.</p>
-  <p>2 · Si al reordenar los elementos la información sigue siendo cierta, es <code>ul</code>; si deja de serlo, es <code>ol</code>.</p>
-  <p>3 · Para saltos de línea que forman parte del propio contenido: versos, líneas de una dirección postal. Nunca para separar bloques de texto.</p>
+  <p>1 · Si al reordenar los elementos la información sigue siendo cierta, es <code>ul</code>; si deja de serlo, es <code>ol</code>.</p>
+  <p>2 · Dentro del <code>&lt;li&gt;</code> del que depende, no detrás de él.</p>
+  <p>3 · Para pares de término y descripción: glosarios, fichas técnicas, listas de definiciones.</p>
 </details>
 
 ---
 
-## Sesión 5 · El laberinto de las rutas relativas
+## Sesión 6 · Enlaces, rutas y navegación
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Desde dónde se resuelve una ruta, qué significan <code>./</code> y <code>../</code>, y por qué una ruta de disco rompe el sitio al publicarlo.</li>
-    <li><strong>2. Haz:</strong> Resuelve cinco rutas entre archivos situados en niveles distintos.</li>
-    <li><strong>3. Comprueba:</strong> Mueve la carpeta del proyecto a otra ubicación y confirma que nada se rompe.</li>
+    <li><strong>1. Aprende:</strong> Cómo se construye un enlace, desde dónde se resuelve una ruta y qué convierte unos enlaces en una navegación.</li>
+    <li><strong>2. Haz:</strong> Monta las cuatro páginas enlazadas y después resuelve el laberinto de rutas.</li>
+    <li><strong>3. Comprueba:</strong> Mueve la carpeta del proyecto y confirma que nada se rompe.</li>
   </ol>
 </div>
 
-### Una ruta se resuelve desde el archivo que la escribe
+### El elemento que hace que exista la Web
 
-Esta es la idea que desatasca todo lo demás. Cuando escribes `href="productos.html"`, el navegador no busca ese archivo desde la raíz del proyecto ni desde donde tú estés mirando: lo busca **desde la carpeta del archivo que contiene el enlace**.
+```html
+<a href="https://developer.mozilla.org/">MDN Web Docs</a>
+```
+
+`href` indica el destino y el contenido del elemento es el texto visible del enlace. Ese texto importa: «pincha aquí» no dice nada fuera de contexto, y mucha gente navega saltando de enlace en enlace sin leer lo que hay alrededor.
+
+#### Enlaces a otras páginas del sitio
+
+```text
+mi-web/
+│
+├── index.html
+├── productos.html
+└── contacto.html
+```
+
+Desde `index.html`:
+
+```html
+<a href="productos.html">Productos</a>
+```
+
+#### Enlaces dentro de la misma página
+
+```html
+<a href="#contacto">Ir a contacto</a>
+```
+
+y en algún punto del documento:
+
+```html
+<section id="contacto">
+    <h2>Contacto</h2>
+</section>
+```
+
+<p class="term">id</p>
+
+Identifica un elemento **de forma única** dentro del documento. Dos elementos con el mismo `id` son un error, y uno que los validadores sí detectan.
+
+#### Enlaces especiales
+
+```html
+<a href="mailto:contacto@example.com">Enviar correo</a>
+```
+
+```html
+<a href="tel:+34960000000">960 000 000</a>
+```
+
+`tel:` es especialmente útil en móvil, donde convierte el número en algo que se puede pulsar para llamar.
+
+#### Abrir en otra pestaña
+
+```html
+<a href="https://example.com"
+   target="_blank"
+   rel="noopener noreferrer">
+    Abrir recurso
+</a>
+```
+
+`target="_blank"` abre en pestaña nueva y `rel="noopener noreferrer"` corta la referencia que la página abierta obtendría hacia la tuya. Los navegadores actuales ya lo hacen por su cuenta, pero escribirlo sigue siendo lo correcto: no dependes de la versión del navegador y dejas la intención por escrito.
+
+Dicho lo cual: abrir pestañas automáticamente no debería ser tu opción por defecto. Quien navega debería mantener el control de su navegación, y el botón de volver atrás deja de funcionar en una pestaña nueva.
+
+### Rutas relativas
+
+Esta es la idea que desatasca todo lo demás. Cuando escribes `href="productos.html"`, el navegador no busca desde la raíz del proyecto: busca **desde la carpeta del archivo que contiene el enlace**.
 
 Por eso la misma ruta, escrita en dos archivos distintos, apunta a sitios distintos. No hay rutas correctas en abstracto: hay rutas correctas *desde un origen*.
 
 | Escribes | Significa |
 | -------- | --------- |
 | `pagina.html` | Un archivo en **mi misma** carpeta |
-| `./pagina.html` | Exactamente lo mismo, escrito de forma explícita |
+| `./pagina.html` | Lo mismo, escrito de forma explícita |
 | `carpeta/pagina.html` | Bajar a una carpeta que está dentro de la mía |
 | `../pagina.html` | **Subir** un nivel y buscar allí |
 | `../../pagina.html` | Subir dos niveles |
-| `#seccion` | Saltar a un elemento con `id="seccion"` en esta misma página |
-
-<p class="term">Ruta relativa</p>
-
-La que describe el camino desde el archivo actual hasta el destino. Como no menciona dónde está instalado el sitio, sigue siendo válida si mueves el proyecto de carpeta, de ordenador o de servidor.
+| `#seccion` | Saltar a un elemento con ese `id` en esta misma página |
 
 <div class="rule">
   <p class="rule-label">Por qué <code>C:\Users\...</code> no es un enlace</p>
-  <p>Una ruta como <code>C:\Users\marc\web\index.html</code> o <code>file:///D:/proyecto/img/logo.webp</code> describe la posición del archivo <strong>en tu ordenador</strong>. Funciona mientras la web se abra desde tu ordenador, y deja de funcionar en el momento en que la abre cualquier otra persona, que es justo para lo que se hace una web.</p>
-  <p>Si tu código contiene una letra de unidad o el prefijo <code>file:///</code>, el enlace está mal construido aunque en tu pantalla funcione.</p>
+  <p>Esto puede funcionar en tu ordenador:</p>
+  <p><code>&lt;img src="C:\Users\Laura\Desktop\foto.jpg"&gt;</code></p>
+  <p>Y deja de funcionar en cuanto mueves el proyecto, lo entregas o lo publicas, que es justo para lo que se hace una web. Lo mismo con <code>file:///</code>. Nuestros proyectos deben ser <strong>transportables</strong>.</p>
 </div>
 
-### Tarea 4 · El laberinto de rutas
+### La navegación
 
-Trabajamos sobre esta estructura:
+Un menú es, conceptualmente, **una lista de enlaces**:
+
+```html
+<nav aria-label="Navegación principal">
+    <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="acerca.html">Acerca de</a></li>
+        <li><a href="contacto.html" aria-current="page">Contacto</a></li>
+    </ul>
+</nav>
+```
+
+* **`<nav>`** declara que ese bloque es navegación. Un lector de pantalla ofrece saltar a él, o saltárselo entero para ir al contenido, que es lo que hace casi todo el mundo que navega así.
+* **La lista** dice que son cuatro enlaces hermanos, y permite anunciar «lista de 4 elementos». Cuatro enlaces sueltos separados por espacios no dicen ni cuántos son ni dónde acaban.
+* **`aria-current="page"`** marca cuál es la página que se está viendo. Sin CSS es la única forma de comunicarlo.
+
+No elegimos las etiquetas pensando en cómo queremos que se vea. Elegimos las que representan mejor la información.
+
+### Tarea 4 · El sitio multipágina
+
+Amplía tu proyecto hasta tener cuatro páginas en la raíz:
+
+```text
+mi-web/
+├── index.html
+├── productos.html
+├── acerca.html
+└── contacto.html
+```
+
+Requisitos:
+
+1. Las cuatro tienen el esqueleto completo y su propio `<title>` **distinto y descriptivo**.
+2. Las cuatro incluyen el mismo bloque de navegación, con los mismos enlaces en el mismo orden.
+3. Cada página marca su propio enlace con `aria-current="page"`.
+4. Cada página tiene un único `h1` que coincide con su tema.
+
+Recorre después el ciclo completo: Inicio → Productos → Acerca de → Contacto → Inicio. Si algún enlace falla, no lo arregles todavía: anótalo, porque es exactamente el problema que ataca la tarea siguiente.
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · el título de cada página</summary>
+  <p>El <code>&lt;title&gt;</code> se lee fuera de contexto: en una pestaña estrecha, en un favorito, en un resultado de búsqueda. «Contacto» no dice de qué web es. Escribe primero lo específico y después el sitio, porque las pestañas se recortan por el final: <code>Contacto | PixelStore</code>.</p>
+</details>
+
+### Tarea 5 · El laberinto de rutas
+
+Ahora el caso difícil, con carpetas de por medio:
 
 ```text
 web/
@@ -651,11 +1158,9 @@ web/
   <dd><code>../img/logo.webp</code></dd>
 </dl>
 
-El truco es no intentar verlo de golpe. Se resuelve en tres pasos: dónde estoy, dónde voy, cuántos niveles subo antes de empezar a bajar.
+No intentes verlo de golpe. Se resuelve en tres pasos: dónde estoy, dónde voy, cuántos niveles subo antes de empezar a bajar.
 
-<p class="stage stage--solo">Paso 2 · Hazlo tú</p>
-
-Escribe la ruta exacta para cada caso:
+<p class="stage stage--solo">Paso 2 · Ahora tú</p>
 
 1. Desde `productos.html`, volver a `index.html`.
 2. Desde `index.html`, mostrar la imagen `logo.webp`.
@@ -674,14 +1179,24 @@ Escribe la ruta exacta para cada caso:
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación de portabilidad · un minuto</p>
-  <p>Mueve la carpeta entera del proyecto al escritorio, o a un pendrive, y navega por todos los enlaces. Si algo deja de funcionar, esa ruta no era relativa. Es la única prueba que importa, porque es lo que le pasará al proyecto cuando lo subas a un servidor.</p>
+  <p>Mueve la carpeta entera del proyecto al escritorio, o a un pendrive, y navega por todos los enlaces. Si algo deja de funcionar, esa ruta no era relativa. Es la única prueba que importa, porque es lo que le pasará al proyecto cuando lo entregues.</p>
+</div>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 6 y de la semana 2</p>
+  <ul class="checklist">
+    <li>Las cuatro páginas existen y se enlazan entre sí sin ningún error 404.</li>
+    <li>El menú es idéntico en las cuatro y cada una marca la suya con <code>aria-current</code>.</li>
+    <li>Todas las rutas son relativas y el sitio sobrevive a moverse de carpeta.</li>
+    <li>Sabes resolver una ruta con el método de los tres pasos.</li>
+  </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Desde dónde se resuelve una ruta relativa?</li>
-    <li>¿Qué significa <code>../</code>?</li>
+    <li>¿Qué aporta <code>&lt;nav&gt;</code> que no aporta un <code>&lt;div&gt;</code> con enlaces?</li>
     <li>¿Por qué una ruta con <code>C:\</code> funciona en tu equipo y no en el del profesor?</li>
   </ol>
 </div>
@@ -689,98 +1204,8 @@ Escribe la ruta exacta para cada caso:
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Desde la carpeta del archivo que contiene el enlace, no desde la raíz del proyecto.</p>
-  <p>2 · Subir un nivel de carpeta antes de seguir buscando.</p>
-  <p>3 · Porque describe una posición dentro de tu disco duro. En cualquier otro equipo esa ruta no existe, y en un servidor tampoco.</p>
-</details>
-
----
-
-## Sesión 6 · El sitio multipágina y su navegación
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué convierte un grupo de enlaces en una navegación, y cómo se indica cuál es la página actual.</li>
-    <li><strong>2. Haz:</strong> Crea y conecta las cuatro páginas del proyecto con la misma navegación.</li>
-    <li><strong>3. Comprueba:</strong> Recorre el ciclo completo de páginas sin un solo enlace roto.</li>
-  </ol>
-</div>
-
-### Un menú es una lista de enlaces, marcada como tal
-
-Una navegación es exactamente dos cosas: una lista de enlaces, y la declaración de que esa lista es la navegación del sitio.
-
-```html
-<nav aria-label="Navegación principal">
-    <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="productos.html">Productos</a></li>
-        <li><a href="acerca.html">Acerca de</a></li>
-        <li><a href="contacto.html" aria-current="page">Contacto</a></li>
-    </ul>
-</nav>
-```
-
-Tres decisiones que merecen explicación:
-
-* **`<nav>`** declara que ese bloque es navegación. Un lector de pantalla ofrece saltar directamente a él, o saltárselo entero para ir al contenido, que es lo que hace la mayoría de la gente que navega así.
-* **La lista** dice que son cuatro enlaces hermanos, y permite anunciar «lista de 4 elementos» antes de leerlos. Cuatro enlaces sueltos separados por espacios no dicen cuántos son ni dónde acaban.
-* **`aria-current="page"`** marca cuál de ellos es la página que se está viendo. Sin CSS es la única forma de comunicarlo.
-
-<div class="rule">
-  <p class="rule-label">Una navegación se repite idéntica</p>
-  <p>El mismo bloque, con los mismos enlaces y en el mismo orden, en las cuatro páginas. Lo único que cambia de una página a otra es <strong>dónde está el <code>aria-current</code></strong>. Si el menú cambia de orden entre páginas, quien navegue por el sitio tendrá que releerlo cada vez.</p>
-</div>
-
-### Tarea 5 · El sitio multipágina
-
-Amplía tu proyecto hasta tener cuatro páginas en la raíz:
-
-```text
-pixelstore/
-├── index.html      · portada
-├── productos.html  · catálogo
-├── acerca.html     · quiénes somos
-└── contacto.html   · contacto
-```
-
-Requisitos:
-
-1. Las cuatro páginas tienen el esqueleto completo y su propio `<title>` **distinto y descriptivo**.
-2. Las cuatro incluyen el mismo bloque de navegación.
-3. Cada página marca su propio enlace con `aria-current="page"`.
-4. Cada página tiene un único `h1` que coincide con el tema de esa página.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · el título de cada página</summary>
-  <p>El <code>&lt;title&gt;</code> se lee fuera de contexto: en una pestaña estrecha, en un favorito, en un resultado de búsqueda. «Contacto» no dice de qué web es. Escribe primero lo específico y después el sitio, porque las pestañas se recortan por el final:</p>
-  <p><code>Contacto | PixelStore</code>, <code>Catálogo de componentes | PixelStore</code>.</p>
-</details>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 6 y de la semana 2</p>
-  <ul class="checklist">
-    <li>Las cuatro páginas existen y validan.</li>
-    <li>Recorres Inicio → Productos → Acerca de → Contacto → Inicio sin ningún error 404.</li>
-    <li>Todas las rutas son relativas y el sitio sobrevive a moverse de carpeta.</li>
-    <li>Cada página tiene un título propio y descriptivo.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué los enlaces de un menú van dentro de una lista?</li>
-    <li>¿Qué aporta <code>&lt;nav&gt;</code> que no aporta un <code>&lt;div&gt;</code> con enlaces?</li>
-    <li>¿Cómo se indica sin CSS cuál es la página actual?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque son elementos hermanos de un conjunto: la lista dice cuántos son y dónde empieza y acaba el menú.</p>
   <p>2 · Declara que ese bloque es una zona de navegación, y eso permite saltar a él o saltárselo. Un <code>div</code> no significa nada.</p>
-  <p>3 · Con <code>aria-current="page"</code> en el enlace correspondiente.</p>
+  <p>3 · Porque describe una posición dentro de tu disco duro. En cualquier otro equipo esa ruta no existe.</p>
 </details>
 
 ---
@@ -789,18 +1214,27 @@ Requisitos:
 
 ---
 
-## Sesión 7 · Imágenes y texto alternativo
+## Sesión 7 · Imágenes correctamente utilizadas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Que el <code>alt</code> correcto depende de la función de la imagen, no de lo que se ve en ella.</li>
-    <li><strong>2. Haz:</strong> Decide el texto alternativo de cinco imágenes con funciones distintas.</li>
+    <li><strong>1. Aprende:</strong> Que el <code>alt</code> correcto depende de la función de la imagen y no de lo que se ve en ella, y qué atributos mejoran el rendimiento.</li>
+    <li><strong>2. Haz:</strong> Decide el texto alternativo de cinco imágenes con funciones distintas y añade imágenes a tu proyecto.</li>
     <li><strong>3. Comprueba:</strong> Desactiva las imágenes y comprueba si la página sigue entendiéndose.</li>
   </ol>
 </div>
 
-### El alt no describe la imagen: la sustituye
+### La etiqueta
+
+```html
+<img src="img/portatil.webp"
+     alt="Portátil gris abierto sobre una mesa de trabajo">
+```
+
+`src` indica el archivo y `alt` el texto alternativo. `img` es un elemento vacío: no se cierra.
+
+### El `alt` no describe la imagen: la sustituye
 
 La pregunta habitual, «¿qué pongo en el `alt`?», casi siempre se responde describiendo lo que se ve. Es la respuesta equivocada.
 
@@ -810,49 +1244,116 @@ El texto alternativo es lo que ocupa el lugar de la imagen cuando la imagen no e
 
 De ahí salen tres casos, y solo tres:
 
-| La imagen... | Entonces el `alt` es... | Ejemplo |
-| ------------ | ----------------------- | ------- |
+| La imagen... | El `alt` es... | Ejemplo |
+| ------------ | -------------- | ------- |
 | **Informa**: aporta contenido que no está escrito en ningún otro sitio | La información que aporta | `alt="El modelo A consume 45 W, el B 65 W y el C 90 W"` |
 | **Actúa**: es el único contenido de un enlace o un botón | La acción o el destino, no el dibujo | `alt="Buscar en la tienda"` |
 | **Decora**: no aporta nada que no esté ya en el texto | Vacío, y se escribe igualmente | `alt=""` |
 
+#### Imagen informativa
+
+```html
+<img src="img/placa-solar.webp"
+     alt="Paneles solares instalados sobre la cubierta del edificio">
+```
+
+#### Imagen decorativa
+
+```html
+<img src="img/separador.webp" alt="">
+```
+
+Un texto alternativo vacío puede ser exactamente la decisión correcta.
+
 <div class="rule">
-  <p class="rule-label">El <code>alt</code> vacío no es lo mismo que no poner <code>alt</code></p>
+  <p class="rule-label"><code>alt=""</code> no es lo mismo que no poner <code>alt</code></p>
   <p><code>alt=""</code> significa «esta imagen es decorativa, ignórala». Un lector de pantalla la salta en silencio, que es justo lo que queremos.</p>
   <p>Si directamente no escribes el atributo, el lector no sabe qué hacer y suele leer el nombre del archivo. Quien usa la página escucha «guion bajo img guion 47 punto webp». Por eso <strong>toda</strong> imagen lleva <code>alt</code>: la duda es solo si va vacío o lleno.</p>
 </div>
 
-#### Cuando la imagen necesita un pie
+#### Lo que no debemos hacer
 
-Si la imagen va acompañada de un pie visible, los dos elementos se marcan juntos:
+```html
+alt="foto"
+```
+
+No aporta nada. Y esto tampoco:
+
+```html
+alt="ordenador portátil barato comprar ordenador portátil
+ofertas portátiles ordenador gaming tienda Alicante"
+```
+
+El `alt` no es un sitio donde meter palabras clave. Quien depende de él tiene que escuchar eso entero.
+
+### `figure` y `figcaption`
+
+Cuando la imagen lleva un pie visible, los dos se marcan juntos:
 
 ```html
 <figure>
-    <img src="grafico-consumo.webp" alt="El modelo A consume 45 W, el B 65 W y el C 90 W">
-    <figcaption>Consumo comparado de los tres portátiles del catálogo</figcaption>
+    <img src="img/prototipo.webp"
+         alt="Primer prototipo del robot, con la carcasa abierta">
+
+    <figcaption>
+        Primer prototipo desarrollado en 2026.
+    </figcaption>
 </figure>
 ```
 
-`figcaption` es el pie que todo el mundo ve; `alt` es el contenido de la imagen para quien no la ve. No deben decir lo mismo, porque no hacen lo mismo: si los repites, quien use un lector de pantalla lo escuchará dos veces.
+`figcaption` es el pie que ve todo el mundo; `alt` sustituye a la imagen para quien no la ve. **No deben decir lo mismo**, porque no hacen lo mismo: si los repites, quien use un lector de pantalla escucha la misma frase dos veces.
 
-#### Dos atributos que cuestan poco
+### Dos atributos de rendimiento
 
 ```html
-<img src="teclado.webp" alt="Teclado mecánico compacto con retroiluminación"
-     width="800" height="600" loading="lazy">
+<img src="img/producto.webp"
+     alt="Teclado mecánico compacto"
+     width="800"
+     height="600"
+     loading="lazy">
 ```
 
-`width` y `height` reservan el hueco antes de que la imagen llegue, y evitan que el texto salte cuando termina de cargar. `loading="lazy"` retrasa la descarga de las imágenes que aún no se ven al bajar por la página.
+`width` y `height` reservan el hueco antes de que la imagen llegue, y evitan que el texto salte cuando termina de cargar. `loading="lazy"` retrasa la descarga de las imágenes que todavía no se ven. Más adelante veremos cómo CSS adapta visualmente estas imágenes.
+
+<details class="aside aside--extra">
+  <summary>Extra · una imagen no tiene por qué ser un único archivo</summary>
+  <p>HTML permite ofrecer varias versiones del mismo contenido y dejar que el navegador elija:</p>
+  <pre><code>&lt;picture&gt;
+    &lt;source srcset="img/portada.webp" type="image/webp"&gt;
+    &lt;img src="img/portada.jpg" alt="Estudiantes en un laboratorio"&gt;
+&lt;/picture&gt;</code></pre>
+  <p>El navegador usa el primer <code>source</code> que entiende y, si no entiende ninguno, cae en el <code>img</code>. No hace falta dominarlo ahora. Lo importante es saber que existe y que una imagen web no es necesariamente un solo archivo para cualquier situación.</p>
+</details>
+
+<details class="aside aside--extra">
+  <summary>Extra · audio, vídeo y contenido incrustado</summary>
+  <p>HTML también incorpora multimedia:</p>
+  <pre><code>&lt;video controls&gt;
+    &lt;source src="media/demo.mp4" type="video/mp4"&gt;
+    Tu navegador no puede reproducir este vídeo.
+&lt;/video&gt;
+
+&lt;audio controls&gt;
+    &lt;source src="media/audio.mp3" type="audio/mpeg"&gt;
+&lt;/audio&gt;</code></pre>
+  <p>El texto suelto dentro del elemento es lo que se muestra si el navegador no puede reproducirlo.</p>
+  <p>Y con <code>&lt;iframe&gt;</code> se puede incrustar un documento externo dentro del tuyo:</p>
+  <pre><code>&lt;iframe src="https://example.com"
+        title="Contenido externo de ejemplo"
+        loading="lazy"&gt;&lt;/iframe&gt;</code></pre>
+  <p>Un <code>iframe</code> no debería ser la opción automática para cualquier contenido: estás metiendo una página ajena dentro de la tuya, con implicaciones de seguridad, privacidad, rendimiento y accesibilidad. El <code>title</code> no es opcional, porque es lo único que identifica ese marco.</p>
+  <p>Un vídeo de 200 MB en tu web también es una decisión: tamaño, ancho de banda, formato y compatibilidad. Volveremos a este problema al estudiar optimización.</p>
+</details>
 
 ### Tarea 6 · ¿Qué `alt` pondrías?
 
 <p class="stage">Paso 1 · Te enseño uno</p>
 
-**El logotipo de PixelStore en la cabecera, enlazado a `index.html`.**
+**El logotipo de la empresa en la cabecera, enlazado a `index.html`.**
 
 <dl class="worked">
   <dt>¿Qué función tiene?</dt>
-  <dd>Actúa: es el contenido de un enlace, y además es el único contenido de ese enlace.</dd>
+  <dd>Actúa: es el único contenido de un enlace.</dd>
   <dt>Si la borro, ¿qué se pierde?</dt>
   <dd>Un enlace sin ningún texto. Quien no vea la imagen se encuentra un enlace que no dice adónde va.</dd>
   <dt>Entonces, ¿qué escribo?</dt>
@@ -861,15 +1362,15 @@ Si la imagen va acompañada de un pie visible, los dos elementos se marcan junto
   <dd><code>alt="PixelStore · Inicio"</code></dd>
 </dl>
 
-<p class="stage stage--solo">Paso 2 · Hazlo tú</p>
+<p class="stage stage--solo">Paso 2 · Ahora tú</p>
 
-Para cada caso, decide si el `alt` debe ser descriptivo, funcional o vacío, y escríbelo:
+Para cada caso, decide si el `alt` debe ser descriptivo, funcional o vacío, escríbelo, y di **por qué**:
 
 1. **Un gráfico de barras** que compara el consumo energético de tres portátiles.
-2. **Una línea divisoria decorativa** entre dos secciones.
+2. **Una fotografía decorativa** que separa dos secciones.
 3. **Un icono de lupa** dentro de un enlace, sin ningún texto alrededor.
 4. **La foto de un producto** en su ficha: un teclado mecánico con iluminación RGB.
-5. **La foto del equipo de PixelStore** en la página «Acerca de», con un pie que ya dice quiénes son.
+5. **La foto del equipo** en la página «Acerca de», con un pie que ya dice quiénes son.
 
 <details class="aside aside--extra">
   <summary>Ver soluciones recomendadas</summary>
@@ -877,8 +1378,12 @@ Para cada caso, decide si el `alt` debe ser descriptivo, funcional o vacío, y e
   <p>2 · Decora. <code>alt=""</code>.</p>
   <p>3 · Actúa. <code>alt="Buscar en la tienda"</code>: es la única etiqueta accesible que tiene ese enlace.</p>
   <p>4 · Informa. <code>alt="Teclado mecánico compacto con interruptores rojos y retroiluminación RGB"</code>. En una ficha de producto la foto sí aporta contenido.</p>
-  <p>5 · Depende del pie. Si el <code>figcaption</code> ya identifica a las personas, el <code>alt</code> describe lo que se ve sin repetirlo: <code>alt="Nueve personas en la oficina de PixelStore"</code>. Si el pie no dice nada, el <code>alt</code> tiene que cargar con la información.</p>
+  <p>5 · Depende del pie. Si el <code>figcaption</code> ya identifica a las personas, el <code>alt</code> describe lo que se ve sin repetirlo: <code>alt="Nueve personas en la oficina"</code>. Si el pie no dice nada, el <code>alt</code> carga con la información.</p>
 </details>
+
+### Ahora tú · Imágenes en tu proyecto
+
+Crea la carpeta `img/` y añade al menos tres imágenes a tu sitio: una informativa, una decorativa y una dentro de un `figure` con su pie. Enlázalas con rutas relativas.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación · la prueba de las imágenes apagadas</p>
@@ -896,27 +1401,85 @@ Para cada caso, decide si el `alt` debe ser descriptivo, funcional o vacío, y e
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · <code>alt=""</code> declara que la imagen es decorativa y hace que se ignore. Sin el atributo, el lector de pantalla no sabe qué es y acaba leyendo el nombre del archivo.</p>
+  <p>1 · <code>alt=""</code> declara que la imagen es decorativa y hace que se ignore. Sin el atributo, el lector de pantalla acaba leyendo el nombre del archivo.</p>
   <p>2 · La acción, no el dibujo: <code>alt="Buscar en la tienda"</code>.</p>
-  <p>3 · Porque el pie lo lee todo el mundo y el <code>alt</code> solo sustituye a la imagen. Si coinciden, quien use un lector de pantalla oye la misma frase dos veces.</p>
+  <p>3 · Porque el pie lo lee todo el mundo y el <code>alt</code> solo sustituye a la imagen. Si coinciden, se oye la misma frase dos veces.</p>
 </details>
 
 ---
 
-## Sesión 8 · Semántica estructural y el infierno de los div
+## Sesión 8 · HTML semántico
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué zonas declara cada elemento estructural, cuándo un <code>div</code> sigue siendo correcto y qué separa <code>section</code> de <code>article</code>.</li>
+    <li><strong>1. Aprende:</strong> Qué declara cada elemento estructural, cuándo un <code>div</code> sigue siendo correcto y qué separa <code>section</code> de <code>article</code>.</li>
     <li><strong>2. Haz:</strong> Refactoriza un documento hecho solo de <code>div</code> hasta convertirlo en HTML semántico.</li>
     <li><strong>3. Comprueba:</strong> Resuelve los dos retos discutiéndolos con tu compañero.</li>
   </ol>
 </div>
 
-### Las zonas de una página
+### Podríamos construir una web con cientos de `div`
 
-Un `<div>` no significa nada: es una caja. Los elementos estructurales sí significan algo, y por eso un lector de pantalla puede ofrecer una lista de zonas de la página y saltar directamente a la que interese.
+Y funcionaría. Pero un `<div>` no significa nada: es una caja. HTML tiene elementos que explican **qué representa cada parte**, y eso permite que un lector de pantalla ofrezca una lista de zonas y salte directamente a la que interese.
+
+#### `<header>`
+
+```html
+<header>
+    <h1>PixelStore</h1>
+</header>
+```
+
+Contenido introductorio, de la página o de una sección.
+
+#### `<nav>`
+
+Un bloque importante de navegación. No hace falta envolver en `nav` cualquier grupo de tres enlaces: se reserva para la navegación principal del sitio o de una sección.
+
+#### `<main>`
+
+```html
+<main>
+    ...
+</main>
+```
+
+El contenido principal del documento. **Uno por página**, y no puede estar dentro de `header`, `nav`, `article`, `aside` ni `footer`.
+
+#### `<section>`
+
+Una sección temática:
+
+```html
+<section>
+    <h2>Productos destacados</h2>
+    ...
+</section>
+```
+
+Buena señal de que tienes una sección de verdad: **tiene sentido darle un encabezado**. Si no sabrías qué título ponerle, probablemente no es una `section`.
+
+#### `<article>`
+
+Contenido que tiene sentido por sí mismo:
+
+```html
+<article>
+    <h3>Portátil Nova 14</h3>
+    <p>Nuevo portátil profesional de 14 pulgadas.</p>
+</article>
+```
+
+Ejemplos habituales: una noticia, una publicación, un comentario, una ficha de producto, una entrada de blog.
+
+#### `<aside>`
+
+Contenido relacionado pero secundario respecto al principal.
+
+#### `<footer>`
+
+Pie de la página o de una sección. Puede contener autoría, información legal, enlaces relacionados, contacto o copyright.
 
 <figure class="diagram">
   <figcaption>Las zonas que declara un documento bien estructurado</figcaption>
@@ -924,8 +1487,8 @@ Un `<div>` no significa nada: es una caja. Los elementos estructurales sí signi
     <li>header · la cabecera de la página o de una sección</li>
     <li>nav · un bloque de navegación</li>
     <li>main · el contenido principal, una sola vez por página</li>
-    <li>section · una parte temática del contenido, con su encabezado</li>
-    <li>article · un contenido que se entiende por sí solo, fuera de esta página</li>
+    <li>section · una parte temática, con su encabezado</li>
+    <li>article · contenido que se entiende fuera de esta página</li>
     <li>aside · contenido relacionado pero secundario</li>
     <li>footer · el pie de la página o de una sección</li>
   </ol>
@@ -933,23 +1496,71 @@ Un `<div>` no significa nada: es una caja. Los elementos estructurales sí signi
 
 <p class="term">Landmark</p>
 
-Cada una de esas zonas. Son los puntos de referencia que permiten recorrer una página sin verla, igual que tú recorres una web mirando dónde está el menú y dónde el contenido.
+Cada una de esas zonas. Son los puntos de referencia que permiten recorrer una página sin verla, igual que tú la recorres mirando dónde está el menú y dónde el contenido.
 
-#### `section` o `article`
+### `section` o `article`
 
-La regla que resuelve el 90 % de los casos:
+La regla que resuelve casi todos los casos:
 
-> **Si el contenido tuviera sentido publicado por separado, es un `article`. Si solo tiene sentido como una parte de esta página, es una `section`.**
+> **Si el contenido tuviera sentido publicado por separado, es un `article`. Si solo lo tiene como parte de esta página, es una `section`.**
 
-Una ficha de producto se entiende sola: aparece en un buscador, se comparte por mensaje, tiene su propio título y su propia descripción. Es un `article`. El catálogo que agrupa veinte fichas solo tiene sentido dentro de la web de la tienda: es una `section`.
+Una ficha de producto se entiende sola: aparece en un buscador, se comparte por mensaje, tiene su propio título. Es un `article`. El catálogo que agrupa veinte fichas solo tiene sentido dentro de la tienda: es una `section`.
 
-#### Entonces, ¿cuándo se usa `div`?
+### Y entonces, ¿`div` está mal?
 
-Cuando de verdad no hay nada que declarar. Un `div` es correcto si solo existe para agrupar cosas de cara al CSS y no representa ninguna zona con significado propio. El error no es usar `div`: es usarlo **en lugar de** un elemento que sí significaba algo.
+No. `<div>` es un contenedor genérico perfectamente válido. La pregunta es:
+
+> **¿Existe un elemento con un significado más adecuado?**
+
+Si existe, úsalo. Si no existe —solo estás agrupando cosas de cara al CSS, sin que ese grupo represente ninguna zona con significado— `div` es exactamente lo correcto. **El error no es usar `div`: es usarlo en lugar de algo que sí significaba.**
+
+### Un ejemplo completo
+
+```html
+<body>
+
+    <header>
+        <h1>PixelStore</h1>
+
+        <nav aria-label="Navegación principal">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <section>
+            <h2>Productos destacados</h2>
+
+            <article>
+                <h3>Portátil Nova 14</h3>
+                <p>Equipo ligero orientado al trabajo y al estudio.</p>
+            </article>
+
+            <article>
+                <h3>Monitor Vision 27</h3>
+                <p>Monitor de 27 pulgadas orientado a productividad.</p>
+            </article>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 PixelStore</p>
+    </footer>
+
+</body>
+```
+
+Aunque todavía no tenga CSS, la estructura del documento ya tiene sentido. Léela en voz alta: se entiende qué es cada cosa sin ver la pantalla.
 
 ### Tarea 7 · El infierno de los div
 
-Este código es real, del tipo que te vas a encontrar heredado:
+Este código es del tipo que te vas a encontrar heredado:
 
 ```html
 <div id="wrapper">
@@ -988,7 +1599,7 @@ Empiezo por la barra superior:
   <dt>¿Qué es <code>div.top-bar</code>?</dt>
   <dd>La cabecera de la página. Existe un elemento para eso: <code>&lt;header&gt;</code>.</dd>
   <dt>¿Y <code>div.logo</code>?</dt>
-  <dd>Es el nombre del sitio, el título de mayor rango de la portada. Es un <code>&lt;h1&gt;</code>, no una caja con texto dentro.</dd>
+  <dd>Es el nombre del sitio, el título de mayor rango de la portada: un <code>&lt;h1&gt;</code>, no una caja con texto.</dd>
   <dt>¿Y <code>div.menu</code>?</dt>
   <dd>Es la navegación, y sus enlaces son un conjunto: <code>&lt;nav&gt;</code> con una <code>&lt;ul&gt;</code>.</dd>
 </dl>
@@ -1007,53 +1618,54 @@ Empiezo por la barra superior:
 
 Cuatro `div` han desaparecido y el documento dice cuatro cosas que antes no decía.
 
-<p class="stage stage--solo">Paso 2 · Hazlo tú</p>
+<p class="stage stage--solo">Paso 2 · Ahora tú</p>
 
-Reescribe el resto del fragmento. Al terminar, tu versión debería cumplir esto:
+Reescribe el resto. Al terminar, tu versión debe cumplir:
 
 1. No queda ningún `div` cuyo nombre de clase describa algo que HTML ya sabe decir.
 2. Hay un único `<main>`.
-3. «Novedades» es un encabezado, y «Portátil Nova 14» es un encabezado de nivel inferior.
-4. La tarjeta de producto está marcada como `article`, y sabes justificar por qué no es una `section`.
-5. El aviso lateral es un `aside` y el pie es un `footer`.
+3. «Novedades» es un encabezado, y «Portátil Nova 14» un encabezado de nivel inferior.
+4. La tarjeta está marcada como `article`, y sabes justificar por qué no es una `section`.
+5. El aviso lateral es un `aside` y el pie un `footer`.
+6. No has perdido ni una palabra del contenido original.
 
 ### Reto 3 · Botón contra falso botón (10 min)
 
 ```html
 <!-- Opción A -->
-<div onclick="abrirModal()">Ver especificaciones</div>
+<div onclick="guardar()">Guardar</div>
 
 <!-- Opción B -->
-<button type="button">Ver especificaciones</button>
+<button type="button">Guardar</button>
 ```
 
 Las dos funcionan al hacer clic. ¿Cuál eliges y por qué?
 
 <details class="aside aside--extra">
   <summary>Ver respuesta del Reto 3</summary>
-  <p>La B, y no por estilo. Un <code>&lt;button&gt;</code> trae de fábrica cuatro cosas que la opción A no tiene y que habría que reconstruir a mano: se puede alcanzar con la tecla <code>Tab</code>, se activa con <code>Enter</code> y con la barra espaciadora, se anuncia como «botón» a un lector de pantalla, y recibe el foco visible.</p>
-  <p>La opción A solo funciona para quien use un ratón y vea la pantalla. Es el mismo patrón de toda la unidad: se ve igual, y no hace lo mismo.</p>
+  <p>La B, y no por estilo. Un <code>&lt;button&gt;</code> trae de fábrica cuatro cosas que la A no tiene y habría que reconstruir a mano: se alcanza con <code>Tab</code>, se activa con <code>Enter</code> y con la barra espaciadora, se anuncia como «botón» a un lector de pantalla, y recibe el foco visible.</p>
+  <p>La opción A solo funciona para quien use ratón y vea la pantalla. Mismo patrón de toda la unidad: se ve igual, y no hace lo mismo.</p>
 </details>
 
 ### Reto 4 · ¿`section` o `article`? (10 min)
 
-Discútelo con tu compañero: en la tienda, ¿la ficha individual de un producto es `section` o `article`? ¿Y el catálogo entero que agrupa los veinte productos?
+Discútelo con tu compañero. En una tienda online:
+
+* ¿La ficha individual de un producto es `section` o `article`?
+* ¿Y el catálogo que agrupa los veinte productos?
+* ¿Y un comentario de un cliente dentro de la ficha?
 
 <details class="aside aside--extra">
   <summary>Ver respuesta del Reto 4</summary>
-  <p>La ficha es un <code>article</code>: se entiende por sí sola fuera de la página, y de hecho es lo que se comparte o lo que devuelve un buscador.</p>
-  <p>El catálogo es una <code>section</code>: agrupa artículos y solo tiene sentido dentro de la web de la tienda. Es decir, una <code>section</code> que contiene veinte <code>article</code>, y no al revés.</p>
+  <p>La ficha es un <code>article</code>: se entiende sola fuera de la página, y de hecho es lo que se comparte o lo que devuelve un buscador.</p>
+  <p>El catálogo es una <code>section</code>: agrupa artículos y solo tiene sentido dentro de la tienda. Es decir, una <code>section</code> que contiene veinte <code>article</code>, y no al revés.</p>
+  <p>El comentario es un <code>article</code> dentro del <code>article</code> de la ficha. Sí, se pueden anidar: un comentario es contenido independiente y atribuible a alguien.</p>
+  <p>Fíjate en que aquí no hay una única respuesta mecánica. HTML semántico admite discusión, y saber defender tu decisión vale más que acertar la etiqueta «oficial».</p>
 </details>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 8</p>
-  <ul class="checklist">
-    <li>Sabes nombrar las siete zonas estructurales y qué declara cada una.</li>
-    <li>Aplicas la regla de «¿tendría sentido publicado aparte?» para decidir entre <code>section</code> y <code>article</code>.</li>
-    <li>Sabes decir cuándo un <code>div</code> sigue siendo la opción correcta.</li>
-    <li>Tu refactorización no ha perdido ningún contenido del original.</li>
-  </ul>
-</div>
+### Ahora tú · Refactoriza tu propio sitio
+
+Aplica lo mismo a tus cuatro páginas: `header`, `nav`, `main`, `footer` en todas, y `section` / `article` donde corresponda.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
@@ -1066,9 +1678,9 @@ Discútelo con tu compañero: en la tienda, ¿la ficha individual de un producto
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Uno. Es el contenido principal del documento, y no puede haber dos contenidos principales.</p>
+  <p>1 · Uno. Es el contenido principal del documento, y no puede haber dos.</p>
   <p>2 · Si tendría sentido publicado por separado es <code>article</code>; si solo lo tiene dentro de esta página, <code>section</code>.</p>
-  <p>3 · Se alcanza con <code>Tab</code>, se activa con teclado, se anuncia como botón y recibe el foco. Bastan dos de las cuatro.</p>
+  <p>3 · Se alcanza con <code>Tab</code>, se activa con teclado, se anuncia como botón y recibe el foco. Bastan dos.</p>
 </details>
 
 ---
@@ -1078,9 +1690,9 @@ Discútelo con tu compañero: en la tienda, ¿la ficha individual de un producto
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se lee la estructura real de una página con DevTools, más allá de lo que se ve.</li>
-    <li><strong>2. Haz:</strong> Audita la estructura de una web en producción y extrae su mapa semántico.</li>
-    <li><strong>3. Comprueba:</strong> Aplica a tus cuatro páginas lo que hayas encontrado que merezca la pena.</li>
+    <li><strong>1. Aprende:</strong> Cómo se lee la estructura real de una página con DevTools, y qué elementos nativos usarías en lugar de programarlos.</li>
+    <li><strong>2. Haz:</strong> Audita una web en producción y extrae su mapa semántico.</li>
+    <li><strong>3. Comprueba:</strong> Aplica a tus páginas lo que hayas encontrado que merezca la pena.</li>
   </ol>
 </div>
 
@@ -1088,30 +1700,43 @@ Discútelo con tu compañero: en la tienda, ¿la ficha individual de un producto
 
 Hasta ahora has escrito HTML. Hoy vas a leerlo, que es lo que harás la mayor parte de tu vida profesional: casi siempre trabajarás sobre código que escribió otro.
 
-Abre DevTools con `F12`. Tres pestañas te interesan:
+Abre DevTools con `F12`. Tres pestañas interesan:
 
 | Pestaña | Para qué |
 | ------- | -------- |
 | **Elements** / *Inspector* | Ver el HTML real que ha construido el navegador, ya reparado |
-| **Accessibility** / *Accesibilidad* | Ver el árbol de accesibilidad: las zonas y los nombres que percibe un lector de pantalla |
+| **Accessibility** / *Accesibilidad* | Ver el árbol de accesibilidad: zonas y nombres que percibe un lector de pantalla |
 | **Console** | Ver los errores que el navegador sí ha decidido contar |
 
 <div class="rule">
   <p class="rule-label">Lo que ves en Elements no es lo que escribió el autor</p>
-  <p>El panel muestra el documento <strong>después</strong> de que el navegador lo haya reparado y de que el JavaScript lo haya modificado. Si quieres ver lo que se escribió de verdad, usa <code>Ctrl + U</code> para ver el código fuente original. Comparar los dos es, muchas veces, la propia auditoría.</p>
+  <p>El panel muestra el documento <strong>después</strong> de que el navegador lo haya reparado y de que el JavaScript lo haya modificado. Para ver lo que se escribió de verdad, usa <code>Ctrl + U</code>. Comparar los dos es, muchas veces, la auditoría entera.</p>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Extra · elementos que ya existen y solemos reprogramar</summary>
+  <p>Al auditar webs verás componentes hechos con JavaScript que HTML ya resuelve solo:</p>
+  <p><strong>Un desplegable</strong>, sin una línea de código:</p>
+  <pre><code>&lt;details&gt;
+    &lt;summary&gt;¿Cuánto tarda el envío?&lt;/summary&gt;
+    &lt;p&gt;Los pedidos se envían en 24–48 horas.&lt;/p&gt;
+&lt;/details&gt;</code></pre>
+  <p><strong>Una fecha</strong> legible por personas y por máquinas:</p>
+  <pre><code>&lt;time datetime="2026-09-15"&gt;15 de septiembre de 2026&lt;/time&gt;</code></pre>
+  <p><strong>Progreso</strong> y <strong>medida</strong>, que no significan lo mismo: <code>&lt;progress value="70" max="100"&gt;</code> representa una tarea que avanza; <code>&lt;meter min="0" max="100" value="85"&gt;</code> representa un valor dentro de un rango conocido, como un nivel de batería.</p>
+  <p>Y <strong>datos de contacto</strong>: <code>&lt;address&gt;</code>.</p>
+  <p>La regla general: antes de construir algo complejo, pregúntate <strong>si HTML ya sabe hacerlo</strong>. Usar la plataforma suele dar soluciones más simples, más accesibles, más compatibles y más fáciles de mantener.</p>
+</details>
 
 ### Tarea 8 · Audita una web real
 
 Elige una web de noticias o una tienda conocida y respóndela con DevTools delante:
 
-1. ¿Tiene un único `<main>`? ¿Y cuántos `<nav>`?
+1. ¿Tiene un único `<main>`? ¿Cuántos `<nav>`?
 2. ¿Cómo está marcado el menú principal: lista de enlaces o enlaces sueltos?
 3. Recorre la jerarquía de encabezados. ¿Hay un solo `h1`? ¿Se salta algún nivel?
 4. Elige tres imágenes distintas: ¿tienen `alt`? ¿Es descriptivo, funcional o vacío? ¿Está bien elegido?
-5. Busca un elemento que parezca un botón. ¿Es un `<button>` o un `div` disfrazado? Compruébalo intentando llegar hasta él solo con `Tab`.
-
-Anota los hallazgos en esta tabla:
+5. Busca algo que parezca un botón. ¿Es un `<button>` o un `div` disfrazado? Compruébalo intentando llegar con `Tab`.
 
 | Aspecto | Qué has encontrado | ¿Correcto? | Qué harías tú |
 | ------- | ------------------ | ---------- | ------------- |
@@ -1123,12 +1748,12 @@ Anota los hallazgos en esta tabla:
 
 <details class="aside aside--help">
   <summary>Estoy atascado · no encuentro los landmarks</summary>
-  <p>En lugar de bucear por el árbol, usa el buscador del panel Elements (<code>Ctrl + F</code> dentro de DevTools) y busca directamente <code>main</code>, <code>nav</code>, <code>header</code> o <code>footer</code>. Te dirá cuántas coincidencias hay, que es justo el dato que necesitas para las dos primeras preguntas.</p>
+  <p>En vez de bucear por el árbol, usa el buscador del panel Elements (<code>Ctrl + F</code> dentro de DevTools) y busca directamente <code>main</code>, <code>nav</code>, <code>header</code> o <code>footer</code>. Te dirá cuántas coincidencias hay, que es justo el dato de las dos primeras preguntas.</p>
 </details>
 
-### Y ahora, lo tuyo
+### Ahora tú · La misma auditoría, sobre lo tuyo
 
-Vuelve a tus cuatro páginas y pásales la misma auditoría que acabas de hacerle a una web profesional. Corrige lo que encuentres antes de cerrar la sesión.
+Pásale a tus cuatro páginas exactamente la misma auditoría que acabas de hacerle a una web profesional, y corrige lo que encuentres.
 
 No es casualidad que la auditoría vaya antes que el proyecto final: es más fácil ver un fallo en el código de otro, y ese ojo entrenado es el que después aplicas al tuyo.
 
@@ -1136,7 +1761,7 @@ No es casualidad que la auditoría vaya antes que el proyecto final: es más fá
   <p class="checkpoint-label">Checkpoint · fin de la sesión 9 y de la semana 3</p>
   <ul class="checklist">
     <li>Sabes abrir el árbol de accesibilidad y leer las zonas de una página.</li>
-    <li>Has auditado una web real y anotado hallazgos concretos, no impresiones.</li>
+    <li>Has auditado una web real con hallazgos concretos, no impresiones.</li>
     <li>Tus cuatro páginas usan elementos estructurales, no <code>div</code> genéricos.</li>
     <li>Todas tus imágenes tienen <code>alt</code>, lleno o vacío según su función.</li>
   </ul>
@@ -1147,15 +1772,15 @@ No es casualidad que la auditoría vaya antes que el proyecto final: es más fá
   <ol>
     <li>¿Por qué el panel Elements puede no coincidir con el código fuente?</li>
     <li>¿Cómo compruebas en diez segundos si un botón es un botón de verdad?</li>
-    <li>¿Qué te dice el árbol de accesibilidad que no te dice el HTML?</li>
+    <li>Nombra un elemento HTML que evite escribir JavaScript.</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque muestra el documento ya reparado por el navegador y modificado por el JavaScript. El fuente original se ve con <code>Ctrl + U</code>.</p>
-  <p>2 · Intentando llegar hasta él con la tecla <code>Tab</code>. Si no recibe el foco, no es un botón.</p>
-  <p>3 · Cómo se anuncia cada elemento: su papel y su nombre accesible, que es lo que de verdad escucha quien no ve la pantalla.</p>
+  <p>2 · Intentando llegar hasta él con <code>Tab</code>. Si no recibe el foco, no es un botón.</p>
+  <p>3 · <code>&lt;details&gt;</code> con <code>&lt;summary&gt;</code> da un desplegable sin código. Vale también <code>&lt;progress&gt;</code>, <code>&lt;meter&gt;</code> o la validación nativa de formularios que veremos la semana que viene.</p>
 </details>
 
 ---
@@ -1164,7 +1789,7 @@ No es casualidad que la auditoría vaya antes que el proyecto final: es más fá
 
 ---
 
-## Sesión 10 · Tablas semánticas
+## Sesión 10 · Tablas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1175,60 +1800,93 @@ No es casualidad que la auditoría vaya antes que el proyecto final: es más fá
   </ol>
 </div>
 
+### Las tablas sirven para datos tabulares
+
+No sirven para diseñar una página. Durante años se maquetaron webs enteras con tablas porque era la única forma de colocar cosas en columnas; eso terminó hace mucho, pero la costumbre dejó rastro.
+
+### Una tabla básica
+
+```html
+<table>
+    <tr>
+        <th>Producto</th>
+        <th>Precio</th>
+    </tr>
+    <tr>
+        <td>Portátil Nova</td>
+        <td>899 €</td>
+    </tr>
+</table>
+```
+
+Funciona, pero le falta casi todo. Vamos a ver por qué.
+
 ### El problema que resuelve una tabla bien marcada
 
 Cuando tú miras una tabla, lees una celda y **subes con la vista** hasta el encabezado de su columna para saber qué significa ese número. Es tan automático que no lo notas.
 
-Quien no ve la tabla no puede hacer eso. Va celda por celda, y sin más información escucha: «19». Nada más. Necesita que el documento diga a qué encabezado pertenece cada celda, y eso es exactamente lo que se marca.
+Quien no ve la tabla no puede hacer eso. Va celda por celda y, sin más información, escucha: «899». Nada más. Necesita que el documento diga a qué encabezado pertenece cada celda.
+
+### Una estructura completa
+
+```html
+<table>
+
+    <caption>Comparativa de productos</caption>
+
+    <thead>
+        <tr>
+            <th scope="col">Producto</th>
+            <th scope="col">Pantalla</th>
+            <th scope="col">Precio</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <th scope="row">Nova 14</th>
+            <td>14 pulgadas</td>
+            <td>899 €</td>
+        </tr>
+        <tr>
+            <th scope="row">Nova 16</th>
+            <td>16 pulgadas</td>
+            <td>1.099 €</td>
+        </tr>
+    </tbody>
+
+</table>
+```
 
 | Elemento | Qué declara |
 | -------- | ----------- |
 | `<table>` | Que esto son datos con relación de filas y columnas |
 | `<caption>` | El título de la tabla, dentro de la propia tabla |
-| `<thead>` | La fila o filas de encabezados |
-| `<tbody>` | Los datos |
+| `<thead>` | La fila o filas de encabezado |
+| `<tbody>` | El cuerpo de datos |
+| `<tfoot>` | Un pie de tabla, para totales o resúmenes |
 | `<tr>` | Una fila |
 | `<th>` | Una celda que **encabeza** otras |
 | `<td>` | Una celda de datos |
-| `scope="col"` | Este `th` encabeza su columna |
-| `scope="row"` | Este `th` encabeza su fila |
+
+### `scope`
 
 <p class="term">scope</p>
 
-El atributo que dice en qué dirección manda un encabezado. Con `scope`, esa celda deja de escucharse como «19» y pasa a escucharse como «Básico, precio mensual, 19 euros».
-
-#### Una tabla completa
+El atributo que dice en qué dirección manda un encabezado.
 
 ```html
-<table>
-    <caption>Planes de servidor de PixelStore</caption>
-    <thead>
-        <tr>
-            <th scope="col">Modelo</th>
-            <th scope="col">RAM</th>
-            <th scope="col">Precio mensual</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th scope="row">Básico</th>
-            <td>8 GB</td>
-            <td>19 €</td>
-        </tr>
-        <tr>
-            <th scope="row">Avanzado</th>
-            <td>16 GB</td>
-            <td>39 €</td>
-        </tr>
-    </tbody>
-</table>
+<th scope="col">   <!-- encabeza su columna -->
+<th scope="row">   <!-- encabeza su fila -->
 ```
 
-Fíjate en la primera columna del `tbody`: «Básico» y «Avanzado» son `th`, no `td`. No son datos, son los nombres que identifican cada fila. Es el error más frecuente al empezar, y el que deja las tablas mudas.
+Con `scope`, esa celda deja de escucharse como «899» y pasa a escucharse como «Nova 14, precio, 899 euros».
+
+Fíjate en la primera columna del `tbody` del ejemplo: «Nova 14» y «Nova 16» son `th`, no `td`. No son datos, son los nombres que identifican cada fila. Es el error más frecuente al empezar, y el que deja las tablas mudas.
 
 <div class="rule">
-  <p class="rule-label"><code>caption</code> no es lo mismo que un encabezado encima</p>
-  <p>Poner un <code>&lt;h3&gt;Planes de servidor&lt;/h3&gt;</code> justo antes de la tabla no es equivalente. El <code>&lt;caption&gt;</code> va <strong>dentro</strong> de <code>&lt;table&gt;</code> y queda asociado a ella, así que se anuncia al entrar en la tabla y aparece si la tabla se extrae de su contexto. Un encabezado suelto encima es solo un texto que casualmente está cerca.</p>
+  <p class="rule-label"><code>caption</code> no es un encabezado puesto encima</p>
+  <p>Poner un <code>&lt;h3&gt;Comparativa&lt;/h3&gt;</code> justo antes de la tabla no es equivalente. El <code>&lt;caption&gt;</code> va <strong>dentro</strong> de <code>&lt;table&gt;</code> y queda asociado a ella: se anuncia al entrar en la tabla y viaja con ella si se extrae de su contexto. Un encabezado suelto encima es solo un texto que casualmente está cerca.</p>
 </div>
 
 ### Tarea 9 · Construye la tabla
@@ -1243,25 +1901,9 @@ Avanzado     16 GB   512 GB NVMe      5 TB            39 €
 Empresarial  32 GB   1 TB NVMe        10 TB           79 €
 ```
 
-Escribe el HTML que la represente, con:
+Escribe el HTML con `caption`, `thead`, `tbody`, `th scope="col"` en la cabecera, `th scope="row"` en el nombre de cada modelo y `td` en el resto.
 
-* `<caption>` con el título de la tabla.
-* `<thead>` y `<tbody>` delimitando encabezados y datos.
-* `<th scope="col">` en cada encabezado de columna.
-* `<th scope="row">` en el nombre de cada modelo.
-* `<td>` en el resto.
-
-Al terminar, haz esta comprobación: **lee en voz alta la celda «5 TB» tal y como la escucharía alguien que no ve la tabla**. Si tu marcado es correcto, deberías poder decir «Avanzado, transferencia, 5 TB». Si no puedes, falta un `scope`.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 10</p>
-  <ul class="checklist">
-    <li>Distingues <code>th</code> de <code>td</code> y sabes por qué la primera columna suele ser <code>th</code>.</li>
-    <li>Sabes explicar qué aporta <code>scope</code> con un ejemplo hablado.</li>
-    <li>Tu tabla tiene <code>caption</code>, <code>thead</code> y <code>tbody</code>.</li>
-    <li>Todas las filas tienen el mismo número de celdas.</li>
-  </ul>
-</div>
+**La comprobación:** lee en voz alta la celda «5 TB» tal y como la escucharía alguien que no ve la tabla. Si tu marcado es correcto, deberías poder decir «Avanzado, transferencia, 5 TB». Si no puedes, falta un `scope`.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
@@ -1275,7 +1917,7 @@ Al terminar, haz esta comprobación: **lee en voz alta la celda «5 TB» tal y c
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · <code>th</code> es una celda que encabeza a otras y les da significado; <code>td</code> es una celda de datos.</p>
-  <p>2 · Para declarar si un encabezado manda sobre su columna o sobre su fila, de modo que cada celda pueda anunciarse junto a los encabezados que la describen.</p>
+  <p>2 · Para declarar si un encabezado manda sobre su columna o sobre su fila, y así cada celda pueda anunciarse junto a los encabezados que la describen.</p>
   <p>3 · Porque <code>caption</code> está dentro de la tabla y queda asociado a ella; un encabezado suelto solo está cerca.</p>
 </details>
 
@@ -1298,47 +1940,46 @@ Al terminar, haz esta comprobación: **lee en voz alta la celda «5 TB» tal y c
 
 ```html
 <tr>
+    <th scope="row">11:00</th>
     <td colspan="5">Recreo</td>
 </tr>
 ```
 
-Esa fila parece tener una celda, pero ocupa cinco columnas. Si la tabla tiene cinco columnas, es correcta. Si tiene seis, acabas de dejar un hueco, y el navegador dibujará algo raro sin decirte nada.
+Esa fila parece tener dos celdas, pero ocupa seis columnas. Si la tabla tiene seis, es correcta. Si tiene siete, acabas de dejar un hueco, y el navegador dibujará algo raro sin decirte nada.
 
 <div class="rule">
   <p class="rule-label">La comprobación que evita el 90 % de los fallos</p>
-  <p>Recorre la tabla fila a fila y suma, en cada una, el <code>colspan</code> de sus celdas (una celda normal cuenta 1). <strong>Todas las filas tienen que dar el mismo total.</strong> Si una da distinto, ahí está el error, y lo tienes localizado sin abrir el navegador.</p>
-  <p>Con <code>rowspan</code> hay que acordarse de que una celda que baja invade la fila siguiente: esa fila tendrá una celda escrita menos, porque una de sus posiciones ya está ocupada desde arriba.</p>
+  <p>Recorre la tabla fila a fila y suma, en cada una, el <code>colspan</code> de sus celdas (una celda normal cuenta 1). <strong>Todas las filas tienen que dar el mismo total.</strong> Si una da distinto, ahí está el error, y lo has localizado sin abrir el navegador.</p>
+  <p>Con <code>rowspan</code>, recuerda que una celda que baja invade la fila siguiente: esa fila tendrá una celda escrita menos, porque una de sus posiciones ya está ocupada desde arriba.</p>
 </div>
 
 #### Cuándo empieza a ser mala idea
 
-Una celda combinada aislada es normal y se entiende bien. Una tabla con combinaciones en varias direcciones a la vez se vuelve difícil de recorrer para quien la escucha, porque deja de estar claro qué encabezado gobierna cada celda.
+Una celda combinada aislada se entiende bien. Una tabla con combinaciones en varias direcciones a la vez se vuelve difícil de recorrer para quien la escucha, porque deja de estar claro qué encabezado gobierna cada celda.
 
-Si tu tabla necesita ese nivel de combinación, casi siempre la respuesta correcta es **partirla en dos tablas más simples**, cada una con su `caption`.
+Si tu tabla necesita ese nivel de combinación, casi siempre lo correcto es **partirla en dos tablas más simples**, cada una con su `caption`. Profesionalmente, `rowspan` y `colspan` tienen bastante menos recorrido del que parece: conviene conocerlos y no abusar.
 
 ### Tarea 10 · El horario de clase
 
 Construye una tabla con el horario semanal de tu grupo: de lunes a viernes, seis periodos lectivos y un recreo intermedio.
 
-Requisitos:
-
 1. `<caption>` que identifique de qué grupo es el horario.
-2. Los días de la semana como `<th scope="col">`.
+2. Los días como `<th scope="col">`.
 3. La hora de cada franja como `<th scope="row">`.
-4. El recreo en una única fila combinada que abarque los cinco días, con `colspan="5"`.
+4. El recreo en una fila combinada que abarque los cinco días.
 5. Aplica la comprobación de sumas antes de darlo por bueno.
 
 <details class="aside aside--help">
   <summary>Estoy atascado · no me cuadran las columnas</summary>
-  <p>Cuenta primero cuántas columnas tiene la tabla en total, contando la de las horas. Si son cinco días más la columna de horas, son <strong>seis</strong> columnas, y entonces la fila del recreo necesita <code>colspan="6"</code>, o bien un <code>th</code> con la hora más un <code>td colspan="5"</code>. Ese despiste de una columna es prácticamente el único fallo que da esta tarea.</p>
+  <p>Cuenta primero cuántas columnas tiene la tabla <strong>en total, incluida la de las horas</strong>. Si son cinco días más la columna de horas, son seis columnas. Entonces la fila del recreo puede ser un <code>th</code> con la hora más un <code>td colspan="5"</code>, o bien una sola celda con <code>colspan="6"</code>. Ese despiste de una columna es prácticamente el único fallo que da esta tarea.</p>
 </details>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Qué hace exactamente <code>colspan="3"</code>?</li>
-    <li>¿Cómo compruebas que una tabla con celdas combinadas está bien, sin abrir el navegador?</li>
-    <li>¿Qué haces si una tabla necesita combinaciones en las dos direcciones a la vez?</li>
+    <li>¿Cómo compruebas una tabla con celdas combinadas sin abrir el navegador?</li>
+    <li>¿Qué haces si una tabla necesita combinaciones en las dos direcciones?</li>
   </ol>
 </div>
 
@@ -1357,22 +1998,18 @@ Requisitos:
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> Qué distingue unos datos tabulares de algo que solo se parece a una tabla.</li>
-    <li><strong>2. Haz:</strong> Clasifica cinco casos y añade una tabla real a tu página de productos.</li>
-    <li><strong>3. Comprueba:</strong> La tabla de tu proyecto aporta información que no cabría igual de bien en una lista.</li>
+    <li><strong>2. Haz:</strong> Clasifica cinco casos y añade una tabla real a tu proyecto.</li>
+    <li><strong>3. Comprueba:</strong> Tu tabla aporta algo que una lista no diría igual de bien.</li>
   </ol>
 </div>
 
 ### La pregunta que decide
 
-Durante años se maquetaron webs enteras con tablas, porque era la única forma de colocar cosas en columnas. Eso terminó hace mucho, pero la costumbre dejó un rastro: en cuanto algo se ve en rejilla, la mano va sola a `<table>`.
+> **¿Cada dato está en el cruce de dos cosas? ¿Necesito saber su fila **y** su columna para entender qué significa?**
 
-La prueba es esta:
+«899 €» no significa nada por sí solo: hace falta saber que es del Nova 14 y que es el precio. Dos coordenadas, dos encabezados. Eso es una tabla.
 
-> **¿Cada dato está en el cruce de dos cosas? Es decir, ¿necesito saber su fila **y** su columna para entender qué significa?**
-
-«19 €» no significa nada por sí solo: hace falta saber que es del plan Básico y que es el precio mensual. Dos coordenadas, dos encabezados. Eso es una tabla.
-
-En cambio, la descripción de una camiseta no está en el cruce de nada: pertenece a esa camiseta y punto. Que las camisetas se vean colocadas en una rejilla de tres columnas es una decisión visual, no una relación entre datos, y las decisiones visuales se resuelven con CSS.
+La descripción de una camiseta, en cambio, no está en el cruce de nada: pertenece a esa camiseta y punto. Que las camisetas se vean colocadas en una rejilla de tres columnas es una decisión visual, no una relación entre datos, y las decisiones visuales se resuelven con CSS.
 
 | Si es... | Se marca como |
 | -------- | ------------- |
@@ -1398,15 +2035,15 @@ Para cada uno, indica con qué se marca y **justifícalo con la pregunta de las 
   <p>1 · <code>&lt;section&gt;</code> con doce <code>&lt;article&gt;</code>. Cada camiseta se entiende sola; no hay cruce de coordenadas.</p>
   <p>2 · <code>&lt;table&gt;</code>. «34» necesita saber que es del Betis y que es la columna de puntos.</p>
   <p>3 · <code>&lt;nav&gt;</code> con <code>&lt;ul&gt;</code>. Es un conjunto de enlaces, no una rejilla de datos.</p>
-  <p>4 · <code>&lt;table&gt;</code> con <code>caption</code> y <code>scope</code>. Mismo caso que la clasificación: cada valor cruza tarifa y característica.</p>
-  <p>5 · Nada de HTML. Es maquetación, y se hace con CSS en la siguiente unidad. Si lo resuelves con una tabla, estás diciendo que la foto y el texto son datos relacionados en una rejilla, que es falso.</p>
+  <p>4 · <code>&lt;table&gt;</code> con <code>caption</code> y <code>scope</code>. Cada valor cruza tarifa y característica.</p>
+  <p>5 · Nada de HTML. Es maquetación, y se hace con CSS. Si lo resuelves con una tabla, estás afirmando que la foto y el texto son datos relacionados en una rejilla, que es falso.</p>
 </details>
 
-### Proyecto · La comparativa de PixelStore
+### Ahora tú · La comparativa de tu proyecto
 
-Añade a `productos.html` una tabla comparativa real: al menos tres productos y cuatro características. Tiene que tener `caption`, `scope` en los dos sentidos, y aportar algo que una lista no diría igual de bien.
+Añade a `productos.html` una tabla comparativa real: al menos tres elementos y cuatro características, con `caption` y `scope` en los dos sentidos.
 
-Si al escribirla te das cuenta de que en realidad no hay cruce de coordenadas, cámbiala por lo que corresponda y explica el cambio en un comentario. Detectar eso también es haber aprendido la sesión.
+No construyas una tabla solo para cumplir el requisito. Busca un conjunto de datos donde **una tabla sea realmente la estructura adecuada**. Y si al escribirla descubres que no hay cruce de coordenadas, cámbiala por lo que corresponda y explica el cambio en un comentario: detectar eso también es haber aprendido la sesión.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 12 y de la semana 4</p>
@@ -1440,75 +2077,97 @@ Si al escribirla te das cuenta de que en realidad no hay cruce de coordenadas, c
 
 ---
 
-## Sesión 13 · La arquitectura de un formulario
+## Sesión 13 · Formularios · recoger información
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué une un <code>label</code> con su campo, para qué sirve <code>name</code> y por qué ninguno de los dos es opcional.</li>
-    <li><strong>2. Haz:</strong> Construye el formulario base de la página de contacto.</li>
+    <li><strong>1. Aprende:</strong> Qué une un <code>label</code> con su campo, en qué se diferencian <code>id</code> y <code>name</code>, y por qué el botón importa.</li>
+    <li><strong>2. Haz:</strong> Construye el formulario base de tu página de contacto.</li>
     <li><strong>3. Comprueba:</strong> Al hacer clic en el texto de cada etiqueta, el cursor entra en su campo.</li>
   </ol>
 </div>
 
-### Tres piezas y una relación
-
-Un formulario es un `<form>` con controles dentro y un botón que lo envía. Lo que casi siempre se hace mal es la relación entre cada campo y su etiqueta.
+### El formulario mínimo
 
 ```html
-<form action="/enviar" method="post">
-    <p>
-        <label for="correo">Correo electrónico</label>
-        <input type="email" id="correo" name="correo">
-    </p>
-    <p>
-        <button type="submit">Enviar consulta</button>
-    </p>
+<form>
+    <label for="nombre">Nombre</label>
+
+    <input id="nombre" name="nombre" type="text">
+
+    <button type="submit">Enviar</button>
 </form>
 ```
 
-Hay dos atributos parecidos que hacen cosas distintas, y confundirlos es el error más caro de la sesión:
+Tres piezas: el contenedor `form`, los controles, y el botón que lo envía. Lo que casi siempre se hace mal es la relación entre cada campo y su etiqueta.
 
-| Atributo | Para quién es | Qué hace |
-| -------- | ------------- | -------- |
-| `id` | Para el documento | Identifica el campo dentro de la página, y es a lo que apunta el `for` |
-| `name` | Para el servidor | Es el nombre con el que viaja el dato al enviarse |
-| `for` | Para el `label` | Dice a qué campo pertenece esta etiqueta |
+### `label`
+
+```html
+<label for="nombre">Nombre</label>
+<input id="nombre" name="nombre" type="text">
+```
+
+Pruébalo: haz clic sobre la palabra **Nombre**. El navegador coloca el foco en el campo.
 
 <p class="term">Etiqueta asociada</p>
 
 Un `<label for="x">` unido a un `<input id="x">`. No es un texto que está al lado del campo: es un texto que **pertenece** al campo.
 
-#### Qué se gana asociándola
+Qué se gana asociándola:
 
 1. Un lector de pantalla anuncia el campo con su nombre. Sin `label`, anuncia «campo de texto» y nada más.
-2. El área de clic crece: pulsar sobre el texto lleva el cursor al campo, lo cual importa mucho en pantallas pequeñas y en casillas de verificación.
+2. El área de clic crece: pulsar sobre el texto lleva el cursor al campo. Importa mucho en pantallas pequeñas y en casillas de verificación.
 3. El navegador puede autocompletar mejor.
+
+### `id` y `name` no son lo mismo
+
+```html
+<input id="nombre" name="nombre">
+```
+
+Se escriben casi siempre iguales, y por eso se confunden.
+
+| Atributo | Para quién es | Qué hace |
+| -------- | ------------- | -------- |
+| `id` | Para el documento | Identifica el campo dentro de la página; es a lo que apunta el `for` |
+| `name` | Para el servidor | Es el nombre con el que el dato viaja al enviarse |
+
+Un campo sin `name` se rellena perfectamente y **su dato no llega a ninguna parte**. Cuando estudies servidores verás por qué.
+
+### `button`
+
+```html
+<button type="submit">Enviar</button>
+```
+
+No conviertas un texto o una imagen en un falso botón. Si algo es una acción, empieza por el elemento diseñado para representar una acción. Ya lo viste en el Reto 3: un `<div>` no se alcanza con `Tab`, no se activa con `Enter` y no se anuncia como botón.
 
 <div class="rule">
   <p class="rule-label">El <code>placeholder</code> no es una etiqueta</p>
   <p>El texto gris dentro de un campo <strong>desaparece en cuanto empiezas a escribir</strong>. Quien se distrae a mitad de un formulario largo se queda con un campo lleno y sin ninguna indicación de qué contenía. Y quien usa un lector de pantalla puede no oírlo nunca.</p>
-  <p>Un <code>placeholder</code> sirve para dar un ejemplo de formato junto a una etiqueta —<code>placeholder="600 000 000"</code>—, no para sustituirla.</p>
+  <p>Sirve para dar un ejemplo de formato <em>junto a</em> una etiqueta —<code>placeholder="nombre@example.com"</code>—, nunca para sustituirla.</p>
 </div>
 
 ### Tarea 12 · Fase A · El formulario base
 
 En `contacto.html`, escribe un formulario con:
 
-* Nombre completo, con su `label` asociado.
+* Nombre completo.
 * Correo electrónico.
 * Asunto.
-* Mensaje, con `<textarea rows="5">`.
-* Botón de envío con `<button type="submit">`.
+* Mensaje, con `<textarea rows="6">`.
+* Botón de envío.
 
-Cada campo debe tener `id` y `name`, y cada `label` su `for` correspondiente.
+Cada campo con su `id` y su `name`, y cada `label` con su `for`.
 
 **La comprobación de un minuto:** haz clic sobre el *texto* de cada etiqueta, no sobre el campo. Si el cursor salta al campo correcto, la asociación está bien. Si no pasa nada, ese `for` no coincide con ningún `id`.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Qué diferencia hay entre <code>id</code> y <code>name</code> en un campo?</li>
+    <li>¿Qué diferencia hay entre <code>id</code> y <code>name</code>?</li>
     <li>Da dos razones para asociar la etiqueta con <code>for</code>.</li>
     <li>¿Por qué un <code>placeholder</code> no sustituye a un <code>label</code>?</li>
   </ol>
@@ -1517,44 +2176,66 @@ Cada campo debe tener `id` y `name`, y cada `label` su `for` correspondiente.
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · <code>id</code> identifica el campo dentro del documento y es a lo que apunta el <code>for</code>; <code>name</code> es el nombre con el que el dato se envía al servidor.</p>
-  <p>2 · El lector de pantalla anuncia el campo por su nombre, y pulsar el texto lleva el foco al campo. Vale también la mejora del autocompletado.</p>
+  <p>2 · El lector de pantalla anuncia el campo por su nombre, y pulsar el texto lleva el foco al campo. Vale también el autocompletado.</p>
   <p>3 · Porque desaparece al escribir y deja el campo sin identificar.</p>
 </details>
 
 ---
 
-## Sesión 14 · Tipos, validación nativa y agrupación
+## Sesión 14 · Tipos de campo y validación nativa
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué te da gratis elegir bien el <code>type</code>, qué validación trae el navegador de fábrica y para qué sirve agrupar campos.</li>
-    <li><strong>2. Haz:</strong> Completa el formulario con los ocho requisitos de la fase B.</li>
-    <li><strong>3. Comprueba:</strong> Intenta enviarlo vacío y con datos inválidos y observa qué impide el navegador.</li>
+    <li><strong>1. Aprende:</strong> Qué te da gratis elegir bien el <code>type</code> y qué validación trae el navegador de fábrica.</li>
+    <li><strong>2. Haz:</strong> Añade tipos correctos, validación y un desplegable a tu formulario.</li>
+    <li><strong>3. Comprueba:</strong> Intenta enviarlo vacío y con datos inválidos.</li>
   </ol>
 </div>
 
-### Elegir el `type` correcto no es cosmético
+### El tipo no es cosmético
 
 Todos estos campos aceptan texto. La diferencia está en lo que el navegador hace con ellos sin que tú programes nada.
+
+```html
+<input type="email"    id="email"     name="email">
+<input type="password" id="password"  name="password">
+<input type="number"   id="unidades"  name="unidades" min="1" max="10">
+<input type="date"     id="fecha"     name="fecha">
+<input type="url"      id="web"       name="web">
+<input type="tel"      id="telefono"  name="telefono">
+```
 
 | `type` | Qué aporta de fábrica |
 | ------ | --------------------- |
 | `text` | Nada especial |
 | `email` | Comprueba el formato y ofrece un teclado con arroba en el móvil |
-| `tel` | Teclado numérico de teléfono en el móvil |
-| `number` | Solo acepta números, admite `min` y `max`, y muestra flechas |
+| `password` | Oculta lo escrito |
+| `number` | Solo acepta números, admite `min` y `max` |
 | `date` | Un selector de fecha del sistema, ya traducido |
 | `url` | Comprueba que sea una dirección web |
-| `password` | Oculta lo escrito |
+| `tel` | Teclado numérico de teléfono en el móvil |
 
-Ese teclado adaptado en el móvil no es un detalle menor: es la diferencia entre rellenar un formulario cómodamente y abandonarlo.
+Ese teclado adaptado no es un detalle menor: es la diferencia entre rellenar un formulario cómodamente en el móvil y abandonarlo.
 
-#### La validación que trae el navegador
+<div class="rule">
+  <p class="rule-label">La pregunta antes de escribir JavaScript</p>
+  <p>Antes de programar una validación, pregúntate: <strong>¿HTML ya sabe hacerlo?</strong> Muchas veces sí, y la versión nativa funciona mejor, es más accesible y no hay que mantenerla.</p>
+</div>
+
+### Validación nativa
 
 <p class="term">Validación nativa</p>
 
 Las comprobaciones que hace el propio navegador antes de enviar, declaradas con atributos y sin una línea de JavaScript.
+
+```html
+<input type="email" required>
+
+<input type="text" minlength="3" maxlength="50">
+
+<input type="number" min="1" max="100">
+```
 
 | Atributo | Exige |
 | -------- | ----- |
@@ -1566,57 +2247,52 @@ Las comprobaciones que hace el propio navegador antes de enviar, declaradas con 
 <div class="rule">
   <p class="rule-label">Validar en el navegador no es validar</p>
   <p>Todo esto se puede desactivar: basta con enviar la petición sin pasar por el formulario. La validación nativa está para <strong>ayudar a quien rellena</strong>, avisándole antes de enviar y sin recargar la página.</p>
-  <p>La comprobación que de verdad protege los datos se hace <strong>en el servidor</strong>, y la veréis en otro módulo. Las dos son necesarias y no se sustituyen entre sí.</p>
+  <p>La comprobación que de verdad protege los datos se hace <strong>en el servidor</strong>, y la verás en otro módulo. Las dos son necesarias y no se sustituyen.</p>
 </div>
 
-#### Agrupar lo que va junto
-
-`<fieldset>` agrupa campos relacionados y `<legend>` le pone nombre al grupo. En un formulario de tres campos sobra; en uno de quince es lo que lo hace navegable, porque cada campo se anuncia precedido del nombre de su grupo.
-
-Los botones de opción **necesitan** el grupo: comparten el mismo `name`, que es lo que los hace excluyentes entre sí, y el `legend` es lo que dice de qué se está eligiendo.
+### `textarea` y `select`
 
 ```html
-<fieldset>
-    <legend>Tipo de cliente</legend>
-    <p>
-        <input type="radio" id="particular" name="tipo_cliente" value="particular">
-        <label for="particular">Particular</label>
-    </p>
-    <p>
-        <input type="radio" id="empresa" name="tipo_cliente" value="empresa">
-        <label for="empresa">Empresa</label>
-    </p>
-</fieldset>
+<label for="mensaje">Mensaje</label>
+
+<textarea id="mensaje" name="mensaje" rows="6"></textarea>
 ```
 
-### Tarea 12 · Fase B · El formulario comercial
+`textarea` no es un `input`: tiene apertura y cierre, y su contenido inicial va entre las dos etiquetas. Cuidado con dejar espacios ahí dentro, porque se convierten en texto escrito.
 
-Amplía el formulario de contacto hasta cumplir estos ocho requisitos:
+```html
+<label for="motivo">Motivo de contacto</label>
 
-1. El correo electrónico usa `type="email"` y es obligatorio.
+<select id="motivo" name="motivo">
+    <option value="">Selecciona una opción</option>
+    <option value="informacion">Información</option>
+    <option value="soporte">Soporte</option>
+    <option value="presupuesto">Presupuesto</option>
+</select>
+```
+
+La primera `option` con `value=""` sirve para que el desplegable no aparezca ya respondido; combinada con `required`, obliga a elegir de verdad.
+
+### Tarea 12 · Fase B · Tipos y validación
+
+Amplía tu formulario:
+
+1. El correo usa `type="email"` y es **obligatorio**.
 2. El asunto exige entre 5 y 50 caracteres.
-3. Un campo numérico de unidades, entre 1 y 100.
-4. Un campo de fecha preferida de contacto, que no admita fechas anteriores a hoy.
-5. Un `<select>` con al menos tres motivos de contacto.
-6. Dos botones de opción con el mismo `name="tipo_cliente"`: particular y empresa.
-7. Una casilla obligatoria para aceptar la política de privacidad.
-8. Dos `<fieldset>` con su `<legend>`: uno para los datos personales y otro para los de la consulta.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · los radio no funcionan como espero</summary>
-  <p>Si puedes marcar los dos a la vez, es que tienen <code>name</code> distinto. Lo que agrupa unos botones de opción y hace que se excluyan no es el <code>fieldset</code>: es <strong>compartir exactamente el mismo <code>name</code></strong>. Lo que sí tiene que ser distinto en cada uno es el <code>id</code>, porque cada <code>label</code> apunta al suyo.</p>
-</details>
+3. Añade una fecha con `type="date"`.
+4. Añade un campo numérico con `min` y `max` que tenga sentido en tu tema.
+5. Añade un `<select>` con al menos tres opciones y una opción vacía inicial.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación · tres intentos de envío</p>
-  <p>Envía el formulario vacío, después con un correo sin arroba, y después con un asunto de tres caracteres. En los tres casos el navegador debe impedir el envío y decirte cuál es el problema, sin recargar la página y sin que tú hayas escrito nada de JavaScript.</p>
+  <p>Envía el formulario vacío, después con un correo sin arroba, y después con un asunto de tres caracteres. En los tres casos el navegador debe impedir el envío y decirte cuál es el problema, sin recargar la página y sin que tú hayas escrito JavaScript.</p>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>Nombra dos cosas que te da <code>type="email"</code> y no te da <code>type="text"</code>.</li>
-    <li>¿Qué hace que dos botones de opción sean excluyentes?</li>
+    <li>Nombra dos cosas que da <code>type="email"</code> y no da <code>type="text"</code>.</li>
+    <li>¿Para qué sirve una <code>&lt;option value=""&gt;</code> al principio de un <code>select</code>?</li>
     <li>¿Por qué la validación nativa no sustituye a la del servidor?</li>
   </ol>
 </div>
@@ -1624,30 +2300,100 @@ Amplía el formulario de contacto hasta cumplir estos ocho requisitos:
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Comprueba el formato del correo y ofrece un teclado adaptado en el móvil.</p>
-  <p>2 · Compartir el mismo atributo <code>name</code>.</p>
-  <p>3 · Porque se ejecuta en el navegador y se puede saltar enviando la petición directamente. Sirve para ayudar a quien rellena, no para proteger los datos.</p>
+  <p>2 · Para que el desplegable no venga ya respondido y, con <code>required</code>, obligar a elegir conscientemente.</p>
+  <p>3 · Porque se ejecuta en el navegador y se puede saltar enviando la petición directamente. Ayuda a quien rellena; no protege los datos.</p>
 </details>
 
 ---
 
-## Sesión 15 · Auditoría de formularios rotos
+## Sesión 15 · Grupos de controles y auditoría de formularios
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Los fallos que se repiten en casi todos los formularios mal hechos y a quién dejan fuera.</li>
-    <li><strong>2. Haz:</strong> Audita un formulario inaccesible, enumera sus fallos y reescríbelo.</li>
-    <li><strong>3. Comprueba:</strong> Recorre tu propio formulario usando solo la tecla <code>Tab</code>.</li>
+    <li><strong>1. Aprende:</strong> Cómo se agrupan opciones excluyentes y múltiples, y cuáles son los fallos que se repiten en todos los formularios mal hechos.</li>
+    <li><strong>2. Haz:</strong> Termina tu formulario y audita uno defectuoso.</li>
+    <li><strong>3. Comprueba:</strong> Recorre tu formulario usando solo la tecla <code>Tab</code>.</li>
   </ol>
 </div>
 
-### La prueba del teclado
+### Botones de opción · cuando solo se puede elegir una
 
-Antes de mirar código, una prueba que dura treinta segundos y que puedes hacerle a cualquier web: **suelta el ratón**. Recorre el formulario con `Tab`, cambia de opción con las flechas, envía con `Enter`.
+```html
+<fieldset>
 
-Si en algún punto no sabes dónde está el foco, o hay algo que no puedes alcanzar, ese formulario está roto para todo el que no use un ratón: quien navega con teclado, quien usa un lector de pantalla y quien maneja el ordenador con un conmutador.
+    <legend>Modalidad de envío</legend>
 
-Los seis fallos que vas a encontrar una y otra vez:
+    <label>
+        <input type="radio" name="envio" value="estandar">
+        Estándar
+    </label>
+
+    <label>
+        <input type="radio" name="envio" value="urgente">
+        Urgente
+    </label>
+
+</fieldset>
+```
+
+Lo que hace que dos botones de opción se excluyan **no es el `fieldset`**: es compartir exactamente el mismo `name`. Si puedes marcar los dos a la vez, tienen `name` distinto.
+
+Fíjate también en otra forma de asociar la etiqueta: aquí el `input` está **dentro** del `label`, y entonces no hace falta `for`. Las dos formas son válidas.
+
+### Casillas · cuando se pueden elegir varias
+
+```html
+<fieldset>
+    <legend>¿Qué tecnologías conoces?</legend>
+
+    <label><input type="checkbox" name="tec" value="html"> HTML</label>
+    <label><input type="checkbox" name="tec" value="css"> CSS</label>
+    <label><input type="checkbox" name="tec" value="js"> JavaScript</label>
+</fieldset>
+```
+
+Y una casilla suelta, obligatoria:
+
+```html
+<label>
+    <input type="checkbox" name="condiciones" required>
+    Acepto las condiciones
+</label>
+```
+
+### `fieldset` y `legend`
+
+Agrupan controles que forman una misma pregunta y le ponen nombre al grupo. En un formulario de tres campos sobran; en uno de quince son lo que lo hace navegable, porque cada campo se anuncia precedido del nombre de su grupo.
+
+Y en los botones de opción no son opcionales en la práctica: el `legend` es lo único que dice **de qué** se está eligiendo. No todo tiene que ser un `div`.
+
+### Autocompletado
+
+```html
+<input type="text"  name="nombre" autocomplete="name">
+<input type="email" name="email"  autocomplete="email">
+```
+
+Los navegadores usan esta información para rellenar por ti. Cuesta un atributo y ahorra bastante escritura a quien usa tu web.
+
+### Tarea 12 · Fase C · El formulario completo
+
+Termina tu formulario con:
+
+6. Dos botones de opción que compartan `name`, dentro de un `fieldset` con su `legend`.
+7. Un grupo de casillas para selección múltiple.
+8. Una casilla obligatoria de aceptación de condiciones.
+9. Dos `fieldset` que separen los datos personales de los de la consulta.
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · los radio no funcionan como espero</summary>
+  <p>Si puedes marcar los dos a la vez, es que tienen <code>name</code> distinto. Lo que agrupa unos botones de opción no es el <code>fieldset</code>: es <strong>compartir exactamente el mismo <code>name</code></strong>. Lo que sí debe ser distinto en cada uno es el <code>value</code>, que es el dato que se envía, y el <code>id</code> si los asocias con <code>for</code>.</p>
+</details>
+
+### Los seis fallos de siempre
+
+Antes de mirar código, una prueba que dura treinta segundos y sirve para cualquier web: **suelta el ratón**. Recorre el formulario con `Tab`, cambia de opción con las flechas, envía con `Enter`. Si no sabes dónde está el foco, o hay algo que no puedes alcanzar, ese formulario está roto para todo el que no use un ratón.
 
 | Fallo | Consecuencia |
 | ----- | ------------ |
@@ -1678,15 +2424,15 @@ Los seis fallos que vas a encontrar una y otra vez:
   <dt>Fallo</dt>
   <dd>El texto «Nombre:» está suelto delante del campo, no es un <code>&lt;label&gt;</code>.</dd>
   <dt>¿Por qué importa, si se lee igual?</dt>
-  <dd>Se lee igual para quien ve la pantalla. Para un lector de pantalla no hay ninguna relación entre ese texto y ese campo: anunciará «campo de texto» y el usuario tendrá que adivinar cuál es.</dd>
+  <dd>Se lee igual para quien ve la pantalla. Para un lector de pantalla no existe ninguna relación entre ese texto y ese campo: anunciará «campo de texto» y habrá que adivinar cuál es.</dd>
   <dt>Corrección</dt>
   <dd><code>&lt;label for="nombre"&gt;Nombre&lt;/label&gt;</code> y <code>&lt;input type="text" id="nombre" name="nombre"&gt;</code>.</dd>
 </dl>
 
-<p class="stage stage--solo">Paso 2 · Hazlo tú</p>
+<p class="stage stage--solo">Paso 2 · Ahora tú</p>
 
-1. Enumera los **seis** fallos del formulario, en el mismo formato: qué está mal, a quién perjudica y cuál es la corrección.
-2. Reescríbelo entero corrigiéndolos todos.
+1. Enumera los **seis** fallos, en el mismo formato: qué está mal, a quién perjudica y cuál es la corrección.
+2. Reescribe el formulario entero corrigiéndolos todos.
 3. Pásale la prueba del teclado a tu versión.
 
 <details class="aside aside--extra">
@@ -1695,8 +2441,8 @@ Los seis fallos que vas a encontrar una y otra vez:
   <p>2 · Ningún campo tiene <code>name</code>, así que ningún dato llegaría al servidor.</p>
   <p>3 · El correo usa <code>type="text"</code> en lugar de <code>type="email"</code>.</p>
   <p>4 · La edad usa <code>type="text"</code> en lugar de <code>type="number"</code> con <code>min</code> y <code>max</code>.</p>
-  <p>5 · El botón de enviar es un <code>&lt;div onclick&gt;</code>: no se alcanza con <code>Tab</code> ni se activa con teclado. Debe ser <code>&lt;button type="submit"&gt;</code>.</p>
-  <p>6 · Los campos se separan con <code>&lt;br&gt;</code>, que no aporta ninguna estructura. Cada campo con su etiqueta debería ir en su propio bloque.</p>
+  <p>5 · El botón es un <code>&lt;div onclick&gt;</code>: no se alcanza con <code>Tab</code> ni se activa con teclado. Debe ser <code>&lt;button type="submit"&gt;</code>.</p>
+  <p>6 · Los campos se separan con <code>&lt;br&gt;</code>, que no aporta estructura. Cada campo con su etiqueta debería ir en su propio bloque.</p>
 </details>
 
 <div class="checkpoint">
@@ -1705,74 +2451,254 @@ Los seis fallos que vas a encontrar una y otra vez:
     <li>Tu formulario se recorre entero con <code>Tab</code>, en un orden que tiene sentido.</li>
     <li>Todos los campos tienen <code>label</code> asociado, <code>id</code> y <code>name</code>.</li>
     <li>Cada campo usa el <code>type</code> que le corresponde.</li>
+    <li>Los botones de opción comparten <code>name</code> y están dentro de un <code>fieldset</code> con <code>legend</code>.</li>
     <li>El botón de envío es un <code>&lt;button&gt;</code>.</li>
-    <li>Ningún <code>placeholder</code> hace de etiqueta.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿En qué consiste la prueba del teclado y qué detecta?</li>
+    <li>¿Qué hace que dos botones de opción sean excluyentes?</li>
     <li>Un campo rellenado no llega al servidor. ¿Qué atributo falta?</li>
-    <li>¿Por qué un texto suelto delante de un campo no es una etiqueta?</li>
+    <li>¿En qué consiste la prueba del teclado y qué detecta?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Recorrer el formulario sin ratón, solo con <code>Tab</code>, flechas y <code>Enter</code>. Detecta elementos inalcanzables, foco invisible y falsos botones.</p>
+  <p>1 · Compartir el mismo atributo <code>name</code>.</p>
   <p>2 · El atributo <code>name</code>.</p>
-  <p>3 · Porque no hay ninguna relación declarada entre los dos: para quien no ve la pantalla, la proximidad no existe.</p>
+  <p>3 · Recorrer el formulario sin ratón, solo con <code>Tab</code>, flechas y <code>Enter</code>. Detecta elementos inalcanzables, foco invisible y falsos botones.</p>
 </details>
 
 ---
 
-## Semana 6 · Depuración, auditoría y coevaluación
+## Semana 6 · Depuración, validación y coevaluación
 
 ---
 
-## Sesión 16 · Auditoría forense de HTML
+## Sesión 16 · Accesibilidad desde HTML
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Los tres niveles de comprobación de un documento y qué ve cada uno, incluido lo que ninguno ve.</li>
-    <li><strong>2. Haz:</strong> Localiza y repara los fallos deliberados de un documento, justificando cada corrección.</li>
+    <li><strong>1. Aprende:</strong> Que casi toda la accesibilidad de una web sale de usar bien HTML, y por qué ARIA no es el punto de partida.</li>
+    <li><strong>2. Haz:</strong> Recorre tu sitio entero sin ratón y anota dónde se rompe.</li>
+    <li><strong>3. Comprueba:</strong> Puedes alcanzar todas las partes interactivas y sabes siempre dónde está el foco.</li>
+  </ol>
+</div>
+
+### Una web no se hace solo para nosotros
+
+Una web no debería funcionar únicamente para:
+
+> una persona que ve perfectamente, usa ratón, tiene una pantalla grande y navega exactamente como nosotros.
+
+La buena noticia es que **HTML bien utilizado proporciona buena parte de la accesibilidad automáticamente**. No es una capa que se añade al final: es lo que llevas haciendo quince sesiones.
+
+#### 1 · Usa el elemento correcto
+
+```html
+<button>Comprar</button>
+```
+
+es mejor punto de partida que:
+
+```html
+<div>Comprar</div>
+```
+
+si representa una acción.
+
+#### 2 · Mantén una jerarquía lógica
+
+```text
+h1
+    h2
+        h3
+    h2
+```
+
+Sin saltos. Es el índice por el que se navega.
+
+#### 3 · Describe las imágenes
+
+`alt` informativo, funcional o vacío, según su función. Nunca ausente.
+
+#### 4 · Etiqueta los formularios
+
+`label` asociado, no solo `placeholder`.
+
+#### 5 · Usa HTML semántico
+
+`nav`, `main`, `header`, `footer`, `section`, `article` informan de la estructura del documento y permiten recorrerlo por zonas.
+
+#### 6 · No uses ARIA por defecto
+
+Encontrarás código como este:
+
+```html
+<div role="button" tabindex="0">Guardar</div>
+```
+
+<p class="term">ARIA</p>
+
+Un conjunto de atributos para describir el papel, el estado y las propiedades de un elemento cuando HTML no llega. Puede ser necesaria en componentes complejos.
+
+Pero no debería usarse para recrear a mano algo que HTML ya proporciona. Ese `div` con `role="button"` necesita además que le programes la activación con `Enter` y con espacio, el foco, y el estado. Un `<button>` trae todo eso.
+
+El orden es siempre:
+
+<figure class="diagram">
+  <figcaption>El orden correcto</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>HTML nativo</li>
+    <li>Si de verdad no llega, ARIA</li>
+  </ol>
+</figure>
+
+<div class="rule">
+  <p class="rule-label">La primera regla de ARIA</p>
+  <p>Está escrita en la propia especificación y viene a decir esto: <strong>si existe un elemento HTML con la semántica que necesitas, úsalo en lugar de reconstruirlo con ARIA</strong>. Una ARIA mal puesta deja la página peor que no poner ninguna.</p>
+</div>
+
+### Ahora tú · La prueba del teclado, sobre tu sitio
+
+Suelta el ratón. Recorre tus cuatro páginas usando solo:
+
+```text
+Tab          avanzar
+Shift + Tab  retroceder
+Enter        activar
+Espacio      marcar casillas y pulsar botones
+```
+
+Y responde:
+
+| Pregunta | Página donde falla |
+| -------- | ------------------ |
+| ¿Puedes alcanzar todas las partes interactivas? | |
+| ¿Sabes en todo momento dónde está el foco? | |
+| ¿El orden de recorrido tiene sentido? | |
+| ¿Puedes enviar el formulario sin tocar el ratón? | |
+| ¿Puedes saltar el menú para ir al contenido? | |
+
+Corrige lo que encuentres. Casi todo se arregla cambiando un elemento por el que tocaba.
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>Nombra tres cosas de accesibilidad que salen gratis de usar bien HTML.</li>
+    <li>¿Por qué <code>&lt;div role="button"&gt;</code> es peor que <code>&lt;button&gt;</code>?</li>
+    <li>¿Cuándo tiene sentido usar ARIA?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Por ejemplo: navegación por encabezados, salto entre zonas con los landmarks, botones alcanzables con teclado, campos anunciados por su etiqueta, imágenes sustituidas por su <code>alt</code>. Bastan tres.</p>
+  <p>2 · Porque hay que reconstruir a mano el foco, la activación con teclado y el estado, y cualquiera de esas piezas se puede olvidar. El <code>button</code> las trae todas.</p>
+  <p>3 · Cuando construyes un componente para el que HTML no tiene un elemento equivalente. Nunca para sustituir uno que sí existe.</p>
+</details>
+
+---
+
+## Sesión 17 · Validar y depurar HTML
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>1. Aprende:</strong> Los niveles de comprobación de un documento, qué ve cada uno y qué no ve ninguno.</li>
+    <li><strong>2. Haz:</strong> Localiza y repara los veinte fallos deliberados de un documento.</li>
     <li><strong>3. Comprueba:</strong> El validador del W3C devuelve cero errores.</li>
   </ol>
 </div>
 
-### Tres niveles, y ninguno es suficiente solo
+### Volvemos a la frase de la sesión 2
+
+> Que una página se vea bien no demuestra que su HTML esté bien.
+
+Los navegadores se recuperan de casi cualquier error para no fallar delante del usuario. Eso es cómodo y, a la vez, es lo que oculta el código incorrecto. Necesitamos herramientas que no perdonen.
 
 <figure class="diagram">
   <figcaption>Cada comprobación ve cosas que la anterior no</figcaption>
   <ol class="flow">
     <li>El navegador · solo delata lo que no consigue disimular</li>
-    <li>El linter · avisa mientras escribes, dentro del editor</li>
+    <li>HTMLHint · avisa mientras escribes, dentro del editor</li>
     <li>El validador del W3C · dictamina si el documento cumple la especificación</li>
     <li>Tu criterio · lo único que juzga si el marcado <em>significa</em> lo correcto</li>
   </ol>
 </figure>
 
-El cuarto nivel es el que importa y el que nadie automatiza. Fíjate en lo que un validador **no** puede decirte:
+### HTMLHint
+
+Mira el panel `Problems`. No ignores automáticamente los mensajes: para cada uno, tres preguntas.
+
+1. ¿Qué elemento provoca el problema?
+2. ¿Qué regla estoy incumpliendo?
+3. ¿Cómo debería solucionarse?
+
+### Formatear el documento
+
+VS Code puede formatear HTML con `Shift + Alt + F`, o desde la paleta con `Format Document`. Compara:
+
+```html
+<main><section><h2>Productos</h2><p>Texto</p></section></main>
+```
+
+con:
+
+```html
+<main>
+    <section>
+        <h2>Productos</h2>
+
+        <p>
+            Texto
+        </p>
+    </section>
+</main>
+```
+
+Las dos son idénticas para el navegador. La segunda es la única legible para una persona, y **el código también se escribe para personas**: para tu compañero de revisión, para el profesor y para ti dentro de tres semanas.
+
+### El validador del W3C
+
+El flujo de trabajo correcto es este:
+
+<figure class="diagram">
+  <figcaption>Cómo se depura un documento</figcaption>
+  <ol class="flow">
+    <li>Escribir</li>
+    <li>Previsualizar</li>
+    <li>Revisar el panel Problems</li>
+    <li>Validar en el W3C</li>
+    <li>Entender los errores</li>
+    <li>Corregir</li>
+  </ol>
+</figure>
+
+<div class="rule">
+  <p class="rule-label">El flujo que no queremos</p>
+  <p>Validar, copiar el error en una IA, pegar cualquier respuesta, repetir hasta que se ponga verde. Se termina antes y no se aprende nada, porque el paso que importa —<strong>entender</strong>— es justo el que se ha saltado.</p>
+  <p>La herramienta debe ayudarte a comprender el documento, no a esquivarlo.</p>
+</div>
+
+### Válido no significa correcto
 
 | Un validador detecta | Un validador no detecta |
 | -------------------- | ----------------------- |
 | Etiquetas sin cerrar o mal anidadas | Que hayas usado `div` donde tocaba `nav` |
-| Atributos que no existen | Que un `alt` diga «imagen1» en lugar de describir algo |
+| Atributos que no existen | Que un `alt` diga «foto» en lugar de describir algo |
 | `id` duplicados | Que hayas saltado de `h1` a `h4` |
 | Anidaciones prohibidas | Que un catálogo esté marcado como tabla |
 
-<div class="rule">
-  <p class="rule-label">Válido no significa correcto</p>
-  <p>Un documento entero hecho de <code>&lt;div&gt;</code>, sin un solo encabezado y con todas las imágenes con <code>alt="foto"</code>, pasa el validador del W3C con cero errores. Es válido y es malo.</p>
-  <p>La validez es el suelo, no el techo: garantiza que la sintaxis está bien escrita, no que la información esté bien descrita.</p>
-</div>
+Un documento entero hecho de `<div>`, sin un solo encabezado y con todas las imágenes con `alt="foto"`, pasa el validador con cero errores. Es válido y es malo. **La validez es el suelo, no el techo.**
 
 ### Tarea 14 · HTML forense
 
-Este documento contiene **veinte fallos deliberados**. Cópialo en un archivo `forense.html` dentro de tu proyecto:
+Este documento contiene **veinte fallos deliberados**. Cópialo en `forense.html`:
 
 ```html
 <html>
@@ -1814,11 +2740,11 @@ Correo: <input type="text">
 
 Tu trabajo:
 
-1. Ábrelo en el navegador. Anota qué se ve mal **antes** de mirar el código, y fíjate en si algún texto aparece con caracteres extraños.
+1. Ábrelo en el navegador y anota qué se ve mal **antes** de mirar el código. Fíjate en si algún texto aparece con caracteres extraños.
 2. Pásale HTMLHint y anota qué encuentra.
 3. Pásalo por `validator.w3.org` y anota qué encuentra que HTMLHint no encontró.
-4. Encuentra al menos **quince** de los veinte fallos y repáralos.
-5. Entrega una tabla justificativa con este formato:
+4. Localiza al menos **quince** de los veinte fallos y repáralos.
+5. Entrega una tabla justificativa:
 
 | Fallo detectado | Línea | Quién lo detectó | A quién perjudica | Corrección aplicada |
 | --------------- | ----- | ---------------- | ----------------- | ------------------- |
@@ -1828,7 +2754,7 @@ La columna «quién lo detectó» es la importante: al terminar tendrás la prue
 
 <details class="aside aside--help">
   <summary>Estoy atascado · llevo ocho y no encuentro más</summary>
-  <p>Recorre el documento con una lista de comprobación en la mano, en este orden, en lugar de buscar «a ver qué veo»:</p>
+  <p>Recorre el documento con una lista en la mano, en este orden, en lugar de buscar «a ver qué veo»:</p>
   <ol>
     <li>El esqueleto: ¿están las cinco piezas de la sesión 3?</li>
     <li>Los enlaces: ¿alguna ruta describe tu disco duro? ¿Algún <code>target="_blank"</code> sin protección?</li>
@@ -1845,14 +2771,14 @@ La columna «quién lo detectó» es la importante: al terminar tendrás la prue
 <details class="aside aside--extra">
   <summary>Ver los veinte fallos</summary>
   <p><strong>Esqueleto</strong></p>
-  <p>1 · Falta <code>&lt;!doctype html&gt;</code>. · 2 · Falta <code>lang="es"</code> en <code>&lt;html&gt;</code>. · 3 · Falta <code>&lt;meta charset="UTF-8"&gt;</code>: por eso «Programación» se ve mal en el navegador. · 4 · Falta <code>&lt;meta name="viewport"&gt;</code>. · 5 · <code>&lt;title&gt;</code> sin cerrar.</p>
+  <p>1 · Falta <code>&lt;!doctype html&gt;</code>. · 2 · Falta <code>lang="es"</code>. · 3 · Falta <code>&lt;meta charset="UTF-8"&gt;</code>: por eso «Programación» se ve mal. · 4 · Falta <code>&lt;meta name="viewport"&gt;</code>. · 5 · <code>&lt;title&gt;</code> sin cerrar.</p>
   <p><strong>Enlaces e imágenes</strong></p>
-  <p>6 · <code>src</code> de la primera imagen con ruta de disco local. · 7 · <code>href</code> del enlace de inicio con ruta de disco local. · 8 · <code>target="_blank"</code> sin <code>rel="noopener noreferrer"</code>. · 9 · La primera imagen no tiene <code>alt</code>. · 10 · La segunda imagen tampoco tiene <code>alt</code>, y además es un gráfico: su <code>alt</code> debe llevar los datos.</p>
+  <p>6 · <code>src</code> de la primera imagen con ruta de disco local. · 7 · <code>href</code> del enlace de inicio con ruta de disco local. · 8 · <code>target="_blank"</code> sin <code>rel="noopener noreferrer"</code>. · 9 · La primera imagen no tiene <code>alt</code>. · 10 · La segunda tampoco, y además es un gráfico: su <code>alt</code> debe llevar los datos.</p>
   <p><strong>Texto y estructura</strong></p>
-  <p>11 · Salto de jerarquía: de <code>h1</code> a <code>h4</code>. · 12 · <code>id="destacado"</code> duplicado en dos párrafos. · 13 · Anidación cruzada: <code>&lt;b&gt;&lt;i&gt;…&lt;/b&gt;&lt;/i&gt;</code>. · 14 · Último <code>&lt;p&gt;</code> sin cerrar. · 15 · La cabecera y el menú son <code>div</code>: deberían ser <code>&lt;header&gt;</code> y <code>&lt;nav&gt;</code> con una lista. · 16 · No hay <code>&lt;main&gt;</code> ni <code>&lt;footer&gt;</code>.</p>
+  <p>11 · Salto de jerarquía: de <code>h1</code> a <code>h4</code>. · 12 · <code>id="destacado"</code> duplicado. · 13 · Anidación cruzada: <code>&lt;b&gt;&lt;i&gt;…&lt;/b&gt;&lt;/i&gt;</code>. · 14 · Último <code>&lt;p&gt;</code> sin cerrar. · 15 · Cabecera y menú son <code>div</code>: deberían ser <code>&lt;header&gt;</code> y <code>&lt;nav&gt;</code> con una lista. · 16 · No hay <code>&lt;main&gt;</code> ni <code>&lt;footer&gt;</code>.</p>
   <p><strong>Tabla y formulario</strong></p>
-  <p>17 · La tabla no tiene <code>&lt;caption&gt;</code>, ni <code>&lt;thead&gt;</code>/<code>&lt;tbody&gt;</code>, ni <code>&lt;th scope&gt;</code>: sus encabezados son <code>td</code>. · 18 · El campo de correo no tiene <code>&lt;label&gt;</code> asociado. · 19 · El campo no tiene <code>name</code> y usa <code>type="text"</code> en vez de <code>type="email"</code>. · 20 · El botón de envío es un <code>&lt;div onclick&gt;</code>.</p>
-  <p>El validador del W3C detecta la sintaxis: el <code>doctype</code> que falta, la codificación no declarada, el <code>&lt;title&gt;</code> abierto, las imágenes sin <code>alt</code>, el <code>id</code> duplicado y la anidación cruzada. No dice nada de la jerarquía de encabezados, ni de la tabla muda, ni del falso botón, ni de la sopa de <code>div</code>. Poco más de la mitad de la lista la tienes que ver tú.</p>
+  <p>17 · La tabla no tiene <code>&lt;caption&gt;</code>, ni <code>&lt;thead&gt;</code>/<code>&lt;tbody&gt;</code>, ni <code>&lt;th scope&gt;</code>. · 18 · El campo de correo no tiene <code>&lt;label&gt;</code>. · 19 · No tiene <code>name</code> y usa <code>type="text"</code> en vez de <code>type="email"</code>. · 20 · El botón de envío es un <code>&lt;div onclick&gt;</code>.</p>
+  <p>El validador del W3C detecta la sintaxis: el <code>doctype</code> que falta, la codificación no declarada, el <code>&lt;title&gt;</code> abierto, las imágenes sin <code>alt</code>, el <code>id</code> duplicado y la anidación cruzada. No dice nada de la jerarquía de encabezados, ni de la tabla muda, ni del falso botón, ni de la sopa de <code>div</code>. Poco más de la mitad la tienes que ver tú.</p>
 </details>
 
 <div class="checkpoint checkpoint--recall">
@@ -1860,103 +2786,116 @@ La columna «quién lo detectó» es la importante: al terminar tendrás la prue
   <ol>
     <li>Nombra dos fallos graves que un validador no detecta.</li>
     <li>¿Por qué «válido» no es lo mismo que «correcto»?</li>
-    <li>¿Qué riesgo tiene <code>target="_blank"</code> sin <code>rel</code>?</li>
+    <li>¿Qué pasos tiene el flujo de depuración, y cuál es el que no se puede saltar?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Por ejemplo, usar <code>div</code> donde tocaba un elemento semántico, o un <code>alt</code> que no describe nada. Vale cualquiera de la tabla de la sesión.</p>
-  <p>2 · Porque la validez comprueba la sintaxis, no el significado. Un documento sin un solo encabezado y todo hecho de <code>div</code> puede validar perfectamente.</p>
-  <p>3 · La página que se abre recibe una referencia a la tuya y puede manipularla. Los navegadores actuales ya cortan esa referencia por su cuenta, pero escribirlo sigue siendo lo correcto: no dependes de la versión del navegador y dejas la intención por escrito.</p>
+  <p>1 · Por ejemplo, usar <code>div</code> donde tocaba un elemento semántico, o un <code>alt</code> que no describe nada.</p>
+  <p>2 · Porque la validez comprueba la sintaxis, no el significado.</p>
+  <p>3 · Escribir, previsualizar, revisar Problems, validar, entender y corregir. El que no se puede saltar es <strong>entender</strong>.</p>
 </details>
 
 ---
 
-## Sesión 17 · Integración y cierre del proyecto
+## Sesión 18 · Auditoría final, revisión por pares y entrega
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué se comprueba antes de dar por terminado un sitio, y en qué orden.</li>
-    <li><strong>2. Haz:</strong> Cierra las cuatro páginas del proyecto y pásales la lista completa.</li>
-    <li><strong>3. Comprueba:</strong> Las cuatro páginas validan al 100 % en el W3C.</li>
+    <li><strong>1. Aprende:</strong> Cómo se revisa el código de otra persona de forma útil.</li>
+    <li><strong>2. Haz:</strong> Cierra tu proyecto con la lista de comprobación y audita el de un compañero.</li>
+    <li><strong>3. Entrega:</strong> Entrega el proyecto, la matriz de coevaluación y defiende tus decisiones.</li>
   </ol>
 </div>
 
-### El estado final del proyecto
-
-```text
-pixelstore/
-├── index.html          · portada, con presentación y áreas temáticas
-├── productos.html      · catálogo semántico y tabla comparativa
-├── acerca.html         · información del proyecto, estructurada
-├── contacto.html       · formulario completo con validación nativa
-└── img/                · imágenes con alt correcto
-```
-
 ### Tarea 15 · La lista de comprobación final
 
-Recórrela entera. Cada línea que no puedas marcar es trabajo pendiente de esta sesión.
+Tu proyecto debe tener una organización parecida a esta:
+
+```text
+mi-web/
+│
+├── index.html
+├── productos.html
+├── acerca.html
+├── contacto.html
+│
+└── img/
+    └── ...
+```
+
+Recorre la lista entera. Cada línea que no puedas marcar es trabajo pendiente de hoy.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Estructura y validez</p>
+  <p class="checkpoint-label">Documento</p>
   <ul class="checklist">
-    <li>Las cuatro páginas tienen el esqueleto completo con sus cuatro metadatos.</li>
-    <li>Las cuatro validan en el W3C con cero errores.</li>
-    <li>Cada página tiene un <code>&lt;title&gt;</code> propio y descriptivo.</li>
-    <li>Cada página tiene un único <code>h1</code> y ninguna salta niveles.</li>
-  </ul>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Semántica y navegación</p>
-  <ul class="checklist">
-    <li>Hay <code>header</code>, <code>nav</code>, <code>main</code> y <code>footer</code> en las cuatro páginas.</li>
-    <li>Ningún <code>div</code> sustituye a un elemento que sí significaba algo.</li>
-    <li>El menú es idéntico en las cuatro y cada una marca la suya con <code>aria-current</code>.</li>
-    <li>Todas las rutas son relativas y el sitio sobrevive a cambiarlo de carpeta.</li>
+    <li>Usa <code>&lt;!doctype html&gt;</code>.</li>
+    <li>Define correctamente <code>lang</code>.</li>
+    <li>Incluye <code>charset</code> y viewport.</li>
+    <li>Cada página tiene un <code>title</code> propio y descriptivo.</li>
   </ul>
 </div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Contenido</p>
   <ul class="checklist">
-    <li>Todas las imágenes tienen <code>alt</code>, lleno o vacío según su función.</li>
-    <li>La tabla comparativa tiene <code>caption</code> y <code>scope</code> en los dos sentidos.</li>
-    <li>El formulario tiene etiquetas asociadas, tipos correctos y validación nativa.</li>
-    <li>El formulario se recorre entero con <code>Tab</code>.</li>
+    <li>Existe una jerarquía coherente de encabezados, sin saltos y con un solo <code>h1</code> por página.</li>
+    <li>Los párrafos son párrafos, y no hay <code>&lt;br&gt;</code> usados para maquetar.</li>
+    <li>Las listas se representan con listas reales, y las anidadas están bien anidadas.</li>
+    <li>Hay elementos de significado textual usados con criterio.</li>
+  </ul>
+</div>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Navegación e imágenes</p>
+  <ul class="checklist">
+    <li>Todos los enlaces funcionan y las rutas son relativas.</li>
+    <li>El menú es idéntico en las cuatro páginas y marca la actual.</li>
+    <li>Todas las imágenes tienen <code>alt</code> adecuado, lleno o vacío según su función.</li>
+    <li>Se usa <code>figure</code> con <code>figcaption</code> donde tiene sentido.</li>
+  </ul>
+</div>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Semántica, tablas y formularios</p>
+  <ul class="checklist">
+    <li>Se usan <code>header</code>, <code>nav</code>, <code>main</code> y <code>footer</code>, con un solo <code>main</code>.</li>
+    <li><code>section</code> y <code>article</code> están justificados, y no hay <code>div</code> innecesarios.</li>
+    <li>La tabla solo se usa para datos tabulares, con <code>caption</code> y <code>scope</code>.</li>
+    <li>Todos los campos tienen etiqueta, tipo apropiado y <code>name</code>.</li>
+    <li>Hay validación nativa, y <code>fieldset</code> con <code>legend</code> donde hay grupos.</li>
+    <li>Los botones son elementos <code>button</code>.</li>
+  </ul>
+</div>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Calidad</p>
+  <ul class="checklist">
+    <li>HTMLHint no muestra errores relevantes.</li>
+    <li>Las cuatro páginas superan el validador del W3C.</li>
+    <li>El código está correctamente indentado.</li>
+    <li>La estructura de carpetas se entiende sin explicación.</li>
   </ul>
 </div>
 
 <div class="rule">
   <p class="rule-label">Condición de entrega · cero CSS</p>
-  <p>Ni ficheros <code>.css</code>, ni <code>&lt;style&gt;</code>, ni atributos <code>style</code>. Un solo estilo invalida la entrega, porque lo que se evalúa es la estructura y el estilo sirve precisamente para taparla.</p>
-</div>
-
----
-
-## Sesión 18 · Revisión por pares y defensa
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se revisa el código de otra persona de forma útil y no ofensiva.</li>
-    <li><strong>2. Haz:</strong> Audita el proyecto de un compañero y rellena la matriz de coevaluación.</li>
-    <li><strong>3. Entrega:</strong> Entrega el proyecto, la matriz recibida y defiende tus decisiones.</li>
-  </ol>
+  <p>Ni ficheros <code>.css</code>, ni <code>&lt;style&gt;</code>, ni atributos <code>style</code>. Tu web tendrá un aspecto muy básico, y es intencionado: queremos comprobar si <strong>la información sigue estando bien estructurada cuando quitamos toda la presentación</strong>.</p>
+  <p>En la siguiente unidad partiremos de este mismo proyecto para ver cómo CSS transforma su apariencia sin cambiar lo que significa cada elemento.</p>
 </div>
 
 ### Revisar código ajeno
 
-Una revisión útil no dice «está mal». Dice tres cosas: **qué**, **por qué** y **qué harías tú**. Las tres, siempre.
+Una revisión útil no dice «está mal». Dice tres cosas: **qué**, **por qué** y **qué harías tú**.
 
 | En vez de escribir | Escribe |
 | ------------------ | ------- |
-| «La tabla está mal» | «Faltan los `scope` en los `th`: sin ellos cada celda se anuncia sin su encabezado. Añadiría `scope="col"` en la cabecera y `scope="row"` en la primera columna» |
+| «La tabla está mal» | «Faltan los `scope` en los `th`: sin ellos cada celda se anuncia sin su encabezado. Añadiría `scope="col"` arriba y `scope="row"` en la primera columna» |
 | «Los alt no valen» | «El `alt` del gráfico dice “gráfico”: quien no lo vea pierde los datos. Pondría los tres valores que compara» |
 
-Y una regla que vale para toda tu vida profesional: **se revisa el código, no a la persona**. «Este enlace apunta a tu disco» y «no sabes hacer enlaces» describen el mismo hecho y solo uno de los dos sirve para algo.
+Y una regla que vale para toda tu vida profesional: **se revisa el código, no a la persona**. «Este enlace apunta a tu disco» y «no sabes hacer enlaces» describen el mismo hecho, y solo uno sirve para algo.
 
 ### Tarea 16 · Matriz de coevaluación
 
@@ -1972,20 +2911,22 @@ Intercambia el proyecto con otro alumno y audita el suyo:
 | Tablas | | | |
 | Formulario | | | |
 
-Después, el autor recibe la matriz, decide **qué acepta y qué no**, y anota su decisión. Rechazar una observación justificándola bien también es parte del ejercicio: la revisión propone, no manda.
+Después, el autor recibe la matriz, decide **qué acepta y qué no**, y anota su decisión. Rechazar una observación justificándola bien también forma parte del ejercicio: la revisión propone, no manda.
 
 ### Producto final
 
 Se entrega:
 
 * **A · El sitio.** Cuatro páginas enlazadas, sin CSS, validadas en el W3C.
-* **B · La tabla forense** de la sesión 16, con las correcciones justificadas.
-* **C · La matriz de coevaluación** que has hecho del proyecto de tu compañero.
+* **B · La tabla forense** de la sesión 17, con las correcciones justificadas.
+* **C · La matriz de coevaluación** del proyecto de tu compañero.
 * **D · Tus decisiones**, en media página: las tres decisiones de estructura de las que estás más seguro, y por qué.
+
+Tu proyecto debe incluir, cuando tenga sentido en tu tema: estructura completa y metadatos, navegación entre páginas, jerarquía de encabezados, párrafos y elementos de énfasis, los tres tipos de lista, enlaces internos y externos, imágenes con `figure`, estructura semántica, una tabla de datos, un formulario completo con varios tipos de campo y validación, y algún elemento moderno como `details` o `time`.
 
 ### Presentación
 
-Dispones de unos **3 minutos** delante del grupo y respondes a cuatro preguntas:
+Dispones de unos **3 minutos** y respondes a cuatro preguntas:
 
 * ¿Qué parte de tu estructura te costó más decidir y cómo la resolviste?
 * Enséñanos un sitio donde estuviste tentado de usar un `div` y no lo hiciste.
@@ -2035,7 +2976,7 @@ Ante cualquier trozo de información que tengas que marcar, esta es la secuencia
   </ol>
 </figure>
 
-El paso tres es el que separa a quien ha entendido la unidad de quien ha memorizado etiquetas. `div` no es el error: usarlo **en lugar de** algo que sí significaba, sí.
+El paso tres separa a quien ha entendido la unidad de quien ha memorizado etiquetas. `div` no es el error: usarlo **en lugar de** algo que sí significaba, sí.
 
 ### La idea más importante
 
@@ -2049,6 +2990,41 @@ De ahí sale todo lo demás: por eso se valida, por eso se prueba con el teclado
 
 Esa frase es la que hace posible la siguiente unidad. Si tu estructura dice lo que las cosas son, el CSS podrá cambiar por completo su apariencia sin tocar una línea de tu HTML.
 
+### Un buen desarrollador no es quien memoriza todas las etiquetas
+
+En desarrollo web tendrás siempre a mano documentación, autocompletado, buscadores, validadores, herramientas de análisis e IA. El objetivo no es memorizar MDN.
+
+El objetivo es construir un modelo mental que te permita decidir:
+
+* ¿Qué elemento representa mejor esta información?
+* ¿Mi documento tiene una estructura lógica?
+* ¿Puede entenderlo una herramienta además de una persona?
+* ¿He usado HTML para estructurar, o estoy intentando usarlo para presentar?
+* ¿Cómo compruebo que mi código es correcto?
+
+No hace falta que lo recuerdes todo. Sí que sepas qué estás haciendo y dónde buscar lo que no recuerdas.
+
+### Al terminar deberías poder responder
+
+1. ¿Qué función tiene HTML dentro de una aplicación web?
+2. ¿Qué diferencia existe entre elemento, etiqueta y atributo?
+3. ¿Qué contienen respectivamente `head` y `body`?
+4. ¿Para qué sirven `charset`, `viewport`, `lang` y `title`?
+5. ¿Cómo se organiza correctamente una jerarquía de encabezados?
+6. ¿Qué diferencia existe entre una ruta relativa y una absoluta?
+7. ¿Qué información debería contener un `alt`, y cuándo debe estar vacío?
+8. ¿Cuándo utilizarías `section`, `article` o `div`?
+9. ¿Por qué no debemos utilizar tablas para maquetar?
+10. ¿Qué relación existe entre `label` e `input`, y qué papel tiene `name`?
+11. ¿Por qué existen diferentes tipos de `input`?
+12. ¿Qué función tienen `fieldset` y `legend`?
+13. ¿Qué ventajas aporta usar elementos HTML nativos frente a recrearlos?
+14. ¿Por qué una página puede verse correctamente y contener HTML incorrecto?
+15. ¿Para qué sirven HTMLHint y el validador del W3C, y qué no detecta ninguno de los dos?
+16. ¿Qué es Emmet y qué problema resuelve?
+
+Si además puedes construir y modificar un sitio multipágina sin depender de una plantilla, tienes la base para continuar.
+
 ### El vocabulario de la unidad
 
 | Concepto | Significa |
@@ -2058,12 +3034,15 @@ Esa frase es la que hace posible la siguiente unidad. Si tu estructura dice lo q
 | Atributo | Un dato añadido a una etiqueta, con nombre y valor |
 | Elemento vacío | El que no envuelve contenido y no se cierra: `img`, `meta`, `br` |
 | Anidación | Contener unos elementos dentro de otros, cerrando en orden inverso |
+| Entidad | Código como `&lt;` para escribir un carácter reservado |
 | Linter | Programa que avisa de errores mientras escribes, sin ejecutar el código |
 | Validador | Servicio que dictamina si un documento cumple la especificación |
+| Emmet | Sistema de abreviaturas que expande estructuras HTML al escribirlas |
 | `doctype` | La declaración de que el documento es HTML estándar |
 | `charset` | Cómo se traducen los bytes del archivo a caracteres |
 | `viewport` | La instrucción de adaptarse al ancho real del dispositivo |
 | Jerarquía de encabezados | El índice del documento, de `h1` a `h6`, sin saltos |
+| `id` | Identificador único de un elemento dentro del documento |
 | Ruta relativa | Camino al destino desde el archivo que escribe el enlace |
 | Landmark | Zona con significado propio: `header`, `nav`, `main`, `aside`, `footer` |
 | `section` | Parte temática que solo tiene sentido dentro de esta página |
@@ -2071,23 +3050,29 @@ Esa frase es la que hace posible la siguiente unidad. Si tu estructura dice lo q
 | Texto alternativo | Lo que ocupa el lugar de una imagen cuando la imagen no está |
 | `scope` | Declara si un encabezado de tabla manda sobre su fila o su columna |
 | Etiqueta asociada | `label` unido a su campo mediante `for` e `id` |
+| `name` | El nombre con el que un dato de formulario viaja al servidor |
 | Validación nativa | Comprobaciones que hace el navegador sin JavaScript |
+| ARIA | Atributos que describen papel y estado cuando HTML no llega |
 | Accesibilidad | Que el contenido siga siendo usable sin ver la pantalla y sin ratón |
 
 ### La siguiente unidad
 
-Durante seis semanas has respondido a una sola pregunta:
+Durante seis semanas hemos respondido principalmente a una pregunta:
 
-> **¿Qué representa cada elemento y cómo se estructura la información?**
+> **¿Qué es cada cosa?**
 
-En la siguiente unidad llega CSS, y con él la apariencia: colores, tipografía, Flexbox, Grid y diseño adaptable.
+En la siguiente empezamos a responder la otra:
+
+> **¿Cómo queremos que se vea?**
 
 <figure class="diagram">
   <figcaption>Las dos mitades del oficio</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>HTML · qué es cada cosa</li>
-    <li>CSS · cómo se ve</li>
+    <li>HTML · estructura y significado</li>
+    <li>CSS · presentación y diseño</li>
   </ol>
 </figure>
+
+Partiremos exactamente del sitio que has construido aquí, y trabajaremos selectores, cascada, especificidad, box model, tipografía, unidades, colores, Flexbox, Grid, diseño adaptable, media queries, variables, estados y transiciones.
 
 Y aquí se cobra el trabajo de estas seis semanas: sobre una estructura semántica, dar estilo es cuestión de escribir selectores. Sobre una sopa de `div`, es cuestión de adivinar cuál era cuál.
