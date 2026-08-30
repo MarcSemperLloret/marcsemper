@@ -477,6 +477,70 @@ export const teachingCourses: TeachingCourse[] = [
         resources: []
       }
     ]
+  },
+  {
+    slug: "lenguaje-de-marcas",
+    title: "Lenguaje de marcas",
+    titleEs: "Lenguaje de marcas",
+    term: "2026/2027",
+    status: "current",
+    updatedAt: "2026-08-30",
+    summary:
+      "Structuring, styling and managing web information: modern semantic HTML, CSS layout systems, structured data formats (XML, JSON), web feeds, and business information management.",
+    summaryEs:
+      "Estructuración, presentación y tratamiento de la información web: HTML semántico, maquetación moderna con CSS, lenguajes de datos estructurados (XML y JSON), sindicación y sistemas de gestión de información.",
+    overview:
+      "A foundational software development module covering the fundamental technologies for representing, exchanging and presenting digital information. The journey begins with semantic HTML as the bedrock of web accessibility and meaning, progresses through modern CSS architectures (Flexbox, Grid, responsive design), and expands into structured data interchange formats (XML, DTD/XSD schema validation, XPath/XSLT transformations, and JSON), web syndication, and digital content management systems.",
+    overviewEs:
+      "Módulo fundamental de desarrollo centrado en las tecnologías para representar, intercambiar y presentar información digital. El recorrido parte de HTML semántico como base de la estructura y accesibilidad web, avanza hacia la maquetación moderna con CSS (Flexbox, Grid, diseño adaptable), y se adentra en el intercambio de datos estructurados (XML, validación DTD/Schema, transformaciones XPath/XSLT y JSON), sindicación de contenidos y sistemas de gestión de información empresarial.",
+    outcomes: [
+      "Write valid, accessible and semantic HTML5 documents.",
+      "Design modern, responsive user interfaces using Flexbox, CSS Grid and design tokens.",
+      "Structure and validate business data with XML, DTD, and XML Schema.",
+      "Query and transform structured documents using XPath and XSLT.",
+      "Parse, serialize and validate JSON datasets in web architectures.",
+      "Integrate web syndication feeds (RSS/Atom) and configure digital content management systems."
+    ],
+    outcomesEs: [
+      "Escribir documentos HTML5 válidos, accesibles y con semántica estricta.",
+      "Maquetar interfaces web modernas y adaptables con Flexbox, CSS Grid y diseño responsive.",
+      "Estructurar y validar datos empresariales con XML, DTD y XML Schema.",
+      "Consultar y transformar documentos estructurados mediante XPath y XSLT.",
+      "Manipular, validar e intercambiar conjuntos de datos en formato JSON.",
+      "Integrar canales de sindicación web (RSS/Atom) y configurar sistemas de gestión de contenidos."
+    ],
+    topics: [
+      "Semantic HTML5 and accessibility",
+      "Modern CSS, Flexbox and Grid",
+      "XML, DTD and XML Schema",
+      "XPath and XSLT transformations",
+      "JSON and data interchange",
+      "Web syndication and content management"
+    ],
+    topicsEs: [
+      "HTML5 semántico y accesibilidad",
+      "CSS moderno, Flexbox y Grid",
+      "XML, DTD y XML Schema",
+      "XPath y transformaciones XSLT",
+      "JSON e intercambio de datos",
+      "Sindicación web y gestión de contenidos"
+    ],
+    resources: [],
+    sections: [
+      {
+        id: "ud-01",
+        number: "UD1",
+        verb: "STRUCTURE",
+        verbEs: "ESTRUCTURAR",
+        title: "HTML: Structure and content of the Web",
+        titleEs: "HTML: estructura y contenido de la Web",
+        description:
+          "Write modern, organized, semantic and accessible HTML documents without CSS.",
+        descriptionEs:
+          "Crear documentos HTML modernos, organizados, semánticos y accesibles como base sólida antes de aplicar presentación.",
+        resources: []
+      }
+    ]
   }
 ];
 

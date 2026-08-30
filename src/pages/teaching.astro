@@ -5,12 +5,12 @@ import {
   publishedCourses,
   currentCourses,
   archivedCourses,
-  courseResourceCount,
   formatTeachingDate
 } from "@/data/teaching";
 import {
   getSessions,
   sessionsOfCourse,
+  courseTotalSessions,
   latestSessionDate
 } from "@/data/sessions";
 import { site } from "@/data/site";
@@ -18,19 +18,19 @@ import { site } from "@/data/site";
 const sessions = await getSessions();
 
 /**
- * A course card counts everything a student can open: the sessions written for
- * the course and the files published under it.
+ * A course card summarises the units and teaching sessions of the course.
  */
 function materialSummary(course: (typeof publishedCourses)[number]): string {
-  const sessionCount = sessionsOfCourse(sessions, course.slug).length;
-  const fileCount = courseResourceCount(course);
+  const courseSessions = sessionsOfCourse(sessions, course.slug);
+  const unitCount = course.sections.length || courseSessions.length;
+  const totalSessions = courseTotalSessions(courseSessions);
   const parts: string[] = [];
 
-  if (sessionCount > 0) {
-    parts.push(sessionCount === 1 ? "1 session" : `${sessionCount} sessions`);
+  if (unitCount > 0) {
+    parts.push(unitCount === 1 ? "1 unit" : `${unitCount} units`);
   }
-  if (fileCount > 0) {
-    parts.push(fileCount === 1 ? "1 file" : `${fileCount} files`);
+  if (totalSessions > 0) {
+    parts.push(totalSessions === 1 ? "1 session" : `${totalSessions} sessions`);
   }
 
   return parts.length > 0 ? parts.join(" · ") : "No material published yet";
