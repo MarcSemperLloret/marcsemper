@@ -242,6 +242,19 @@ body {
 }
 ```
 
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>La estructura recibe una presentación propia</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <div class="lesson-browser" aria-label="Vista de una página después de aplicar las primeras reglas CSS">
+      <div class="lesson-browser__page lesson-first-css">
+        <h1>PixelStore</h1>
+        <p>Componentes pensados para trabajar y crear.</p>
+      </div>
+    </div>
+  </div>
+  <p class="lesson-demo__note">El contenido HTML no cambia: CSS modifica tipografía, color y ritmo de lectura.</p>
+</figure>
+
 <p class="term">Regla</p>
 
 Un selector más el bloque de declaraciones que se le aplican. Una hoja de estilos es una lista de reglas.
@@ -729,6 +742,23 @@ La confusión clásica es padding contra margin. La distinción práctica: **el 
     border-radius: 0.75rem;
 }
 ```
+
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>Las cuatro capas del box model</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <div class="lesson-box-model">
+      <span>margin · separación exterior</span>
+      <div class="lesson-box-model__border">
+        <span>border</span>
+        <div class="lesson-box-model__padding">
+          <span>padding · aire interior</span>
+          <div class="lesson-box-model__content">contenido</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="lesson-demo__note">El fondo llega hasta el borde: pinta el contenido y el <code>padding</code>, pero nunca el <code>margin</code>.</p>
+</figure>
 
 Los valores admiten varias formas:
 
@@ -1284,6 +1314,21 @@ nav ul {
 }
 ```
 
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>La misma lista semántica, ahora distribuida en una fila</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <nav class="lesson-flex-nav" aria-label="Demostración de navegación con Flexbox">
+      <strong>PixelStore</strong>
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Productos</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+  <p class="lesson-demo__note"><code>display: flex</code> cambia la distribución; <code>gap</code> crea únicamente el espacio entre enlaces.</p>
+</figure>
+
 Fíjate en algo: **el HTML no se ha tocado**. Sigue siendo una lista de enlaces, que es lo que es. Solo ha cambiado cómo se dibuja.
 
 ### Los dos ejes
@@ -1582,6 +1627,21 @@ Aquí no hay una dirección: hay filas **y** columnas, y quieres que las columna
     gap: 1.5rem;
 }
 ```
+
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>Tres columnas alineadas y filas creadas automáticamente</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <div class="lesson-grid-catalogue">
+      <article><h4>Nova 14</h4><p>Portátil ligero</p></article>
+      <article><h4>Vision 27</h4><p>Monitor IPS</p></article>
+      <article><h4>Type Pro</h4><p>Teclado mecánico</p></article>
+      <article><h4>Dock One</h4><p>Base USB-C</p></article>
+      <article><h4>Wave</h4><p>Ratón inalámbrico</p></article>
+      <article><h4>Focus</h4><p>Webcam 2K</p></article>
+    </div>
+  </div>
+  <p class="lesson-demo__note">Grid alinea cada tarjeta con las columnas de las demás filas; por eso es una herramienta bidimensional.</p>
+</figure>
 
 Tres declaraciones y tienes una cuadrícula de tres columnas con sus filas alineadas. Fíjate en que **no has dicho cuántas filas hay**: Grid las crea según los elementos que haya.
 
@@ -1912,6 +1972,25 @@ Escribir primero los estilos de la disposición más sencilla —una columna— 
     .catalogo { grid-template-columns: repeat(3, 1fr); }
 }
 ```
+
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>Un mismo catálogo en tres espacios disponibles</strong></figcaption>
+  <div class="lesson-demo__stage lesson-responsive-frames">
+    <div class="lesson-responsive-frame">
+      <span>Base · 1 columna</span>
+      <div><i>A</i><i>B</i><i>C</i></div>
+    </div>
+    <div class="lesson-responsive-frame lesson-responsive-frame--tablet">
+      <span>≥ 48rem · 2 columnas</span>
+      <div><i>A</i><i>B</i><i>C</i><i>D</i></div>
+    </div>
+    <div class="lesson-responsive-frame lesson-responsive-frame--wide">
+      <span>≥ 70rem · 3 columnas</span>
+      <div><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
+    </div>
+  </div>
+  <p class="lesson-demo__note">Mobile first parte de una columna y añade capacidad solo cuando el contenido dispone de espacio suficiente.</p>
+</figure>
 
 La razón no es ideológica: **el caso de una columna es el más simple**, y partir de lo simple para añadir complejidad da menos código que partir de lo complejo para irlo deshaciendo.
 

@@ -292,6 +292,19 @@ Todavía no vamos a usar atajos. Escribe esto letra a letra:
 </html>
 ```
 
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>Lo que dibuja el navegador</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <div class="lesson-browser" aria-label="Vista de la primera página en un navegador">
+      <div class="lesson-browser__page">
+        <h1>Mi primera página web</h1>
+        <p>Esta página está construida utilizando HTML.</p>
+      </div>
+    </div>
+  </div>
+  <p class="lesson-demo__note">El <code>title</code> aparecería en la pestaña; dentro de la página vemos lo que contiene <code>body</code>.</p>
+</figure>
+
 Guarda con `Ctrl + S` y ábrelo en el navegador, o usa la previsualización de VS Code. Durante el desarrollo tendrás normalmente estas dos cosas a la vista:
 
 <figure class="diagram">
@@ -878,6 +891,38 @@ Para pares de término y definición:
 ```
 
 `dt` es el término y `dd` su descripción. Un mismo `dt` puede tener varios `dd`, y varios `dt` pueden compartir un `dd`.
+
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>Tres estructuras, tres representaciones</strong></figcaption>
+  <div class="lesson-demo__stage lesson-lists">
+    <div class="lesson-list-card">
+      <strong>&lt;ul&gt; · sin orden</strong>
+      <ul>
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>JavaScript</li>
+      </ul>
+    </div>
+    <div class="lesson-list-card">
+      <strong>&lt;ol&gt; · secuencia</strong>
+      <ol>
+        <li>Crear el proyecto</li>
+        <li>Escribir HTML</li>
+        <li>Validar</li>
+      </ol>
+    </div>
+    <div class="lesson-list-card">
+      <strong>&lt;dl&gt; · términos</strong>
+      <dl>
+        <dt>HTML</dt>
+        <dd>Estructura el contenido.</dd>
+        <dt>CSS</dt>
+        <dd>Define su presentación.</dd>
+      </dl>
+    </div>
+  </div>
+  <p class="lesson-demo__note">La viñeta o el número ayudan a leer, pero la diferencia importante es la relación que declara cada elemento.</p>
+</figure>
 
 | Lista | Se usa cuando | Ejemplo |
 | ----- | ------------- | ------- |
@@ -1556,6 +1601,31 @@ Si existe, úsalo. Si no existe —solo estás agrupando cosas de cara al CSS, s
 </body>
 ```
 
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>El documento entendido como regiones</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <div class="lesson-semantic-map" aria-label="Mapa de las regiones semánticas del ejemplo">
+      <div class="lesson-semantic-map__region" data-element="&lt;header&gt;">
+        <strong>PixelStore</strong>
+        <div class="lesson-semantic-map__nav" aria-label="Contenido de nav">
+          <span>Inicio</span><span>Productos</span><span>Contacto</span>
+        </div>
+      </div>
+      <div class="lesson-semantic-map__region" data-element="&lt;main&gt;">
+        <div class="lesson-semantic-map__region" data-element="&lt;section&gt;">
+          <strong>Productos destacados</strong>
+          <div class="lesson-semantic-map__articles">
+            <div>Portátil Nova 14</div>
+            <div>Monitor Vision 27</div>
+          </div>
+        </div>
+      </div>
+      <div class="lesson-semantic-map__region" data-element="&lt;footer&gt;">© 2026 PixelStore</div>
+    </div>
+  </div>
+  <p class="lesson-demo__note">Visualmente podrían ser cajas idénticas; las etiquetas indican qué papel cumple cada región para el navegador y las tecnologías de asistencia.</p>
+</figure>
+
 Aunque todavía no tenga CSS, la estructura del documento ya tiene sentido. Léela en voz alta: se entiende qué es cada cosa sin ver la pantalla.
 
 ### Tarea 7 · El infierno de los div
@@ -1858,6 +1928,35 @@ Quien no ve la tabla no puede hacer eso. Va celda por celda y, sin más informac
 </table>
 ```
 
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>Una tabla que conserva la relación entre filas y columnas</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <table class="lesson-demo-table">
+      <caption>Comparativa de productos</caption>
+      <thead>
+        <tr>
+          <th scope="col">Producto</th>
+          <th scope="col">Pantalla</th>
+          <th scope="col">Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Nova 14</th>
+          <td>14 pulgadas</td>
+          <td>899 €</td>
+        </tr>
+        <tr>
+          <th scope="row">Nova 16</th>
+          <td>16 pulgadas</td>
+          <td>1.099 €</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="lesson-demo__note">El color facilita distinguir los encabezados, pero la asociación accesible la crean <code>th</code> y <code>scope</code>, no el aspecto.</p>
+</figure>
+
 | Elemento | Qué declara |
 | -------- | ----------- |
 | `<table>` | Que esto son datos con relación de filas y columnas |
@@ -2099,6 +2198,18 @@ No construyas una tabla solo para cumplir el requisito. Busca un conjunto de dat
     <button type="submit">Enviar</button>
 </form>
 ```
+
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>Etiqueta, campo y acción</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <div class="lesson-demo-form" role="img" aria-label="Representación visual de un formulario con una etiqueta Nombre, un campo de texto y un botón Enviar">
+      <span class="lesson-demo-form__label">Nombre</span>
+      <span class="lesson-demo-form__input" aria-hidden="true"></span>
+      <span class="lesson-demo-form__button">Enviar</span>
+    </div>
+  </div>
+  <p class="lesson-demo__note">Esta vista es ilustrativa. Al ejecutar el código real, pulsar «Nombre» lleva el foco al campo porque el <code>for</code> del <code>label</code> coincide con su <code>id</code>.</p>
+</figure>
 
 Tres piezas: el contenedor `form`, los controles, y el botón que lo envía. Lo que casi siempre se hace mal es la relación entre cada campo y su etiqueta.
 
