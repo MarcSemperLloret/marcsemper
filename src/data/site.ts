@@ -8,7 +8,7 @@ export const site = {
   url: "https://marcsemperlloret.com",
   portrait: "/marc-semper-lloret.jpg",
   defaultSocialImage: "/og-default.png",
-  lastUpdated: "2026-08-14",
+  lastUpdated: "2026-08-25",
   email: "marc.semper@ua.es",
   affiliation: "University of Alicante",
   department: "Department of Computer Science and Artificial Intelligence",
@@ -87,6 +87,7 @@ export const researchAreas = [
     methods: ["GraphSAGE", "Spectral learning", "Message passing", "Graph transformers"],
     topics: ["Graph neural networks", "Sensor networks", "Forecasting"],
     publicationSlugs: [
+      "graph-multivariable-bias-correction-era5",
       "multi-dataset-training-spatiotemporal",
       "global-aerosol-optical-depth",
       "inter-city-air-quality",
@@ -120,6 +121,7 @@ export const researchAreas = [
     methods: ["Reference perturbation", "Missing-data analysis", "Provenance", "Sensitivity analysis"],
     topics: ["Data quality", "Uncertainty", "Provenance"],
     publicationSlugs: [
+      "graph-multivariable-bias-correction-era5",
       "out-of-sample-correctability-limits-imerg-precipitation-extremes",
       "gpm-imerg-precipitation-extremes-valencia",
       "robust-post-training-model-selection",
@@ -152,6 +154,7 @@ export const researchAreas = [
     methods: ["CAMS", "ERA5", "Satellite observations", "Environmental sensor networks"],
     topics: ["Air quality", "Climate data", "Decision support"],
     publicationSlugs: [
+      "graph-multivariable-bias-correction-era5",
       "out-of-sample-correctability-limits-imerg-precipitation-extremes",
       "gpm-imerg-precipitation-extremes-valencia",
       "global-aerosol-optical-depth",

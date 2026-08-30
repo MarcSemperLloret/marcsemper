@@ -36,6 +36,57 @@ export interface Publication {
 
 export const publications: Publication[] = [
   {
+    slug: "graph-multivariable-bias-correction-era5",
+    title:
+      "Graph-based multivariable bias correction of meteorological variables under strict temporal validation in a western mediterranean region prone to atmospheric instability",
+    authors: ["Marc Semper", "Manuel Curado", "Jose F. Vicent"],
+    year: 2026,
+    onlineDate: "2026-08-25",
+    type: "Journal article",
+    venue: "Journal of Computational Science",
+    articleNumber: "102988",
+    doi: "10.1016/j.jocs.2026.102988",
+    status: "Available online",
+    selected: true,
+    abstract:
+      "Global meteorological reanalyses such as ERA5 provide spatially coherent atmospheric fields, yet sub-grid orography and complex coastal dynamics induce systematic local biases that limit their direct utility in regional hydrology, wildfire risk assessment, renewable energy, and agriculture. While traditional bias correction approaches operate variable-by-variable and tabular machine-learning baselines neglect spatial topology, this study introduces a multivariable graph-based post-processing framework designed to model both spatial-neighborhood structure and inter-variable physical dependencies. Using ground observations from the dense AVAMET weather station network across the Valencian Community (a Western Mediterranean region with complex terrain prone to severe convective instability), station records are projected onto the ERA5 grid to train a GraphSAGE architecture with Jumping Knowledge under strict, leakage-free chronological validation splits. The graph model is benchmarked against raw ERA5, an oracle classical reference, and a fixed Random Forest baseline using block-bootstrap uncertainty estimation, fixed-window seasonal robustness diagnostics, and spatial and cross-variable consistency evaluations. On the temporal test partition, GraphSAGE+JK achieves substantial error reductions across six non-precipitation variables—cutting RMSE and MAE for surface pressure, relative humidity, 2-m temperature, wind speed, wind direction, and maximum wind gust by up to 81% relative to classical models. Conversely, precipitation remains an unresolved challenge: the graph model does not improve aggregate pointwise accuracy or high-threshold extreme occurrence detection. These findings confirm the effectiveness of graph neural networks for local predictive bias correction of continuous meteorological variables while highlighting localized precipitation extremes as a key open frontier.",
+    metaDescription:
+      "Graph-based multivariable bias correction of ERA5 meteorological variables under strict temporal validation in the Western Mediterranean.",
+    plainSummary:
+      "Global atmospheric reanalyses like ERA5 suffer from localized biases over complex terrain, impacting downstream hydrological and risk models. This study develops a multivariable graph neural network (GraphSAGE with Jumping Knowledge) that integrates AVAMET ground station observations with spatial neighborhood context to correct ERA5 biases across the Valencian Community. Evaluated under strict chronological validation, the graph approach reduces errors in pressure, humidity, temperature, and wind by up to 81% compared to classical baselines, while identifying localized extreme precipitation as an ongoing challenge.",
+    plainSummaryEs:
+      "Los reanálisis atmosféricos globales como ERA5 presentan sesgos locales sistemáticos en zonas de orografía compleja, lo que afecta a modelos hidrológicos y de gestión de riesgos. Este estudio desarrolla un marco de redes neuronales en grafos (GraphSAGE con Jumping Knowledge) que combina observaciones de estaciones meteorológicas de AVAMET con la topología espacial de vecindad para corregir múltiples variables de ERA5 en la Comunitat Valenciana. Evaluado bajo una rigurosa validación cronológica sin fugas, el modelo en grafos reduce los errores en presión, humedad, temperatura y viento hasta en un 81% frente a baselines clásicos, señalando además los límites actuales en la corrección de precipitación extrema.",
+    contribution:
+      "A multivariable graph neural network post-processing framework that captures spatial-neighborhood context and inter-variable dependencies to correct ERA5 biases, evaluated under leakage-free chronological splits, uncertainty bounds, and seasonal robustness tests.",
+    contributionEs:
+      "Un marco de post-procesamiento multivariable mediante redes neuronales en grafos que captura la topología espacial de vecindad y las dependencias entre variables para corregir sesgos de ERA5, evaluado bajo particiones cronológicas sin fugas, intervalos de incertidumbre y robustez estacional.",
+    finding:
+      "GraphSAGE with Jumping Knowledge reduces RMSE and MAE across six non-precipitation variables (surface pressure, relative humidity, 2-m temperature, wind speed, wind direction, and wind gust) by up to 81% over classical and tabular baselines, while extreme precipitation remains an open challenge for spatial graph post-processing.",
+    findingEs:
+      "GraphSAGE con Jumping Knowledge reduce el RMSE y el MAE en seis variables no pluviométricas (presión superficial, humedad relativa, temperatura a 2 m, velocidad, dirección y ráfaga de viento) hasta en un 81% respecto a modelos clásicos y tabulares, mientras que la precipitación extrema sigue siendo un desafío abierto.",
+    topics: [
+      "Bias correction",
+      "ERA5 reanalysis",
+      "Graph neural networks",
+      "Meteorological post-processing",
+      "Spatial dependencies"
+    ],
+    models: [
+      "GraphSAGE + Jumping Knowledge",
+      "Random Forest reference",
+      "Oracle classical reference"
+    ],
+    dataSources: [
+      "ERA5 reanalysis (ECMWF)",
+      "AVAMET weather station network (Valencian Community)"
+    ],
+    relatedSlugs: [
+      "out-of-sample-correctability-limits-imerg-precipitation-extremes",
+      "gpm-imerg-precipitation-extremes-valencia",
+      "global-aerosol-optical-depth"
+    ]
+  },
+  {
     slug: "out-of-sample-correctability-limits-imerg-precipitation-extremes",
     title:
       "Out-of-sample statistical correctability limits under an uncertain operational reference: the case of IMERG sub-daily areal precipitation extremes",
@@ -81,6 +132,7 @@ export const publications: Publication[] = [
     models: ["LightGBM (M3/M3b)", "CNN spatial specialist (M4)", "Probabilistic exceedance model"],
     dataSources: ["GPM IMERG Final V07", "AVAMET rain-gauge network (556 gauges, 2019-2025)"],
     relatedSlugs: [
+      "graph-multivariable-bias-correction-era5",
       "gpm-imerg-precipitation-extremes-valencia",
       "robust-post-training-model-selection"
     ]
