@@ -1796,6 +1796,67 @@ select {
 
 
 /* ---------------------------------------------------------------------------
+   Copy button
+
+   Added to each code block by /copy-code.js. Every state is a class, because
+   the policy drops inline styles, and the script sets none.
+   --------------------------------------------------------------------------- */
+
+.copy-code {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  border-left: 1px solid var(--line-strong);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  /* Keep the label out of a selection made by dragging across the block. */
+  user-select: none;
+  transition: color 140ms ease, background-color 140ms ease;
+}
+
+.copy-code:hover {
+  color: var(--white);
+  background: var(--blue-dark);
+}
+
+.copy-code:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
+.copy-code.is-copied {
+  color: var(--white);
+  background: var(--ink);
+}
+
+.copy-code.is-failed {
+  color: var(--white);
+  background: var(--coral);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy-code {
+    transition: none;
+  }
+}
+
+@media print {
+  .copy-code {
+    display: none;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
    Session content, pieces introduced by UD4
    --------------------------------------------------------------------------- */
 

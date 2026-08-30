@@ -130,10 +130,16 @@ const serializedStructuredData = JSON.stringify(structuredData).replaceAll("<", 
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    {/*
+      `script-src 'self'` allows exactly one first-party file, /copy-code.js,
+      which puts a copy button on the session code blocks. No inline scripts and
+      no third-party origins: setting this back to 'none' removes the buttons
+      and breaks nothing else.
+    */}
     {isProduction && (
       <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self'; script-src 'none'; form-action 'self'; upgrade-insecure-requests"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self'; script-src 'self'; form-action 'self'; upgrade-insecure-requests"
       />
     )}
     <meta name="generator" content={Astro.generator} />
