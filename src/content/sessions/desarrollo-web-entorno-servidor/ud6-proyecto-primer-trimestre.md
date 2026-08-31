@@ -4,10 +4,10 @@ label: "UD6 · Integrar"
 section: "ud-06"
 order: 6
 lang: "es"
-summary: "Integrar el primer trimestre en una aplicación con interfaz, capas, validación, sesiones, PostgreSQL y JPA a partir de requisitos."
+summary: "Integrar el primer trimestre en una API con capas, validación, sesiones, PostgreSQL y JPA a partir de requisitos."
 duration: "6 horas · 1 semana · 3 sesiones"
 modality: "Proyecto · requisitos y acompañamiento puntual"
-deliverable: "Una aplicación Spring MVC completa, revisada y defendida."
+deliverable: "Una API Spring Boot completa, revisada, defendida y verificable con Postman o Bruno."
 date: "2026-08-31"
 outcomes:
   - "Convertir requisitos en un plan de trabajo verificable."
@@ -19,7 +19,7 @@ requirements:
   - "PostgreSQL operativo."
   - "Lista de criterios de aceptación del proyecto."
 priorKnowledge:
-  - "Spring MVC y Thymeleaf."
+  - "HTTP, controllers REST, DTO y una colección de Postman o Bruno."
   - "Arquitectura por capas, validación y sesiones."
   - "JPA, relaciones y PostgreSQL."
 ---
@@ -195,4 +195,3 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-

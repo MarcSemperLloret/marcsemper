@@ -63,6 +63,7 @@ const t = isSpanish
       onThisPage: "En esta página",
       planEyebrow: "Al terminar el módulo",
       planTitle: "Lo que serás capaz de hacer.",
+      milestones: "Mapa global del proyecto",
       announcements: "Avisos de la asignatura",
       documentsEyebrow: "Documentos de la asignatura",
       documentsTitle: "Material general.",
@@ -90,6 +91,7 @@ const t = isSpanish
       onThisPage: "On this page",
       planEyebrow: "By the end of the module",
       planTitle: "What you will be able to do.",
+      milestones: "Whole-project roadmap",
       announcements: "Course notes",
       documentsEyebrow: "Course documents",
       documentsTitle: "General material.",
@@ -161,6 +163,7 @@ const resourceMeta = (resource: TeachingResource) =>
       <p class="course-summary">{text.summary}</p>
       <div class="course-meta">
         <span>{course.term}</span>
+        {text.level && <span>{text.level}</span>}
         {(isSpanish ? course.hoursEs : course.hours) && (
           <span>{isSpanish ? course.hoursEs : course.hours}</span>
         )}
@@ -218,17 +221,30 @@ const resourceMeta = (resource: TeachingResource) =>
         )}
         {route.length > 1 && (
           <ol class="course-route">
-            {route.map((step) => (
-              <li>
-                <a href={`#${step.id}`}>
-                  <span class="route-number">{step.number}</span>
-                  {step.verb && <span class="route-verb">{step.verb}</span>}
-                  <span class="route-title">{step.title}</span>
-                  {step.duration && <span class="route-duration">{step.duration}</span>}
-                </a>
-              </li>
+            {route.map((step, index) => (
+              <Fragment>
+                {step.phase && step.phase !== route[index - 1]?.phase && (
+                  <li class="route-phase"><span>{step.phase}</span></li>
+                )}
+                <li>
+                  <a href={`#${step.id}`}>
+                    <span class="route-number">{step.number}</span>
+                    {step.verb && <span class="route-verb">{step.verb}</span>}
+                    <span class="route-title">{step.title}</span>
+                    {step.duration && <span class="route-duration">{step.duration}</span>}
+                  </a>
+                </li>
+              </Fragment>
             ))}
           </ol>
+        )}
+        {text.milestones.length > 0 && (
+          <div class="course-milestones">
+            <p>{t.milestones}</p>
+            <ul>
+              {text.milestones.map((milestone) => <li>{milestone}</li>)}
+            </ul>
+          </div>
         )}
       </div>
     </section>
@@ -306,15 +322,19 @@ const resourceMeta = (resource: TeachingResource) =>
         <p class="sections-empty">{t.sectionsEmpty}</p>
       ) : (
         <div class="section-list">
-          {course.sections.map((section) => {
+          {course.sections.map((section, index) => {
             const info = sectionText(section, lang);
             const sectionUnits = units.filter(
               (unit) => unit.entry.data.section === section.id
             );
             return (
-              <article id={section.id}>
-                <div class="section-index">{section.number ?? "—"}</div>
-                <div>
+              <Fragment>
+                {info.phase && (index === 0 || info.phase !== sectionText(course.sections[index - 1], lang).phase) && (
+                  <div class="section-phase">{info.phase}</div>
+                )}
+                <article id={section.id}>
+                  <div class="section-index">{section.number ?? "—"}</div>
+                  <div>
                   <h3>{info.title}</h3>
                   {info.description && <p>{info.description}</p>}
                   {sectionUnits.length > 0 && (
@@ -387,8 +407,9 @@ const resourceMeta = (resource: TeachingResource) =>
                       })}
                     </ul>
                   )}
-                </div>
-              </article>
+                  </div>
+                </article>
+              </Fragment>
             );
           })}
         </div>
@@ -561,6 +582,62 @@ const resourceMeta = (resource: TeachingResource) =>
     border: 1px solid var(--blue);
     border-radius: 100px;
     background: var(--paper);
+    content: "";
+  }
+
+  .course-route .route-phase {
+    padding: 34px 0 8px;
+    color: var(--blue-dark);
+    font-size: 0.67rem;
+    font-weight: 850;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .course-route .route-phase::before,
+  .course-route .route-phase::after {
+    display: none;
+  }
+
+  .course-milestones {
+    margin-top: 64px;
+    padding: 30px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper-deep);
+  }
+
+  .course-milestones > p {
+    margin: 0 0 18px;
+    color: var(--blue-dark);
+    font-size: 0.67rem;
+    font-weight: 850;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .course-milestones ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .course-milestones li {
+    position: relative;
+    padding: 10px 0 10px 30px;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+
+  .course-milestones li::before {
+    position: absolute;
+    top: 11px;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--line-strong);
     content: "";
   }
 
@@ -804,6 +881,16 @@ const resourceMeta = (resource: TeachingResource) =>
     padding: 40px 0;
     border-bottom: 1px solid var(--line-strong);
     scroll-margin-top: 90px;
+  }
+
+  .section-phase {
+    padding: 52px 0 16px;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--blue-dark);
+    font-size: 0.7rem;
+    font-weight: 850;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   .section-index {

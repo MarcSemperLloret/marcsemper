@@ -1,54 +1,56 @@
 ---
-title: "Formularios, validación y estado"
-label: "UD3 · Validar"
-section: "ud-03"
-order: 3
+title: "Peticiones, respuestas y clientes HTTP"
+label: "UD2 · Comunicar"
+section: "ud-02"
+order: 2
 lang: "es"
-summary: "Pasar de mostrar información a modificarla de forma segura mediante formularios, validación, redirecciones y estado de sesión."
+summary: "Comprender cómo transforma Spring una petición HTTP en datos Java, cómo construye la respuesta y cómo comprobar cada contrato sin una interfaz gráfica."
 duration: "12 horas · 2 semanas · 6 sesiones"
-modality: "Taller aplicado · 60 % guía / 40 % autonomía"
-deliverable: "Un CRUD completo con interfaz, validación y preferencias guardadas en sesión."
+modality: "Taller guiado · 80 % guía / 20 % autonomía"
+deliverable: "Un backend en memoria acompañado de una colección ejecutable de Postman o Bruno."
 date: "2026-08-31"
 outcomes:
-  - "Procesar formularios mediante GET, POST y binding."
-  - "Validar la entrada en servidor y mostrar errores útiles."
-  - "Implementar un CRUD completo con el patrón POST-Redirect-GET."
-  - "Mantener estado entre peticiones mediante cookies y sesión."
+  - "Seguir una petición desde el cliente HTTP hasta el método del controller."
+  - "Recibir JSON y transformarlo en objetos Java de forma controlada."
+  - "Construir respuestas con cuerpo, cabeceras y códigos de estado adecuados."
+  - "Separar DTO de entrada y salida del modelo interno."
+  - "Guardar y repetir pruebas manuales con Postman o Bruno."
 requirements:
-  - "La miniweb de la UD2."
-  - "Herramientas de red y almacenamiento de DevTools."
+  - "El proyecto de la UD1 funcionando."
+  - "Postman o Bruno instalado."
+  - "Un navegador con DevTools para comparar clientes."
 priorKnowledge:
-  - "Spring MVC, Model y plantillas Thymeleaf."
-  - "Rutas de listado y detalle."
+  - "Peticiones y respuestas HTTP."
+  - "Controllers, rutas, objetos, listas y JSON."
 ---
 
-<p class="lead">La aplicación ya no solo se consulta: recibe datos que nunca debe considerar fiables por venir del cliente. Después aprende a recordar lo imprescindible entre peticiones.</p>
+<p class="lead">La aplicación sigue sin interfaz visual. Eso es intencionado: primero aprenderemos a observar su contrato HTTP directamente, sin que Angular o una página oculten qué se envía y qué se recibe.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje medio. Se guía el primer formulario y la primera validación; el CRUD y la funcionalidad con estado se completan con decisiones del alumnado.</p>
+  <p>Andamiaje alto. Cada mecanismo se observa primero con una petición pequeña; la colección final debe poder ejecutar y documentar el flujo completo sin pasos improvisados.</p>
 </div>
 
-## Semana 5 · Del formulario al cambio de estado
+## Semana 3 · De HTTP a Java y de vuelta
 
-## Sesión 13 · Formularios y POST
+## Sesión 7 · De HTTP a un método Java
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> usar GET para modificar datos confunde intención, caché, historial y repetición de peticiones.</li>
-    <li><strong>Construye:</strong> un formulario ligado a un objeto mediante @ModelAttribute.</li>
+    <li><strong>Comprende:</strong> las anotaciones parecen magia si no se relaciona cada valor Java con una parte concreta de la petición.</li>
+    <li><strong>Construye:</strong> una petición trazada desde Postman o Bruno hasta el método que la atiende.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **diferenciar la petición que muestra un formulario de la que procesa sus datos**.
+Al terminar serás capaz de **seguir cómo Spring selecciona un controller y enlaza ruta, parámetros y cabeceras con sus argumentos**.
 
 ### 2. El problema
 
-Usar GET para modificar datos confunde intención, caché, historial y repetición de peticiones.
+Las anotaciones parecen magia si no se relaciona cada valor Java con una parte concreta de la petición.
 
 ### 3–6. Itinerario de trabajo
 
@@ -62,7 +64,7 @@ Usar GET para modificar datos confunde intención, caché, historial y repetici�
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un formulario ligado a un objeto mediante @ModelAttribute.</li>
+    <li>Has obtenido una petición trazada desde Postman o Bruno hasta el método que la atiende.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -80,24 +82,24 @@ Usar GET para modificar datos confunde intención, caché, historial y repetici�
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 14 · Validación
+## Sesión 8 · Cuerpo JSON y deserialización
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> los datos del cliente pueden llegar incompletos, mal formados o manipulados.</li>
-    <li><strong>Construye:</strong> un formulario que rechaza datos inválidos sin perder la entrada del usuario.</li>
+    <li><strong>Comprende:</strong> crear recursos exige transformar datos externos en objetos Java sin asumir que su forma es correcta.</li>
+    <li><strong>Construye:</strong> un endpoint que recibe JSON y permite observar el objeto resultante.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **aplicar @Valid y restricciones de Bean Validation mostrando cada error junto a su campo**.
+Al terminar serás capaz de **recibir un cuerpo JSON mediante @RequestBody y detectar diferencias entre JSON válido, inválido e incompleto**.
 
 ### 2. El problema
 
-Los datos del cliente pueden llegar incompletos, mal formados o manipulados.
+Crear recursos exige transformar datos externos en objetos Java sin asumir que su forma es correcta.
 
 ### 3–6. Itinerario de trabajo
 
@@ -111,7 +113,7 @@ Los datos del cliente pueden llegar incompletos, mal formados o manipulados.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un formulario que rechaza datos inválidos sin perder la entrada del usuario.</li>
+    <li>Has obtenido un endpoint que recibe JSON y permite observar el objeto resultante.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -129,24 +131,24 @@ Los datos del cliente pueden llegar incompletos, mal formados o manipulados.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 15 · CRUD completo con interfaz
+## Sesión 9 · Construir respuestas HTTP
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> repetir un POST al refrescar puede duplicar operaciones y degradar la navegación.</li>
-    <li><strong>Construye:</strong> un CRUD web completo sin reenvíos accidentales.</li>
+    <li><strong>Comprende:</strong> devolver un objeto no siempre expresa si se ha creado, encontrado, rechazado o eliminado un recurso.</li>
+    <li><strong>Construye:</strong> respuestas distintas y verificables para varios resultados de una operación.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **crear, editar y eliminar desde HTML aplicando POST-Redirect-GET**.
+Al terminar serás capaz de **controlar cuerpo, cabeceras y código de estado mediante ResponseEntity**.
 
 ### 2. El problema
 
-Repetir un POST al refrescar puede duplicar operaciones y degradar la navegación.
+Devolver un objeto no siempre expresa si se ha creado, encontrado, rechazado o eliminado un recurso.
 
 ### 3–6. Itinerario de trabajo
 
@@ -160,7 +162,7 @@ Repetir un POST al refrescar puede duplicar operaciones y degradar la navegació
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un CRUD web completo sin reenvíos accidentales.</li>
+    <li>Has obtenido respuestas distintas y verificables para varios resultados de una operación.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -178,26 +180,26 @@ Repetir un POST al refrescar puede duplicar operaciones y degradar la navegació
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 6 · HTTP no recuerda nada
+## Semana 4 · Un contrato que se puede repetir
 
-## Sesión 16 · HTTP no recuerda nada
+## Sesión 10 · DTO de entrada y salida
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> la aplicación necesita reconocer continuidad donde el protocolo no la aporta por sí solo.</li>
-    <li><strong>Construye:</strong> una demostración observable de identidad entre varias peticiones.</li>
+    <li><strong>Comprende:</strong> usar la misma clase para recibir, procesar y responder filtra detalles internos y permite campos que el cliente no debería controlar.</li>
+    <li><strong>Construye:</strong> DTO diferentes para crear y consultar un usuario o proyecto.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **explicar por qué dos peticiones son independientes e identificar cookies y sesión en DevTools**.
+Al terminar serás capaz de **separar los datos que acepta el backend de los que decide devolver**.
 
 ### 2. El problema
 
-La aplicación necesita reconocer continuidad donde el protocolo no la aporta por sí solo.
+Usar la misma clase para recibir, procesar y responder filtra detalles internos y permite campos que el cliente no debería controlar.
 
 ### 3–6. Itinerario de trabajo
 
@@ -211,7 +213,7 @@ La aplicación necesita reconocer continuidad donde el protocolo no la aporta po
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una demostración observable de identidad entre varias peticiones.</li>
+    <li>Has obtenido DTO diferentes para crear y consultar un usuario o proyecto.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -229,24 +231,24 @@ La aplicación necesita reconocer continuidad donde el protocolo no la aporta po
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 17 · Estado de aplicación
+## Sesión 11 · Probar con Postman o Bruno
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> guardar todo en cualquier sitio crea incoherencia, exposición o estado imposible de mantener.</li>
-    <li><strong>Construye:</strong> preferencias o selección temporal asociadas a una sesión.</li>
+    <li><strong>Comprende:</strong> hacer peticiones sueltas a mano no deja una evidencia repetible ni permite detectar fácilmente una regresión.</li>
+    <li><strong>Construye:</strong> una colección con entornos, casos correctos y casos de error.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **elegir entre sesión, cookie y dato temporal según alcance y sensibilidad**.
+Al terminar serás capaz de **organizar peticiones, variables y comprobaciones en una colección reproducible**.
 
 ### 2. El problema
 
-Guardar todo en cualquier sitio crea incoherencia, exposición o estado imposible de mantener.
+Hacer peticiones sueltas a mano no deja una evidencia repetible ni permite detectar fácilmente una regresión.
 
 ### 3–6. Itinerario de trabajo
 
@@ -260,7 +262,7 @@ Guardar todo en cualquier sitio crea incoherencia, exposición o estado imposibl
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido preferencias o selección temporal asociadas a una sesión.</li>
+    <li>Has obtenido una colección con entornos, casos correctos y casos de error.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -278,24 +280,24 @@ Guardar todo en cualquier sitio crea incoherencia, exposición o estado imposibl
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 18 · Aplicación con estado
+## Sesión 12 · Backend en memoria verificable
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> entender el estado es necesario antes de delegar su gestión en Spring Security.</li>
-    <li><strong>Construye:</strong> una funcionalidad con estado integrada y verificable en la aplicación.</li>
+    <li><strong>Comprende:</strong> las piezas aisladas solo son útiles si forman un flujo completo que otra persona puede ejecutar.</li>
+    <li><strong>Construye:</strong> un backend CRUD en memoria acompañado de su colección de pruebas.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **incorporar favoritos, carrito o preferencias sin introducir todavía autenticación**.
+Al terminar serás capaz de **integrar rutas, cuerpos JSON, DTO y respuestas HTTP en un backend pequeño**.
 
 ### 2. El problema
 
-Entender el estado es necesario antes de delegar su gestión en Spring Security.
+Las piezas aisladas solo son útiles si forman un flujo completo que otra persona puede ejecutar.
 
 ### 3–6. Itinerario de trabajo
 
@@ -309,7 +311,7 @@ Entender el estado es necesario antes de delegar su gestión en Spring Security.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una funcionalidad con estado integrada y verificable en la aplicación.</li>
+    <li>Has obtenido un backend CRUD en memoria acompañado de su colección de pruebas.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -334,10 +336,11 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Procesar formularios mediante GET, POST y binding.</li>
-    <li>Validar la entrada en servidor y mostrar errores útiles.</li>
-    <li>Implementar un CRUD completo con el patrón POST-Redirect-GET.</li>
-    <li>Mantener estado entre peticiones mediante cookies y sesión.</li>
+    <li>Seguir una petición desde el cliente HTTP hasta el método del controller.</li>
+    <li>Recibir JSON y transformarlo en objetos Java de forma controlada.</li>
+    <li>Construir respuestas con cuerpo, cabeceras y códigos de estado adecuados.</li>
+    <li>Separar DTO de entrada y salida del modelo interno.</li>
+    <li>Guardar y repetir pruebas manuales con Postman o Bruno.</li>
   </ul>
 </div>
 

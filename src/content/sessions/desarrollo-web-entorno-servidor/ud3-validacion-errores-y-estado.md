@@ -1,55 +1,55 @@
 ---
-title: "MVC, Thymeleaf y páginas dinámicas"
-label: "UD2 · Renderizar"
-section: "ud-02"
-order: 2
+title: "Validación, errores y estado"
+label: "UD3 · Validar"
+section: "ud-03"
+order: 3
 lang: "es"
-summary: "Convertir los datos de la aplicación en páginas HTML dinámicas mediante Spring MVC, Thymeleaf y componentes reutilizables."
+summary: "Modificar recursos de forma fiable, rechazar entrada inválida, responder con errores consistentes y comprender cómo se mantiene estado entre peticiones."
 duration: "12 horas · 2 semanas · 6 sesiones"
-modality: "Taller guiado · 80 % guía / 20 % autonomía"
-deliverable: "Un catálogo dinámico de proyectos con listado y página de detalle."
+modality: "Taller aplicado · 60 % guía / 40 % autonomía"
+deliverable: "Una API CRUD en memoria con entrada validada, errores coherentes y una funcionalidad basada en sesión."
 date: "2026-08-31"
 outcomes:
-  - "Devolver vistas HTML desde un controller MVC."
-  - "Mostrar colecciones y decisiones mediante expresiones de Thymeleaf."
-  - "Reutilizar cabecera, navegación y pie con fragments."
-  - "Navegar entre listados y páginas de detalle."
+  - "Crear, modificar y eliminar recursos mediante JSON."
+  - "Validar la entrada en servidor y explicar por qué nunca se confía en el cliente."
+  - "Devolver errores de API estructurados y coherentes."
+  - "Explicar el carácter stateless de HTTP."
+  - "Mantener estado deliberado mediante cookies y sesión."
 requirements:
-  - "El proyecto de la UD1 funcionando."
-  - "Un navegador con inspección del HTML generado."
+  - "El backend y la colección de pruebas de la UD2."
+  - "DevTools y Postman o Bruno."
 priorKnowledge:
-  - "Peticiones y respuestas HTTP."
-  - "Controllers, rutas, objetos y listas en Java."
-  - "HTML semántico básico."
+  - "Request body, DTO y ResponseEntity."
+  - "Métodos HTTP y códigos de estado."
 ---
 
-<p class="lead">La misma aplicación deja de ser solo una API: ahora una persona puede recorrer proyectos e incidencias desde páginas generadas en el servidor.</p>
+<p class="lead">El backend ya intercambia JSON, pero todavía debe protegerse de datos incompletos, operaciones imposibles y resultados incoherentes. Después veremos cómo recordar lo imprescindible entre peticiones.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje alto. Las primeras vistas se construyen juntos; la miniweb final obliga a decidir cómo repartir y reutilizar las plantillas.</p>
+  <p>Andamiaje medio. Se guía la primera validación y el primer error estructurado; el CRUD completo y la funcionalidad con estado deben quedar cubiertos por la colección del alumnado.</p>
 </div>
 
-## Semana 3 · Del objeto Java a la página
+## Semana 5 · Cambiar datos sin perder el control
 
-## Sesión 7 · Devolver HTML
+## Sesión 13 · Crear, modificar y eliminar recursos
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> el navegador necesita una página completa y el controller no debería concatenar HTML.</li>
-    <li><strong>Construye:</strong> una vista Thymeleaf cargada desde resources/templates.</li>
+    <li><strong>Comprende:</strong> un backend útil no solo consulta datos: también debe cambiar su estado con una semántica predecible.</li>
+    <li><strong>Construye:</strong> operaciones de escritura sobre proyectos o incidencias comprobadas desde el cliente HTTP.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **distinguir una respuesta de texto o JSON de una vista resuelta por Spring MVC**.
+Al terminar serás capaz de **implementar POST, PUT o PATCH y DELETE distinguiendo la intención de cada operación**.
 
 ### 2. El problema
 
-El navegador necesita una página completa y el controller no debería concatenar HTML.
+Un backend útil no solo consulta datos: también debe cambiar su estado con una semántica predecible.
 
 ### 3–6. Itinerario de trabajo
 
@@ -63,7 +63,7 @@ El navegador necesita una página completa y el controller no debería concatena
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una vista Thymeleaf cargada desde resources/templates.</li>
+    <li>Has obtenido operaciones de escritura sobre proyectos o incidencias comprobadas desde el cliente HTTP.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -81,24 +81,24 @@ El navegador necesita una página completa y el controller no debería concatena
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 8 · Mostrar datos
+## Sesión 14 · Validación de entrada
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una plantilla estática no puede reflejar el estado real de la aplicación.</li>
-    <li><strong>Construye:</strong> una página que muestra los datos escapados de un usuario o proyecto.</li>
+    <li><strong>Comprende:</strong> el JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formulario de Angular valide en el navegador.</li>
+    <li><strong>Construye:</strong> peticiones inválidas rechazadas con información concreta sobre cada campo.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **pasar datos con Model y representarlos con expresiones de Thymeleaf**.
+Al terminar serás capaz de **aplicar @Valid y restricciones de Bean Validation a los DTO de entrada**.
 
 ### 2. El problema
 
-Una plantilla estática no puede reflejar el estado real de la aplicación.
+El JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formulario de Angular valide en el navegador.
 
 ### 3–6. Itinerario de trabajo
 
@@ -112,7 +112,7 @@ Una plantilla estática no puede reflejar el estado real de la aplicación.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una página que muestra los datos escapados de un usuario o proyecto.</li>
+    <li>Has obtenido peticiones inválidas rechazadas con información concreta sobre cada campo.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -130,24 +130,24 @@ Una plantilla estática no puede reflejar el estado real de la aplicación.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 9 · Decisiones y bucles
+## Sesión 15 · Errores coherentes de API
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> los listados cambian de tamaño y los estados vacíos también deben explicarse.</li>
-    <li><strong>Construye:</strong> un listado dinámico con estado vacío y contenido condicional.</li>
+    <li><strong>Comprende:</strong> tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variables y difíciles de consumir.</li>
+    <li><strong>Construye:</strong> un formato común para recurso inexistente, conflicto y validación fallida.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **renderizar condiciones y colecciones con th:if, th:unless y th:each**.
+Al terminar serás capaz de **centralizar errores mediante excepciones propias y @RestControllerAdvice**.
 
 ### 2. El problema
 
-Los listados cambian de tamaño y los estados vacíos también deben explicarse.
+Tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variables y difíciles de consumir.
 
 ### 3–6. Itinerario de trabajo
 
@@ -161,7 +161,7 @@ Los listados cambian de tamaño y los estados vacíos también deben explicarse.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un listado dinámico con estado vacío y contenido condicional.</li>
+    <li>Has obtenido un formato común para recurso inexistente, conflicto y validación fallida.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -179,26 +179,26 @@ Los listados cambian de tamaño y los estados vacíos también deben explicarse.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 4 · Una web que se puede recorrer
+## Semana 6 · HTTP no recuerda nada
 
-## Sesión 10 · Layouts y componentes
+## Sesión 16 · Peticiones independientes
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> copiar la misma estructura en cada plantilla produce divergencias y errores.</li>
-    <li><strong>Construye:</strong> un layout coherente compartido por varias páginas.</li>
+    <li><strong>Comprende:</strong> el servidor no puede asumir que dos peticiones pertenecen a la misma conversación sin un mecanismo explícito.</li>
+    <li><strong>Construye:</strong> una secuencia documentada que muestra qué información se conserva y cuál desaparece.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **extraer cabecera, navegación y pie a fragments reutilizables**.
+Al terminar serás capaz de **explicar el carácter stateless de HTTP observando varias peticiones consecutivas**.
 
 ### 2. El problema
 
-Copiar la misma estructura en cada plantilla produce divergencias y errores.
+El servidor no puede asumir que dos peticiones pertenecen a la misma conversación sin un mecanismo explícito.
 
 ### 3–6. Itinerario de trabajo
 
@@ -212,7 +212,7 @@ Copiar la misma estructura en cada plantilla produce divergencias y errores.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un layout coherente compartido por varias páginas.</li>
+    <li>Has obtenido una secuencia documentada que muestra qué información se conserva y cuál desaparece.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -230,24 +230,24 @@ Copiar la misma estructura en cada plantilla produce divergencias y errores.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 11 · Navegación dinámica
+## Sesión 17 · Cookies y sesión
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> ver una colección no permite consultar un recurso concreto ni conservar su identidad.</li>
-    <li><strong>Construye:</strong> navegación de /proyectos a /proyectos/{id}.</li>
+    <li><strong>Comprende:</strong> la aplicación necesita continuidad en algunos casos, pero guardar estado sin entender su alcance crea acoplamiento y errores.</li>
+    <li><strong>Construye:</strong> una preferencia o selección temporal asociada a una sesión y visible en el cliente HTTP.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **construir enlaces con identificadores entre listados y detalles**.
+Al terminar serás capaz de **relacionar una cookie de sesión con el estado almacenado en el servidor**.
 
 ### 2. El problema
 
-Ver una colección no permite consultar un recurso concreto ni conservar su identidad.
+La aplicación necesita continuidad en algunos casos, pero guardar estado sin entender su alcance crea acoplamiento y errores.
 
 ### 3–6. Itinerario de trabajo
 
@@ -261,7 +261,7 @@ Ver una colección no permite consultar un recurso concreto ni conservar su iden
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido navegación de /proyectos a /proyectos/{id}.</li>
+    <li>Has obtenido una preferencia o selección temporal asociada a una sesión y visible en el cliente HTTP.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -279,24 +279,24 @@ Ver una colección no permite consultar un recurso concreto ni conservar su iden
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 12 · Miniweb dinámica
+## Sesión 18 · API con estado controlado
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> las piezas solo tienen valor si forman una experiencia completa y coherente.</li>
-    <li><strong>Construye:</strong> un catálogo dinámico de proyectos o tareas con listado y detalle.</li>
+    <li><strong>Comprende:</strong> cada mecanismo funciona aislado, pero debe conservar un contrato coherente cuando se combina con los demás.</li>
+    <li><strong>Construye:</strong> una API en memoria con favoritos o preferencias y una colección que cubre todo el recorrido.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **integrar MVC, modelos, Thymeleaf, fragments y navegación**.
+Al terminar serás capaz de **integrar CRUD, validación, errores y sesión en un flujo completo y repetible**.
 
 ### 2. El problema
 
-Las piezas solo tienen valor si forman una experiencia completa y coherente.
+Cada mecanismo funciona aislado, pero debe conservar un contrato coherente cuando se combina con los demás.
 
 ### 3–6. Itinerario de trabajo
 
@@ -310,7 +310,7 @@ Las piezas solo tienen valor si forman una experiencia completa y coherente.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un catálogo dinámico de proyectos o tareas con listado y detalle.</li>
+    <li>Has obtenido una API en memoria con favoritos o preferencias y una colección que cubre todo el recorrido.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -335,10 +335,11 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Devolver vistas HTML desde un controller MVC.</li>
-    <li>Mostrar colecciones y decisiones mediante expresiones de Thymeleaf.</li>
-    <li>Reutilizar cabecera, navegación y pie con fragments.</li>
-    <li>Navegar entre listados y páginas de detalle.</li>
+    <li>Crear, modificar y eliminar recursos mediante JSON.</li>
+    <li>Validar la entrada en servidor y explicar por qué nunca se confía en el cliente.</li>
+    <li>Devolver errores de API estructurados y coherentes.</li>
+    <li>Explicar el carácter stateless de HTTP.</li>
+    <li>Mantener estado deliberado mediante cookies y sesión.</li>
   </ul>
 </div>
 

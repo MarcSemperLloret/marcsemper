@@ -4,26 +4,28 @@ label: "UD11 · Defender"
 section: "ud-11"
 order: 11
 lang: "es"
-summary: "Resolver de forma autónoma una especificación completa integrando arquitectura, persistencia, REST, seguridad, servicios externos, tests y documentación."
+summary: "Resolver de forma autónoma una especificación completa integrando backend, persistencia, REST, seguridad, servicios externos, Angular, tests y documentación."
 duration: "18 horas · 3 semanas · 9 sesiones"
 modality: "Proyecto autónomo · especificación sin tutorial"
-deliverable: "Un backend completo, probado, documentado y defendido técnicamente."
+deliverable: "Un backend completo verificable con Postman o Bruno, conectado a Angular, probado, documentado y defendido técnicamente."
 date: "2026-08-31"
 outcomes:
   - "Modelar un problema nuevo y diseñar su arquitectura."
   - "Planificar y desarrollar por incrementos verificables."
   - "Integrar persistencia, seguridad y servicios externos."
+  - "Conectar el cliente Angular desarrollado en el otro módulo sin acoplar el backend a la interfaz."
   - "Construir una estrategia de tests y documentación."
   - "Refactorizar y defender decisiones técnicas con evidencias."
 requirements:
   - "Repositorio limpio con integración continua básica."
   - "Entorno reproducible para aplicación y PostgreSQL."
   - "Especificación y rúbrica del proyecto."
+  - "Proyecto Angular o conocimientos de Angular adquiridos en el módulo cliente."
 priorKnowledge:
   - "Todo el recorrido de las UD1–UD10."
 ---
 
-<p class="lead">Ya no existe tutorial. Se entrega una especificación y el equipo decide modelo, contrato, arquitectura, estrategia de seguridad, integración y pruebas.</p>
+<p class="lead">Ya no existe tutorial. Se entrega una especificación y el equipo decide modelo, contrato, arquitectura, estrategia de seguridad, integración y pruebas. Angular actúa como consumidor final, pero el backend debe seguir pudiendo comprobarse de forma completa con Postman o Bruno.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
@@ -179,7 +181,7 @@ Crear todas las capas por separado retrasa la primera evidencia de que el sistem
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 25 · Desarrollo por incrementos
+## Semana 25 · Desarrollo e integración
 
 ## Sesión 73 · Desarrollo I: núcleo funcional
 
@@ -279,24 +281,24 @@ Seguridad e integración añadidas al final suelen revelar supuestos tardíos y 
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 75 · Desarrollo III: cierre de alcance
+## Sesión 75 · Integración con Angular
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> seguir añadiendo funciones sin congelar alcance compromete pruebas, documentación y entrega.</li>
-    <li><strong>Construye:</strong> una versión funcionalmente completa según criterios de aceptación.</li>
+    <li><strong>Comprende:</strong> una API que funciona en Postman todavía puede fallar al enfrentarse a un navegador, un origen distinto y el modelo de datos del cliente.</li>
+    <li><strong>Construye:</strong> un flujo completo Angular → API Spring Boot → PostgreSQL, manteniendo la colección HTTP como prueba independiente.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **cerrar criterios pendientes, corregir defectos y aplazar de forma explícita lo no esencial**.
+Al terminar serás capaz de **conectar el cliente Angular a la API, resolver el contrato real y diagnosticar CORS, autenticación y errores de integración**.
 
 ### 2. El problema
 
-Seguir añadiendo funciones sin congelar alcance compromete pruebas, documentación y entrega.
+Una API que funciona en Postman todavía puede fallar al enfrentarse a un navegador, un origen distinto y el modelo de datos del cliente.
 
 ### 3–6. Itinerario de trabajo
 
@@ -310,7 +312,7 @@ Seguir añadiendo funciones sin congelar alcance compromete pruebas, documentaci
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una versión funcionalmente completa según criterios de aceptación.</li>
+    <li>Has obtenido un flujo completo Angular → API Spring Boot → PostgreSQL, manteniendo la colección HTTP como prueba independiente.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -493,4 +495,3 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-

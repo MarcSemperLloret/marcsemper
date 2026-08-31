@@ -4,7 +4,7 @@ label: "UD4 · Arquitectar"
 section: "ud-04"
 order: 4
 lang: "es"
-summary: "Detectar los límites del controller monolítico y refactorizar la aplicación en capas con dependencias explícitas y errores centralizados."
+summary: "Detectar los límites del controller monolítico y refactorizar la aplicación en capas con dependencias explícitas, reglas de negocio y contratos claros."
 duration: "12 horas · 2 semanas · 6 sesiones"
 modality: "Refactorización guiada · 50 % guía / 50 % autonomía"
 deliverable: "La aplicación anterior reorganizada en controller, service, repository, model y DTO."
@@ -13,12 +13,12 @@ outcomes:
   - "Reconocer responsabilidades mezcladas y lógica duplicada."
   - "Separar presentación, negocio y acceso a datos."
   - "Usar inyección por constructor y componentes de Spring."
-  - "Separar DTO y modelo y centralizar el tratamiento de excepciones."
+  - "Mantener las reglas de negocio en el service y los mapeos en las fronteras."
 requirements:
-  - "El CRUD con interfaz de la UD3."
+  - "La API CRUD y la colección de pruebas de la UD3."
   - "Capacidad para ejecutar y probar el flujo completo antes y después de un cambio."
 priorKnowledge:
-  - "Controllers MVC, formularios, validación y sesión."
+  - "Controllers REST, DTO, validación, errores y sesión."
   - "Clases, interfaces y excepciones en Java."
 ---
 
@@ -178,26 +178,26 @@ Crear colaboradores dentro de una clase acopla implementación, configuración y
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 8 · Contratos, errores y refactorización
+## Semana 8 · Reglas, contratos y refactorización
 
-## Sesión 22 · DTO frente a entidad o modelo
+## Sesión 22 · Contratos entre capas
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> la forma conveniente para almacenar no siempre es segura ni estable como contrato de interfaz.</li>
-    <li><strong>Construye:</strong> DTO de entrada y salida transformados de forma explícita.</li>
+    <li><strong>Comprende:</strong> pasar cualquier objeto entre todas las capas hace que un cambio interno se propague por toda la aplicación.</li>
+    <li><strong>Construye:</strong> contratos y mapeos explícitos en las fronteras entre controller, service y repository.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **decidir qué datos entran y salen sin exponer directamente el modelo interno**.
+Al terminar serás capaz de **definir qué intercambia cada capa y dónde se transforma cada representación**.
 
 ### 2. El problema
 
-La forma conveniente para almacenar no siempre es segura ni estable como contrato de interfaz.
+Pasar cualquier objeto entre todas las capas hace que un cambio interno se propague por toda la aplicación.
 
 ### 3–6. Itinerario de trabajo
 
@@ -211,7 +211,7 @@ La forma conveniente para almacenar no siempre es segura ni estable como contrat
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido DTO de entrada y salida transformados de forma explícita.</li>
+    <li>Has obtenido contratos y mapeos explícitos en las fronteras entre controller, service y repository.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -229,24 +229,24 @@ La forma conveniente para almacenar no siempre es segura ni estable como contrat
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 23 · Excepciones
+## Sesión 23 · Reglas de negocio en el service
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> repetir try/catch en cada controller produce respuestas incoherentes y oculta la causa.</li>
-    <li><strong>Construye:</strong> un tratamiento centralizado con respuestas y vistas de error previsibles.</li>
+    <li><strong>Comprende:</strong> repartir reglas entre controllers y repositories hace imposible saber dónde se decide el comportamiento.</li>
+    <li><strong>Construye:</strong> casos de uso y reglas de negocio concentrados en servicios comprobables.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **definir errores de dominio y resolverlos de forma centralizada con @ControllerAdvice**.
+Al terminar serás capaz de **distinguir coordinación de casos de uso, reglas de negocio y acceso a datos**.
 
 ### 2. El problema
 
-Repetir try/catch en cada controller produce respuestas incoherentes y oculta la causa.
+Repartir reglas entre controllers y repositories hace imposible saber dónde se decide el comportamiento.
 
 ### 3–6. Itinerario de trabajo
 
@@ -260,7 +260,7 @@ Repetir try/catch en cada controller produce respuestas incoherentes y oculta la
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un tratamiento centralizado con respuestas y vistas de error previsibles.</li>
+    <li>Has obtenido casos de uso y reglas de negocio concentrados en servicios comprobables.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -342,4 +342,3 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-

@@ -43,6 +43,9 @@ export interface TeachingSection {
    */
   verb?: string;
   verbEs?: string;
+  /** Optional phase used to group several consecutive sections visually. */
+  phase?: string;
+  phaseEs?: string;
   title: string;
   titleEs: string;
   description?: string;
@@ -98,6 +101,9 @@ export interface TeachingCourse {
    */
   outcomes?: string[];
   outcomesEs?: string[];
+  /** Course-wide milestones shown as a persistent project checklist. */
+  milestones?: string[];
+  milestonesEs?: string[];
   topics: string[];
   topicsEs: string[];
   /** ISO date (YYYY-MM-DD) of the last change to this course's material. */
@@ -183,53 +189,57 @@ export const teachingCourses: TeachingCourse[] = [
     status: "current",
     updatedAt: "2026-08-31",
     summary:
-      "Building a complete backend with Java and Spring Boot: from HTTP and server-rendered pages to PostgreSQL, REST APIs, security, integrations and testing.",
+      "Building a complete backend with Java and Spring Boot: from HTTP and the first endpoints to PostgreSQL, REST APIs, security, integrations, testing and Angular connection.",
     summaryEs:
-      "Construcción de un backend completo con Java y Spring Boot: desde HTTP y las páginas renderizadas en servidor hasta PostgreSQL, APIs REST, seguridad, integraciones y testing.",
+      "Construcción de un backend completo con Java y Spring Boot: desde HTTP y los primeros endpoints hasta PostgreSQL, APIs REST, seguridad, integraciones, testing y conexión con Angular.",
     overview:
-      "A two-term, project-led module built around one application that grows with the class: an issue and project manager with users, projects, issues, comments and tags. It starts as an in-memory list, gains server-rendered views and persistence, is reorganised into professional layers, exposes a REST API, adds authentication and external integrations, and finishes with tests and technical documentation. Guidance is deliberately reduced as the course advances, so the final project is driven by a specification rather than a tutorial.",
+      "A two-term, project-led module built around one application that grows with the class: an issue and project manager with users, projects, issues, comments and tags. It starts as an in-memory API verified with Postman or Bruno, gains persistence, is reorganised into professional layers, improves its REST design, adds authentication and external integrations, and finishes with tests, technical documentation and an Angular client built in the corresponding module. Guidance is deliberately reduced as the course advances, so the final project is driven by a specification rather than a tutorial.",
     overviewEs:
-      "Módulo de dos trimestres articulado alrededor de una única aplicación que crece con la clase: un gestor de proyectos e incidencias con usuarios, proyectos, incidencias, comentarios y etiquetas. Empieza como una lista en memoria, incorpora vistas renderizadas en servidor y persistencia, se reorganiza en capas profesionales, expone una API REST, añade autenticación e integraciones externas y termina con tests y documentación técnica. El andamiaje se retira de forma deliberada: al principio se trabaja con mucha guía y el proyecto final parte únicamente de una especificación.",
+      "Módulo de dos trimestres articulado alrededor de una única aplicación que crece con la clase: un gestor de proyectos e incidencias con usuarios, proyectos, incidencias, comentarios y etiquetas. Empieza como una API en memoria comprobada con Postman o Bruno, incorpora persistencia, se reorganiza en capas profesionales, mejora su diseño REST, añade autenticación e integraciones externas y termina con tests, documentación técnica y un cliente Angular desarrollado en el módulo correspondiente. El andamiaje se retira de forma deliberada: al principio se trabaja con mucha guía y el proyecto final parte únicamente de una especificación.",
     outcomes: [
-      "Explain what happens between an HTTP request and response, and diagnose it with browser tools.",
-      "Build dynamic server-rendered applications with Spring MVC, Thymeleaf, forms, validation and session state.",
+      "Explain what happens between an HTTP request and response, and diagnose it with browser tools and an HTTP client.",
+      "Build and verify HTTP backends with controllers, JSON, DTOs, validation, errors and session state.",
       "Organise a Spring application into controller, service, repository, model and DTO layers.",
       "Persist a relational domain model safely with JPA and PostgreSQL.",
       "Design, validate, document and consume resource-oriented REST APIs.",
       "Apply authentication, authorisation and common web-security controls with Spring Security.",
       "Integrate external services and handle files, timeouts and partial failures.",
+      "Connect an Angular client to the finished API without making backend verification depend on the interface.",
       "Test, debug, document and defend a complete backend application."
     ],
     outcomesEs: [
-      "Explicar qué ocurre entre una petición y una respuesta HTTP y diagnosticarlo con las herramientas del navegador.",
-      "Construir aplicaciones dinámicas con Spring MVC, Thymeleaf, formularios, validación y estado de sesión.",
+      "Explicar qué ocurre entre una petición y una respuesta HTTP y diagnosticarlo con las herramientas del navegador y un cliente HTTP.",
+      "Construir y comprobar backends HTTP con controllers, JSON, DTO, validación, errores y estado de sesión.",
       "Organizar una aplicación Spring en capas controller, service, repository, model y DTO.",
       "Persistir con seguridad un modelo relacional mediante JPA y PostgreSQL.",
       "Diseñar, validar, documentar y consumir APIs REST orientadas a recursos.",
       "Aplicar autenticación, autorización y controles habituales de seguridad web con Spring Security.",
       "Integrar servicios externos y tratar ficheros, timeouts y fallos parciales.",
+      "Conectar un cliente Angular a la API terminada sin hacer que la comprobación del backend dependa de la interfaz.",
       "Probar, depurar, documentar y defender una aplicación backend completa."
     ],
     topics: [
       "HTTP and Spring Boot",
-      "Spring MVC and Thymeleaf",
-      "Forms, validation and session state",
+      "HTTP requests, responses and API clients",
+      "Validation, errors and session state",
       "Layered architecture",
       "JPA and PostgreSQL",
       "REST API design",
       "Spring Security",
       "External integrations",
+      "Angular integration",
       "Testing and documentation"
     ],
     topicsEs: [
       "HTTP y Spring Boot",
-      "Spring MVC y Thymeleaf",
-      "Formularios, validación y estado de sesión",
+      "Peticiones, respuestas y clientes de API",
+      "Validación, errores y estado de sesión",
       "Arquitectura por capas",
       "JPA y PostgreSQL",
       "Diseño de APIs REST",
       "Spring Security",
       "Integraciones externas",
+      "Integración con Angular",
       "Testing y documentación"
     ],
     resources: [],
@@ -248,12 +258,12 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-02",
         number: "UD2",
-        verb: "RENDER",
-        verbEs: "RENDERIZAR",
-        title: "MVC, Thymeleaf and dynamic pages",
-        titleEs: "MVC, Thymeleaf y páginas dinámicas",
-        description: "Server-rendered HTML, models, templates, reusable fragments and navigation between list and detail pages.",
-        descriptionEs: "HTML generado en servidor, modelos, plantillas, fragmentos reutilizables y navegación entre listado y detalle.",
+        verb: "COMMUNICATE",
+        verbEs: "COMUNICAR",
+        title: "Requests, responses and HTTP clients",
+        titleEs: "Peticiones, respuestas y clientes HTTP",
+        description: "How Spring turns HTTP into Java and back: request bodies, DTOs, response control and repeatable checks with Postman or Bruno.",
+        descriptionEs: "Cómo transforma Spring HTTP en Java y de vuelta: cuerpos de petición, DTO, control de respuestas y pruebas repetibles con Postman o Bruno.",
         resources: []
       },
       {
@@ -261,10 +271,10 @@ export const teachingCourses: TeachingCourse[] = [
         number: "UD3",
         verb: "VALIDATE",
         verbEs: "VALIDAR",
-        title: "Forms, validation and state",
-        titleEs: "Formularios, validación y estado",
-        description: "Turning pages into an application with forms, trustworthy input, complete CRUD and session state.",
-        descriptionEs: "Convertir páginas en una aplicación con formularios, entrada fiable, CRUD completo y estado de sesión.",
+        title: "Validation, errors and state",
+        titleEs: "Validación, errores y estado",
+        description: "Writing operations, trustworthy JSON input, consistent API errors and state across otherwise independent requests.",
+        descriptionEs: "Operaciones de escritura, entrada JSON fiable, errores de API coherentes y estado entre peticiones que de otro modo serían independientes.",
         resources: []
       },
       {
@@ -274,8 +284,8 @@ export const teachingCourses: TeachingCourse[] = [
         verbEs: "ARQUITECTAR",
         title: "Professional architecture with Spring",
         titleEs: "Arquitectura profesional con Spring",
-        description: "Refactoring a monolithic controller into clear layers with dependency injection, DTOs and centralised errors.",
-        descriptionEs: "Refactorizar un controller monolítico en capas claras con inyección de dependencias, DTO y errores centralizados.",
+        description: "Refactoring a monolithic controller into clear layers with dependency injection, business rules and explicit contracts.",
+        descriptionEs: "Refactorizar un controller monolítico en capas claras con inyección de dependencias, reglas de negocio y contratos explícitos.",
         resources: []
       },
       {
@@ -296,8 +306,8 @@ export const teachingCourses: TeachingCourse[] = [
         verbEs: "INTEGRAR",
         title: "First-term project",
         titleEs: "Proyecto del primer trimestre",
-        description: "Integrating MVC, architecture, validation, sessions and persistence from a set of requirements.",
-        descriptionEs: "Integrar MVC, arquitectura, validación, sesiones y persistencia a partir de unos requisitos.",
+        description: "Integrating an HTTP API, layered architecture, validation, sessions and persistence from a set of requirements.",
+        descriptionEs: "Integrar una API HTTP, arquitectura por capas, validación, sesiones y persistencia a partir de unos requisitos.",
         resources: []
       },
       {
@@ -351,12 +361,290 @@ export const teachingCourses: TeachingCourse[] = [
         verbEs: "DEFENDER",
         title: "Complete backend project",
         titleEs: "Proyecto backend completo",
-        description: "An autonomous project from specification and modelling through implementation, testing, documentation and technical defence.",
-        descriptionEs: "Un proyecto autónomo desde la especificación y el modelado hasta la implementación, los tests, la documentación y la defensa técnica.",
+        description: "An autonomous project from specification and modelling through backend implementation, Angular integration, testing, documentation and technical defence.",
+        descriptionEs: "Un proyecto autónomo desde la especificación y el modelado hasta la implementación backend, la integración con Angular, los tests, la documentación y la defensa técnica.",
         resources: []
       }
     ]
   },
+  {
+    slug: "proyecto-intermodular",
+    title: "Intermodular project",
+    titleEs: "Proyecto Intermodular",
+    level: "Second year of Web Application Development",
+    levelEs: "2.º de Desarrollo de Aplicaciones Web",
+    term: "2026/2027",
+    status: "current",
+    updatedAt: "2026-08-31",
+    summary: "A complete web product taken from a defensible idea to a public release, a professional portfolio case study and a technical defence.",
+    summaryEs: "Un producto web completo llevado desde una idea defendible hasta una versión pública, un caso de portfolio profesional y una defensa técnica.",
+    overview: "A longitudinal project module that connects the rest of the programme without teaching the same content again. Students identify a real problem, define and prototype a viable product, design its data, API and architecture, organise the work, build and improve an MVP, assure its quality, deploy it and turn the result into a portfolio case study. Git, GitHub, AI, diagrams, mockups, APIs, documentation and deployment are used throughout as working tools rather than as isolated units.",
+    overviewEs: "Módulo longitudinal que conecta el resto del ciclo sin volver a enseñar sus contenidos. El alumnado identifica un problema real, define y prototipa un producto viable, diseña sus datos, API y arquitectura, organiza el trabajo, construye y mejora un MVP, asegura su calidad, lo despliega y convierte el resultado en un caso de portfolio. Git, GitHub, IA, diagramas, mockups, APIs, documentación y despliegue se utilizan durante todo el recorrido como herramientas de trabajo, no como unidades aisladas.",
+    outcomes: [
+      "Distinguish an academic exercise from a project worth presenting in a junior portfolio.",
+      "Select a relevant, viable and defensible problem using explicit criteria.",
+      "Define users, value, scope, requirements, acceptance criteria and an achievable MVP.",
+      "Publish an accessible, responsive prototype before committing to implementation.",
+      "Design the data model, API contract and system architecture before building.",
+      "Organise a repository, backlog, roadmap and collaborative Git workflow.",
+      "Build and evolve a full-stack MVP by reusing learning from the other modules.",
+      "Test, review, secure, deploy and monitor a public release.",
+      "Present the project professionally and defend its technical decisions and limitations."
+    ],
+    outcomesEs: [
+      "Distinguir un ejercicio académico de un proyecto que merece aparecer en un portfolio junior.",
+      "Seleccionar un problema relevante, viable y defendible mediante criterios explícitos.",
+      "Definir usuarios, valor, alcance, requisitos, criterios de aceptación y un MVP alcanzable.",
+      "Publicar un prototipo accesible y responsive antes de comprometer la implementación.",
+      "Diseñar el modelo de datos, el contrato de API y la arquitectura antes de construir.",
+      "Organizar repositorio, backlog, roadmap y flujo colaborativo con Git.",
+      "Construir y evolucionar un MVP full stack reutilizando lo aprendido en los demás módulos.",
+      "Probar, revisar, asegurar, desplegar y observar una versión pública.",
+      "Presentar profesionalmente el proyecto y defender sus decisiones técnicas y limitaciones."
+    ],
+    milestones: [
+      "Idea selected",
+      "MVP defined",
+      "Prototype published",
+      "Data model",
+      "API designed",
+      "Architecture defined",
+      "Repository ready",
+      "Working backend",
+      "Working frontend",
+      "Authentication",
+      "Tests",
+      "Deployment",
+      "README",
+      "Portfolio",
+      "Technical defence"
+    ],
+    milestonesEs: [
+      "Idea elegida",
+      "MVP definido",
+      "Prototipo publicado",
+      "Modelo de datos",
+      "API diseñada",
+      "Arquitectura definida",
+      "Repositorio preparado",
+      "Backend funcional",
+      "Frontend funcional",
+      "Autenticación",
+      "Tests",
+      "Despliegue",
+      "README",
+      "Portfolio",
+      "Defensa técnica"
+    ],
+    topics: [
+      "Product discovery",
+      "Prototyping and UX",
+      "Data and API design",
+      "Architecture",
+      "Project management",
+      "Full-stack development",
+      "Quality and release",
+      "Deployment",
+      "Professional portfolio"
+    ],
+    topicsEs: [
+      "Descubrimiento de producto",
+      "Prototipado y UX",
+      "Diseño de datos y API",
+      "Arquitectura",
+      "Gestión de proyecto",
+      "Desarrollo full stack",
+      "Calidad y release",
+      "Despliegue",
+      "Portfolio profesional"
+    ],
+    resources: [],
+    sections: [
+      {
+        id: "ud-01",
+        number: "UD1",
+        verb: "EVALUATE",
+        verbEs: "EVALUAR",
+        title: "What makes a good project",
+        titleEs: "Qué hace bueno a un proyecto",
+        description: "Understand what separates an exercise from a project that demonstrates professional potential.",
+        descriptionEs: "Entender qué separa un ejercicio de un proyecto que demuestra potencial profesional.",
+        phase: "1 · DEFINE THE PROJECT",
+        phaseEs: "1 · DEFINIR EL PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-02",
+        number: "UD2",
+        verb: "DISCOVER",
+        verbEs: "DESCUBRIR",
+        title: "Find a good idea",
+        titleEs: "Encontrar una buena idea",
+        description: "Explore real problems, compare alternatives and select one viable idea with evidence.",
+        descriptionEs: "Explorar problemas reales, comparar alternativas y seleccionar una idea viable con evidencias.",
+        phase: "1 · DEFINE THE PROJECT",
+        phaseEs: "1 · DEFINIR EL PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-03",
+        number: "UD3",
+        verb: "DEFINE",
+        verbEs: "DEFINIR",
+        title: "Define the product",
+        titleEs: "Definir el producto",
+        description: "Turn the selected problem into users, value, requirements, scope, acceptance criteria and an MVP.",
+        descriptionEs: "Convertir el problema elegido en usuarios, valor, requisitos, alcance, criterios de aceptación y un MVP.",
+        phase: "1 · DEFINE THE PROJECT",
+        phaseEs: "1 · DEFINIR EL PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-04",
+        number: "UD4",
+        verb: "PROTOTYPE",
+        verbEs: "PROTOTIPAR",
+        title: "Design the experience",
+        titleEs: "Diseñar la experiencia",
+        description: "Move from requirements to flows, navigation, wireframes and a public responsive prototype.",
+        descriptionEs: "Pasar de los requisitos a flujos, navegación, wireframes y un prototipo responsive público.",
+        phase: "1 · DEFINE THE PROJECT",
+        phaseEs: "1 · DEFINIR EL PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-05",
+        number: "UD5",
+        verb: "MODEL",
+        verbEs: "MODELAR",
+        title: "Design the data",
+        titleEs: "Diseñar los datos",
+        description: "Identify entities, attributes, relationships, cardinalities and integrity constraints.",
+        descriptionEs: "Identificar entidades, atributos, relaciones, cardinalidades y restricciones de integridad.",
+        phase: "1 · DEFINE THE PROJECT",
+        phaseEs: "1 · DEFINIR EL PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-06",
+        number: "UD6",
+        verb: "SPECIFY",
+        verbEs: "ESPECIFICAR",
+        title: "Design the API",
+        titleEs: "Diseñar la API",
+        description: "Describe what the frontend needs through resources, operations, representations and errors.",
+        descriptionEs: "Describir lo que necesita el frontend mediante recursos, operaciones, representaciones y errores.",
+        phase: "1 · DEFINE THE PROJECT",
+        phaseEs: "1 · DEFINIR EL PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-07",
+        number: "UD7",
+        verb: "ARCHITECT",
+        verbEs: "ARQUITECTAR",
+        title: "System architecture",
+        titleEs: "Arquitectura del sistema",
+        description: "Connect frontend, backend, database and external services and justify every technology choice.",
+        descriptionEs: "Conectar frontend, backend, base de datos y servicios externos y justificar cada elección tecnológica.",
+        phase: "1 · DEFINE THE PROJECT",
+        phaseEs: "1 · DEFINIR EL PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-08",
+        number: "UD8",
+        verb: "PLAN",
+        verbEs: "PLANIFICAR",
+        title: "Prepare development",
+        titleEs: "Preparar el desarrollo",
+        description: "Turn the product into a backlog, roadmap, repository and collaborative workflow.",
+        descriptionEs: "Convertir el producto en backlog, roadmap, repositorio y flujo de trabajo colaborativo.",
+        phase: "1 · DEFINE THE PROJECT",
+        phaseEs: "1 · DEFINIR EL PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-09",
+        number: "UD9",
+        verb: "BUILD",
+        verbEs: "CONSTRUIR",
+        title: "MVP development",
+        titleEs: "Desarrollo del MVP",
+        description: "Build the first usable version by integrating backend, persistence, API, frontend and authentication.",
+        descriptionEs: "Construir la primera versión utilizable integrando backend, persistencia, API, frontend y autenticación.",
+        phase: "2 · BUILD AND PUBLISH",
+        phaseEs: "2 · CONSTRUIR Y PUBLICAR",
+        resources: []
+      },
+      {
+        id: "ud-10",
+        number: "UD10",
+        verb: "EVOLVE",
+        verbEs: "EVOLUCIONAR",
+        title: "Evolve the product",
+        titleEs: "Evolucionar el producto",
+        description: "Use feedback, bugs and changing requirements to produce a better second version.",
+        descriptionEs: "Usar feedback, errores y cambios de requisitos para producir una segunda versión mejor.",
+        phase: "2 · BUILD AND PUBLISH",
+        phaseEs: "2 · CONSTRUIR Y PUBLICAR",
+        resources: []
+      },
+      {
+        id: "ud-11",
+        number: "UD11",
+        verb: "ASSURE",
+        verbEs: "ASEGURAR",
+        title: "Quality and release candidate",
+        titleEs: "Calidad y release candidate",
+        description: "Consolidate testing, validation, errors, security, performance, accessibility and code review.",
+        descriptionEs: "Consolidar testing, validación, errores, seguridad, rendimiento, accesibilidad y revisión de código.",
+        phase: "2 · BUILD AND PUBLISH",
+        phaseEs: "2 · CONSTRUIR Y PUBLICAR",
+        resources: []
+      },
+      {
+        id: "ud-12",
+        number: "UD12",
+        verb: "PUBLISH",
+        verbEs: "PUBLICAR",
+        title: "Deployment",
+        titleEs: "Despliegue",
+        description: "Move from development to a public production environment with configuration, HTTPS, logs and final checks.",
+        descriptionEs: "Pasar de desarrollo a un entorno público de producción con configuración, HTTPS, logs y comprobaciones finales.",
+        phase: "2 · BUILD AND PUBLISH",
+        phaseEs: "2 · CONSTRUIR Y PUBLICAR",
+        resources: []
+      },
+      {
+        id: "ud-13",
+        number: "UD13",
+        verb: "PRESENT",
+        verbEs: "PRESENTAR",
+        title: "Turn it into a portfolio case study",
+        titleEs: "Convertirlo en portfolio",
+        description: "Prepare the repository, README, visuals, demo and professional narrative used to show the project.",
+        descriptionEs: "Preparar repositorio, README, elementos visuales, demo y relato profesional con el que enseñar el proyecto.",
+        phase: "3 · TURN IT INTO A PORTFOLIO",
+        phaseEs: "3 · CONVERTIRLO EN PORTFOLIO",
+        resources: []
+      },
+      {
+        id: "ud-14",
+        number: "UD14",
+        verb: "DEFEND",
+        verbEs: "DEFENDER",
+        title: "Technical defence",
+        titleEs: "Defensa técnica",
+        description: "Explain the problem, demonstrate the solution and defend architecture, decisions, mistakes and limitations.",
+        descriptionEs: "Explicar el problema, demostrar la solución y defender arquitectura, decisiones, errores y limitaciones.",
+        phase: "3 · TURN IT INTO A PORTFOLIO",
+        phaseEs: "3 · CONVERTIRLO EN PORTFOLIO",
+        resources: []
+      }
+    ]
+  },
+
   {
     slug: "digitalizacion",
     title: "Digitalización",
@@ -807,7 +1095,8 @@ export function courseText(course: TeachingCourse, lang: Lang) {
     level: es ? course.levelEs : course.level,
     institution: es ? course.institutionEs : course.institution,
     topics: es ? course.topicsEs : course.topics,
-    outcomes: (es ? course.outcomesEs : course.outcomes) ?? []
+    outcomes: (es ? course.outcomesEs : course.outcomes) ?? [],
+    milestones: (es ? course.milestonesEs : course.milestones) ?? []
   };
 }
 
@@ -816,6 +1105,7 @@ export function sectionText(section: TeachingSection, lang: Lang) {
   return {
     title: es ? section.titleEs : section.title,
     description: es ? section.descriptionEs : section.description,
+    phase: es ? (section.phaseEs ?? section.phase) : section.phase,
     // A block keeps its English verb when no Spanish one is given, because a
     // missing verb would break the sequence the blocks read as.
     verb: es ? (section.verbEs ?? section.verb) : section.verb

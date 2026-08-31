@@ -10,7 +10,7 @@ modality: "Taller de diseño · 30 % guía / 70 % autonomía"
 deliverable: "Una API REST completa, paginada, validada y documentada con OpenAPI."
 date: "2026-08-31"
 outcomes:
-  - "Distinguir una web tradicional de una API."
+  - "Distinguir una API HTTP funcional de una API REST coherente."
   - "Diseñar recursos, rutas y representaciones coherentes."
   - "Usar códigos de estado y ResponseEntity con intención."
   - "Publicar filtros, paginación y documentación OpenAPI."
@@ -30,24 +30,24 @@ priorKnowledge:
 
 ## Semana 14 · Pensar en recursos
 
-## Sesión 40 · Web tradicional frente a API
+## Sesión 40 · De una API HTTP a una API REST
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> reutilizar mentalmente una vista HTML como si fuera una API genera contratos ligados a la interfaz.</li>
-    <li><strong>Construye:</strong> un mapa de qué responsabilidades se mantienen y cuáles cambian.</li>
+    <li><strong>Comprende:</strong> usar JSON y responder por HTTP no convierte automáticamente un backend en una API REST bien diseñada.</li>
+    <li><strong>Construye:</strong> una comparación entre la API funcional del primer trimestre y un contrato REST orientado a recursos.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **comparar flujo, representación y consumidor de MVC y REST**.
+Al terminar serás capaz de **distinguir una API HTTP que funciona de una API REST con recursos y semántica coherentes**.
 
 ### 2. El problema
 
-Reutilizar mentalmente una vista HTML como si fuera una API genera contratos ligados a la interfaz.
+Usar JSON y responder por HTTP no convierte automáticamente un backend en una API REST bien diseñada.
 
 ### 3–6. Itinerario de trabajo
 
@@ -61,7 +61,7 @@ Reutilizar mentalmente una vista HTML como si fuera una API genera contratos lig
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un mapa de qué responsabilidades se mantienen y cuáles cambian.</li>
+    <li>Has obtenido una comparación entre la API funcional del primer trimestre y un contrato REST orientado a recursos.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -490,4 +490,3 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-
