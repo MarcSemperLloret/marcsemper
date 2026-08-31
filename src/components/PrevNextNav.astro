@@ -1,0 +1,116 @@
+---
+/**
+ * The step-to-step footer of a lesson, and the way back up to its unit.
+ *
+ * A student reads these pages in order, so the next class has to be one click
+ * away at the point where the previous one ends.
+ */
+interface Step {
+  href: string;
+  label: string;
+  title: string;
+}
+
+interface Props {
+  previous?: Step;
+  next?: Step;
+  backHref: string;
+  backLabel: string;
+  navLabel: string;
+}
+
+const { previous, next, backHref, backLabel, navLabel } = Astro.props;
+---
+
+<nav class="step-nav" aria-label={navLabel}>
+  <div class="container nav-grid">
+    {previous ? (
+      <a class="nav-previous" href={previous.href}>
+        <span>{previous.label}</span>
+        <strong>{previous.title}</strong>
+      </a>
+    ) : (
+      <span></span>
+    )}
+    {next ? (
+      <a class="nav-next" href={next.href}>
+        <span>{next.label}</span>
+        <strong>{next.title}</strong>
+      </a>
+    ) : (
+      <span></span>
+    )}
+  </div>
+  <div class="container nav-back">
+    <a href={backHref}>{backLabel} ↗</a>
+  </div>
+</nav>
+
+<style>
+  .step-nav {
+    padding: 50px 0 70px;
+    background: var(--paper-deep);
+  }
+
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .nav-grid a {
+    display: grid;
+    gap: 8px;
+    padding: 22px 24px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 160ms ease, transform 160ms ease;
+  }
+
+  .nav-grid a:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .nav-next {
+    text-align: right;
+  }
+
+  .nav-grid span {
+    color: var(--ink-soft);
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-grid strong {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .nav-back {
+    margin-top: 26px;
+  }
+
+  .nav-back a {
+    color: var(--blue-dark);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
+  @media (max-width: 780px) {
+    .nav-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .nav-next {
+      text-align: left;
+    }
+  }
+</style>

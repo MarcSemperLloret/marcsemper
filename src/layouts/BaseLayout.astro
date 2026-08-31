@@ -131,7 +131,8 @@ const serializedStructuredData = JSON.stringify(structuredData).replaceAll("<", 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     {/*
-      `script-src 'self'` allows exactly one first-party file, /copy-code.js,
+      `script-src 'self'` allows the site's own scripts, /session-ui.js and
+      /teaching-search.js,
       which puts a copy button on the session code blocks. No inline scripts and
       no third-party origins: setting this back to 'none' removes the buttons
       and breaks nothing else.

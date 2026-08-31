@@ -1,0 +1,519 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ArrowLink from "@/components/ArrowLink.astro";
+import TeachingSearch from "@/components/TeachingSearch.astro";
+import {
+  publishedCourses,
+  currentCourses,
+  archivedCourses,
+  formatTeachingDate,
+  courseText,
+  coursePath,
+  teachingBase,
+  type Lang,
+  type TeachingCourse
+} from "@/data/teaching";
+import { getUnits, unitsOfCourse, courseTotalLessons, latestUnitDate } from "@/data/units";
+import { site } from "@/data/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const isSpanish = lang === "es";
+const base = teachingBase(lang);
+const alternatePath = isSpanish ? "/teaching/" : "/es/docencia/";
+
+const units = await getUnits();
+
+const t = isSpanish
+  ? {
+      title: "Docencia",
+      metaDescription:
+        "Material docente: apuntes, diapositivas, ejercicios, cuadernos y lecturas de las asignaturas y módulos que imparte Marc Semper Lloret.",
+      jsonName: "Docencia",
+      jsonDescription:
+        "Material docente publicado por Marc Semper Lloret para las asignaturas y módulos de formación profesional que imparte.",
+      heroEyebrow: "Docencia",
+      heroTitle: "Material docente.",
+      heroIntro:
+        "Un único lugar estable para el material de las asignaturas y módulos que imparto: apuntes, diapositivas, ejercicios, cuadernos y lecturas, organizados por asignatura y por bloques.",
+      coursesEyebrow: "Asignaturas",
+      coursesTitle: "Asignaturas y material.",
+      coursesLead:
+        "Cada asignatura tiene su propia página, con el material agrupado en los bloques que le convienen.",
+      emptyMark: "D",
+      emptyTitle: "Material en preparación.",
+      emptyBody:
+        "Todavía no se ha publicado material docente. Las asignaturas que imparto y su material aparecerán aquí en cuanto se publiquen para el curso actual.",
+      emptyMeanwhile:
+        "Mientras tanto, el alumnado puede escribirme por correo para cualquier cuestión relacionada con una asignatura.",
+      emptyAction: "Escribir a",
+      openCourse: "Ver el material de la asignatura",
+      archiveEyebrow: "Archivo",
+      archiveTitle: "Cursos anteriores.",
+      archiveLead:
+        "Se conservan como referencia. Los contenidos y la evaluación pueden haber cambiado desde entonces.",
+      contactEyebrow: "Dudas",
+      contactTitle: "Preguntar sobre una asignatura.",
+      contactBody:
+        "Para dudas sobre contenidos, ejercicios o material, escríbeme desde tu cuenta del centro indicando la asignatura o el módulo en el que estás matriculado.",
+      researchLink: "Programa de investigación ↗",
+      researchHref: "/es/investigacion/",
+      unit: (n: number) => (n === 1 ? "1 unidad" : `${n} unidades`),
+      lesson: (n: number) => (n === 1 ? "1 sesión" : `${n} sesiones`),
+      noMaterial: "Todavía sin material publicado",
+      updated: (date: string) => ` · actualizado el ${date}`
+    }
+  : {
+      title: "Teaching",
+      metaDescription:
+        "Teaching material: notes, slides, exercises, notebooks and reading lists for the subjects and modules taught by Marc Semper Lloret.",
+      jsonName: "Teaching",
+      jsonDescription:
+        "Course material published by Marc Semper Lloret for the subjects and vocational training modules he teaches.",
+      heroEyebrow: "Teaching",
+      heroTitle: "Teaching material.",
+      heroIntro:
+        "A single, stable place for the material of the subjects and modules I teach: notes, slides, exercises, notebooks and reading lists, organised by subject and by section.",
+      coursesEyebrow: "Courses",
+      coursesTitle: "Subjects and material.",
+      coursesLead:
+        "Each subject has its own page, with the material grouped into the sections that suit it.",
+      emptyMark: "T",
+      emptyTitle: "Material in preparation.",
+      emptyBody:
+        "No course material has been published yet. The subjects I teach and their material will appear here as soon as they are released for the current academic year.",
+      emptyMeanwhile:
+        "In the meantime, students can reach me by email for anything related to a course.",
+      emptyAction: "Write to",
+      openCourse: "Open course material",
+      archiveEyebrow: "Archive",
+      archiveTitle: "Previous academic years.",
+      archiveLead:
+        "Kept for reference. Content and assessment may have changed since these courses were taught.",
+      contactEyebrow: "Questions",
+      contactTitle: "Ask about a course.",
+      contactBody:
+        "For doubts about content, exercises or material, write from your student account and state the subject or module you are enrolled in.",
+      researchLink: "Research programme ↗",
+      researchHref: "/research/",
+      unit: (n: number) => (n === 1 ? "1 unit" : `${n} units`),
+      lesson: (n: number) => (n === 1 ? "1 session" : `${n} sessions`),
+      noMaterial: "No material published yet",
+      updated: (date: string) => ` · updated ${date}`
+    };
+
+/**
+ * A course card summarises the units and classes of the course.
+ */
+function materialSummary(course: TeachingCourse): string {
+  const courseUnits = unitsOfCourse(units, course.slug);
+  const unitCount = course.sections.length || courseUnits.length;
+  const totalLessons = courseTotalLessons(courseUnits);
+  const parts: string[] = [];
+
+  if (unitCount > 0) parts.push(t.unit(unitCount));
+  if (totalLessons > 0) parts.push(t.lesson(totalLessons));
+
+  return parts.length > 0 ? parts.join(" · ") : t.noMaterial;
+}
+
+function updatedLabel(course: TeachingCourse): string | undefined {
+  const date = course.updatedAt ?? latestUnitDate(unitsOfCourse(units, course.slug));
+  return date ? t.updated(formatTeachingDate(date, lang)) : undefined;
+}
+
+const jsonLd = {
+  "@type": "CollectionPage",
+  // Both language versions describe the same collection, so they share one
+  // canonical id and differ in `url`. This is how the courses below are
+  // identified too, and it was already the case when these were two files.
+  "@id": `${site.url}/teaching/#teaching`,
+  url: `${site.url}${base}/`,
+  name: t.jsonName,
+  description: t.jsonDescription,
+  inLanguage: lang,
+  author: { "@id": `${site.url}/#person` },
+  hasPart: publishedCourses.map((course) => {
+    const text = courseText(course, lang);
+    return {
+      "@type": "Course",
+      "@id": `${site.url}/teaching/${course.slug}/#course`,
+      url: `${site.url}${coursePath(course.slug, lang)}`,
+      name: text.title,
+      description: text.summary,
+      ...(text.institution
+        ? { provider: { "@type": "EducationalOrganization", name: text.institution } }
+        : {})
+    };
+  })
+};
+---
+
+<BaseLayout
+  lang={lang}
+  title={t.title}
+  description={t.metaDescription}
+  jsonLd={jsonLd}
+  alternatePath={alternatePath}
+>
+  <header class="page-hero">
+    <div class="container page-hero-grid">
+      <div>
+        <p class="eyebrow">{t.heroEyebrow}</p>
+        <h1 class="page-title">{t.heroTitle}</h1>
+      </div>
+      <p class="page-intro">{t.heroIntro}</p>
+    </div>
+  </header>
+
+  <section class="courses-section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">{t.coursesEyebrow}</p>
+          <h2 class="section-title">{t.coursesTitle}</h2>
+        </div>
+        <p>{t.coursesLead}</p>
+      </div>
+
+      <TeachingSearch lang={lang} />
+
+      {publishedCourses.length === 0 ? (
+        <div class="empty-state">
+          <p class="empty-mark" aria-hidden="true">{t.emptyMark}</p>
+          <div>
+            <h3>{t.emptyTitle}</h3>
+            <p>{t.emptyBody}</p>
+            <p>{t.emptyMeanwhile}</p>
+            <a class="button primary" href={`mailto:${site.email}`}>
+              {t.emptyAction} {site.email}
+            </a>
+          </div>
+        </div>
+      ) : (
+        <div class="course-list">
+          {currentCourses.map((course) => {
+            const text = courseText(course, lang);
+            return (
+              <article>
+                <div class="course-meta">
+                  <span>{course.term}</span>
+                  {course.code && <span>{course.code}</span>}
+                </div>
+                <div>
+                  <h3>
+                    <a href={coursePath(course.slug, lang)}>{text.title}</a>
+                  </h3>
+                  {text.institution && <p class="course-level">{text.institution}</p>}
+                  <p>{text.summary}</p>
+                  {text.topics.length > 0 && (
+                    <ul class="topic-list">
+                      {text.topics.map((topic) => <li>{topic}</li>)}
+                    </ul>
+                  )}
+                  <p class="course-stats">
+                    {materialSummary(course)}
+                    {updatedLabel(course)}
+                  </p>
+                  <ArrowLink href={coursePath(course.slug, lang)}>
+                    {t.openCourse}
+                  </ArrowLink>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {archivedCourses.length > 0 && (
+    <section class="page-section archive-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">{t.archiveEyebrow}</p>
+            <h2 class="section-title">{t.archiveTitle}</h2>
+          </div>
+          <p>{t.archiveLead}</p>
+        </div>
+        <ul class="archive-list">
+          {archivedCourses.map((course) => (
+            <li>
+              <a href={coursePath(course.slug, lang)}>
+                <span class="archive-term">{course.term}</span>
+                <span>{courseText(course, lang).title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="teaching-contact">
+    <div class="container contact-grid">
+      <div>
+        <p class="eyebrow">{t.contactEyebrow}</p>
+        <h2>{t.contactTitle}</h2>
+      </div>
+      <div>
+        <p>{t.contactBody}</p>
+        <a class="button primary" href={`mailto:${site.email}`}>{site.email}</a>
+        <a class="text-link" href={t.researchHref}>{t.researchLink}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* The teaching index leads with the courses, so its hero stays out of the
+     way instead of taking a full screen like the research pages. */
+  .page-hero {
+    padding: 74px 0 46px;
+  }
+
+  .page-title {
+    font-size: clamp(2.6rem, 5.4vw, 4.4rem);
+  }
+
+  /* The hero aligns its two columns at the bottom, which reads well under a
+     full-height display title. With this smaller one the intro is the taller
+     column, so bottom alignment started it above the title. Align at the top. */
+  .page-hero-grid {
+    align-items: start;
+  }
+
+  .page-intro {
+    margin-bottom: 0;
+    padding-top: 10px;
+  }
+
+  @media (max-width: 640px) {
+    .page-hero {
+      padding: 56px 0 38px;
+    }
+
+    .page-title {
+      font-size: clamp(2.3rem, 11vw, 3.4rem);
+    }
+  }
+
+  .courses-section {
+    padding: 105px 0;
+    background: var(--paper-deep);
+  }
+
+  .empty-state {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 40px;
+    padding: 45px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+  }
+
+  .empty-mark {
+    margin: 0;
+    color: var(--coral);
+    font-family: var(--serif);
+    font-size: 5rem;
+    line-height: 0.8;
+  }
+
+  .empty-state h3 {
+    margin: 0 0 16px;
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+
+  .empty-state p {
+    max-width: 560px;
+    color: var(--ink-soft);
+  }
+
+  .empty-state .button {
+    margin-top: 18px;
+  }
+
+  .course-list {
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .course-list article {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .course-meta {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    color: var(--ink-soft);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .course-list h3 {
+    margin: 0 0 8px;
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    overflow-wrap: break-word;
+  }
+
+  .course-list h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .course-list h3 a:hover {
+    color: var(--blue-dark);
+  }
+
+  .course-level {
+    margin: 0 0 14px;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  .topic-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .topic-list li {
+    padding: 5px 11px;
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 750;
+  }
+
+  .course-stats {
+    margin: 0 0 18px;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .archive-list {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+    list-style: none;
+  }
+
+  .archive-list a {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 30px;
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    transition: color 160ms ease;
+  }
+
+  .archive-list a:hover {
+    color: var(--blue-dark);
+  }
+
+  .archive-term {
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Blue, matching the band that closes a course page. The two pages had
+     drifted apart while they were separate files. */
+  .teaching-contact {
+    padding: 100px 0;
+    color: var(--white);
+    background: var(--blue);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.7fr;
+    gap: 100px;
+  }
+
+  .teaching-contact .eyebrow {
+    color: var(--gold);
+  }
+
+  .teaching-contact h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .teaching-contact p {
+    margin-top: 0;
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  .teaching-contact .button {
+    color: var(--ink);
+    border-color: var(--white);
+    background: var(--white);
+  }
+
+  .teaching-contact .text-link {
+    display: block;
+    margin-top: 18px;
+    color: var(--white);
+  }
+
+  @media (max-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 50px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .empty-state,
+    .course-list article,
+    .archive-list a {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .archive-list a {
+      gap: 6px;
+    }
+
+    .empty-state {
+      padding: 30px;
+    }
+  }
+</style>

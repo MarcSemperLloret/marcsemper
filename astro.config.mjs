@@ -2,7 +2,6 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import { satteri } from "@astrojs/markdown-satteri";
 
-import { sessionParts } from "./plugins/session-parts.mjs";
 import { tableAlignment } from "./plugins/table-alignment.mjs";
 
 export default defineConfig({
@@ -22,13 +21,9 @@ export default defineConfig({
     // themed from global.css like everything else.
     syntaxHighlight: "prism",
     processor: satteri({
-      // Teaching units are long. `sessionParts` folds each of their `##`
-      // sections into a native <details>, which is the only accordion available
-      // to a site that serves no client JavaScript.
-      // `tableAlignment` runs last: `sessionParts` clones the nodes it folds
-      // into each <details>, and a property removed before that clone comes
-      // back as an empty attribute.
-      hastPlugins: [sessionParts(), tableAlignment()]
+      // Units are split into one page per class by the content loader, so
+      // nothing here has to fold a long document into an accordion.
+      hastPlugins: [tableAlignment()]
     })
   },
   build: {

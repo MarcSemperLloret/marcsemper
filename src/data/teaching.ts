@@ -486,44 +486,28 @@ export const teachingCourses: TeachingCourse[] = [
     status: "current",
     updatedAt: "2026-08-30",
     summary:
-      "Structuring, styling and managing web information: modern semantic HTML, CSS layout systems, structured data formats (XML, JSON), web feeds, and business information management.",
+      "Structuring and styling web information with modern semantic HTML, accessible forms, CSS layout systems, and responsive design.",
     summaryEs:
-      "Estructuración, presentación y tratamiento de la información web: HTML semántico, maquetación moderna con CSS, lenguajes de datos estructurados (XML y JSON), sindicación y sistemas de gestión de información.",
+      "Estructuración y presentación de la información web con HTML semántico, formularios accesibles, maquetación moderna con CSS y diseño responsive.",
     overview:
-      "A foundational software development module covering the fundamental technologies for representing, exchanging and presenting digital information. The journey begins with semantic HTML as the bedrock of web accessibility and meaning, progresses through modern CSS architectures (Flexbox, Grid, responsive design), and expands into structured data interchange formats (XML, DTD/XSD schema validation, XPath/XSLT transformations, and JSON), web syndication, and digital content management systems.",
+      "A foundational software development module focused, for now, on the two layers used to build a web interface: semantic HTML for structure, meaning and accessibility, followed by modern CSS for visual design, Flexbox, Grid and responsive layouts.",
     overviewEs:
-      "Módulo fundamental de desarrollo centrado en las tecnologías para representar, intercambiar y presentar información digital. El recorrido parte de HTML semántico como base de la estructura y accesibilidad web, avanza hacia la maquetación moderna con CSS (Flexbox, Grid, diseño adaptable), y se adentra en el intercambio de datos estructurados (XML, validación DTD/Schema, transformaciones XPath/XSLT y JSON), sindicación de contenidos y sistemas de gestión de información empresarial.",
+      "Módulo fundamental de desarrollo centrado, de momento, en las dos capas con las que se construye una interfaz web: HTML semántico para la estructura, el significado y la accesibilidad, seguido de CSS moderno para el diseño visual, Flexbox, Grid y la adaptación a distintas pantallas.",
     outcomes: [
       "Write valid, accessible and semantic HTML5 documents.",
-      "Design modern, responsive user interfaces using Flexbox, CSS Grid and design tokens.",
-      "Structure and validate business data with XML, DTD, and XML Schema.",
-      "Query and transform structured documents using XPath and XSLT.",
-      "Parse, serialize and validate JSON datasets in web architectures.",
-      "Integrate web syndication feeds (RSS/Atom) and configure digital content management systems."
+      "Design modern, responsive user interfaces using Flexbox, CSS Grid and design tokens."
     ],
     outcomesEs: [
       "Escribir documentos HTML5 válidos, accesibles y con semántica estricta.",
-      "Maquetar interfaces web modernas y adaptables con Flexbox, CSS Grid y diseño responsive.",
-      "Estructurar y validar datos empresariales con XML, DTD y XML Schema.",
-      "Consultar y transformar documentos estructurados mediante XPath y XSLT.",
-      "Manipular, validar e intercambiar conjuntos de datos en formato JSON.",
-      "Integrar canales de sindicación web (RSS/Atom) y configurar sistemas de gestión de contenidos."
+      "Maquetar interfaces web modernas y adaptables con Flexbox, CSS Grid y diseño responsive."
     ],
     topics: [
       "Semantic HTML5 and accessibility",
-      "Modern CSS, Flexbox and Grid",
-      "XML, DTD and XML Schema",
-      "XPath and XSLT transformations",
-      "JSON and data interchange",
-      "Web syndication and content management"
+      "Modern CSS, Flexbox and Grid"
     ],
     topicsEs: [
       "HTML5 semántico y accesibilidad",
-      "CSS moderno, Flexbox y Grid",
-      "XML, DTD y XML Schema",
-      "XPath y transformaciones XSLT",
-      "JSON e intercambio de datos",
-      "Sindicación web y gestión de contenidos"
+      "CSS moderno, Flexbox y Grid"
     ],
     resources: [],
     sections: [
@@ -609,3 +593,53 @@ export function formatTeachingDate(date: string, lang: "en" | "es"): string {
     { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }
   );
 }
+
+export type Lang = "en" | "es";
+
+/**
+ * Reading a course, a section or a resource in one language.
+ *
+ * Every visible field of a course exists twice, once per language. Left as is,
+ * every page that shows a course has to spell out that choice for each field,
+ * which is what made the English and the Spanish page of a course two separate
+ * files. These readers make the choice once, so a single page component can
+ * render either language.
+ */
+export function courseText(course: TeachingCourse, lang: Lang) {
+  const es = lang === "es";
+  return {
+    title: es ? course.titleEs : course.title,
+    summary: es ? course.summaryEs : course.summary,
+    overview: es ? course.overviewEs : course.overview,
+    level: es ? course.levelEs : course.level,
+    institution: es ? course.institutionEs : course.institution,
+    topics: es ? course.topicsEs : course.topics,
+    outcomes: (es ? course.outcomesEs : course.outcomes) ?? []
+  };
+}
+
+export function sectionText(section: TeachingSection, lang: Lang) {
+  const es = lang === "es";
+  return {
+    title: es ? section.titleEs : section.title,
+    description: es ? section.descriptionEs : section.description,
+    // A block keeps its English verb when no Spanish one is given, because a
+    // missing verb would break the sequence the blocks read as.
+    verb: es ? (section.verbEs ?? section.verb) : section.verb
+  };
+}
+
+export function resourceText(resource: TeachingResource, lang: Lang) {
+  const es = lang === "es";
+  return {
+    label: es ? resource.labelEs : resource.label,
+    description: es ? resource.descriptionEs : resource.description
+  };
+}
+
+/** Root of the teaching section in each language. */
+export const teachingBase = (lang: Lang): string =>
+  lang === "es" ? "/es/docencia" : "/teaching";
+
+export const coursePath = (slug: string, lang: Lang): string =>
+  `${teachingBase(lang)}/${slug}/`;

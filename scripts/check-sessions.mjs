@@ -12,10 +12,17 @@
  * succeeds. It is only visible by opening the page.
  *
  * Inside an HTML block, tags have to be written escaped: `&lt;head&gt;`.
+ *
+ * It also checks that each unit still has the shape the content loader splits
+ * it into. A `##` heading that is neither a class nor a week divider, sitting
+ * between two classes, would silently land on a page it does not belong to, so
+ * it fails the build here instead.
  */
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, sep } from "node:path";
+
+import { splitUnit } from "../plugins/unit-split.mjs";
 
 const ROOT = "src/content";
 
@@ -79,13 +86,36 @@ function scan(path) {
     // A backtick stuck to a tag is the giveaway: the author wrote Markdown code
     // syntax somewhere Markdown does not read it.
     if (trimmed.includes("`<")) {
-      problems.push({ line: index + 1, reason: "código con backticks", text: trimmed });
+      problems.push({
+        line: index + 1,
+        reason: "código con backticks",
+        advice: "escríbelo como &lt;etiqueta&gt;",
+        text: trimmed
+      });
       return;
     }
 
-    for (const [, tag] of trimmed.matchAll(TAG)) {
-      if (DANGEROUS.has(tag.toLowerCase())) {
-        problems.push({ line: index + 1, reason: `<${tag}> en vivo`, text: trimmed });
+    for (const [match, tag] of trimmed.matchAll(TAG)) {
+      const name = tag.toLowerCase();
+      // `</h1>` is the same heading as `<h1>`; report the line once.
+      if (name === "h1" && match[1] === "/") continue;
+      if (DANGEROUS.has(name)) {
+        problems.push({
+          line: index + 1,
+          reason: `<${tag}> en vivo`,
+          advice: "escríbelo como &lt;etiqueta&gt;",
+          text: trimmed
+        });
+      } else if (name === "h1") {
+        // The page title is already the only <h1>. A second one, which happens
+        // inside a mockup of a browser window, joins the real document outline
+        // and leaves the page with two top-level headings.
+        problems.push({
+          line: index + 1,
+          reason: "<h1> en vivo: la página ya tiene el suyo",
+          advice: 'si es una maqueta usa <p class="demo-title">; si lo estás citando, &lt;h1&gt;',
+          text: trimmed
+        });
       }
     }
   });
@@ -93,24 +123,56 @@ function scan(path) {
   return problems;
 }
 
+/**
+ * A unit whose sections the loader cannot place. `splitUnit` reports them
+ * rather than guessing, because guessing would move a section onto another
+ * page without saying so.
+ */
+function scanShape(path) {
+  if (!path.includes(`${sep}sessions${sep}`)) return [];
+  const body = readFileSync(path, "utf8").replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
+  return splitUnit(body).strays.map((stray) => ({
+    line: stray.line,
+    reason: `la sección "${stray.heading}" no es una sesión ni un divisor de semana`,
+    text: `## ${stray.heading}`
+  }));
+}
+
 let total = 0;
+let strays = 0;
 
 for (const path of markdownFiles(ROOT)) {
   for (const problem of scan(path)) {
     total += 1;
     const where = `${path.split(sep).join("/")}:${problem.line}`;
-    console.error(`${where}\n  ${problem.reason} — escríbelo como &lt;etiqueta&gt;`);
+    console.error(`${where}\n  ${problem.reason} — ${problem.advice}`);
+    console.error(`  ${problem.text.slice(0, 120)}\n`);
+  }
+  for (const problem of scanShape(path)) {
+    strays += 1;
+    const where = `${path.split(sep).join("/")}:${problem.line}`;
+    console.error(`${where}\n  ${problem.reason}`);
     console.error(`  ${problem.text.slice(0, 120)}\n`);
   }
 }
 
+if (strays > 0) {
+  console.error(
+    `${strays} sección/es de nivel ## sin sitio dentro de su unidad.\n` +
+      "Una unidad se publica como: introducción, sesiones (## Sesión N · Título),\n" +
+      "divisores opcionales (## Semana N · …) y un cierre al final. Una sección\n" +
+      "suelta entre dos sesiones acabaría dentro de la página equivocada."
+  );
+  process.exit(1);
+}
+
 if (total > 0) {
   console.error(
-    `${total} etiqueta(s) HTML viva(s) dentro de un bloque HTML.\n` +
+    `${total} etiqueta(s) HTML problemática(s) dentro de un bloque HTML.\n` +
       "Dentro de un bloque HTML los backticks no escapan nada: hay que escribir\n" +
       "&lt;head&gt; en lugar de `<head>`, o el navegador se come el resto de la página."
   );
   process.exit(1);
 }
 
-console.log("Sesiones revisadas: ningún tag HTML vivo dentro de un bloque HTML.");
+console.log("Unidades revisadas: sin tags HTML vivos y con todas las secciones ubicadas.");

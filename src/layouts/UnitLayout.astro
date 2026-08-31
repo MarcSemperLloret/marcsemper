@@ -1,0 +1,444 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MaterialHero from "@/components/MaterialHero.astro";
+import { site } from "@/data/site";
+import { formatTeachingDate, type TeachingCourse } from "@/data/teaching";
+import { lessonGroups, lessonLabel, lessonPath, type Lesson, type Unit } from "@/data/units";
+
+interface Props {
+  unit: Unit;
+  course: TeachingCourse;
+  /** The unit's own pages, in teaching order. */
+  lessons: Lesson[];
+}
+
+const { unit, course, lessons } = Astro.props;
+const { data } = unit.entry;
+const isSpanish = unit.lang === "es";
+const courseTitle = isSpanish ? course.titleEs : course.title;
+const coursePath = isSpanish
+  ? `/es/docencia/${course.slug}/`
+  : `/teaching/${course.slug}/`;
+// The unit exists in one language only, so the switcher goes to the course
+// page in the other language rather than dropping the reader on the homepage.
+const otherLanguageCoursePath = isSpanish
+  ? `/teaching/${course.slug}/`
+  : `/es/docencia/${course.slug}/`;
+
+const t = isSpanish
+  ? {
+      duration: "Duración",
+      modality: "Modalidad",
+      deliverable: "Producto final",
+      before: "Antes de empezar",
+      requirements: "Necesitas",
+      prior: "Debes saber",
+      contents: "Sesiones de la unidad",
+      contentsLead: "Cada sesión es una clase, con su propia página.",
+      lessons: "sesiones",
+      published: "Publicado el",
+      back: `Volver a ${courseTitle}`,
+      nav: "Unidad"
+    }
+  : {
+      duration: "Duration",
+      modality: "Format",
+      deliverable: "Deliverable",
+      before: "Before you start",
+      requirements: "You need",
+      prior: "You should already know",
+      contents: "Classes in this unit",
+      contentsLead: "Every class is a page of its own.",
+      lessons: "classes",
+      published: "Published on",
+      back: `Back to ${courseTitle}`,
+      nav: "Unit"
+    };
+
+const facts = [
+  data.duration && { label: t.duration, value: data.duration },
+  data.modality && { label: t.modality, value: data.modality },
+  data.deliverable && { label: t.deliverable, value: data.deliverable }
+].filter(Boolean) as Array<{ label: string; value: string }>;
+
+/**
+ * The "Before you start" strip. It is deliberately separate from `facts`: the
+ * facts describe the unit, while this tells the student what to do before
+ * opening it, which is what stops a one-hour weekly class from being spent
+ * installing things.
+ *
+ * What the unit leaves you able to do is not here. Eleven sentences of it stood
+ * between the reader and the list of classes they came for, and they describe
+ * the end of the unit rather than its start: they are shown on the page that
+ * closes it.
+ */
+const prep = [
+  data.requirements.length > 0 && { label: t.requirements, items: data.requirements },
+  data.priorKnowledge.length > 0 && { label: t.prior, items: data.priorKnowledge }
+].filter(Boolean) as Array<{ label: string; items: string[] }>;
+
+const groups = lessonGroups(lessons);
+
+const jsonLd = {
+  "@type": "LearningResource",
+  "@id": `${site.url}${Astro.url.pathname}#unit`,
+  url: `${site.url}${Astro.url.pathname}`,
+  name: data.title,
+  description: data.summary,
+  inLanguage: unit.lang,
+  learningResourceType: isSpanish ? "Unidad didáctica" : "Teaching unit",
+  isPartOf: { "@id": `${site.url}/teaching/${course.slug}/#course` },
+  author: { "@id": `${site.url}/#person` },
+  hasPart: lessons.map((lesson) => ({
+    "@type": "LearningResource",
+    url: `${site.url}${lessonPath(lesson)}`,
+    name: lesson.entry.data.title
+  })),
+  ...(data.date ? { datePublished: data.date } : {})
+};
+---
+
+<BaseLayout
+  lang={unit.lang}
+  title={data.title}
+  description={data.summary}
+  jsonLd={jsonLd}
+  languagePath={otherLanguageCoursePath}
+>
+  <MaterialHero
+    backHref={coursePath}
+    backLabel={courseTitle}
+    eyebrow={data.label}
+    title={data.title}
+    summary={data.summary}
+  />
+
+  {facts.length > 0 && (
+    <section class="unit-facts">
+      <div class="container facts-grid">
+        {facts.map((fact) => (
+          <div>
+            <span>{fact.label}</span>
+            <strong>{fact.value}</strong>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {prep.length > 0 && (
+    <section class="unit-brief">
+      <div class="container">
+        <p class="eyebrow">{t.before}</p>
+        <dl class="brief-rows">
+          {prep.map((block) => (
+            <div class="brief-row">
+              <dt class="brief-label">{block.label}</dt>
+              <dd>
+                <ul>
+                  {block.items.map((item) => <li>{item}</li>)}
+                </ul>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  )}
+
+  {data.hasIntro && (
+    <section class="unit-intro">
+      <div class="container">
+        <div class="session-content">
+          <slot />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="unit-lessons">
+    <div class="container">
+      <div class="lessons-header">
+        <div>
+          <p class="eyebrow">{t.contents}</p>
+          <h2>{t.contentsLead}</h2>
+        </div>
+        <p class="lessons-count">{data.lessonCount} {t.lessons}</p>
+      </div>
+
+      {groups.map((block) => (
+        <div class="lesson-block">
+          {block.group && <p class="lesson-group">{block.group}</p>}
+          <ol class="lesson-list">
+            {block.lessons.map((lesson) => (
+              <li class:list={["lesson-item", lesson.entry.data.role === "recap" && "is-recap"]}>
+                <a href={lessonPath(lesson)}>
+                  <span class="lesson-index">{lessonLabel(lesson)}</span>
+                  <span class="lesson-title">{lesson.entry.data.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <nav class="unit-back" aria-label={t.nav}>
+    <div class="container">
+      {data.date && (
+        <p class="unit-updated">
+          {t.published} {formatTeachingDate(data.date, unit.lang)}.
+        </p>
+      )}
+      <a href={coursePath}>{t.back} ↗</a>
+    </div>
+  </nav>
+  <!-- Progressive enhancement: copy buttons on the code blocks of the unit's
+       introduction, and keeping an opened panel in view. -->
+  <script src="/session-ui.js" defer is:inline></script>
+</BaseLayout>
+
+<style>
+  .unit-facts {
+    background: var(--blue);
+    color: var(--white);
+  }
+
+  .facts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .facts-grid div {
+    padding: 22px 25px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .facts-grid div:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .facts-grid span {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--gold);
+    font-size: 0.59rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .facts-grid strong {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .unit-brief {
+    padding: 46px 0 8px;
+  }
+
+  .unit-brief .eyebrow {
+    margin-bottom: 24px;
+  }
+
+  /*
+     One row per group, not one card each. As cards of equal width, "you need"
+     with four items and "you should already know" with one left half the strip
+     empty and took the height of the longer one. As rows, each group takes only
+     the space its own contents need.
+   */
+  .brief-rows {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .brief-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px 24px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (min-width: 700px) {
+    .brief-row {
+      grid-template-columns: 150px 1fr;
+      align-items: baseline;
+    }
+  }
+
+  .brief-label {
+    margin: 0;
+    color: var(--blue-dark);
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .brief-row dd {
+    margin: 0;
+  }
+
+  .brief-row ul {
+    margin: 0;
+    padding: 0;
+    color: var(--ink);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    list-style: none;
+  }
+
+  /* Set as running text: four one-line requirements read as one sentence and
+     take two lines instead of four. */
+  .brief-row li {
+    display: inline;
+  }
+
+  .brief-row li:not(:last-child)::after {
+    color: var(--ink-soft);
+    content: " · ";
+  }
+
+  .unit-intro {
+    padding: 60px 0 10px;
+  }
+
+  /* The reading column of the introduction, matching a lesson's. */
+  .unit-intro .session-content {
+    max-width: 760px;
+  }
+
+  .unit-lessons {
+    padding: 70px 0 90px;
+  }
+
+  .lessons-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 40px;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 34px;
+  }
+
+  .lessons-header h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+  }
+
+  .lessons-count {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .lesson-group {
+    margin: 38px 0 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--coral);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .lesson-block:first-child .lesson-group {
+    margin-top: 0;
+  }
+
+  .lesson-list {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .lesson-item a {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 24px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 160ms ease, padding-left 160ms ease;
+  }
+
+  .lesson-item a:hover {
+    color: var(--blue-dark);
+    padding-left: 8px;
+  }
+
+  .lesson-index {
+    color: var(--ink-soft);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .lesson-item a:hover .lesson-index {
+    color: var(--blue);
+  }
+
+  .lesson-title {
+    font-family: var(--serif);
+    font-size: 1.18rem;
+    line-height: 1.3;
+  }
+
+  /* What closes a unit is a revision sheet, not a class: it is listed with the
+     lessons because that is where it is looked for, but it is not one of them. */
+  .lesson-item.is-recap .lesson-index {
+    color: var(--coral);
+  }
+
+  .unit-back {
+    padding: 0 0 90px;
+  }
+
+  .unit-updated {
+    max-width: 760px;
+    margin: 0 0 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .unit-back a {
+    color: var(--blue-dark);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 800;
+  }
+
+  @media (max-width: 780px) {
+    .facts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .facts-grid div {
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .lesson-item a {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>

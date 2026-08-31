@@ -1,0 +1,28 @@
+---
+import { render } from "astro:content";
+import LessonLayout from "@/layouts/LessonLayout.astro";
+import { lessonRoutes, type Lesson, type Unit } from "@/data/units";
+import type { TeachingCourse } from "@/data/teaching";
+
+export const getStaticPaths = () => lessonRoutes("es");
+
+interface Props {
+  lesson: Lesson;
+  unit: Unit;
+  course: TeachingCourse;
+  siblings: Lesson[];
+}
+
+const { lesson, unit, course, siblings } = Astro.props;
+const { Content, headings } = await render(lesson.entry);
+---
+
+<LessonLayout
+  lesson={lesson}
+  unit={unit}
+  course={course}
+  siblings={siblings}
+  headings={headings}
+>
+  <Content />
+</LessonLayout>

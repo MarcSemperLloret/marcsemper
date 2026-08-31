@@ -1,16 +1,51 @@
 /**
- * Adds a copy button to every code block in a teaching session.
+ * The two behaviours a page of teaching material adds on top of its markup: a
+ * copy button on every code block, and keeping an opened panel in view.
  *
- * This is the only script the site serves, and it is why the policy allows
- * `script-src 'self'` rather than 'none'. It is a progressive enhancement: if
- * it never runs, the page is exactly what it was, because the buttons only
- * exist once this has added them.
+ * Both are progressive enhancements. If this never runs the page is exactly
+ * what it was: the buttons only exist once this has added them, and the panels
+ * are native <details> that open perfectly well on their own.
  *
  * It sets no inline styles — `style-src 'self'` would drop them — so every
  * state is a class defined in global.css.
  */
 (function () {
   "use strict";
+
+  var reduceMotion =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /*
+     Opening a panel low on the screen used to leave its summary at the very
+     bottom, with everything it just revealed below the fold. When the opened
+     panel does not fit as it lies, its summary is brought up under the header;
+     when it already fits, the page is left alone.
+
+     The offset matches the `scroll-margin-top` the headings use, so an opened
+     panel lands where an anchor jump would.
+   */
+  var HEADER = 96;
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".session-content details"),
+    function (panel) {
+      panel.addEventListener("toggle", function () {
+        if (!panel.open) return;
+        var summary = panel.querySelector("summary") || panel;
+        // `toggle` fires before the browser has laid the panel out again.
+        window.requestAnimationFrame(function () {
+          var top = summary.getBoundingClientRect().top;
+          var bottom = panel.getBoundingClientRect().bottom;
+          var fits = top >= HEADER && bottom <= window.innerHeight;
+          if (fits) return;
+          summary.scrollIntoView({
+            block: "start",
+            behavior: reduceMotion ? "auto" : "smooth"
+          });
+        });
+      });
+    }
+  );
 
   var blocks = document.querySelectorAll(".session-content pre > code");
   if (blocks.length === 0) return;

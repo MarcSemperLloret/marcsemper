@@ -794,6 +794,12 @@ select {
   margin-bottom: 0;
 }
 
+/* The offset an opened panel is scrolled to, matching the headings above. */
+.session-content details,
+.session-content details > summary {
+  scroll-margin-top: 96px;
+}
+
 .session-content pre {
   margin: 22px 0;
   padding: 20px 22px;
@@ -889,15 +895,15 @@ select {
   }
 }
 
-/* Sessions listed inside a course page. */
-.session-list {
+/* Units listed inside a course page, each with its classes under it. */
+.unit-list {
   margin: 22px 0 0;
   padding: 0;
   border-top: 1px solid var(--line-strong);
   list-style: none;
 }
 
-.session-list a {
+.unit-list > li > a {
   display: grid;
   grid-template-columns: 150px 1fr auto;
   gap: 20px;
@@ -909,11 +915,11 @@ select {
   transition: color 160ms ease;
 }
 
-.session-list a:hover {
+.unit-list > li > a:hover {
   color: var(--blue-dark);
 }
 
-.session-kind {
+.unit-kind {
   color: var(--coral);
   font-size: 0.63rem;
   font-weight: 800;
@@ -921,39 +927,127 @@ select {
   text-transform: uppercase;
 }
 
-.session-body {
+.unit-body {
   display: grid;
   gap: 5px;
 }
 
-.session-title {
+.unit-title {
   font-family: var(--serif);
   font-size: 1.15rem;
 }
 
-.session-body small {
+.unit-body small {
   color: var(--ink-soft);
   font-size: 0.86rem;
 }
 
-.session-meta {
+.unit-meta {
   color: var(--ink-soft);
   font-size: 0.72rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
-.loose-sessions {
+.loose-units {
   margin-top: 55px;
 }
 
+/*
+   The classes of a unit, listed under it on the course page. This is the whole
+   course on one screen, so the rows are quiet: the unit above them is the
+   heading, and these are its contents.
+*/
+.course-lessons {
+  margin: 0 0 4px;
+  padding: 0 0 0 150px;
+  list-style: none;
+}
+
+.course-lessons a {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding: 7px 0;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: color 160ms ease, padding-left 160ms ease;
+}
+
+.course-lessons a:hover {
+  color: var(--blue-dark);
+  padding-left: 6px;
+}
+
+.course-lessons .lesson-number {
+  color: var(--ink-soft);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.course-lessons a:hover .lesson-number {
+  color: var(--blue);
+}
+
+.course-week {
+  margin: 14px 0 2px;
+  padding-left: 150px;
+  color: var(--ink);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.unit-deliverable {
+  margin: 12px 0 6px;
+  padding-left: 150px;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.unit-deliverable b {
+  color: var(--coral);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.unit-entry {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.unit-entry > a {
+  border-bottom: 0 !important;
+}
+
+@media (max-width: 780px) {
+  .course-lessons,
+  .course-week,
+  .unit-deliverable {
+    padding-left: 0;
+  }
+
+  .course-lessons a {
+    grid-template-columns: 74px 1fr;
+    gap: 10px;
+  }
+}
+
 @media (max-width: 640px) {
-  .session-list a {
+  .unit-list > li > a {
     grid-template-columns: 1fr;
     gap: 7px;
   }
 
-  .session-meta {
+  .unit-meta {
     white-space: normal;
   }
 }
@@ -1191,28 +1285,41 @@ select {
 }
 
 /* ---------------------------------------------------------------------------
-   Session page shell: sticky contents rail beside the reading column.
+   Lesson page shell: sticky contents rail beside the reading column.
+
+   A lesson is one class, so its rail is a flat list of the `###` headings
+   inside it. Nothing here tracks an open section: the page IS the section.
    --------------------------------------------------------------------------- */
 
-.session-grid {
+.lesson-grid {
   display: grid;
   grid-template-columns: minmax(0, 760px);
   gap: 56px;
 }
 
-.session-toc ol,
-.session-toc ul {
+.lesson-toc ol {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.session-toc a {
+.lesson-toc a {
   display: block;
+  padding: 7px 0 7px 13px;
+  border-left: 2px solid transparent;
+  color: var(--ink-soft);
   text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.3;
 }
 
-.session-toc .toc-title {
+.lesson-toc a:hover {
+  border-left-color: var(--coral);
+  color: var(--blue-dark);
+}
+
+.lesson-toc .toc-title {
   margin: 0 0 16px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--line-strong);
@@ -1223,120 +1330,12 @@ select {
   text-transform: uppercase;
 }
 
-/* A heading that only labels the sessions after it, such as "Semana 2". */
-.toc-group a {
-  margin: 22px 0 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink);
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.toc-part {
-  /* Defaults for a closed session. The rule further down flips them on the one
-     that is open, which is the only "you are here" signal a page with no
-     client JavaScript can offer. */
-  --toc-mark: transparent;
-  --toc-color: var(--ink-soft);
-  --toc-weight: 650;
-  --toc-sub: none;
-}
-
-.toc-link {
-  padding: 7px 0 7px 13px;
-  border-left: 2px solid var(--toc-mark);
-  color: var(--toc-color);
-  font-size: 0.82rem;
-  font-weight: var(--toc-weight);
-  line-height: 1.3;
-}
-
-.toc-link:hover {
-  color: var(--blue-dark);
-}
-
-.toc-kicker {
-  display: block;
-  margin-bottom: 3px;
-  color: var(--blue-dark);
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-}
-
-.toc-sub {
-  display: var(--toc-sub);
-  margin: 2px 0 10px;
-  padding-left: 15px;
-  border-left: 2px solid var(--line);
-}
-
-.toc-sub a {
-  padding: 4px 0;
-  color: var(--ink-soft);
-  font-size: 0.76rem;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.toc-sub a:hover {
-  color: var(--blue-dark);
-}
-
-/*
-   Mark the open session in the rail and unfold its subsections.
-
-   `:has()` cannot pair a rail entry with the accordion entry carrying the same
-   number, so the pairing is spelled out once per position. Thirty covers the
-   longest unit written so far, eighteen sessions plus its weekly dividers; a
-   section past that still reads, it is just not tracked in the rail.
-*/
-.session-grid:has(.session-part[data-part="1"][open]) .toc-part[data-part="1"],
-.session-grid:has(.session-part[data-part="2"][open]) .toc-part[data-part="2"],
-.session-grid:has(.session-part[data-part="3"][open]) .toc-part[data-part="3"],
-.session-grid:has(.session-part[data-part="4"][open]) .toc-part[data-part="4"],
-.session-grid:has(.session-part[data-part="5"][open]) .toc-part[data-part="5"],
-.session-grid:has(.session-part[data-part="6"][open]) .toc-part[data-part="6"],
-.session-grid:has(.session-part[data-part="7"][open]) .toc-part[data-part="7"],
-.session-grid:has(.session-part[data-part="8"][open]) .toc-part[data-part="8"],
-.session-grid:has(.session-part[data-part="9"][open]) .toc-part[data-part="9"],
-.session-grid:has(.session-part[data-part="10"][open]) .toc-part[data-part="10"],
-.session-grid:has(.session-part[data-part="11"][open]) .toc-part[data-part="11"],
-.session-grid:has(.session-part[data-part="12"][open]) .toc-part[data-part="12"],
-.session-grid:has(.session-part[data-part="13"][open]) .toc-part[data-part="13"],
-.session-grid:has(.session-part[data-part="14"][open]) .toc-part[data-part="14"],
-.session-grid:has(.session-part[data-part="15"][open]) .toc-part[data-part="15"],
-.session-grid:has(.session-part[data-part="16"][open]) .toc-part[data-part="16"],
-.session-grid:has(.session-part[data-part="17"][open]) .toc-part[data-part="17"],
-.session-grid:has(.session-part[data-part="18"][open]) .toc-part[data-part="18"],
-.session-grid:has(.session-part[data-part="19"][open]) .toc-part[data-part="19"],
-.session-grid:has(.session-part[data-part="20"][open]) .toc-part[data-part="20"],
-.session-grid:has(.session-part[data-part="21"][open]) .toc-part[data-part="21"],
-.session-grid:has(.session-part[data-part="22"][open]) .toc-part[data-part="22"],
-.session-grid:has(.session-part[data-part="23"][open]) .toc-part[data-part="23"],
-.session-grid:has(.session-part[data-part="24"][open]) .toc-part[data-part="24"],
-.session-grid:has(.session-part[data-part="25"][open]) .toc-part[data-part="25"],
-.session-grid:has(.session-part[data-part="26"][open]) .toc-part[data-part="26"],
-.session-grid:has(.session-part[data-part="27"][open]) .toc-part[data-part="27"],
-.session-grid:has(.session-part[data-part="28"][open]) .toc-part[data-part="28"],
-.session-grid:has(.session-part[data-part="29"][open]) .toc-part[data-part="29"],
-.session-grid:has(.session-part[data-part="30"][open]) .toc-part[data-part="30"] {
-  --toc-mark: var(--coral);
-  --toc-color: var(--ink);
-  --toc-weight: 800;
-  --toc-sub: block;
-}
-
 @media (min-width: 1060px) {
-  .session-grid {
+  .lesson-grid {
     grid-template-columns: 250px minmax(0, 760px);
   }
 
-  .session-toc {
+  .lesson-toc {
     align-self: start;
     position: sticky;
     top: 100px;
@@ -1346,8 +1345,7 @@ select {
 }
 
 @media (max-width: 1059px) {
-  .session-toc {
-    /* A unit of eighteen sessions would otherwise push the text off screen. */
+  .lesson-toc {
     max-height: 55vh;
     padding: 22px 24px;
     overflow-y: auto;
@@ -1356,129 +1354,12 @@ select {
   }
 }
 
-
-/* ---------------------------------------------------------------------------
-   Session accordion
-
-   Each `##` section of a unit is wrapped in a <details> at build time by
-   plugins/session-parts.mjs, so a unit opens as the list of its sessions
-   rather than as an hour of scrolling. They share a `name`, which is what
-   makes the browser close one when another opens: a single session is on
-   screen at a time, and the rail always has one entry to mark.
-   --------------------------------------------------------------------------- */
-
-.session-content .session-part {
-  scroll-margin-top: 88px;
-  border-top: 1px solid var(--line-strong);
-}
-
-.session-content .session-part:last-of-type {
-  border-bottom: 1px solid var(--line-strong);
-}
-
-.session-part-summary {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 24px 0;
-  cursor: pointer;
-  list-style: none;
-}
-
-.session-part-summary::-webkit-details-marker {
-  display: none;
-}
-
-.session-content .session-part-summary h2 {
-  flex: 1;
-  margin: 0;
-  font-size: clamp(1.5rem, 2.9vw, 2.05rem);
-  transition: color 160ms ease;
-}
-
-.session-part-summary::after {
-  flex: none;
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid var(--ink-soft);
-  border-bottom: 2px solid var(--ink-soft);
-  transform: translateY(-3px) rotate(45deg);
-  transition: transform 180ms ease, border-color 160ms ease;
-  content: "";
-}
-
-.session-part[open] > .session-part-summary::after {
-  transform: translateY(2px) rotate(225deg);
-}
-
-.session-part-summary:hover h2 {
-  color: var(--blue-dark);
-}
-
-.session-part-summary:hover::after {
-  border-color: var(--blue-dark);
-}
-
-.session-part-summary:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: 3px;
-}
-
-.session-part-body {
-  padding-bottom: 44px;
-}
-
-.session-content .session-part-body > *:first-child {
-  margin-top: 0;
-}
-
-/* A `##` that only labels the sessions after it. The rule the author wrote
-   under it would double the one drawn here. */
-.session-content .session-part-group {
-  margin: 64px 0 0;
-  padding-bottom: 9px;
-  border-bottom: 2px solid var(--ink);
-  color: var(--ink);
-  font-family: var(--sans);
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-.session-content .session-part-group + hr {
-  display: none;
-}
-
-.session-content .session-part-group + .session-part,
-.session-content .session-part-group + hr + .session-part {
-  border-top: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .session-part-summary::after,
-  .session-content .session-part-summary h2 {
-    transition: none;
-  }
-}
-
 @media print {
-  .session-toc {
-    display: none;
-  }
-
-  /* Print the whole unit, not only the session that happened to be open. */
-  @supports selector(::details-content) {
-    .session-part::details-content {
-      content-visibility: visible;
-    }
-  }
-
-  .session-part-summary::after {
+  .lesson-toc {
     display: none;
   }
 }
+
 
 @media (max-width: 640px) {
   .session-content .flow li {
@@ -1807,7 +1688,7 @@ select {
   padding: 22px 24px 26px;
 }
 
-.session-content .lesson-browser__page h1 {
+.session-content .lesson-browser__page .demo-title {
   margin: 0 0 0.67em;
   color: #202124;
   font-family: Arial, sans-serif;
@@ -2031,7 +1912,7 @@ select {
   line-height: 1.6;
 }
 
-.session-content .lesson-first-css h1 {
+.session-content .lesson-first-css .demo-title {
   margin: 0 0 8px;
   color: navy;
   font-family: inherit;
@@ -2276,7 +2157,7 @@ select {
     padding: 18px;
   }
 
-  .session-content .lesson-browser__page h1 {
+  .session-content .lesson-browser__page .demo-title {
     font-size: 1.7em;
   }
 
@@ -2449,7 +2330,7 @@ select {
 /* ---------------------------------------------------------------------------
    Copy button
 
-   Added to each code block by /copy-code.js. Every state is a class, because
+   Added to each code block by /session-ui.js. Every state is a class, because
    the policy drops inline styles, and the script sets none.
    --------------------------------------------------------------------------- */
 
@@ -2751,6 +2632,85 @@ select {
 
 .session-content .checkpoint--recall .checkpoint-label {
   color: var(--coral);
+}
+
+/* Opening retrieval and weekly diagnostics use the checkpoint grammar but
+   remain distinguishable from end-of-session evidence. */
+.session-content .checkpoint--start {
+  margin-top: -16px;
+  border-left-color: var(--blue-dark);
+  background: color-mix(in srgb, var(--paper-deep) 78%, var(--white));
+}
+
+.session-content .checkpoint--weekly {
+  border-left-color: var(--ink);
+  background: var(--white);
+  box-shadow: 0 10px 28px rgba(27, 39, 51, 0.07);
+}
+
+.session-content .checkpoint--weekly .checkpoint-label {
+  color: var(--ink);
+}
+
+/* Three speeds for significant practices. Keeping the labels beside the task
+   makes the common finish line explicit without holding back faster students. */
+.session-content .practice-levels,
+.session-content .learning-priorities {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 28px 0 34px;
+  border: 1px solid var(--line-strong);
+  background: var(--line-strong);
+}
+
+.session-content .practice-levels > div,
+.session-content .learning-priorities > div {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+  padding: 20px;
+  background: var(--white);
+}
+
+.session-content .practice-levels strong,
+.session-content .learning-priorities strong {
+  color: var(--blue-dark);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.session-content .practice-levels span,
+.session-content .learning-priorities span {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.session-content .practice-levels > div:last-child strong,
+.session-content .learning-priorities__extra strong {
+  color: var(--coral);
+}
+
+.session-content .learning-priorities__essential {
+  box-shadow: inset 0 4px 0 var(--blue-dark);
+}
+
+.session-content .learning-priorities__important {
+  box-shadow: inset 0 4px 0 var(--blue);
+}
+
+.session-content .learning-priorities__extra {
+  box-shadow: inset 0 4px 0 var(--coral);
+}
+
+@media (max-width: 720px) {
+  .session-content .practice-levels,
+  .session-content .learning-priorities {
+    grid-template-columns: 1fr;
+  }
 }
 
 .session-content .aside {

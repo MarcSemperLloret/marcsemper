@@ -2,23 +2,38 @@ import type { APIRoute } from "astro";
 import { publications } from "@/data/publications";
 import { researchAreas, site } from "@/data/site";
 import { publishedCourses } from "@/data/teaching";
-import { getSessions, sessionPath, sessionsOfCourse } from "@/data/sessions";
+import {
+  getUnits,
+  getLessons,
+  unitsOfCourse,
+  lessonsOfUnit,
+  unitPath,
+  lessonPath
+} from "@/data/units";
 
 export const GET: APIRoute = async () => {
-  const sessions = await getSessions();
+  const [units, lessons] = await Promise.all([getUnits(), getLessons()]);
 
   const teaching = publishedCourses
     .map((course) => {
-      const courseSessions = sessionsOfCourse(sessions, course.slug);
-      const sessionLines = courseSessions.length
-        ? courseSessions
-            .map(
-              (session) =>
-                `- ${session.entry.data.title} (${session.entry.data.lang}): ${site.url}${sessionPath(session)}
-  ${session.entry.data.summary}`
-            )
+      const courseUnits = unitsOfCourse(units, course.slug);
+      // Every class has its own page, so each one is listed with its URL: this
+      // file exists to be read whole, and a unit link alone would hide them.
+      const unitLines = courseUnits.length
+        ? courseUnits
+            .map((unit) => {
+              const classes = lessonsOfUnit(lessons, unit.entry.id)
+                .map(
+                  (lesson) =>
+                    `  - ${lesson.entry.data.title}: ${site.url}${lessonPath(lesson)}`
+                )
+                .join("\n");
+              return `- ${unit.entry.data.title} (${unit.entry.data.lang}): ${site.url}${unitPath(unit)}
+  ${unit.entry.data.summary}
+${classes}`;
+            })
             .join("\n")
-        : "- No session material published yet.";
+        : "- No unit material published yet.";
 
       // Both are optional, so the line is dropped rather than left as an
       // empty label when a course declares neither.
@@ -34,8 +49,8 @@ ${course.overview}
 
 Topics: ${course.topics.join("; ")}
 
-Sessions:
-${sessionLines}
+Units and classes:
+${unitLines}
 `;
     })
     .join("\n");

@@ -1,0 +1,190 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MaterialHero from "@/components/MaterialHero.astro";
+import PrevNextNav from "@/components/PrevNextNav.astro";
+import { site } from "@/data/site";
+import { type TeachingCourse } from "@/data/teaching";
+import { lessonLabel, lessonPath, unitPath, type Lesson, type Unit } from "@/data/units";
+
+interface Props {
+  lesson: Lesson;
+  unit: Unit;
+  course: TeachingCourse;
+  /** The other pages of the same unit, in teaching order. */
+  siblings: Lesson[];
+  /** The headings of this lesson, for the contents rail. */
+  headings: Array<{ depth: number; slug: string; text: string }>;
+}
+
+const { lesson, unit, course, siblings, headings } = Astro.props;
+const { data } = lesson.entry;
+const isSpanish = lesson.lang === "es";
+const courseTitle = isSpanish ? course.titleEs : course.title;
+const backPath = unitPath(unit);
+// A lesson exists in one language only, so the switcher goes to the course page
+// in the other language rather than dropping the reader on the homepage.
+const otherLanguageCoursePath = isSpanish
+  ? `/teaching/${course.slug}/`
+  : `/es/docencia/${course.slug}/`;
+
+const t = isSpanish
+  ? {
+      contents: "Contenido",
+      previous: "Anterior",
+      next: "Siguiente",
+      nav: "Sesiones",
+      outcomes: "Ya deberías ser capaz de"
+    }
+  : {
+      contents: "Contents",
+      previous: "Previous",
+      next: "Next",
+      nav: "Classes",
+      outcomes: "You should now be able to"
+    };
+
+/**
+ * What the unit leaves you able to do, listed on the page that closes it.
+ *
+ * They used to open the unit, where eleven sentences sat between the reader and
+ * the list of classes. They belong here: this is the page read at the end, and
+ * against a recap they work as a self-check rather than as a preamble.
+ */
+const outcomes = data.role === "recap" ? unit.entry.data.outcomes : [];
+
+const index = siblings.findIndex((candidate) => candidate.slug === lesson.slug);
+const previous = index > 0 ? siblings[index - 1] : undefined;
+const next =
+  index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
+
+/**
+ * The eyebrow says where in the unit the reader is: "Sesión 7 · Semana 3". The
+ * number is here because the title above does not carry it, and the week is
+ * trimmed to its label — its own title would repeat half the page. The unit is
+ * not named again, the back link right above already does that.
+ */
+const eyebrow =
+  data.role === "recap"
+    ? (unit.entry.data.label ?? unit.entry.data.title)
+    : [lessonLabel(lesson), data.group?.split(" · ")[0]].filter(Boolean).join(" · ");
+
+// Only the section headings. The body's headings were promoted a level when
+// the class became a page, so its sections are `h2`; a rail listing their
+// subsections too would be longer than the class it summarises.
+const outline = headings.filter((heading) => heading.depth === 2);
+
+const jsonLd = {
+  "@type": "LearningResource",
+  "@id": `${site.url}${Astro.url.pathname}#lesson`,
+  url: `${site.url}${Astro.url.pathname}`,
+  name: data.title,
+  inLanguage: lesson.lang,
+  learningResourceType: isSpanish ? "Actividad de aula" : "Classroom activity",
+  isPartOf: { "@id": `${site.url}${backPath}#unit` },
+  author: { "@id": `${site.url}/#person` },
+  ...(data.number !== undefined ? { position: data.number } : {}),
+  ...(data.date ? { datePublished: data.date } : {})
+};
+---
+
+<BaseLayout
+  lang={lesson.lang}
+  title={`${data.title} · ${courseTitle}`}
+  description={`${lessonLabel(lesson)} · ${unit.entry.data.title}. ${unit.entry.data.summary}`.slice(0, 300)}
+  jsonLd={jsonLd}
+  languagePath={otherLanguageCoursePath}
+>
+  <MaterialHero
+    backHref={backPath}
+    backLabel={unit.entry.data.title}
+    eyebrow={eyebrow}
+    title={data.title}
+  />
+
+  <article class="lesson-body">
+    <div class="container lesson-grid">
+      {outline.length > 2 && (
+        <nav class="lesson-toc" aria-label={t.contents}>
+          <p class="toc-title">{t.contents}</p>
+          <ol>
+            {outline.map((heading) => (
+              <li>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
+      <div class="session-content">
+        <slot />
+
+        {outcomes.length > 0 && (
+          <section class="lesson-outcomes">
+            <h2>{t.outcomes}</h2>
+            <ul>
+              {outcomes.map((item) => <li>{item}</li>)}
+            </ul>
+          </section>
+        )}
+      </div>
+    </div>
+  </article>
+
+  <PrevNextNav
+    previous={previous && {
+      href: lessonPath(previous),
+      label: t.previous,
+      title: previous.entry.data.title
+    }}
+    next={next && {
+      href: lessonPath(next),
+      label: t.next,
+      title: next.entry.data.title
+    }}
+    backHref={backPath}
+    backLabel={unit.entry.data.title}
+    navLabel={t.nav}
+  />
+  <!-- Progressive enhancement: copy buttons on code blocks, and keeping an
+       opened panel in view. The page is complete without it. -->
+  <script src="/session-ui.js" defer is:inline></script>
+</BaseLayout>
+
+<style>
+  .lesson-body {
+    display: block;
+    padding: 60px 0 80px;
+  }
+
+  /* A checklist, not prose: the marks carry the "can I do this?" reading. */
+  .lesson-outcomes {
+    margin-top: 56px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .lesson-outcomes ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lesson-outcomes li {
+    position: relative;
+    padding: 11px 0 11px 34px;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .lesson-outcomes li::before {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    border: 1px solid var(--line-strong);
+    content: "";
+  }
+</style>

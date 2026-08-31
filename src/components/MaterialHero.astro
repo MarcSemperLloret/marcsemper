@@ -1,0 +1,73 @@
+---
+/**
+ * The dark header that opens a unit and a lesson.
+ *
+ * Both pages start the same way — where you came from, what this is, what it
+ * is for — and the two layouts share it rather than each keeping its own copy
+ * of the same forty lines of CSS.
+ */
+interface Props {
+  backHref: string;
+  backLabel: string;
+  eyebrow?: string;
+  title: string;
+  summary?: string;
+}
+
+const { backHref, backLabel, eyebrow, title, summary } = Astro.props;
+---
+
+<header class="material-hero">
+  <div class="container">
+    <a class="back-link" href={backHref}>← {backLabel}</a>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {summary && <p class="hero-summary">{summary}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .material-hero {
+    padding: 70px 0 60px;
+    color: var(--white);
+    background:
+      radial-gradient(circle at 83% 35%, rgba(235, 93, 68, 0.4), transparent 19rem),
+      var(--ink);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 40px;
+    color: rgba(255, 255, 255, 0.62);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 750;
+  }
+
+  .back-link:hover {
+    color: var(--white);
+  }
+
+  .material-hero .eyebrow {
+    color: var(--gold);
+  }
+
+  .material-hero h1 {
+    max-width: 900px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5.5vw, 4.8rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 1.02;
+    overflow-wrap: break-word;
+  }
+
+  .hero-summary {
+    max-width: 680px;
+    margin: 24px 0 0;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 1.04rem;
+  }
+</style>
