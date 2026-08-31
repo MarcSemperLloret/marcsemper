@@ -46,18 +46,31 @@ Y aprender HTML no consiste en memorizar cien etiquetas: la lista está publicad
 
 ### Cómo es cada sesión
 
-Cada sesión dura **una hora** y tiene siempre la misma forma:
+Cada sesión dura **una hora** y sigue una estructura habitual, adaptable al contenido. Un concepto sencillo deja más tiempo para practicar; semántica, formularios o depuración pueden necesitar una demostración más larga.
 
 <figure class="diagram">
   <figcaption>El ritmo de cada sesión</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>Aprende · 15 min</li>
-    <li>Haz · 30 min</li>
-    <li>Comprueba · 15 min</li>
+    <li>Recupera · 5 min</li>
+    <li>Aprende y observa · 10–20 min</li>
+    <li>Practica · 30–40 min</li>
+    <li>Cierra · 5 min</li>
   </ol>
 </figure>
 
-Tres sesiones por semana, seis semanas, dieciocho horas. Cada bloque de teoría termina con un **«Ahora tú»**, y cada dos o tres sesiones hay una tarea mayor que hace avanzar el mismo proyecto.
+Tres sesiones por semana, seis semanas, dieciocho horas. Cada bloque de teoría termina con un **«Ahora tú»**, y cada dos o tres sesiones hay una tarea mayor que hace avanzar el mismo proyecto. Aproximadamente dos tercios de la práctica ocurren sobre ese proyecto y un tercio sobre código ajeno, para demostrar que la decisión se puede transferir a un contexto nuevo.
+
+Cuando aparece un concepto nuevo, la progresión habitual es esta:
+
+<figure class="diagram">
+  <figcaption>De observar a resolver sin ayuda</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Ejemplo resuelto</li>
+    <li>Ejemplo incompleto</li>
+    <li>Problema parecido</li>
+    <li>Problema nuevo</li>
+  </ol>
+</figure>
 
 ---
 
@@ -97,9 +110,12 @@ Los ejemplos de estos apuntes usan siempre la misma empresa ficticia —una tien
 
 <div class="rule">
   <p class="rule-label">Condición 2 · la IA se usa para entender, no para entregar</p>
-  <p>Puedes usar IA para preguntar qué significa un error, comparar dos alternativas, revisar accesibilidad, explicarte una etiqueta, generar textos ficticios de relleno o ayudarte a localizar un problema.</p>
-  <p>No para pedir «hazme la web de la práctica». La razón es sencilla: si una IA escribe <code>&lt;article&gt;</code> y tú no sabes decir por qué no es un <code>&lt;section&gt;</code>, no has aprendido HTML, y en la defensa se nota en treinta segundos.</p>
-  <p>Durante las actividades se te pedirán modificaciones pequeñas sobre tu propio código —añade un producto, convierte esto en tabla, corrige esta jerarquía, explica por qué esta imagen lleva <code>alt=""</code>—. No hace falta que lo memorices todo. Sí que sepas <strong>qué estás haciendo y dónde buscar lo que no recuerdas</strong>.</p>
+  <ol>
+    <li><strong>Antes de preguntar:</strong> escribe qué crees que ocurre y qué has comprobado.</li>
+    <li><strong>Pregunta:</strong> pide una explicación o pistas, no que rehaga la actividad. Ejemplo: «Creo que esta jerarquía falla porque salto de <code>h1</code> a <code>h3</code>. Explícame qué debería revisar sin darme el documento completo».</li>
+    <li><strong>Después:</strong> cierra la respuesta y realiza una modificación diferente sin volver a preguntar.</li>
+  </ol>
+  <p>Si una IA escribe <code>&lt;article&gt;</code> y tú no sabes justificar por qué no es un <code>&lt;section&gt;</code>, todavía no has aprendido HTML. La prueba será siempre hacer un cambio pequeño y explicarlo.</p>
 </div>
 
 ---
@@ -111,7 +127,7 @@ Los ejemplos de estos apuntes usan siempre la misma empresa ficticia —una tien
 | **Semana 1** | El editor y el documento HTML | Entorno, reparación de HTML roto y primera página propia | 3 h |
 | **Semana 2** | Texto, listas, enlaces y navegación | Interpretación de información, sitio multipágina y laberinto de rutas | 3 h |
 | **Semana 3** | Imágenes y semántica estructural | Criterio de `alt`, refactorización de *div soup* y auditoría con DevTools | 3 h |
-| **Semana 4** | Tablas para datos tabulares | Tabla comparativa accesible, tabla compleja y matriz de idoneidad | 3 h |
+| **Semana 4** | Tablas e integración | Tablas accesibles, celdas combinadas y marcado completo de una página desconocida | 3 h |
 | **Semana 5** | Formularios accesibles | Formulario comercial progresivo y auditoría de uno defectuoso | 3 h |
 | **Semana 6** | Depuración, validación y coevaluación | HTML forense, cierre del proyecto y revisión por pares | 3 h |
 | **Total** | | **Sitio multipágina validado y revisado** | **18 h** |
@@ -141,6 +157,15 @@ No son dieciocho horas explicando etiquetas.
     <li><strong>1. Aprende:</strong> Qué hace un editor de código, por qué se trabaja con carpetas de proyecto y qué es un linter.</li>
     <li><strong>2. Haz:</strong> Monta el entorno y reconstruye un documento a partir de su resultado visible.</li>
     <li><strong>3. Comprueba:</strong> El documento se ve como se pedía y el panel de problemas está limpio.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Escribe qué crees que hacen HTML, CSS y el navegador. No importa si todavía dudas.</li>
+    <li>¿Qué diferencia imaginas entre abrir un archivo suelto y abrir una carpeta de proyecto?</li>
+    <li>Observa <code>&lt;h1&gt;Hola&lt;/h1&gt;</code>: señala qué partes crees que son instrucciones y cuál es el contenido.</li>
   </ol>
 </div>
 
@@ -211,7 +236,39 @@ Permite ejecutar prácticamente cualquier acción de VS Code escribiendo su nomb
 
 ### Tarea 1 · Reconstruye este documento
 
-Esto es lo que debe verse en el navegador. No te doy el código: te doy el resultado.
+Todavía no tienes que inventar una solución desde cero. Avanza de una versión resuelta a otra con menos ayuda.
+
+#### Paso 1 · Observa uno resuelto
+
+```html
+<h1>Aula web</h1>
+<h2>Primer curso</h2>
+<p>Hoy abrimos nuestro <strong>primer proyecto</strong>.</p>
+```
+
+El primer encabezado nombra la página, el segundo introduce un nivel inferior, el párrafo agrupa una idea y `strong` señala importancia. Copia el fragmento, cambia cada texto y comprueba qué permanece igual.
+
+#### Paso 2 · Completa cuatro huecos
+
+```html
+<__>Mi portfolio</__>
+<h2>Sobre mí</h2>
+<__>Estoy aprendiendo <strong>HTML</strong>.</__>
+```
+
+#### Paso 3 · Repara uno parecido
+
+```html
+<h1>Proyecto de clase<h1>
+<h2>Objetivo</h3>
+<p>Construir una web completa.</p>
+```
+
+Explica cada reparación antes de hacerla.
+
+#### Paso 4 · Ahora sí, reconstruye
+
+Esto es lo que debe verse en el navegador. Ahora no recibes el código, solo el resultado:
 
 ```text
 Marc Semper
@@ -225,6 +282,12 @@ documentos utilizando HTML5 estándar.
 Crea `index.html` y escribe el HTML mínimo que represente esa información: un encabezado principal, un encabezado secundario, un párrafo, y énfasis donde tenga sentido.
 
 La palabra importante es **mínimo**. Si has escrito una etiqueta que no aporta significado, sobra.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Completa, repara y reconstruye el documento sin errores del linter.</span></div>
+  <div><strong>Si lo tienes</strong><span>Cambia todo el contenido manteniendo la misma jerarquía y explica qué no cambia.</span></div>
+  <div><strong>Reto</strong><span>Recibe un resultado distinto y decide cuántos encabezados y párrafos necesita sin pistas.</span></div>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
@@ -265,6 +328,15 @@ La palabra importante es **mínimo**. Si has escrito una etiqueta que no aporta 
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Para qué abrimos la carpeta completa del proyecto en VS Code?</li>
+    <li>¿Qué información ofrece el panel <em>Problemas</em>?</li>
+    <li>Corrige mentalmente <code>&lt;h1&gt;Título&lt;h1&gt;</code> y explica qué faltaba.</li>
+  </ol>
+</div>
+
 ### Escríbela entera, a mano
 
 Todavía no vamos a usar atajos. Escribe esto letra a letra:
@@ -297,7 +369,7 @@ Todavía no vamos a usar atajos. Escribe esto letra a letra:
   <div class="lesson-demo__stage">
     <div class="lesson-browser" aria-label="Vista de la primera página en un navegador">
       <div class="lesson-browser__page">
-        <h1>Mi primera página web</h1>
+        <p class="demo-title">Mi primera página web</p>
         <p>Esta página está construida utilizando HTML.</p>
       </div>
     </div>
@@ -472,6 +544,15 @@ No basta con decir «falta una etiqueta»: interesa qué consecuencia tiene, por
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿En qué se diferencian un elemento, una etiqueta y un atributo?</li>
+    <li>¿Por qué ver una página «bien» no demuestra que su HTML sea correcto?</li>
+    <li>Repara <code>&lt;p class="aviso"&gt;Importante&lt;/strong&gt;</code>.</li>
+  </ol>
+</div>
+
 ### Pieza por pieza
 
 #### `<!doctype html>`
@@ -624,6 +705,16 @@ Este archivo no es un ejercicio desechable: es la primera página del sitio que 
   <p>3 · Prácticamente ninguna, salvo el cambio de codificación. Ese es justo el punto de la práctica.</p>
 </details>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 1 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes. No se califica: sirve para decidir qué necesitas recuperar.</p>
+  <ol>
+    <li>Escribe de memoria el esqueleto mínimo de un documento HTML.</li>
+    <li>Explica la diferencia entre elemento, etiqueta y atributo con un ejemplo.</li>
+    <li>Repara: <code>&lt;p lang="es"&gt;Hola &lt;strong&gt;mundo&lt;/p&gt;&lt;/strong&gt;</code>.</li>
+  </ol>
+</div>
+
 ---
 
 ## Semana 2 · Texto, listas, enlaces y navegación
@@ -638,6 +729,15 @@ Este archivo no es un ejercicio desechable: es la primera página del sitio que 
     <li><strong>1. Aprende:</strong> Que los encabezados son el índice del documento, qué elementos marcan significado en el texto y cómo se escriben los caracteres especiales.</li>
     <li><strong>2. Haz:</strong> Resuelve el reto de anidación y aplica la jerarquía correcta a tu portada.</li>
     <li><strong>3. Comprueba:</strong> Ningún encabezado se salta un nivel.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué contenido pertenece a <code>head</code> y cuál a <code>body</code>?</li>
+    <li>¿Para qué sirven <code>lang</code> y <code>meta charset</code>?</li>
+    <li>Predice qué problema puede causar una página sin <code>meta name="viewport"</code> en un móvil.</li>
   </ol>
 </div>
 
@@ -822,6 +922,15 @@ Esto es imprescindible cuando quieres **mostrar código HTML dentro de una pági
     <li><strong>1. Aprende:</strong> Los tres tipos de lista, qué relación expresa cada uno y cómo se anidan correctamente.</li>
     <li><strong>2. Haz:</strong> Interpreta información en bruto y decide con qué se marca cada parte.</li>
     <li><strong>3. Comprueba:</strong> Resuelve el reto de la lista anidada.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué no se elige un <code>h3</code> por su tamaño visual?</li>
+    <li>Escribe una jerarquía válida con un título principal y dos apartados.</li>
+    <li>Corrige <code>&lt;p&gt;Texto &lt;strong&gt;importante&lt;/p&gt;&lt;/strong&gt;</code>.</li>
   </ol>
 </div>
 
@@ -1037,6 +1146,15 @@ Todavía no la enlazaremos con la portada: eso es la sesión que viene.
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Cuándo usarías <code>ul</code>, <code>ol</code> y <code>dl</code>?</li>
+    <li>¿Qué regla debe cumplir un <code>li</code> que contiene otra lista?</li>
+    <li>Convierte «HTML, CSS y JavaScript» en una lista no ordenada mínima.</li>
+  </ol>
+</div>
+
 ### El elemento que hace que exista la Web
 
 ```html
@@ -1169,6 +1287,12 @@ Requisitos:
 
 Recorre después el ciclo completo: Inicio → Productos → Acerca de → Contacto → Inicio. Si algún enlace falla, no lo arregles todavía: anótalo, porque es exactamente el problema que ataca la tarea siguiente.
 
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Cuatro páginas enlazadas, títulos distintos y navegación coherente.</span></div>
+  <div><strong>Si lo tienes</strong><span>Mueve una página a una carpeta y corrige solo las rutas afectadas.</span></div>
+  <div><strong>Reto</strong><span>Recibe un árbol ajeno y resuelve sus rutas sin copiar las de tu proyecto.</span></div>
+</div>
+
 <details class="aside aside--help">
   <summary>Estoy atascado · el título de cada página</summary>
   <p>El <code>&lt;title&gt;</code> se lee fuera de contexto: en una pestaña estrecha, en un favorito, en un resultado de búsqueda. «Contacto» no dice de qué web es. Escribe primero lo específico y después el sitio, porque las pestañas se recortan por el final: <code>Contacto | PixelStore</code>.</p>
@@ -1253,6 +1377,21 @@ No intentes verlo de golpe. Se resuelve en tres pasos: dónde estoy, dónde voy,
   <p>3 · Porque describe una posición dentro de tu disco duro. En cualquier otro equipo esa ruta no existe.</p>
 </details>
 
+<div class="rule">
+  <p class="rule-label">Demostración del profesor · el mismo HTML, tres apariencias</p>
+  <p>Durante dos minutos observa esta misma página con tres hojas CSS completamente distintas. No necesitas conocer aún las reglas: identifica qué contenido y qué estructura permanecen idénticos.</p>
+</div>
+
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 2 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Escribe una jerarquía con un <code>h1</code>, dos apartados y un subapartado.</li>
+    <li>Decide si tres instrucciones ordenadas necesitan <code>ol</code>, <code>ul</code> o tres párrafos y justifica.</li>
+    <li>Desde <code>paginas/acerca.html</code>, enlaza <code>index.html</code> y explica cómo resolviste la ruta.</li>
+  </ol>
+</div>
+
 ---
 
 ## Semana 3 · Imágenes y semántica estructural
@@ -1267,6 +1406,15 @@ No intentes verlo de golpe. Se resuelve en tres pasos: dónde estoy, dónde voy,
     <li><strong>1. Aprende:</strong> Que el <code>alt</code> correcto depende de la función de la imagen y no de lo que se ve en ella, y qué atributos mejoran el rendimiento.</li>
     <li><strong>2. Haz:</strong> Decide el texto alternativo de cinco imágenes con funciones distintas y añade imágenes a tu proyecto.</li>
     <li><strong>3. Comprueba:</strong> Desactiva las imágenes y comprueba si la página sigue entendiéndose.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Desde qué archivo se resuelve una ruta relativa?</li>
+    <li>¿Qué convierte un grupo de enlaces en una navegación?</li>
+    <li>Desde <code>paginas/productos.html</code>, escribe la ruta hacia <code>index.html</code>.</li>
   </ol>
 </div>
 
@@ -1461,6 +1609,15 @@ Crea la carpeta `img/` y añade al menos tres imágenes a tu sitio: una informat
     <li><strong>1. Aprende:</strong> Qué declara cada elemento estructural, cuándo un <code>div</code> sigue siendo correcto y qué separa <code>section</code> de <code>article</code>.</li>
     <li><strong>2. Haz:</strong> Refactoriza un documento hecho solo de <code>div</code> hasta convertirlo en HTML semántico.</li>
     <li><strong>3. Comprueba:</strong> Resuelve los dos retos discutiéndolos con tu compañero.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Cuándo debe ser <code>alt=""</code> y cuándo debe describir información?</li>
+    <li>¿Qué aporta <code>figure</code> cuando una imagen tiene un pie propio?</li>
+    <li>Detecta el problema: <code>&lt;img src="grafico.png" alt="imagen"&gt;</code>.</li>
   </ol>
 </div>
 
@@ -1688,7 +1845,11 @@ Empiezo por la barra superior:
 
 Cuatro `div` han desaparecido y el documento dice cuatro cosas que antes no decía.
 
-<p class="stage stage--solo">Paso 2 · Ahora tú</p>
+<p class="stage">Paso 2 · Completa una versión guiada</p>
+
+Antes de abordar el documento entero, sustituye en una copia únicamente <code>content-box</code>, <code>bloque-central</code> y <code>titulo-seccion</code>. Elige entre <code>main</code>, <code>section</code> y un encabezado, y escribe al lado de cada cambio qué significado has añadido.
+
+<p class="stage stage--solo">Paso 3 · Ahora tú</p>
 
 Reescribe el resto. Al terminar, tu versión debe cumplir:
 
@@ -1698,6 +1859,12 @@ Reescribe el resto. Al terminar, tu versión debe cumplir:
 4. La tarjeta está marcada como `article`, y sabes justificar por qué no es una `section`.
 5. El aviso lateral es un `aside` y el pie un `footer`.
 6. No has perdido ni una palabra del contenido original.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Refactoriza el documento completo y justifica cada región.</span></div>
+  <div><strong>Si lo tienes</strong><span>Añade una segunda tarjeta sin duplicar regiones que deberían compartirse.</span></div>
+  <div><strong>Reto</strong><span>Refactoriza otro fragmento ajeno sin nombres de clase que te den pistas.</span></div>
+</div>
 
 ### Reto 3 · Botón contra falso botón (10 min)
 
@@ -1766,6 +1933,15 @@ Aplica lo mismo a tus cuatro páginas: `header`, `nav`, `main`, `footer` en toda
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué diferencia práctica hay entre <code>section</code> y <code>article</code>?</li>
+    <li>¿Cuándo sigue siendo correcto usar un <code>div</code>?</li>
+    <li>Sustituye <code>&lt;div onclick="..."&gt;Guardar&lt;/div&gt;</code> por el elemento nativo adecuado.</li>
+  </ol>
+</div>
+
 ### Ver la estructura, no el diseño
 
 Hasta ahora has escrito HTML. Hoy vas a leerlo, que es lo que harás la mayor parte de tu vida profesional: casi siempre trabajarás sobre código que escribió otro.
@@ -1821,6 +1997,16 @@ Elige una web de noticias o una tienda conocida y respóndela con DevTools delan
   <p>En vez de bucear por el árbol, usa el buscador del panel Elements (<code>Ctrl + F</code> dentro de DevTools) y busca directamente <code>main</code>, <code>nav</code>, <code>header</code> o <code>footer</code>. Te dirá cuántas coincidencias hay, que es justo el dato de las dos primeras preguntas.</p>
 </details>
 
+### Microrevisión · diez minutos, sin nota
+
+Intercambia únicamente tu `index.html` con un compañero. No lo corrijas por él: encuentra **un problema semántico concreto** y descríbelo con este formato:
+
+1. **Qué veo:** señala el elemento y el contenido afectado.
+2. **Por qué importa:** explica qué significado o navegación pierde.
+3. **Qué probaría:** propone una alternativa sin reescribir el documento.
+
+El autor decide si acepta la observación. También puede rechazarla, pero debe justificar su decisión con el significado del contenido.
+
 ### Ahora tú · La misma auditoría, sobre lo tuyo
 
 Pásale a tus cuatro páginas exactamente la misma auditoría que acabas de hacerle a una web profesional, y corrige lo que encuentres.
@@ -1853,9 +2039,19 @@ No es casualidad que la auditoría vaya antes que el proyecto final: es más fá
   <p>3 · <code>&lt;details&gt;</code> con <code>&lt;summary&gt;</code> da un desplegable sin código. Vale también <code>&lt;progress&gt;</code>, <code>&lt;meter&gt;</code> o la validación nativa de formularios que veremos la semana que viene.</p>
 </details>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 3 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Reestructura <code>&lt;div class="menu"&gt;...&lt;/div&gt; &lt;div class="noticia"&gt;...&lt;/div&gt;</code> con elementos semánticos.</li>
+    <li>Justifica dos de tus decisiones: no basta con nombrar las etiquetas.</li>
+    <li>Escribe el <code>alt</code> de una imagen decorativa y el de un gráfico que aporta un dato.</li>
+  </ol>
+</div>
+
 ---
 
-## Semana 4 · Tablas para datos tabulares
+## Semana 4 · Tablas e integración
 
 ---
 
@@ -1867,6 +2063,15 @@ No es casualidad que la auditoría vaya antes que el proyecto final: es más fá
     <li><strong>1. Aprende:</strong> Qué hace cada parte de una tabla y qué problema resuelve exactamente el atributo <code>scope</code>.</li>
     <li><strong>2. Haz:</strong> Convierte una comparativa en texto plano en una tabla accesible.</li>
     <li><strong>3. Comprueba:</strong> El validador no encuentra celdas huérfanas ni errores de anidación.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Enumera cuatro regiones semánticas que esperarías encontrar en una página completa.</li>
+    <li>¿Qué hace que una auditoría semántica sea distinta de juzgar el diseño?</li>
+    <li>Decide si una ficha de producto independiente sería <code>section</code>, <code>article</code> o <code>div</code>, y justifica.</li>
   </ol>
 </div>
 
@@ -2033,6 +2238,15 @@ Escribe el HTML con `caption`, `thead`, `tbody`, `th scope="col"` en la cabecera
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué relación expresan <code>thead</code>, <code>tbody</code> y <code>caption</code>?</li>
+    <li>¿Para qué sirve <code>scope="col"</code>?</li>
+    <li>Detecta el error conceptual: usar una tabla para colocar una imagen junto a un texto.</li>
+  </ol>
+</div>
+
 ### Una tabla es una cuadrícula, aunque no lo parezca
 
 `colspan` y `rowspan` no «juntan» celdas: hacen que **una celda ocupe el sitio de varias**. La cuadrícula sigue existiendo debajo, con el mismo número de columnas en todas las filas.
@@ -2091,84 +2305,126 @@ Construye una tabla con el horario semanal de tu grupo: de lunes a viernes, seis
 
 ---
 
-## Sesión 12 · ¿Tabla o no tabla?
+## Sesión 12 · Reto de integración · del contenido al HTML
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué distingue unos datos tabulares de algo que solo se parece a una tabla.</li>
-    <li><strong>2. Haz:</strong> Clasifica cinco casos y añade una tabla real a tu proyecto.</li>
-    <li><strong>3. Comprueba:</strong> Tu tabla aporta algo que una lista no diría igual de bien.</li>
+    <li><strong>1. Recupera:</strong> Decide qué estructura expresa cada relación sin recibir una lista de etiquetas.</li>
+    <li><strong>2. Haz:</strong> Convierte una especificación desconocida en una página HTML completa.</li>
+    <li><strong>3. Comprueba:</strong> Justifica las decisiones y modifica una de ellas ante un requisito nuevo.</li>
   </ol>
 </div>
 
-### La pregunta que decide
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Cómo compruebas que una fila con <code>colspan</code> no rompe la cuadrícula?</li>
+    <li>¿Por qué una tabla muy combinada puede ser difícil de entender?</li>
+    <li>Decide si un horario, una navegación y una ficha de contacto necesitan tabla, lista o estructura semántica.</li>
+  </ol>
+</div>
 
-> **¿Cada dato está en el cruce de dos cosas? ¿Necesito saber su fila **y** su columna para entender qué significa?**
+### La decisión viene antes que la etiqueta
 
-«899 €» no significa nada por sí solo: hace falta saber que es del Nova 14 y que es el precio. Dos coordenadas, dos encabezados. Eso es una tabla.
+En las dos sesiones anteriores aprendiste a construir tablas. Hoy la tabla vuelve a ser solo una opción entre muchas. Antes de escribir cada bloque, formula estas preguntas:
 
-La descripción de una camiseta, en cambio, no está en el cruce de nada: pertenece a esa camiseta y punto. Que las camisetas se vean colocadas en una rejilla de tres columnas es una decisión visual, no una relación entre datos, y las decisiones visuales se resuelven con CSS.
+1. ¿Este contenido se entiende por sí solo o forma parte de otro?
+2. ¿Es navegación, una acción o información?
+3. ¿Existe orden, jerarquía o cruce de fila y columna?
+4. ¿La decisión expresa significado o solo intenta colocar algo visualmente?
 
-| Si es... | Se marca como |
-| -------- | ------------- |
-| Datos en el cruce de fila y columna | `<table>` |
-| Un conjunto de elementos sin orden | `<ul>` |
-| Una secuencia donde el orden importa | `<ol>` |
-| Contenidos que se entienden por sí solos | `<section>` con varios `<article>` |
-| Enlaces de navegación | `<nav>` con `<ul>` |
-| Colocación visual en columnas | Nada de HTML: es CSS |
+### Paso 1 · Un fragmento resuelto
 
-### Tarea 11 · Clasifica cinco casos
+La especificación dice: «Una introducción explica el evento y después aparecen tres ventajas sin orden». La decisión es un apartado con encabezado, párrafo y lista no ordenada. No se elige por cómo quedará colocado, sino por la relación entre los datos.
 
-Para cada uno, indica con qué se marca y **justifícalo con la pregunta de las dos coordenadas**:
+### Paso 2 · Completa el marcado
 
-1. Un catálogo de 12 camisetas, cada una con foto, título, descripción y botón de comprar.
-2. La clasificación de la liga: posición, equipo, puntos, partidos jugados y goles.
-3. El menú de navegación superior de la web, con cinco enlaces.
-4. Una comparativa de tres tarifas de móvil: gigas, minutos, permanencia y precio.
-5. Colocar una foto a la izquierda y un texto a la derecha.
+Recibes este contenido: «Cómo participar» contiene tres pasos que deben seguirse en orden. Completa los cuatro huecos sin añadir contenedores innecesarios:
+
+```html
+<_____>
+  <h2>Cómo participar</h2>
+  <_____>
+    <li>Inscríbete</li>
+    <li>Confirma tu correo</li>
+    <li>Presenta tu entrada</li>
+  </_____>
+</_____>
+```
+
+Compara tu solución con un compañero y justificad el elemento exterior y el tipo de lista antes de verla resuelta.
 
 <details class="aside aside--extra">
-  <summary>Ver soluciones de criterio</summary>
-  <p>1 · <code>&lt;section&gt;</code> con doce <code>&lt;article&gt;</code>. Cada camiseta se entiende sola; no hay cruce de coordenadas.</p>
-  <p>2 · <code>&lt;table&gt;</code>. «34» necesita saber que es del Betis y que es la columna de puntos.</p>
-  <p>3 · <code>&lt;nav&gt;</code> con <code>&lt;ul&gt;</code>. Es un conjunto de enlaces, no una rejilla de datos.</p>
-  <p>4 · <code>&lt;table&gt;</code> con <code>caption</code> y <code>scope</code>. Cada valor cruza tarifa y característica.</p>
-  <p>5 · Nada de HTML. Es maquetación, y se hace con CSS. Si lo resuelves con una tabla, estás afirmando que la foto y el texto son datos relacionados en una rejilla, que es falso.</p>
+  <summary>Ver una solución razonada</summary>
+  <p><code>&lt;section&gt;</code> agrupa un apartado temático con encabezado propio y <code>&lt;ol&gt;</code> expresa que los pasos tienen un orden. Las etiquetas de cierre corresponden a esos dos elementos.</p>
 </details>
 
-### Ahora tú · La comparativa de tu proyecto
+### Tarea 11 · Marca una página que nunca has visto
 
-Añade a `productos.html` una tabla comparativa real: al menos tres elementos y cuatro características, con `caption` y `scope` en los dos sentidos.
+Una asociación local necesita una página para anunciar una jornada de puertas abiertas. Solo recibes esta especificación, no las etiquetas:
 
-No construyas una tabla solo para cumplir el requisito. Busca un conjunto de datos donde **una tabla sea realmente la estructura adecuada**. Y si al escribirla descubres que no hay cruce de coordenadas, cámbiala por lo que corresponda y explica el cambio en un comentario: detectar eso también es haber aprendido la sesión.
+* nombre de la jornada y una frase introductoria;
+* enlaces a inicio, programa, ponentes y contacto;
+* tres actividades, cada una con título, imagen, descripción y enlace para ampliar información;
+* una lista ordenada con los pasos de inscripción;
+* una pequeña comparativa de tres talleres con hora, duración y plazas;
+* una acción para enviar la inscripción y un enlace para descargar las normas;
+* información complementaria sobre accesibilidad del recinto;
+* autoría y contacto de la asociación.
+
+Antes de programar, dibuja el árbol del documento y anota al lado de cada región **qué relación expresa**. Después escribe el HTML completo. La página debe incluir navegación, una jerarquía de encabezados, listas, imágenes con alternativa adecuada, una tabla pequeña, acciones y regiones semánticas. Nadie te dirá qué etiqueta corresponde a cada punto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Documento completo, válido y con cada relación principal marcada correctamente.</span></div>
+  <div><strong>Si lo tienes</strong><span>Añade una cuarta actividad que se entienda por sí sola sin reestructurar las demás.</span></div>
+  <div><strong>Reto</strong><span>Recibes una versión móvil dibujada en una columna: explica por qué no deberías cambiar el HTML para reproducirla.</span></div>
+</div>
+
+### Transfiérelo a tu proyecto
+
+Revisa ahora `productos.html`. Añade una comparativa real solo si sus valores necesitan fila y columna para entenderse. Si no existe ese cruce, usa la estructura adecuada y deja un comentario justificando por qué no has creado una tabla.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 12 y de la semana 4</p>
   <ul class="checklist">
-    <li>Aplicas la pregunta de las dos coordenadas antes de escribir <code>&lt;table&gt;</code>.</li>
-    <li>Sabes por qué la maquetación en columnas no es asunto de HTML.</li>
-    <li>Tu <code>productos.html</code> tiene una tabla comparativa accesible.</li>
-    <li>El catálogo está marcado con <code>article</code>, no con filas de tabla.</li>
+    <li>Has convertido una especificación nueva en un árbol antes de escribir etiquetas.</li>
+    <li>Puedes justificar navegación, jerarquía, listas, imágenes, tabla, acciones y regiones.</li>
+    <li>Has aplicado un cambio nuevo sin rehacer el documento.</li>
+    <li>Tu proyecto contiene una tabla únicamente si los datos realmente tienen dos coordenadas.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>Enuncia la prueba que decide si algo es una tabla.</li>
-    <li>¿Por qué un catálogo de productos no es una tabla?</li>
-    <li>¿Con qué se resuelve colocar dos bloques en columnas?</li>
+    <li>¿Qué pregunta haces antes de elegir una etiqueta?</li>
+    <li>¿Qué diferencia una acción de un enlace?</li>
+    <li>¿Qué parte del reto te obligó a recuperar un concepto anterior?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Si cada dato necesita su fila y su columna para significar algo, es una tabla.</p>
-  <p>2 · Porque cada producto se entiende por sí solo: no hay cruce de coordenadas, solo elementos parecidos colocados juntos.</p>
-  <p>3 · Con CSS. HTML declara qué es cada cosa, no dónde se dibuja.</p>
+  <p>1 · Qué relación o significado expresa ese contenido; la etiqueta viene después.</p>
+  <p>2 · La acción provoca un cambio y se marca como botón; el enlace lleva a otro destino.</p>
+  <p>3 · La respuesta depende de tu proceso, pero debe nombrar un concepto y dónde lo aplicaste, no limitarse a «todo».</p>
 </details>
+
+<div class="rule">
+  <p class="rule-label">Demostración del profesor · la estructura no se maquilla</p>
+  <p>Compara tres diseños del documento integrado de esta semana. Comprueba que la navegación, las regiones y la tabla no cambian: solo cambia cómo se presentan.</p>
+</div>
+
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 4 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Dibuja el árbol semántico de una noticia con navegación, imagen, datos relacionados y una acción.</li>
+    <li>Escribe solo el bloque de datos usando una tabla accesible si corresponde.</li>
+    <li>Justifica dos decisiones y cambia una cuando el profesor modifica el requisito.</li>
+  </ol>
+</div>
 
 ---
 
@@ -2184,6 +2440,15 @@ No construyas una tabla solo para cumplir el requisito. Busca un conjunto de dat
     <li><strong>1. Aprende:</strong> Qué une un <code>label</code> con su campo, en qué se diferencian <code>id</code> y <code>name</code>, y por qué el botón importa.</li>
     <li><strong>2. Haz:</strong> Construye el formulario base de tu página de contacto.</li>
     <li><strong>3. Comprueba:</strong> Al hacer clic en el texto de cada etiqueta, el cursor entra en su campo.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué pregunta permite decidir si unos datos necesitan una tabla?</li>
+    <li>¿Qué elemento usarías para una acción y cuál para ir a otra página?</li>
+    <li>Marca semánticamente: título, navegación, noticia independiente y lista de características.</li>
   </ol>
 </div>
 
@@ -2301,6 +2566,15 @@ Cada campo con su `id` y su `name`, y cada `label` con su `for`.
     <li><strong>1. Aprende:</strong> Qué te da gratis elegir bien el <code>type</code> y qué validación trae el navegador de fábrica.</li>
     <li><strong>2. Haz:</strong> Añade tipos correctos, validación y un desplegable a tu formulario.</li>
     <li><strong>3. Comprueba:</strong> Intenta enviarlo vacío y con datos inválidos.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Cómo se conectan un <code>label</code> y su <code>input</code>?</li>
+    <li>¿En qué se diferencian <code>id</code> y <code>name</code>?</li>
+    <li>Corrige un campo cuyo <code>label for="correo"</code> apunta a <code>id="email"</code>.</li>
   </ol>
 </div>
 
@@ -2428,6 +2702,15 @@ Amplía tu formulario:
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué ventajas aporta <code>type="email"</code> frente a <code>type="text"</code>?</li>
+    <li>¿Cuándo usarías <code>textarea</code> y cuándo <code>select</code>?</li>
+    <li>Predice qué ocurre al enviar vacío un campo con <code>required</code>.</li>
+  </ol>
+</div>
+
 ### Botones de opción · cuando solo se puede elegir una
 
 ```html
@@ -2496,6 +2779,12 @@ Termina tu formulario con:
 7. Un grupo de casillas para selección múltiple.
 8. Una casilla obligatoria de aceptación de condiciones.
 9. Dos `fieldset` que separen los datos personales de los de la consulta.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Formulario completo, etiquetado y recorrible con teclado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Añade una opción nueva a cada grupo sin romper nombres ni asociaciones.</span></div>
+  <div><strong>Reto</strong><span>Audita un formulario desconocido y corrige solo los fallos que puedas justificar.</span></div>
+</div>
 
 <details class="aside aside--help">
   <summary>Estoy atascado · los radio no funcionan como espero</summary>
@@ -2583,6 +2872,16 @@ Antes de mirar código, una prueba que dura treinta segundos y sirve para cualqu
   <p>3 · Recorrer el formulario sin ratón, solo con <code>Tab</code>, flechas y <code>Enter</code>. Detecta elementos inalcanzables, foco invisible y falsos botones.</p>
 </details>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 5 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Escribe un campo de correo con <code>label</code>, <code>id</code>, <code>name</code> y validación nativa.</li>
+    <li>Explica qué hace que tres radios sean mutuamente excluyentes.</li>
+    <li>Detecta dos fallos: <code>&lt;label&gt;Edad&lt;/label&gt;&lt;input type="text" required&gt;</code>.</li>
+  </ol>
+</div>
+
 ---
 
 ## Semana 6 · Depuración, validación y coevaluación
@@ -2597,6 +2896,15 @@ Antes de mirar código, una prueba que dura treinta segundos y sirve para cualqu
     <li><strong>1. Aprende:</strong> Que casi toda la accesibilidad de una web sale de usar bien HTML, y por qué ARIA no es el punto de partida.</li>
     <li><strong>2. Haz:</strong> Recorre tu sitio entero sin ratón y anota dónde se rompe.</li>
     <li><strong>3. Comprueba:</strong> Puedes alcanzar todas las partes interactivas y sabes siempre dónde está el foco.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué comparten los botones de opción que pertenecen al mismo grupo?</li>
+    <li>¿Qué aportan <code>fieldset</code> y <code>legend</code>?</li>
+    <li>Detecta dos fallos en un formulario con campos sin <code>label</code> y varios radios con nombres distintos.</li>
   </ol>
 </div>
 
@@ -2723,6 +3031,15 @@ Corrige lo que encuentres. Casi todo se arregla cambiando un elemento por el que
     <li><strong>1. Aprende:</strong> Los niveles de comprobación de un documento, qué ve cada uno y qué no ve ninguno.</li>
     <li><strong>2. Haz:</strong> Localiza y repara los veinte fallos deliberados de un documento.</li>
     <li><strong>3. Comprueba:</strong> El validador del W3C devuelve cero errores.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué un botón nativo suele ser mejor que un <code>div</code> con ARIA?</li>
+    <li>¿Qué debe ocurrir al recorrer una página únicamente con <code>Tab</code>?</li>
+    <li>Ordena el diagnóstico: mirar el resultado, revisar Problemas y validar el documento.</li>
   </ol>
 </div>
 
@@ -2863,6 +3180,12 @@ Tu trabajo:
 
 La columna «quién lo detectó» es la importante: al terminar tendrás la prueba, escrita por ti, de que las herramientas encuentran menos de la mitad.
 
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Encuentra quince fallos y documenta herramienta, impacto y corrección.</span></div>
+  <div><strong>Si lo tienes</strong><span>Localiza los veinte y clasifícalos en sintaxis, semántica y accesibilidad.</span></div>
+  <div><strong>Reto</strong><span>Introduce tres fallos nuevos en una copia para que otro compañero los diagnostique.</span></div>
+</div>
+
 <details class="aside aside--help">
   <summary>Estoy atascado · llevo ocho y no encuentro más</summary>
   <p>Recorre el documento con una lista en la mano, en este orden, en lugar de buscar «a ver qué veo»:</p>
@@ -2918,6 +3241,15 @@ La columna «quién lo detectó» es la importante: al terminar tendrás la prue
     <li><strong>1. Aprende:</strong> Cómo se revisa el código de otra persona de forma útil.</li>
     <li><strong>2. Haz:</strong> Cierra tu proyecto con la lista de comprobación y audita el de un compañero.</li>
     <li><strong>3. Entrega:</strong> Entrega el proyecto, la matriz de coevaluación y defiende tus decisiones.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué diferencia hay entre HTML válido y HTML semánticamente correcto?</li>
+    <li>¿Qué herramienta usarías primero para un error de anidación y cuál para una decisión de significado?</li>
+    <li>Encuentra una mejora en este patrón: <code>&lt;div class="boton"&gt;Enviar&lt;/div&gt;</code>.</li>
   </ol>
 </div>
 
@@ -3069,6 +3401,21 @@ Durante la defensa se preguntará por **una decisión concreta** de tu proyecto.
   </ul>
 </div>
 
+<div class="rule">
+  <p class="rule-label">Demostración final · el HTML ya está preparado para CSS</p>
+  <p>Observa tu estructura final con tres estilos muy diferentes. Predice qué partes de HTML no deberían tocarse en la UD2 y señala cualquier elemento que todavía dependa de su apariencia.</p>
+</div>
+
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 6 · 10 minutos</p>
+  <p>Individual, sin IA y sin apuntes. Recibes una página breve que nunca has visto.</p>
+  <ol>
+    <li>Localiza un error de sintaxis, uno de semántica y uno de accesibilidad.</li>
+    <li>Corrige solo lo imprescindible y explica el orden de diagnóstico.</li>
+    <li>Realiza un cambio nuevo solicitado por el profesor sin consultar tu proyecto.</li>
+  </ol>
+</div>
+
 ---
 
 ## Lo que debes recordar
@@ -3187,3 +3534,4 @@ En la siguiente empezamos a responder la otra:
 Partiremos exactamente del sitio que has construido aquí, y trabajaremos selectores, cascada, especificidad, box model, tipografía, unidades, colores, Flexbox, Grid, diseño adaptable, media queries, variables, estados y transiciones.
 
 Y aquí se cobra el trabajo de estas seis semanas: sobre una estructura semántica, dar estilo es cuestión de escribir selectores. Sobre una sopa de `div`, es cuestión de adivinar cuál era cuál.
+

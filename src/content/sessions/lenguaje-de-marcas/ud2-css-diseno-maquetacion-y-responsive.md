@@ -123,9 +123,12 @@ mi-web/
 
 <div class="rule">
   <p class="rule-label">Condición 3 · la IA, para entender, no para entregar</p>
-  <p>En CSS la IA es especialmente útil: explica por qué una propiedad no hace nada, compara Flexbox con Grid, localiza una regla en conflicto, sugiere alternativas responsive.</p>
-  <p>El problema aparece al pedir «hazme responsive esta página» y recibir doscientas líneas que funcionan. Funcionar no es entender: no sabrás por qué aparece ese <em>breakpoint</em>, por qué hay un <code>position</code> ahí, ni qué pasará cuando cambie el contenido.</p>
-  <p>La prueba es siempre la misma: <strong>si no puedes hacer cambios pequeños sobre tu propia solución</strong> —convierte este Grid en dos columnas, cambia el eje de este Flexbox, quita este <code>!important</code> sin romper nada— todavía no controlas el código que has entregado.</p>
+  <ol>
+    <li><strong>Antes de preguntar:</strong> escribe qué crees que ocurre y qué has comprobado en DevTools.</li>
+    <li><strong>Pregunta:</strong> pide una explicación o pistas, no el CSS completo. Ejemplo: «Mi Grid tiene tres columnas pero desborda a 360 px. Creo que he usado anchos fijos. Explícame qué debería revisar sin darme la solución».</li>
+    <li><strong>Después:</strong> cierra la respuesta y realiza una modificación distinta sin volver a preguntar.</li>
+  </ol>
+  <p>La prueba es siempre la misma: <strong>si no puedes cambiar una decisión pequeña sobre tu propia solución</strong> —el número de columnas, el eje de un Flexbox o una regla en conflicto— todavía no controlas el código que has entregado.</p>
 </div>
 
 ---
@@ -142,6 +145,25 @@ El inspector del navegador. En CSS deja de ser algo que se abre de vez en cuando
 
 Durante seis semanas, cada vez que algo no se vea como esperas, la primera acción es `F12`.
 
+### No todo pesa lo mismo
+
+<div class="learning-priorities">
+  <div class="learning-priorities__essential">
+    <strong>Esencial · debes dominarlo</strong>
+    <span>Cascada, selectores, box model, unidades, Flexbox, Grid, responsive y DevTools.</span>
+  </div>
+  <div class="learning-priorities__important">
+    <strong>Importante · debes saber aplicarlo</strong>
+    <span>Variables, <code>clamp()</code>, <code>object-fit</code>, estados y transiciones.</span>
+  </div>
+  <div class="learning-priorities__extra">
+    <strong>Ampliación · cuando lo anterior funciona</strong>
+    <span><code>:where()</code>, container queries y CSS anidado.</span>
+  </div>
+</div>
+
+Si vas justo, prioriza los ocho contenidos esenciales. Las ampliaciones nunca compensan una cascada que no entiendes, un layout que desborda o un foco que no se ve.
+
 ---
 
 ## Plan de trabajo semanal
@@ -153,19 +175,22 @@ Durante seis semanas, cada vez que algo no se vea como esperas, la primera acci�
 | **Semana 3** | Flujo normal y Flexbox | Navegación y componentes en una dimensión | 3 h |
 | **Semana 4** | Grid y responsive | Catálogo adaptable y decisión de breakpoints | 3 h |
 | **Semana 5** | Imágenes, estados y movimiento | Catálogo irregular, foco visible y transiciones | 3 h |
-| **Semana 6** | CSS moderno, depuración y entrega | Container queries, CSS forense y revisión por pares | 3 h |
+| **Semana 6** | Integración, depuración y entrega | Interfaz desconocida, CSS forense y revisión por pares | 3 h |
 | **Total** | | **El sitio de la UD1 convertido en una web completa** | **18 h** |
 
-Cada sesión dura una hora y mantiene el mismo ritmo que en la UD1:
+Cada sesión dura una hora y mantiene la estructura habitual de la UD1, adaptando el tiempo a la dificultad de cada concepto:
 
 <figure class="diagram">
   <figcaption>El ritmo de cada sesión</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>Aprende · 15 min</li>
-    <li>Haz · 30 min</li>
-    <li>Comprueba · 15 min</li>
+    <li>Recupera · 5 min</li>
+    <li>Aprende y observa · 10–20 min</li>
+    <li>Practica · 30–40 min</li>
+    <li>Cierra · 5 min</li>
   </ol>
 </figure>
+
+Los conceptos nuevos avanzan de **ejemplo resuelto → ejemplo incompleto → problema parecido → problema nuevo**. Aproximadamente dos tercios de la práctica se aplican al proyecto y un tercio a interfaces que no has visto antes. La pregunta previa nunca es «¿qué propiedad copio?», sino «¿qué tipo de problema tengo y qué herramienta encaja?».
 
 ---
 
@@ -181,6 +206,15 @@ Cada sesión dura una hora y mantiene el mismo ritmo que en la UD1:
     <li><strong>1. Aprende:</strong> Cómo se enlaza una hoja de estilos, de qué partes se compone una regla y por qué existen tres formas de aplicar CSS aunque solo usemos una.</li>
     <li><strong>2. Haz:</strong> Crea tu hoja de estilos, enlázala en las cuatro páginas y da el primer estilo al sitio.</li>
     <li><strong>3. Comprueba:</strong> Las cuatro páginas cargan el CSS, y sabes comprobarlo sin adivinar.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué información pertenece a HTML y cuál esperas que pertenezca a CSS?</li>
+    <li>¿Qué ventaja tiene conservar el mismo HTML cuando cambia el diseño?</li>
+    <li>Señala qué cambiarías para presentar un título en azul sin alterar su significado.</li>
   </ol>
 </div>
 
@@ -247,7 +281,7 @@ body {
   <div class="lesson-demo__stage">
     <div class="lesson-browser" aria-label="Vista de una página después de aplicar las primeras reglas CSS">
       <div class="lesson-browser__page lesson-first-css">
-        <h1>PixelStore</h1>
+        <p class="demo-title">PixelStore</p>
         <p>Componentes pensados para trabajar y crear.</p>
       </div>
     </div>
@@ -280,6 +314,12 @@ Sobre tu proyecto de la UD1:
 4. Da un color distinto a los encabezados.
 5. Cambia el aspecto de los enlaces.
 6. Comprueba que el estilo se aplica en las cuatro.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Una hoja externa cargada en las cuatro páginas y tres reglas que puedas explicar.</span></div>
+  <div><strong>Si lo tienes</strong><span>Cambia el nombre o la ubicación de la hoja y diagnostica el fallo con Network.</span></div>
+  <div><strong>Reto</strong><span>Recibe una quinta página y enlaza el CSS desde una carpeta distinta.</span></div>
+</div>
 
 <div class="rule">
   <p class="rule-label">Si una página no cambia, no escribas más CSS</p>
@@ -323,6 +363,15 @@ Sobre tu proyecto de la UD1:
     <li><strong>1. Aprende:</strong> Las familias de selectores y qué problema resuelve cada una.</li>
     <li><strong>2. Haz:</strong> Elige el selector adecuado para cinco requisitos distintos.</li>
     <li><strong>3. Comprueba:</strong> Ninguna de tus reglas afecta a elementos que no debía tocar.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué tres partes tiene una regla CSS?</li>
+    <li>¿Por qué usamos una hoja externa en lugar del atributo <code>style</code>?</li>
+    <li>Esta regla no actúa: <code>h1 { colour: red; }</code>. Localiza la causa.</li>
   </ol>
 </div>
 
@@ -495,6 +544,15 @@ Fíjate en que no he inventado una clase. Si el HTML ya distingue esa zona, el s
     <li><strong>1. Aprende:</strong> Qué decide cuál de dos reglas en conflicto se aplica, qué se hereda y qué no, y por qué <code>!important</code> es una rendición.</li>
     <li><strong>2. Haz:</strong> Diagnostica una hoja con reglas contradictorias y resuélvela sin <code>!important</code>.</li>
     <li><strong>3. Comprueba:</strong> Sabes leer en DevTools qué regla ha ganado y por qué.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Cuándo conviene un selector de elemento y cuándo una clase?</li>
+    <li>¿Qué selecciona <code>nav a</code> que no selecciona <code>nav &gt; a</code>?</li>
+    <li>Escribe el selector de todos los campos obligatorios sin inventar una clase.</li>
   </ol>
 </div>
 
@@ -690,6 +748,16 @@ El título no se ve rojo, y DevTools no muestra la regla ni siquiera tachada. ¿
   <p>3 · Tachada quiere decir que seleccionó el elemento pero perdió el conflicto: es un problema de cascada. Que no aparezca quiere decir que no seleccionó nada: es un problema de selector, de sintaxis o de carga.</p>
 </details>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 1 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Escribe un selector de clase, uno descendiente y uno por atributo.</li>
+    <li>Ordena por especificidad: <code>p</code>, <code>.aviso p</code> y <code>#principal p</code>.</li>
+    <li>Una regla aparece tachada en DevTools: explica qué significa y qué revisarías.</li>
+  </ol>
+</div>
+
 ---
 
 ## Semana 2 · La caja y el sistema visual
@@ -704,6 +772,15 @@ El título no se ve rojo, y DevTools no muestra la regla ni siquiera tachada. ¿
     <li><strong>1. Aprende:</strong> De qué capas se compone una caja, qué cambia <code>box-sizing</code> y por qué una anchura fija suele ser una mala idea.</li>
     <li><strong>2. Haz:</strong> Construye las tarjetas de tu catálogo y localiza cada capa en DevTools.</li>
     <li><strong>3. Comprueba:</strong> Ninguna tarjeta desborda su contenedor al estrechar la ventana.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Si dos reglas cambian el mismo color, ¿qué criterios deciden cuál gana?</li>
+    <li>¿Qué propiedades suelen heredarse?</li>
+    <li>Explica por qué añadir <code>!important</code> no diagnostica el conflicto.</li>
   </ol>
 </div>
 
@@ -876,6 +953,15 @@ En `productos.html` tienes `article` con el marcado de cada producto. Dales form
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Nombra las cuatro capas del box model de dentro hacia fuera.</li>
+    <li>¿Qué cambia <code>box-sizing: border-box</code>?</li>
+    <li>Una caja de <code>300px</code> tiene <code>padding: 20px</code> y dos bordes de <code>2px</code>: calcula su anchura con el modelo inicial.</li>
+  </ol>
+</div>
+
 ### No todo se mide en píxeles
 
 | Unidad | Se calcula respecto a | Para qué la usamos |
@@ -1003,6 +1089,15 @@ No buscamos todavía un diseño espectacular. Buscamos **consistencia**: que las
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Respecto a qué se calculan <code>rem</code>, <code>em</code> y <code>%</code>?</li>
+    <li>¿Qué dos decisiones hacen que un párrafo sea legible además del tamaño?</li>
+    <li>Detecta el riesgo de repetir el mismo color hexadecimal en veinte reglas.</li>
+  </ol>
+</div>
+
 ### El problema: repetir una decisión
 
 ```css
@@ -1111,6 +1206,12 @@ Sobre tu hoja de estilos:
 4. Prueba a cambiar `--color-primary` por otro color y recarga. Si el sitio entero cambia de color con una sola línea, lo has hecho bien.
 5. Añade un `clamp()` al tamaño de tu `h1` y comprueba cómo se comporta al estrechar la ventana.
 
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Variables con nombres semánticos y un cambio global comprobado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Crea una segunda variante visual modificando solo las variables.</span></div>
+  <div><strong>Reto</strong><span>Recibe CSS ajeno y distingue qué valores merecen variable y cuáles deben seguir locales.</span></div>
+</div>
+
 <div class="rule">
   <p class="rule-label">No conviertas todo en una variable</p>
   <p>Un valor que aparece una sola vez y no es una decisión de diseño no gana nada por ser variable: gana una indirección más que leer. Si <code>border-width: 1px</code> solo está en un sitio, déjalo donde está.</p>
@@ -1144,6 +1245,16 @@ Sobre tu hoja de estilos:
   <p>3 · Un mínimo, un valor preferido que se adapta, y un máximo.</p>
 </details>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 2 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Dibuja y nombra las cuatro capas del box model.</li>
+    <li>Explica cuándo elegirías <code>rem</code>, <code>%</code> y un píxel.</li>
+    <li>Convierte tres colores repetidos en una custom property y predice el efecto de cambiarla.</li>
+  </ol>
+</div>
+
 ---
 
 ## Semana 3 · Flujo normal y Flexbox
@@ -1158,6 +1269,15 @@ Sobre tu hoja de estilos:
     <li><strong>1. Aprende:</strong> Cómo coloca el navegador los elementos cuando no le dices nada, y qué pasa cuando sacas uno de ese flujo.</li>
     <li><strong>2. Haz:</strong> Experimenta con los modos de <code>display</code> y de <code>position</code> sobre unas cajas.</li>
     <li><strong>3. Comprueba:</strong> Sabes explicar qué ocurre con el hueco que ocupaba cada elemento.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué problema resuelve una custom property?</li>
+    <li>¿En qué se diferencia un valor fijo de uno limitado con <code>clamp()</code>?</li>
+    <li>Predice qué cambia si sustituyes <code>var(--color-principal)</code> en la declaración de <code>:root</code>.</li>
   </ol>
 </div>
 
@@ -1284,6 +1404,15 @@ Crea un archivo de pruebas `laboratorio.html` con cuatro cajas de colores, una d
     <li><strong>1. Aprende:</strong> Los dos ejes de Flexbox y las cinco propiedades con las que se resuelve casi todo.</li>
     <li><strong>2. Haz:</strong> Convierte la navegación de tu sitio en un Flexbox.</li>
     <li><strong>3. Comprueba:</strong> El menú se comporta razonablemente al estrechar la ventana.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué diferencia hay entre un elemento <code>block</code> y uno <code>inline</code>?</li>
+    <li>¿Qué ocurre con el hueco de un elemento en <code>position: absolute</code>?</li>
+    <li>Explica por qué <code>display: none</code> no es solo «hacerlo invisible».</li>
   </ol>
 </div>
 
@@ -1448,6 +1577,15 @@ Transforma la cabecera de tus cuatro páginas:
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Cómo se determinan el eje principal y el eje cruzado?</li>
+    <li>¿Qué diferencia hay entre <code>justify-content</code> y <code>align-items</code>?</li>
+    <li>Una navegación desborda: ¿qué revisarías antes de reducir la fuente?</li>
+  </ol>
+</div>
+
 ### El método, en tres preguntas
 
 Cuando te enfrentes a un componente, no busques la propiedad: contesta esto.
@@ -1544,6 +1682,16 @@ Tienes tres cajas, cada una con un cuadrado dentro. Consigue, sin `position` y s
   <p>Y la comprobación de que lo has entendido: con <code>flex-direction: column</code>, los tres se resuelven intercambiando las dos propiedades.</p>
 </details>
 
+### Microrevisión · diez minutos, sin nota
+
+Intercambia con un compañero únicamente una sección que ya hayas maquetado. Encuentra **una decisión de layout que no puedas justificar** y descríbela así:
+
+1. **Qué intenta resolver:** tamaño, espacio, distribución o estado.
+2. **Qué regla actúa:** compruébala en DevTools.
+3. **Qué duda queda:** por qué Flexbox, Grid o el flujo normal podrían encajar mejor.
+
+El autor decide si cambia el código o conserva la decisión y la justifica. No se valora que ambos tengáis el mismo gusto visual.
+
 ### Tarea 9 · Flexbox Challenge
 
 Construye estos tres componentes usando **solo Flexbox**, y aplícalos a tu proyecto donde encajen:
@@ -1563,6 +1711,12 @@ Para cada uno responde por escrito:
 | C | | | | |
 
 Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla solo la puede rellenar quien ha entendido los ejes.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Resuelve A, B y C, completa la tabla y evita desbordamientos.</span></div>
+  <div><strong>Si lo tienes</strong><span>Duplica la longitud del contenido y adapta la solución sin cambiar el HTML.</span></div>
+  <div><strong>Reto</strong><span>Recibe un cuarto componente y decide primero si necesita Flexbox, Grid o ninguno.</span></div>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 9 y de la semana 3</p>
@@ -1591,6 +1745,16 @@ Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla so
   <p>3 · Absorbe todo el espacio sobrante por ese lado, empujando ese elemento y los siguientes al final del eje.</p>
 </details>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 3 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Elige cuáles resolverías con Flexbox: navegación, botonera, tabla de datos y tarjeta horizontal.</li>
+    <li>Escribe únicamente el CSS imprescindible para una botonera que pueda saltar de línea.</li>
+    <li>Predice qué cambia al pasar de <code>row</code> a <code>column</code>.</li>
+  </ol>
+</div>
+
 ---
 
 ## Semana 4 · Grid y responsive
@@ -1605,6 +1769,15 @@ Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla so
     <li><strong>1. Aprende:</strong> Qué problema resuelve Grid que Flexbox no, y qué significa la unidad <code>fr</code>.</li>
     <li><strong>2. Haz:</strong> Convierte tu catálogo en una cuadrícula.</li>
     <li><strong>3. Comprueba:</strong> Observa qué pasa al estrechar la ventana. Todavía no lo arregles.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Cuál es la diferencia entre <code>margin</code> y <code>gap</code>?</li>
+    <li>¿Qué hace <code>flex-wrap</code>?</li>
+    <li>Decide si una botonera, una tarjeta horizontal y un catálogo necesitan Flexbox, Grid o ninguno.</li>
   </ol>
 </div>
 
@@ -1725,6 +1898,15 @@ En `productos.html`, convierte el contenedor de las fichas en un Grid.
     <li><strong>1. Aprende:</strong> Cómo hacer que el número de columnas lo decida el espacio, y cómo colocar elementos por líneas o por áreas.</li>
     <li><strong>2. Haz:</strong> Construye un catálogo que se adapta solo y un layout de página completa.</li>
     <li><strong>3. Comprueba:</strong> El catálogo funciona de 320 px a 1600 px sin una media query.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué problema bidimensional resuelve Grid mejor que Flexbox?</li>
+    <li>¿Qué significa <code>1fr</code>?</li>
+    <li>Predice qué ocurre con <code>grid-template-columns: repeat(3, 1fr)</code> a 320 px.</li>
   </ol>
 </div>
 
@@ -1922,6 +2104,15 @@ y su versión en una columna para pantallas estrechas. Decide tú a qué anchura
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué hacen juntos <code>auto-fit</code>, <code>minmax()</code> y <code>1fr</code>?</li>
+    <li>¿Cuándo elegirías Flexbox y cuándo Grid?</li>
+    <li>Este Grid no se adapta: <code>repeat(4, 250px)</code>. Propón una estrategia, no una cifra nueva.</li>
+  </ol>
+</div>
+
 ### Una web no se diseña para 1920 × 1080
 
 Quien entre a tu sitio puede hacerlo desde un móvil, una tablet, un portátil, un monitor grande, media pantalla en una ventana dividida, o un dispositivo que todavía no existe. No puedes enumerarlos.
@@ -2017,6 +2208,12 @@ Con DevTools en modo dispositivo, recorre tu sitio a estas anchuras:
 
 Y busca, en las cuatro páginas:
 
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Prueba las cinco anchuras, elimina el scroll horizontal y documenta cada causa.</span></div>
+  <div><strong>Si lo tienes</strong><span>Duplica la longitud de títulos y navegación y vuelve a probar.</span></div>
+  <div><strong>Reto</strong><span>Corrige una página ajena sin conocer sus breakpoints ni añadir uno por defecto.</span></div>
+</div>
+
 | Problema | ¿Dónde aparece? | A qué anchura | Cómo lo has resuelto |
 | -------- | --------------- | ------------- | -------------------- |
 | Contenido que se sale | | | |
@@ -2068,6 +2265,16 @@ Después corrígelos, **intentando primero sin media query**. Si lo resuelves co
   <p>3 · <code>max-width</code>, <code>flex-wrap</code>, <code>auto-fit</code> con <code>minmax()</code>, <code>clamp()</code>, <code>gap</code>. Bastan tres.</p>
 </details>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 4 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Decide entre Flexbox, Grid o flujo normal para tres interfaces que no has visto.</li>
+    <li>Escribe un Grid adaptable sin media query.</li>
+    <li>Una página desborda a 360 px: enumera tres comprobaciones antes de añadir un breakpoint.</li>
+  </ol>
+</div>
+
 ---
 
 ## Semana 5 · Imágenes, estados y movimiento
@@ -2082,6 +2289,15 @@ Después corrígelos, **intentando primero sin media query**. Si lo resuelves co
     <li><strong>1. Aprende:</strong> Por qué una imagen rompe un layout y cómo se encajan imágenes de tamaños distintos sin deformarlas.</li>
     <li><strong>2. Haz:</strong> Consigue un catálogo visualmente coherente con imágenes irregulares.</li>
     <li><strong>3. Comprueba:</strong> Ninguna imagen está estirada ni aplastada.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué significa trabajar <em>mobile first</em>?</li>
+    <li>¿Qué diferencia hay entre un layout fluido y una media query?</li>
+    <li>Ordena el diagnóstico de un desbordamiento horizontal antes de escribir CSS nuevo.</li>
   </ol>
 </div>
 
@@ -2193,6 +2409,15 @@ Consigue que el catálogo se vea coherente **sin editar los archivos**:
     <li><strong>1. Aprende:</strong> Que una interfaz tiene más de un estado, y por qué el del foco no es opcional.</li>
     <li><strong>2. Haz:</strong> Recorre tu sitio solo con el teclado y arregla lo que no se vea.</li>
     <li><strong>3. Comprueba:</strong> Sabes en todo momento dónde está el foco.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué se usan juntos <code>max-width: 100%</code> y <code>height: auto</code>?</li>
+    <li>¿Qué diferencia hay entre <code>cover</code> y <code>contain</code>?</li>
+    <li>Predice cómo ayuda <code>aspect-ratio</code> en un catálogo con imágenes irregulares.</li>
   </ol>
 </div>
 
@@ -2323,6 +2548,15 @@ Después:
   </ol>
 </div>
 
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué estados de un enlace debe distinguir una interfaz?</li>
+    <li>¿Por qué no se debe eliminar <code>outline</code> sin ofrecer una alternativa?</li>
+    <li>Usa <code>Tab</code>: predice qué debería cambiar visualmente antes de probarlo.</li>
+  </ol>
+</div>
+
 ### Transiciones
 
 Una transición suaviza el paso de un estado a otro. Se declara en el estado **normal**, no en el `:hover`, para que funcione en los dos sentidos:
@@ -2403,6 +2637,12 @@ Una media query que no pregunta por el tamaño de la pantalla sino por **una pre
 
 Es la única tarea de la unidad en la que se puntúa quitar cosas.
 
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Estados claros, dos transiciones justificadas y movimiento reducido.</span></div>
+  <div><strong>Si lo tienes</strong><span>Prueba teclado y ratón y elimina cualquier estado que dependa solo del color.</span></div>
+  <div><strong>Reto</strong><span>Audita los movimientos de una interfaz ajena y conserva únicamente los que comunican.</span></div>
+</div>
+
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 15 y de la semana 5</p>
   <ul class="checklist">
@@ -2430,133 +2670,112 @@ Es la única tarea de la unidad en la que se puntúa quitar cosas.
   <p>3 · Si la persona ha pedido en su sistema que se reduzcan las animaciones.</p>
 </details>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 5 · 5–10 minutos</p>
+  <p>Individual, sin IA y sin apuntes.</p>
+  <ol>
+    <li>Explica cómo evitar que una imagen se deforme dentro de una tarjeta.</li>
+    <li>Escribe un foco visible que no dependa solo del color.</li>
+    <li>Añade una transición breve y explica cómo respetarías <code>prefers-reduced-motion</code>.</li>
+  </ol>
+</div>
+
 ---
 
-## Semana 6 · CSS moderno, depuración y entrega
+## Semana 6 · Integración, depuración y entrega
 
 ---
 
-## Sesión 16 · CSS moderno: componentes que se adaptan
+## Sesión 16 · Reto acumulativo · una interfaz desconocida
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Por qué una media query no siempre es la pregunta correcta, y qué es una container query.</li>
-    <li><strong>2. Haz:</strong> Construye una tarjeta que cambia de forma según el espacio que tiene, no según la ventana.</li>
-    <li><strong>3. Comprueba:</strong> La misma tarjeta se ve distinta en dos zonas de la misma página.</li>
+    <li><strong>1. Decide:</strong> Traduce una interfaz nueva a flujo, tamaño, espacio, layout, adaptación y estados.</li>
+    <li><strong>2. Haz:</strong> Constrúyela desde cero usando solo decisiones que puedas justificar.</li>
+    <li><strong>3. Comprueba:</strong> Responde a un cambio imprevisto sin rehacer el componente.</li>
   </ol>
 </div>
 
-### El problema que las media queries no resuelven
-
-Imagina una tarjeta de producto. Puede aparecer en la columna estrecha de un lateral, o a lo ancho de la página. En el primer caso debería ser vertical; en el segundo, imagen a un lado y texto al otro.
-
-Con media queries no se puede: **el navegador mide lo mismo en los dos casos**, porque la ventana es la misma. La pregunta que estás haciendo no es la que necesitas.
-
-| Pregunta | Qué contesta |
-| -------- | ------------ |
-| Media query | ¿Qué tamaño tiene el viewport? |
-| Container query | ¿Qué espacio tiene **este componente**? |
-
-### Container queries
-
-```css
-.zona-producto {
-    container-type: inline-size;
-}
-
-.producto {
-    display: grid;
-    gap: 1rem;
-}
-
-@container (width >= 35rem) {
-    .producto {
-        grid-template-columns: 1fr 2fr;
-    }
-}
-```
-
-Dos pasos: declarar que un elemento es un **contenedor de consulta**, y después preguntar por su anchura en lugar de por la de la ventana.
-
-<p class="term">Container query</p>
-
-Una consulta sobre el espacio disponible del contenedor de un componente. Permite escribir un componente que se adapta solo, esté donde esté, sin saber nada de la página que lo aloja.
-
-El cambio de mentalidad es real: pasas de escribir reglas para **la página** a escribir componentes que **se defienden solos**. Un componente así se puede llevar a otro proyecto sin arrastrar sus breakpoints.
-
-`container-type: inline-size` significa «quiero consultar la anchura». Es lo que se usa el 95 % de las veces.
-
-<div class="rule">
-  <p class="rule-label">Primero, sin nada de esto</p>
-  <p>Antes de sacar una container query, prueba a resolverlo con lo que ya sabes. Muchas veces un <code>auto-fit</code> con <code>minmax()</code>, o un <code>flex-wrap</code>, consiguen el mismo efecto con menos maquinaria.</p>
-  <p>La container query es para cuando el componente tiene que <strong>cambiar de disposición</strong>, no solo de tamaño.</p>
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué diferencia hay entre una transición y una transformación?</li>
+    <li>¿Qué preferencia comunica <code>prefers-reduced-motion</code>?</li>
+    <li>Una tarjeta aumenta de tamaño al pasar el ratón: explica qué debe ocurrir al usar teclado.</li>
+  </ol>
 </div>
 
-### CSS anidado
+### Antes de tocar CSS · clasifica los problemas
 
-También encontrarás esto, que ya funciona sin herramientas externas:
+Recibes una captura y el HTML semántico de una página de actividades. La interfaz contiene una cabecera con navegación, un bloque destacado, un catálogo de tarjetas, una botonera de filtros y un aviso final. No recibes ninguna pista sobre las propiedades.
 
-```css
-.card {
-    padding: var(--space-md);
+Antes de escribir, completa esta tabla:
 
-    & h3 {
-        margin-top: 0;
-    }
+| Zona | Flujo normal | Tamaño | Espacio | Flexbox/Grid | Responsive | Estado |
+| ---- | :----------: | :----: | :-----: | :----------: | :--------: | :----: |
+| Navegación | | | | | | |
+| Destacado | | | | | | |
+| Catálogo | | | | | | |
+| Botonera | | | | | | |
 
-    &:hover {
-        border-color: var(--color-primary);
-    }
+No todas las casillas necesitan una propiedad. Dejar una zona en flujo normal también es una decisión.
+
+### Paso 1 · Una decisión resuelta
+
+Las tarjetas se repiten en filas y columnas y su número debe depender del espacio. Eso apunta a Grid con una plantilla adaptable. Dentro de cada tarjeta, imagen, texto y acción forman una relación en una dimensión: puede bastar flujo normal o Flexbox. Se resuelve cada nivel por separado.
+
+### Paso 2 · Completa una base incompleta
+
+Se entrega el HTML y una hoja con variables, tipografía y el box model ya preparados. Faltan deliberadamente la distribución del catálogo, el comportamiento de la navegación y los estados de los controles. Completa primero esas tres decisiones y comprueba cada una en DevTools antes de continuar.
+
+### Tarea 16 · Construye y defiende la interfaz
+
+La solución debe cumplir estos requisitos sin framework:
+
+1. El contenido conserva una anchura legible y espacios coherentes.
+2. La navegación funciona en una línea cuando cabe y no desborda cuando deja de caber.
+3. El catálogo decide automáticamente cuántas columnas entran.
+4. Las imágenes conservan proporción y encajan sin deformarse.
+5. Los filtros y enlaces tienen estados de interacción y foco visibles.
+6. No existe scroll horizontal entre 320 px y 1600 px.
+7. Cada media query responde a una rotura que puedes señalar.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Interfaz completa, usable a 360 px y escritorio, sin desbordamientos y con foco visible.</span></div>
+  <div><strong>Si lo tienes</strong><span>Haz que una tarjeta destacada ocupe más espacio cuando exista, sin crear otra clase de Grid completa.</span></div>
+  <div><strong>Reto</strong><span>Reproduce una segunda composición sin que se te diga si necesita Grid, Flexbox o ambos.</span></div>
+</div>
+
+Al terminar, el profesor cambia un requisito: orden de la navegación, anchura mínima de tarjeta o dirección de un componente. Predice el resultado, haz el cambio mínimo y explícalo.
+
+<details class="aside aside--extra">
+  <summary>Si has terminado · ampliación: container queries y CSS anidado</summary>
+  <p>Una media query pregunta por el viewport; una container query pregunta por el espacio del componente. Úsala solo si el componente necesita cambiar de disposición según el lugar donde aparece:</p>
+  <pre><code>.zona-producto {
+  container-type: inline-size;
 }
-```
 
-El `&` representa al selector de fuera. Ahorra repetir `.card` y mantiene junto lo que va junto.
-
-No es obligatorio, y tiene un riesgo conocido: anidando mucho se generan selectores larguísimos y muy específicos sin darte cuenta, que es justo el problema de la sesión 3. Regla prudente: **anida un nivel, dos como mucho**. Primero escribe selectores correctos; después decide si anidarlos mejora la lectura.
-
-### Tarea 16 · El componente adaptable
-
-Construye una tarjeta de producto que se vea así cuando tiene poco espacio:
-
-```text
-┌──────────────┐
-│    imagen    │
-│    título    │
-│ descripción  │
-└──────────────┘
-```
-
-y así cuando tiene bastante:
-
-```text
-┌───────────────────────────────┐
-│ imagen │ título               │
-│        │ descripción          │
-└───────────────────────────────┘
-```
-
-En este orden:
-
-1. **Primero, sin container queries.** Intenta resolverlo con lo que sabes de las semanas anteriores. Anota hasta dónde llegas y qué no consigues.
-2. **Después, con container queries.** Coloca la misma tarjeta en dos sitios de la misma página: dentro del catálogo estrecho y a lo ancho del contenido.
-3. Comprueba que **las dos se ven distintas a la vez, sin tocar el tamaño de la ventana**. Ese es el momento en que se entiende para qué sirve esto.
-4. Explica en un comentario qué te ha dado la container query que no te daba el intento anterior.
+@container (width &gt;= 35rem) {
+  .producto { grid-template-columns: 1fr 2fr; }
+}</code></pre>
+  <p>Como segunda ampliación, reescribe un único componente con CSS anidado. El <code>&amp;</code> representa al selector exterior. Limita el anidamiento a uno o dos niveles y comprueba que no has creado selectores innecesariamente específicos.</p>
+</details>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Qué pregunta una media query y qué pregunta una container query?</li>
-    <li>¿Qué dos pasos hacen falta para usar una container query?</li>
-    <li>¿Qué riesgo tiene abusar del anidamiento?</li>
+    <li>¿Qué seis tipos de decisión has separado antes de escribir CSS?</li>
+    <li>¿Qué parte resolviste con flujo normal y por qué?</li>
+    <li>¿Cómo demostraste que tu solución se transfiere a un requisito nuevo?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · La media query, por el tamaño del viewport; la container query, por el espacio disponible del contenedor del componente.</p>
-  <p>2 · Declarar <code>container-type</code> en el contenedor, y escribir la regla dentro de un bloque <code>@container</code>.</p>
-  <p>3 · Que genera selectores muy largos y muy específicos sin que te des cuenta, y vuelven los problemas de cascada de la sesión 3.</p>
+  <p>1 · Flujo normal, tamaño, espacio, distribución, comportamiento responsive y estado.</p>
+  <p>2 · Depende de tu interfaz, pero debes nombrar la zona y explicar por qué no necesitaba un sistema de layout.</p>
+  <p>3 · Prediciendo y realizando un cambio que no estaba en la captura inicial sin rehacer la solución.</p>
 </details>
 
 ---
@@ -2569,6 +2788,15 @@ En este orden:
     <li><strong>1. Aprende:</strong> El método para diagnosticar una página que se ve mal, en lugar de rehacerla.</li>
     <li><strong>2. Haz:</strong> Localiza y corrige los fallos de una hoja de estilos rota, explicando cada causa.</li>
     <li><strong>3. Comprueba:</strong> Puedes nombrar la causa de cada fallo, no solo la corrección.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué elegirías para una navegación, un catálogo y una página completa: flujo, Flexbox o Grid?</li>
+    <li>¿Qué hace que un componente sea realmente responsive?</li>
+    <li>Predice por qué una regla puede aparecer tachada en DevTools.</li>
   </ol>
 </div>
 
@@ -2689,6 +2917,15 @@ Tu trabajo:
     <li><strong>1. Aprende:</strong> Qué se revisa en el CSS de otra persona, que no es si te gustan sus colores.</li>
     <li><strong>2. Haz:</strong> Pasa la auditoría a tu sitio y revisa el de un compañero.</li>
     <li><strong>3. Entrega:</strong> El sitio, la tabla forense, la matriz de revisión y la defensa.</li>
+  </ol>
+</div>
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Si una regla no aparece en DevTools, ¿qué causas revisarías? ¿Y si aparece tachada?</li>
+    <li>Explica la diferencia entre corregir la causa y añadir una excepción.</li>
+    <li>Diagnostica antes de tocar: un catálogo desborda solo a 360 px.</li>
   </ol>
 </div>
 
@@ -2836,6 +3073,16 @@ No puntúa que el sitio sea vistoso. Puntúa que **aguante**: que siga funcionan
     <li>Has revisado el proyecto de un compañero y decidido qué aceptas de la suya.</li>
     <li>Puedes hacer un cambio pequeño sobre tu propio CSS delante de alguien.</li>
   </ul>
+</div>
+
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Microprueba semanal 6 · 10 minutos</p>
+  <p>Individual, sin IA y sin apuntes. Trabajas sobre una interfaz desconocida.</p>
+  <ol>
+    <li>Identifica un problema de selector, uno de cascada y uno de layout.</li>
+    <li>Corrige la causa con el CSS mínimo y justifica cada decisión.</li>
+    <li>Realiza un cambio responsive nuevo sin copiar tu proyecto.</li>
+  </ol>
 </div>
 
 ---
