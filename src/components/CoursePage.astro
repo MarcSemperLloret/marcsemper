@@ -161,6 +161,9 @@ const resourceMeta = (resource: TeachingResource) =>
       <p class="course-summary">{text.summary}</p>
       <div class="course-meta">
         <span>{course.term}</span>
+        {(isSpanish ? course.hoursEs : course.hours) && (
+          <span>{isSpanish ? course.hoursEs : course.hours}</span>
+        )}
         {course.code && <span>{course.code}</span>}
         {text.institution && <span>{text.institution}</span>}
         {course.status === "archived" && <span class="archived">{t.archived}</span>}

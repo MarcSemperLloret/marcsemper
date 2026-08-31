@@ -13,7 +13,7 @@ import {
   type Lang,
   type TeachingCourse
 } from "@/data/teaching";
-import { getUnits, unitsOfCourse, courseTotalLessons, latestUnitDate } from "@/data/units";
+import { getUnits, unitsOfCourse, latestUnitDate } from "@/data/units";
 import { site } from "@/data/site";
 
 interface Props {
@@ -62,7 +62,8 @@ const t = isSpanish
       researchLink: "Programa de investigación ↗",
       researchHref: "/es/investigacion/",
       unit: (n: number) => (n === 1 ? "1 unidad" : `${n} unidades`),
-      lesson: (n: number) => (n === 1 ? "1 sesión" : `${n} sesiones`),
+      publishedUnits: (published: number, total: number) =>
+        `${published}/${total} unidades publicadas`,
       noMaterial: "Todavía sin material publicado",
       updated: (date: string) => ` · actualizado el ${date}`
     }
@@ -100,7 +101,8 @@ const t = isSpanish
       researchLink: "Research programme ↗",
       researchHref: "/research/",
       unit: (n: number) => (n === 1 ? "1 unit" : `${n} units`),
-      lesson: (n: number) => (n === 1 ? "1 session" : `${n} sessions`),
+      publishedUnits: (published: number, total: number) =>
+        `${published}/${total} units published`,
       noMaterial: "No material published yet",
       updated: (date: string) => ` · updated ${date}`
     };
@@ -110,12 +112,16 @@ const t = isSpanish
  */
 function materialSummary(course: TeachingCourse): string {
   const courseUnits = unitsOfCourse(units, course.slug);
-  const unitCount = course.sections.length || courseUnits.length;
-  const totalLessons = courseTotalLessons(courseUnits);
+  const totalUnits = course.sections.length || courseUnits.length;
+  const publishedCount = courseUnits.length;
+  const hours = isSpanish ? (course.hoursEs ?? course.hours) : (course.hours ?? course.hoursEs);
   const parts: string[] = [];
 
-  if (unitCount > 0) parts.push(t.unit(unitCount));
-  if (totalLessons > 0) parts.push(t.lesson(totalLessons));
+  if (totalUnits > 0) parts.push(t.unit(totalUnits));
+  if (hours) parts.push(hours);
+  if (totalUnits > 0 && publishedCount > 0) {
+    parts.push(t.publishedUnits(publishedCount, totalUnits));
+  }
 
   return parts.length > 0 ? parts.join(" · ") : t.noMaterial;
 }

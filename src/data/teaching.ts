@@ -79,6 +79,9 @@ export interface TeachingCourse {
   institutionEs?: string;
   /** Academic year, e.g. "2025/2026". */
   term: string;
+  /** Estimated or official workload, e.g. "~30 hours". */
+  hours?: string;
+  hoursEs?: string;
   /** "current" courses are listed first; "archived" ones move to past years. */
   status: "current" | "archived";
   /** Draft courses are excluded from the site until this is removed. */
@@ -171,10 +174,196 @@ export interface TeachingCourse {
  */
 export const teachingCourses: TeachingCourse[] = [
   {
+    slug: "desarrollo-web-entorno-servidor",
+    title: "Server-side web development",
+    titleEs: "Desarrollo web en entorno servidor",
+    term: "2026/2027",
+    hours: "~156 hours",
+    hoursEs: "~156 horas",
+    status: "current",
+    updatedAt: "2026-08-31",
+    summary:
+      "Building a complete backend with Java and Spring Boot: from HTTP and server-rendered pages to PostgreSQL, REST APIs, security, integrations and testing.",
+    summaryEs:
+      "Construcción de un backend completo con Java y Spring Boot: desde HTTP y las páginas renderizadas en servidor hasta PostgreSQL, APIs REST, seguridad, integraciones y testing.",
+    overview:
+      "A two-term, project-led module built around one application that grows with the class: an issue and project manager with users, projects, issues, comments and tags. It starts as an in-memory list, gains server-rendered views and persistence, is reorganised into professional layers, exposes a REST API, adds authentication and external integrations, and finishes with tests and technical documentation. Guidance is deliberately reduced as the course advances, so the final project is driven by a specification rather than a tutorial.",
+    overviewEs:
+      "Módulo de dos trimestres articulado alrededor de una única aplicación que crece con la clase: un gestor de proyectos e incidencias con usuarios, proyectos, incidencias, comentarios y etiquetas. Empieza como una lista en memoria, incorpora vistas renderizadas en servidor y persistencia, se reorganiza en capas profesionales, expone una API REST, añade autenticación e integraciones externas y termina con tests y documentación técnica. El andamiaje se retira de forma deliberada: al principio se trabaja con mucha guía y el proyecto final parte únicamente de una especificación.",
+    outcomes: [
+      "Explain what happens between an HTTP request and response, and diagnose it with browser tools.",
+      "Build dynamic server-rendered applications with Spring MVC, Thymeleaf, forms, validation and session state.",
+      "Organise a Spring application into controller, service, repository, model and DTO layers.",
+      "Persist a relational domain model safely with JPA and PostgreSQL.",
+      "Design, validate, document and consume resource-oriented REST APIs.",
+      "Apply authentication, authorisation and common web-security controls with Spring Security.",
+      "Integrate external services and handle files, timeouts and partial failures.",
+      "Test, debug, document and defend a complete backend application."
+    ],
+    outcomesEs: [
+      "Explicar qué ocurre entre una petición y una respuesta HTTP y diagnosticarlo con las herramientas del navegador.",
+      "Construir aplicaciones dinámicas con Spring MVC, Thymeleaf, formularios, validación y estado de sesión.",
+      "Organizar una aplicación Spring en capas controller, service, repository, model y DTO.",
+      "Persistir con seguridad un modelo relacional mediante JPA y PostgreSQL.",
+      "Diseñar, validar, documentar y consumir APIs REST orientadas a recursos.",
+      "Aplicar autenticación, autorización y controles habituales de seguridad web con Spring Security.",
+      "Integrar servicios externos y tratar ficheros, timeouts y fallos parciales.",
+      "Probar, depurar, documentar y defender una aplicación backend completa."
+    ],
+    topics: [
+      "HTTP and Spring Boot",
+      "Spring MVC and Thymeleaf",
+      "Forms, validation and session state",
+      "Layered architecture",
+      "JPA and PostgreSQL",
+      "REST API design",
+      "Spring Security",
+      "External integrations",
+      "Testing and documentation"
+    ],
+    topicsEs: [
+      "HTTP y Spring Boot",
+      "Spring MVC y Thymeleaf",
+      "Formularios, validación y estado de sesión",
+      "Arquitectura por capas",
+      "JPA y PostgreSQL",
+      "Diseño de APIs REST",
+      "Spring Security",
+      "Integraciones externas",
+      "Testing y documentación"
+    ],
+    resources: [],
+    sections: [
+      {
+        id: "ud-01",
+        number: "UD1",
+        verb: "UNDERSTAND",
+        verbEs: "ENTENDER",
+        title: "From Java to the Web: HTTP and Spring Boot",
+        titleEs: "De Java a la Web: HTTP y Spring Boot",
+        description: "From the browser request to a small in-memory CRUD API, understanding every Spring piece that appears.",
+        descriptionEs: "De la petición del navegador a una pequeña API CRUD en memoria, entendiendo cada pieza de Spring que aparece.",
+        resources: []
+      },
+      {
+        id: "ud-02",
+        number: "UD2",
+        verb: "RENDER",
+        verbEs: "RENDERIZAR",
+        title: "MVC, Thymeleaf and dynamic pages",
+        titleEs: "MVC, Thymeleaf y páginas dinámicas",
+        description: "Server-rendered HTML, models, templates, reusable fragments and navigation between list and detail pages.",
+        descriptionEs: "HTML generado en servidor, modelos, plantillas, fragmentos reutilizables y navegación entre listado y detalle.",
+        resources: []
+      },
+      {
+        id: "ud-03",
+        number: "UD3",
+        verb: "VALIDATE",
+        verbEs: "VALIDAR",
+        title: "Forms, validation and state",
+        titleEs: "Formularios, validación y estado",
+        description: "Turning pages into an application with forms, trustworthy input, complete CRUD and session state.",
+        descriptionEs: "Convertir páginas en una aplicación con formularios, entrada fiable, CRUD completo y estado de sesión.",
+        resources: []
+      },
+      {
+        id: "ud-04",
+        number: "UD4",
+        verb: "ARCHITECT",
+        verbEs: "ARQUITECTAR",
+        title: "Professional architecture with Spring",
+        titleEs: "Arquitectura profesional con Spring",
+        description: "Refactoring a monolithic controller into clear layers with dependency injection, DTOs and centralised errors.",
+        descriptionEs: "Refactorizar un controller monolítico en capas claras con inyección de dependencias, DTO y errores centralizados.",
+        resources: []
+      },
+      {
+        id: "ud-05",
+        number: "UD5",
+        verb: "PERSIST",
+        verbEs: "PERSISTIR",
+        title: "Persistence with JPA and PostgreSQL",
+        titleEs: "Persistencia con JPA y PostgreSQL",
+        description: "A real relational database, entity relationships, queries, transactions, pagination and introductory performance analysis.",
+        descriptionEs: "Una base de datos relacional real, relaciones entre entidades, consultas, transacciones, paginación y rendimiento introductorio.",
+        resources: []
+      },
+      {
+        id: "ud-06",
+        number: "UD6",
+        verb: "INTEGRATE",
+        verbEs: "INTEGRAR",
+        title: "First-term project",
+        titleEs: "Proyecto del primer trimestre",
+        description: "Integrating MVC, architecture, validation, sessions and persistence from a set of requirements.",
+        descriptionEs: "Integrar MVC, arquitectura, validación, sesiones y persistencia a partir de unos requisitos.",
+        resources: []
+      },
+      {
+        id: "ud-07",
+        number: "UD7",
+        verb: "DESIGN",
+        verbEs: "DISEÑAR",
+        title: "Well-designed REST APIs",
+        titleEs: "APIs REST bien diseñadas",
+        description: "Resource-oriented endpoints, input and output DTOs, HTTP semantics, filtering, pagination and OpenAPI.",
+        descriptionEs: "Endpoints orientados a recursos, DTO de entrada y salida, semántica HTTP, filtros, paginación y OpenAPI.",
+        resources: []
+      },
+      {
+        id: "ud-08",
+        number: "UD8",
+        verb: "PROTECT",
+        verbEs: "PROTEGER",
+        title: "Authentication and Spring Security",
+        titleEs: "Autenticación y Spring Security",
+        description: "Identity, passwords, roles, permissions, protected endpoints, sessions, tokens, CORS and CSRF.",
+        descriptionEs: "Identidad, contraseñas, roles, permisos, endpoints protegidos, sesiones, tokens, CORS y CSRF.",
+        resources: []
+      },
+      {
+        id: "ud-09",
+        number: "UD9",
+        verb: "CONNECT",
+        verbEs: "CONECTAR",
+        title: "Advanced backend and external integration",
+        titleEs: "Backend avanzado e integración externa",
+        description: "HTTP clients, external DTOs, unavailable services, file handling, email and webhooks.",
+        descriptionEs: "Clientes HTTP, DTO externos, servicios no disponibles, gestión de ficheros, correo y webhooks.",
+        resources: []
+      },
+      {
+        id: "ud-10",
+        number: "UD10",
+        verb: "VERIFY",
+        verbEs: "VERIFICAR",
+        title: "Testing, errors, logs and documentation",
+        titleEs: "Testing, errores, logs y documentación",
+        description: "JUnit, Mockito, controller tests, logging, debugging, OpenAPI and maintainability review.",
+        descriptionEs: "JUnit, Mockito, tests de controllers, logging, depuración, OpenAPI y revisión de mantenibilidad.",
+        resources: []
+      },
+      {
+        id: "ud-11",
+        number: "UD11",
+        verb: "DEFEND",
+        verbEs: "DEFENDER",
+        title: "Complete backend project",
+        titleEs: "Proyecto backend completo",
+        description: "An autonomous project from specification and modelling through implementation, testing, documentation and technical defence.",
+        descriptionEs: "Un proyecto autónomo desde la especificación y el modelado hasta la implementación, los tests, la documentación y la defensa técnica.",
+        resources: []
+      }
+    ]
+  },
+  {
     slug: "digitalizacion",
     title: "Digitalización",
     titleEs: "Digitalización",
     term: "2026/2027",
+    hours: "~30 hours",
+    hoursEs: "~30 horas",
     status: "current",
     updatedAt: "2026-08-30",
     summary:
@@ -326,6 +515,8 @@ export const teachingCourses: TeachingCourse[] = [
     title: "Sostenibilidad",
     titleEs: "Sostenibilidad",
     term: "2026/2027",
+    hours: "~30 hours",
+    hoursEs: "~30 horas",
     status: "current",
     updatedAt: "2026-08-29",
     summary:
@@ -333,9 +524,9 @@ export const teachingCourses: TeachingCourse[] = [
     summaryEs:
       "Decidir con criterio de sostenibilidad dentro de un producto digital: impactos ASG, ciclo de vida, una web que consume menos, accesibilidad e infraestructura proporcional al problema.",
     overview:
-      "A cross-curricular module on the environmental and social consequences of technology, and on the criteria used to reduce them. Every unit ends in a decision that has to be defended with evidence rather than with intentions: which impacts actually matter, whether a device should be replaced, what a page really costs to load, who cannot use the interface, and how much infrastructure a problem deserves. Regulation appears throughout, where it belongs — as a constraint on a technical decision rather than as a list to memorise.",
+      "A cross-curricular module on the environmental and social consequences of technology, and on the criteria used to reduce them. Every unit ends in a decision that has to be defended with evidence rather than with intentions: which impacts actually matter, whether a device should be replaced, what a page really costs to load, who cannot use the interface, how much infrastructure a problem deserves and, finally, designing the digital sustainability plan of a whole company. Regulation appears throughout, where it belongs — as a constraint on a technical decision rather than as a list to memorise.",
     overviewEs:
-      "Módulo transversal sobre las consecuencias ambientales y sociales de la tecnología y sobre los criterios para reducirlas. Cada unidad termina en una decisión que hay que defender con evidencias y no con intenciones: qué impactos importan de verdad, si conviene sustituir un dispositivo, cuánto cuesta realmente cargar una página, quién no puede usar la interfaz y cuánta infraestructura merece un problema. La normativa aparece a lo largo del módulo, donde le corresponde: como límite de una decisión técnica y no como una lista que memorizar.",
+      "Módulo transversal sobre las consecuencias ambientales y sociales de la tecnología y sobre los criterios para reducirlas. Cada unidad termina en una decisión que hay que defender con evidencias y no con intenciones: qué impactos importan de verdad, si conviene sustituir un dispositivo, cuánto cuesta realmente cargar una página, quién no puede usar la interfaz, cuánta infraestructura merece un problema y, al final, diseñar el plan de sostenibilidad digital de una empresa entera. La normativa aparece a lo largo del módulo, donde le corresponde: como límite de una decisión técnica y no como una lista que memorizar.",
     outcomes: [
       "Analyse the environmental, social and governance impacts of a company.",
       "Tell a real improvement from a claim with no evidence behind it.",
@@ -483,6 +674,8 @@ export const teachingCourses: TeachingCourse[] = [
     title: "Lenguaje de marcas",
     titleEs: "Lenguaje de marcas",
     term: "2026/2027",
+    hours: "~36 hours",
+    hoursEs: "~36 horas",
     status: "current",
     updatedAt: "2026-08-30",
     summary:
