@@ -1943,149 +1943,1018 @@ Cuando ejecutamos `findByTituloContainingIgnoreCase("login")`, Hibernate genera 
 ## Sesión 34 · Tests de repositorio con @DataJpaTest
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> un repositorio que compila puede seguir devolviendo lo que no es, y el error solo aparece en la interfaz semanas después.</li>
-    <li><strong>Construye:</strong> una clase de tests de repositorio que cubre una consulta derivada y un caso sin resultados.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> por qué los mocks no sirven para probar el acceso a datos, qué es una prueba de rebanada (<em>slice test</em>) con <code>@DataJpaTest</code> y cómo evitar la trampa de la caché de primer nivel con <code>flush()</code> y <code>clear()</code>.</li>
+    <li><strong>2. Haz:</strong> escribe una batería de pruebas automatizadas para <code>TareaRepository</code> usando <code>TestEntityManager</code> contra PostgreSQL real.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw test</code>, verificas que las pruebas pasan en milisegundos y demuestras que cada test hace un rollback automático sin dejar basura en la base de datos.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>En la sesión 26 probamos <code>TareaService</code> simulando el repositorio. ¿Por qué usar un mock no demuestra nada sobre si tus consultas SQL funcionan?</li>
+    <li>¿Qué diferencia hay entre arrancar toda la aplicación con <code>@SpringBootTest</code> y usar una prueba acotada con <code>@DataJpaTest</code>?</li>
+    <li>Si en un test guardas una entidad y en la línea siguiente la buscas con el repositorio, ¿cómo evitas que Hibernate te devuelva el objeto de la memoria RAM sin consultar la base de datos?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **comprobar el acceso a datos contra una base de datos real sin arrancar la aplicación entera**.
+### Por qué los mocks no sirven en el repositorio
 
-### 2. El problema
+En la sesión 26 aprendiste a probar la capa de servicio sustituyendo sus colaboradores por dobles de prueba. Tenía todo el sentido del mundo: queríamos comprobar las reglas de negocio aisladas de cualquier infraestructura.
 
-Un repositorio que compila puede seguir devolviendo lo que no es, y el error solo aparece en la interfaz semanas después.
+Pero en la capa de acceso a datos, la situación es exactamente la contraria. **La única responsabilidad de un repositorio es comunicarse con la base de datos.**
 
-### 3–6. Itinerario de trabajo
+Si escribes un test de repositorio usando un mock:
+```java
+// UN TEST INÚTIL: estás probando tu propio mock, no la base de datos
+when(repositorio.findByPrioridad("ALTA")).thenReturn(List.of(tarea1));
+```
+No estás demostrando nada. Los errores reales de un repositorio nunca son de lógica Java:
+* Una errata en un nombre de método que genera un SQL con una columna incorrecta.
+* Una discrepancia de tipos entre Java y PostgreSQL (por ejemplo, enviar un `LocalDate` donde la columna espera un `TIMESTAMP`).
+* Una violación de longitud de cadena (`VARCHAR(20)`) ignorada.
+* Una consulta que devuelve duplicados porque faltó un `DISTINCT` en el `JOIN`.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+Para que un test de repositorio tenga valor profesional, **debe ejecutarse contra una base de datos real**.
 
-### 7. Comprueba que funciona
+### Pruebas de rebanada (Slice Testing) con @DataJpaTest
+
+Arrancar la aplicación completa con `@SpringBootTest` para probar una consulta SQL es una pésima idea: levanta el servidor web Tomcat, los controladores, los filtros de seguridad y los servicios, tardando entre 5 y 10 segundos por clase de prueba.
+
+Spring Boot ofrece una solución elegante: **las pruebas de rebanada** (*Slice Tests*).
+
+<p class="term">@DataJpaTest</p>
+
+La anotación `@DataJpaTest` desactiva la autoconfiguración global de Spring y carga **únicamente la infraestructura de persistencia**:
+* Las entidades marcadas con `@Entity`.
+* Las interfaces que extienden `JpaRepository`.
+* El `EntityManager` y la configuración de DataSource de Hibernate.
+* No carga controladores, ni servicios, ni servidores web.
+
+El resultado es un test que arranca en una fracción de segundo y prueba exclusivamente el acceso a datos.
+
+<div class="rule">
+  <p class="rule-label">Probar contra PostgreSQL real, no contra H2</p>
+  <p>Por defecto, <code>@DataJpaTest</code> intenta buscar una base de datos embebida en memoria como H2. <strong>Ese es otro error clásico del sector.</strong></p>
+  <p>H2 no soporta las mismas funciones, ni los mismos dialectos, ni el mismo comportamiento de secuencias que PostgreSQL. Un test que pasa en verde sobre H2 puede estrellarse estrepitosamente en producción contra PostgreSQL.</p>
+  <p>Para indicarle a Spring que use nuestra conexión real de PostgreSQL, añadimos la anotación:
+  <code>@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)</code>.</p>
+</div>
+
+### La trampa mortal: la caché de primer nivel
+
+Observa este test. Parece perfectamente legítimo, pero es una trampa:
+
+```java
+@Test
+void buscarPorPrioridad_trampa() {
+    // 1. Guardar
+    Tarea t = new Tarea("Revisar índices", "ALTA");
+    repositorio.save(t);
+
+    // 2. Buscar
+    List<Tarea> resultado = repositorio.findByPrioridad("ALTA");
+
+    // 3. Afirmar
+    assertThat(resultado).hasSize(1);
+}
+```
+
+¿Por qué es una trampa? Porque al llamar a `save(t)`, Hibernate metió el objeto `t` en su **contexto de persistencia (la caché de primer nivel)**.
+
+Cuando en la línea siguiente llamas a `findByPrioridad("ALTA")`, en muchas ocasiones Hibernate ni siquiera envía la consulta SQL al servidor PostgreSQL: resuelve la llamada contra su mapa en memoria RAM. Tu test saldrá en verde aunque la tabla no tenga la columna o la consulta SQL generada sea una aberración.
+
+Para que el test sea honesto, debemos utilizar **`TestEntityManager`**:
+
+<figure class="diagram">
+  <figcaption>El ciclo honesto de un test de repositorio</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>persist(entidad)</li>
+    <li>flush() [fuerza SQL]</li>
+    <li>clear() [vacía memoria]</li>
+    <li>repositorio.find() [obliga a SELECT]</li>
+  </ol>
+</figure>
+
+* **`flush()`:** obliga a Hibernate a vaciar su cola de escrituras pendientes y ejecutar inmediatamente el `INSERT` en PostgreSQL.
+* **`clear()`:** vacía por completo el contexto de persistencia en memoria. La caché de primer nivel queda a cero.
+* Al llamar al repositorio después del `clear()`, Hibernate **está obligado a enviar una sentencia `SELECT` por el cable TCP a PostgreSQL** y reconstruir el objeto a partir de los datos del disco.
+
+### Paso 1 · Escribir TareaRepositoryTest
+
+Crea el archivo `src/test/java/com/ejemplo/gestor/repository/TareaRepositoryTest.java`:
+
+```java
+package com.ejemplo.gestor.repository;
+
+import com.ejemplo.gestor.model.Tarea;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+class TareaRepositoryTest {
+
+    @Autowired
+    private TareaRepository repositorio;
+
+    @Autowired
+    private TestEntityManager em;
+
+    @Test
+    @DisplayName("findByPrioridad devuelve solo las tareas que coinciden exactamente")
+    void findByPrioridad_cuandoHayCoincidencias_devuelveSoloCoincidentes() {
+        // Preparar (Arrange): persistir dos tareas en PostgreSQL
+        Tarea urgente = new Tarea("Corregir fuga de memoria", "ALTA");
+        Tarea normal = new Tarea("Actualizar README", "MEDIA");
+
+        em.persist(urgente);
+        em.persist(normal);
+        em.flush();
+        em.clear(); // Vaciar memoria para obligar a consultar a PostgreSQL
+
+        // Actuar (Act): ejecutar la consulta derivada
+        List<Tarea> resultado = repositorio.findByPrioridad("ALTA");
+
+        // Comprobar (Assert)
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.get(0).getTitulo()).isEqualTo("Corregir fuga de memoria");
+        assertThat(resultado.get(0).getPrioridad()).isEqualTo("ALTA");
+    }
+
+    @Test
+    @DisplayName("findByPrioridad devuelve lista vacía si ninguna coincide")
+    void findByPrioridad_cuandoNoHayCoincidencias_devuelveListaVacia() {
+        Tarea normal = new Tarea("Actualizar README", "MEDIA");
+        em.persist(normal);
+        em.flush();
+        em.clear();
+
+        List<Tarea> resultado = repositorio.findByPrioridad("BAJA");
+
+        assertThat(resultado).isEmpty();
+    }
+
+    @Test
+    @DisplayName("findByTituloContainingIgnoreCase ignora mayúsculas y encuentra fragmentos")
+    void findByTitulo_ignoraMayusculasYMinusculas() {
+        Tarea t1 = new Tarea("Aprender PostgreSQL y Spring", "ALTA");
+        Tarea t2 = new Tarea("Escribir documentación", "BAJA");
+
+        em.persist(t1);
+        em.persist(t2);
+        em.flush();
+        em.clear();
+
+        List<Tarea> resultado = repositorio.findByTituloContainingIgnoreCase("POSTGRE");
+
+        assertThat(resultado).hasSize(1);
+        assertThat(resultado.get(0).getTitulo()).isEqualTo("Aprender PostgreSQL y Spring");
+    }
+
+    @Test
+    @DisplayName("countByCompletadaFalse cuenta únicamente las pendientes")
+    void countByCompletadaFalse_cuentaSoloPendientes() {
+        Tarea pendiente1 = new Tarea("Tarea 1", "ALTA");
+        Tarea pendiente2 = new Tarea("Tarea 2", "MEDIA");
+        Tarea terminada = new Tarea(null, "Tarea 3", "BAJA", true);
+
+        em.persist(pendiente1);
+        em.persist(pendiente2);
+        em.persist(terminada);
+        em.flush();
+        em.clear();
+
+        long pendientes = repositorio.countByCompletadaFalse();
+
+        assertThat(pendientes).isEqualTo(2);
+    }
+}
+```
+
+<dl class="worked">
+  <dt>Por qué cada test hace rollback automático</dt>
+  <dd>Por defecto, cada método anotado con <code>@Test</code> dentro de una clase con <code>@DataJpaTest</code> está envuelto en una transacción. Al terminar la ejecución de cada test, Spring ejecuta un <strong>ROLLBACK automático</strong>. Esto garantiza que el primer test no deje datos que contaminen al segundo, logrando un aislamiento total y repetible.</dd>
+</dl>
+
+### Paso 2 · Ejecutar y comprobar en la terminal
+
+Abre la terminal y ejecuta exclusivamente los tests de persistencia:
+
+```bash
+./mvnw test -Dtest=TareaRepositoryTest
+```
+
+Observa la salida en la consola:
+
+```text
+[INFO] Running com.ejemplo.gestor.repository.TareaRepositoryTest
+2026-09-02T11:20:01.120+02:00  INFO 54321 --- [main] o.s.b.t.a.j.DataJpaTestContextBootstrapper : Found @SpringBootConfiguration com.ejemplo.gestor.GestorApplication
+2026-09-02T11:20:01.890+02:00  INFO 54321 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Added connection
+2026-09-02T11:20:02.100+02:00  INFO 54321 --- [main] org.hibernate.dialect.Dialect             : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+Hibernate: insert into tareas (completada, prioridad, titulo) values (?, ?, ?)
+Hibernate: select t1_0.id, t1_0.completada, t1_0.prioridad, t1_0.titulo from tareas t1_0 where t1_0.prioridad=?
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.452 s
+[INFO] BUILD SUCCESS
+```
+
+Fíjate en las consultas SQL:
+1. Verás el `insert` forzado por el `em.flush()`.
+2. Verás el `select` forzado por el `em.clear()` y la llamada al repositorio.
+3. El test pasa en menos de 2 segundos contra tu PostgreSQL real.
+
+### Ahora tú · Tests para ProyectoRepository
+
+Escribe la clase `ProyectoRepositoryTest` cubriendo las consultas derivadas que implementamos en la sesión 33:
+
+1. Crea `src/test/java/com/ejemplo/gestor/repository/ProyectoRepositoryTest.java` con `@DataJpaTest` y `@AutoConfigureTestDatabase(replace = NONE)`.
+2. Escribe un test para `findByActivoTrue()`:
+   * Inserta un proyecto activo y otro inactivo (`activo = false`).
+   * Ejecuta `flush()` y `clear()`.
+   * Verifica que la lista devuelta tiene tamaño 1 y que su campo `activo` es `true`.
+3. Escribe un test para `existsByNombre()`:
+   * Inserta un proyecto con nombre `"Plataforma Educativa"`.
+   * Comprueba que `existsByNombre("Plataforma Educativa")` devuelve `true`.
+   * Comprueba que `existsByNombre("Nombre Inventado")` devuelve `false`.
+4. Escribe un test que intente persistir una entidad con un campo no nulo vacío (o nombre duplicado si configuraste `@Column(unique = true)`):
+   * Comprueba que al ejecutar `em.flush()` se lanza una excepción de integridad de datos (`DataIntegrityViolationException` o `ConstraintViolationException`).
+
+### Reto · La trampa de las excepciones diferidas
+
+Investiga este fenómeno clave del funcionamiento de los motores ORM:
+
+<p class="stage stage--solo">1 · El test que pasa en verde sin comprobar nada</p>
+
+Imagina que quieres comprobar que la base de datos rechaza una tarea sin título (`titulo = null`), violando la restricción `@Column(nullable = false)`:
+
+```java
+@Test
+void tareaSinTitulo_debeFallar_malEscrito() {
+    Tarea sinTitulo = new Tarea(null, "ALTA");
+    em.persist(sinTitulo);
+    // Omitimos em.flush();
+}
+```
+
+* Ejecuta ese test sin llamar a `em.flush()`. **El test pasa en verde sin lanzar ninguna excepción.**
+* ¿Por qué? Porque Hibernate retrasa (*defers*) las sentencias de inserción hasta el último momento posible antes de confirmar la transacción. Como el método termina sin forzar el envío, la transacción se cancela (rollback) y la sentencia `INSERT` jamás llega a viajar a PostgreSQL.
+* Ahora añade `em.flush()` y envuélvelo en `assertThrows(ConstraintViolationException.class, () -> em.flush());`.
+* Explica con tus palabras por qué `flush()` es la única instrucción que convierte un deseo en memoria en una sentencia SQL física verificable.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span><code>TareaRepositoryTest</code> escrito con <code>@DataJpaTest</code>, usando <code>flush()</code> y <code>clear()</code> con los 4 tests en verde.</span></div>
+  <div><strong>Si lo tienes</strong><span><code>ProyectoRepositoryTest</code> completo cubriendo <code>findByActivoTrue</code> y <code>existsByNombre</code> contra PostgreSQL real.</span></div>
+  <div><strong>Reto</strong><span>El test de violación de restricción implementado con <code>assertThrows</code> y la justificación técnica de las escrituras diferidas en Hibernate.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 34</p>
   <ul class="checklist">
-    <li>Has obtenido una clase de tests de repositorio que cubre una consulta derivada y un caso sin resultados.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Entiendes por qué la capa repository exige pruebas con base de datos real y no con mocks.</li>
+    <li>Utilizas <code>@DataJpaTest</code> para ejecutar pruebas de persistencia en milisegundos sin arrancar Tomcat ni los controladores.</li>
+    <li>Configuras <code>@AutoConfigureTestDatabase(replace = NONE)</code> para validar contra PostgreSQL y no contra H2.</li>
+    <li>Usas <code>TestEntityManager.flush()</code> y <code>clear()</code> para evitar falsos positivos provocados por la caché de primer nivel.</li>
+    <li>Compruebas que las consultas derivadas devuelven los resultados exactos y manejan listas vacías sin errores.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué componentes de Spring carga `@DataJpaTest` y cuáles ignora por completo?</li>
+    <li>¿Por qué llamar a `save()` y consultar inmediatamente sin hacer `clear()` puede falsear un test de repositorio?</li>
+    <li>¿Por qué no quedan filas guardadas en PostgreSQL después de ejecutar una clase de tests con `@DataJpaTest`?</li>
+    <li>¿Qué instrucción fuerza a Hibernate a ejecutar las sentencias SQL pendientes antes de que termine la transacción?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Carga entidades (@Entity), repositorios (JpaRepository) y el DataSource de JPA; ignora controladores (@RestController), servicios (@Service), filtros de seguridad y el servidor web embebido.</p>
+  <p>2 · Porque Hibernate resuelve la búsqueda contra la caché de primer nivel en la memoria RAM de la JVM, sin enviar la sentencia SELECT a PostgreSQL ni verificar si el SQL generado funciona realmente en el motor relacional.</p>
+  <p>3 · Porque cada método de test está envuelto en una transacción gestionada que ejecuta un ROLLBACK automático al finalizar.</p>
+  <p>4 · La instrucción <code>em.flush()</code> (o <code>testEntityManager.flush()</code>).</p>
+</details>
 
 ## Sesión 35 · ManyToOne y OneToMany
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> guardar identificadores sueltos pierde navegación, integridad y semántica del dominio.</li>
-    <li><strong>Construye:</strong> proyectos e incidencias relacionados y consultables.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> por qué guardar claves numéricas sueltas destruye el modelo de objetos, cómo mapear <code>@ManyToOne</code> y <code>@JoinColumn</code>, y la regla crítica de configurar siempre <code>FetchType.LAZY</code>.</li>
+    <li><strong>2. Haz:</strong> refactoriza <code>Tarea</code> para vincularla a <code>Proyecto</code> como entidad real, adaptando DTOs y mappers para evitar fugas de información.</li>
+    <li><strong>3. Comprueba:</strong> creas tareas vinculadas a proyectos por HTTP, consultas tareas por proyecto con <code>findByProyectoId</code> y auditas el comportamiento del Proxy de Hibernate.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Si en la clase `Tarea` tenemos `private Long proyectoId;`, ¿por qué eso rompe los principios de la programación orientada a objetos?</li>
+    <li>En una relación entre tareas (muchas) y proyectos (uno), ¿cuál es el lado propietario en JPA y qué anotación define la columna física?</li>
+    <li>¿Por qué el comportamiento por defecto de `@ManyToOne` en JPA (`FetchType.EAGER`) es peligroso en bases de datos con miles de registros?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **modelar la relación entre proyecto e incidencias definiendo el lado propietario**.
+### De un identificador numérico a un grafo de entidades
 
-### 2. El problema
+Hasta ahora, en nuestra entidad `Tarea` guardábamos una referencia débil:
 
-Guardar identificadores sueltos pierde navegación, integridad y semántica del dominio.
+```java
+// MODELADO PRIMITIVO (procedural)
+public class Tarea {
+    private Long id;
+    private String titulo;
+    private Long proyectoId; // Un simple número
+}
+```
 
-### 3–6. Itinerario de trabajo
+Guardar un `Long proyectoId` funciona a nivel de base de datos relacional, pero en Java introduce tres problemas de diseño muy serios:
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+1. **Pérdida total de navegación:** si teniendo una tarea necesitas mostrar el nombre del proyecto al que pertenece, estás obligado a inyectar `ProyectoRepository` y hacer una consulta manual adicional. No puedes hacer `tarea.getProyecto().getNombre()`.
+2. **Validación manual:** la aplicación permite guardar `proyectoId = 9999`. Salvo que escribas código defensivo a mano en cada servicio, la incoherencia no se detectará hasta que PostgreSQL rechace el `INSERT` con una violación de clave foránea cruda.
+3. **Desajuste de paradigma:** los objetos se relacionan mediante referencias directas en memoria, no mediante claves foráneas numéricas.
 
-### 7. Comprueba que funciona
+### El lado propietario: @ManyToOne y @JoinColumn
+
+En una base de datos relacional, la clave foránea siempre se almacena en la tabla del lado «muchos» (`tareas` tiene la columna `proyecto_id` apuntando a `proyectos.id`).
+
+En JPA, la entidad que mapea la clave foránea física se denomina **lado propietario** (*Owning Side*):
+
+<figure class="diagram">
+  <figcaption>Mapeo objeto-relacional de @ManyToOne</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Clase Tarea (@ManyToOne)</li>
+    <li>@JoinColumn(name = "proyecto_id")</li>
+    <li>Tabla tareas (FK proyecto_id)</li>
+    <li>Tabla proyectos (PK id)</li>
+  </ol>
+</figure>
+
+```java
+@Entity
+@Table(name = "tareas")
+public class Tarea {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 120)
+    private String titulo;
+
+    @Column(nullable = false, length = 20)
+    private String prioridad;
+
+    private boolean completada;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "proyecto_id", nullable = false)
+    private Proyecto proyecto;
+
+    // Constructores, getters y setters
+}
+```
+
+<dl class="worked">
+  <dt><code>@ManyToOne</code></dt>
+  <dd>Declara que muchas instancias de <code>Tarea</code> pueden pertenecer a una misma instancia de <code>Proyecto</code>.</dd>
+  <dt><code>@JoinColumn(name = "proyecto_id", nullable = false)</code></dt>
+  <dd>Especifica el nombre exacto de la columna física en la tabla <code>tareas</code> que actúa como clave foránea (FK). Al indicar <code>nullable = false</code>, Hibernate añade la restricción <code>NOT NULL</code> al generar el esquema o validarlo.</dd>
+  <dt><code>optional = false</code></dt>
+  <dd>Regla a nivel de JPA que indica que una tarea no puede existir en el contexto de persistencia sin un proyecto asociado.</dd>
+</dl>
+
+### La regla más importante de JPA: FetchType.LAZY
+
+Fíjate en el atributo `fetch = FetchType.LAZY`. **Esta es la decisión de rendimiento más trascendente que tomarás en persistencia.**
+
+JPA ofrece dos estrategias de carga para relaciones:
+
+| Estrategia | Cómo funciona | Riesgo en producción |
+| :--- | :--- | :--- |
+| **`FetchType.EAGER` (Ansioso)** | Al cargar una `Tarea`, Hibernate carga **inmediatamente** el `Proyecto` asociado mediante un `JOIN` o una segunda consulta SQL. | **Catastrófico.** Si listas 100 tareas, Hibernate puede disparar 100 consultas adicionales para cargar cada proyecto (**el problema N+1**). |
+| **`FetchType.LAZY` (Perezoso)** | Al cargar una `Tarea`, Hibernate **no consulta** la tabla de proyectos. En su lugar, coloca un objeto simulado (**Proxy de Hibernate**). Solo viajará a PostgreSQL si alguien llama a `tarea.getProyecto().getNombre()`. | **Óptimo.** Solo se paga el coste de consultar los datos que el caso de uso realmente necesita. |
+
+<div class="rule">
+  <p class="rule-label">Por defecto JPA hace trampa: cámbialo siempre a LAZY</p>
+  <p>En la especificación estándar de JPA, la anotación <code>@ManyToOne</code> viene por defecto con <code>FetchType.EAGER</code>. Es una de las peores decisiones históricas de diseño del estándar.</p>
+  <p><strong>Regla innegociable en este curso:</strong> toda anotación <code>@ManyToOne</code> y <code>@OneToOne</code> que escribas debe llevar explícitamente <code>fetch = FetchType.LAZY</code>.</p>
+</div>
+
+### Cómo viaja la relación en la API: DTOs limpios
+
+Ahora que `Tarea` contiene un objeto `Proyecto`, surge la duda: ¿cómo deben ser los DTOs de petición y respuesta?
+
+<p class="stage">1 · TareaRequest (entrada)</p>
+
+El cliente web no envía un objeto proyecto entero con su fecha de creación y descripción; solo envía su identificador:
+
+```java
+public record TareaRequest(
+    @NotBlank(message = "El título es obligatorio")
+    @Size(max = 120, message = "Máximo 120 caracteres")
+    String titulo,
+
+    @NotBlank(message = "La prioridad es obligatoria")
+    String prioridad,
+
+    @NotNull(message = "El id del proyecto es obligatorio")
+    Long proyectoId
+) {}
+```
+
+<p class="stage">2 · TareaResponse (salida)</p>
+
+En la respuesta proyectamos los datos útiles para la vista, aplanando la relación para no forzar a la interfaz a lidiar con objetos anidados innecesarios:
+
+```java
+public record TareaResponse(
+    Long id,
+    String titulo,
+    String prioridad,
+    boolean completada,
+    Long proyectoId,
+    String proyectoNombre
+) {}
+```
+
+<p class="stage">3 · El servicio asocia las entidades</p>
+
+En `TareaService`, el caso de uso de creación valida la existencia del proyecto antes de asociarlo:
+
+```java
+@Service
+public class TareaService {
+
+    private final TareaRepository tareaRepo;
+    private final ProyectoRepository proyectoRepo;
+
+    public TareaService(TareaRepository tareaRepo, ProyectoRepository proyectoRepo) {
+        this.tareaRepo = tareaRepo;
+        this.proyectoRepo = proyectoRepo;
+    }
+
+    @Transactional
+    public Tarea crear(Tarea tarea, Long proyectoId) {
+        // 1. Validar que el proyecto existe; si no, lanzar excepción de dominio (404)
+        Proyecto proyecto = proyectoRepo.findById(proyectoId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("proyecto", proyectoId));
+
+        // 2. Asociar el objeto en el lado propietario
+        tarea.setProyecto(proyecto);
+        tarea.setCompletada(false);
+
+        // 3. Persistir
+        return tareaRepo.save(tarea);
+    }
+}
+```
+
+<dl class="worked">
+  <dt>Por qué validamos el proyecto antes de guardar</dt>
+  <dd>Si no comprobáramos la existencia de <code>proyectoId</code> en el servicio, la llamada a <code>save()</code> delegaría la validación en la restricción física de PostgreSQL, lanzando una <code>DataIntegrityViolationException</code> (que terminaría en un error <code>500 Internal Server Error</code> o requeriría un manejador de excepciones complejo). Validarlo en el servicio permite emitir de inmediato un <code>404 Not Found</code> limpio con el mensaje exacto: <em>"No existe proyecto con id 88"</em>.</dd>
+</dl>
+
+### Paso a paso guiado · Conectar el controlador y la consulta por proyecto
+
+Abre `TareaRepository.java` y añade la consulta derivada para obtener todas las tareas de un proyecto:
+
+```java
+// Spring Data navega automáticamente por la propiedad: proyecto.id
+List<Tarea> findByProyectoId(Long proyectoId);
+```
+
+Ahora abre `ProyectoController.java`. Añade el subrecurso REST para consultar todas las tareas pertenecientes a un proyecto concreto:
+
+```java
+@GetMapping("/{id}/tareas")
+public List<TareaResponse> listarTareasDelProyecto(@PathVariable Long id) {
+    // 1. Asegurar que el proyecto existe
+    proyectoService.obtener(id);
+
+    // 2. Obtener las tareas del proyecto
+    List<Tarea> tareas = tareaService.listarPorProyecto(id);
+
+    // 3. Mapear a DTOs de respuesta
+    return TareaMapper.aRespuestas(tareas);
+}
+```
+
+### La comprobación · Navegación e integridad en acción
+
+Arranca la aplicación y ejecuta las siguientes pruebas en tu cliente HTTP:
+
+<p class="stage">1 · Crea un proyecto base</p>
+
+```http
+POST http://localhost:8080/proyectos
+Content-Type: application/json
+
+{
+  "nombre": "Rediseño Portal Corporativo",
+  "descripcion": "Migración a arquitectura por capas y PostgreSQL"
+}
+```
+* Respuesta: `201 Created` con `"id": 1`.
+
+<p class="stage">2 · Crea una tarea vinculada al proyecto 1</p>
+
+```http
+POST http://localhost:8080/tareas
+Content-Type: application/json
+
+{
+  "titulo": "Configurar @ManyToOne en entidades",
+  "prioridad": "ALTA",
+  "proyectoId": 1
+}
+```
+* Respuesta: `201 Created` con `"id": 1`, `"proyectoId": 1` y `"proyectoNombre": "Rediseño Portal Corporativo"`.
+* Consola SQL de Hibernate:
+```sql
+Hibernate: 
+    insert 
+    into
+        tareas
+        (completada, prioridad, proyecto_id, titulo) 
+    values
+        (?, ?, ?, ?)
+```
+Observa cómo la columna `proyecto_id` se rellena con el valor `1`.
+
+<p class="stage">3 · Intenta crear una tarea vinculada a un proyecto inexistente</p>
+
+```http
+POST http://localhost:8080/tareas
+Content-Type: application/json
+
+{
+  "titulo": "Tarea fantasma",
+  "prioridad": "BAJA",
+  "proyectoId": 999
+}
+```
+* Respuesta: `404 Not Found`.
+* Cuerpo: `{"error": "Recurso no encontrado", "mensaje": "No existe proyecto con id 999"}`.
+* En la consola SQL **no se ejecuta ningún INSERT**. La integridad se preservó en la capa de negocio.
+
+<p class="stage">4 · Consulta las tareas del proyecto</p>
+
+Ejecuta `GET http://localhost:8080/proyectos/1/tareas`.
+* Respuesta: `200 OK` con un array JSON que contiene la tarea creada.
+* Consola SQL:
+```sql
+Hibernate: 
+    select 
+        t1_0.id,
+        t1_0.completada,
+        t1_0.prioridad,
+        t1_0.proyecto_id,
+        t1_0.titulo 
+    from 
+        tareas t1_0 
+    where 
+        t1_0.proyecto_id=?
+```
+
+### Ahora tú · Asignar un responsable a la tarea
+
+Añade una segunda relación `@ManyToOne` para modelar qué usuario es el responsable de realizar una tarea:
+
+1. Modifica `Tarea.java`:
+   * Añade el atributo:
+     ```java
+     @ManyToOne(fetch = FetchType.LAZY)
+     @JoinColumn(name = "responsable_id") // nullable = true (puede nacer sin asignar)
+     private Usuario responsable;
+     ```
+2. Modifica `TareaRequest` para admitir opcionalmente `Long responsableId`.
+3. Modifica `TareaResponse` para incluir `responsableId` y `responsableNombre` (que serán `null` si la tarea no tiene responsable asignado).
+4. En `TareaService`:
+   * Si `request.responsableId()` no es nulo, busca el usuario mediante `UsuarioRepository` (lanzando `404` si no existe) y asígnalo con `tarea.setResponsable(usuario)`.
+5. Añade a `TareaRepository`: `List<Tarea> findByResponsableId(Long responsableId);`.
+6. Crea un usuario, asigna una tarea a ese usuario y comprueba que la columna `responsable_id` se persiste correctamente en PostgreSQL.
+
+### Reto · La temida LazyInitializationException
+
+Investiga el error más famoso del ecosistema Spring y Hibernate:
+
+<p class="stage stage--solo">1 · La trampa del Proxy fuera de sesión</p>
+
+Cuando configuras `fetch = FetchType.LAZY`, Hibernate no rellena `tarea.getProyecto()` con los datos reales; rellena el campo con un **Proxy** (un objeto intermediario generado dinámicamente con ByteBuddy que extiende `Proyecto`).
+* Si intentas llamar a `tarea.getProyecto().getNombre()` cuando la transacción de base de datos ya está cerrada (por ejemplo, dentro del controlador o en una capa de serialización JSON que olvidó los DTOs), Hibernate intentará abrir una conexión para consultar los datos del proyecto.
+* Como la sesión original ya se ha cerrado, Hibernate lanza la catastrófica:
+  ```text
+  org.hibernate.LazyInitializationException: 
+  could not initialize proxy [com.ejemplo.gestor.model.Proyecto#1] - no Session
+  ```
+* Explica por qué el uso estricto de DTOs y mappers **dentro de la frontera transaccional del servicio** erradica este problema para siempre.
+* Investiga qué es la propiedad `spring.jpa.open-in-view=true` (OSIV), por qué Spring Boot la trae activada por defecto para novatos y por qué en proyectos de alto rendimiento **se desactiva de forma inmediata**.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Relación <code>@ManyToOne</code> entre <code>Tarea</code> y <code>Proyecto</code> funcionando con <code>FetchType.LAZY</code> y FK verificada en PostgreSQL.</span></div>
+  <div><strong>Si lo tienes</strong><span>Consulta de subrecurso <code>GET /proyectos/{id}/tareas</code> implementada, con DTOs planos y validación previa de existencia.</span></div>
+  <div><strong>Reto</strong><span>Relación con <code>Usuario</code> completada y justificación técnica de la <code>LazyInitializationException</code> y los peligros de Open-In-View.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 35</p>
   <ul class="checklist">
-    <li>Has obtenido proyectos e incidencias relacionados y consultables.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Distingues el modelado procedimental con claves ajenas numéricas frente al modelado relacional con referencias a entidades.</li>
+    <li>Comprendes qué significa «lado propietario» de una relación y por qué lleva la anotación <code>@JoinColumn</code>.</li>
+    <li>Configuras siempre <code>FetchType.LAZY</code> en relaciones <code>@ManyToOne</code> para prevenir el problema de rendimiento N+1.</li>
+    <li>Diseñas DTOs planos de petición y respuesta que desacoplan la estructura de la API de las relaciones internas de JPA.</li>
+    <li>Validas la existencia de la entidad padre en el servicio antes de asociarla, evitando excepciones de base de datos no controladas.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿En qué tabla de la base de datos se ubica físicamente la columna de clave foránea en una relación `@ManyToOne`?</li>
+    <li>¿Qué objeto coloca Hibernate en el atributo relacionado cuando una entidad se carga con `FetchType.LAZY`?</li>
+    <li>¿Qué es el problema N+1 y qué valor de `FetchType` ayuda a combatirlo?</li>
+    <li>¿Por qué se produce una `LazyInitializationException` al acceder a una relación fuera de una transacción?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · En la tabla del lado "muchos" (en nuestro caso, la columna <code>proyecto_id</code> dentro de la tabla <code>tareas</code>).</p>
+  <p>2 · Un Proxy de Hibernate (una subclase generada por reflexión que solo contiene el identificador y carga los demás campos bajo demanda).</p>
+  <p>3 · Es el problema de rendimiento que ocurre cuando consultar una lista de N elementos dispara N consultas SQL adicionales para cargar sus dependencias; se combate usando <code>FetchType.LAZY</code> o consultas con <code>JOIN FETCH</code>.</p>
+  <p>4 · Porque se intenta acceder a los datos de un Proxy perezoso cuando la sesión de persistencia (conexión y transacción) que lo gestionaba ya ha sido cerrada.</p>
+</details>
 
 ## Sesión 36 · Relaciones bidireccionales
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una relación navegable en dos direcciones puede divergir en memoria o crear ciclos infinitos.</li>
-    <li><strong>Construye:</strong> métodos de asociación y una representación externa sin recursión.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> el peligro de desincronización en memoria con relaciones bidireccionales, los métodos de sincronización (<em>helper methods</em>) y cómo evitar el ciclo infinito de Jackson (<code>StackOverflowError</code>).</li>
+    <li><strong>2. Haz:</strong> añade la colección de tareas a <code>Proyecto</code> mediante <code>@OneToMany(mappedBy = "proyecto")</code>, implementa <code>agregarTarea</code> y configura <code>orphanRemoval = true</code>.</li>
+    <li><strong>3. Comprueba:</strong> agregas y desvinculas tareas directamente a través del proyecto padre, verificas el borrado físico de huérfanos en PostgreSQL y compruebas que los DTOs impiden cualquier recursión.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>En una relación bidireccional entre `Proyecto` y `Tarea`, ¿qué significa el parámetro `mappedBy = "proyecto"` dentro de `@OneToMany`?</li>
+    <li>Si ejecutas `tarea.setProyecto(p);` pero no haces `p.getTareas().add(tarea);`, ¿qué problema de coherencia ocurre si consultas `p.getTareas()` dentro de la misma transacción?</li>
+    <li>¿Por qué la biblioteca Jackson se bloquea con un `StackOverflowError` si intentas serializar directamente entidades bidireccionales a JSON?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **mantener ambos lados de una relación coherentes y evitar serializaciones recursivas**.
+### La ilusión de la bidireccionalidad
 
-### 2. El problema
+En un modelo relacional físico en PostgreSQL, **las relaciones bidireccionales no existen**. Solo existe una tabla con una columna de clave foránea (`tareas.proyecto_id`). Una fila de la tabla `tareas` sabe a qué proyecto apunta; la tabla `proyectos` no almacena ninguna lista de IDs ni sabe físicamente quién la apunta.
 
-Una relación navegable en dos direcciones puede divergir en memoria o crear ciclos infinitos.
+Sin embargo, en el paradigma orientado a objetos de Java, resulta muy intuitivo poder navegar en las dos direcciones:
+* Saber a qué proyecto pertenece una tarea: `tarea.getProyecto().getNombre()`.
+* Saber qué tareas tiene un proyecto: `proyecto.getTareas().size()`.
 
-### 3–6. Itinerario de trabajo
+Para conseguir esta navegación inversa en Java sin crear tablas intermedias, añadimos en `Proyecto`:
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+```java
+@OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
+private List<Tarea> tareas = new ArrayList<>();
+```
 
-### 7. Comprueba que funciona
+<figure class="diagram">
+  <figcaption>El lado inverso frente al lado propietario</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Proyecto (@OneToMany, mappedBy)</li>
+    <li>Lado inverso (solo lectura de navegación)</li>
+    <li>Tarea (@ManyToOne, @JoinColumn)</li>
+    <li>Lado propietario (escribe la FK física)</li>
+  </ol>
+</figure>
+
+<div class="rule">
+  <p class="rule-label">El significado exacto de mappedBy</p>
+  <p>El parámetro <code>mappedBy = "proyecto"</code> le dice a Hibernate: <em>«Yo soy el lado inverso. La clave foránea física no está en mi tabla; la gestiona el atributo llamado <code>proyecto</code> dentro de la clase <code>Tarea</code>»</em>.</p>
+  <p>Cualquier modificación que hagas sobre la lista <code>tareas</code> de un proyecto será <strong>ignorada por la base de datos</strong> a menos que también se actualice la referencia <code>tarea.setProyecto(...)</code>.</p>
+</div>
+
+### La desincronización en memoria: la trampa de los dos punteros
+
+Como en Java tenemos dos referencias independientes en memoria RAM, es facilísimo romper la coherencia de nuestro propio grafo de objetos:
+
+```java
+// CÓDIGO PELIGROSO: desincroniza la memoria
+Tarea tarea = new Tarea("Nueva funcionalidad", "ALTA");
+tarea.setProyecto(proyecto);
+// ¡Olvidamos añadirla a la lista: proyecto.getTareas().add(tarea)!
+```
+
+Al terminar la transacción, Hibernate guardará la tarea en PostgreSQL porque el lado propietario (`tarea.setProyecto`) se actualizó. Pero si en esa misma transacción de negocio alguien consulta `proyecto.getTareas()`, **la nueva tarea no estará en la lista**. Tu aplicación dirá que el proyecto tiene 0 tareas cuando en la base de datos ya hay 1.
+
+Para blindar nuestra entidad contra este fallo, **prohibimos manipular la lista directamente** e implementamos **métodos de sincronización (*Helper Methods*)**:
+
+```java
+@Entity
+@Table(name = "proyectos")
+public class Proyecto {
+
+    // ... campos id, nombre, etc.
+
+    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tarea> tareas = new ArrayList<>();
+
+    // Getter que devuelve una vista no modificable para proteger la encapsulación
+    public List<Tarea> getTareas() {
+        return Collections.unmodifiableList(tareas);
+    }
+
+    // Método helper de asociación bidireccional
+    public void agregarTarea(Tarea tarea) {
+        tareas.add(tarea);
+        tarea.setProyecto(this);
+    }
+
+    // Método helper de desvinculación
+    public void eliminarTarea(Tarea tarea) {
+        tareas.remove(tarea);
+        tarea.setProyecto(null);
+    }
+}
+```
+
+<dl class="worked">
+  <dt><code>Collections.unmodifiableList(tareas)</code></dt>
+  <dd>Evita que un programador despistado haga <code>proyecto.getTareas().add(tarea)</code> desde fuera sin actualizar la referencia inversa. Si alguien lo intenta, Java lanza de inmediato una <code>UnsupportedOperationException</code>.</dd>
+  <dt><code>orphanRemoval = true</code></dt>
+  <dd>Si sacas una tarea de la lista mediante <code>proyecto.eliminarTarea(t)</code>, Hibernate detecta que la tarea se ha quedado "huérfana" (ya no pertenece a su proyecto padre) y genera automáticamente un <code>DELETE FROM tareas WHERE id = ?</code> en PostgreSQL.</dd>
+  <dt><code>cascade = CascadeType.ALL</code></dt>
+  <dd>Propaga las operaciones del padre a los hijos: si persistes un proyecto nuevo que ya contiene tres tareas añadidas con <code>agregarTarea</code>, Hibernate guardará automáticamente el proyecto y las tres tareas en la misma transacción.</dd>
+</dl>
+
+### El monstruo de la recursión infinita: Jackson y StackOverflowError
+
+Si devuelves entidades `@Entity` directamente en un `@RestController`, las relaciones bidireccionales provocarán una catástrofe garantizada:
+
+```text
+java.lang.StackOverflowError
+    at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField...
+    at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields...
+```
+
+¿Qué ha ocurrido?
+1. Jackson empieza a serializar el `Proyecto` a JSON: escribe `id`, `nombre` y llega al campo `tareas`.
+2. Para cada `Tarea` de la lista, empieza a escribir sus campos: `id`, `titulo` y llega a su campo `proyecto`.
+3. Jackson serializa ese `Proyecto`: escribe sus campos y llega a `tareas`.
+4. Jackson serializa cada `Tarea`... y entra en un bucle infinito que agota la pila de llamadas (*call stack*) de la JVM en un milisegundo.
+
+<div class="rule">
+  <p class="rule-label">Los DTOs eliminan la recursión de raíz</p>
+  <p>Muchos tutoriales intentan parchear este problema llenando las entidades de anotaciones como <code>@JsonIgnore</code>, <code>@JsonManagedReference</code> o <code>@JsonBackReference</code>. Es una pésima solución que mezcla detalles de serialización HTTP dentro del modelo de persistencia.</p>
+  <p>La solución arquitectónica correcta es la que venimos aplicando: <strong>las entidades jamás se serializan a JSON</strong>. El controlador devuelve DTOs planos diseñados para la vista, donde los ciclos no existen.</p>
+</div>
+
+### Paso 1 · Diseñar el DTO de detalle del proyecto
+
+Diseñamos un DTO específico para consultar un proyecto junto al resumen de sus tareas:
+
+```java
+package com.ejemplo.gestor.dto;
+
+import java.util.List;
+
+public record ProyectoDetalleResponse(
+    Long id,
+    String nombre,
+    String descripcion,
+    boolean activo,
+    int totalTareas,
+    List<TareaResumenResponse> tareas
+) {
+    public record TareaResumenResponse(
+        Long id,
+        String titulo,
+        String prioridad,
+        boolean completada
+    ) {}
+}
+```
+
+Observa la clave del diseño: `TareaResumenResponse` **no incluye ninguna referencia a Proyecto**. El ciclo queda roto de forma natural y limpia.
+
+### Paso 2 · Mapear y exponer en el Service y Controller
+
+Actualiza `ProyectoMapper.java`:
+
+```java
+public static ProyectoDetalleResponse aDetalle(Proyecto proyecto) {
+    List<ProyectoDetalleResponse.TareaResumenResponse> tareasResumen = proyecto.getTareas().stream()
+            .map(t -> new ProyectoDetalleResponse.TareaResumenResponse(
+                    t.getId(),
+                    t.getTitulo(),
+                    t.getPrioridad(),
+                    t.isCompletada()))
+            .toList();
+
+    return new ProyectoDetalleResponse(
+            proyecto.getId(),
+            proyecto.getNombre(),
+            proyecto.getDescripcion(),
+            proyecto.isActivo(),
+            tareasResumen.size(),
+            tareasResumen
+    );
+}
+```
+
+En `ProyectoService.java`:
+
+```java
+@Transactional(readOnly = true)
+public Proyecto obtenerConDetalle(Long id) {
+    // Al estar dentro de @Transactional, la lista perezosa getTareas() se inicializa sin error
+    Proyecto proyecto = obtener(id);
+    // Forzamos la inicialización accediendo al tamaño mientras la sesión está abierta
+    proyecto.getTareas().size();
+    return proyecto;
+}
+```
+
+En `ProyectoController.java`:
+
+```java
+@GetMapping("/{id}/detalle")
+public ProyectoDetalleResponse obtenerDetalle(@PathVariable Long id) {
+    Proyecto proyecto = servicio.obtenerConDetalle(id);
+    return ProyectoMapper.aDetalle(proyecto);
+}
+```
+
+### La comprobación · El ciclo sin recursión y el borrado de huérfanos
+
+Arranca la aplicación y ejecuta las siguientes pruebas:
+
+<p class="stage">1 · Consulta el detalle de un proyecto con tareas</p>
+
+Ejecuta `GET http://localhost:8080/proyectos/1/detalle`.
+
+Respuesta limpia `200 OK` sin recursión ni errores:
+
+```json
+{
+  "id": 1,
+  "nombre": "Rediseño Portal Corporativo",
+  "descripcion": "Migración a arquitectura por capas y PostgreSQL",
+  "activo": true,
+  "totalTareas": 2,
+  "tareas": [
+    {
+      "id": 1,
+      "titulo": "Configurar @ManyToOne en entidades",
+      "prioridad": "ALTA",
+      "completada": false
+    },
+    {
+      "id": 2,
+      "titulo": "Escribir tests con @DataJpaTest",
+      "prioridad": "MEDIA",
+      "completada": true
+    }
+  ]
+}
+```
+
+<p class="stage">2 · Comprueba el borrado automático de huérfanos</p>
+
+Añade en `ProyectoService` un caso de uso para desvincular una tarea:
+
+```java
+@Transactional
+public void desvincularTarea(Long proyectoId, Long tareaId) {
+    Proyecto proyecto = obtener(proyectoId);
+    Tarea tarea = tareaRepo.findById(tareaId)
+            .orElseThrow(() -> new RecursoNoEncontradoException("tarea", tareaId));
+
+    // Usamos el helper method: saca la tarea de la lista y pone su proyecto a null
+    proyecto.eliminarTarea(tarea);
+    // Al salir de la transacción con orphanRemoval = true, Hibernate genera el DELETE
+}
+```
+
+Añade el endpoint en `ProyectoController`:
+```java
+@DeleteMapping("/{id}/tareas/{tareaId}")
+public ResponseEntity<Void> desvincularTarea(
+        @PathVariable Long id, 
+        @PathVariable Long tareaId) {
+    servicio.desvincularTarea(id, tareaId);
+    return ResponseEntity.noContent().build();
+}
+```
+
+Ejecuta `DELETE http://localhost:8080/proyectos/1/tareas/2`.
+* Respuesta: `204 No Content`.
+* Consola SQL de Hibernate:
+```sql
+Hibernate: 
+    delete 
+    from
+        tareas 
+    where
+        id=?
+```
+* Abre tu cliente de base de datos (`psql` o DBeaver) y ejecuta `SELECT * FROM tareas WHERE id = 2;`: la fila ha desaparecido. El mecanismo de `orphanRemoval` ha limpiado la base de datos automáticamente.
+
+### Ahora tú · Operaciones de lote sobre el proyecto
+
+Implementa en `ProyectoService` y `ProyectoController` un caso de uso para crear un proyecto junto a un lote inicial de tareas en una sola petición HTTP:
+
+1. Crea el DTO `ProyectoConTareasRequest`:
+   ```java
+   public record ProyectoConTareasRequest(
+       @NotBlank String nombre,
+       String descripcion,
+       List<String> titulosTareasIniciales
+   ) {}
+   ```
+2. En `ProyectoService.crearConTareas(...)`:
+   * Instancia el nuevo `Proyecto`.
+   * Itera sobre la lista de títulos recibidos creando cada `Tarea` y añadiéndola con `proyecto.agregarTarea(nuevaTarea)`.
+   * Llama a `proyectoRepo.save(proyecto)`.
+   * Gracias a `cascade = CascadeType.ALL`, comprueba que Hibernate genera el `INSERT` del proyecto y a continuación todos los `INSERT` de las tareas asociadas.
+3. Expón el endpoint `POST /proyectos/con-tareas` devolviendo `201 Created` y verifica en PostgreSQL que todas las filas se han insertado en una única transacción atómica.
+
+### Reto · equals() y hashCode() en entidades JPA
+
+Investiga uno de los temas más debatidos de la ingeniería Java:
+
+<p class="stage stage--solo">1 · La trampa del @Id en el hashCode()</p>
+
+Muchos desarrolladores generan los métodos `equals()` y `hashCode()` basándose en el atributo `id`:
+
+```java
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Tarea tarea)) return false;
+    return id != null && id.equals(tarea.id);
+}
+
+@Override
+public int hashCode() {
+    return getClass().hashCode();
+}
+```
+
+* Imagina que creas una tarea nueva: `Tarea t = new Tarea("Login", "ALTA");`. Su `id` es `null`.
+* Metes esa tarea en un `Set<Tarea> pendientes = new HashSet<>(); pendientes.add(t);`.
+* Persistes la tarea en la base de datos: `em.persist(t); em.flush();`. Ahora PostgreSQL le ha asignado `id = 1L`.
+* ¿Qué ocurre si ejecutas `pendientes.contains(t)` si el `hashCode()` dependía del `id`? El objeto sigue estando en el conjunto, pero **Java ya no lo encuentra** porque su código hash cambió de valor mientras estaba dentro de la tabla hash.
+* Investiga la recomendación oficial de Hibernate: ¿por qué se recomienda mantener un `hashCode()` constante basado en la clase o en una clave de negocio natural inmutable (*Natural Business Key*)?
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Relación bidireccional entre <code>Proyecto</code> y <code>Tarea</code> con <code>mappedBy</code>, helper methods y DTO de detalle funcionando.</span></div>
+  <div><strong>Si lo tienes</strong><span>Desvinculación con <code>orphanRemoval = true</code> eliminando la fila en PostgreSQL mediante <code>DELETE</code>.</span></div>
+  <div><strong>Reto</strong><span>Creación en cascada de proyecto con tareas iniciales en una transacción y análisis técnico de <code>equals/hashCode</code> con IDs mutables.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 36</p>
   <ul class="checklist">
-    <li>Has obtenido métodos de asociación y una representación externa sin recursión.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Comprendes que en PostgreSQL las relaciones bidireccionales no existen y que <code>mappedBy</code> marca el lado inverso de lectura.</li>
+    <li>Utilizas métodos helper (<code>agregarTarea</code>, <code>eliminarTarea</code>) para garantizar que la memoria RAM y la base de datos no diverjan.</li>
+    <li>Proteges la colección interna devolviendo <code>Collections.unmodifiableList</code> en el getter de la entidad padre.</li>
+    <li>Comprendes la diferencia entre <code>cascade = REMOVE</code> y <code>orphanRemoval = true</code>.</li>
+    <li>Utilizas DTOs específicos para respuestas compuestas, erradicando el problema de recursión infinita de Jackson (<code>StackOverflowError</code>).</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué una relación en la base de datos solo necesita una columna física mientras que en Java necesitamos gestionar dos referencias?</li>
+    <li>¿Qué ocurre si añades una tarea a la lista `proyecto.getTareas()` pero no ejecutas `tarea.setProyecto(proyecto)`?</li>
+    <li>¿Qué hace la opción `orphanRemoval = true` cuando eliminas un elemento de una colección gestionada?</li>
+    <li>¿Cómo solucionan los DTOs el error `StackOverflowError` al serializar relaciones bidireccionales?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque en el modelo relacional cualquier fila puede asociarse con otra buscando por su clave foránea en cualquier dirección con una cláusula JOIN, mientras que en Java la navegación entre punteros en memoria es estrictamente unidireccional.</p>
+  <p>2 · Que la base de datos nunca se enterará del cambio, porque el lado propietario que mapea la clave foránea física (Tarea.proyecto) no fue actualizado.</p>
+  <p>3 · Emite automáticamente una sentencia SQL DELETE para borrar físicamente de la tabla la entidad hija que ha dejado de pertenecer a la colección del padre.</p>
+  <p>4 · Porque los DTOs de salida aplanan los datos y no incluyen referencias circulares hacia la entidad contenedora, rompiendo el ciclo de inspección de Jackson.</p>
+</details>
 
 ## Semana 13 · JPA más allá del tutorial
 
