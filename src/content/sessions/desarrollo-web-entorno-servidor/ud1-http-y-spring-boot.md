@@ -392,7 +392,7 @@ El ejemplo de todos los días: escribes en un buscador y aparecen sugerencias de
 <div class="rule">
   <p class="rule-label">Por qué te insisto con este filtro y no con los otros</p>
   <p>Las peticiones de <code>Fetch/XHR</code> son las que van a buscar <strong>datos</strong> a una API, y son exactamente el tipo de petición que atenderá el servidor que vas a escribir. Las de <code>Img</code> o <code>CSS</code> no las verás nunca en tu backend.</p>
-  <p>Cuando en la UD8 conectes un cliente Angular con tu API, sus peticiones aparecerán en este filtro y en ningún otro. Acostumbrarte hoy a mirarlo te ahorrará semanas de confusión entonces.</p>
+  <p>Cuando en la UD8 conectes una página del navegador con tu API, sus peticiones aparecerán en este filtro y en ningún otro. Acostumbrarte hoy a mirarlo te ahorrará semanas de confusión entonces.</p>
 </div>
 
 ### Tarea 1 · Ficha de tres peticiones

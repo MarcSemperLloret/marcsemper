@@ -284,7 +284,7 @@ Si cada método convierte a su manera, el mismo recurso acaba publicándose de d
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> el JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formulario de Angular valide en el navegador.</li>
+    <li><strong>Comprende:</strong> el JSON puede llegar incompleto, mal formado o manipulado aunque el formulario del cliente valide en el navegador.</li>
     <li><strong>Construye:</strong> peticiones inválidas rechazadas con información concreta sobre cada campo.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
@@ -296,7 +296,7 @@ Al terminar serás capaz de **aplicar @Valid y restricciones de Bean Validation 
 
 ### 2. El problema
 
-El JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formulario de Angular valide en el navegador.
+El JSON puede llegar incompleto, mal formado o manipulado aunque el formulario del cliente valide en el navegador.
 
 ### 3–6. Itinerario de trabajo
 

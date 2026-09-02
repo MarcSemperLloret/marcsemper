@@ -193,9 +193,9 @@ export const teachingCourses: TeachingCourse[] = [
     summaryEs:
       "Construcción de un backend completo con Java y Spring Boot: desde HTTP y los primeros endpoints hasta PostgreSQL, APIs REST, seguridad, integraciones, testing y conexión con Angular.",
     overview:
-      "A two-term, project-led module built around one application that grows with the class: an issue and project manager with users, projects, issues, comments and tags. It starts as an in-memory API verified with an HTTP client from the very first unit, learns REST design before the code grows enough to make a redesign expensive, is reorganised into layers, gains persistence, meets a real browser client before security is added, and finishes with authentication, integrations, testing and a technical defence. Automated tests appear from the architecture unit onwards rather than at the end. Guidance is deliberately reduced as the course advances, so the final project is driven by a specification rather than a tutorial.",
+      "A two-term, project-led module built around one application that grows with the class: an issue and project manager with users, projects, issues, comments and tags. It starts as an in-memory API verified with an HTTP client from the very first unit, learns REST design before the code grows enough to make a redesign expensive, is reorganised into layers, gains persistence, meets a real browser client before security is added, with Angular kept for the final project, and finishes with authentication, integrations, testing and a technical defence. Automated tests appear from the architecture unit onwards rather than at the end. Guidance is deliberately reduced as the course advances, so the final project is driven by a specification rather than a tutorial.",
     overviewEs:
-      "Módulo de dos trimestres articulado alrededor de una única aplicación que crece con la clase: un gestor de proyectos e incidencias con usuarios, proyectos, incidencias, comentarios y etiquetas. Empieza como una API en memoria comprobada con un cliente HTTP desde la primera unidad, aprende a diseñarse como API REST antes de que rediseñarla salga caro, se reorganiza en capas, incorpora persistencia, se enfrenta a un navegador real antes de añadir la seguridad, y termina con autenticación, integraciones, pruebas y defensa técnica. Los tests automáticos aparecen desde la unidad de arquitectura y no al final. El andamiaje se retira de forma deliberada: al principio se trabaja con mucha guía y el proyecto final parte únicamente de una especificación.",
+      "Módulo de dos trimestres articulado alrededor de una única aplicación que crece con la clase: un gestor de proyectos e incidencias con usuarios, proyectos, incidencias, comentarios y etiquetas. Empieza como una API en memoria comprobada con un cliente HTTP desde la primera unidad, aprende a diseñarse como API REST antes de que rediseñarla salga caro, se reorganiza en capas, incorpora persistencia, se enfrenta a un navegador real antes de añadir la seguridad, dejando Angular para el proyecto final, y termina con autenticación, integraciones, pruebas y defensa técnica. Los tests automáticos aparecen desde la unidad de arquitectura y no al final. El andamiaje se retira de forma deliberada: al principio se trabaja con mucha guía y el proyecto final parte únicamente de una especificación.",
     outcomes: [
       "Explain what happens between an HTTP request and response, and diagnose it with browser tools and an HTTP client.",
       "Build and verify HTTP backends with controllers, JSON, DTOs, validation, errors and session state.",
@@ -204,7 +204,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Design, validate, document and consume resource-oriented REST APIs.",
       "Apply authentication, authorisation and common web-security controls with Spring Security.",
       "Integrate external services and handle files, timeouts and partial failures.",
-      "Connect an Angular client to the finished API without making backend verification depend on the interface.",
+      "Connect a browser client, and finally Angular, to the finished API without making backend verification depend on the interface.",
       "Test, debug, document and defend a complete backend application."
     ],
     outcomesEs: [
@@ -215,7 +215,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Diseñar, validar, documentar y consumir APIs REST orientadas a recursos.",
       "Aplicar autenticación, autorización y controles habituales de seguridad web con Spring Security.",
       "Integrar servicios externos y tratar ficheros, timeouts y fallos parciales.",
-      "Conectar un cliente Angular a la API terminada sin hacer que la comprobación del backend dependa de la interfaz.",
+      "Conectar un cliente de navegador, y finalmente Angular, a la API terminada sin hacer que la comprobación del backend dependa de la interfaz.",
       "Probar, depurar, documentar y defender una aplicación backend completa."
     ],
     topics: [
@@ -225,7 +225,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Layered architecture",
       "JPA and PostgreSQL",
       "Advanced REST APIs",
-      "Angular integration",
+      "Browser clients and CORS",
       "Spring Security",
       "External integrations",
       "Testing, quality and documentation"
@@ -237,7 +237,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Arquitectura por capas",
       "JPA y PostgreSQL",
       "APIs REST avanzadas",
-      "Integración con Angular",
+      "Clientes de navegador y CORS",
       "Spring Security",
       "Integraciones externas",
       "Testing, calidad y documentación"
@@ -326,10 +326,10 @@ export const teachingCourses: TeachingCourse[] = [
         number: "UD8",
         verb: "CONNECT",
         verbEs: "CONECTAR",
-        title: "The first client: Angular against the API",
-        titleEs: "El primer cliente: Angular contra la API",
-        description: "A minimal Angular integration with no authentication, so that CORS and the browser are learned in isolation before security is added.",
-        descriptionEs: "Una integración Angular mínima y sin autenticación, para que CORS y el navegador se aprendan aislados antes de añadir la seguridad.",
+        title: "The first client: a page in the browser",
+        titleEs: "El primer cliente: una página en el navegador",
+        description: "A framework-free page calling the API with no authentication, so that the browser and CORS are learned in isolation before security is added.",
+        descriptionEs: "Una página sin framework llamando a la API y sin autenticación, para que el navegador y CORS se aprendan aislados antes de añadir la seguridad.",
         resources: []
       },
       {

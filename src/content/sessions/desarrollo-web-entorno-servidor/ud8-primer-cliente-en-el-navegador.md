@@ -1,37 +1,37 @@
 ---
-title: "El primer cliente: Angular contra la API"
+title: "El primer cliente: una página en el navegador"
 label: "UD8 · Conectar"
 section: "ud-08"
 order: 8
 lang: "es"
-summary: "Conectar por primera vez un cliente Angular con la API, todavía sin autenticación, para que CORS y el navegador se aprendan aislados y no mezclados con la seguridad."
+summary: "Conectar por primera vez una página web con la API, sin framework y sin autenticación, para que el navegador y CORS se aprendan aislados y no mezclados con la seguridad."
 duration: "6 horas · 1 semana · 3 sesiones"
 modality: "Laboratorio de integración · 50 % guía / 50 % autonomía"
-deliverable: "Una pantalla Angular que lista y crea recursos contra la API real, con CORS resuelto y documentado."
+deliverable: "Una página de una sola pantalla que lista y crea recursos contra la API real, con CORS resuelto y documentado."
 date: "2026-09-02"
 outcomes:
-  - "Consumir la API desde un cliente Angular con HttpClient."
+  - "Consumir la API desde el navegador con fetch, sin ningún framework."
   - "Explicar qué es CORS, por qué lo aplica el navegador y por qué Postman no lo sufre."
   - "Configurar CORS en el backend de forma explícita y acotada."
   - "Diagnosticar un fallo de integración sabiendo si el problema es del cliente, del servidor o del navegador."
 requirements:
   - "La API de la UD7 en marcha."
-  - "Un proyecto Angular mínimo: el del módulo de cliente, o uno de una sola pantalla creado en la primera sesión."
+  - "Un editor de texto y un navegador con DevTools. No hace falta instalar ningún framework."
 priorKnowledge:
   - "APIs REST, JSON y códigos de estado."
-  - "TypeScript básico y componentes Angular."
+  - "HTML básico y nociones mínimas de JavaScript."
 ---
 
-<p class="lead">Es la primera vez que un navegador, y no Postman, llama a tu API. Se hace ahora y sin autenticación a propósito: cuando en la unidad siguiente aparezcan tokens y permisos, CORS ya no será una variable desconocida.</p>
+<p class="lead">Es la primera vez que un navegador, y no Postman, llama a tu API. Se hace con una página suelta, sin framework y sin autenticación, a propósito: lo que hay que aprender aquí es qué cambia cuando el cliente es un navegador, no cómo se programa una interfaz. Así, cuando en la unidad siguiente aparezcan tokens y permisos, CORS ya no será una variable desconocida.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje medio. El cliente se reduce a una pantalla y se monta en la primera sesión: lo que se practica es la integración y el diagnóstico, no Angular.</p>
+  <p>Andamiaje medio. El cliente es una página de una veintena de líneas que se escribe en la primera sesión: lo que se practica es la integración y el diagnóstico, no el desarrollo de interfaces. El cliente real llega en el proyecto final, cuando Angular ya se haya visto en su módulo.</p>
 </div>
 
 ## Semana 17 · Del cliente HTTP al navegador
 
-## Sesión 49 · Un cliente de verdad llama a tu API
+## Sesión 49 · Un navegador llama a tu API
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -44,7 +44,7 @@ priorKnowledge:
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **consumir un endpoint desde Angular con HttpClient y observar la petición en el panel de red**.
+Al terminar serás capaz de **consumir un endpoint desde una página web con fetch y observar la petición en el panel de red**.
 
 ### 2. El problema
 
@@ -185,7 +185,7 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Consumir la API desde un cliente Angular con HttpClient.</li>
+    <li>Consumir la API desde el navegador con fetch, sin ningún framework.</li>
     <li>Explicar qué es CORS, por qué lo aplica el navegador y por qué Postman no lo sufre.</li>
     <li>Configurar CORS en el backend de forma explícita y acotada.</li>
     <li>Diagnosticar un fallo de integración sabiendo si el problema es del cliente, del servidor o del navegador.</li>

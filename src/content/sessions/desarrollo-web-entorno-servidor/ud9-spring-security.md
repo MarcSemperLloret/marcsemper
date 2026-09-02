@@ -7,7 +7,7 @@ lang: "es"
 summary: "Desde por qué HTTP no recuerda quién eres hasta una API protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada."
 duration: "18 horas · 3 semanas · 9 sesiones"
 modality: "Taller técnico · 40 % guía / 60 % autonomía"
-deliverable: "La aplicación protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada, consumida desde el cliente Angular."
+deliverable: "La aplicación protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada, consumida desde la página cliente de la UD8."
 date: "2026-09-02"
 outcomes:
   - "Explicar por qué HTTP no mantiene estado y cómo lo resuelven cookies y sesión."

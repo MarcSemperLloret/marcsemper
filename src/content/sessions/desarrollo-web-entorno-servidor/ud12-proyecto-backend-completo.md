@@ -19,6 +19,7 @@ requirements:
   - "Todo lo construido durante el curso."
 priorKnowledge:
   - "El módulo completo, de la UD1 a la UD11."
+  - "Angular, del módulo de desarrollo web en entorno cliente."
 ---
 
 <p class="lead">Ya no existe tutorial. El profesorado entrega una especificación y el equipo decide modelo, contrato, arquitectura, estrategia de seguridad, integración y pruebas. Angular actúa como consumidor final, pero el backend debe seguir pudiendo comprobarse de forma completa con Postman o Bruno.</p>

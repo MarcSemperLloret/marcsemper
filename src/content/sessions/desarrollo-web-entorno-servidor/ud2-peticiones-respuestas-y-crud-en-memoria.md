@@ -25,7 +25,7 @@ priorKnowledge:
   - "Postman o Bruno a nivel básico: método, URL, cuerpo JSON y lectura de la respuesta."
 ---
 
-<p class="lead">La aplicación sigue sin interfaz visual. Eso es intencionado: primero aprenderemos a observar su contrato HTTP directamente, sin que Angular o una página oculten qué se envía y qué se recibe.</p>
+<p class="lead">La aplicación sigue sin interfaz visual. Eso es intencionado: primero aprenderemos a observar su contrato HTTP directamente, sin que ninguna interfaz oculte qué se envía y qué se recibe.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
