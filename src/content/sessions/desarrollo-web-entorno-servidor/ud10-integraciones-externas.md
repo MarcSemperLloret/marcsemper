@@ -801,153 +801,1086 @@ Investiga la librería **Resilience4j**:
 ## Sesión 64 · Subida y descarga de ficheros
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> aceptar un archivo sin límites abre problemas de seguridad, espacio y trazabilidad.</li>
-    <li><strong>Construye:</strong> adjuntos de una incidencia con descarga autorizada.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> el transporte binario sobre HTTP con <code>multipart/form-data</code>, los vectores de ataque críticos en subida de ficheros (<em>Path Traversal</em>, ejecución remota de código en carpetas estáticas y agotamiento de disco), los límites de tamaño en Spring Boot y la descarga segura mediante la cabecera <code>Content-Disposition</code>.</li>
+    <li><strong>2. Haz:</strong> configura el almacenamiento seguro en un directorio externo al proyecto, renombra los ficheros con identificadores únicos UUID, persiste los metadatos en PostgreSQL y construye endpoints protegidos para adjuntar ficheros a tareas y descargarlos con autorización.</li>
+    <li><strong>3. Comprueba:</strong> subes documentos PDF e imágenes desde Bruno mediante <em>Multipart Form</em>, verificas en el disco que los nombres están sanitizados y compruebas que la descarga autorizada sirve el binario con su nombre original y tipo MIME correcto.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué una petición con un archivo adjunto debe enviarse con el tipo de contenido <code>multipart/form-data</code> en lugar de <code>application/json</code>?</li>
+    <li>¿Qué grave vulnerabilidad de seguridad (*Path Traversal*) se produce si guardas un fichero en el disco utilizando directamente el nombre original que envía el cliente (ej: <code>../../etc/passwd</code>)?</li>
+    <li>¿Por qué nunca se deben guardar los ficheros subidos por los usuarios dentro de la carpeta <code>src/main/resources/static</code> de la aplicación?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **validar, almacenar y servir un fichero controlando nombre, tipo, tamaño y autorización**.
+### El transporte binario: multipart/form-data
 
-### 2. El problema
+Hasta ahora todas nuestras peticiones enviaban texto estructurado en formato JSON. Sin embargo, un fichero (un PDF con especificaciones, una captura de un bug en PNG o un informe de obra) es una secuencia de bytes binarios.
 
-Aceptar un archivo sin límites abre problemas de seguridad, espacio y trazabilidad.
+Para transmitir simultáneamente datos JSON y flujos binarios, el protocolo HTTP utiliza el estándar **`multipart/form-data`** (RFC 7578):
+* El cuerpo de la petición se divide en bloques independientes delimitados por una cadena frontera (*boundary*).
+* Cada bloque tiene sus propias cabeceras `Content-Disposition` y `Content-Type`, seguidas de los bytes correspondientes.
 
-### 3–6. Itinerario de trabajo
+### Los tres vectores de ataque en la subida de ficheros
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+Aceptar ficheros del exterior es una de las puertas de entrada más peligrosas en una aplicación web. Un atacante intentará explotar tres vectores clásicos:
 
-### 7. Comprueba que funciona
+| Vector de ataque | Cómo opera el atacante | Consecuencia | Contramedida obligatoria |
+| :--- | :--- | :--- | :--- |
+| **1 · Salto de directorio (*Path Traversal*)** | Envía un fichero con nombre manipulado: `../../../../etc/shadow` o `../../app.jar`. | Sobrescribe ficheros críticos del sistema operativo o binarios de la aplicación. | **Nunca usar el nombre original en el disco.** Generar un nombre aleatorio con `UUID.randomUUID()` y guardar el nombre original solo como metadato en la base de datos. |
+| **2 · Ejecución remota de código (RCE)** | Sube un archivo con código ejecutable (`malware.jsp`, `script.sh`) a una carpeta estática pública. | El servidor web ejecuta el script directamente con permisos del sistema, dando control total al atacante. | **Almacenar los ficheros fuera del classpath y del directorio web.** Servirlos exclusivamente a través de un endpoint de descarga controlado por Java. |
+| **3 · Denegación de servicio por espacio (*Zip Bomb*)** | Sube ficheros gigantescos de cientos de gigabytes o miles de ficheros simultáneos. | Agota el espacio en disco de la máquina o satura la memoria RAM del servidor. | **Configurar límites estrictos en Spring Boot** (`max-file-size: 5MB`) y validar extensiones/MIME permitidos en el servicio. |
+
+<div class="rule">
+  <p class="rule-label">La ley del almacenamiento seguro</p>
+  <p><strong>El disco almacena UUIDs opacos; la base de datos almacena los nombres reales.</strong></p>
+  <p>Los ficheros subidos deben residir en un directorio externo configurable (ej: <code>/var/uploads/</code>), inaccesible mediante URL directa, y servirse siempre a través de un controlador que verifique la autenticación del usuario.</p>
+</div>
+
+### Paso a paso guiado · Subida y descarga segura de adjuntos
+
+<p class="stage">Paso 1 · Configurar límites de multipart en application.properties</p>
+
+```properties
+# Límite máximo por fichero individual (5 MB)
+spring.servlet.multipart.max-file-size=5MB
+# Límite máximo por petición completa (10 MB)
+spring.servlet.multipart.max-request-size=10MB
+
+# Directorio de almacenamiento externo en disco
+app.almacenamiento.directorio-subidas=./almacenamiento/adjuntos
+```
+
+<p class="stage">Paso 2 · Entidad JPA para metadatos de ficheros</p>
+
+La base de datos almacena la trazabilidad y la relación con la tarea:
+
+```java
+package com.empresa.proyecto.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "adjuntos")
+public class Adjunto {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nombreOriginal;
+
+    @Column(nullable = false, unique = true)
+    private String nombreAlmacenado; // UUID generado (ej: "a4f8b1c2-9e3d.pdf")
+
+    @Column(nullable = false)
+    private String contentType; // "application/pdf", "image/png"
+
+    @Column(nullable = false)
+    private long tamanoBytes;
+
+    @Column(nullable = false)
+    private LocalDateTime fechaSubida = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tarea_id", nullable = false)
+    private Tarea tarea;
+
+    // Constructores, getters y setters
+    public Adjunto() {}
+
+    public Adjunto(String nombreOriginal, String nombreAlmacenado, String contentType, long tamanoBytes, Tarea tarea) {
+        this.nombreOriginal = nombreOriginal;
+        this.nombreAlmacenado = nombreAlmacenado;
+        this.contentType = contentType;
+        this.tamanoBytes = tamanoBytes;
+        this.tarea = tarea;
+    }
+
+    public Long getId() { return id; }
+    public String getNombreOriginal() { return nombreOriginal; }
+    public String getNombreAlmacenado() { return nombreAlmacenado; }
+    public String getContentType() { return contentType; }
+    public long getTamanoBytes() { return tamanoBytes; }
+}
+```
+
+<p class="stage">Paso 3 · Servicio de almacenamiento local seguro</p>
+
+Este servicio valida el fichero, genera el UUID y escribe los bytes en el disco con control estricto:
+
+```java
+package com.empresa.proyecto.service;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.annotation.PostConstruct;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.*;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class AlmacenamientoService {
+
+    @Value("${app.almacenamiento.directorio-subidas:./almacenamiento/adjuntos}")
+    private String directorioSubidas;
+
+    private Path rutaAlmacenamiento;
+
+    private static final List<String> TIPOS_PERMITIDOS = List.of(
+        "application/pdf", "image/png", "image/jpeg", "text/plain"
+    );
+
+    @PostConstruct
+    public void inicializar() {
+        try {
+            this.rutaAlmacenamiento = Paths.get(directorioSubidas).toAbsolutePath().normalize();
+            Files.createDirectories(this.rutaAlmacenamiento);
+        } catch (IOException ex) {
+            throw new RuntimeException("No se pudo inicializar la carpeta de subidas en: " + directorioSubidas, ex);
+        }
+    }
+
+    public String guardarFichero(MultipartFile archivo) {
+        if (archivo == null || archivo.isEmpty()) {
+            throw new IllegalArgumentException("El archivo no puede estar vacío");
+        }
+
+        // Validación estricta de tipo MIME
+        String contentType = archivo.getContentType();
+        if (contentType == null || !TIPOS_PERMITIDOS.contains(contentType.toLowerCase())) {
+            throw new IllegalArgumentException("Tipo de archivo no permitido: " + contentType + ". Permitidos: " + TIPOS_PERMITIDOS);
+        }
+
+        // Extracción segura de la extensión
+        String nombreOriginal = archivo.getOriginalFilename();
+        String extension = "";
+        if (nombreOriginal != null && nombreOriginal.contains(".")) {
+            extension = nombreOriginal.substring(nombreOriginal.lastIndexOf(".")).toLowerCase();
+        }
+
+        // Generamos un nombre UUID para evitar colisiones y ataques de Path Traversal
+        String nombreSeguro = UUID.randomUUID() + extension;
+        Path destino = this.rutaAlmacenamiento.resolve(nombreSeguro).normalize();
+
+        // Verificación de seguridad anti Path Traversal
+        if (!destino.startsWith(this.rutaAlmacenamiento)) {
+            throw new SecurityException("Intento de almacenamiento fuera de la ruta permitida");
+        }
+
+        try {
+            Files.copy(archivo.getInputStream(), destino, StandardCopyOption.REPLACE_EXISTING);
+            return nombreSeguro;
+        } catch (IOException ex) {
+            throw new RuntimeException("Error al escribir el archivo en disco", ex);
+        }
+    }
+
+    public Resource cargarComoRecurso(String nombreAlmacenado) {
+        try {
+            Path archivo = this.rutaAlmacenamiento.resolve(nombreAlmacenado).normalize();
+            Resource recurso = new UrlResource(archivo.toUri());
+
+            if (recurso.exists() && recurso.isReadable()) {
+                return recurso;
+            } else {
+                throw new RuntimeException("El archivo no existe o no se puede leer: " + nombreAlmacenado);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("Ruta de archivo malformada", ex);
+        }
+    }
+}
+```
+
+<p class="stage">Paso 4 · Controlador de subida y descarga autorizada</p>
+
+```java
+package com.empresa.proyecto.controller;
+
+import com.empresa.proyecto.model.Adjunto;
+import com.empresa.proyecto.repository.AdjuntoRepository;
+import com.empresa.proyecto.repository.TareaRepository;
+import com.empresa.proyecto.service.AlmacenamientoService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+@RequestMapping("/api/v1")
+public class AdjuntoController {
+
+    private final AlmacenamientoService almacenamientoService;
+    private final AdjuntoRepository adjuntoRepository;
+    private final TareaRepository tareaRepository;
+
+    public AdjuntoController(AlmacenamientoService almacenamientoService, 
+                             AdjuntoRepository adjuntoRepository, 
+                             TareaRepository tareaRepository) {
+        this.almacenamientoService = almacenamientoService;
+        this.adjuntoRepository = adjuntoRepository;
+        this.tareaRepository = tareaRepository;
+    }
+
+    @PostMapping(value = "/tareas/{id}/adjuntos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('DESARROLLADOR', 'JEFE_PROYECTO', 'ADMINISTRADOR')")
+    public ResponseEntity<Void> subirAdjunto(
+            @PathVariable Long id,
+            @RequestParam("archivo") MultipartFile archivo) {
+
+        var tarea = tareaRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Tarea no encontrada"));
+
+        String nombreAlmacenado = almacenamientoService.guardarFichero(archivo);
+
+        Adjunto adjunto = new Adjunto(
+            archivo.getOriginalFilename(),
+            nombreAlmacenado,
+            archivo.getContentType(),
+            archivo.getSize(),
+            tarea
+        );
+        adjuntoRepository.save(adjunto);
+
+        return ResponseEntity.status(201).build();
+    }
+
+    @GetMapping("/adjuntos/{id}/descargar")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Resource> descargarAdjunto(@PathVariable Long id) {
+        Adjunto adjunto = adjuntoRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Adjunto no encontrado"));
+
+        Resource recurso = almacenamientoService.cargarComoRecurso(adjunto.getNombreAlmacenado());
+
+        // Cabecera Content-Disposition: attachment fuerza al navegador a descargarlo con su nombre original
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(adjunto.getContentType()))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + adjunto.getNombreOriginal() + "\"")
+            .body(recurso);
+    }
+}
+```
+
+### La comprobación · Pruebas de subida y descarga en Bruno
+
+1. **Subida de fichero mediante Bruno:**
+   * Crea una petición `POST http://localhost:8080/api/v1/tareas/1/adjuntos`.
+   * En la pestaña **Auth**, introduce un Bearer Token válido con rol `DESARROLLADOR`.
+   * En la pestaña **Body**, selecciona **Multipart Form**.
+   * Añade el campo con nombre `archivo`, selecciona el tipo **File** y escoge un archivo PDF o PNG real de tu ordenador.
+   * Envía la petición y comprueba que responde **`201 Created`**.
+2. **Inspección forense del disco:**
+   * Abre tu explorador de archivos y entra en la carpeta `almacenamiento/adjuntos`.
+   * Comprueba que se ha creado un archivo como `8e2a1b9c-4f12-411a-a45b-76b9e28f30c1.pdf`.
+   * El nombre original no está en el disco: **el sistema es completamente inmune a Path Traversal**.
+3. **Descarga autorizada:**
+   * Lanza `GET http://localhost:8080/api/v1/adjuntos/1/descargar` con cabecera `Authorization: Bearer <token>`.
+   * Comprueba que la respuesta devuelve los bytes binarios y la cabecera:
+     `Content-Disposition: attachment; filename="especificaciones-proyecto.pdf"`.
+4. **Prueba de seguridad (Fichero malicioso o no permitido):**
+   * Intenta subir un script `prueba.sh` o un ejecutable `.exe`.
+   * **Resultado esperado:** Error `400 Bad Request` con mensaje *"Tipo de archivo no permitido"*. El archivo es rechazado y nada se escribe en el disco.
+
+### Ahora tú · Listar los adjuntos de una tarea
+
+Implementa el endpoint de consulta de adjuntos:
+1. Crea `GET /api/v1/tareas/{id}/adjuntos`.
+2. Devuelve una lista de `AdjuntoResponse`:
+   ```java
+   public record AdjuntoResponse(
+       Long id,
+       String nombreOriginal,
+       long tamanoBytes,
+       String contentType,
+       String urlDescarga
+   ) {}
+   ```
+3. Donde `urlDescarga` sea `/api/v1/adjuntos/{adjunto.id}/descargar`.
+4. Verifica con Bruno que el cliente web puede consultar la lista de adjuntos y descargar cada uno mediante su URL correspondiente.
+
+### Reto · Validación de firmas mágicas binarias (Magic Bytes)
+
+Un atacante avanzado puede renombrar un ejecutable `virus.exe` a `informe.pdf`.
+* Si tu servidor solo comprueba la extensión o la cabecera `Content-Type` enviada por el cliente, el fichero será aceptado porque el navegador reporta lo que la extensión sugiere.
+
+Investiga cómo inspeccionar los **Magic Bytes** del flujo binario:
+1. ¿Cuáles son los primeros 4 bytes característicos de un archivo PDF legítimo (`%PDF` / `0x25 0x50 0x44 0x46`) y de una imagen PNG (`0x89 0x50 0x4E 0x47`)?
+2. Integra la librería `Apache Tika` o implementa una comprobación directa de los primeros bytes de `archivo.getInputStream()` para verificar el tipo real antes de escribir en disco.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Configuración de límites multipart y servicio de almacenamiento local con UUIDs operativos.</span></div>
+  <div><strong>Si lo tienes</strong><span>Subida y descarga autorizada con Spring Security, metadatos en PostgreSQL y `Content-Disposition`.</span></div>
+  <div><strong>Reto</strong><span>Validación profunda de tipos de archivo mediante inspección de firmas mágicas (*Magic Bytes*).</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 64</p>
   <ul class="checklist">
-    <li>Has obtenido adjuntos de una incidencia con descarga autorizada.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se comprende el protocolo `multipart/form-data` para el transporte de binarios.</li>
+    <li>Se neutraliza el ataque de *Path Traversal* generando UUIDs opacos para el disco.</li>
+    <li>Los ficheros se almacenan en un directorio externo, nunca en carpetas web públicas.</li>
+    <li>Los límites de tamaño (`max-file-size`) protegen el servidor contra saturación de disco.</li>
+    <li>La descarga está blindada por autorización y emite cabeceras de descarga correctas.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué nunca se debe guardar un fichero usando directamente `archivo.getOriginalFilename()`?</li>
+    <li>¿Qué cabecera HTTP le indica al navegador que no intente renderizar el archivo en la pestaña sino que lo descargue al disco?</li>
+    <li>¿Qué dos propiedades de `application.properties` establecen el tamaño máximo permitido para subidas?</li>
+    <li>¿Por qué es peligroso validar el tipo de fichero únicamente a través de la extensión de su nombre?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque el cliente puede enviar nombres maliciosos con secuencias de salto de directorio (../../) para sobrescribir archivos del sistema o inyectar código ejecutable.</p>
+  <p>2 · La cabecera Content-Disposition: attachment; filename="nombre.ext".</p>
+  <p>3 · spring.servlet.multipart.max-file-size y spring.servlet.multipart.max-request-size.</p>
+  <p>4 · Porque la extensión puede ser alterada trivialmente por el usuario (ej: renombrar un script .sh a .pdf) eludiendo la comprobación si no se valida el MIME o los magic bytes.</p>
+</details>
 
 ## Sesión 65 · Correo, servicio externo o webhook
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> notificar otro sistema introduce un segundo resultado que puede fallar después de guardar el dato principal.</li>
-    <li><strong>Construye:</strong> un correo o webhook encapsulado con registro de éxito y fallo.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> el problema de la doble escritura y la frontera transaccional al notificar a terceros, la ejecución asíncrona desacoplada con <code>@Async</code>, y el patrón de <strong>Eventos de Dominio</strong> con <code>ApplicationEventPublisher</code> y <code>@TransactionalEventListener</code>.</li>
+    <li><strong>2. Haz:</strong> publica un evento al crear una tarea urgente y constrúyelo de forma que un listener asíncrono emita una notificación por webhook HTTP saliente sin ralentizar ni bloquear la transacción de la base de datos principal.</li>
+    <li><strong>3. Comprueba:</strong> verificas en los logs de Spring Boot que el controlador responde en menos de 20 ms mientras que la notificación externa se procesa en segundo plano en un hilo independiente (<code>task-executor</code>), demostrando que un fallo en la notificación externa no afecta a la persistencia local.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué ocurre con la respuesta de tu API si el controlador envía un correo electrónico de forma síncrona y el servidor SMTP tarda 8 segundos en conectar?</li>
+    <li>Si la llamada externa de notificación falla con una excepción, ¿debería cancelarse (*rollback*) la tarea que el usuario acaba de guardar en PostgreSQL?</li>
+    <li>¿Qué diferencia fundamental existe entre un listener estándar con `@EventListener` y uno con `@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)`?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **integrar una salida asíncrona o una notificación sin mezclarla con el controller**.
+### El problema de la doble escritura y la frontera transaccional
 
-### 2. El problema
+Imagina este caso de uso en nuestro gestor de proyectos:
+* Cuando un usuario crea una tarea de prioridad **CRÍTICA**, el sistema debe:
+  1. **Guardar la tarea en PostgreSQL** (operación ACID local).
+  2. **Notificar a un sistema externo** (enviar un correo SMTP o emitir un webhook HTTP hacia un canal de Discord/Slack de soporte).
 
-Notificar otro sistema introduce un segundo resultado que puede fallar después de guardar el dato principal.
+Si implementas esto de forma síncrona dentro del método del servicio:
 
-### 3–6. Itinerario de trabajo
+```java
+// ANTIPATRÓN: Acoplamiento síncrono de efectos secundarios
+@Transactional
+public TareaResponse crearTarea(TareaRequest request) {
+    Tarea tarea = tareaRepository.save(new Tarea(...)); // Paso 1: Base de datos
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+    webhookClient.notificarAlerta(tarea); // Paso 2: Red externa síncrona (¡PELIGRO!)
 
-### 7. Comprueba que funciona
+    return mapearResponse(tarea);
+}
+```
+
+Este código contiene **dos defectos arquitectónicos gravísimos**:
+1. **Latencia acumulada:** El cliente web se queda esperando en blanco mientras el servidor contacta con Slack o el servidor de correo. Si la red remota tarda 5 segundos, la API tarda 5 segundos.
+2. **Inconsistencia transaccional:**
+   * Si la llamada a Slack falla con una excepción, Spring hace rollback en PostgreSQL: **la tarea no se guarda porque Slack estaba caído**.
+   * Si la base de datos hace commit pero la notificación falla después, ¿cómo sabes qué se notificó y qué no?
+
+<div class="rule">
+  <p class="rule-label">El principio de desacoplamiento de efectos secundarios</p>
+  <p><strong>Las notificaciones externas son efectos secundarios; nunca deben bloquear la transacción principal de negocio.</strong></p>
+  <p>La persistencia en base de datos debe confirmarse primero. Una vez garantizado el <em>commit</em>, los efectos secundarios se disparan de forma asíncrona mediante <strong>Eventos de Dominio</strong>.</p>
+</div>
+
+### Arquitectura de Eventos de Dominio en Spring
+
+Para resolver este problema con elegancia, Spring proporciona un bus de eventos en memoria:
+
+<figure class="diagram">
+  <figcaption>Eventos desacoplados con @TransactionalEventListener</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Controlador recibe petición</li>
+    <li>2. Servicio guarda Tarea en DB</li>
+    <li>3. Publica TareaCreadaEvent</li>
+    <li>4. Commit de la Transacción local (DB asegurada)</li>
+    <li>5. Listener en hilo @Async envía Webhook en background</li>
+  </ol>
+</figure>
+
+* **`ApplicationEventPublisher`:** Publica un objeto de evento inmutable (`record`).
+* **`@TransactionalEventListener(phase = AFTER_COMMIT)`:** Garantiza que el evento solo se procesará **después de que la transacción de base de datos se haya confirmado con éxito**. Si la base de datos falla, la notificación externa jamás se envía.
+* **`@Async`:** Ejecuta el listener en un pool de hilos independiente en segundo plano, liberando al hilo de Tomcat inmediatamente.
+
+### Paso a paso guiado · Webhooks asíncronos con Eventos de Dominio
+
+<p class="stage">Paso 1 · Activar el soporte asíncrono en AsyncConfig</p>
+
+Configuramos el ejecutor de tareas asíncronas con un pool de hilos dimensionado:
+
+```java
+package com.empresa.proyecto.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
+
+@Configuration
+@EnableAsync // Habilita la anotación @Async
+public class AsyncConfig {
+
+    @Bean(name = "notificacionesExecutor")
+    public Executor notificacionesExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(50);
+        executor.setThreadNamePrefix("notif-thread-");
+        executor.initialize();
+        return executor;
+    }
+}
+```
+
+<p class="stage">Paso 2 · Definir el Evento de Dominio</p>
+
+Creamos un registro inmutable que transporta los datos mínimos necesarios:
+
+```java
+package com.empresa.proyecto.event;
+
+public record TareaCriticaCreadaEvent(
+    Long tareaId,
+    String titulo,
+    String prioridad,
+    String proyectoNombre,
+    String creadoPor
+) {}
+```
+
+<p class="stage">Paso 3 · Publicar el evento desde TareaService</p>
+
+El servicio solo se preocupa de guardar el dato y publicar el evento. Cero código de correos o webhooks:
+
+```java
+package com.empresa.proyecto.service;
+
+import com.empresa.proyecto.dto.TareaRequest;
+import com.empresa.proyecto.dto.TareaResponse;
+import com.empresa.proyecto.event.TareaCriticaCreadaEvent;
+import com.empresa.proyecto.model.Prioridad;
+import com.empresa.proyecto.model.Tarea;
+import com.empresa.proyecto.repository.TareaRepository;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class TareaService {
+
+    private final TareaRepository tareaRepository;
+    private final ApplicationEventPublisher eventPublisher;
+
+    public TareaService(TareaRepository tareaRepository, ApplicationEventPublisher eventPublisher) {
+        this.tareaRepository = tareaRepository;
+        this.eventPublisher = eventPublisher;
+    }
+
+    @Transactional
+    public TareaResponse crearTarea(TareaRequest request, String usuarioAutenticado) {
+        Tarea tarea = new Tarea();
+        tarea.setTitulo(request.titulo());
+        tarea.setPrioridad(request.prioridad());
+        // ... persistencia en PostgreSQL
+        tarea = tareaRepository.save(tarea);
+
+        // Si la tarea es crítica, publicamos el evento
+        if (tarea.getPrioridad() == Prioridad.CRITICA) {
+            eventPublisher.publishEvent(new TareaCriticaCreadaEvent(
+                tarea.getId(),
+                tarea.getTitulo(),
+                tarea.getPrioridad().name(),
+                tarea.getProyecto().getNombre(),
+                usuarioAutenticado
+            ));
+        }
+
+        return new TareaResponse(tarea.getId(), tarea.getTitulo(), tarea.getPrioridad().name());
+    }
+}
+```
+
+<p class="stage">Paso 4 · Listener asíncrono emisor de Webhook</p>
+
+El listener se ejecuta en segundo plano solo tras el commit de la base de datos:
+
+```java
+package com.empresa.proyecto.listener;
+
+import com.empresa.proyecto.event.TareaCriticaCreadaEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
+import org.springframework.web.client.RestClient;
+
+import java.util.Map;
+
+@Component
+public class NotificacionWebhookListener {
+
+    private static final Logger log = LoggerFactory.getLogger(NotificacionWebhookListener.class);
+    private final RestClient webhookRestClient;
+
+    public NotificacionWebhookListener(RestClient.Builder restClientBuilder) {
+        // En un entorno real se apunta a una URL configurable de Slack/Discord o Webhook de terceros
+        this.webhookRestClient = restClientBuilder
+            .baseUrl("https://httpbin.org") // Servicio de pruebas que refleja peticiones
+            .build();
+    }
+
+    @Async("notificacionesExecutor")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void alCrearTareaCritica(TareaCriticaCreadaEvent evento) {
+        log.info("[{}] Procesando notificación asíncrona para tarea crítica #{}: {}",
+            Thread.currentThread().getName(), evento.tareaId(), evento.titulo());
+
+        try {
+            // Emitimos la petición POST hacia el webhook externo
+            webhookRestClient.post()
+                .uri("/post")
+                .body(Map.of(
+                    "alerta", "TAREA CRÍTICA REGISTRADA",
+                    "id", evento.tareaId(),
+                    "titulo", evento.titulo(),
+                    "proyecto", evento.proyectoNombre(),
+                    "responsable", evento.creadoPor()
+                ))
+                .retrieve()
+                .toBodilessEntity();
+
+            log.info("[{}] Notificación de webhook enviada con éxito para tarea #{}", 
+                Thread.currentThread().getName(), evento.tareaId());
+
+        } catch (Exception ex) {
+            // El fallo externo se registra en auditoría sin afectar al usuario
+            log.error("[{}] Error al enviar webhook para tarea #{}: {}. Se registrará para reintento.",
+                Thread.currentThread().getName(), evento.tareaId(), ex.getMessage());
+        }
+    }
+}
+```
+
+### La comprobación · Inspección de hilos y tiempos en Bruno
+
+1. **Lanza la creación de una tarea crítica:**
+   `POST http://localhost:8080/api/v1/proyectos/1/tareas`
+   ```json
+   {
+     "titulo": "Servidor principal caído en producción",
+     "prioridad": "CRITICA"
+   }
+   ```
+2. **Comprueba el tiempo de respuesta en Bruno:**
+   El cliente recibe código **`201 Created` en 18 ms**. La experiencia de usuario es instantánea.
+3. **Inspecciona la consola de Spring Boot:**
+   ```text
+   23:45:10.102 INFO  [http-nio-8080-exec-1] c.e.p.service.TareaService : Tarea #42 guardada en PostgreSQL
+   23:45:10.120 INFO  [notif-thread-1] c.e.p.l.NotificacionWebhookListener : [notif-thread-1] Procesando notificación asíncrona para tarea crítica #42: Servidor principal caído
+   23:45:10.450 INFO  [notif-thread-1] c.e.p.l.NotificacionWebhookListener : [notif-thread-1] Notificación de webhook enviada con éxito para tarea #42
+   ```
+   Observa los nombres de los hilos:
+   * El hilo de Tomcat `http-nio-8080-exec-1` guardó en la base de datos y respondió al cliente en 18 ms.
+   * El hilo `notif-thread-1` procesó el webhook en segundo plano durante 330 ms sin que el usuario sufriera ninguna espera.
+
+### Ahora tú · Notificación simulada por correo electrónico
+
+Añade un segundo listener que simule el envío de un correo de alerta:
+1. Crea `NotificacionEmailListener`.
+2. Escucha el mismo evento `TareaCriticaCreadaEvent` con `@Async` y `@TransactionalEventListener(phase = AFTER_COMMIT)`.
+3. Simula la redacción del mensaje y registra en logs:
+   `"[Email] Enviando correo a jefatura@empresa.com con asunto: ALERTA en proyecto X"`.
+4. Comprueba que un único evento dispara concurrentemente tanto el webhook como el correo sin interferir entre sí.
+
+### Reto · El patrón Outbox para garantizar entrega (Transactional Outbox)
+
+Si el servidor se apaga repentinamente justo después de hacer commit en la base de datos pero antes de que el hilo asíncrono ejecute el webhook, la notificación se pierde para siempre.
+
+Investiga el patrón **Transactional Outbox**:
+1. ¿Por qué las arquitecturas de microservicios guardan la notificación en una tabla local `mensajes_pendientes` dentro de la **misma transacción** que la tarea?
+2. ¿Cómo lee un proceso programado (`@Scheduled`) esa tabla periódicamente para enviar los webhooks y marcar su estado como `ENVIADO`?
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Configuración de `@EnableAsync`, evento de dominio y listener desacoplado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Listener con `@TransactionalEventListener(phase = AFTER_COMMIT)` y llamada a webhook con `RestClient`.</span></div>
+  <div><strong>Reto</strong><span>Diseño conceptual del patrón Transactional Outbox para tolerancia a fallos y reintentos.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 65</p>
   <ul class="checklist">
-    <li>Has obtenido un correo o webhook encapsulado con registro de éxito y fallo.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se erradica el antipatrón de encadenar llamadas externas síncronas en transacciones locales.</li>
+    <li>Se utiliza el bus de eventos en memoria de Spring (`ApplicationEventPublisher`).</li>
+    <li>La anotación `@TransactionalEventListener(phase = AFTER_COMMIT)` evita notificar transacciones abortadas.</li>
+    <li>El procesamiento asíncrono con `@Async` mantiene tiempos de respuesta de milisegundos en la API.</li>
+    <li>Los fallos en servicios de terceros quedan contenidos en auditoría sin romper el flujo de negocio.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué es un error ejecutar una llamada HTTP externa dentro de un método anotado con `@Transactional`?</li>
+    <li>¿Qué garantiza la fase `TransactionPhase.AFTER_COMMIT` en un `@TransactionalEventListener`?</li>
+    <li>¿Qué sucede con la petición del usuario si el listener asíncrono falla con una excepción no controlada?</li>
+    <li>¿Por qué es recomendable definir un `ThreadPoolTaskExecutor` propio en lugar de usar el executor por defecto de Spring?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque mantiene la conexión de base de datos y los bloqueos de filas abiertos durante todo el tiempo que tarda la red externa, reduciendo drásticamente la concurrencia y arriesgando rollbacks indebidos.</p>
+  <p>2 · Garantiza que el evento solo se ejecutará si la transacción de base de datos se confirmó con éxito; si hubo un error previo o un rollback, el listener no se dispara.</p>
+  <p>3 · Nada; el usuario ya recibió su respuesta 201 Created hace tiempo porque el listener se ejecuta en un hilo separado desacoplado del ciclo de vida de la petición HTTP.</p>
+  <p>4 · Para controlar el tamaño de la cola, limitar el número máximo de hilos concurrentes y evitar que un aluvión de notificaciones consuma toda la memoria de la máquina.</p>
+</details>
 
 ## Sesión 66 · Miniintegración
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una demo aislada no demuestra que la integración respete las reglas de la aplicación.</li>
-    <li><strong>Construye:</strong> una funcionalidad integrada con camino feliz y degradación comprobados.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> la síntesis de una arquitectura backend completa: cómo orquestar de forma coherente <strong>Persistencia (PostgreSQL)</strong>, <strong>Seguridad (Spring Security / JWT)</strong>, <strong>Integración Externa (RestClient / Open-Meteo)</strong>, <strong>Gestión de Ficheros (Multipart)</strong> y <strong>Eventos Asíncronos</strong> en un único caso de uso empresarial.</li>
+    <li><strong>2. Haz:</strong> implementa el flujo integral de gestión de incidencias de campo: subida de informe técnico adjunto, consulta automática del clima de la sede del proyecto con degradación elegante y emisión de alerta por webhook a los responsables.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas la batería de pruebas verificando tanto el camino feliz (todos los sistemas operativos) como los escenarios de contingencia (proveedor meteorológico caído y webhook inaccesible), certificando que la aplicación se comporta de forma robusta y predecible.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué diferencia a un backend profesional de una colección de ejemplos de clase aislados?</li>
+    <li>Si la API externa de clima falla y el webhook de alerta falla, ¿qué código de estado HTTP debe devolver el endpoint de creación de incidencia si el dato local y el archivo adjunto se guardaron correctamente?</li>
+    <li>¿Cómo garantizamos que solo un usuario autenticado con rol adecuado pueda registrar una incidencia con adjunto?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **combinar persistencia, seguridad y un servicio externo en un caso de uso completo**.
+### La prueba del mundo real: Todo el sistema en marcha
 
-### 2. El problema
+A lo largo del curso has aprendido piezas individuales:
+* Controladores REST y DTOs con validación (UD3).
+* Arquitectura por capas desacoplada (UD4).
+* Persistencia relacional con Spring Data JPA y PostgreSQL (UD5).
+* Pruebas de integración con MockMvc y documentación OpenAPI (UD7).
+* Autenticación y autorización granular con Spring Security y JWT (UD9).
+* Clientes HTTP salientes con Capa Anticorrupción y eventos asíncronos (UD10).
 
-Una demo aislada no demuestra que la integración respete las reglas de la aplicación.
+El objetivo de esta sesión es **integrar todas estas capacidades en un único flujo de negocio de extremo a extremo**:
 
-### 3–6. Itinerario de trabajo
+<figure class="diagram">
+  <figcaption>El flujo integral de la Miniintegración</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Cliente autenticado (Bearer JWT) envía Multipart</li>
+    <li>2. Spring Security autoriza el rol (hasRole)</li>
+    <li>3. Almacenamiento guarda PDF con UUID en disco</li>
+    <li>4. ClimaService consulta Open-Meteo (con timeout y fallback)</li>
+    <li>5. PostgreSQL guarda Incidencia + Adjunto (Transacción ACID)</li>
+    <li>6. Commit dispara Webhook asíncrono en background</li>
+    <li>7. Respuesta 201 Created limpia entregada al usuario</li>
+  </ol>
+</figure>
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+### El caso de uso: Registro de Incidencias de Obra
 
-### 7. Comprueba que funciona
+Un operario de campo registra una incidencia urgente sobre un proyecto:
+1. Envía los datos de la incidencia (título, descripción, severidad) junto a un archivo adjunto (fotografía o informe técnico en PDF).
+2. El servidor valida la identidad y el rol mediante JWT.
+3. El fichero se sanitiza con UUID y se almacena en el directorio seguro.
+4. El servidor obtiene las coordenadas del proyecto y consulta el clima local en tiempo real para enriquecer el registro. Si la API de clima falla, se aplica degradación elegante.
+5. Se persiste la incidencia en base de datos.
+6. Se publica el evento que notifica a los responsables vía webhook en segundo plano.
+
+### Paso a paso guiado · Ensamblado del flujo completo
+
+<p class="stage">Paso 1 · El DTO de respuesta integral</p>
+
+```java
+package com.empresa.proyecto.dto;
+
+import java.time.LocalDateTime;
+
+public record IncidenciaCompletaResponse(
+    Long id,
+    String titulo,
+    String severidad,
+    String proyectoNombre,
+    String nombreFicheroAdjunto,
+    String urlDescargaAdjunto,
+    ClimaProyectoResponse condicionesMeteorologicas,
+    LocalDateTime fechaRegistro
+) {}
+```
+
+<p class="stage">Paso 2 · El servicio orquestador IncidenciaService</p>
+
+```java
+package com.empresa.proyecto.service;
+
+import com.empresa.proyecto.dto.ClimaProyectoResponse;
+import com.empresa.proyecto.dto.IncidenciaCompletaResponse;
+import com.empresa.proyecto.event.TareaCriticaCreadaEvent;
+import com.empresa.proyecto.integration.ClimaService;
+import com.empresa.proyecto.model.Adjunto;
+import com.empresa.proyecto.model.Incidencia;
+import com.empresa.proyecto.model.Proyecto;
+import com.empresa.proyecto.repository.IncidenciaRepository;
+import com.empresa.proyecto.repository.ProyectoRepository;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+
+@Service
+public class IncidenciaService {
+
+    private final IncidenciaRepository incidenciaRepository;
+    private final ProyectoRepository proyectoRepository;
+    private final AlmacenamientoService almacenamientoService;
+    private final ClimaService climaService;
+    private final ApplicationEventPublisher eventPublisher;
+
+    public IncidenciaService(IncidenciaRepository incidenciaRepository,
+                             ProyectoRepository proyectoRepository,
+                             AlmacenamientoService almacenamientoService,
+                             ClimaService climaService,
+                             ApplicationEventPublisher eventPublisher) {
+        this.incidenciaRepository = incidenciaRepository;
+        this.proyectoRepository = proyectoRepository;
+        this.almacenamientoService = almacenamientoService;
+        this.climaService = climaService;
+        this.eventPublisher = eventPublisher;
+    }
+
+    @Transactional
+    public IncidenciaCompletaResponse registrarIncidencia(
+            Long proyectoId,
+            String titulo,
+            String severidad,
+            MultipartFile fichero,
+            String username) {
+
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado"));
+
+        // 1. Guardar fichero binario con UUID seguro
+        String nombreAlmacenado = almacenamientoService.guardarFichero(fichero);
+
+        // 2. Consultar servicio externo con degradación garantizada (nunca lanza 500)
+        ClimaProyectoResponse clima = climaService.consultarClimaSeguro(
+            proyecto.getLatitud(), proyecto.getLongitud()
+        );
+
+        // 3. Persistir entidad en PostgreSQL
+        Incidencia incidencia = new Incidencia();
+        incidencia.setTitulo(titulo);
+        incidencia.setSeveridad(severidad);
+        incidencia.setProyecto(proyecto);
+        incidencia.setFechaRegistro(LocalDateTime.now());
+
+        Adjunto adjunto = new Adjunto(
+            fichero.getOriginalFilename(),
+            nombreAlmacenado,
+            fichero.getContentType(),
+            fichero.getSize(),
+            null
+        );
+        incidencia.setAdjunto(adjunto);
+
+        incidencia = incidenciaRepository.save(incidencia);
+
+        // 4. Publicar evento para notificaciones asíncronas
+        eventPublisher.publishEvent(new TareaCriticaCreadaEvent(
+            incidencia.getId(),
+            incidencia.getTitulo(),
+            incidencia.getSeveridad(),
+            proyecto.getNombre(),
+            username
+        ));
+
+        // 5. Retornar respuesta integral
+        return new IncidenciaCompletaResponse(
+            incidencia.getId(),
+            incidencia.getTitulo(),
+            incidencia.getSeveridad(),
+            proyecto.getNombre(),
+            adjunto.getNombreOriginal(),
+            "/api/v1/adjuntos/" + adjunto.getId() + "/descargar",
+            clima,
+            incidencia.getFechaRegistro()
+        );
+    }
+}
+```
+
+<p class="stage">Paso 3 · Controlador protegido con Multipart y Seguridad</p>
+
+```java
+package com.empresa.proyecto.controller;
+
+import com.empresa.proyecto.dto.IncidenciaCompletaResponse;
+import com.empresa.proyecto.service.IncidenciaService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+@RequestMapping("/api/v1/proyectos")
+public class IncidenciaController {
+
+    private final IncidenciaService incidenciaService;
+
+    public IncidenciaController(IncidenciaService incidenciaService) {
+        this.incidenciaService = incidenciaService;
+    }
+
+    @PostMapping(value = "/{id}/incidencias", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('DESARROLLADOR', 'JEFE_PROYECTO', 'ADMINISTRADOR')")
+    public ResponseEntity<IncidenciaCompletaResponse> registrarIncidencia(
+            @PathVariable Long id,
+            @RequestParam("titulo") String titulo,
+            @RequestParam("severidad") String severidad,
+            @RequestParam("fichero") MultipartFile fichero,
+            @AuthenticationPrincipal UserDetails usuarioAutenticado) {
+
+        IncidenciaCompletaResponse response = incidenciaService.registrarIncidencia(
+            id, titulo, severidad, fichero, usuarioAutenticado.getUsername()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+}
+```
+
+### La comprobación · Batería de escenarios en Bruno
+
+Ejecuta la suite de verificación de integración:
+
+1. **Escenario 1: El camino feliz (Todo funciona):**
+   * Auth: Bearer Token con rol `DESARROLLADOR`.
+   * Body: Multipart con campos de texto y archivo `informe.pdf`.
+   * **Resultado:** Código **`201 Created`**.
+   * La respuesta contiene el ID generado, el enlace de descarga `/api/v1/adjuntos/1/descargar`, el clima actual (`"temperaturaCelsius": 21.5`) y en la consola se observa el webhook disparado en segundo plano por el hilo `notif-thread-1`.
+2. **Escenario 2: Caída del servicio meteorológico (Degradación elegante):**
+   * Desconecta tu conexión a Internet o apunta la URL de Open-Meteo a una IP inalcanzable.
+   * Lanza la misma petición de alta.
+   * **Resultado:** Código **`201 Created`**. La incidencia se guarda, el PDF se almacena y la respuesta incluye `"descripcionClima": "Servicio meteorológico no disponible temporalmente"`. **El backend no se cae.**
+3. **Escenario 3: Acceso no autorizado:**
+   * Lanza la petición sin cabecera `Authorization`.
+   * **Resultado:** Código **`401 Unauthorized`**. Cero ficheros guardados en disco.
+4. **Escenario 4: Fichero inválido:**
+   * Intenta adjuntar un archivo ejecutable `virus.exe`.
+   * **Resultado:** Código **`400 Bad Request`**. La transacción se aborta limpiamente.
+
+### Ahora tú · Integrar la visualización en el cliente web de la UD8
+
+Actualiza tu página web `index.html`:
+1. Añade una sección para consultar incidencias de un proyecto.
+2. Si la incidencia incluye condiciones climáticas favorables (`esFavorableParaTrabajoExterior: true`), muestra un icono en verde; si no es favorable o hubo aviso de degradación, muéstralo en naranja.
+3. Añade el botón de descarga del fichero adjunto con su enlace a `/api/v1/adjuntos/{id}/descargar` inyectando el token JWT en la cabecera.
+
+### Reto · Auditoría de integraciones externas
+
+Diseña una tabla de auditoría en PostgreSQL:
+```sql
+CREATE TABLE auditoria_integraciones (
+    id BIGSERIAL PRIMARY KEY,
+    servicio_destino VARCHAR(50) NOT NULL,
+    operacion VARCHAR(50) NOT NULL,
+    latencia_ms BIGINT NOT NULL,
+    codigo_http_resultado INT,
+    estado VARCHAR(20) NOT NULL, -- 'EXITO', 'TIMEOUT', 'ERROR_REMOTO'
+    fecha_registro TIMESTAMP NOT NULL
+);
+```
+Implementa un aspecto `@Aspect` o un interceptor en `RestClient` (`ClientHttpRequestInterceptor`) que registre automáticamente cada petición saliente a Open-Meteo o al Webhook en esta tabla.
+
+> [!NOTE]
+> Si en la evaluación se solicita una memoria técnica justificando la arquitectura integral y la resiliencia del sistema frente a fallos de terceros, el formato oficial de entrega de texto es siempre un **documento en PDF** (`memoria-integracion.pdf`), nunca un archivo markdown suelto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Flujo integral de subida multipart con persistencia en PostgreSQL y respuesta tipada.</span></div>
+  <div><strong>Si lo tienes</strong><span>Integración de Open-Meteo con degradación elegante, seguridad JWT y eventos asíncronos.</span></div>
+  <div><strong>Reto</strong><span>Tabla e interceptor de auditoría de peticiones salientes registrando latencias y fallos.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 66</p>
   <ul class="checklist">
-    <li>Has obtenido una funcionalidad integrada con camino feliz y degradación comprobados.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se articulan coherentemente todas las capas del backend en un único caso de uso.</li>
+    <li>La persistencia transaccional y el almacenamiento binario en disco operan en armonía.</li>
+    <li>La degradación elegante garantiza la continuidad del servicio ante averías externas.</li>
+    <li>Las notificaciones asíncronas no degradan la latencia percibida por el usuario.</li>
+    <li>La seguridad por token protege tanto la mutación de datos como la descarga de adjuntos.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué la consulta meteorológica debe realizarse antes de guardar la incidencia pero el webhook debe dispararse después?</li>
+    <li>¿Qué ocurriría con el archivo guardado en disco si la transacción de PostgreSQL falla al final con un error de clave duplicada?</li>
+    <li>¿Cómo se asegura que un usuario solo pueda descargar adjuntos si está autenticado?</li>
+    <li>¿Qué ventajas ofrece devolver un DTO integral (`IncidenciaCompletaResponse`) frente a hacer que el frontend consulte tres endpoints distintos?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque los datos climáticos forman parte de la información que enriquece la incidencia a guardar; el webhook, en cambio, es un efecto secundario de notificación que solo debe emitirse si el registro tuvo éxito.</p>
+  <p>2 · El archivo quedaría huérfano en disco a menos que se implemente un mecanismo de compensación o limpieza en el bloque catch de la transacción.</p>
+  <p>3 · Protegiendo el endpoint GET de descarga con @PreAuthorize("isAuthenticated()") o verificando roles específicos en la SecurityFilterChain.</p>
+  <p>4 · Reduce el número de peticiones de red entre navegador y servidor (round-trips), disminuye la latencia total y simplifica la lógica del cliente frontend.</p>
+</details>
 
 ## Lo que debes recordar
 
-Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben poder justificarse, preguntas de recuperación y una comprobación final del producto.
+### El método
+
+En esta unidad has aprendido a conectar tu backend con el mundo exterior sin comprometer su estabilidad, rendimiento ni seguridad.
+
+Para diseñar e implementar cualquier integración externa profesional, aplica siempre este protocolo de 10 pasos:
+
+<figure class="diagram">
+  <figcaption>El protocolo de ingeniería para integraciones externas</figcaption>
+  <ol class="flow">
+    <li>Utiliza siempre clientes modernos y fluidos: <strong><code>RestClient</code></strong> es el estándar síncrono oficial desde Spring Boot 3.2.</li>
+    <li><strong>Nunca reutilices contratos ajenos</strong>: aplica el patrón <strong>Capa Anticorrupción (ACL)</strong> aislando los DTOs del proveedor de tu modelo de dominio.</li>
+    <li>Protege la deserialización con <code>@JsonIgnoreProperties(ignoreUnknown = true)</code> para que cambios ajenos no rompan tu aplicación.</li>
+    <li><strong>Asume las falacias de la red</strong>: toda llamada saliente debe tener <strong>Timeouts estrictos</strong> (Connect Timeout $\le 2$ s, Read Timeout $\le 3$ s).</li>
+    <li>Aplica el principio de <strong>Degradación Elegante (<em>Graceful Degradation</em>)</strong>: el fallo de una API externa nunca debe provocar un <code>500 Internal Server Error</code> en tu backend.</li>
+    <li>Optimiza el consumo con <strong><code>@Cacheable</code></strong> para ahorrar peticiones, evitar costes y reducir latencias de cientos de milisegundos a 1 ms.</li>
+    <li><strong>Sanitiza todo archivo entrante</strong>: almacena los binarios con <strong>UUIDs aleatorios</strong> fuera del classpath y guarda el nombre original solo en base de datos.</li>
+    <li>Protege el servidor contra denegación de servicio acotando los tamaños máximos de subida (<code>max-file-size</code> y <code>max-request-size</code>).</li>
+    <li><strong>Desacopla efectos secundarios</strong>: emite correos y webhooks de forma asíncrona con <strong><code>@Async</code></strong> y <strong><code>@TransactionalEventListener(phase = AFTER_COMMIT)</code></strong>.</li>
+    <li>Protege la descarga de ficheros con la cabecera estándar <code>Content-Disposition: attachment</code> y reglas de autorización de Spring Security.</li>
+  </ol>
+</figure>
+
+### La idea más importante
+
+> **Todo lo que ocurre fuera de tu servidor fallará tarde o temprano. Integrar con éxito una API o servicio externo no consiste en saber hacer una petición HTTP saliente, sino en diseñar tu aplicación para que siga funcionando cuando el proveedor externo se caiga, cambie su contrato o se quede congelado.**
+
+Un desarrollador principiante asume que la red es mágica y que los proveedores nunca fallan. Un ingeniero de software asume que la red se caerá en el peor momento posible y diseña barreras de contención (timeouts, adaptadores, cachés y degradación elegante) para que sus usuarios nunca sufran las consecuencias.
+
+### Las decisiones que tienes que saber justificar
+
+| Decisión de ingeniería | Lo que tienes que poder defender ante un tribunal |
+| :--- | :--- |
+| **`RestClient` frente a `RestTemplate` y `WebClient`** | `RestTemplate` está en modo mantenimiento; `WebClient` exige arrastrar la reactividad de WebFlux; `RestClient` ofrece una interfaz fluida moderna y síncrona perfectamente integrada con Spring MVC. |
+| **Capa Anticorrupción (ACL) frente a devolver el JSON ajeno** | Reenviar el JSON externo acopla el frontend y la base de datos a decisiones de terceros; el adaptador aísla el modelo y permite transformar códigos crudos en valor de negocio. |
+| **`@JsonIgnoreProperties(ignoreUnknown = true)`** | Garantiza robustez y compatibilidad hacia adelante; si el proveedor añade 20 campos nuevos mañana, Jackson los ignora en silencio sin lanzar `UnrecognizedPropertyException`. |
+| **Timeouts obligatorios de conexión y lectura** | Previene el colapso por agotamiento de hilos (*Thread Starvation*) en Tomcat; si un proveedor externo se congela, el hilo se libera en 2 segundos en lugar de quedarse bloqueado minutos. |
+| **Degradación Elegante (*Graceful Degradation*)** | Si un servicio complementario (como el clima) falla, se devuelven los datos locales principales con un aviso por defecto en lugar de tumbar la experiencia del usuario con un error 500. |
+| **Caché en memoria con `@Cacheable`** | Disminuye la latencia de 200 ms a 1 ms, ahorra ancho de banda, respeta los límites de tasa (*rate limits*) del proveedor y permite responder ante caídas temporales del servicio remoto. |
+| **Almacenar ficheros con UUID en disco** | Neutraliza el ataque de salto de directorio (*Path Traversal*); el disco físico solo contiene identificadores seguros y la base de datos preserva el nombre original del usuario. |
+| **Almacenar ficheros fuera del directorio estático web** | Impide la ejecución remota de código (RCE); un archivo malicioso `.jsp` o `.sh` no puede ser ejecutado directamente por el servidor web mediante una URL pública. |
+| **`@TransactionalEventListener(phase = AFTER_COMMIT)`** | Garantiza que las notificaciones externas solo se emitan si la transacción local de base de datos se confirmó con éxito, evitando notificar acciones que sufrieron rollback. |
+| **Ejecución asíncrona desacoplada con `@Async`** | Libera inmediatamente al hilo de Tomcat que atiende al usuario (respuesta en milisegundos), trasladando la espera de la red externa a un pool de hilos de fondo. |
+
+### Al terminar la unidad deberías poder responder
+
+1. ¿Qué transformaciones técnicas ocurren cuando el backend pasa de ser un servidor HTTP pasivo a un cliente HTTP saliente?
+2. ¿Por qué `RestClient` es la opción recomendada en Spring Boot 3.2+ para aplicaciones síncronas tradicionales?
+3. ¿Por qué la latencia de una petición saliente a Internet es órdenes de magnitud mayor que una consulta a PostgreSQL local?
+4. ¿En qué consiste el antipatrón de fuga de contratos externos (*External Contract Bleeding*)?
+5. ¿Qué tres componentes estructuran el patrón Capa Anticorrupción (ACL) en una integración REST?
+6. ¿Qué función cumple la anotación `@JsonIgnoreProperties(ignoreUnknown = true)` en un DTO externo?
+7. ¿Cómo transforma un adaptador los códigos numéricos del proveedor en reglas y lógica de dominio propias?
+8. ¿Cuáles son las dos falacias de la computación distribuida más peligrosas en el desarrollo backend?
+9. ¿Qué es el agotamiento de hilos (*Thread Starvation*) y cómo una llamada externa lenta puede tumbar un servidor Tomcat?
+10. ¿Cuál es la diferencia exacta entre *Connect Timeout* y *Read Timeout* en una factoría de conexiones HTTP?
+11. ¿Qué es la degradación elegante (*Graceful Degradation*) y cómo se implementa con bloques de captura en servicios de integración?
+12. ¿Por qué almacenar en caché una respuesta externa con `@Cacheable` beneficia tanto al rendimiento como a la resiliencia?
+13. ¿Por qué el transporte de ficheros binarios sobre HTTP exige el estándar `multipart/form-data`?
+14. ¿Cómo opera el ataque de salto de directorio (*Path Traversal*) y por qué renombrar ficheros con UUID en disco lo neutraliza?
+15. ¿Por qué nunca se deben guardar ficheros subidos por usuarios dentro de la carpeta `static` del proyecto?
+16. ¿Qué cabecera HTTP estándar fuerza la descarga de un fichero con su nombre original en el navegador?
+17. ¿Por qué es un error crítico ejecutar llamadas HTTP salientes dentro de un método anotado con `@Transactional`?
+18. ¿Qué problema resuelve el uso de Eventos de Dominio junto a `@TransactionalEventListener(phase = AFTER_COMMIT)`?
+19. ¿Cómo protege la anotación `@Async` el tiempo de respuesta del controlador frente a notificaciones externas lentas?
+20. ¿Qué estrategia permite auditar las llamadas salientes a servicios de terceros para detectar degradaciones de rendimiento?
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| :--- | :--- |
+| **RestClient** | Cliente HTTP síncrono, moderno y fluido introducido en Spring Boot 3.2 para realizar peticiones salientes con API declarativa. |
+| **Outbound HTTP** | Petición HTTP iniciada por el propio servidor backend hacia un servicio o API remota en Internet. |
+| **Anticorruption Layer** | Patrón arquitectónico (Capa Anticorrupción) que traduce y aísla los contratos externos ajenos del modelo de dominio interno. |
+| **External DTO** | Objeto de transferencia que reproduce fielmente el formato de datos emitido por un proveedor externo. |
+| **Connect Timeout** | Tiempo máximo que el cliente HTTP esperará para establecer la conexión TCP y la negociación TLS con el servidor remoto. |
+| **Read Timeout** | Tiempo máximo de inactividad permitido entre paquetes de datos una vez que la conexión HTTP ya está abierta. |
+| **Thread Starvation** | Agotamiento del pool de hilos de trabajo del servidor al quedar todos bloqueados esperando respuestas externas colgadas. |
+| **Graceful Degradation** | Estrategia de diseño donde una aplicación sigue operativa con datos por defecto o funcionalidad reducida ante la caída de un servicio secundario. |
+| **Circuit Breaker** | Patrón de estabilidad que interrumpe de inmediato las llamadas hacia un servicio externo averiado para proteger los recursos propios. |
+| **Multipart/form-data** | Esquema de codificación HTTP (RFC 7578) para transmitir simultáneamente campos de texto y ficheros binarios divididos por límites. |
+| **Path Traversal** | Vulnerabilidad de seguridad donde un atacante utiliza secuencias de salto (`../`) en el nombre de un archivo para escribir en directorios prohibidos. |
+| **Content-Disposition** | Cabecera HTTP que indica si un recurso debe presentarse en el navegador (`inline`) o descargarse como fichero adjunto (`attachment`). |
+| **MIME Type** | Identificador estándar en dos partes (ej: `application/pdf`) que describe la naturaleza y formato de un archivo transmitido por la red. |
+| **Webhook** | Mecanismo de comunicación donde un servidor notifica a otro enviando una petición HTTP POST asíncrona ante un evento relevante. |
+| **Domain Event** | Objeto inmutable que representa un hecho consumado de relevancia en el negocio dentro de la aplicación. |
+| **@TransactionalEventListener** | Listener de Spring que sincroniza la ejecución de un manejador de eventos con una fase específica de la transacción (ej: tras el commit). |
+| **@Async** | Anotación de Spring que desvía la ejecución de un método a un hilo secundario independiente gestionado por un ejecutor de tareas. |
+
+### Comprobación final del producto de la unidad
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Integración externa y resiliencia · criterios de producción</p>
+  <ul class="checklist">
+    <li>Las peticiones salientes utilizan el cliente moderno `RestClient` con URL base y cabeceras centralizadas.</li>
+    <li>Los contratos de proveedores externos están completamente aislados mediante el patrón Capa Anticorrupción (ACL).</li>
+    <li>Los DTOs externos utilizan `@JsonIgnoreProperties(ignoreUnknown = true)` para tolerar adiciones futuras de campos.</li>
+    <li>Toda llamada HTTP externa dispone de límites estrictos de `Connect Timeout` ($\le 2$ s) y `Read Timeout` ($\le 3$ s).</li>
+    <li>La aplicación aplica degradación elegante ante caídas de red o errores 4xx/5xx sin colapsar con código 500.</li>
+    <li>Las consultas a servicios externos con datos estables se optimizan mediante caché con `@Cacheable`.</li>
+    <li>Los ficheros subidos se almacenan con UUIDs en un directorio externo al proyecto para prevenir ataques de *Path Traversal*.</li>
+    <li>Los límites de tamaño para subidas (`max-file-size`) y validación de tipos MIME están estrictamente configurados.</li>
+    <li>La descarga de ficheros está protegida por autorización y emite la cabecera estándar `Content-Disposition: attachment`.</li>
+    <li>Los efectos secundarios (correos y webhooks) se ejecutan de forma asíncrona tras el commit (`@TransactionalEventListener`).</li>
+  </ul>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
@@ -959,4 +1892,3 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
   </ul>
 </div>
 
-> El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
