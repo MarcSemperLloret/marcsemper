@@ -113,6 +113,7 @@ Pensad en un ordenador portátil e identificad los posibles impactos de cada eta
 
 | Etapa           | Posibles impactos |
 | --------------- | ----------------- |
+| *Ejemplo · Materias primas* | Extracción de metales, consumo de agua y alteración de ecosistemas |
 | Materias primas |                   |
 | Fabricación     |                   |
 | Transporte      |                   |
@@ -464,6 +465,7 @@ Clasificad cada actividad según el recurso principal implicado: energía, almac
 
 | Actividad                       | Principal recurso implicado |
 | ------------------------------- | --------------------------- |
+| *Ejemplo · Guardar copias de seguridad* | Almacenamiento, electricidad y hardware |
 | Ejecutar cálculos en CPU        |                             |
 | Guardar millones de fotografías |                             |
 | Refrigerar infraestructura      |                             |
@@ -616,6 +618,7 @@ PixelStore retira unos quince equipos al año y no sabe qué pasa con ellos. Dec
 
 | Equipo retirado | Destino propuesto | Qué hace falta para poder hacerlo |
 | --------------- | ----------------- | --------------------------------- |
+| *Ejemplo · Portátil funcional de 4 años* | Reasignarlo a una tarea menos exigente | Comprobar estado, borrar los datos anteriores y registrar el nuevo uso |
 | Portátiles de 3 años que funcionan | | |
 | Portátiles con la batería agotada | | |
 | Monitores antiguos que funcionan | | |
@@ -657,6 +660,7 @@ PixelStore tiene presupuesto limitado y seis opciones. Ordenadlas del 1 al 6 y j
 
 | Prioridad | Acción | Justificación |
 | --------: | ------ | ------------- |
+| *Ejemplo · 1* | Inventariar los equipos y su estado | Sin saber qué existe no se puede decidir qué reparar, reutilizar o retirar |
 |         1 |        |               |
 |         2 |        |               |
 |         3 |        |               |
@@ -724,6 +728,7 @@ Cuándo mantener, reparar, reutilizar, sustituir y reciclar.
 
 | Acción | Indicador |
 | ------ | --------- |
+| *Ejemplo · Reparar antes de sustituir* | Porcentaje de averías resueltas mediante reparación |
 |        |           |
 |        |           |
 |        |           |

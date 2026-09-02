@@ -216,6 +216,7 @@ Identificad al menos **seis grupos**.
 
 | Stakeholder  | ¿Qué espera de PixelStore? | ¿Cómo puede afectarle PixelStore? |
 | ------------ | -------------------------- | --------------------------------- |
+| *Ejemplo · Proveedor cloud* | Requisitos previsibles y una relación estable | Su consumo, disponibilidad y seguridad condicionan el servicio de PixelStore |
 | Clientes     |                            |                                   |
 | Trabajadores |                            |                                   |
 |              |                            |                                   |
@@ -297,7 +298,7 @@ Identificad **al menos doce aspectos**, repartidos entre las tres dimensiones.
 
 | Aspecto       | A / S / G | Posible impacto              |
 | ------------- | --------- | ---------------------------- |
-| Web pesada    | A         | Mayor transferencia de datos |
+| *Ejemplo · Web pesada* | A | Mayor transferencia de datos |
 | Accesibilidad | S         | Usuarios excluidos           |
 |               |           |                              |
 |               |           |                              |
@@ -397,6 +398,7 @@ Evaluad vuestros aspectos y quedaos solo con cinco.
 
 | Prioridad | Aspecto | Justificación |
 | --------: | ------- | ------------- |
+| *Ejemplo · 1* | Accesibilidad | Impide comprar a parte de los usuarios y combina impacto social, riesgo legal y oportunidad comercial |
 |         1 |         |               |
 |         2 |         |               |
 |         3 |         |               |
@@ -466,6 +468,7 @@ Quizá encontréis la palabra **SMART**: específico, medible, alcanzable, relev
 
 | Prioridad | Objetivo |
 | --------- | -------- |
+| *Ejemplo · Accesibilidad* | Eliminar antes de junio las barreras críticas de teclado detectadas, sin aumentar el tiempo de carga |
 |           |          |
 |           |          |
 |           |          |
@@ -545,6 +548,7 @@ Ya tenéis problema y objetivo. Falta lo que se hace realmente.
 
 | Objetivo | Acción | Indicador | Responsable | Plazo |
 | -------- | ------ | --------- | ----------- | ----- |
+| *Ejemplo · Reducir la transferencia por visita un 40 %* | Optimizar imágenes y retirar scripts innecesarios | MB transferidos por visita | Equipo frontend | 8 semanas |
 |          |        |           |             |       |
 |          |        |           |             |       |
 |          |        |           |             |       |

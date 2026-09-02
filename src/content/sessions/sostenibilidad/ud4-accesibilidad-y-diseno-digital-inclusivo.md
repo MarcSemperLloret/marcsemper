@@ -332,6 +332,7 @@ Marcad qué principio afecta a cada problema. Puede afectar a más de uno; lo qu
 
 | Problema                                 | P | O | U | R |
 | ---------------------------------------- | - | - | - | - |
+| *Ejemplo · Vídeo sin subtítulos*         | ✓ |   |   |   |
 | Imagen sin texto alternativo             |   |   |   |   |
 | Botón imposible de usar con teclado      |   |   |   |   |
 | Mensaje de error incomprensible          |   |   |   |   |
@@ -457,6 +458,7 @@ Completad entre cinco y ocho problemas.
 
 | Problema | A quién afecta | Qué le impide hacer | Cómo lo detectamos | Prioridad |
 | -------- | -------------- | ------------------- | ------------------ | --------- |
+| *Ejemplo · El foco no se ve* | Personas que navegan con teclado | Saber qué control está activo | Recorrer la página con Tab | Alta |
 |          |                |                     |                    |           |
 |          |                |                     |                    |           |
 |          |                |                     |                    |           |

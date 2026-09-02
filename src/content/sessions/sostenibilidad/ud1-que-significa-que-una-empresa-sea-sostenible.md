@@ -141,6 +141,7 @@ Clasificad las siguientes situaciones. Puede haber casos que pertenezcan a más 
 
 | Situación                                                            | A / S / G |
 | -------------------------------------------------------------------- | --------- |
+| *Ejemplo · Un centro de datos usa energía renovable*                 | A         |
 | Una empresa reduce el consumo eléctrico de sus servidores            |           |
 | Una web no puede utilizarse mediante teclado                         |           |
 | Una empresa vende datos personales sin informar                      |           |
@@ -424,6 +425,7 @@ Pensad en una gran plataforma digital: una tienda online, una plataforma de stre
 
 | Stakeholder | ¿Qué espera de la empresa? | ¿Cómo puede afectarle? |
 | ----------- | -------------------------- | ---------------------- |
+| *Ejemplo · Proveedor cloud* | Una relación estable y requisitos claros | Sus decisiones sobre energía, seguridad o disponibilidad condicionan el servicio |
 | Usuario     |                            |                        |
 | Trabajador  |                            |                        |
 |             |                            |                        |
@@ -490,6 +492,7 @@ Imaginad una empresa SaaS con 500.000 usuarios. Clasificad cada aspecto como alt
 
 | Aspecto                      | Importancia | ¿Por qué? |
 | ---------------------------- | ----------- | --------- |
+| *Ejemplo · Protección de datos* | Muy alta | Una filtración puede perjudicar a usuarios y provocar sanciones |
 | Consumo energético del cloud |             |           |
 | Accesibilidad                |             |           |
 | Uso de papel                 |             |           |
@@ -556,6 +559,7 @@ Proponed al menos un indicador para cada afirmación.
 
 | Afirmación                                      | ¿Cómo podríamos medirla? |
 | ----------------------------------------------- | ------------------------ |
+| *Ejemplo · Nuestra web transfiere menos datos*  | MB transferidos por visita, medidos antes y después en las mismas condiciones |
 | Nuestra web utiliza menos recursos              |                          |
 | Nuestro cloud está mejor dimensionado           |                          |
 | Nuestra aplicación es más accesible             |                          |
@@ -757,6 +761,7 @@ Identificad los principales aspectos de sostenibilidad. Podéis añadir los que 
 
 | Aspecto                 | A / S / G | Importancia |
 | ----------------------- | --------- | ----------- |
+| *Ejemplo · Imágenes de producto* | A | Alta: se descargan en cada visita y multiplican la transferencia total |
 | Infraestructura cloud   |           |             |
 | Hardware                |           |             |
 | Inteligencia artificial |           |             |
@@ -772,6 +777,7 @@ Aquí viene la parte importante. No vale decir «todo es muy importante». Elegi
 
 | Posición | Aspecto | ¿Por qué es importante? |
 | -------: | ------- | ----------------------- |
+| *Ejemplo · 1* | Protección de datos | Afecta a todos los clientes y un fallo tendría consecuencias graves |
 |        1 |         |                         |
 |        2 |         |                         |
 |        3 |         |                         |
@@ -797,6 +803,7 @@ Para cada uno de vuestros cinco aspectos, proponed al menos un indicador.
 
 | Aspecto | Indicador |
 | ------- | --------- |
+| *Ejemplo · Accesibilidad* | Número de errores de axe y barreras de teclado detectadas |
 |         |           |
 |         |           |
 |         |           |
@@ -811,6 +818,7 @@ Para cada problema importante, proponed una acción. Por ejemplo: si los portát
 
 | Problema | Acción propuesta | Indicador |
 | -------- | ---------------- | --------- |
+| *Ejemplo · Imágenes demasiado pesadas* | Redimensionarlas y convertirlas a WebP o AVIF | MB transferidos por visita |
 |          |                  |           |
 |          |                  |           |
 |          |                  |           |
@@ -849,6 +857,7 @@ Ordenados de mayor a menor importancia.
 
 | Aspecto | Acción | Indicador |
 | ------- | ------ | --------- |
+| *Ejemplo · Accesibilidad* | Corregir navegación por teclado y etiquetas | Barreras manuales y errores automáticos antes/después |
 |         |        |           |
 |         |        |           |
 |         |        |           |

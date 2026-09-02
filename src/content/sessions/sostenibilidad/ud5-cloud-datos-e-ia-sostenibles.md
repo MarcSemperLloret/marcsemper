@@ -97,6 +97,7 @@ La idea es tener capacidad cuando hace falta y dejar de pagarla —y de ocuparla
 
 | Caso | Situación | ¿Es razonable? ¿Por qué? |
 | ---- | --------- | ------------------------ |
+| *Ejemplo · E* | Entorno de demostración usado dos horas al mes y encendido siempre | No; conviene apagarlo fuera de uso y automatizar su arranque cuando se necesite |
 | A | Web de una academia: entre 5 y 20 usuarios simultáneos, sobre 8 servidores de 32 GB cada uno | |
 | B | Tienda online: 1.000 usuarios habituales, 50.000 en Black Friday. ¿Mantendríais infraestructura para 50.000 todo el año? | |
 | C | Servidor de pruebas que se usa de 08:00 a 15:00 y está encendido 24 × 7 | |
@@ -252,6 +253,7 @@ Revisando su infraestructura, PixelStore encuentra esto. Decidid qué hacer con 
 
 | Recurso          | Mantener / archivar / eliminar / investigar | Motivo |
 | ---------------- | ------------------------------------------- | ------ |
+| *Ejemplo · Logs operativos de hace ocho meses* | Archivar o eliminar según la política de retención | Ya no se consultan; antes hay que comprobar obligaciones legales y necesidades de auditoría |
 | Máquinas virtuales que nadie usa | | |
 | Logs de hace cinco años | | |
 | Un backup que se sabe necesario | | |
@@ -576,6 +578,7 @@ Los cinco restantes.
 
 | Caso | Problema | Propuesta | ¿Por qué? |
 | ---- | -------- | --------- | --------- |
+| *Ejemplo · Web corporativa* | Cuatro máquinas casi ociosas | Consolidar la carga y medir antes de reducir más | Ajusta capacidad sin poner en riesgo la disponibilidad |
 | Logs | | | |
 | Backups | | | |
 | Soporte | | | |
@@ -588,6 +591,7 @@ Elegid tres casos y decid cómo afecta vuestra solución a cada cosa:
 
 | Dimensión | Efecto |
 | --------- | ------ |
+| *Ejemplo · Coste* | El autoscaling reduce gasto en horas valle, aunque exige tiempo inicial de configuración |
 | Coste | |
 | Rendimiento | |
 | Sostenibilidad | |
@@ -601,6 +605,7 @@ Coged uno de los casos y proponed tres soluciones: **A**, la más sencilla que p
 
 | | A · Sencilla | B · Intermedia | C · Compleja |
 | ----------- | - | - | - |
+| *Ejemplo · Coste* | Bajo: regla local | Medio: servicio gestionado | Alto: plataforma propia |
 | Coste       | | | |
 | Complejidad | | | |
 | Recursos    | | | |
@@ -642,6 +647,7 @@ Cada pareja entrega **una única página o diapositiva** con cinco bloques.
 
 | Problema | Decisión |
 | -------- | -------- |
+| *Ejemplo · Servidor de pruebas activo 24 × 7* | Programar su apagado fuera del horario de uso y revisar la utilización al mes |
 |          |          |
 |          |          |
 |          |          |

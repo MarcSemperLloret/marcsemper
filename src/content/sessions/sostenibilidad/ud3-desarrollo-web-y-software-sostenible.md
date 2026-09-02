@@ -119,6 +119,7 @@ Para cada situación, decid qué optimizaríais primero.
 
 | Situación                                                  | Posible mejora |
 | ---------------------------------------------------------- | -------------- |
+| *Ejemplo · Vídeo que se carga al abrir la página*          | Mostrar una miniatura y cargarlo solo cuando el usuario lo reproduzca |
 | Imagen de 8 MB usada como miniatura                        |                |
 | 15 fuentes diferentes                                      |                |
 | Vídeo 4K que arranca solo                                  |                |
@@ -254,6 +255,7 @@ Abridla en <http://localhost:8080>. No vale abrir el `index.html` con doble clic
 
 | Indicador                     | Antes |
 | ----------------------------- | ----: |
+| *Ejemplo · Transferencia total* | 6,8 MB por visita |
 | Transferencia total           |       |
 | Número de peticiones          |       |
 | Tamaño total de imágenes      |       |
@@ -265,6 +267,7 @@ Después, los cinco recursos más pesados:
 
 | Recurso | Tamaño | ¿Parece necesario? |
 | ------- | -----: | ------------------ |
+| *Ejemplo · hero.jpg* | 4,2 MB | Sí, pero está sobredimensionada para el espacio visible |
 |         |        |                    |
 |         |        |                    |
 |         |        |                    |
@@ -398,6 +401,7 @@ El resto de las imágenes del proyecto. Anotad cada una:
 
 | Imagen | Antes | Después | Reducción |
 | ------ | ----: | ------: | --------: |
+| *Ejemplo · hero.jpg* | 4,2 MB | 620 KB | 85 % |
 |        |       |         |           |
 |        |       |         |           |
 |        |       |         |           |
@@ -487,6 +491,7 @@ Revisad las cuatro categorías y rellenad la tabla: ¿hay alguna biblioteca o fi
 
 | Recurso | ¿Necesario?  | Acción |
 | ------- | ------------ | ------ |
+| *Ejemplo · librería de iconos completa* | Dudoso | Sustituirla por los tres SVG que realmente se usan |
 |         | Sí/No/Dudoso |        |
 |         |              |        |
 |         |              |        |
@@ -587,6 +592,7 @@ Vuelve a aparecer el principio de la unidad: **procesar y transferir solo lo nec
 
 | Situación                                               | Posible mejora |
 | ------------------------------------------------------- | -------------- |
+| *Ejemplo · La API devuelve todos los campos del usuario* | Seleccionar y enviar solo los campos que necesita esta vista |
 | La API devuelve 50.000 filas                            |                |
 | La web pide los mismos datos cada segundo               |                |
 | El navegador descarga siempre los mismos recursos       |                |
@@ -643,6 +649,7 @@ Ya tenemos suficiente información. Volvemos al proyecto con un objetivo: **redu
 
 | Problema | Cambio | Resultado esperado |
 | -------- | ------ | ------------------ |
+| *Ejemplo · Imágenes de catálogo sobredimensionadas* | Generar tamaños responsive y usar `srcset` | Reducir la transferencia sin perder calidad visible |
 |          |        |                    |
 |          |        |                    |
 |          |        |                    |
@@ -741,6 +748,7 @@ Repetid la medición inicial **exactamente igual**: mismas herramientas, mismas 
 
 | Indicador              | Antes | Después | Cambio |
 | ---------------------- | ----: | ------: | -----: |
+| *Ejemplo · Transferencia total* | 6,8 MB | 2,1 MB | −69 % |
 | Transferencia total    |       |         |        |
 | Número de peticiones   |       |         |        |
 | Imágenes               |       |         |        |
@@ -823,6 +831,7 @@ Los tres principales problemas que encontrasteis.
 
 | Cambio | Motivo |
 | ------ | ------ |
+| *Ejemplo · Convertir las imágenes del catálogo a WebP* | Reducir bytes transferidos manteniendo una calidad visual equivalente |
 |        |        |
 |        |        |
 |        |        |
@@ -833,6 +842,7 @@ Los tres principales problemas que encontrasteis.
 
 | Métrica       | Antes | Después |
 | ------------- | ----: | ------: |
+| *Ejemplo · Transferencia* | 6,8 MB | 2,1 MB |
 | Transferencia |       |         |
 | Peticiones    |       |         |
 | Imágenes      |       |         |

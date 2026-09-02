@@ -856,6 +856,23 @@ select {
   text-transform: uppercase;
 }
 
+/* A solved first row gives students the expected level of detail before they
+   complete the remaining rows. The marker lives in the content, so exercise
+   tables stay distinguishable from reference tables without extra markup. */
+.session-content tbody tr:has(td:first-child > em:first-child) td {
+  border-color: color-mix(in srgb, var(--blue) 38%, var(--line-strong));
+  background: color-mix(in srgb, var(--blue) 7%, var(--paper));
+}
+
+.session-content tbody tr:has(td:first-child > em:first-child) td:first-child {
+  color: var(--blue-dark);
+  font-weight: 700;
+}
+
+.session-content tbody tr:has(td:first-child > em:first-child) em {
+  font-style: normal;
+}
+
 /* Empty cells are answer boxes students fill in, so keep them tall enough. */
 .session-content td:empty {
   min-width: 120px;
@@ -2526,21 +2543,47 @@ select {
 
 /* Capabilities list, where each item is something the tool can already do. */
 .session-content .checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  margin: 0;
   padding-left: 0;
   list-style: none;
 }
 
 .session-content .checklist li {
   position: relative;
-  padding-left: 28px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 14px 12px 42px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  line-height: 1.45;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .session-content .checklist li::before {
   position: absolute;
-  left: 0;
-  color: var(--blue);
+  top: 12px;
+  left: 14px;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--blue);
   content: "✓";
+  font-size: 0.72rem;
   font-weight: 800;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .session-content .checklist {
+    grid-template-columns: 1fr;
+  }
 }
 
 
