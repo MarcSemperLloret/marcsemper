@@ -839,149 +839,740 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
 ## Sesión 73 · Desarrollo I: núcleo funcional
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> intentar cubrir todo a la vez dispersa el esfuerzo y deja muchas piezas a medias.</li>
-    <li><strong>Construye:</strong> el núcleo funcional integrado con sus primeras pruebas.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> a priorizar los casos de uso por valor de negocio frente a dispersar el esfuerzo, el modelado de relaciones entre agregados (<code>Proyecto</code> $\leftrightarrow$ <code>Tarea</code>), la protección de reglas de integridad presupuestaria mediante transacciones ACID y la paginación eficiente de resultados con <code>Pageable</code>.</li>
+    <li><strong>2. Haz:</strong> implementa los casos de uso de alta de tareas vinculadas con cálculo de techo presupuestario, cambio de estado regulado por máquina de estados y cierre atómico de proyectos condicionado a la resolución de tareas.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas pruebas en Bruno intentando sobrepasar el presupuesto del proyecto o cerrar un proyecto con tareas pendientes, verificando que el backend responde con los códigos semánticos <code>400 Bad Request</code> y <code>409 Conflict</code> protegiendo la base de datos de inconsistencias.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué intentar programar todas las entidades secundarias a la vez suele dejar el backend con muchos endpoints a medias y ninguno completamente probado?</li>
+    <li>¿Qué ocurriría si dos usuarios crean tareas simultáneas en el mismo proyecto y la comprobación del presupuesto disponible no se ejecuta dentro de una transacción con aislamiento adecuado?</li>
+    <li>¿Por qué los endpoints que devuelven colecciones de datos siempre deben implementar paginación mediante `Pageable` en lugar de devolver listas completas con `findAll()`?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **completar los casos de uso de mayor valor manteniendo verde la versión ejecutable**.
+### La trampa de la dispersión frente al núcleo funcional
 
-### 2. El problema
+Cuando un desarrollador afronta un proyecto grande, la tentación habitual es crear quince entidades y diez controladores a la vez: la entidad de etiquetas, la de comentarios, la de historial, la de categorías...
+* Al final de la jornada tiene miles de líneas de código escritas, pero **ningún caso de uso funciona de verdad**.
+* No puede hacer una demo a su cliente ni pasar un test de integración real.
 
-Intentar cubrir todo a la vez dispersa el esfuerzo y deja muchas piezas a medias.
+El desarrollo profesional se rige por la **priorización por valor**:
+* Identifica los **dos agregados centrales** que dan sentido al negocio (en nuestro caso: `Proyecto` y `Tarea`).
+* Implementa sus relaciones y reglas más complejas antes de añadir adornos secundarios.
 
-### 3–6. Itinerario de trabajo
+<div class="rule">
+  <p class="rule-label">La ley del núcleo de negocio</p>
+  <p><strong>Un proyecto sin entidades secundarias es un producto viable; un proyecto con diez entidades a medias es chatarra.</strong></p>
+  <p>Construye y prueba a fondo las reglas más críticas del dominio (presupuestos, transiciones de estado e integridad referencial) antes de dedicar tiempo a comentarios, avatares o filtros decorativos.</p>
+</div>
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+### Reglas de negocio e integridad entre Agregados
 
-### 7. Comprueba que funciona
+En nuestro dominio empresarial, un `Proyecto` actúa como **raíz de agregado (*Aggregate Root*)** sobre sus `Tareas`:
+
+<figure class="diagram">
+  <figcaption>El ciclo de vida transaccional Proyecto-Tarea</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Proyecto creado con presupuesto total de 50.000 €</li>
+    <li>2. Alta de Tarea A (coste 20.000 €) -> Aceptada (acumulado 20.000 €)</li>
+    <li>3. Alta de Tarea B (coste 25.000 €) -> Aceptada (acumulado 45.000 €)</li>
+    <li>4. Alta de Tarea C (coste 10.000 €) -> Rechazada (45.000 + 10.000 > 50.000)</li>
+    <li>5. Cierre de Proyecto -> Solo permitido si Tareas A y B están FINALIZADAS</li>
+  </ol>
+</figure>
+
+### Paso a paso guiado · Implementación del núcleo transaccional
+
+<p class="stage">Paso 1 · El repositorio con consultas agregadas de coste</p>
+
+Necesitamos saber de forma instantánea cuánto presupuesto se ha consumido sin traernos todas las tareas a memoria:
+
+```java
+package com.empresa.proyecto.tarea.repository;
+
+import com.empresa.proyecto.tarea.model.EstadoTarea;
+import com.empresa.proyecto.tarea.model.Tarea;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.math.BigDecimal;
+
+public interface TareaRepository extends JpaRepository<Tarea, Long> {
+
+    // Paginación eficiente de tareas por proyecto
+    Page<Tarea> findByProyectoId(Long proyectoId, Pageable pageable);
+
+    // Sumatorio de costes en base de datos (rendimiento óptimo en SQL)
+    @Query("SELECT COALESCE(SUM(t.costeEstimado), 0.0) FROM Tarea t WHERE t.proyecto.id = :proyectoId")
+    BigDecimal calcularCosteTotalEstimadoProyecto(@Param("proyectoId") Long proyectoId);
+
+    // Conteo de tareas no finalizadas para validar el cierre
+    long countByProyectoIdAndEstadoNot(Long proyectoId, EstadoTarea estado);
+}
+```
+
+<p class="stage">Paso 2 · Lógica de negocio en TareaService</p>
+
+```java
+package com.empresa.proyecto.tarea.service;
+
+import com.empresa.proyecto.proyecto.model.Proyecto;
+import com.empresa.proyecto.proyecto.repository.ProyectoRepository;
+import com.empresa.proyecto.tarea.dto.CrearTareaRequest;
+import com.empresa.proyecto.tarea.dto.TareaResponse;
+import com.empresa.proyecto.tarea.model.EstadoTarea;
+import com.empresa.proyecto.tarea.model.Tarea;
+import com.empresa.proyecto.tarea.repository.TareaRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+
+@Service
+public class TareaService {
+
+    private final TareaRepository tareaRepository;
+    private final ProyectoRepository proyectoRepository;
+
+    public TareaService(TareaRepository tareaRepository, ProyectoRepository proyectoRepository) {
+        this.tareaRepository = tareaRepository;
+        this.proyectoRepository = proyectoRepository;
+    }
+
+    @Transactional
+    public TareaResponse crearTarea(Long proyectoId, CrearTareaRequest request) {
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado"));
+
+        // Regla 1: No se pueden añadir tareas a proyectos cerrados o cancelados
+        if (proyecto.getEstado().esTerminal()) {
+            throw new IllegalStateException("No se pueden añadir tareas a un proyecto en estado " + proyecto.getEstado());
+        }
+
+        // Regla 2: El sumatorio de costes no puede superar el presupuesto total del proyecto
+        BigDecimal costeActual = tareaRepository.calcularCosteTotalEstimadoProyecto(proyectoId);
+        BigDecimal nuevoTotal = costeActual.add(request.costeEstimado());
+
+        if (nuevoTotal.compareTo(proyecto.getPresupuestoTotal()) > 0) {
+            throw new IllegalArgumentException(String.format(
+                "Presupuesto excedido. Presupuesto proyecto: %.2f €, Coste actual: %.2f €, Nueva tarea: %.2f €",
+                proyecto.getPresupuestoTotal(), costeActual, request.costeEstimado()
+            ));
+        }
+
+        Tarea tarea = new Tarea();
+        tarea.setTitulo(request.titulo());
+        tarea.setPrioridad(request.prioridad());
+        tarea.setCosteEstimado(request.costeEstimado());
+        tarea.setProyecto(proyecto);
+        tarea.setEstado(EstadoTarea.PENDIENTE);
+
+        tarea = tareaRepository.save(tarea);
+        return new TareaResponse(tarea.getId(), tarea.getTitulo(), tarea.getEstado().name(), tarea.getCosteEstimado());
+    }
+}
+```
+
+<p class="stage">Paso 3 · Caso de uso: Cierre atómico del Proyecto</p>
+
+```java
+    @Transactional
+    public void cerrarProyecto(Long proyectoId) {
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado"));
+
+        // Verificamos si existen tareas pendientes de finalizar
+        long tareasPendientes = tareaRepository.countByProyectoIdAndEstadoNot(proyectoId, EstadoTarea.FINALIZADA);
+
+        if (tareasPendientes > 0) {
+            // Lanzamos excepción específica de conflicto de negocio
+            throw new ConflictoNegocioException(String.format(
+                "No se puede cerrar el proyecto '%s': tiene %d tareas sin finalizar.",
+                proyecto.getCodigo(), tareasPendientes
+            ));
+        }
+
+        proyecto.setEstado(EstadoProyecto.FINALIZADO);
+        proyectoRepository.save(proyecto);
+    }
+```
+
+<p class="stage">Paso 4 · Controlador REST de Tareas con Paginación</p>
+
+```java
+package com.empresa.proyecto.tarea.controller;
+
+import com.empresa.proyecto.tarea.dto.CrearTareaRequest;
+import com.empresa.proyecto.tarea.dto.TareaResponse;
+import com.empresa.proyecto.tarea.service.TareaService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/proyectos/{proyectoId}/tareas")
+public class TareaController {
+
+    private final TareaService tareaService;
+
+    public TareaController(TareaService tareaService) {
+        this.tareaService = tareaService;
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('JEFE_PROYECTO', 'ADMINISTRADOR')")
+    public ResponseEntity<TareaResponse> crearTarea(
+            @PathVariable Long proyectoId,
+            @Valid @RequestBody CrearTareaRequest request) {
+
+        TareaResponse response = tareaService.crearTarea(proyectoId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Page<TareaResponse>> listarTareas(
+            @PathVariable Long proyectoId,
+            @PageableDefault(size = 10, sort = "prioridad") Pageable pageable) {
+
+        return ResponseEntity.ok(tareaService.listarTareasProyecto(proyectoId, pageable));
+    }
+}
+```
+
+### La comprobación · Batería de pruebas en Bruno
+
+1. **Creación dentro de presupuesto:**
+   * Lanza `POST /api/v1/proyectos/1/tareas` con coste de `5000.00 €`.
+   * **Resultado:** Código **`201 Created`**.
+2. **Prueba de estrés de regla de negocio (Exceso de presupuesto):**
+   * Lanza otra tarea con coste `200000.00 €` sobre un proyecto que solo dispone de `150000.00 €`.
+   * **Resultado:** Código **`400 Bad Request`** con detalle:
+     `"Presupuesto excedido. Presupuesto proyecto: 150000.00 €, Coste actual: 37000.00 €, Nueva tarea: 200000.00 €"`.
+   * Ninguna fila queda guardada en la tabla `tareas`.
+3. **Prueba de conflicto en cierre:**
+   * Lanza `POST /api/v1/proyectos/1/cerrar`.
+   * **Resultado:** Código **`409 Conflict`** indicando que existen tareas pendientes. El estado del proyecto permanece inalterado en `EN_CURSO`.
+
+### Ahora tú · Máquina de estados para Tareas
+
+Implementa el endpoint de transición de estados de tarea:
+1. Diseña `PATCH /api/v1/tareas/{id}/estado`.
+2. Define las transiciones permitidas:
+   * `PENDIENTE` $\to$ `EN_CURSO`
+   * `EN_CURSO` $\to$ `BLOQUEADA` (requiere indicar motivo de bloqueo) o `FINALIZADA`
+   * `BLOQUEADA` $\to$ `EN_CURSO`
+3. Si el cliente intenta saltarse un estado (por ejemplo, pasar directamente de `PENDIENTE` a `FINALIZADA`), el servicio debe rechazar la mutación con `409 Conflict`.
+
+### Reto · Control de concurrencia pesimista en presupuestos
+
+Si dos usuarios añaden tareas simultáneamente al mismo proyecto en milisegundos idénticos, ambos podrían leer el mismo coste actual acumulado antes de que el otro guarde su fila (*Race Condition*), superando el presupuesto total.
+
+Investiga cómo resolver esta condición de carrera:
+1. Utiliza `@Lock(LockModeType.PESSIMISTIC_WRITE)` en la consulta de búsqueda de `Proyecto` para bloquear la fila en PostgreSQL durante la transacción.
+2. Comprueba mediante un test concurrente multihilo que las dos creaciones se serializan y la segunda es rechazada correctamente por falta de saldo.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Relación Proyecto-Tarea operativa con consultas paginadas y respuesta 201.</span></div>
+  <div><strong>Si lo tienes</strong><span>Cálculo atómico de techo presupuestario y rechazo 409 al cerrar con tareas pendientes.</span></div>
+  <div><strong>Reto</strong><span>Bloqueo pesimista (`PESSIMISTIC_WRITE`) para blindar el presupuesto ante concurrencia extrema.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 73</p>
   <ul class="checklist">
-    <li>Has obtenido el núcleo funcional integrado con sus primeras pruebas.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se prioriza el desarrollo del núcleo de negocio antes de incorporar entidades accesorias.</li>
+    <li>Las operaciones de cálculo se delegan eficientemente en la base de datos SQL (`SUM`, `COUNT`).</li>
+    <li>La regla de techo presupuestario está garantizada en la capa de servicios mediante transacciones.</li>
+    <li>Las listas de datos utilizan paginación estándar (`Pageable`) para proteger la memoria RAM.</li>
+    <li>El cierre de proyectos respeta la integridad de sus tareas emitiendo código `409 Conflict`.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué es más eficiente calcular el sumatorio de costes con `SUM` en SQL que iterar una lista Java en memoria?</li>
+    <li>¿Qué código de estado HTTP estándar de la RFC 9110 debe devolverse cuando una acción choca con el estado actual del negocio?</li>
+    <li>¿Por qué el método de servicio que verifica y descuenta el presupuesto debe estar anotado con `@Transactional`?</li>
+    <li>¿Qué ventajas aporta la anotación `@PageableDefault` en los métodos de un controlador REST?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque la base de datos procesa millones de filas de forma indexada en milisegundos y devuelve solo un número decimal por la red, mientras que iterar en Java exige transferir miles de entidades y saturar la memoria RAM.</p>
+  <p>2 · El código 409 Conflict (indica que la petición no puede procesarse debido a un conflicto con el estado actual del recurso).</p>
+  <p>3 · Para garantizar la atomicidad y el aislamiento ACID: si la comprobación pasa y la tarea se guarda, la operación se confirma; si algo falla, no se modifica la base de datos.</p>
+  <p>4 · Permite definir valores por defecto sensatos (tamaño de página, campo de ordenación y dirección ascendente/descendente) si el cliente no envía los parámetros en la URL.</p>
+</details>
 
 ## Sesión 74 · Desarrollo II: seguridad e integración
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> seguridad e integración añadidas al final suelen revelar supuestos tardíos y costosos.</li>
-    <li><strong>Construye:</strong> flujos protegidos y una integración con degradación controlada.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> el cierre del perímetro de seguridad, la autorización granular por propiedad del recurso (<em>Domain-Level Security</em>) evaluando si el usuario es el responsable asignado, y la integración robusta del cliente saliente de meteorología y el servicio de ficheros con degradación elegante.</li>
+    <li><strong>2. Haz:</strong> implementa un evaluador de seguridad personalizado en Spring Security (<code>@seguridadService.esResponsable(...)</code>), conecta el cliente <code>ClimaService</code> con timeouts estrictos y añade el soporte de adjuntos multipart sanitizados con UUID.</li>
+    <li><strong>3. Comprueba:</strong> verificas con tokens JWT de distintos roles que un jefe de proyecto no puede modificar los proyectos de otro, que los operarios solo acceden a sus tareas y que la caída de la API de Open-Meteo no bloquea el alta de incidencias.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué una comprobación simple de roles como `@PreAuthorize("hasRole('JEFE_PROYECTO')")` no es suficiente para evitar que un usuario modifique datos ajenos?</li>
+    <li>¿Cómo se define una expresión SpEL (Spring Expression Language) para delegar la autorización en un bean de Spring propio?</li>
+    <li>¿Qué ocurre con la experiencia del usuario si el servicio externo de meteorología sufre una caída de red durante el registro de una incidencia en obra?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **incorporar identidad, permisos y servicio externo sin romper los contratos existentes**.
+### Más allá de los roles: Autorización basada en la propiedad del dato
 
-### 2. El problema
+Comprobar roles (`ADMINISTRADOR`, `JEFE_PROYECTO`, `DESARROLLADOR`) es solo la primera línea de defensa.
+* Si el usuario Elena es `JEFE_PROYECTO` y el usuario Marcos también es `JEFE_PROYECTO`, **Elena no debe poder modificar el presupuesto ni reasignar tareas del proyecto que gestiona Marcos**.
+* Esto se conoce como **Control de Acceso Basado en Atributos (ABAC) o Seguridad a Nivel de Dominio**.
 
-Seguridad e integración añadidas al final suelen revelar supuestos tardíos y costosos.
+<figure class="diagram">
+  <figcaption>Las dos capas de autorización en Spring Security</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Petición HTTP con Bearer JWT</li>
+    <li>2. Capa 1: ¿Tiene el Rol adecuado? (RBAC: hasRole)</li>
+    <li>3. Capa 2: ¿Es el Propietario del Recurso? (ABAC: esResponsable)</li>
+    <li>4. Ejecución del método de negocio</li>
+  </ol>
+</figure>
 
-### 3–6. Itinerario de trabajo
+### Paso a paso guiado · Bean de seguridad y llamadas salientes resilientes
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<p class="stage">Paso 1 · El evaluador de propiedad SeguridadService</p>
 
-### 7. Comprueba que funciona
+Creamos un bean gestionado por Spring que resuelve la propiedad del recurso consultando la base de datos:
+
+```java
+package com.empresa.proyecto.core.security;
+
+import com.empresa.proyecto.proyecto.repository.ProyectoRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+@Service("seguridadService")
+public class SeguridadService {
+
+    private final ProyectoRepository proyectoRepository;
+
+    public SeguridadService(ProyectoRepository proyectoRepository) {
+        this.proyectoRepository = proyectoRepository;
+    }
+
+    public boolean esResponsableDeProyecto(Long proyectoId, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+
+        // Los administradores tienen acceso maestro universal
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"))) {
+            return true;
+        }
+
+        String username = authentication.getName();
+        return proyectoRepository.findById(proyectoId)
+            .map(p -> p.getResponsable().getUsername().equals(username))
+            .orElse(false);
+    }
+}
+```
+
+<p class="stage">Paso 2 · Proteger el método en el controlador con SpEL</p>
+
+Vinculamos la comprobación directamente en la anotación `@PreAuthorize`:
+
+```java
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or (hasRole('JEFE_PROYECTO') and @seguridadService.esResponsableDeProyecto(#id, authentication))")
+    public ResponseEntity<ProyectoDetalleResponse> actualizarProyecto(
+            @PathVariable Long id,
+            @Valid @RequestBody ActualizarProyectoRequest request) {
+
+        return ResponseEntity.ok(proyectoService.actualizarProyecto(id, request));
+    }
+```
+
+<p class="stage">Paso 3 · El servicio de Clima saliente con degradación elegante</p>
+
+Conectamos la integración de la UD10 garantizando que el alta de incidencias nunca colapse ante averías de Open-Meteo:
+
+```java
+package com.empresa.proyecto.integration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClient;
+
+import java.math.BigDecimal;
+
+@Service
+public class ClimaService {
+
+    private static final Logger log = LoggerFactory.getLogger(ClimaService.class);
+    private final RestClient climaRestClient;
+
+    public ClimaService(RestClient.Builder restClientBuilder) {
+        this.climaRestClient = restClientBuilder
+            .baseUrl("https://api.open-meteo.com/v1")
+            .build();
+    }
+
+    @Cacheable(value = "climaProyectos", key = "#lat.toString() + '_' + #lon.toString()")
+    public ClimaResultado consultarClimaSeguro(BigDecimal lat, BigDecimal lon) {
+        try {
+            log.info("Consultando Open-Meteo para coordenadas: lat={}, lon={}", lat, lon);
+
+            var respuesta = climaRestClient.get()
+                .uri("/forecast?latitude={lat}&longitude={lon}&current_weather=true", lat, lon)
+                .retrieve()
+                .body(OpenMeteoResponse.class);
+
+            return ClimaResultado.disponible(
+                respuesta.currentWeather().temperature(),
+                respuesta.currentWeather().weathercode()
+            );
+
+        } catch (ResourceAccessException ex) {
+            log.warn("Timeout o fallo de red con Open-Meteo: {}. Aplicando degradación elegante.", ex.getMessage());
+            return ClimaResultado.noDisponible("Servicio meteorológico fuera de línea temporalmente");
+        } catch (Exception ex) {
+            log.error("Error inesperado al consultar clima: {}. Se continúa sin enriquecimiento.", ex.getMessage());
+            return ClimaResultado.noDisponible("Datos climáticos no disponibles");
+        }
+    }
+}
+```
+
+### La comprobación · Pruebas de matriz de permisos en Bruno
+
+1. **Prueba de usurpación de proyecto (Caso no autorizado):**
+   * Autentícate como `jefe2` (Elena).
+   * Intenta modificar el proyecto `PRJ-2026-001` cuyo responsable es `jefe1` (Marcos):
+     `PUT http://localhost:8080/api/v1/proyectos/1`.
+   * **Resultado esperado:** Código **`403 Forbidden`**. Spring Security bloquea la petición antes de ejecutar el servicio.
+2. **Prueba como responsable legítimo:**
+   * Autentícate como `jefe1`.
+   * Lanza el mismo `PUT`.
+   * **Resultado esperado:** Código **`200 OK`**.
+3. **Prueba de degradación de red:**
+   * Apaga tu conexión WiFi o introduce coordenadas simuladas inalcanzables.
+   * Da de alta una incidencia con fichero adjunto.
+   * **Resultado esperado:** Código **`201 Created`**. El informe se guarda con su archivo en disco y el campo clima reporta *"Servicio meteorológico fuera de línea temporalmente"*.
+
+### Ahora tú · Autorización granular en Tareas
+
+Implementa la regla de propiedad para tareas:
+1. Añade a `SeguridadService` el método `puedeModificarTarea(Long tareaId, Authentication auth)`.
+2. Permite la edición si el usuario es `ADMINISTRADOR`, o si es el `JEFE_PROYECTO` del proyecto padre, o si es el `DESARROLLADOR` que tiene asignada esa tarea.
+3. Protege el endpoint `PATCH /api/v1/tareas/{id}/estado` con esta comprobación.
+
+### Reto · Auditoría de accesos denegados en base de datos
+
+Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un error inocente o de un ataque malicioso de fuerza bruta / enumeración de IDs.
+1. Implementa un listener para el evento de Spring Security `AuthorizationFailureEvent`.
+2. Registra en una tabla `auditoria_seguridad` el usuario, la IP del cliente, la URL intentada y el motivo de denegación.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Seguridad JWT activa en endpoints y cliente de clima con captura de excepciones.</span></div>
+  <div><strong>Si lo tienes</strong><span>Evaluador SpEL `esResponsableDeProyecto` protegiendo recursos frente a accesos ajenos.</span></div>
+  <div><strong>Reto</strong><span>Auditoría reactiva de eventos `AuthorizationFailureEvent` persistida en base de datos.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 74</p>
   <ul class="checklist">
-    <li>Has obtenido flujos protegidos y una integración con degradación controlada.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se superan los roles genéricos implementando seguridad a nivel de dominio y propiedad.</li>
+    <li>El evaluador `@seguridadService` encapsula las reglas de acceso en expresiones SpEL legibles.</li>
+    <li>El cliente `RestClient` cuenta con timeouts y contingencia garantizada ante caídas de red.</li>
+    <li>Los ficheros adjuntos se gestionan mediante almacenamiento seguro con UUIDs y tipo MIME validado.</li>
+    <li>El sistema distingue con exactitud entre no autenticado (`401`) y no autorizado (`403`).</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué un rol `JEFE_PROYECTO` no debe tener barra libre para modificar cualquier proyecto del sistema?</li>
+    <li>¿Qué objeto proporciona Spring Security a través del parámetro `authentication` en las expresiones SpEL?</li>
+    <li>¿Qué ventaja ofrece el patrón de degradación elegante frente a relanzar una excepción cuando una API externa falla?</li>
+    <li>¿Cuál es la diferencia entre el error HTTP 401 y el error HTTP 403?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque violaría el principio de aislamiento y confidencialidad; cada responsable solo debe gestionar los proyectos y presupuestos formalmente asignados a su cargo.</p>
+  <p>2 · Proporciona la instancia actual de Authentication del SecurityContext, con el nombre del usuario (getName()), sus roles/autoridades (getAuthorities()) y sus credenciales.</p>
+  <p>3 · Evita abortar un caso de uso principal válido del usuario (como guardar un informe o incidencia) por culpa de un servicio secundario complementario que no está disponible.</p>
+  <p>4 · 401 Unauthorized significa que el cliente no se ha identificado (falta el token o es inválido); 403 Forbidden significa que el servidor sabe quién es el usuario pero sus permisos son insuficientes para esa acción.</p>
+</details>
 
 ## Sesión 75 · Integración con Angular
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una API que funciona en Postman todavía puede fallar al enfrentarse a un navegador, un origen distinto y el modelo de datos del cliente.</li>
-    <li><strong>Construye:</strong> un flujo completo Angular → API Spring Boot → PostgreSQL, manteniendo la colección HTTP como prueba independiente.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> los desafíos de la integración frontend-backend: el protocolo <strong>CORS (Cross-Origin Resource Sharing)</strong> y las peticiones de sondeo previo (<strong>Preflight OPTIONS</strong>), la alineación de contratos de datos TypeScript $\leftrightarrow$ Java DTO, y el manejo centralizado de errores RFC 7807 mediante interceptores HTTP.</li>
+    <li><strong>2. Haz:</strong> configura <code>CorsConfigurationSource</code> en Spring Security con orígenes específicos y cabeceras expuestas, conecta los servicios Angular a la API y sincroniza los modelos tipados con el cliente web.</li>
+    <li><strong>3. Comprueba:</strong> abres la aplicación Angular en el navegador, inspeccionas en DevTools la petición previa <code>OPTIONS</code> confirmando el código <code>200 OK</code> y las cabeceras CORS, y verificas el flujo interactivo de creación y visualización de proyectos sin que el backend pierda su independencia.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué una petición que responde perfectamente en Postman o Bruno falla con un error rojo de CORS al ejecutarse desde Angular en el navegador?</li>
+    <li>¿Qué es una petición HTTP de sondeo previo (*Preflight Request*) y qué método HTTP utiliza?</li>
+    <li>¿Por qué la verificación del backend nunca debe depender de que el frontend Angular esté terminado o funcionando?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **conectar el cliente Angular a la API, resolver el contrato real y diagnosticar CORS, autenticación y errores de integración**.
+### El salto de Bruno al Navegador: La barrera de CORS
 
-### 2. El problema
+Durante todo el curso has probado tus endpoints con herramientas de escritorio como Bruno o curl. En ese entorno no existe ninguna restricción de origen cruzado.
 
-Una API que funciona en Postman todavía puede fallar al enfrentarse a un navegador, un origen distinto y el modelo de datos del cliente.
+Sin embargo, cuando el usuario abre la aplicación en Chrome o Firefox:
+* El código frontend de Angular se sirve desde el origen `http://localhost:4200`.
+* La API de Spring Boot escucha en el origen `http://localhost:8080`.
+* **Como los puertos difieren, el navegador activa la Política del Mismo Origen (*Same-Origin Policy*)**.
 
-### 3–6. Itinerario de trabajo
+Antes de enviar una petición destructiva (`POST`, `PUT`, `DELETE`) con cabeceras personalizadas (`Authorization: Bearer`), el navegador envía automáticamente una **petición de sondeo previo (*Preflight Request*) con el método `OPTIONS`**:
+* Le pregunta al servidor: *«¿Aceptas peticiones desde `http://localhost:4200` con la cabecera `Authorization`?»*.
+* Si Spring Security no está configurado expresamente para autorizar peticiones `OPTIONS`, **la rechaza y el navegador bloquea la llamada**.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<div class="rule">
+  <p class="rule-label">La regla de oro de la integración desacoplada</p>
+  <p><strong>El backend no sabe ni le importa que el cliente sea Angular, React o una app móvil.</strong></p>
+  <p>El backend solo responde a contratos HTTP estándar. Angular es solo un cliente más. La suite de pruebas de Bruno sigue siendo el certificador técnico oficial e independiente del backend.</p>
+</div>
 
-### 7. Comprueba que funciona
+### Paso a paso guiado · Configuración de CORS y sincronización de contratos
+
+<p class="stage">Paso 1 · Configurar CorsConfigurationSource en Spring Security</p>
+
+Configuramos de forma granular los orígenes y cabeceras permitidas en `SecurityConfig`:
+
+```java
+package com.empresa.proyecto.core.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            // Activamos CORS con nuestra configuración personalizada
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable()) // Deshabilitado para APIs REST stateless con JWT
+            // ... resto de reglas de autorización
+            ;
+        return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        
+        // Origen del cliente Angular de desarrollo
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        
+        // Métodos HTTP permitidos
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        
+        // Cabeceras permitidas en las peticiones entrantes
+        configuration.setAllowedHeaders(List.of(
+            "Authorization", "Content-Type", "X-Correlation-ID", "Accept"
+        ));
+        
+        // Cabeceras expuestas legibles por el código JavaScript de Angular
+        configuration.setExposedHeaders(List.of(
+            "Location", "X-Correlation-ID", "Content-Disposition"
+        ));
+        
+        // Permitir envío de credenciales/cookies si fuera necesario
+        configuration.setAllowCredentials(true);
+        
+        // Tiempo de caché del resultado del preflight (1 hora)
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
+    }
+}
+```
+
+<p class="stage">Paso 2 · Sincronizar modelos en TypeScript (Angular)</p>
+
+Creamos las interfaces en Angular espejando los DTOs de Java:
+
+```typescript
+// src/app/models/proyecto.model.ts
+export interface ProyectoResponse {
+  id: number;
+  codigo: string;
+  nombre: string;
+  estado: 'PLANIFICADO' | 'EN_CURSO' | 'BLOQUEADO' | 'FINALIZADO' | 'CANCELADO';
+  presupuestoTotal: number;
+  responsableNombre: string;
+}
+
+export interface CrearProyectoRequest {
+  codigo: string;
+  nombre: string;
+  descripcion?: string;
+  presupuestoTotal: number;
+  latitud: number;
+  longitud: number;
+  fechaInicio: string; // Formato ISO "YYYY-MM-DD"
+  fechaFinEstimada: string;
+}
+
+// Estructura de error estándar RFC 7807 capturada en el frontend
+export interface ProblemDetails {
+  type?: string;
+  title: string;
+  status: number;
+  detail: string;
+  instance?: string;
+  correlationId?: string;
+}
+```
+
+<p class="stage">Paso 3 · Interceptor HTTP en Angular para inyectar JWT y trazar errores</p>
+
+```typescript
+// src/app/interceptors/auth.interceptor.ts
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const token = authService.obtenerToken();
+
+  // Si tenemos token JWT en localStorage, lo clonamos en la cabecera Authorization
+  let peticionClonada = req;
+  if (token) {
+    peticionClonada = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
+  return next(peticionClonada).pipe(
+    catchError((error: HttpErrorResponse) => {
+      // Capturamos el Problem Details RFC 7807 emitido por Spring Boot
+      if (error.error && error.error.detail) {
+        console.error(`[API Error ${error.status}] ${error.error.title}: ${error.error.detail}`);
+        if (error.error.correlationId) {
+          console.warn(`Código de soporte para reporte: ${error.error.correlationId}`);
+        }
+      }
+      return throwError(() => error);
+    })
+  );
+};
+```
+
+### La comprobación · Inspección de red en DevTools
+
+1. **Arranca el backend (`:8080`) y el cliente Angular (`:4200`).**
+2. **Abre las herramientas de desarrollo de Chrome (F12) en la pestaña Network (Red).**
+3. **Inicia sesión y crea un proyecto desde el formulario web de Angular:**
+   * Observa la secuencia de dos peticiones en la lista de red:
+     1. `OPTIONS /api/v1/proyectos`: Responde **`200 OK`** con cabecera `Access-Control-Allow-Origin: http://localhost:4200`.
+     2. `POST /api/v1/proyectos`: Responde **`201 Created`** con el cuerpo JSON del proyecto y la cabecera `Location`.
+4. **Prueba de captura de error RFC 7807 en pantalla:**
+   * Intenta introducir un código duplicado o un presupuesto de -500 €.
+   * Comprueba que la pantalla de Angular muestra el mensaje amigable extraído directamente de `error.error.detail` y el identificador de correlación para soporte.
+
+### Ahora tú · Integrar la visualización del Clima en Angular
+
+Modifica el componente de detalle de proyecto en Angular:
+1. Añade un botón *"Consultar Meteorología en Obra"*.
+2. Llama al endpoint de incidencias y muestra la temperatura actual y el icono correspondiente.
+3. Si el backend responde con aviso de degradación (*"Servicio no disponible"*), muestra una alerta visual amarilla sin romper la vista del proyecto.
+
+### Reto · Descarga de ficheros binarios Blob en Angular
+
+La descarga de un archivo binario mediante un enlace `<a>` tradicional no permite inyectar cabeceras `Authorization: Bearer <token>`:
+1. Investiga cómo descargar el archivo mediante Angular `HttpClient` configurando `{ responseType: 'blob' }`.
+2. Crea una URL de objeto en memoria con `window.URL.createObjectURL(blob)` y dispara la descarga programática asignando el nombre de fichero extraído de la cabecera `Content-Disposition`.
+
+> [!NOTE]
+> Si en la evaluación se solicita una memoria técnica justificando la integración entre cliente y servidor, el formato oficial de entrega de texto es siempre un **documento en PDF** (`memoria-integracion-cliente.pdf`), nunca un archivo markdown suelto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Configuración de CORS operativa permitiendo peticiones desde `http://localhost:4200`.</span></div>
+  <div><strong>Si lo tienes</strong><span>Interceptor HTTP en Angular inyectando tokens Bearer y capturando errores RFC 7807.</span></div>
+  <div><strong>Reto</strong><span>Descarga programática de binarios Blob con inyección de JWT y extracción de `Content-Disposition`.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 75</p>
   <ul class="checklist">
-    <li>Has obtenido un flujo completo Angular → API Spring Boot → PostgreSQL, manteniendo la colección HTTP como prueba independiente.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se comprende el funcionamiento de las peticiones preflight OPTIONS en el estándar CORS.</li>
+    <li>La configuración de CORS en Spring Security autoriza orígenes, métodos y cabeceras exactas.</li>
+    <li>Los modelos TypeScript en Angular están sincronizados con los DTOs inmutables de Java.</li>
+    <li>El interceptor HTTP gestiona de forma centralizada la autenticación y las trazas RFC 7807.</li>
+    <li>El backend mantiene su autonomía y puede verificarse independientemente de Angular.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué las herramientas como Bruno o Postman no sufren nunca bloqueos por CORS?</li>
+    <li>¿Qué cabecera HTTP de respuesta indica al navegador qué origen tiene permiso para leer los datos?</li>
+    <li>¿Por qué es necesario declarar cabeceras expuestas (*Exposed Headers*) en la configuración de CORS?</li>
+    <li>¿Qué información crucial de soporte técnico extrae el interceptor de Angular del cuerpo RFC 7807?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque las restricciones de CORS son implementadas exclusivamente por los navegadores web para proteger a los usuarios de peticiones no autorizadas entre sitios; los clientes de escritorio como Bruno no aplican la política Same-Origin.</p>
+  <p>2 · La cabecera Access-Control-Allow-Origin (por ejemplo: Access-Control-Allow-Origin: http://localhost:4200).</p>
+  <p>3 · Porque por defecto el navegador oculta a JavaScript casi todas las cabeceras de respuesta excepto las básicas; si necesitas leer Location, Content-Disposition o X-Correlation-ID en TypeScript debes exponerlas explícitamente.</p>
+  <p>4 · El correlationId generado por el servidor, que permite al usuario comunicar ese código al soporte técnico para que localicen el fallo exacto en los archivos de log del servidor.</p>
+</details>
+
 
 ## Semana 26 · Demostrar que está terminado
 
