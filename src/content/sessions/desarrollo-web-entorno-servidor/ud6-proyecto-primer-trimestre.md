@@ -24,7 +24,7 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje muy bajo. El profesorado entrega al comenzar la unidad la especificación y los criterios de aceptación; el diseño y el reparto del trabajo son del equipo.</p>
+  <p>Andamiaje muy bajo. La especificación técnica y los criterios de aceptación están publicados en esta misma unidad; el diseño de detalle, la implementación y el reparto del trabajo son del equipo.</p>
 </div>
 
 ## Semana 14 · Integración y defensa
@@ -34,9 +34,9 @@ priorKnowledge:
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> cómo transformar un pliego de requisitos de negocio en un contrato de API REST verificable, un esquema relacional normalizado y un backlog priorizado con criterios de aceptación estrictos.</li>
-    <li><strong>2. Haz:</strong> redacta el contrato formal de endpoints (<code>CONTRATO_API.md</code>), diseña el script DDL de PostgreSQL (<code>ESQUEMA_INICIAL.sql</code>) y desglosa las historias del sprint en <code>BACKLOG.md</code>.</li>
-    <li><strong>3. Comprueba:</strong> verificas que cada endpoint tiene definidos sus DTOs, códigos HTTP de éxito y error (400, 404, 409), y que la colección de Bruno/Postman queda preparada antes de programar una sola línea de código.</li>
+    <li><strong>1. Aprende:</strong> cómo interpretar un pliego de requisitos técnicos, acordar el contrato de endpoints en una colección ejecutable y diseñar el esquema relacional en PostgreSQL.</li>
+    <li><strong>2. Haz:</strong> diseña el script DDL (<code>src/main/resources/schema.sql</code>), traslada los requisitos a una colección de peticiones en Bruno o Postman y organiza las prioridades de desarrollo en tu repositorio.</li>
+    <li><strong>3. Comprueba:</strong> verificas que cada endpoint tiene definidos sus DTOs, códigos HTTP de éxito y error (400, 404, 409), y que la colección de Bruno/Postman queda preparada antes de programar una sola línea de código backend.</li>
   </ol>
 </div>
 
@@ -133,15 +133,15 @@ Escenario: Alta de proyecto con nombre duplicado
   Y el cuerpo JSON detalla la regla de negocio violada
 ```
 
-### La documentación de ingeniería del repositorio
+### Los tres artefactos de partida del proyecto
 
-Antes de tirar código en la sesión 41, el repositorio debe contener tres archivos fundamentales de diseño:
+Antes de tirar código en la sesión 41, el equipo debe dejar listos tres elementos tangibles:
 
-<p class="stage">1 · CONTRATO_API.md</p>
+<p class="stage">1 · El contrato ejecutable: la colección de Bruno o Postman</p>
 
-Una tabla con la lista completa de endpoints, métodos HTTP, códigos esperados y esquemas JSON de petición y respuesta:
+En lugar de redactar un documento de texto que nadie mantiene, el contrato de la API se define directamente en la **colección de peticiones HTTP**:
 
-| Método | Endpoint | Descripción | Body Request | Códigos HTTP |
+| Método | Endpoint | Descripción | Body Request | Códigos HTTP esperados |
 | :--- | :--- | :--- | :--- | :--- |
 | `POST` | `/proyectos` | Crea un proyecto nuevo | `ProyectoRequest` | `201`, `400`, `409` |
 | `GET` | `/proyectos` | Lista proyectos con filtro | Ninguno | `200` |
@@ -150,7 +150,7 @@ Una tabla con la lista completa de endpoints, métodos HTTP, códigos esperados 
 | `GET` | `/proyectos/{id}/tareas` | Tareas de un proyecto | Ninguno | `200`, `404` |
 | `POST` | `/proyectos/{id}/clonar` | Clona proyecto y tareas | Query param | `201`, `400`, `404`, `409` |
 
-<p class="stage">2 · ESQUEMA_INICIAL.sql</p>
+<p class="stage">2 · El esquema relacional: src/main/resources/schema.sql</p>
 
 El script DDL de referencia con los tipos exactos de PostgreSQL, secuencias, claves primarias, claves foráneas e índices:
 
@@ -196,27 +196,26 @@ CREATE INDEX idx_tareas_proyecto ON tareas(proyecto_id);
 CREATE INDEX idx_tareas_prioridad ON tareas(prioridad);
 ```
 
-<p class="stage">3 · BACKLOG.md</p>
+<p class="stage">3 · La hoja de ruta técnica en el README.md</p>
 
-El tablero de planificación del sprint organizado por orden estricto de dependencias técnicas:
-1. **Fase 1 (Fundamentos):** Entidades base, DDL PostgreSQL, Repositorios JPA y tests `@DataJpaTest`.
+El orden de trabajo del sprint organizado por dependencias técnicas:
+1. **Fase 1 (Fundamentos):** Entidades base, DDL en `schema.sql`, Repositorios JPA y tests `@DataJpaTest`.
 2. **Fase 2 (Casos de Uso Core):** Servicios y endpoints CRUD de Proyecto y Tarea con DTOs y validación `@Valid`.
 3. **Fase 3 (Relaciones N:M y Subrecursos):** Catálogo de etiquetas, tabla puente y endpoints de asignación.
 4. **Fase 4 (Integridad y Transacciones):** Caso de uso multioperación `clonarProyecto` con reversión atómica ante fallos.
 5. **Fase 5 (Calidad y Rendimiento):** Erradicación de N+1 con `JOIN FETCH`, paginación y suite de tests en verde.
 
-### Ahora tú · Redactar la documentación y preparar la suite de pruebas
+### Ahora tú · Preparar la suite de pruebas y el esquema
 
 En esta sesión no se programa lógica Java. Tu entregable de hoy es la planificación rigurosa:
 
-1. Crea el archivo `CONTRATO_API.md` en la raíz del proyecto completando la tabla de todos los endpoints de tu API.
-2. Crea el archivo `ESQUEMA_INICIAL.sql` con las sentencias DDL correspondientes a tu diseño de base de datos.
-3. Crea el archivo `BACKLOG.md` desglosando las tareas en orden de prelación técnica.
-4. Abre tu cliente HTTP de cabecera (**Bruno** o **Postman**):
+1. Crea el archivo `src/main/resources/schema.sql` con las sentencias DDL correspondientes a tu diseño de base de datos.
+2. Abre tu cliente HTTP de cabecera (**Bruno** o **Postman**):
    * Crea una nueva colección llamada `Gestor-Proyectos-Trimestre-1`.
    * Configura la variable de entorno `baseUrl = http://localhost:8080`.
-   * Crea todas las peticiones vacías con sus rutas, métodos y ejemplos de JSON en el cuerpo según lo definido en `CONTRATO_API.md`.
-5. Revisa con tu compañero o equipo que no exista ninguna contradicción entre las rutas del contrato y las peticiones de la colección.
+   * Crea las peticiones correspondientes a los endpoints pactados en la tabla superior con sus rutas, métodos y ejemplos de JSON en el cuerpo.
+3. Anota en el `README.md` del repositorio el orden de las fases técnicas acordadas con tu equipo.
+4. Revisa con tu compañero que las rutas y nombres de campos en la colección coincidan exactamente con lo que espera el modelo.
 
 ### Reto · Detección de ambigüedades en pliegos técnicos
 
@@ -238,8 +237,8 @@ Analiza estas tres frases extraídas de pliegos de clientes reales y detecta sus
 * ¿Cómo debe formularse este criterio a nivel de DTO, de Servicio y de base de datos relacional para que sea invulnerable?
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span><code>CONTRATO_API.md</code> y <code>ESQUEMA_INICIAL.sql</code> redactados y alineados sin contradicciones de nombres ni tipos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Colección completa en Bruno/Postman preparada con variables de entorno y <code>BACKLOG.md</code> priorizado por dependencias.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Esquema <code>schema.sql</code> y tabla de correspondencia de endpoints definidos sin ambigüedades de nombres ni tipos.</span></div>
+  <div><strong>Si lo tienes</strong><span>Colección completa en Bruno/Postman preparada con variables de entorno y fases ordenadas en <code>README.md</code>.</span></div>
   <div><strong>Reto</strong><span>Análisis de ambigüedades técnicas completado con criterios Gherkin rigurosos y gestión de borrados definida.</span></div>
 </div>
 
@@ -439,7 +438,7 @@ Un compañero de equipo sube un cambio y el pipeline de GitHub Actions se pone e
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> el método profesional de revisión de código entre pares (<em>Peer Code Review</em>), los cinco vectores de auditoría backend y la estructura de una defensa técnica oral de 5 minutos.</li>
-    <li><strong>2. Haz:</strong> audita el repositorio de otro equipo rellenando la plantilla <code>CODE_REVIEW.md</code>, aplica las refactorizaciones solicitadas en tu código y prepara el guion de defensa.</li>
+    <li><strong>2. Haz:</strong> audita el repositorio de otro equipo aplicando la rúbrica de 5 vectores de esta sesión (mediante comentarios en su Pull Request o una revisión guiada en el aula), aplica las refactorizaciones solicitadas en tu código y prepara el guion de defensa.</li>
     <li><strong>3. Comprueba:</strong> superas la defensa técnica individual justificando tus decisiones de diseño con evidencias de código y demostrando la ejecución de tests y peticiones en vivo.</li>
   </ol>
 </div>
@@ -449,7 +448,7 @@ Un compañero de equipo sube un cambio y el pipeline de GitHub Actions se pone e
   <ol>
     <li>¿Qué diferencia a un comentario subjetivo de estilo de una observación de revisión de código técnica fundamentada?</li>
     <li>¿Qué tres «olores de código» (<em>code smells</em>) en persistencia JPA delatan de inmediato a un desarrollador que no domina Hibernate?</li>
-    <li>Durante una defensa técnica, ¿por qué admitir una limitación documentada en <code>PROBLEMAS.md</code> puntúa mucho más alto que intentar ocultarla ante el tribunal?</li>
+    <li>Durante una defensa técnica, ¿por qué admitir una limitación conocida puntúa mucho más alto que intentar ocultarla ante el tribunal?</li>
   </ol>
 </div>
 
@@ -478,9 +477,9 @@ Un **Code Review de ingeniería de software** audita la salud estructural y la v
 | **4 · Manejo de Errores** | ¿La API devuelve códigos de estado coherentes (`404` para no encontrado, `409` para conflicto de unicidad, `400` para validación)? ¿Se evitan errores `500` con trazas de pila expuestas al cliente? |
 | **5 · Batería de Pruebas** | ¿La suite compila y pasa al 100 % con `./mvnw test`? ¿Los tests de repositorio usan `TestEntityManager` con `flush()` y `clear()` para evitar falsos positivos de caché? |
 
-### La plantilla de auditoría: CODE_REVIEW.md
+### Los niveles de severidad en la revisión de código
 
-Para que la revisión sea profesional, constructiva y trazable, clasificamos cada observación según su **nivel de severidad**:
+Para que la revisión sea profesional, constructiva y trazable, clasificamos cada observación según su **nivel de severidad** (ya sea como comentarios en la Pull Request de GitHub o en las notas de revisión del aula):
 
 <dl class="worked">
   <dt>🔴 Bloqueante (<em>Blocker</em>)</dt>
@@ -491,7 +490,7 @@ Para que la revisión sea profesional, constructiva y trazable, clasificamos cad
   <dd>Oportunidades de simplificación con streams, nombres de métodos más expresivos o mejoras en el README.</dd>
 </dl>
 
-Ejemplo de observación bien redactada en `CODE_REVIEW.md`:
+Ejemplo de observación técnica bien formulada:
 
 ```markdown
 ### [🔴 Bloqueante] Riesgo de problema N+1 en GET /tareas
@@ -509,7 +508,7 @@ El tiempo se reparte con precisión militar:
 ```text
 [ Minuto 1 ]  Visión general: arquitectura de capas y modelo relacional en PostgreSQL.
 [ Minuto 2 ]  La decisión técnica más difícil: qué problema tuviste y cómo lo resolviste.
-[ Minuto 3 ]  Evidencia de bitácora: muestra una entrada de PROBLEMAS.md y su solución.
+[ Minuto 3 ]  Evidencia de bitácora: muestra un bloqueo técnico real que superaste y su solución.
 [ Minuto 4 ]  Demostración en vivo: ejecución de ./mvnw test y petición real en Bruno con SQL.
 [ Minuto 5 ]  Pregunta sorpresa del tribunal: respuesta conceptual y justificación teórica.
 ```
@@ -528,13 +527,12 @@ En esta sesión realizarás la revisión de código de otro equipo y corregirás
 
 1. Clona el repositorio de tus compañeros en una carpeta independiente.
 2. Ejecuta `./mvnw test` para verificar si su suite pasa en verde a la primera.
-3. Abre su código y revisa los cinco vectores de auditoría.
-4. Rellena el archivo `CODE_REVIEW.md` en la raíz de su repositorio señalando al menos **un aspecto positivo bien resuelto** y **tres observaciones técnicas justificadas** (indicando archivo, línea y propuesta de código).
-5. Abre una Pull Request o entrégales el archivo de revisión.
+3. Abre su código y revisa los cinco vectores de auditoría con la tabla anterior.
+4. Deja al menos **un aspecto positivo bien resuelto** y **tres observaciones técnicas justificadas** categorizadas por severidad (como comentarios en su Pull Request de GitHub o en la sesión de revisión de aula).
 
 <p class="stage">2 · Refactoriza tu propio proyecto</p>
 
-1. Lee detenidamente el `CODE_REVIEW.md` que te han entregado tus revisores.
+1. Revisa las observaciones que te han dejado tus revisores.
 2. Aplica las correcciones a las observaciones bloqueantes y mayores.
 3. Vuelve a ejecutar `./mvnw test` para asegurar que nada se ha roto.
 4. Haz un commit de entrega final: `git commit -m "refactor(review): resolver observaciones de auditoria tecnica"`.
@@ -560,7 +558,7 @@ Ensaya tu respuesta a estas tres preguntas típicas de tribunal de evaluación y
 * *(Respuesta esperada: Ambas pasarían la validación del servicio `existsByNombre`, pero la restricción física `UNIQUE` de PostgreSQL abortaría una de ellas con `DataIntegrityViolationException`, garantizando la integridad de datos).*
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span><code>CODE_REVIEW.md</code> completado con observaciones técnicas fundamentadas en los 5 vectores.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Revisión de código completada con observaciones técnicas fundamentadas en los 5 vectores.</span></div>
   <div><strong>Si lo tienes</strong><span>Refactorizaciones del feedback aplicadas con tests en verde y guion de defensa de 5 minutos preparado.</span></div>
   <div><strong>Reto</strong><span>Defensa técnica superada con demostración en vivo de peticiones HTTP, logs SQL y respuesta solvente a la pregunta sorpresa.</span></div>
 </div>
@@ -638,7 +636,7 @@ En ingeniería de software no decimos *«creo que esto funciona»* o *«a mí me
 | **`rollbackFor = Exception.class`** | Asegura la atomicidad de la transacción ante cualquier fallo, evitando que excepciones comprobadas hagan un `COMMIT` accidental sobre datos inconsistentes. |
 | **`Set` en relaciones `@ManyToMany`** | Garantiza la unicidad y permite a Hibernate actualizar únicamente las filas modificadas en la tabla puente sin borrar y reinsertar toda la colección. |
 | **Code Review categorizado por severidades** | Separa lo bloqueante (seguridad, integridad, rendimiento) de sugerencias menores de estilo, permitiendo priorizar la refactorización sin debates subjetivos estériles. |
-| **Honestidad técnica en la defensa** | Reconocer una limitación documentada en `PROBLEMAS.md` y explicar cómo se solucionaría en producción demuestra madurez ingenieril y dominio del sistema. |
+| **Honestidad técnica en la defensa** | Reconocer una limitación y explicar cómo se solucionaría en producción demuestra madurez ingenieril y dominio del sistema. |
 
 ### Al terminar el trimestre deberías poder responder
 
@@ -685,7 +683,6 @@ En ingeniería de software no decimos *«creo que esto funciona»* o *«a mí me
 | **Corte vertical** | Estrategia de desarrollo que implementa un caso de uso completo a través de todas las capas cada vez. |
 | **Code Review** | Auditoría técnica entre pares para evaluar arquitectura, persistencia, validación, errores y tests. |
 | **Blocker (Bloqueante)** | Defecto de gravedad máxima que impide fusionar código por riesgo de corrupción, seguridad o caída del sistema. |
-| **PROBLEMAS.md** | Bitácora técnica de incidencias donde se registran síntomas, causas raíz y soluciones adoptadas. |
 | **Defensa técnica** | Justificación oral individual de decisiones de diseño y resolución de problemas ante tribunal. |
 
 ### Comprobación final del producto del primer trimestre
@@ -693,7 +690,7 @@ En ingeniería de software no decimos *«creo que esto funciona»* o *«a mí me
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría final · el entregable completo del trimestre</p>
   <ul class="checklist">
-    <li>El repositorio contiene <code>README.md</code> con instrucciones de arranque, <code>CONTRATO_API.md</code>, <code>ESQUEMA_INICIAL.sql</code> y <code>PROBLEMAS.md</code>.</li>
+    <li>El repositorio contiene <code>README.md</code> con instrucciones de arranque, <code>src/main/resources/schema.sql</code>, la suite de tests en verde y la colección de pruebas para Bruno o Postman.</li>
     <li>La aplicación arranca conectada a una base de datos PostgreSQL real sin errores de dialecto ni tablas desalineadas.</li>
     <li>Todos los endpoints de Proyectos, Tareas y Etiquetas responden con códigos HTTP semánticos y DTOs validados.</li>
     <li>La arquitectura en tres capas es estricta: ninguna entidad JPA llega al cliente ni el servicio conoce HTTP.</li>
@@ -701,7 +698,7 @@ En ingeniería de software no decimos *«creo que esto funciona»* o *«a mí me
     <li>El problema N+1 está erradicado mediante <code>JOIN FETCH</code> o paginación en todos los métodos de consulta.</li>
     <li>La suite completa de pruebas unitarias y de integración pasa al 100 % en verde con <code>./mvnw test</code>.</li>
     <li>La colección de pruebas HTTP (Bruno / Postman) se ejecuta con éxito de principio a fin.</li>
-    <li>El equipo ha superado la revisión de código cruzada (<code>CODE_REVIEW.md</code>) y la defensa técnica oral individual.</li>
+    <li>El equipo ha superado la revisión de código cruzada y la defensa técnica oral individual.</li>
   </ul>
 </div>
 

@@ -202,12 +202,12 @@ Para cada atributo debemos tomar tres decisiones:
 
 ### Ahora tú · El esquema de proyectos y usuarios
 
-Diseña en un archivo `ESQUEMA_INICIAL.md` la traducción completa para las entidades `Proyecto` y `Usuario`.
+Diseña en un archivo `schema.sql` (o directamente en tu consola SQL) la definición completa para las tablas `proyectos` y `usuarios`.
 
 <p class="stage stage--solo">1 · La tabla <code>proyectos</code></p>
 
 Tu clase `Proyecto` tiene los campos `id`, `nombre`, `descripcion`, `activo` y `fechaCreacion` (`LocalDate`).
-* Escribe la tabla de correspondencia con los tipos de PostgreSQL correspondientes.
+* Escribe la sentencia `CREATE TABLE` con los tipos de PostgreSQL correspondientes.
 * Asegúrate de que el nombre del proyecto sea obligatorio y único en el sistema.
 * Define el valor por defecto para `activo`.
 
@@ -220,7 +220,7 @@ Diseña la tabla para almacenar los miembros del equipo:
 
 ### Reto · Las tres trampas de la identidad y los tipos
 
-Examina estas tres situaciones reales y explica por escrito por qué son decisiones técnicas erróneas:
+Examina estas tres situaciones reales y explica por qué son decisiones técnicas erróneas:
 
 1. **El identificador primitivo:** Un desarrollador decide que el atributo `id` de su entidad sea un `long` primitivo en lugar de `Long` (objeto). ¿Qué valor tiene ese campo en memoria antes de guardar el objeto por primera vez en la base de datos? ¿Por qué eso confunde por completo a un ORM al decidir si debe hacer un `INSERT` o un `UPDATE`?
 2. **La lista en un solo campo:** Para no crear otra tabla, alguien propone guardar las etiquetas de una tarea como un `VARCHAR` separado por comas: `"backend,urgente,seguridad"`. Explica qué ocurre cuando un usuario pide: *«dame todas las tareas con etiqueta seguridad ordenadas por fecha»*. ¿Puede la base de datos usar un índice en esa consulta?
@@ -228,7 +228,7 @@ Examina estas tres situaciones reales y explica por escrito por qué son decisio
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>La tabla de correspondencia de <code>Tarea</code> comprendida, con tipos SQL y restricciones justificadas.</span></div>
-  <div><strong>Si lo tienes</strong><span><code>ESQUEMA_INICIAL.md</code> completo con <code>proyectos</code> y <code>usuarios</code>, incluyendo tipos temporales y restricciones de unicidad.</span></div>
+  <div><strong>Si lo tienes</strong><span><code>schema.sql</code> completo con <code>proyectos</code> y <code>usuarios</code>, incluyendo tipos temporales y restricciones de unicidad.</span></div>
   <div><strong>Reto</strong><span>Las tres trampas analizadas en profundidad: primitivos frente a wrappers, violación de la 1ª Forma Normal y debilidades del hash como identidad.</span></div>
 </div>
 
