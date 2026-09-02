@@ -2961,153 +2961,1055 @@ public int hashCode() {
 ## Sesión 37 · ManyToMany
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> las etiquetas parecen simples hasta que la asociación necesita datos propios o reglas.</li>
-    <li><strong>Construye:</strong> incidencias etiquetadas con un modelo justificable.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> cómo modelar relaciones muchos-a-muchos con <code>@ManyToMany</code> y <code>@JoinTable</code>, por qué debes usar <code>Set</code> en lugar de <code>List</code> y el criterio exacto para descomponer en una entidad intermedia.</li>
+    <li><strong>2. Haz:</strong> implementa la entidad <code>Etiqueta</code>, asóciala a <code>Tarea</code> mediante una colección de valores únicos y expón la gestión de etiquetas en la API REST.</li>
+    <li><strong>3. Comprueba:</strong> asignas y desasignas etiquetas desde HTTP, auditas en PostgreSQL la tabla puente <code>tareas_etiquetas</code> y compruebas que el borrado de tareas nunca destruye las etiquetas maestras.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>En una base de datos relacional, ¿cómo se implementa físicamente una relación N:M entre tareas y etiquetas?</li>
+    <li>¿Por qué en JPA se recomienda enfáticamente usar <code>Set&lt;Etiqueta&gt;</code> en lugar de <code>List&lt;Etiqueta&gt;</code> en relaciones muchos-a-muchos?</li>
+    <li>Si la asociación entre una tarea y una etiqueta necesita registrar la fecha en que se asignó, ¿por qué deja de servir la anotación <code>@ManyToMany</code> directa?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **decidir cuándo una relación muchos-a-muchos directa es suficiente y cuándo necesita entidad intermedia**.
+### La tabla puente en el modelo relacional
 
-### 2. El problema
+En las sesiones anteriores vimos cómo una relación uno-a-muchos se resuelve fácilmente añadiendo una columna de clave foránea en la tabla hija (`tareas.proyecto_id`).
 
-Las etiquetas parecen simples hasta que la asociación necesita datos propios o reglas.
+Sin embargo, en el mundo real las relaciones suelen ser muchos-a-muchos:
+* Una tarea puede tener múltiples etiquetas (`"urgente"`, `"seguridad"`, `"backend"`).
+* Una misma etiqueta puede estar aplicada a cientos de tareas distintas.
 
-### 3–6. Itinerario de trabajo
+En el álgebra relacional de PostgreSQL **es físicamente imposible almacenar una lista de claves foráneas dentro de una columna**. Para resolver una relación N:M, el motor necesita una tercera tabla: la **tabla puente** o **tabla de unión** (*Join Table*).
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<figure class="diagram">
+  <figcaption>Estructura física de una relación N:M en PostgreSQL</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Tabla tareas (PK id)</li>
+    <li>Tabla tareas_etiquetas (FK tarea_id, FK etiqueta_id)</li>
+    <li>Tabla etiquetas (PK id)</li>
+  </ol>
+</figure>
 
-### 7. Comprueba que funciona
+```sql
+CREATE TABLE tareas_etiquetas (
+    tarea_id BIGINT NOT NULL REFERENCES tareas(id) ON DELETE CASCADE,
+    etiqueta_id BIGINT NOT NULL REFERENCES etiquetas(id) ON DELETE RESTRICT,
+    PRIMARY KEY (tarea_id, etiqueta_id)
+);
+```
+
+La clave primaria de la tabla puente es una clave compuesta formada por los dos identificadores, garantizando que una tarea no pueda tener la misma etiqueta duplicada dos veces.
+
+### El mapeo en JPA: @ManyToMany y @JoinTable
+
+En JPA modelamos esta relación utilizando la anotación `@ManyToMany`.
+
+<p class="stage">1 · La entidad Etiqueta (lado inverso)</p>
+
+Creamos la entidad maestra para las etiquetas:
+
+```java
+package com.ejemplo.gestor.model;
+
+import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "etiquetas")
+public class Etiqueta {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 40)
+    private String nombre;
+
+    @Column(nullable = false, length = 7)
+    private String colorHex; // Ej: "#FF5733"
+
+    @ManyToMany(mappedBy = "etiquetas")
+    private Set<Tarea> tareas = new HashSet<>();
+
+    public Etiqueta() {}
+
+    public Etiqueta(String nombre, String colorHex) {
+        this.nombre = nombre;
+        this.colorHex = colorHex;
+    }
+
+    // Getters y setters
+}
+```
+
+<p class="stage">2 · La entidad Tarea (lado propietario)</p>
+
+En `Tarea.java`, configuramos el lado propietario declarando cómo se llama la tabla puente y sus columnas:
+
+```java
+@ManyToMany(fetch = FetchType.LAZY)
+@JoinTable(
+    name = "tareas_etiquetas",
+    joinColumns = @JoinColumn(name = "tarea_id"),
+    inverseJoinColumns = @JoinColumn(name = "etiqueta_id")
+)
+private Set<Etiqueta> etiquetas = new HashSet<>();
+
+public Set<Etiqueta> getEtiquetas() {
+    return Collections.unmodifiableSet(etiquetas);
+}
+
+public void agregarEtiqueta(Etiqueta etiqueta) {
+    this.etiquetas.add(etiqueta);
+    etiqueta.getTareas().add(this);
+}
+
+public void quitarEtiqueta(Etiqueta etiqueta) {
+    this.etiquetas.remove(etiqueta);
+    etiqueta.getTareas().remove(this);
+}
+```
+
+<dl class="worked">
+  <dt><code>joinColumns</code></dt>
+  <dd>Especifica la columna de la tabla puente que apunta a la entidad actual (<code>tarea_id</code> hacia <code>tareas.id</code>).</dd>
+  <dt><code>inverseJoinColumns</code></dt>
+  <dd>Especifica la columna de la tabla puente que apunta a la otra entidad (<code>etiqueta_id</code> hacia <code>etiquetas.id</code>).</dd>
+</dl>
+
+### Por qué usamos Set y NUNCA List en ManyToMany
+
+Este es otro de los errores más costosos de rendimiento en aplicaciones Spring Boot con JPA:
+
+```java
+// ANTIPATRÓN GRAVE: usar List en @ManyToMany
+private List<Etiqueta> etiquetas = new ArrayList<>();
+```
+
+Si usas `List`, la especificación de Hibernate no puede saber qué fila concreta ha cambiado porque una lista permite elementos repetidos y depende de índices posicionales.
+
+¿Qué hace Hibernate cuando tienes 20 etiquetas en una tarea y eliminas una?
+1. Ejecuta: `DELETE FROM tareas_etiquetas WHERE tarea_id = 5;` (¡borra todas las 20 filas de golpe!).
+2. A continuación, ejecuta 19 sentencias `INSERT` una a una para reinsertar las que quedaban.
+
+Al cambiar a `Set<Etiqueta>`, Hibernate sabe que los elementos son matemáticamente únicos y emite únicamente:
+```sql
+DELETE FROM tareas_etiquetas WHERE tarea_id = 5 AND etiqueta_id = 2;
+```
+Una sola sentencia atómica y eficiente.
+
+<div class="rule">
+  <p class="rule-label">La regla de oro de las colecciones N:M</p>
+  <p><strong>En relaciones <code>@ManyToMany</code> se utiliza siempre <code>Set</code> y nunca <code>List</code>.</strong></p>
+  <p>Además, inicializa siempre la colección directamente en la declaración del atributo (<code>= new HashSet&lt;&gt;()</code>) para evitar excepciones <code>NullPointerException</code> al acceder a entidades recién instanciadas.</p>
+</div>
+
+### El peligro mortal: CascadeType.REMOVE en ManyToMany
+
+En la sesión anterior aprendimos que un `Proyecto` puede tener `cascade = CascadeType.ALL` sobre sus tareas porque si el proyecto se destruye, sus tareas pierden sentido.
+
+En una relación `@ManyToMany`, **el borrado en cascada está terminantemente prohibido**:
+
+```java
+// PELIGRO: NUNCA hagas esto en @ManyToMany
+@ManyToMany(cascade = CascadeType.ALL) // o CascadeType.REMOVE
+private Set<Etiqueta> etiquetas;
+```
+
+¿Qué ocurriría si borras una tarea que tenía la etiqueta `"BUG"`? Hibernate interpretaría que debe propagar el borrado y ejecutaría:
+`DELETE FROM etiquetas WHERE nombre = 'BUG';`
+
+¡Acabarías borrando la etiqueta del catálogo maestro de la empresa, rompiendo todas las demás tareas del sistema que compartían esa misma etiqueta!
+
+### El dilema arquitectónico: ¿Relación directa o Entidad Intermedia?
+
+La anotación `@ManyToMany` directa solo sirve bajo una condición muy estricta: **cuando la relación no contiene ningún dato adicional aparte de los dos IDs**.
+
+| Escenario | Solución JPA | Ejemplo en el mundo real |
+| :--- | :--- | :--- |
+| **Asociación pura sin atributos** | `@ManyToMany` directo con `@JoinTable`. | Tareas y Etiquetas, Usuarios y Roles de seguridad. |
+| **Asociación con atributos propios** | **Entidad intermedia** con dos relaciones `@ManyToOne`. | Inscripción de Alumnos en Cursos (con `fecha_matricula`, `calificacion`), Asignación de Tareas a Empleados (con `horas_estimadas`, `rol_desempenado`). |
+
+Si tu tabla puente necesita columnas como `creado_en`, `prioridad_etiqueta` o `asignado_por`, debes crear una entidad Java intermedia completa (por ejemplo, `TareaEtiqueta`).
+
+### Paso 1 · Crear EtiquetaRepository y Servicio
+
+Crea `EtiquetaRepository.java`:
+
+```java
+package com.ejemplo.gestor.repository;
+
+import com.ejemplo.gestor.model.Etiqueta;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface EtiquetaRepository extends JpaRepository<Etiqueta, Long> {
+    Optional<Etiqueta> findByNombreIgnoreCase(String nombre);
+    boolean existsByNombreIgnoreCase(String nombre);
+}
+```
+
+En `TareaService.java`, implementamos el caso de uso para etiquetar una tarea:
+
+```java
+@Transactional
+public Tarea asignarEtiqueta(Long tareaId, Long etiquetaId) {
+    Tarea tarea = obtener(tareaId);
+    Etiqueta etiqueta = etiquetaRepo.findById(etiquetaId)
+            .orElseThrow(() -> new RecursoNoEncontradoException("etiqueta", etiquetaId));
+
+    tarea.agregarEtiqueta(etiqueta);
+    return tarea; // El dirty checking guardará la fila en tareas_etiquetas
+}
+
+@Transactional
+public Tarea desasignarEtiqueta(Long tareaId, Long etiquetaId) {
+    Tarea tarea = obtener(tareaId);
+    Etiqueta etiqueta = etiquetaRepo.findById(etiquetaId)
+            .orElseThrow(() -> new RecursoNoEncontradoException("etiqueta", etiquetaId));
+
+    tarea.quitarEtiqueta(etiqueta);
+    return tarea;
+}
+```
+
+### Paso 2 · Exponer en DTOs y Controladores
+
+Actualizamos `TareaResponse` para incluir el listado de nombres de etiquetas:
+
+```java
+public record TareaResponse(
+    Long id,
+    String titulo,
+    String prioridad,
+    boolean completada,
+    Long proyectoId,
+    String proyectoNombre,
+    Set<String> etiquetas
+) {}
+```
+
+Añadimos en `TareaController.java` los endpoints de asociación:
+
+```java
+@PostMapping("/{id}/etiquetas/{etiquetaId}")
+public TareaResponse agregarEtiqueta(
+        @PathVariable Long id, 
+        @PathVariable Long etiquetaId) {
+    Tarea actualizada = servicio.asignarEtiqueta(id, etiquetaId);
+    return TareaMapper.aRespuesta(actualizada);
+}
+
+@DeleteMapping("/{id}/etiquetas/{etiquetaId}")
+public ResponseEntity<Void> quitarEtiqueta(
+        @PathVariable Long id, 
+        @PathVariable Long etiquetaId) {
+    servicio.desasignarEtiqueta(id, etiquetaId);
+    return ResponseEntity.noContent().build();
+}
+```
+
+### La comprobación · El ciclo N:M en PostgreSQL
+
+Arranca la aplicación y ejecuta las siguientes pruebas:
+
+<p class="stage">1 · Crea dos etiquetas en el catálogo</p>
+
+```http
+POST http://localhost:8080/etiquetas
+Content-Type: application/json
+
+{
+  "nombre": "backend",
+  "colorHex": "#3498DB"
+}
+```
+
+```http
+POST http://localhost:8080/etiquetas
+Content-Type: application/json
+
+{
+  "nombre": "urgente",
+  "colorHex": "#E74C3C"
+}
+```
+
+<p class="stage">2 · Asocia ambas etiquetas a la tarea 1</p>
+
+Ejecuta:
+* `POST http://localhost:8080/tareas/1/etiquetas/1`
+* `POST http://localhost:8080/tareas/1/etiquetas/2`
+
+Observa la consola de Spring Boot:
+```sql
+Hibernate: 
+    insert 
+    into
+        tareas_etiquetas
+        (tarea_id, etiqueta_id) 
+    values
+        (?, ?)
+```
+
+La respuesta HTTP devuelve:
+```json
+{
+  "id": 1,
+  "titulo": "Configurar @ManyToOne en entidades",
+  "etiquetas": ["backend", "urgente"]
+}
+```
+
+<p class="stage">3 · Verifica la tabla puente en PostgreSQL</p>
+
+Ejecuta en tu cliente SQL:
+```sql
+SELECT * FROM tareas_etiquetas;
+```
+Verás dos filas: `(1, 1)` y `(1, 2)`.
+
+<p class="stage">4 · Comprueba el borrado seguro</p>
+
+Borra la tarea 1 con `DELETE http://localhost:8080/tareas/1`.
+* En PostgreSQL, la tabla intermedia `tareas_etiquetas` se limpia automáticamente.
+* Ejecuta `SELECT * FROM etiquetas;`: **las etiquetas "backend" y "urgente" siguen existiendo intactas**.
+
+### Ahora tú · Filtrar tareas por etiqueta
+
+Implementa la búsqueda de tareas asociadas a una etiqueta concreta:
+
+1. Añade a `TareaRepository`:
+   ```java
+   // Spring Data realiza el JOIN automático entre tareas y etiquetas
+   List<Tarea> findByEtiquetasNombreIgnoreCase(String nombreEtiqueta);
+   ```
+2. Añade en `TareaService` el método `buscarPorEtiqueta(String nombre)`.
+3. Conéctalo al endpoint `GET /tareas?etiqueta=urgente`.
+4. Comprueba en la consola SQL que Hibernate genera una sentencia `INNER JOIN tareas_etiquetas` y `INNER JOIN etiquetas` con la condición `WHERE LOWER(etiquetas.nombre) = LOWER(?)`.
+
+### Reto · La entidad intermedia con clave compuesta
+
+Investiga cómo resolver el caso en el que la relación N:M necesita atributos de negocio propios:
+
+<p class="stage stage--solo">1 · Diseñar la entidad Asignacion con @EmbeddedId</p>
+
+Imagina que una etiqueta no solo se asocia a una tarea, sino que debemos guardar `LocalDateTime fechaAsignacion` y `String motivo`:
+* ¿Por qué una anotación `@ManyToMany` directa es totalmente incapaz de persistir esos dos campos en la tabla intermedia?
+* Investiga cómo se diseña este modelo mediante una entidad intermedia:
+  1. La clase `@Embeddable TareaEtiquetaId` que agrupa `Long tareaId` y `Long etiquetaId`.
+  2. La entidad `@Entity TareaEtiqueta` con `@EmbeddedId TareaEtiquetaId id` y dos relaciones `@ManyToOne @MapsId`.
+* Explica qué ventaja tiene este patrón de descomposición frente al `@ManyToMany` simple y por qué en proyectos empresariales grandes es el estándar dominante.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Entidad <code>Etiqueta</code> creada y vinculada con <code>@ManyToMany</code> y <code>@JoinTable</code> a <code>Tarea</code> usando <code>Set</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Asignación y desasignación funcionando por HTTP, DTOs con etiquetas y consulta filtrada por nombre de etiqueta.</span></div>
+  <div><strong>Reto</strong><span>El diseño conceptual de la entidad intermedia descompuesta con <code>@EmbeddedId</code> documentado y justificado.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 37</p>
   <ul class="checklist">
-    <li>Has obtenido incidencias etiquetadas con un modelo justificable.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Comprendes la necesidad física de una tabla puente (<em>Join Table</em>) para modelar relaciones N:M en PostgreSQL.</li>
+    <li>Mapeas relaciones bidireccionales muchos-a-muchos con <code>@ManyToMany</code>, <code>@JoinTable</code> y <code>mappedBy</code>.</li>
+    <li>Utilizas <code>Set</code> en lugar de <code>List</code> para evitar que Hibernate destruya y reescriba todas las filas de la tabla puente.</li>
+    <li>Evitas el uso de <code>CascadeType.REMOVE</code> en relaciones N:M para proteger el ciclo de vida independiente de las entidades maestras.</li>
+    <li>Conoces el criterio arquitectónico para decidir cuándo una relación N:M requiere descomponerse en una entidad intermedia.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué columnas mínimas forman la clave primaria compuesta de una tabla puente N:M?</li>
+    <li>¿Qué problema de rendimiento provoca usar `List` en lugar de `Set` en una relación `@ManyToMany` al eliminar un elemento?</li>
+    <li>¿Por qué nunca se debe configurar `CascadeType.REMOVE` en una colección `@ManyToMany` de etiquetas?</li>
+    <li>¿En qué momento es obligatorio sustituir un `@ManyToMany` directo por dos relaciones `@ManyToOne` con una entidad intermedia?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Las dos columnas de clave foránea que apuntan a las claves primarias de cada una de las tablas relacionadas (ej: <code>tarea_id</code> y <code>etiqueta_id</code>).</p>
+  <p>2 · Provoca que Hibernate elimine todas las filas de la tabla puente correspondientes a la entidad y las vuelva a insertar todas de nuevo una a una.</p>
+  <p>3 · Porque al borrar una tarea hija se eliminarían también las etiquetas maestras asociadas, rompiendo las demás tareas que estuvieran usando esa misma etiqueta.</p>
+  <p>4 · En el momento en que la relación necesita almacenar atributos propios de negocio (como fecha de asignación, usuario que asignó, rol o estado del vínculo).</p>
+</details>
 
 ## Sesión 38 · Transacciones e integridad
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una operación de negocio puede dejar datos incoherentes si cada escritura confirma por separado.</li>
-    <li><strong>Construye:</strong> un caso multioperación que se confirma completo o se revierte completo.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> cómo funcionan las propiedades ACID en una aplicación web real, cómo actúa el proxy dinámico de <code>@Transactional</code> y qué excepciones disparan un <code>ROLLBACK</code>.</li>
+    <li><strong>2. Haz:</strong> implementa un caso de uso atómico multioperación (clonar un proyecto con todas sus tareas) que se confirma íntegro o se deshace por completo.</li>
+    <li><strong>3. Comprueba:</strong> fuerzas un error simulado a mitad del proceso, verificas en PostgreSQL que no queda ni un solo registro residual y analizas la trampa de la autoinvocación.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué significa que una operación sobre una base de datos sea atómica?</li>
+    <li>¿Qué tipos de excepciones de Java provocan un <code>ROLLBACK</code> automático por defecto al usar <code>@Transactional</code> en Spring Boot?</li>
+    <li>Si un método no transaccional llama a otro método de su misma clase anotado con <code>@Transactional</code>, ¿se abre una transacción en la base de datos?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **delimitar operaciones atómicas y comprobar qué ocurre cuando una parte falla**.
+### El peligro del estado corrompido
 
-### 2. El problema
+En una aplicación empresarial, los casos de uso rara vez consisten en guardar una sola fila. Observa este escenario habitual:
 
-Una operación de negocio puede dejar datos incoherentes si cada escritura confirma por separado.
+> **Caso de uso:** *Archivar un proyecto obsoleto y reasignar sus 50 tareas pendientes al proyecto de mantenimiento general.*
 
-### 3–6. Itinerario de trabajo
+Imagina qué ocurre si este proceso se ejecuta sin una transacción atómica:
+1. La aplicación actualiza el proyecto obsoleto: `activo = false`. (PostgreSQL lo guarda).
+2. Empieza a reasignar las 50 tareas una a una.
+3. Al llegar a la tarea 23, se corta la conexión de red con el servidor, salta una excepción de validación o se agota la memoria.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+El resultado es devastador: **tu base de datos ha quedado corrompida**. El proyecto figura como cerrado, 22 tareas están en mantenimiento, pero las otras 28 se han quedado en un limbo inaccesible. Reparar esa incoherencia a mano exigirá horas de auditoría forense con scripts SQL.
 
-### 7. Comprueba que funciona
+### Las propiedades ACID explicadas para desarrolladores
+
+Una transacción relacional es un escudo que garantiza cuatro propiedades matemáticas fundamentales:
+
+<figure class="diagram">
+  <figcaption>Las cuatro propiedades ACID</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Atomicidad (todo o nada)</li>
+    <li>Consistencia (reglas e invariantes)</li>
+    <li>Aislamiento (sin interferencias)</li>
+    <li>Durabilidad (persistido en disco)</li>
+  </ol>
+</figure>
+
+| Propiedad | Qué significa en la práctica |
+| :--- | :--- |
+| **A · Atomicidad (*Atomicity*)** | **Todo o nada.** O todas las modificaciones del caso de uso se consolidan en PostgreSQL (`COMMIT`), o si una sola falla, la base de datos revierte todas las escrituras (`ROLLBACK`), dejándola exactamente como estaba al empezar. |
+| **C · Consistencia (*Consistency*)** | La transacción lleva a la base de datos de un estado válido a otro estado válido, respetando todas las claves primarias, foráneas, tipos y restricciones de integridad. |
+| **I · Aislamiento (*Isolation*)** | Dos usuarios ejecutando operaciones concurrentes no ven los cambios a medio cocinar del otro hasta que la transacción se haya confirmado definitivamente. |
+| **D · Durabilidad (*Durability*)** | Una vez recibido el `COMMIT`, los datos quedan registrados en el disco (en el archivo WAL de PostgreSQL). Si se corta la corriente eléctrica un milisegundo después, los datos no se perderán. |
+
+### Cómo funciona @Transactional por dentro
+
+Cuando anotas una clase o método con `@Transactional`, Spring **no modifica tu código Java**. En su lugar, utiliza el patrón **Proxy Dinámico** (AOP):
+
+```text
+Petición HTTP → Controlador → [ PROXY DE SPRING ] → Tu TareaService
+                                      │
+                         1. connection.setAutoCommit(false)
+                         2. Ejecuta tu método de servicio
+                         3. ¿Terminó bien? → connection.commit()
+                         4. ¿Lanzó error?  → connection.rollback()
+```
+
+<div class="rule">
+  <p class="rule-label">La trampa mortal de las excepciones comprobadas</p>
+  <p>Por defecto en Spring, <strong><code>@Transactional</code> solo ejecuta ROLLBACK ante excepciones no comprobadas (subclases de <code>RuntimeException</code> y errores <code>Error</code>)</strong>.</p>
+  <p>Si tu método lanza una excepción comprobada (como <code>IOException</code>, <code>SQLException</code> o cualquier clase que herede directamente de <code>Exception</code>), Spring asume que es una condición de negocio recuperable y <strong>¡ejecuta COMMIT!</strong></p>
+  <p>Para protegerte ante cualquier fallo inesperado, acostumbra a especificar:
+  <code>@Transactional(rollbackFor = Exception.class)</code>.</p>
+</div>
+
+### La trampa de la autoinvocación (Self-Invocation Problem)
+
+Mira este código con atención. Contiene un error silencioso muy común:
+
+```java
+@Service
+public class ProyectoService {
+
+    public void procesoPublico() {
+        // ... tareas previas ...
+        this.operacionCritica(); // ¡PELIGRO!
+    }
+
+    @Transactional
+    public void operacionCritica() {
+        // Varias escrituras en base de datos
+    }
+}
+```
+
+¿Qué ocurre al ejecutar `procesoPublico()`?
+* Como `procesoPublico()` no tiene `@Transactional`, el controlador llama directamente al servicio.
+* Al invocar `this.operacionCritica()`, la llamada se resuelve mediante el puntero `this` interno de Java, **saltándose por completo el proxy de Spring**.
+* El código de `operacionCritica()` se ejecutará **sin ninguna transacción**. Cada instrucción SQL se confirmará por separado en modo autocommit.
+
+**Regla:** para que `@Transactional` funcione, la llamada debe entrar desde un bean externo inyectado por Spring.
+
+### Paso 1 · Implementar el caso multioperación «Clonar Proyecto»
+
+Vamos a crear un caso de uso completo en `ProyectoService`: clonar un proyecto existente duplicando todas sus tareas asociadas con una nueva identidad:
+
+```java
+@Transactional(rollbackFor = Exception.class)
+public Proyecto clonarProyecto(Long idOriginal, String nuevoNombre) {
+    // 1. Obtener el proyecto original con sus tareas
+    Proyecto original = obtener(idOriginal);
+
+    // 2. Validar regla de negocio: el nombre del nuevo proyecto debe ser único
+    if (proyectoRepo.existsByNombreIgnoreCase(nuevoNombre)) {
+        throw new ReglaDeNegocioException("Ya existe un proyecto con el nombre: " + nuevoNombre);
+    }
+
+    // 3. Crear la nueva entidad padre
+    Proyecto clon = new Proyecto(nuevoNombre, "Clon de " + original.getNombre());
+    Proyecto clonGuardado = proyectoRepo.save(clon);
+
+    // 4. Duplicar cada una de las tareas del proyecto original
+    List<Tarea> tareasOriginales = tareaRepo.findByProyectoId(idOriginal);
+
+    for (Tarea tareaOriginal : tareasOriginales) {
+        // Simulador de fallo: si una tarea contiene "FALLO_TEST", abortamos
+        if (tareaOriginal.getTitulo().contains("FALLO_TEST")) {
+            throw new ReglaDeNegocioException("Error simulado: abortando clonación de emergencia");
+        }
+
+        Tarea nuevaTarea = new Tarea(
+                tareaOriginal.getTitulo() + " (Copia)",
+                tareaOriginal.getPrioridad()
+        );
+        nuevaTarea.setProyecto(clonGuardado);
+        nuevaTarea.setCompletada(false);
+        tareaRepo.save(nuevaTarea);
+    }
+
+    return clonGuardado;
+}
+```
+
+<dl class="worked">
+  <dt>Por qué este método debe ser estrictamente atómico</dt>
+  <dd>Si el proyecto original tiene 10 tareas y la séptima tarea provoca la excepción, la transacción aborta. PostgreSQL revierte el <code>INSERT</code> del nuevo proyecto y los seis <code>INSERT</code> de las tareas previas. No queda ninguna fila huérfana en la base de datos.</dd>
+</dl>
+
+### Paso 2 · Conectar el endpoint en ProyectoController
+
+Añadimos el endpoint POST para disparar la clonación:
+
+```java
+@PostMapping("/{id}/clonar")
+public ResponseEntity<ProyectoResponse> clonar(
+        @PathVariable Long id,
+        @RequestParam String nuevoNombre) {
+    Proyecto clonado = servicio.clonarProyecto(id, nuevoNombre);
+    return ResponseEntity.status(HttpStatus.CREATED).body(ProyectoMapper.aRespuesta(clonado));
+}
+```
+
+### La comprobación · El experimento del ROLLBACK real
+
+Arranca la aplicación y ejecuta las dos pruebas siguientes:
+
+<p class="stage">1 · Prueba el caso de éxito</p>
+
+1. Asegúrate de que el proyecto 1 tiene dos tareas normales (sin la palabra clave de error).
+2. Ejecuta la petición:
+   ```http
+   POST http://localhost:8080/proyectos/1/clonar?nuevoNombre=Proyecto+Clonado+OK
+   ```
+3. Respuesta: `201 Created` con el nuevo proyecto.
+4. Consulta en PostgreSQL:
+   ```sql
+   SELECT * FROM proyectos WHERE nombre = 'Proyecto Clonado OK';
+   SELECT * FROM tareas WHERE proyecto_id = (SELECT id FROM proyectos WHERE nombre = 'Proyecto Clonado OK');
+   ```
+   Verás el proyecto nuevo y sus dos tareas duplicadas con la coletilla `(Copia)`.
+
+<p class="stage">2 · Provoca el fallo atómico</p>
+
+1. Añade a propósito una tarea al proyecto 1 con el título problemático:
+   ```http
+   POST http://localhost:8080/tareas
+   Content-Type: application/json
+
+   {
+     "titulo": "Tarea con FALLO_TEST para provocar rollback",
+     "prioridad": "ALTA",
+     "proyectoId": 1
+   }
+   ```
+2. Ahora intenta clonar el proyecto 1 pidiendo crear `"Proyecto Destinado al Fracaso"`:
+   ```http
+   POST http://localhost:8080/proyectos/1/clonar?nuevoNombre=Proyecto+Destinado+al+Fracaso
+   ```
+3. La aplicación lanza la excepción y responde con un código `400 Bad Request` (o el manejador de tu API):
+   ```json
+   {
+     "error": "Regla de negocio violada",
+     "mensaje": "Error simulado: abortando clonación de emergencia"
+   }
+   ```
+4. **La prueba de fuego en PostgreSQL:** abre tu cliente SQL y comprueba:
+   ```sql
+   SELECT * FROM proyectos WHERE nombre = 'Proyecto Destinado al Fracaso';
+   ```
+   **Resultado:** `0 filas`.
+   PostgreSQL deshizo el proyecto nuevo y todas las tareas que se habían insertado antes de saltar la excepción. La base de datos está perfectamente limpia y coherente.
+
+### Ahora tú · Transferencia atómica de tareas entre proyectos
+
+Implementa en `ProyectoService` un caso de uso para transferir todas las tareas de un proyecto a otro:
+
+1. Método: `transferirTareas(Long origenId, Long destinoId)` anotado con `@Transactional(rollbackFor = Exception.class)`.
+2. Reglas de negocio a comprobar:
+   * El proyecto de origen debe existir.
+   * El proyecto de destino debe existir.
+   * El proyecto de destino **debe estar activo** (`destino.isActivo()`). Si está inactivo, lanza una `ReglaDeNegocioException("No se pueden transferir tareas a un proyecto inactivo")`.
+3. Si la validación pasa, reasigna todas las tareas de `origen` a `destino`.
+4. Expón el endpoint `POST /proyectos/{origenId}/transferir-a/{destinoId}`.
+5. Haz una prueba transfiriendo tareas hacia un proyecto inactivo: comprueba que responde con error y que en PostgreSQL ninguna tarea cambió de proyecto.
+
+### Reto · Niveles de aislamiento y lecturas fantasma
+
+Investiga cómo controla PostgreSQL la concurrencia entre transacciones simultáneas:
+
+<p class="stage stage--solo">1 · Los niveles de aislamiento de SQL</p>
+
+En `@Transactional` puedes configurar el parámetro `isolation`:
+```java
+@Transactional(isolation = Isolation.READ_COMMITTED) // Por defecto en PostgreSQL
+```
+* Explica qué es una **lectura sucia (*Dirty Read*)**, una **lectura no repetible (*Non-Repeatable Read*)** y una **lectura fantasma (*Phantom Read*)**.
+* Investiga por qué PostgreSQL **no permite lecturas sucias bajo ningún concepto**, incluso en su nivel más permisivo (`READ UNCOMMITTED`).
+* ¿Qué ocurre si configuras `Isolation.SERIALIZABLE` en un endpoint con miles de peticiones por segundo? Explica por qué el nivel serializable introduce una sobrecarga enorme de bloqueos y obliga a tu aplicación a capturar excepciones de reintento (`could not serialize access due to concurrent update`).
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Caso de uso de clonación implementado con <code>@Transactional</code> y rollback verificado en PostgreSQL ante error.</span></div>
+  <div><strong>Si lo tienes</strong><span>Transferencia atómica de tareas entre proyectos con validación de estado activo y pruebas de aborto sin efectos secundarios.</span></div>
+  <div><strong>Reto</strong><span>Estudio técnico de los 4 niveles de aislamiento SQL, fenómenos anómalos y coste del nivel serializable en PostgreSQL.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 38</p>
   <ul class="checklist">
-    <li>Has obtenido un caso multioperación que se confirma completo o se revierte completo.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Comprendes las cuatro garantías ACID (Atomicidad, Consistencia, Aislamiento y Durabilidad).</li>
+    <li>Entiendes cómo el proxy AOP de Spring gestiona el ciclo <code>setAutoCommit(false)</code>, <code>commit()</code> y <code>rollback()</code>.</li>
+    <li>Configuras <code>rollbackFor = Exception.class</code> para evitar confirmaciones accidentales ante excepciones comprobadas.</li>
+    <li>Conoces el problema de la autoinvocación interna (<em>Self-Invocation</em>) y por qué anula las anotaciones transaccionales.</li>
+    <li>Has comprobado empíricamente en PostgreSQL que un rollback revierte todas las inserciones previas sin dejar basura.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué ocurre con las operaciones previas de una transacción si la última sentencia lanza una RuntimeException?</li>
+    <li>¿Por qué Spring no ejecuta rollback por defecto ante una excepción comprobada como `IOException`?</li>
+    <li>¿Por qué llamar a un método `@Transactional` desde otro método de la misma clase no abre una transacción?</li>
+    <li>¿En qué archivo de disco escribe PostgreSQL los cambios confirmados para garantizar la durabilidad incluso si se apaga el servidor?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Se cancelan y revierten por completo mediante un comando SQL ROLLBACK, dejando la base de datos en el estado exacto en que estaba antes de empezar.</p>
+  <p>2 · Por convención histórica de la arquitectura EJB/Spring: las excepciones comprobadas se consideraban situaciones de negocio esperadas que el programador debía gestionar, mientras que las RuntimeException se consideraban fallos técnicos imprevistos.</p>
+  <p>3 · Porque la llamada se ejecuta mediante la referencia interna <code>this</code> sin pasar por el proxy interceptor de Spring AOP que gestiona la conexión.</p>
+  <p>4 · En el registro de escritura anticipada (*Write-Ahead Logging* o archivo WAL).</p>
+</details>
 
 ## Sesión 39 · Consultas, rendimiento y N+1
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una página correcta puede esconder decenas de accesos repetidos a la base de datos.</li>
-    <li><strong>Construye:</strong> una comparación medible antes y después de corregir una carga ineficiente.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> la anatomía del antipatrón N+1, por qué pasa desapercibido en local y cómo resolverlo de raíz utilizando JPQL con <code>JOIN FETCH</code> y <code>@EntityGraph</code>.</li>
+    <li><strong>2. Haz:</strong> audita el endpoint de listado de tareas, diagnostica la avalancha de consultas en la consola y refactoriza el repositorio con una consulta optimizada en una sola sentencia.</li>
+    <li><strong>3. Comprueba:</strong> comparas el número exacto de consultas SQL antes y después (de N+1 a 1), mides el tiempo de respuesta y aplicas paginación con <code>Pageable</code>.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Si un endpoint devuelve 50 tareas y al mapearlas a DTO accedes al nombre de su proyecto asociado, ¿cuántas consultas SQL se enviarán a PostgreSQL si no has optimizado la carga?</li>
+    <li>¿Qué diferencia hay entre un `JOIN` ordinario en SQL y la cláusula `JOIN FETCH` en una consulta JPQL de Hibernate?</li>
+    <li>¿Por qué devolver listas sin paginar (`List<Tarea>`) en una API pública es un riesgo crítico para la estabilidad del servidor?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **observar las consultas ejecutadas y detectar un N+1 introductorio**.
+### La trampa silenciosa: el problema N+1 al microscopio
 
-### 2. El problema
+El problema N+1 es, sin discusión, el fallo de rendimiento más extendido en el desarrollo de backends con ORM. Lo más peligroso es que **el código parece totalmente inocente y la aplicación funciona en apariencia a la perfección**.
 
-Una página correcta puede esconder decenas de accesos repetidos a la base de datos.
+Observa este método de tu servicio:
 
-### 3–6. Itinerario de trabajo
+```java
+@Transactional(readOnly = true)
+public List<TareaResponse> listarTodas() {
+    // Consulta 1: Traer todas las tareas
+    List<Tarea> tareas = tareaRepo.findAll(); 
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+    // Mapear cada tarea a su DTO de respuesta
+    return tareas.stream()
+            .map(t -> new TareaResponse(
+                    t.getId(),
+                    t.getTitulo(),
+                    t.getPrioridad(),
+                    t.isCompletada(),
+                    t.getProyecto().getId(),
+                    t.getProyecto().getNombre() // ¡AQUÍ OCURRE EL DESASTRE!
+            ))
+            .toList();
+}
+```
 
-### 7. Comprueba que funciona
+Analicemos qué ocurre en PostgreSQL cuando hay **100 tareas** en la base de datos:
+
+<figure class="diagram">
+  <figcaption>La avalancha del problema N+1</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1 SELECT tareas</li>
+    <li>100 SELECT proyectos (1 por fila)</li>
+    <li>101 viajes TCP</li>
+    <li>Colapso de red y pool</li>
+  </ol>
+</figure>
+
+1. `tareaRepo.findAll()` ejecuta **1 consulta**:
+   ```sql
+   SELECT * FROM tareas;
+   ```
+2. Al iterar el stream, llegamos a `t.getProyecto().getNombre()`. Como configuramos `FetchType.LAZY` (lo correcto para no cargar proyectos a ciegas), `t.getProyecto()` es un Proxy vacío.
+3. Al pedirle `.getNombre()`, el Proxy se ve obligado a viajar a PostgreSQL para traer los datos:
+   ```sql
+   SELECT * FROM proyectos WHERE id = 1;
+   ```
+4. En la segunda tarea, vuelve a disparar:
+   ```sql
+   SELECT * FROM proyectos WHERE id = 2;
+   ```
+5. ...y así sucesivamente hasta completar las 100 tareas.
+
+**Total:** 1 consulta inicial + 100 consultas secundarias = **101 consultas SQL** para responder a un único cliente HTTP.
+
+### Por qué en desarrollo no te enteras
+
+En tu ordenador de desarrollo tienes tres tareas y dos proyectos de prueba. Tres consultas tardan 0,5 milisegundos en `localhost`. El navegador carga al instante y crees que tu código vuela.
+
+En producción, la aplicación y la base de datos están en servidores o contenedores separados por una red física. Aunque la red sea rápida, cada consulta introduce una pequeña latencia de ida y vuelta (*Round Trip Time*):
+* 100 consultas × 3 ms de latencia = **300 milisegundos de espera pura de red**.
+* 1.000 tareas en una tabla real = **¡3 segundos enteros bloqueando la conexión!**
+* Si diez usuarios hacen la misma petición a la vez, se satura el pool de conexiones de HikariCP y la API entera deja de responder (error `503 Service Unavailable`).
+
+### La solución de ingeniería: JPQL con JOIN FETCH
+
+La solución consiste en ordenarle a Hibernate: *«Cuando traigas las tareas, haz un JOIN con proyectos y rellena el objeto proyecto en la misma sentencia SQL»*.
+
+Para lograrlo, utilizamos la cláusula **`JOIN FETCH`** en una consulta JPQL personalizada con la anotación `@Query`:
+
+```java
+package com.ejemplo.gestor.repository;
+
+import com.ejemplo.gestor.model.Tarea;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface TareaRepository extends JpaRepository<Tarea, Long> {
+
+    // Consulta optimizada con JOIN FETCH: elimina el N+1 de raíz
+    @Query("SELECT t FROM Tarea t JOIN FETCH t.proyecto")
+    List<Tarea> findAllConProyecto();
+}
+```
+
+<dl class="worked">
+  <dt>Qué diferencia hay entre <code>JOIN</code> y <code>JOIN FETCH</code></dt>
+  <dd>En JPQL, un <code>JOIN</code> normal solo sirve para filtrar (por ejemplo, <code>WHERE p.activo = true</code>), pero deja el objeto relacionado como un Proxy perezoso. <code>JOIN FETCH</code> le dice explícitamente a Hibernate: <em>«Filtra Y ADEMÁS inicializa el objeto relacionado con las columnas devueltas»</em>.</dd>
+</dl>
+
+Observa la única sentencia SQL que PostgreSQL ejecuta ahora:
+
+```sql
+Hibernate: 
+    select 
+        t1_0.id,
+        t1_0.completada,
+        t1_0.prioridad,
+        t1_0.titulo,
+        p1_0.id,
+        p1_0.activo,
+        p1_0.descripcion,
+        p1_0.nombre 
+    from 
+        tareas t1_0 
+    join 
+        proyectos p1_0 
+            on p1_0.id=t1_0.proyecto_id
+```
+
+**De 101 consultas hemos pasado a 1 sola consulta.** El tiempo de ejecución cae de 300 ms a 3 ms.
+
+### La alternativa declarativa: @EntityGraph
+
+Si prefieres no escribir consultas JPQL a mano para métodos estándar, Spring Data JPA ofrece la anotación `@EntityGraph`:
+
+```java
+@EntityGraph(attributePaths = {"proyecto"})
+@Override
+List<Tarea> findAll();
+```
+
+`@EntityGraph` instruye a Hibernate a realizar automáticamente un `LEFT OUTER JOIN` trayendo el atributo especificado sin necesidad de alterar la signatura del método ni escribir la sentencia JPQL.
+
+### Paginación profesional con Pageable y Page
+
+Cargar listas completas con `List<T>` es el segundo gran pecado de rendimiento en un backend. Si una tabla acumula 50.000 tareas, `findAllConProyecto()` construirá 50.000 objetos en memoria, colapsando el *heap* de Java con un `OutOfMemoryError`.
+
+La solución en producción es la **paginación en base de datos**:
+
+<p class="stage">1 · El repositorio paginado</p>
+
+En `TareaRepository`:
+```java
+// Spring Data genera automáticamente LIMIT y OFFSET en PostgreSQL
+Page<Tarea> findByCompletada(boolean completada, Pageable pageable);
+```
+
+<p class="stage">2 · El controlador recibe parámetros de paginación</p>
+
+```java
+@GetMapping("/paginadas")
+public Page<TareaResponse> listarPaginadas(
+        @RequestParam(defaultValue = "0") int pagina,
+        @RequestParam(defaultValue = "10") int tamano) {
+
+    // Creamos la petición de página ordenada por id descendente
+    Pageable pageable = PageRequest.of(pagina, tamano, Sort.by("id").descending());
+
+    Page<Tarea> resultado = servicio.listarPaginadas(pageable);
+
+    // Page.map transforma cada elemento sin perder los metadatos de paginación
+    return resultado.map(TareaMapper::aRespuesta);
+}
+```
+
+<p class="stage">3 · El SQL eficiente en PostgreSQL</p>
+
+Al pedir `GET /tareas/paginadas?pagina=0&tamano=10`, Hibernate ejecuta en PostgreSQL:
+```sql
+SELECT ... FROM tareas LIMIT 10 OFFSET 0;
+SELECT count(*) FROM tareas; -- Para calcular el total de páginas
+```
+Solo viajan 10 filas por la red. La memoria de la aplicación permanece ligera y estable.
+
+### Paso a paso guiado · Diagnóstico y optimización en vivo
+
+Aplica la optimización en tu proyecto siguiendo estos pasos:
+
+1. Abre `application.properties` y asegúrate de tener activada la visibilidad SQL:
+   ```properties
+   spring.jpa.show-sql=true
+   spring.jpa.properties.hibernate.format_sql=true
+   ```
+2. Asegúrate de tener al menos tres proyectos y diez tareas creadas en tu base de datos.
+3. Haz una llamada a `GET /tareas`:
+   * Cuenta en tu terminal cuántas sentencias `select ... from proyectos` aparecen. Verás una por cada tarea. **Has pillado al N+1 con las manos en la masa.**
+4. Cambia `TareaService` para que invoque `tareaRepo.findAllConProyecto()`.
+5. Vuelve a hacer `GET /tareas`:
+   * Comprueba en la consola que ahora solo se emite **una única sentencia con `JOIN`**.
+
+### Ahora tú · Optimizar la carga de proyectos con su lista de tareas
+
+En la sesión 36 creamos `GET /proyectos/{id}/detalle` que cargaba el proyecto y luego inicializaba sus tareas.
+
+1. Añade en `ProyectoRepository` una consulta con `JOIN FETCH`:
+   ```java
+   @Query("SELECT p FROM Proyecto p LEFT JOIN FETCH p.tareas WHERE p.id = :id")
+   Optional<Proyecto> findByIdConTareas(@Param("id") Long id);
+   ```
+   *(Usamos `LEFT JOIN FETCH` para que devuelva el proyecto incluso si no tiene tareas creadas todavía).*
+2. Actualiza `ProyectoService.obtenerConDetalle(id)` para utilizar este nuevo método.
+3. Comprueba en la terminal que la consulta del detalle de un proyecto se resuelve ahora en una sola sentencia SQL en lugar de dos.
+
+### Reto · El problema del producto cartesiano (MultipleBagFetchException)
+
+Investiga una de las excepciones más desconcertantes de JPA:
+
+<p class="stage stage--solo">1 · La trampa de hacer JOIN FETCH sobre dos listas</p>
+
+Imagina que una `Tarea` tiene una lista de comentarios (`List<Comentario>`) y una lista de etiquetas (`List<Etiqueta>`). Escribes esta consulta optimizadora:
+
+```java
+// INTENTO FALLIDO
+@Query("SELECT t FROM Tarea t JOIN FETCH t.comentarios JOIN FETCH t.etiquetas")
+List<Tarea> findTodo();
+```
+
+* Al arrancar la aplicación, Hibernate aborta con este error:
+  ```text
+  org.hibernate.loader.MultipleBagFetchException: 
+  cannot simultaneously fetch multiple bags: [com.ejemplo.gestor.model.Tarea.comentarios, com.ejemplo.gestor.model.Tarea.etiquetas]
+  ```
+* ¿Qué es una *bag* en la terminología de Hibernate? (Una colección de tipo `List` sin orden definido).
+* Explica qué es el **producto cartesiano relacional**: si una tarea tiene 5 comentarios y 4 etiquetas, ¿cuántas filas devuelve un doble `JOIN` en PostgreSQL para esa sola tarea? ($5 \times 4 = 20$ filas duplicadas).
+* Explica las dos soluciones de la industria para este problema:
+  1. Cambiar las colecciones a `Set` (que no admiten duplicados).
+  2. Dividir la carga en dos consultas dirigidas dentro de la misma transacción (aprovechando la caché de primer nivel de Hibernate).
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>N+1 detectado en logs de consola y corregido mediante <code>JOIN FETCH</code> en <code>TareaRepository</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Paginación con <code>Pageable</code> y <code>Page&lt;T&gt;</code> implementada, con <code>LIMIT</code> y <code>OFFSET</code> verificados en PostgreSQL.</span></div>
+  <div><strong>Reto</strong><span>Consulta con <code>LEFT JOIN FETCH</code> para proyectos implementada y justificación técnica de la <code>MultipleBagFetchException</code>.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 39</p>
   <ul class="checklist">
-    <li>Has obtenido una comparación medible antes y después de corregir una carga ineficiente.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Sabes identificar el problema N+1 observando repeticiones de consultas en la consola de Spring Boot.</li>
+    <li>Comprendes por qué <code>FetchType.LAZY</code> es indispensable pero requiere consultas optimizadas en casos de lectura masiva.</li>
+    <li>Utilizas <code>JOIN FETCH</code> en JPQL para cargar entidades y sus dependencias en una sola sentencia SQL eficiente.</li>
+    <li>Conoces la alternativa declarativa con <code>@EntityGraph</code>.</li>
+    <li>Implementas paginación profesional con <code>Pageable</code> para proteger la memoria RAM del servidor contra tablas masivas.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué el problema N+1 pasa desapercibido en los entornos de desarrollo locales?</li>
+    <li>¿Qué diferencia a nivel de Hibernate existe entre `JOIN` y `JOIN FETCH` en una consulta JPQL?</li>
+    <li>¿Por qué se utiliza `LEFT JOIN FETCH` en lugar de `INNER JOIN FETCH` al cargar una colección de hijos opcional?</li>
+    <li>¿Qué parámetros SQL genera Spring Data al recibir una petición con `Pageable`?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque en local la base de datos tiene pocos datos y la latencia de red es cero (localhost), ocultando el impacto del volumen de peticiones.</p>
+  <p>2 · `JOIN` ordinario solo permite aplicar condiciones de filtrado en la consulta; `JOIN FETCH` además inicializa y puebla el objeto relacionado directamente en la misma sentencia sin dejar un Proxy perezoso.</p>
+  <p>3 · Porque si la entidad padre no tiene ningún hijo asociado, un `INNER JOIN` descartaría al padre de la lista de resultados, mientras que `LEFT JOIN` devuelve al padre con la colección vacía.</p>
+  <p>4 · Genera las cláusulas `LIMIT` (tamaño de página) y `OFFSET` (desplazamiento inicial según el número de página).</p>
+</details>
 
 ## Lo que debes recordar
 
-Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben poder justificarse, preguntas de recuperación y una comprobación final del producto.
+### El método
+
+La UD4 enseñó a estructurar el código en capas desacopladas. Esta unidad ha demostrado por qué esa inversión valió la pena: **cambiamos todo el sistema de almacenamiento de memoria a PostgreSQL y el servicio no modificó ni una sola regla de negocio**.
+
+Para persistir con JPA sin caer en sus trampas de rendimiento, sigue siempre este orden de ingeniería:
+
+<figure class="diagram">
+  <figcaption>El orden de diseño en persistencia</figcaption>
+  <ol class="flow">
+    <li>Diseña primero la <strong>tabla física en PostgreSQL</strong> (tipos, índices, restricciones y claves foráneas).</li>
+    <li>Mapea la <strong>entidad JPA</strong> (constructor vacío, <code>@Id Long</code> y columnas explícitas).</li>
+    <li>Declara el <strong>repositorio</strong> extendiendo <code>JpaRepository</code> con nombres derivados precisos.</li>
+    <li>Comprueba el acceso con <strong>tests de repositorio</strong> (<code>@DataJpaTest</code>, <code>flush()</code> y <code>clear()</code>).</li>
+    <li>Modela las relaciones con <code>@ManyToOne(fetch = FetchType.LAZY)</code> y lados propietarios claros.</li>
+    <li>Delimita la atomicidad en el servicio con <code>@Transactional(rollbackFor = Exception.class)</code>.</li>
+    <li>Audita el SQL en consola para erradicar el <strong>problema N+1</strong> mediante <code>JOIN FETCH</code>.</li>
+  </ol>
+</figure>
+
+### La idea más importante
+
+> **Un ORM no te exime de saber SQL: te exige entenderlo mejor. Las abstracciones tienen fugas. Si no entiendes cómo traduce Hibernate tus grafos de objetos a sentencias en PostgreSQL, tu backend funcionará en tu portátil y colapsará en producción.**
+
+De ahí nacen todas las buenas prácticas: por eso usamos `FetchType.LAZY`, por eso usamos `Set` y nunca `List` en relaciones N:M, por eso comprobamos la existencia antes de borrar, y por eso las entidades jamás se serializan a JSON sin un DTO intermedio.
+
+<p class="term">El desajuste de impedancia está domado, no eliminado</p>
+
+El motor relacional habla de conjuntos, tablas y filas. Java habla de grafos, tipos, encapsulación e identidad en memoria. JPA tiende un puente entre ambos mundos, pero el coste de cruzar ese puente es entender en todo momento qué sentencias viajan por la red.
+
+### Las decisiones que tienes que saber justificar
+
+| Decisión | Lo que tienes que poder decir |
+| :--- | :--- |
+| **`Long` y no `long` primitivo para el `@Id`** | El primitivo nace con valor `0`, lo que confunde a Hibernate haciéndole creer que ya existe en la base de datos. El objeto envoltorio nace con valor `null`, señalando sin ambigüedad que se trata de una entidad nueva y transitoria que requiere un `INSERT`. |
+| **Constructor vacío obligatorio** | Hibernate necesita instanciar la clase vacía mediante reflexión de Java antes de rellenar sus campos privados con los valores leídos de las columnas de la base de datos. |
+| **Usar siempre la instancia devuelta por `save()`** | `save()` sincroniza la entidad con el contexto de persistencia y devuelve la referencia gestionada (*managed*) con el identificador autoincremental asignado por PostgreSQL y las columnas con valores por defecto. |
+| **DTOs independientes de las entidades** | Desacoplan el contrato público de la API de la estructura física de almacenamiento, evitan exponer secretos o columnas internas y erradican de raíz los ciclos infinitos de serialización (`StackOverflowError`). |
+| **`FetchType.LAZY` en relaciones `@ManyToOne`** | Previene que Hibernate cargue inmediatamente todas las entidades asociadas, evitando el catastrófico problema N+1 de consultas en listados masivos. |
+| **`Set` y nunca `List` en relaciones `@ManyToMany`** | Con `Set`, Hibernate garantiza unicidad e inserta o borra únicamente la fila modificada en la tabla puente. Con `List`, se ve obligado a borrar todas las filas de la tabla puente y reinsertarlas una por una. |
+| **Prohibido `CascadeType.REMOVE` en ManyToMany** | Evita que al eliminar una entidad hija (una tarea) se destruyan por error las entidades maestras compartidas (las etiquetas de todo el sistema). |
+| **`orphanRemoval = true` en OneToMany** | Garantiza que si un elemento se elimina de la colección gestionada de su entidad padre, Hibernate emita automáticamente un `DELETE` en PostgreSQL, evitando registros huérfanos. |
+| **`flush()` y `clear()` en tests de repositorio** | `flush()` fuerza la ejecución inmediata del SQL pendiente y `clear()` vacía la caché de primer nivel de la memoria RAM, impidiendo que el test dé falsos positivos al consultar datos cacheados. |
+| **`rollbackFor = Exception.class`** | Por defecto Spring solo revierte la transacción ante `RuntimeException`. Añadir `rollbackFor` garantiza que excepciones comprobadas no provoquen un `COMMIT` accidental sobre datos a medio procesar. |
+| **`JOIN FETCH` en lugar de `JOIN` en JPQL** | Instruye a Hibernate a realizar el `JOIN` físico y poblar inmediatamente la entidad relacionada en una única consulta SQL, reduciendo 101 consultas a solo 1. |
+
+### Al terminar deberías poder responder
+
+1. ¿Qué es el desajuste de impedancia (*Impedance Mismatch*) y en qué cuatro aspectos se manifiesta?
+2. ¿Por qué una base de datos relacional seria exige un pool de conexiones como HikariCP en lugar de abrir conexiones a mano?
+3. ¿Qué peligro tiene utilizar `ddl-auto=create-drop` o `update` en un entorno de producción?
+4. ¿Cuáles son los cuatro estados del ciclo de vida de una entidad en JPA?
+5. ¿Qué ocurre si modificas un campo con un setter dentro de un método `@Transactional` y olvidas llamar a `save()`?
+6. ¿Por qué una clave foránea en PostgreSQL genera un error al intentar borrar una fila padre que tiene hijos asociados?
+7. ¿Qué diferencia conceptual hay entre borrado físico (*Hard Delete*) y borrado lógico (*Soft Delete*)?
+8. ¿Cómo traduce Spring Data un método llamado `findByTituloContainingIgnoreCase(String texto)` a SQL?
+9. ¿En qué momento valida Spring Data si los métodos declarados en tu interfaz de repositorio tienen nombres coherentes?
+10. ¿Por qué un test de repositorio con mocks no demuestra que tus consultas SQL funcionan?
+11. ¿Qué componentes de Spring carga `@DataJpaTest` y cuáles ignora para ser tan rápido?
+12. ¿Por qué es obligatorio llamar a `clear()` en un test antes de ejecutar la consulta que quieres verificar?
+13. ¿Qué significa «lado propietario» de una relación y en qué tabla reside la clave foránea física?
+14. ¿Qué es un Proxy de Hibernate y qué excepción lanza si intentas acceder a sus datos con la sesión cerrada?
+15. ¿Qué significa el parámetro `mappedBy` en una anotación `@OneToMany`?
+16. ¿Por qué los métodos helper (como `agregarTarea`) son obligatorios en relaciones bidireccionales?
+17. ¿Por qué una relación `@ManyToMany` requiere físicamente una tabla puente en PostgreSQL?
+18. ¿Cuáles son las cuatro garantías ACID y qué significa que una operación sea atómica?
+19. ¿Qué es el problema de la autoinvocación (*Self-Invocation*) en métodos anotados con `@Transactional`?
+20. ¿Qué es el problema N+1, cómo se diagnostica en la consola de logs y cómo lo elimina la cláusula `JOIN FETCH`?
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| :--- | :--- |
+| **ORM** | Mapeo Objeto-Relacional: traduce clases y objetos Java a tablas y filas SQL. |
+| **JPA** | Especificación estándar de Java que define las anotaciones y comportamiento de persistencia. |
+| **Hibernate** | El motor relacional (implementación concreta) que ejecuta las directrices de JPA. |
+| **HikariCP** | El pool de conexiones de alto rendimiento que administra sockets TCP con PostgreSQL. |
+| **Contexto de persistencia** | Zona de memoria en RAM donde Hibernate monitoriza las entidades gestionadas durante una transacción. |
+| **EntityManager** | La interfaz central de JPA responsable de persistir, buscar y sincronizar entidades con la base de datos. |
+| **Estado Transitorio** | Objeto nuevo creado con `new`, sin identificador en base de datos y no monitorizado por JPA. |
+| **Estado Gestionado** | Entidad asociada activamente al contexto de persistencia; sus cambios se sincronizan automáticamente. |
+| **Dirty Checking** | Comparación automática de Hibernate al final de la transacción que emite sentencias `UPDATE` para campos alterados. |
+| **Consultas derivadas** | Métodos de Spring Data cuyo nombre define las cláusulas `WHERE`, operadores y ordenación de la consulta SQL. |
+| **Slice Testing** | Pruebas de integración acotadas (`@DataJpaTest`) que solo levantan la rebanada de persistencia. |
+| **TestEntityManager** | Herramienta de pruebas para forzar escrituras SQL (`flush`) y vaciar la memoria intermedia (`clear`). |
+| **Lado propietario** | La entidad que mapea la clave foránea física en su tabla mediante `@JoinColumn`. |
+| **`mappedBy`** | Indica el lado inverso de una relación; delega la escritura física en el campo correspondiente del otro lado. |
+| **`FetchType.LAZY`** | Carga bajo demanda: no consulta la relación de base de datos hasta que se accede explícitamente a ella. |
+| **Proxy de Hibernate** | Subclase intermedia ligera generada en memoria que sustituye temporalmente a una entidad perezosa. |
+| **`orphanRemoval`** | Borrado automático en base de datos de entidades hijas cuando se desconectan de la colección de su padre. |
+| **Tabla puente (*Join Table*)** | Tabla relacional intermedia con dos claves foráneas que permite modelar relaciones N:M. |
+| **Atomicidad (ACID)** | Garantía transaccional de que todas las operaciones se confirman juntas (`COMMIT`) o se cancelan juntas (`ROLLBACK`). |
+| **Problema N+1** | Antipatrón de rendimiento donde consultar N elementos dispara N consultas SQL individuales adicionales. |
+| **`JOIN FETCH`** | Cláusula JPQL que obliga a Hibernate a traer la entidad y sus dependencias en una única sentencia SQL unificada. |
+
+### Comprobación final del producto
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación final · con el proyecto y PostgreSQL delante</p>
+  <ul class="checklist">
+    <li>La aplicación arranca conectada a una base de datos PostgreSQL real sin errores de dialecto ni de HikariCP.</li>
+    <li>Todas las tablas, columnas y claves foráneas están creadas respetando restricciones de integridad (<code>NOT NULL</code>, <code>UNIQUE</code>, <code>REFERENCES</code>).</li>
+    <li>El ciclo CRUD completo funciona desde HTTP, persistiendo datos reales que sobreviven al reinicio del servidor.</li>
+    <li>Los métodos del servicio están protegidos por <code>@Transactional</code> y reverten de forma demostrable ante excepciones.</li>
+    <li>Los métodos de consulta derivados y personalizados están verificados mediante tests de repositorio con <code>@DataJpaTest</code>.</li>
+    <li>Las relaciones <code>@ManyToOne</code> y <code>@ManyToMany</code> usan <code>FetchType.LAZY</code> y <code>Set</code> respectivamente.</li>
+    <li>No se produce ningún <code>StackOverflowError</code> por serialización recursiva ni fugas de Proxies no inicializados.</li>
+    <li>Las consultas de listado están optimizadas con <code>JOIN FETCH</code> o <code>Pageable</code>, erradicando el problema N+1 de la consola.</li>
+  </ul>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
@@ -3120,5 +4022,3 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
     <li>Reconocer y corregir el problema N+1.</li>
   </ul>
 </div>
-
-> El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
