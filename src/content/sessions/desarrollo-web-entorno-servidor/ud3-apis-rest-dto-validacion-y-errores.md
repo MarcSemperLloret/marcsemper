@@ -1703,153 +1703,978 @@ La pregunta 1 abre la sesión siguiente, y la 2 apunta a la UD4. La 3 no tiene r
 ## Sesión 19 · Reglas propias y mensajes de validación útiles
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> un «400 Bad Request» sin detalle obliga a quien consume la API a adivinar qué campo ha fallado.</li>
-    <li><strong>Construye:</strong> un conjunto de validaciones con mensajes accionables y su caso de prueba.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> a escribir mensajes que digan qué corregir y restricciones que expresen reglas de tu dominio.</li>
+    <li><strong>2. Haz:</strong> haz visibles los mensajes, reescríbelos todos y crea tu propia anotación de validación.</li>
+    <li><strong>3. Comprueba:</strong> quien recibe un 400 sabe qué campo arreglar sin preguntarte.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué información da hoy el cuerpo de tu <code>400</code> a quien consume la API?</li>
+    <li>¿Dónde está esa información ahora mismo, si no está en la respuesta?</li>
+    <li>De la sesión 18: nombra una regla de tu API que las anotaciones no pueden expresar.</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **escribir restricciones que expresen reglas del dominio y mensajes que digan qué corregir**.
+### Ponte en el otro lado
 
-### 2. El problema
+Estás escribiendo un cliente contra una API ajena. Envías tu formulario y recibes esto:
 
-Un «400 Bad Request» sin detalle obliga a quien consume la API a adivinar qué campo ha fallado.
+```json
+{ "timestamp": "...", "status": 400, "error": "Bad Request", "path": "/tareas" }
+```
 
-### 3–6. Itinerario de trabajo
+¿Qué haces ahora? Solo te quedan tres opciones, y las tres son malas: probar campo por campo hasta acertar, buscar una documentación que quizá no exista, o escribirle a quien hizo la API.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+**Esa API eres tú desde ayer.** Hoy lo arreglamos.
 
-### 7. Comprueba que funciona
+### Primero, hazlos visibles
+
+La información existe: Spring sabe perfectamente qué campo ha fallado y por qué, y lo tienes en la consola. Simplemente no se envía, porque por defecto no se publican detalles de error.
+
+En `application.properties`:
+
+```properties
+server.error.include-message=always
+server.error.include-binding-errors=always
+```
+
+Reinicia y repite el `POST` con el cuerpo vacío:
+
+```json
+{
+  "timestamp": "2026-09-02T10:14:22.831+00:00",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Validation failed for object='tareaRequest'. Error count: 3",
+  "errors": [
+    { "field": "titulo", "defaultMessage": "must not be blank" },
+    { "field": "prioridad", "defaultMessage": "must not be null" },
+    { "field": "proyectoId", "defaultMessage": "must not be null" }
+  ],
+  "path": "/tareas"
+}
+```
+
+Ya se puede trabajar con eso: hay campos y hay motivos.
+
+<div class="rule">
+  <p class="rule-label">Dos avisos sobre estas dos líneas</p>
+  <p><strong>Uno.</strong> Es una solución provisional. El formato lo decide Spring, no tú, y arrastra ruido como <code>defaultMessage</code> o <code>object=</code>. En la sesión 20 diseñarás tu propio formato y estas propiedades sobrarán.</p>
+  <p><strong>Dos.</strong> <code>include-message=always</code> también publica el mensaje de <strong>cualquier</strong> excepción, incluidas las inesperadas. En una aplicación real eso puede filtrar detalles internos a quien no debería verlos. Aquí se acepta porque estamos aprendiendo y porque dura una sesión.</p>
+</div>
+
+### Un mensaje útil dice qué se espera
+
+Los mensajes por defecto están en inglés y describen la restricción, no el problema. Compara:
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Describe la restricción</p>
+    <p class="compare-body">«must not be blank», «size must be between 3 and 120». Traduce la anotación. Quien lo lee tiene que deducir qué hacer.</p>
+  </div>
+  <div>
+    <p class="compare-label">Dice qué corregir</p>
+    <p class="compare-body">«El título es obligatorio», «El título debe tener entre 3 y 120 caracteres». Se puede enseñar tal cual al usuario final.</p>
+  </div>
+</div>
+
+Cada anotación acepta un `message`:
+
+```java
+public class TareaRequest {
+
+    @NotBlank(message = "El título es obligatorio")
+    @Size(min = 3, max = 120,
+          message = "El título debe tener entre 3 y 120 caracteres")
+    private String titulo;
+
+    @NotNull(message = "La prioridad es obligatoria")
+    @Pattern(regexp = "baja|media|alta",
+             message = "La prioridad debe ser baja, media o alta")
+    private String prioridad;
+
+    @NotNull(message = "Toda tarea debe pertenecer a un proyecto")
+    @Positive(message = "El identificador de proyecto debe ser un número positivo")
+    private Integer proyectoId;
+}
+```
+
+<div class="rule">
+  <p class="rule-label">Las cuatro reglas de un buen mensaje</p>
+  <ol>
+    <li><strong>Di qué se espera, no qué está mal.</strong> «Debe tener entre 3 y 120 caracteres» es accionable; «longitud inválida» no.</li>
+    <li><strong>Incluye los valores admitidos</strong> cuando sean pocos: «baja, media o alta» ahorra una consulta a la documentación.</li>
+    <li><strong>Habla del dominio, no del código.</strong> «Toda tarea debe pertenecer a un proyecto», no «proyectoId no puede ser null».</li>
+    <li><strong>No cuentes cómo está hecho por dentro.</strong> Nada de nombres de tablas, de clases ni de columnas.</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Sacar los mensajes a un archivo</summary>
+  <p>Los mensajes también pueden vivir fuera del código, en <code>src/main/resources/ValidationMessages.properties</code>, y referenciarse entre llaves:</p>
+  <p><code>@NotBlank(message = "{tarea.titulo.obligatorio}")</code></p>
+  <p>Sirve para traducir la API a varios idiomas y para revisar todos los textos de una vez sin abrir veinte clases. No lo necesitamos aquí, pero es lo que verás en cualquier aplicación que se publique en más de un idioma.</p>
+</details>
+
+### Cuando la regla es tuya, la anotación también
+
+`@Pattern(regexp = "baja|media|alta")` funciona, y tiene tres problemas:
+
+1. Está repetida en `TareaRequest` y en `TareaPatchRequest`.
+2. Si mañana se añade la prioridad `crítica`, hay que acordarse de los dos sitios.
+3. No dice nada: hay que leer la expresión regular para entender la regla.
+
+Vamos a convertir esa regla del dominio en una anotación propia.
+
+<p class="stage">Paso 1 · La anotación</p>
+
+```java
+package com.ejemplo.gestor.validacion;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = PrioridadValidaValidator.class)
+public @interface PrioridadValida {
+
+    String message() default "La prioridad debe ser baja, media o alta";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+}
+```
+
+<dl class="worked">
+  <dt><code>@Target(FIELD)</code></dt>
+  <dd>Dónde se puede poner esta anotación. Aquí, sobre atributos.</dd>
+  <dt><code>@Retention(RUNTIME)</code></dt>
+  <dd>Que siga existiendo mientras el programa se ejecuta. Sin esto, la anotación desaparece al compilar y nadie la ve.</dd>
+  <dt><code>@Constraint(validatedBy = ...)</code></dt>
+  <dd>Qué clase contiene la comprobación de verdad. La anotación solo es la etiqueta.</dd>
+  <dt><code>groups</code> y <code>payload</code></dt>
+  <dd>Los exige la especificación de Bean Validation y casi nunca se usan. Se copian tal cual.</dd>
+</dl>
+
+<p class="stage">Paso 2 · La comprobación</p>
+
+```java
+package com.ejemplo.gestor.validacion;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+import java.util.List;
+
+public class PrioridadValidaValidator
+        implements ConstraintValidator<PrioridadValida, String> {
+
+    private static final List<String> VALIDAS = List.of("baja", "media", "alta");
+
+    @Override
+    public boolean isValid(String valor, ConstraintValidatorContext contexto) {
+        // Un valor ausente es asunto de @NotNull, no nuestro.
+        if (valor == null) {
+            return true;
+        }
+        return VALIDAS.contains(valor);
+    }
+}
+```
+
+Ese `if (valor == null) return true` no es un descuido: **cada anotación comprueba una sola cosa**. Si además rechazara los nulos, no podrías tener un campo opcional con esta regla, y es justo lo que necesitas en el `PATCH`.
+
+<p class="stage">Paso 3 · Úsala</p>
+
+```java
+@NotNull(message = "La prioridad es obligatoria")
+@PrioridadValida
+private String prioridad;
+```
+
+En `TareaPatchRequest`, donde el campo es opcional, va sola:
+
+```java
+@PrioridadValida
+private String prioridad;
+```
+
+La regla vive ahora **en un solo sitio**, se lee sin descifrar nada, y añadir `crítica` es tocar una línea.
+
+<div class="rule">
+  <p class="rule-label">Y aun así, la mejor validación es la que no hace falta</p>
+  <p>Si <code>prioridad</code> fuera un <code>enum</code> en lugar de un <code>String</code>, un valor inválido sería imposible de representar: Jackson rechazaría <code>"urgentísima"</code> él solo, y no habría regla que escribir ni que mantener.</p>
+  <p><strong>Antes de validar un dato, pregúntate si puedes elegir un tipo en el que el dato incorrecto no quepa.</strong> Es una idea que vale para toda la carrera, y volveremos a ella en la UD5 al modelar la base de datos.</p>
+</div>
+
+### Reglas que miran dos campos a la vez
+
+En la sesión 18 encontraste reglas que no encajaban en un solo campo. La más habitual: «la fecha de fin no puede ser anterior a la de inicio».
+
+Ese tipo de restricción se pone **sobre la clase**, no sobre un atributo, porque necesita ver el objeto entero:
+
+```java
+@FechasCoherentes
+public class ProyectoRequest {
+
+    @NotNull
+    private LocalDate fechaInicio;
+
+    private LocalDate fechaFin;
+}
+```
+
+Se escribe igual que la de antes, cambiando dos cosas: `@Target(TYPE)` en la anotación, y `ConstraintValidator<FechasCoherentes, ProyectoRequest>` en el validador, cuyo `isValid` recibe el objeto completo y puede comparar los dos campos.
+
+<div class="rule">
+  <p class="rule-label">Dónde se acaba lo que puede hacer Bean Validation</p>
+  <p>Todo lo de hoy comprueba <strong>el objeto que ha llegado, y nada más</strong>. Puede mirar un campo, o varios campos entre sí.</p>
+  <p>Lo que no puede es responder «¿existe el proyecto 7?», porque para eso hay que consultar los datos, y un validador no tiene acceso a ellos. Esa comprobación es una <strong>regla de negocio</strong>, no una regla de formato, y su sitio es otro: se resuelve con una excepción propia en la sesión 20 y encontrará su hogar definitivo en la UD4.</p>
+</div>
+
+### Práctica guiada · Reescribe todos tus mensajes
+
+1. Activa las dos propiedades y comprueba que ves los mensajes.
+2. Recorre todos tus DTO de entrada y pon un `message` en **cada** restricción, aplicando las cuatro reglas.
+3. Envía `{}` a la creación de tareas y de proyectos, y lee el resultado como si fueras el cliente.
+4. Para cada mensaje, pregúntate: **¿podría enseñárselo tal cual a un usuario final?** Si la respuesta es no, reescríbelo.
+
+### Ahora tú · Tu propia anotación
+
+1. Implementa `@PrioridadValida` y úsala en los dos DTO de tareas.
+2. Crea una segunda anotación propia para una regla real de **tu** dominio. Algunas ideas: un código de proyecto con un formato concreto, un nombre sin caracteres especiales, una fecha que no sea festivo.
+3. Añade a la colección una petición que la incumpla y comprueba que responde `400` con **tu** mensaje.
+4. Escribe en `DECISIONES.md` por qué esa regla merece una anotación propia en lugar de un `@Pattern`.
+
+### Reto · La regla que no se deja validar
+
+1. Coge la regla «una tarea solo puede pertenecer a un proyecto que exista» e **intenta** implementarla como anotación propia. Llega hasta donde puedas.
+2. Vas a chocar con un muro concreto. Descríbelo: ¿qué necesita el validador que no tiene?
+3. Investiga si Spring permitiría dárselo, y en caso afirmativo explica **por qué seguiría siendo mala idea** meter ahí esa comprobación. Piensa en qué pasa cuando esa misma regla se necesita en una operación que no venga de una petición HTTP.
+4. Propón dónde debería vivir la comprobación y qué código de estado debería producir. Argumenta entre `400` y `404`.
+
+Este reto no tiene una solución cerrada y es el que más se parece a una discusión de equipo real.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Mensajes visibles y reescritos en todos los DTO de entrada, aplicando las cuatro reglas.</span></div>
+  <div><strong>Si lo tienes</strong><span><code>@PrioridadValida</code> implementada y en uso, más una segunda anotación de tu dominio con su prueba.</span></div>
+  <div><strong>Reto</strong><span>El muro del validador descrito, y la comprobación de existencia situada y argumentada.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 19</p>
   <ul class="checklist">
-    <li>Has obtenido un conjunto de validaciones con mensajes accionables y su caso de prueba.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>El cuerpo de un <code>400</code> nombra los campos que fallan y por qué.</li>
+    <li>Ningún mensaje está en inglés ni describe la anotación en lugar del problema.</li>
+    <li>Tienes al menos una anotación de validación propia, con su validador.</li>
+    <li>Tu validador propio deja pasar los nulos y sabes explicar por qué.</li>
+    <li>Sabes decir qué reglas no puede comprobar Bean Validation y por qué.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué hace mejor un mensaje que dice lo que se espera frente a uno que dice lo que está mal?</li>
+    <li>¿Por qué un validador propio no debe rechazar el valor nulo?</li>
+    <li>¿Dónde se coloca una restricción que compara dos campos?</li>
+    <li>¿Por qué un <code>enum</code> es mejor que validar un texto?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Que se puede actuar sobre él sin consultar nada más, e incluso enseñárselo tal cual al usuario final. Decir «longitud inválida» obliga a buscar cuál es la longitud correcta.</p>
+  <p>2 · Porque cada restricción comprueba una sola cosa: la obligatoriedad es trabajo de <code>@NotNull</code>. Si además rechazara los nulos, no podría usarse en un campo opcional como los del <code>PATCH</code>.</p>
+  <p>3 · Sobre la clase, con <code>@Target(TYPE)</code>, porque necesita ver el objeto completo para comparar sus campos.</p>
+  <p>4 · Porque el valor incorrecto deja de ser representable: no hace falta escribir ni mantener una regla para algo que el tipo ya impide.</p>
+</details>
 
 ## Sesión 20 · Errores coherentes de API
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variables y difíciles de consumir.</li>
-    <li><strong>Construye:</strong> un formato común para recurso inexistente, conflicto y validación fallida.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> por qué tu API responde hoy los errores en cinco formatos distintos y qué cuesta eso a quien la consume.</li>
+    <li><strong>2. Haz:</strong> diseña un único formato de error y céntralo todo en un solo sitio.</li>
+    <li><strong>3. Comprueba:</strong> cualquier error de tu API, sea cual sea, llega con la misma forma.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Enumera los códigos de error que tu API puede devolver hoy. Deberían salirte al menos cinco.</li>
+    <li>¿Qué cuerpo devuelve tu <code>404</code> ahora mismo?</li>
+    <li>¿Qué pasa si dentro de un método tuyo salta una excepción que no esperabas?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **centralizar errores mediante excepciones propias y @RestControllerAdvice**.
+### Cinco errores, cinco formatos
 
-### 2. El problema
+Provoca los cinco, uno detrás de otro, y copia el cuerpo de cada respuesta. Es el punto de partida de la sesión.
 
-Tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variables y difíciles de consumir.
+| Provoca | Código | Qué cuerpo recibes |
+| :--- | :---: | :--- |
+| `GET /tareas/999` | `404` | **Vacío del todo** |
+| `POST /tareas` con `{}` | `400` | El objeto de Spring con `errors` |
+| `POST /tareas` con `{,}` | `400` | Otro objeto distinto, con `message` de Jackson |
+| `POST /tareas` sin `Content-Type` | `415` | Otro más |
+| Una excepción dentro de tu método | `500` | Otro más, quizá con la traza |
 
-### 3–6. Itinerario de trabajo
+Cinco fallos, **cinco formas distintas**, y una de ellas ni siquiera tiene cuerpo.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+Ponte otra vez en el lado del cliente. Para tratar los errores de tu API tiene que escribir un caso especial por cada uno, y el `404` no le da nada con lo que trabajar: solo sabe que algo no estaba, pero no qué.
 
-### 7. Comprueba que funciona
+<div class="rule">
+  <p class="rule-label">Lo que se promete en un contrato</p>
+  <p>Una API no promete solo qué devuelve cuando todo va bien. <strong>Promete también cómo son sus fallos.</strong></p>
+  <p>Si los errores tienen una forma única y predecible, quien consume la API escribe el tratamiento <strong>una vez</strong> y le sirve para todos los endpoints, incluidos los que aún no existen.</p>
+</div>
+
+### Diseña el formato antes de escribir código
+
+Un error útil responde a cuatro preguntas: qué ha pasado, cuándo, dónde y qué hay que corregir.
+
+```java
+package com.ejemplo.gestor.error;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public record ErrorResponse(
+        LocalDateTime momento,
+        int estado,
+        String error,
+        String mensaje,
+        String ruta,
+        List<ErrorDeCampo> errores) {
+
+    public record ErrorDeCampo(String campo, String motivo) {
+    }
+}
+```
+
+| Campo | Para qué sirve |
+| :--- | :--- |
+| `momento` | Correlacionar con los registros del servidor cuando alguien reporta un fallo |
+| `estado` | El mismo número del código HTTP, repetido para quien solo lee el cuerpo |
+| `error` | El nombre legible: `Not Found`, `Bad Request` |
+| `mensaje` | Qué ha ocurrido, en una frase |
+| `ruta` | Qué se estaba pidiendo |
+| `errores` | La lista de campos que fallan. Vacía cuando el error no es de validación |
+
+<details class="aside aside--extra">
+  <summary>Esto ya está estandarizado: <em>Problem Details</em></summary>
+  <p>Existe un estándar para el cuerpo de los errores HTTP, el RFC 9457, con campos fijos —<code>type</code>, <code>title</code>, <code>status</code>, <code>detail</code>, <code>instance</code>— y su propio tipo de contenido, <code>application/problem+json</code>.</p>
+  <p>Spring lo trae de serie en la clase <code>ProblemDetail</code>, y en una API pública es lo que conviene usar: quien la consuma reconocerá el formato sin leer tu documentación.</p>
+  <p>Aquí construimos el nuestro porque diseñarlo enseña qué preguntas tiene que responder un error. Cuando lo tengas claro, cambiar a <code>ProblemDetail</code> es media hora.</p>
+</details>
+
+### Excepciones que hablan de tu dominio
+
+Ahora mismo tu controlador devuelve `ResponseEntity.notFound().build()` desde dentro de un bucle. Mezcla dos cosas: **buscar** y **decidir qué responder**.
+
+Sepáralas. Primero, una excepción propia:
+
+```java
+package com.ejemplo.gestor.error;
+
+public class RecursoNoEncontradoException extends RuntimeException {
+
+    public RecursoNoEncontradoException(String recurso, Object id) {
+        super("No existe " + recurso + " con id " + id);
+    }
+}
+```
+
+Extiende `RuntimeException` para no tener que declararla en cada firma ni envolverla en `try`. Y el mensaje se construye en un solo sitio, así que todos los «no encontrado» de la API se redactan igual.
+
+Con ella, el controlador se limita a decir la verdad y seguir:
+
+```java
+@GetMapping("/{id}")
+public TareaResponse detalle(@PathVariable(name = "id") int id) {
+    Tarea tarea = buscar(id);
+    if (tarea == null) {
+        throw new RecursoNoEncontradoException("tarea", id);
+    }
+    return TareaMapper.aRespuesta(tarea);
+}
+```
+
+Fíjate en dos cambios: ya no devuelve `ResponseEntity`, porque **solo tiene un final posible**; y el caso de error es una línea que se lee como una frase.
+
+### El sitio único · `@RestControllerAdvice`
+
+<p class="term">@RestControllerAdvice</p>
+
+Una clase que atiende las excepciones de **todos** los controladores. Cuando un método tuyo lanza algo y no lo captura nadie, Spring busca aquí quién sabe convertirlo en respuesta.
+
+```java
+package com.ejemplo.gestor.error;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestControllerAdvice
+public class ManejadorDeErrores {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(ManejadorDeErrores.class);
+
+    @ExceptionHandler(RecursoNoEncontradoException.class)
+    public ResponseEntity<ErrorResponse> noEncontrado(
+            RecursoNoEncontradoException ex, HttpServletRequest peticion) {
+
+        return construir(HttpStatus.NOT_FOUND, ex.getMessage(),
+                peticion, List.of());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> validacion(
+            MethodArgumentNotValidException ex, HttpServletRequest peticion) {
+
+        List<ErrorResponse.ErrorDeCampo> campos = new ArrayList<>();
+        for (var error : ex.getBindingResult().getFieldErrors()) {
+            campos.add(new ErrorResponse.ErrorDeCampo(
+                    error.getField(), error.getDefaultMessage()));
+        }
+        return construir(HttpStatus.BAD_REQUEST,
+                "Hay campos que no son válidos", peticion, campos);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> cuerpoIlegible(
+            HttpMessageNotReadableException ex, HttpServletRequest peticion) {
+
+        return construir(HttpStatus.BAD_REQUEST,
+                "El cuerpo de la petición no es un JSON válido",
+                peticion, List.of());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> inesperado(
+            Exception ex, HttpServletRequest peticion) {
+
+        log.error("Error no controlado en {}", peticion.getRequestURI(), ex);
+        return construir(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Ha ocurrido un error inesperado", peticion, List.of());
+    }
+
+    private ResponseEntity<ErrorResponse> construir(
+            HttpStatus estado, String mensaje,
+            HttpServletRequest peticion,
+            List<ErrorResponse.ErrorDeCampo> campos) {
+
+        ErrorResponse cuerpo = new ErrorResponse(
+                LocalDateTime.now(), estado.value(),
+                estado.getReasonPhrase(), mensaje,
+                peticion.getRequestURI(), campos);
+
+        return ResponseEntity.status(estado).body(cuerpo);
+    }
+}
+```
+
+<dl class="worked">
+  <dt>Cómo elige Spring el manejador</dt>
+  <dd>Por el tipo de la excepción, y siempre <strong>el más específico</strong>. Una <code>RecursoNoEncontradoException</code> encaja con el primero y también con el último, que atrapa cualquier <code>Exception</code>; gana el primero.</dd>
+  <dt>Por qué el último existe</dt>
+  <dd>Para que <strong>ningún</strong> fallo se escape con un formato ajeno. Sin él, un <code>NullPointerException</code> devolvería la página de error de Spring, que es otra forma distinta.</dd>
+  <dt>Por qué el último no dice qué ha pasado</dt>
+  <dd>Porque no se sabe si es seguro contarlo. El mensaje de una excepción inesperada puede incluir rutas de archivos, consultas o datos de otro usuario. <strong>Al cliente, un mensaje genérico; a la consola, todo.</strong></dd>
+  <dt>Por qué se registra con <code>log.error</code></dt>
+  <dd>Porque el cliente ya no recibe el detalle, así que si no queda escrito en el servidor, se pierde. Un <code>500</code> silencioso es un fallo que nadie podrá diagnosticar.</dd>
+</dl>
+
+<div class="rule">
+  <p class="rule-label">La regla del 500</p>
+  <p><strong>Nunca devuelvas una traza de excepción a un cliente.</strong> Le dice qué framework usas, qué versiones, cómo se llaman tus clases y a veces qué datos manejabas. Es información de regalo para quien busque un agujero, y ruido inútil para todos los demás.</p>
+  <p>Ahora ya puedes quitar las dos propiedades <code>server.error.*</code> de ayer: eran el andamio, y esto es el edificio.</p>
+</div>
+
+### Antes y después
+
+Repite los cinco errores del principio. Ahora los cinco responden igual:
+
+```json
+{
+  "momento": "2026-09-02T10:14:22.831",
+  "estado": 404,
+  "error": "Not Found",
+  "mensaje": "No existe tarea con id 999",
+  "ruta": "/tareas/999",
+  "errores": []
+}
+```
+
+```json
+{
+  "momento": "2026-09-02T10:15:03.122",
+  "estado": 400,
+  "error": "Bad Request",
+  "mensaje": "Hay campos que no son válidos",
+  "ruta": "/tareas",
+  "errores": [
+    { "campo": "titulo", "motivo": "El título es obligatorio" },
+    { "campo": "prioridad", "motivo": "La prioridad debe ser baja, media o alta" }
+  ]
+}
+```
+
+Mismo formato, campos siempre en el mismo sitio, mensajes en tu idioma y escritos por ti. Un cliente escribe el tratamiento una vez.
+
+### El error que faltaba · el conflicto
+
+Hay una familia de errores que tu API todavía no sabe expresar: cuando la petición es correcta pero **choca con el estado actual de los datos**.
+
+Ejemplos: crear un proyecto con un nombre que ya existe, o borrar un proyecto que aún tiene tareas.
+
+No es un `400`, porque el cuerpo es válido. No es un `404`, porque el recurso existe.
+
+<p class="term">409 Conflict</p>
+
+La petición se entiende y es válida, pero no se puede aplicar en el estado actual del recurso.
+
+```java
+public class ConflictoException extends RuntimeException {
+
+    public ConflictoException(String mensaje) {
+        super(mensaje);
+    }
+}
+```
+
+Añade su manejador con `HttpStatus.CONFLICT` y úsalo, por ejemplo, para impedir dos proyectos con el mismo nombre.
+
+### Ahora tú · Unifica toda tu API
+
+1. Crea el paquete `error` con las tres clases y el manejador.
+2. Sustituye **todos** los `ResponseEntity.notFound()` por la excepción.
+3. Simplifica las firmas: los métodos que ya solo tienen un final devuelven el DTO directamente.
+4. Añade `ConflictoException` y una regla que la use.
+5. Quita las propiedades `server.error.*`.
+6. Provoca los cinco errores del principio y comprueba que los cinco tienen la misma forma.
+
+### Reto · La prueba de que no se escapa nada
+
+1. Añade a la colección **una comprobación de formato** para cada error: que existan las claves `estado`, `mensaje` y `ruta`.
+2. Escribe un endpoint temporal que lance una excepción a propósito:
+
+```java
+@GetMapping("/boom")
+public String boom() {
+    throw new IllegalStateException("Contraseña de la base de datos: 1234");
+}
+```
+
+3. Llámalo y comprueba dos cosas: que el cliente recibe `500` con **tu** formato, y que **ese texto no aparece por ninguna parte de la respuesta**.
+4. Comprueba que sí aparece en la consola del servidor.
+5. Borra el endpoint y explica en `DECISIONES.md` qué habría pasado si el manejador genérico devolviera `ex.getMessage()`.
+
+El paso 3 es el que hay que ver con los propios ojos. Es la diferencia entre entender la regla del 500 y creérsela.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>El manejador con los cuatro casos y todos los <code>404</code> pasando por la excepción propia.</span></div>
+  <div><strong>Si lo tienes</strong><span>Los cinco errores unificados, el conflicto implementado y las propiedades provisionales retiradas.</span></div>
+  <div><strong>Reto</strong><span>La comprobación de formato en la colección y la demostración de que el mensaje interno no sale.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 20</p>
   <ul class="checklist">
-    <li>Has obtenido un formato común para recurso inexistente, conflicto y validación fallida.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Todos los errores de tu API tienen la misma forma, el <code>404</code> incluido.</li>
+    <li>Ningún controlador construye una respuesta de error.</li>
+    <li>Existe un manejador genérico y ninguna excepción se escapa con formato ajeno.</li>
+    <li>Un <code>500</code> devuelve un mensaje genérico y deja la traza en la consola.</li>
+    <li>Tu API sabe expresar un conflicto con <code>409</code>.</li>
+    <li>Las propiedades <code>server.error.*</code> ya no están.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué gana quien consume tu API cuando todos los errores tienen la misma forma?</li>
+    <li>¿Por qué el manejador genérico no devuelve el mensaje de la excepción?</li>
+    <li>¿Cuándo se usa un <code>409</code> y no un <code>400</code>?</li>
+    <li>Si el cliente ya no recibe el detalle del <code>500</code>, ¿dónde queda?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Que escribe el tratamiento de errores una sola vez y le sirve para todos los endpoints, incluidos los que todavía no existen.</p>
+  <p>2 · Porque el mensaje de una excepción inesperada puede contener rutas, consultas o datos internos. Al cliente se le da un mensaje genérico y el detalle se queda en el servidor.</p>
+  <p>3 · Cuando la petición es válida y comprensible pero choca con el estado actual de los datos: un nombre repetido, un borrado que dejaría datos huérfanos.</p>
+  <p>4 · En el registro del servidor, escrito por el manejador con <code>log.error</code>. Si no se registra ahí, se pierde y el fallo será indiagnosticable.</p>
+</details>
 
 ## Sesión 21 · Rediseño completo de la API del gestor
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> endpoints correctos de forma aislada pueden formar una API incoherente en conjunto.</li>
-    <li><strong>Construye:</strong> una API de proyectos e incidencias validada mediante una colección de peticiones.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> por qué endpoints correctos por separado pueden formar una API incoherente en conjunto.</li>
+    <li><strong>2. Haz:</strong> pasa la rúbrica de la sesión 13 otra vez y cierra todo lo que quede abierto.</li>
+    <li><strong>3. Comprueba:</strong> la API entera es coherente y lo demuestras con una colección y con una auditoría.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Saca la auditoría que hiciste en la sesión 13. ¿Cuántos criterios incumplías?</li>
+    <li>¿Cuántas clases hay hoy entre el JSON que llega y el JSON que sale?</li>
+    <li>¿Qué formato tienen tus errores y cuántos sitios los construyen?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **cerrar y comprobar el contrato completo antes de considerar terminada la implementación**.
+<div class="rule">
+  <p class="rule-label">Cómo es esta sesión</p>
+  <p>Sesión de cierre de unidad. No hay contenido nuevo: hay <strong>una especificación, unos criterios de aceptación y una auditoría</strong>. Todo lo necesario está entre la sesión 13 y la 20.</p>
+</div>
 
-### 2. El problema
+### Correcto no es lo mismo que coherente
 
-Endpoints correctos de forma aislada pueden formar una API incoherente en conjunto.
+Cada endpoint que has escrito estas tres semanas está bien por separado. Y aun así, una API puede fallar en el conjunto de una forma que ninguna prueba individual detecta:
 
-### 3–6. Itinerario de trabajo
+<figure class="diagram">
+  <figcaption>Incoherencias que solo se ven mirando el conjunto</figcaption>
+  <ol class="flow flow--before">
+    <li>Un recurso se llama en plural y otro en singular</li>
+    <li>Un endpoint devuelve <code>201</code> con <code>Location</code> y otro se olvida de la cabecera</li>
+    <li>Una fecha viaja como texto ISO en un sitio y como número en otro</li>
+    <li>Un recurso valida el nombre y otro, con el mismo campo, no lo valida</li>
+    <li class="is-error">Un error llega con tu formato y otro con el de Spring, porque quedó un <code>ResponseEntity</code> suelto</li>
+  </ol>
+</figure>
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+Todas son «pequeñas». Todas obligan a quien consume la API a **tratar cada endpoint como un caso especial**, que es exactamente lo que la unidad quería evitar.
 
-### 7. Comprueba que funciona
+### La segunda auditoría
+
+Vuelve a la rúbrica de la sesión 13, la misma tabla, sin cambiar ni un criterio:
+
+| # | Criterio | Sesión 13 | Hoy |
+| :---: | :--- | :---: | :---: |
+| 1 | Ninguna ruta contiene un verbo | | |
+| 2 | Cada recurso tiene una URL propia y estable | | |
+| 3 | Las colecciones se nombran en plural | | |
+| 4 | La acción la expresa siempre el método HTTP | | |
+| 5 | `GET` nunca modifica nada | | |
+| 6 | Cada final posible tiene su código de estado | | |
+| 7 | Los recursos relacionados se expresan con jerarquía | | |
+| 8 | El mismo tipo de dato se representa igual en todos los endpoints | | |
+| 9 | La API no publica campos internos del modelo | | |
+| 10 | Las respuestas incluyen enlaces a operaciones relacionadas | | |
+
+Rellena las dos columnas y **quédate con la diferencia**: es la medida de lo que has aprendido en tres semanas, y forma parte de la entrega.
+
+El criterio 10 debe seguir siendo «no», y tienes que poder decir por qué sin que suene a excusa.
+
+### Especificación · el estado final de la API
+
+Tu API tiene que cumplir esto por completo.
+
+#### Estructura del proyecto
+
+```text
+com.ejemplo.gestor
+├── controller     · recibe y responde, nada más
+├── dto            · lo que se acepta y lo que se publica
+├── mapper         · el único sitio que traduce
+├── model          · lo que maneja tu código
+├── validacion     · anotaciones propias
+└── error          · excepciones, formato y manejador
+```
+
+#### Recursos y rutas
+
+| Método y ruta | Caso | Respuesta |
+| :--- | :--- | :--- |
+| `GET /proyectos` | Con filtros opcionales | `200` con array |
+| `GET /proyectos/{id}` | Existe / no existe | `200` / `404` |
+| `POST /proyectos` | Válido / inválido | `201` con `Location` / `400` |
+| `PUT /proyectos/{id}` | Válido / no existe | `200` / `404` |
+| `PATCH /proyectos/{id}` | Válido / no existe | `200` / `404` |
+| `DELETE /proyectos/{id}` | — | `204` |
+| `GET /proyectos/{id}/tareas` | Proyecto existe / no existe | `200` / `404` |
+| `GET /tareas` | Con filtros opcionales | `200` con array |
+| `GET /tareas/{id}` | Existe / no existe | `200` / `404` |
+| `POST /tareas` | Válido / inválido | `201` con `Location` / `400` |
+| `PUT /tareas/{id}` | Válido / no existe | `200` / `404` |
+| `PATCH /tareas/{id}` | Válido / no existe | `200` / `404` |
+| `DELETE /tareas/{id}` | — | `204` |
+
+#### Reglas que se comprueban
+
+1. Ninguna ruta lleva verbos y todas las colecciones están en plural.
+2. Ningún `@RequestBody` recibe una clase del modelo.
+3. Ningún endpoint devuelve una clase del modelo.
+4. Toda la traducción vive en el paquete `mapper`.
+5. Toda entrada de creación y sustitución lleva `@Valid`.
+6. Todos los mensajes de validación están en español y dicen qué corregir.
+7. Existe al menos una anotación de validación propia.
+8. **Todos** los errores, sin excepción, tienen el mismo formato.
+9. Ningún controlador construye una respuesta de error.
+10. Un `500` no revela nada del interior.
+11. Existe al menos un caso que responda `409`.
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · me quedan errores con formato distinto</summary>
+  <p>Busca en tu código <code>ResponseEntity.notFound</code>, <code>ResponseEntity.badRequest</code> y <code>ResponseEntity.status</code>. Cada aparición dentro de un controlador es un error que no pasa por tu manejador.</p>
+  <p>Y prueba los caminos raros: una ruta que no existe, un método no permitido, un <code>Content-Type</code> incorrecto. Alguno de esos ni siquiera llega a un controlador tuyo, así que piensa qué excepción lanza Spring y si tu manejador la cubre.</p>
+</details>
+
+### La colección de aceptación
+
+Amplía la de la UD2 hasta cubrir esto:
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Criterios de aceptación de la colección</p>
   <ul class="checklist">
-    <li>Has obtenido una API de proyectos e incidencias validada mediante una colección de peticiones.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Cubre las trece filas de la tabla, con sus casos correctos y de error.</li>
+    <li>Incluye al menos <strong>seis peticiones de error distintas</strong>: 400 de validación, 400 de JSON ilegible, 404, 405, 415 y 409.</li>
+    <li>Cada petición de error comprueba que el cuerpo tiene <code>estado</code>, <code>mensaje</code> y <code>ruta</code>.</li>
+    <li>Al menos una comprueba el contenido de <code>errores</code> campo a campo.</li>
+    <li>Incluye la prueba de ida y vuelta de la sesión 17 para los dos recursos.</li>
+    <li>Se ejecuta entera en verde, dos veces seguidas.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
+### Entrega de la unidad
 
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
+1. **El proyecto**, con la estructura de paquetes de la especificación.
+2. **La colección exportada**, en `pruebas/`.
+3. **`AUDITORIA.md`**: la rúbrica con sus dos columnas y un párrafo comentando la diferencia.
+4. **`DECISIONES.md`**, ampliado con estas cinco:
+   * Qué campos dejaste fuera de cada DTO de entrada y de salida, y por qué.
+   * Qué anotación de validación propia escribiste y por qué no bastaba `@Pattern`.
+   * Qué formato de error elegiste y qué campo añadirías si tuvieras que depurar un fallo reportado por un cliente.
+   * Qué caso de tu API responde `409` y por qué no es un `400` ni un `404`.
+   * Por qué tu API se queda en el nivel 2 y no implementa hipermedia.
 
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+### Autoevaluación · el examen de coherencia
+
+Esta lista no mira endpoints sueltos: mira el conjunto. Pásatela con la API delante.
+
+| Comprobación | Cómo se verifica |
+| :--- | :--- |
+| Nombres uniformes | Lista todas tus rutas seguidas y léelas de un tirón. ¿Alguna desentona? |
+| Representaciones uniformes | ¿Un mismo campo se llama igual en todos los recursos donde aparece? |
+| Tipos uniformes | ¿Las fechas viajan siempre igual? ¿Los booleanos? |
+| Códigos uniformes | ¿Dos operaciones equivalentes en recursos distintos devuelven lo mismo? |
+| Errores uniformes | ¿Los seis errores tienen la misma forma? |
+| Validación uniforme | ¿Un campo con el mismo significado tiene las mismas reglas en los dos recursos? |
+
+La fila de la validación es la que más suspende. Es muy fácil validar a fondo el recurso con el que empezaste y dejar el segundo a medias.
+
+### Lo que sigue haciendo mal, y es mucho
+
+Esto ya no son defectos del contrato: **el contrato está bien**. Lo que está mal es lo que hay detrás.
+
+Abre tu `TareaController` y cuenta lo que hace:
+
+<figure class="diagram">
+  <figcaption>Todo lo que hace hoy un solo controlador</figcaption>
+  <ol class="flow flow--before">
+    <li>Recibe la petición y devuelve la respuesta</li>
+    <li>Guarda la lista de tareas como atributo</li>
+    <li>Lleva la cuenta del siguiente identificador</li>
+    <li>Busca, filtra y recorre</li>
+    <li>Decide reglas de negocio, como que una tarea nace sin completar</li>
+    <li class="is-error">Y todo eso se pierde entero al reiniciar</li>
+  </ol>
+</figure>
+
+| Lo que está mal | Se arregla en |
+| :--- | :--- |
+| El controlador guarda los datos y lleva la lógica | UD4, con capas |
+| No hay forma de reutilizar una regla en dos endpoints | UD4, con un service |
+| Nada comprueba la lógica sin arrancar el servidor | UD4, con los primeros tests |
+| La regla «el proyecto debe existir» sigue sin sitio | UD4 |
+| Al reiniciar se pierde todo | UD5, con PostgreSQL |
+
+Esa cuarta fila viene de la sesión 19: la encontraste, viste por qué una anotación no podía resolverla, y desde entonces está esperando. En la UD4 tendrá por fin dónde vivir.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Las trece filas cumplidas, la estructura de paquetes y todos los errores unificados.</span></div>
+  <div><strong>Si lo tienes</strong><span>La colección de aceptación con sus seis errores comprobados y la auditoría con sus dos columnas.</span></div>
+  <div><strong>Reto</strong><span>El examen de coherencia superado en las seis filas, incluida la validación uniforme entre recursos.</span></div>
 </div>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 21</p>
+  <ul class="checklist">
+    <li>La estructura de paquetes es la de la especificación.</li>
+    <li>Las trece filas responden exactamente lo que dice la tabla.</li>
+    <li>Los seis tipos de error tienen la misma forma, comprobada en la colección.</li>
+    <li>La segunda auditoría está escrita junto a la primera, con su comentario.</li>
+    <li><code>DECISIONES.md</code> responde a las cinco preguntas.</li>
+    <li>Puedes enumerar lo que sigue mal y en qué unidad se resuelve cada cosa.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué tipo de fallo no detecta ninguna prueba de un endpoint aislado?</li>
+    <li>¿Cuántos sitios de tu API construyen hoy una respuesta de error?</li>
+    <li>¿Qué hace tu controlador que no debería hacer un controlador?</li>
+    <li>¿Por qué tu API se queda en el nivel 2?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Las incoherencias del conjunto: nombres, tipos, códigos o validaciones que difieren entre recursos. Cada endpoint es correcto por separado y la API obliga a tratarlos como casos especiales.</p>
+  <p>2 · Uno: el manejador. Si sale más de uno, queda trabajo.</p>
+  <p>3 · Guardar los datos, generar identificadores, buscar y filtrar, y decidir reglas de negocio. Un controlador debería recibir la petición, delegar y responder.</p>
+  <p>4 · Porque la hipermedia añade complejidad al servidor que muy pocos clientes aprovechan, y es una decisión de coste y beneficio tomada a conciencia.</p>
+</details>
 
 ## Lo que debes recordar
 
-Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben poder justificarse, preguntas de recuperación y una comprobación final del producto.
+### El método
+
+La secuencia crece otra vez. Estos son los pasos de la UD1 y la UD2 con los tres que añade el diseño:
+
+<figure class="diagram">
+  <figcaption>Cómo se diseña un endpoint, versión completa</figcaption>
+  <ol class="flow">
+    <li><strong>¿De qué cosa hablo?</strong> Un sustantivo, en plural si es colección. Nunca un verbo</li>
+    <li>¿Qué le hago? Eso elige el método HTTP, y con él si es idempotente</li>
+    <li>¿Qué datos necesito? Ruta si identifican, query si filtran, cuerpo si son contenido</li>
+    <li><strong>¿Qué acepto y qué publico?</strong> Dos listas distintas, dos clases distintas</li>
+    <li><strong>¿Qué tiene que cumplir lo que llega?</strong> Y qué digo cuando no lo cumple</li>
+    <li>¿Cómo puede terminar esto? Cada final, su código de estado</li>
+    <li>¿Cómo demuestro que sigue funcionando mañana?</li>
+  </ol>
+</figure>
+
+El paso uno decide más que ningún otro: si eliges bien el sustantivo, los cinco métodos HTTP te dan la mitad de la API sin pensar. Si eliges un verbo, cada funcionalidad nueva te obligará a inventar una ruta.
+
+### La idea más importante
+
+> **Tu API es una promesa, y las promesas se hacen a alguien que no está delante. Todo lo que obligue a preguntarte algo es un defecto de diseño, aunque funcione perfectamente.**
+
+De ahí sale la unidad entera. Por eso las rutas se nombran para que se puedan adivinar, por eso el modelo no se publica, por eso un `400` dice qué campo corregir, y por eso todos los errores tienen la misma forma: **para que nadie tenga que escribirte**.
+
+<p class="term">Lo que cambia por dentro y lo que se promete fuera son dos cosas</p>
+
+Modelo, DTO y mapper existen por esa frase. El modelo cambia cuando cambia tu código; el contrato cambia cuando decides romper una promesa. Si son la misma clase, cualquier refactorización es una promesa rota sin querer.
+
+### Las decisiones que tienes que saber justificar
+
+| Decisión | Lo que tienes que poder decir |
+| :--- | :--- |
+| La ruta lleva sustantivos | La acción ya la expresa el método; con verbos, la API deja de ser adivinable |
+| Ruta anidada o filtro | Anidada si el recurso pertenece a otro; filtro si acota una colección propia |
+| Una acción que no es CRUD | Primero cambio de estado, luego recurso nuevo, y solo entonces acción explícita |
+| Tres clases por recurso | Lo que acepto, lo que manejo y lo que publico tienen motivos de cambio distintos |
+| El DTO de entrada como lista blanca | Lo que no existe en la clase no se puede asignar: previene el *mass assignment* |
+| Tipos envoltorio en los DTO | Un primitivo no distingue «ausente» de su valor por defecto |
+| Un solo mapper | Con dos sitios que traducen, el mismo recurso acaba publicándose de dos formas |
+| Validar en el DTO, no en el modelo | El DTO es la frontera con lo que no es de fiar; el modelo lo construye tu código |
+| Mensajes que dicen qué se espera | Un mensaje accionable se puede enseñar al usuario final sin traducirlo |
+| Un único formato de error | Quien consume escribe el tratamiento una vez y le sirve para toda la API |
+| El `500` no cuenta nada | El mensaje de una excepción puede filtrar rutas, consultas o datos ajenos |
+| Nivel 2 y no hipermedia | Coste alto y beneficio bajo con los clientes reales; es una decisión, no un olvido |
+
+### Al terminar deberías poder responder
+
+1. ¿Por qué devolver JSON no convierte una API en REST?
+2. ¿Qué tres restricciones de REST cumples solo por usar HTTP bien?
+3. ¿Qué distingue el nivel 1 del nivel 2, y el 2 del 3?
+4. ¿Por qué una URL no debe contener un verbo?
+5. ¿Cuándo se usa ruta anidada y cuándo un filtro?
+6. Enumera las tres estrategias para exponer algo que no es CRUD, en orden.
+7. ¿Qué diferencia hay entre un recurso, un modelo y una representación?
+8. Nombra un campo que entra y no sale, y otro que sale y no entra.
+9. ¿Qué es el *mass assignment* y por qué un DTO de entrada lo previene?
+10. ¿Por qué un DTO de modificación usa `Boolean` y no `boolean`?
+11. ¿Qué fallo concreto produce tener la conversión repartida en dos sitios?
+12. ¿Por qué el mapper conoce el modelo y el DTO no?
+13. ¿Qué comprueba una prueba de ida y vuelta que no comprueba un código de estado?
+14. ¿Por qué la validación del navegador no protege nada?
+15. Las anotaciones de validación no hacen nada. ¿Qué compruebas primero?
+16. Diferencia entre `@NotNull`, `@NotEmpty` y `@NotBlank`, con un valor que las separe.
+17. ¿Por qué un validador propio debe dejar pasar el nulo?
+18. ¿Por qué un `enum` es mejor que validar un texto?
+19. ¿Qué reglas no puede comprobar Bean Validation, y por qué?
+20. ¿Por qué el manejador genérico no devuelve el mensaje de la excepción?
+21. ¿Cuándo se responde `409` en lugar de `400` o `404`?
+22. ¿Qué tipo de fallo no detecta ninguna prueba de un endpoint aislado?
+
+Si además puedes coger un dominio nuevo y escribir su contrato de recursos, sus DTO, sus reglas y su formato de error antes de programar nada, tienes lo que esta unidad quería darte.
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| :--- | :--- |
+| REST | Estilo de arquitectura, no un protocolo ni una librería ni un formato |
+| Interfaz uniforme | Que todos los recursos se identifiquen y manipulen con las mismas reglas |
+| Niveles de madurez | El mapa de 0 a 3 que sitúa cualquier API |
+| Hipermedia | El nivel 3: respuestas que incluyen los enlaces a lo que se puede hacer después |
+| Recurso | Una cosa del dominio a la que se le puede dar una dirección |
+| Colección | El conjunto de recursos de un tipo, en plural: `/tareas` |
+| Ruta anidada | La que expresa pertenencia: `/proyectos/7/tareas` |
+| Representación | El JSON concreto que viaja, con los campos que has decidido publicar |
+| DTO | Clase cuyo único trabajo es transportar datos entre dos sitios |
+| DTO de entrada | Lo que la API acepta. Funciona además como lista blanca |
+| DTO de salida | Lo que la API publica |
+| *Mass assignment* | Que el cliente asigne un campo que no debería poder tocar |
+| Mapper | El único sitio del proyecto que traduce entre DTO y modelo |
+| Prueba de ida y vuelta | Comprobar que un dato sobrevive al circuito completo de conversiones |
+| Bean Validation | El estándar de restricciones declarativas: `@NotBlank`, `@Size`, `@Pattern` |
+| `@Valid` | Lo que activa la comprobación de esas restricciones |
+| Restricción propia | Anotación que expresa una regla del dominio, con su validador |
+| Regla de negocio | La que necesita consultar datos para decidir. No es validación de formato |
+| `@RestControllerAdvice` | La clase que atiende las excepciones de todos los controladores |
+| `@ExceptionHandler` | El método que convierte un tipo de excepción en una respuesta |
+| `409 Conflict` | Petición válida que choca con el estado actual de los datos |
+| *Problem Details* | El estándar RFC 9457 para el cuerpo de un error, con su `ProblemDetail` en Spring |
+
+### Comprobación final del producto
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación final · con el proyecto delante</p>
+  <ul class="checklist">
+    <li>Ninguna ruta lleva verbos y todas las colecciones están en plural.</li>
+    <li>Ningún <code>@RequestBody</code> recibe una clase del modelo y ningún endpoint la devuelve.</li>
+    <li>Toda la traducción vive en el paquete <code>mapper</code>.</li>
+    <li>Un cuerpo vacío responde <code>400</code> nombrando los campos que faltan, en español.</li>
+    <li>Existe al menos una anotación de validación propia.</li>
+    <li>Los seis tipos de error tienen exactamente la misma forma.</li>
+    <li>Un <code>500</code> no revela nada del interior y deja la traza en la consola.</li>
+    <li>La auditoría de la sesión 13 y la de la sesión 21 están las dos escritas.</li>
+  </ul>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
@@ -1862,4 +2687,33 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
   </ul>
 </div>
 
-> El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
+### La siguiente unidad
+
+Tres unidades, tres preguntas. Ya están las tres respondidas:
+
+<figure class="diagram">
+  <figcaption>Lo que se ha preguntado hasta aquí</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>UD1 · que responda</li>
+    <li>UD2 · que responda correctamente</li>
+    <li>UD3 · que esté bien diseñada</li>
+  </ol>
+</figure>
+
+Y hay una cuarta que no se ha tocado todavía:
+
+> **¿Y esto quién lo mantiene?**
+
+Porque el contrato de tu API está bien, y detrás de él hay un controlador que guarda los datos, genera identificadores, busca, filtra y decide reglas de negocio. Todo junto, en una clase, sin una sola prueba que compruebe la lógica sin arrancar un servidor.
+
+| Lo que sigue mal | Se arregla en |
+| :--- | :--- |
+| El controlador hace de todo | UD4, con capas |
+| Una regla no se puede reutilizar en dos endpoints | UD4, con un service |
+| Nada comprueba la lógica sin levantar la aplicación | UD4, con los primeros tests |
+| «El proyecto debe existir» sigue sin tener sitio | UD4 |
+| Al reiniciar se pierde todo | UD5, con PostgreSQL |
+
+Fíjate en la cuarta fila. Esa regla la encontraste tú en la sesión 19, viste por qué una anotación de validación no podía resolverla y la dejaste apuntada. Lleva dos sesiones esperando un sitio donde vivir, y en la unidad siguiente lo encontrará.
+
+Y aquí se cobra el trabajo de estas tres semanas: la UD4 **no va a cambiar ni una ruta, ni un DTO, ni un código de estado**. Va a reorganizar lo que hay detrás sin tocar el contrato. Tu colección de pruebas, que ya cubre la API entera, será exactamente lo que demuestre que no has roto nada por el camino.
