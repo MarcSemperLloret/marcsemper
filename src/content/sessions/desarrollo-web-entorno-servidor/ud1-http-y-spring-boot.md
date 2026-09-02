@@ -366,22 +366,82 @@ Míralo en el panel de red y compáralo con la petición anterior. La estructura
   <p>La opción <code>-i</code> significa «incluye las cabeceras de la respuesta». Lo que aparece en pantalla es, letra por letra, el formato que hemos estudiado hoy.</p>
 </details>
 
+### Los filtros del panel, y qué es eso de Fetch/XHR
+
+Justo encima de la lista de peticiones hay una fila de filtros: `All`, `Doc`, `CSS`, `JS`, `Font`, `Img`, `Media`, `Manifest`, `WS`, `Fetch/XHR`, `Other`. Cada uno deja a la vista un solo tipo de petición, y son la única forma razonable de encontrar algo en una lista de cincuenta.
+
+Casi todos se entienden por el nombre: `Doc` es el documento HTML, `Img` son las imágenes, `Font` las tipografías. El que no se entiende por el nombre es el que más nos interesa.
+
+<p class="term">Fetch / XHR</p>
+
+Las peticiones que hace **el JavaScript de la página por su cuenta**, sin que tú navegues a ningún sitio y sin que la página se recargue. `XHR` es el mecanismo antiguo, *XMLHttpRequest*; `fetch` es el moderno. Las herramientas los agrupan en un mismo filtro porque, para quien mira, son lo mismo: peticiones que ha decidido hacer el código, no el navegador.
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Las decide el navegador</p>
+    <p class="compare-body">Lee el HTML, descubre que necesita una hoja de estilos, una tipografía o una imagen, y va a buscarla sin preguntar. Salen en <code>Doc</code>, <code>CSS</code>, <code>Font</code> e <code>Img</code>.</p>
+  </div>
+  <div>
+    <p class="compare-label">Las decide el código de la página</p>
+    <p class="compare-body">El JavaScript pide datos cuando le hacen falta: al pulsar algo, al escribir en un buscador, al llegar al final de la lista. Salen en <code>Fetch/XHR</code>.</p>
+  </div>
+</div>
+
+El ejemplo de todos los días: escribes en un buscador y aparecen sugerencias debajo **sin que la página parpadee**. No has navegado a ninguna parte y la página es la misma; simplemente su código ha hecho una petición, ha recibido datos y los ha pintado. Eso es una petición Fetch/XHR.
+
+<div class="rule">
+  <p class="rule-label">Por qué te insisto con este filtro y no con los otros</p>
+  <p>Las peticiones de <code>Fetch/XHR</code> son las que van a buscar <strong>datos</strong> a una API, y son exactamente el tipo de petición que atenderá el servidor que vas a escribir. Las de <code>Img</code> o <code>CSS</code> no las verás nunca en tu backend.</p>
+  <p>Cuando en la UD8 conectes un cliente Angular con tu API, sus peticiones aparecerán en este filtro y en ningún otro. Acostumbrarte hoy a mirarlo te ahorrará semanas de confusión entonces.</p>
+</div>
+
 ### Tarea 1 · Ficha de tres peticiones
 
 Trabajo individual. Elige **una web que uses de verdad** y rellena esta ficha para tres peticiones distintas de su carga.
 
-| Campo | Petición A | Petición B | Petición C |
-| :--- | :--- | :--- | :--- |
-| Ruta, solo el *path* | | | |
-| Método | | | |
-| Código de estado | | | |
-| `Content-Type` de la respuesta | | | |
-| ¿Tenía cuerpo la petición? | | | |
-| ¿Qué crees que devuelve? | | | |
+La primera columna va rellenada como ejemplo, para que veas el nivel de detalle que se pide. Es una petición real de esta misma web.
 
-Elige tres peticiones **que no se parezcan**: una debería ser el documento HTML, otra un recurso estático —una imagen, una tipografía, un CSS— y otra, si la encuentras, una llamada a datos.
+<div class="table-scroll">
 
-Para localizar esta última usa el filtro **Fetch/XHR** del panel: deja solo ese filtro y navega por la web haciendo clic en cosas. Las peticiones que aparezcan ahí son las que hace el JavaScript de la página, y son las que más se parecen a las que atenderá tu servidor.
+| Campo | Ejemplo resuelto | Petición A | Petición B | Petición C |
+| :--- | :--- | :--- | :--- | :--- |
+| Ruta, solo el *path* | `/es/docencia/` | | | |
+| Método | `GET` | | | |
+| Código de estado | `200` | | | |
+| `Content-Type` de la respuesta | `text/html; charset=utf-8` | | | |
+| ¿Tenía cuerpo la petición? | No | | | |
+| ¿Qué crees que devuelve? | El HTML de la página de docencia | | | |
+
+</div>
+
+#### De dónde sale cada fila
+
+Todo está en el panel lateral que abriste en el paso 3. Fila por fila:
+
+1. **Ruta.** En `General → Request URL` tienes la dirección entera. Copia **solo desde la primera barra después del dominio**: de `https://marcsemperlloret.com/es/docencia/` se anota `/es/docencia/`.
+2. **Método.** En `General → Request Method`.
+3. **Código de estado.** En `General → Status Code`. Anota solo el número.
+4. **`Content-Type`.** En **Response Headers**, no en Request Headers. Es la confusión más habitual: las dos listas tienen cabeceras con nombres parecidos, y aquí nos interesa lo que declaró el servidor sobre lo que envía.
+5. **¿Tenía cuerpo la petición?** Si en el detalle no aparece ninguna pestaña de `Payload` o `Request`, no había cuerpo. En un `GET` la respuesta será casi siempre «no».
+6. **¿Qué devuelve?** Ábrelo en la pestaña `Response` o `Preview` y descríbelo en tus palabras. No hace falta entenderlo entero.
+
+#### Qué tres peticiones elegir
+
+Que **no se parezcan entre sí**. Una de cada tipo:
+
+| Petición | Cómo la encuentras |
+| :--- | :--- |
+| El documento HTML | Filtro `Doc`. Suele ser la primera de la lista |
+| Un recurso estático | Filtro `Img` o `Font`. Una imagen o una tipografía |
+| Una llamada a datos | Filtro `Fetch/XHR` |
+
+Para la tercera, deja puesto solo el filtro `Fetch/XHR` y **navega por la web haciendo cosas**: pulsa botones, abre un menú, busca algo, baja hasta el final de una lista. Con la página quieta puede que no aparezca ninguna; en cuanto interactúas, empiezan a salir.
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · con ese filtro no me aparece nada</summary>
+  <p>Hay webs, sobre todo las hechas con HTML estático, que no hacen ninguna petición de datos. No es que lo estés haciendo mal.</p>
+  <p>Prueba con una web que cargue contenido a medida que bajas, con un buscador que sugiera mientras escribes, o con cualquier aplicación donde inicies sesión. Si aun así no encuentras ninguna, anota en la tercera columna otro recurso estático distinto y escribe una frase explicando por qué crees que esa web no necesita llamadas a datos.</p>
+</details>
 
 <p class="stage stage--solo">Ahora tú · sin ejemplo delante</p>
 
@@ -391,15 +451,54 @@ Debajo de la tabla, responde en dos o tres frases a cada pregunta:
 2. Alguna petición de esa web seguro que no devolvió `200`. Busca una: usa el filtro de estado o recorre la lista. ¿Qué código era y qué le está diciendo al navegador?
 3. Si el servidor de esa web se apagara ahora mismo y volvieras a recargar, ¿qué parte de lo que ves en pantalla seguiría apareciendo?
 
-### Reto · La petición que no existe
+### Reto · Dos formas distintas de no encontrar algo
 
-Sin buscar la solución en Internet:
+Este reto va de una distinción que confunde a casi todo el mundo, y de una costumbre que te va a acompañar toda la carrera: **escribir qué esperas antes de mirar**. Si aciertas, has entendido la regla. Si fallas, acabas de localizar exactamente el hueco que te faltaba, que es información mucho más valiosa que un acierto.
 
-1. Toma la URL de la API de pruebas y **rómpela a propósito**: `https://jsonplaceholder.typicode.com/posts/999999`.
-2. Antes de pulsar `Enter`, escribe qué código de estado esperas y por qué.
-3. Ábrela y compruébalo.
-4. Ahora prueba `https://jsonplaceholder.typicode.com/pooosts/1`, con la ruta mal escrita. ¿Sale el mismo código? ¿Debería?
-5. Explica en una frase la diferencia entre «el recurso no existe» y «la ruta no existe», y por qué HTTP usa el mismo número para las dos.
+Volvemos a la API de pruebas del paso 4. Dos cosas que hay que saber antes de empezar:
+
+* `/posts` es una **colección**: todos los mensajes que tiene esa API.
+* `/posts/1` es **un elemento** de esa colección: el mensaje número 1.
+
+Para no repetir el dominio entero, escribo `…/posts/1` en lugar de `https://jsonplaceholder.typicode.com/posts/1`.
+
+<p class="stage">Paso 1 · Predice, con el navegador cerrado</p>
+
+Copia esta tabla y rellena **las dos columnas del medio sin abrir nada**. La última se queda vacía de momento.
+
+| URL | Código que espero | Por qué lo espero | Código real |
+| :--- | :---: | :--- | :---: |
+| `…/posts/1` | | | |
+| `…/posts/999999` | | | |
+| `…/pooosts/1` | | | |
+| `…/posts` | | | |
+
+Fíjate en qué es distinto en cada fila:
+
+1. Un elemento que existe. Es el control: si esta falla, algo va mal en tu conexión y no en el ejercicio.
+2. Una ruta correcta con un identificador que **no corresponde a ningún mensaje**.
+3. Una ruta **mal escrita**: `pooosts` no existe en esa API.
+4. La colección entera, sin pedir ningún elemento concreto.
+
+<p class="stage stage--solo">Paso 2 · Ahora ábrelas</p>
+
+Una a una, con el panel de red abierto. Anota el código real en la última columna y echa un vistazo al cuerpo de cada respuesta.
+
+Dos de las cuatro se suelen fallar. Cuando encuentres una predicción equivocada, **no la borres**: al lado escribe qué regla habías aplicado y por qué no valía.
+
+<p class="stage stage--solo">Paso 3 · Explica lo que has visto</p>
+
+1. Las filas 2 y 3 son situaciones distintas: en una la ruta existe y el elemento no; en la otra no existe ni la ruta. ¿Han devuelto el mismo código? ¿Te parece razonable que sea así?
+2. ¿Podría el servidor distinguirlas si quisiera? ¿Qué ganaría y qué perdería haciéndolo?
+3. La fila 4 devuelve algo aunque no hayas pedido ningún elemento concreto. ¿Qué devuelve exactamente, y qué código? ¿Y qué crees que devolvería si esa colección estuviera vacía: un error, o algo?
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · no sé por dónde coger la pregunta 1</summary>
+  <p>Piensa desde fuera, desde quien hace la petición y no desde quien la programa. Para el cliente, una URL nombra una cosa. Si esa cosa no aparece, ¿le cambia en algo el plan saber <em>por qué</em> no aparece?</p>
+  <p>Y piensa también en la pregunta 2 desde el otro lado: si el servidor respondiera «esta ruta no existe» frente a «este elemento no existe», estaría contando algo sobre cómo está construido por dentro. Eso, a veces, es justo lo que no interesa contar.</p>
+</details>
+
+Se entrega la tabla con sus cuatro filas completas —predicción, motivo y código real— y las tres respuestas del paso 3.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>La ficha de las tres peticiones completa y correcta, con las tres bien diferenciadas.</span></div>
