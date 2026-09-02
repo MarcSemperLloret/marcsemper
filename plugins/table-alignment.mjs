@@ -20,26 +20,39 @@ const ALIGNMENTS = {
 export function tableAlignment() {
   return {
     name: "table-alignment",
-    element: {
-      filter: ["th", "td"],
-      visit(node, ctx) {
-        const style = node.properties?.style;
-        if (typeof style !== "string") return;
+    element: [
+      {
+        filter: ["table"],
+        visit(node, ctx) {
+          ctx.wrapNode(node, {
+            type: "element",
+            tagName: "div",
+            properties: { className: ["table-scroll"] },
+            children: []
+          });
+        }
+      },
+      {
+        filter: ["th", "td"],
+        visit(node, ctx) {
+          const style = node.properties?.style;
+          if (typeof style !== "string") return;
 
-        const match = /text-align:\s*(left|center|right)/i.exec(style);
-        if (!match) return;
+          const match = /text-align:\s*(left|center|right)/i.exec(style);
+          if (!match) return;
 
-        const existing = node.properties?.className;
-        const classes = Array.isArray(existing)
-          ? existing.slice()
-          : typeof existing === "string" && existing
-            ? existing.split(/\s+/)
-            : [];
-        classes.push(ALIGNMENTS[match[1].toLowerCase()]);
+          const existing = node.properties?.className;
+          const classes = Array.isArray(existing)
+            ? existing.slice()
+            : typeof existing === "string" && existing
+              ? existing.split(/\s+/)
+              : [];
+          classes.push(ALIGNMENTS[match[1].toLowerCase()]);
 
-        ctx.setProperty(node, "className", classes);
-        ctx.setProperty(node, "style", null);
+          ctx.setProperty(node, "className", classes);
+          ctx.setProperty(node, "style", null);
+        }
       }
-    }
+    ]
   };
 }
