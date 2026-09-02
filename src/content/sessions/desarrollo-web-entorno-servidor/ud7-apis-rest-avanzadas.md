@@ -750,153 +750,753 @@ Analiza las consecuencias técnicas y diseña una alternativa:
 ## Sesión 46 · Tests de endpoints con MockMvc
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> los tests del service no detectan que una ruta cambió, que un código de estado es incorrecto o que el JSON dejó de tener un campo.</li>
-    <li><strong>Construye:</strong> tests de endpoint que cubren un caso correcto y un caso de error de un recurso.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> cómo verificar el contrato HTTP completo (rutas, códigos de estado, cabeceras y cuerpos JSON) mediante <code>@WebMvcTest</code> y <code>MockMvc</code> sin arrancar un servidor Tomcat real ni levantar la base de datos.</li>
+    <li><strong>2. Haz:</strong> escribe una suite de pruebas de capa web para <code>ProyectoController</code> cubriendo el caso exitoso (201 con cabecera <code>Location</code>), errores de validación (400 con RFC 7807) y recursos no encontrados (404).</li>
+    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw test</code> verificando que la batería de pruebas de controladores se ejecuta en milisegundos y garantiza la estabilidad del contrato ante cualquier refactorización.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué tener tests unitarios del servicio al 100 % de cobertura no garantiza que la API responda con código HTTP 201 en lugar de 200 en un alta?</li>
+    <li>¿Qué ventaja de velocidad y aislamiento tiene utilizar <code>@WebMvcTest</code> frente a arrancar toda la aplicación con <code>@SpringBootTest</code>?</li>
+    <li>¿Qué librería utiliza Spring Boot para evaluar aserciones sobre campos anidados dentro de un JSON de respuesta (expresiones como <code>$.nombre</code>)?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **comprobar el contrato HTTP completo —ruta, estado, cuerpo— sin arrancar un servidor real**.
+### La brecha entre el servicio y el protocolo HTTP
 
-### 2. El problema
+Hasta ahora has probado tus servicios con tests unitarios y tus repositorios con `@DataJpaTest`. Esas pruebas garantizan que la lógica de negocio y las consultas SQL funcionan.
 
-Los tests del service no detectan que una ruta cambió, que un código de estado es incorrecto o que el JSON dejó de tener un campo.
+Sin embargo, **ninguna de esas pruebas valida la capa web**:
+* ¿Qué pasa si alguien cambia por error la ruta `@PostMapping("/proyectos")` a `@PostMapping("/proyecto")`?
+* ¿Qué pasa si el controlador olvida la anotación `@Valid` y acepta cuerpos con campos en blanco?
+* ¿Qué pasa si el controlador devuelve un `200 OK` plano en lugar de un `201 Created` con la cabecera `Location` obligatoria?
+* ¿Qué pasa si el serializador Jackson omite un campo o cambia el nombre de una propiedad en el JSON?
 
-### 3–6. Itinerario de trabajo
+Para responder a estas preguntas sin tener que arrancar manualmente la aplicación y probar peticiones en Bruno una a una, utilizamos **pruebas de slice web con MockMvc**.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<figure class="diagram">
+  <figcaption>El slice de pruebas web con @WebMvcTest</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Petición HTTP simulada (MockMvc)</li>
+    <li>Filtros y Routing de Spring MVC</li>
+    <li>Validación de DTOs (@Valid)</li>
+    <li>Controlador (@RestController)</li>
+    <li>Servicio simulado (@MockBean)</li>
+  </ol>
+</figure>
 
-### 7. Comprueba que funciona
+<div class="rule">
+  <p class="rule-label">La ventaja de @WebMvcTest</p>
+  <p><strong><code>@WebMvcTest</code> no arranca un servidor HTTP real ni conecta con PostgreSQL.</strong></p>
+  <p>Carga únicamente los componentes de la capa web (controladores, mappers de Jackson, validadores de Bean Validation y manejadores <code>@RestControllerAdvice</code>), ejecutando docenas de tests en menos de un segundo.</p>
+</div>
+
+### Sintaxis y aserciones fluidas con MockMvc y JSONPath
+
+`MockMvc` utiliza un patrón fluido para construir la petición y comprobar las expectativas de la respuesta:
+
+```java
+mockMvc.perform(post("/proyectos")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {"nombre": "Portal Clientes", "descripcion": "Acceso web"}
+        """))
+    .andExpect(status().isCreated())
+    .andExpect(header().exists("Location"))
+    .andExpect(jsonPath("$.id").value(1))
+    .andExpect(jsonPath("$.nombre").value("Portal Clientes"));
+```
+
+Para evaluar el contenido del JSON utilizamos **JSONPath**:
+* `$.id`: el atributo `id` de la raíz del objeto.
+* `$.nombre`: el atributo `nombre`.
+* `$.content`: el array de elementos en una respuesta paginada.
+* `$.content.length()`: la cantidad de elementos devueltos en el array.
+* `$.content[0].titulo`: el título del primer elemento de la lista.
+
+### Paso a paso guiado · Crear la suite de ProyectoControllerTest
+
+Vamos a construir la suite de pruebas automatizadas para el contrato de `ProyectoController`:
+
+<p class="stage">Paso 1 · Estructura de la clase de prueba con @WebMvcTest</p>
+
+Aislamos el controlador inyectando `MockMvc` y simulando el colaborador de negocio con `@MockBean`:
+
+```java
+@WebMvcTest(ProyectoController.class)
+class ProyectoControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockBean
+    private ProyectoService proyectoService;
+
+    @MockBean
+    private TareaService tareaService;
+```
+
+<p class="stage">Paso 2 · Test del caso feliz de creación (POST 201 Created)</p>
+
+Verificamos que un cuerpo válido responde con código `201`, emite la cabecera `Location` correcta y devuelve el recurso creado:
+
+```java
+    @Test
+    void crearProyecto_conDatosValidos_devuelve201YLocation() throws Exception {
+        // 1. Arrange: preparamos el DTO de entrada y la respuesta simulada del servicio
+        ProyectoRequest request = new ProyectoRequest("Plataforma SaaS", "Gestión cloud");
+        ProyectoResponse response = new ProyectoResponse(
+            1L, "Plataforma SaaS", "Gestión cloud", true, LocalDateTime.now()
+        );
+
+        when(proyectoService.crearProyecto(any(ProyectoRequest.class))).thenReturn(response);
+
+        // 2. Act & Assert: ejecutamos la petición HTTP y evaluamos el contrato
+        mockMvc.perform(post("/proyectos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(header().string("Location", "http://localhost/proyectos/1"))
+            .andExpect(jsonPath("$.id").value(1L))
+            .andExpect(jsonPath("$.nombre").value("Plataforma SaaS"))
+            .andExpect(jsonPath("$.activo").value(true));
+    }
+```
+
+<p class="stage">Paso 3 · Test de validación con datos inválidos (POST 400 Bad Request)</p>
+
+Comprobamos que si el cliente envía un nombre en blanco, Bean Validation intercepta la petición antes de llegar al servicio y emite el formato estándar RFC 7807:
+
+```java
+    @Test
+    void crearProyecto_conNombreEnBlanco_devuelve400ProblemDetails() throws Exception {
+        // Nombre inválido (vacío)
+        ProyectoRequest requestInvalido = new ProyectoRequest("", "Descripción válida");
+
+        mockMvc.perform(post("/proyectos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestInvalido)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.title").value("Error de validación"))
+            .andExpect(jsonPath("$.invalidParams.nombre").exists());
+
+        // Verificamos que el servicio jamás llegó a ejecutarse ante datos corruptos
+        verify(proyectoService, never()).crearProyecto(any());
+    }
+```
+
+<p class="stage">Paso 4 · Test de recurso no encontrado (GET 404 Not Found)</p>
+
+Simulamos que el servicio lanza `RecursoNoEncontradoException` y comprobamos que el `@RestControllerAdvice` lo transforma limpiamente en un `404`:
+
+```java
+    @Test
+    void obtenerPorId_cuandoNoExiste_devuelve404NotFound() throws Exception {
+        when(proyectoService.buscarPorId(999L))
+            .thenThrow(new RecursoNoEncontradoException("No existe proyecto con id 999"));
+
+        mockMvc.perform(get("/proyectos/999"))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.detail").value("No existe proyecto con id 999"));
+    }
+}
+```
+
+### La comprobación · Ejecutar la batería en terminal
+
+Ejecuta tu suite desde la terminal de tu IDE o consola:
+
+```bash
+./mvnw test -Dtest=ProyectoControllerTest
+```
+
+Observa la salida de Maven:
+* La suite arranca en menos de **1.5 segundos**.
+* No se realizan conexiones TCP a PostgreSQL.
+* Los 3 tests pasan en verde confirmando que rutas, DTOs, validaciones, códigos de estado y respuestas JSON están blindados.
+
+### Ahora tú · Batería de pruebas para TareaController
+
+Aplica el mismo patrón para blindar el contrato de `TareaController`:
+
+1. Crea la clase `TareaControllerTest` anotada con `@WebMvcTest(TareaController.class)`.
+2. Simula `TareaService` con `@MockBean`.
+3. Escribe un test `crearTarea_conPrioridadInvalida_devuelve400`.
+4. Escribe un test `listarTareas_conFiltros_devuelveListaPaginada200` verificando que devuelve el array en `$.content` y los metadatos `$.page.totalElements`.
+5. Ejecuta `./mvnw test -Dtest=TareaControllerTest` y confirma el verde completo.
+
+### Reto · Validación de cabeceras de caché HTTP (ETag y Cache-Control)
+
+En APIs REST de alto rendimiento, los endpoints de consulta devuelven cabeceras de control de caché para que los clientes no descarguen datos repetidos si no han cambiado.
+
+Diseña un test con MockMvc que verifique el soporte de cabeceras condicionales:
+1. Simula una petición `GET /proyectos/1` que incluya la cabecera `If-None-Match: "v1-abc"`.
+2. Si el recurso no ha cambiado, comprueba que el endpoint devuelve código **`304 Not Modified`** con el cuerpo completamente vacío.
+3. Analiza qué ahorro de ancho de banda y procesamiento representa este mecanismo para una API consumida por miles de clientes simultáneos.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Tests de <code>ProyectoControllerTest</code> cubriendo casos 201 y 400 con MockMvc y JSONPath.</span></div>
+  <div><strong>Si lo tienes</strong><span>Suite de <code>TareaControllerTest</code> completa incluyendo validaciones, 404 y respuestas paginadas.</span></div>
+  <div><strong>Reto</strong><span>Test de cabeceras condicionales de caché HTTP (ETag / 304 Not Modified) implementado y verificado.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 46</p>
   <ul class="checklist">
-    <li>Has obtenido tests de endpoint que cubren un caso correcto y un caso de error de un recurso.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>El contrato HTTP se valida de forma automatizada sin requerir peticiones manuales en clientes externos.</li>
+    <li>`@WebMvcTest` se utiliza para aislar la capa web sin arrancar servidores Tomcat ni bases de datos.</li>
+    <li>Las respuestas de error por validación (400) se comprueban campo a campo mediante JSONPath.</li>
+    <li>Los códigos de estado semánticos (201, 204, 400, 404) están garantizados por aserciones estrictas.</li>
+    <li>La suite completa de tests de controladores pasa al 100 % en verde con `./mvnw test`.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué `@WebMvcTest` es mucho más rápido que `@SpringBootTest`?</li>
+    <li>¿Qué rol cumple `@MockBean` en una prueba de controlador?</li>
+    <li>¿Cómo se comprueba con MockMvc que una petición POST devuelve la cabecera `Location`?</li>
+    <li>¿Qué expresión JSONPath utilizarías para comprobar el total de elementos de una respuesta paginada?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque no levanta el contexto completo de Spring: ignora repositorios, conexiones JDBC a base de datos y servicios, cargando únicamente los componentes del dispatcher web.</p>
+  <p>2 · Reemplaza el servicio real en el contexto de Spring por un doble de prueba de Mockito, permitiendo definir respuestas simuladas (when/then) e inspeccionar llamadas sin ejecutar lógica de negocio real.</p>
+  <p>3 · Mediante andExpect(header().exists("Location")) o andExpect(header().string("Location", valorEsperado)).</p>
+  <p>4 · jsonPath("$.page.totalElements").value(numeroEsperado) o jsonPath("$.totalElements").value(...).</p>
+</details>
 
 ## Sesión 47 · OpenAPI y Swagger
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una API no documentada obliga a descubrirla por ensayo y error y se vuelve difícil de verificar.</li>
-    <li><strong>Construye:</strong> una especificación OpenAPI navegable con ejemplos y respuestas.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> el estándar OpenAPI 3.0, la diferencia entre la especificación interpretable por máquinas (JSON/YAML) y la interfaz visual interactiva (Swagger UI), y cómo generar documentación viva a partir del código con <code>springdoc-openapi</code>.</li>
+    <li><strong>2. Haz:</strong> integra <code>springdoc-openapi-starter-webmvc-ui</code> en tu proyecto Spring Boot, decora controladores y DTOs con anotaciones semánticas y publica la especificación en <code>/v3/api-docs</code>.</li>
+    <li><strong>3. Comprueba:</strong> abres Swagger UI en el navegador, ejecutas peticiones interactivas reales contra la API y verificas que todos los endpoints, esquemas y códigos de error están documentados.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué mantener la documentación de una API en un documento externo de texto siempre acaba en desincronización con el código?</li>
+    <li>¿Qué diferencia conceptual existe entre la especificación **OpenAPI** y la herramienta **Swagger UI**?</li>
+    <li>¿Cómo permite un archivo OpenAPI generar automáticamente el código del cliente frontend (TypeScript, Axios) o colecciones de pruebas sin programarlas a mano?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **generar, leer y corregir documentación que refleje el contrato real**.
+### La documentación como código vivo (Living Documentation)
 
-### 2. El problema
+En desarrollo de software profesional existe una regla demostrada por la experiencia: **toda documentación que no se genere automáticamente a partir del código acaba mintiendo**.
 
-Una API no documentada obliga a descubrirla por ensayo y error y se vuelve difícil de verificar.
+Un desarrollador añade un campo al DTO, renombra un query param o cambia un código de estado de `200` a `201`. Si la documentación vive en un documento estático, nadie se acuerda de actualizarlo. Al cabo de dos meses, el equipo de frontend intenta consumir la API y nada encaja.
 
-### 3–6. Itinerario de trabajo
+<div class="rule">
+  <p class="rule-label">El principio de la documentación viva</p>
+  <p><strong>El código fuente es la única fuente de verdad (Single Source of Truth).</strong></p>
+  <p>Utilizamos el estándar <strong>OpenAPI 3.0</strong> para que el propio framework inspeccione nuestros controladores, rutas y DTOs, generando una especificación técnica interactiva que se actualiza automáticamente con cada compilación.</p>
+</div>
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+### OpenAPI frente a Swagger UI
 
-### 7. Comprueba que funciona
+Conviene distinguir con precisión ambos términos:
+
+| Concepto | Qué es | Para qué sirve | Dónde se consulta |
+| :--- | :--- | :--- | :--- |
+| **OpenAPI 3.0** | Estándar formal independiente de cualquier lenguaje que describe APIs REST en formato JSON o YAML. | Lo consumen las máquinas: generadores de código de clientes, pasarelas de API (API Gateways) y herramientas de pruebas automáticas. | `http://localhost:8080/v3/api-docs` |
+| **Swagger UI** | Aplicación web interactiva que lee la especificación OpenAPI y la renderiza visualmente. | La consumen los humanos: permite a cualquier desarrollador explorar los endpoints, ver ejemplos y lanzar peticiones en vivo (*Try it out*). | `http://localhost:8080/swagger-ui.html` |
+
+### Paso a paso guiado · Integrar y documentar con springdoc-openapi
+
+<p class="stage">Paso 1 · Añadir la dependencia en pom.xml</p>
+
+En proyectos Spring Boot 3 utilizamos la librería oficial de la comunidad `springdoc-openapi`:
+
+```xml
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.5.0</version>
+</dependency>
+```
+
+Al compilar y arrancar la aplicación, Spring Boot habilitará automáticamente los endpoints de documentación sin necesidad de escribir una sola línea de configuración inicial.
+
+<p class="stage">Paso 2 · Configurar metadatos globales del proyecto</p>
+
+Creamos una clase de configuración para definir el título, descripción y versión de nuestra API:
+
+```java
+@Configuration
+public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+            .info(new Info()
+                .title("API de Gestión de Proyectos e Incidencias")
+                .version("1.0.0")
+                .description("Servicio RESTful con persistencia relacional en PostgreSQL, filtros dinámicos y paginación.")
+                .contact(new Contact()
+                    .name("Equipo de Ingeniería Backend")
+                    .email("backend@empresa.com")));
+    }
+}
+```
+
+<p class="stage">Paso 3 · Anotar controladores con @Tag y @Operation</p>
+
+Decoramos `ProyectoController` para estructurar la interfaz en bloques lógicos y documentar el propósito de cada método:
+
+```java
+@Tag(name = "Proyectos", description = "Endpoints para la gestión del ciclo de vida de proyectos de desarrollo")
+@RestController
+@RequestMapping("/proyectos")
+public class ProyectoController {
+
+    private final ProyectoService proyectoService;
+
+    public ProyectoController(ProyectoService proyectoService) {
+        this.proyectoService = proyectoService;
+    }
+
+    @Operation(
+        summary = "Crear un nuevo proyecto",
+        description = "Registra un proyecto con nombre único y estado activo por defecto. Emite cabecera Location con la URI del nuevo recurso."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Proyecto creado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos (Bean Validation)"),
+        @ApiResponse(responseCode = "409", description = "Conflicto: ya existe un proyecto con ese nombre")
+    })
+    @PostMapping
+    public ResponseEntity<ProyectoResponse> crear(@Valid @RequestBody ProyectoRequest request) {
+        ProyectoResponse nuevo = proyectoService.crearProyecto(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(nuevo.id())
+            .toUri();
+        return ResponseEntity.created(location).body(nuevo);
+    }
+```
+
+<p class="stage">Paso 4 · Enriquecer los DTOs con @Schema</p>
+
+Anotamos los atributos de nuestros records para mostrar descripciones claras y ejemplos reales en Swagger:
+
+```java
+@Schema(description = "Datos para el registro o actualización de un proyecto")
+public record ProyectoRequest(
+
+    @Schema(description = "Nombre único del proyecto en la organización", example = "Portal de Clientes B2B")
+    @NotBlank(message = "El nombre no puede estar en blanco")
+    @Size(min = 3, max = 80, message = "El nombre debe tener entre 3 y 80 caracteres")
+    String nombre,
+
+    @Schema(description = "Descripción detallada de los objetivos del proyecto", example = "Migración de la interfaz corporativa a arquitectura desacoplada")
+    @Size(max = 500, message = "La descripción no puede superar 500 caracteres")
+    String descripcion
+) {}
+```
+
+### La comprobación · Explorar Swagger UI en vivo
+
+Arranca tu aplicación Spring Boot y realiza estas comprobaciones:
+
+1. **Abrir Swagger UI:** Navega en tu navegador a `http://localhost:8080/swagger-ui.html`.
+   * Comprueba que aparece el título *«API de Gestión de Proyectos e Incidencias»* y el bloque agrupado *«Proyectos»*.
+2. **Examinar esquemas de datos:** Baja a la sección inferior de *Schemas*.
+   * Comprueba que `ProyectoRequest` muestra las descripciones de los campos, los ejemplos y qué atributos son obligatorios.
+3. **Lanzar una petición interactiva (*Try it out*):**
+   * Despliega `POST /proyectos`, pulsa en *Try it out*, edita el JSON de ejemplo y pulsa *Execute*.
+   * Comprueba que la consola responde con código `201 Created` y muestra las cabeceras de respuesta reales.
+4. **Inspeccionar la especificación pura:**
+   * Abre `http://localhost:8080/v3/api-docs` en una pestaña nueva para ver el documento JSON completo que consumirán los clientes automatizados.
+
+### Ahora tú · Documentar los endpoints de Tareas y Filtros
+
+Documenta el controlador de tareas aplicando las anotaciones correspondientes:
+
+1. Añade `@Tag(name = "Tareas", description = "Gestión de incidencias, filtros multicriterio y paginación")` en `TareaController`.
+2. Documenta el endpoint de búsqueda `GET /tareas` decorando cada parámetro `@RequestParam` con `@Parameter`:
+   ```java
+   @Parameter(description = "Filtro por identificador del proyecto asociado", example = "1")
+   @RequestParam(required = false) Long proyectoId
+   ```
+3. Añade ejemplos descriptivos a `TareaRequest` y `TareaDetalleResponse` con `@Schema`.
+4. Recarga Swagger UI y verifica que la documentación de tareas permite filtrar interactivamente desde la propia página web.
+
+### Reto · Generación de clientes TypeScript con openapi-generator
+
+El mayor superpoder de OpenAPI no es que los humanos lean Swagger UI: es que **las máquinas generen código sin fallos humanos**.
+
+Investiga cómo funciona la herramienta de código abierto `openapi-generator-cli`:
+1. ¿Cómo permite el comando:
+   `npx @openapitools/openapi-generator-cli generate -i http://localhost:8080/v3/api-docs -g typescript-axios -o ./frontend/api`
+   generar automáticamente todas las interfaces TypeScript y llamadas Axios para un frontend en React o Vue?
+2. Si cambias el tipo de un campo en Java de `Long` a `String` y vuelves a ejecutar el generador, ¿cómo detecta el compilador de TypeScript el error en el frontend antes de que la aplicación llegue a producción?
+
+> [!NOTE]
+> Si en la evaluación se solicita un informe sobre adopción de OpenAPI en pipelines de integración continua, el formato de entrega de texto es siempre un **documento en PDF** (`informe-openapi.pdf`), nunca un archivo markdown suelto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Dependencia `springdoc-openapi` integrada y Swagger UI accesible en `/swagger-ui.html`.</span></div>
+  <div><strong>Si lo tienes</strong><span>Controladores y DTOs documentados con `@Tag`, `@Operation`, `@ApiResponses` y `@Schema` con ejemplos.</span></div>
+  <div><strong>Reto</strong><span>Flujo de generación automática de clientes cliente-servidor mediante OpenAPI justificado y comprendido.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 47</p>
   <ul class="checklist">
-    <li>Has obtenido una especificación OpenAPI navegable con ejemplos y respuestas.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>La especificación técnica OpenAPI 3.0 se genera automáticamente a partir del código en `/v3/api-docs`.</li>
+    <li>Swagger UI está disponible para pruebas interactivas en `/swagger-ui.html`.</li>
+    <li>Todos los endpoints declaran sus códigos de respuesta esperados (200, 201, 400, 404, 409).</li>
+    <li>Los DTOs muestran ejemplos representativos y restricciones de validación documentadas.</li>
+    <li>Los parámetros de consulta para filtros y paginación disponen de descripciones semánticas.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué la documentación viva generada con OpenAPI previene la desincronización entre frontend y backend?</li>
+    <li>¿Qué diferencia hay entre la ruta `/v3/api-docs` y `/swagger-ui.html`?</li>
+    <li>¿Para qué se utiliza la anotación `@Schema(example = "...")` en un DTO?</li>
+    <li>¿Cómo se agrupan varios endpoints relacionados bajo una misma categoría en la interfaz de Swagger UI?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque inspecciona directamente las anotaciones y clases compiladas de Java en cada ejecución; si el código cambia, la documentación cambia de forma simultánea e inmediata.</p>
+  <p>2 · /v3/api-docs devuelve el documento JSON estandarizado OpenAPI para ser procesado por herramientas y librerías; /swagger-ui.html es la interfaz gráfica web interactiva para usuarios humanos.</p>
+  <p>3 · Para proporcionar valores de ejemplo representativos que aparecen precargados en la documentación interactiva, facilitando las pruebas de consumo.</p>
+  <p>4 · Mediante la anotación @Tag(name = "NombreGrupo", description = "...") a nivel de clase controladora.</p>
+</details>
 
 ## Sesión 48 · Evolucionar el contrato sin romper a quien lo consume
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> renombrar un campo publicado rompe todas las aplicaciones que ya lo leían, y nadie se entera hasta que fallan.</li>
-    <li><strong>Construye:</strong> un cambio del contrato aplicado con su análisis de compatibilidad y su nota de versión.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> qué distingue a un cambio compatible (*Non-breaking change*) de uno incompatible (*Breaking change*), la Ley de Postel (Principio de Robustez), las tres estrategias de versionado de APIs y el ciclo de vida de obsolescencia (*Deprecation*).</li>
+    <li><strong>2. Haz:</strong> implementa una estrategia de versionado en las rutas de tu API (`/api/v1/...`), aplica una evolución compatible sobre un DTO existente y utiliza cabeceras HTTP estándar de obsolescencia (<code>Deprecation</code> y <code>Sunset</code>).</li>
+    <li><strong>3. Comprueba:</strong> ejecutas peticiones en Bruno simulando tanto clientes antiguos como clientes nuevos, verificando que ambos conviven con éxito sin errores de deserialización.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué es un «breaking change» (cambio incompatible) en una API REST y por qué es una de las causas más graves de caída de sistemas en producción?</li>
+    <li>Menciona dos cambios en un endpoint que sean compatibles hacia atrás y dos que rompan la compatibilidad de inmediato.</li>
+    <li>¿Qué significa el principio de robustez o Ley de Postel en el diseño de protocolos y comunicaciones web?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **clasificar un cambio como compatible o incompatible y decidir cómo introducirlo**.
+### El coste invisible de romper un contrato publicado
 
-### 2. El problema
+Cuando desarrollas un proyecto en local, cambiar el nombre de un campo es tan fácil como pulsar `Shift+F6` en IntelliJ y renombrar `titulo` por `nombreTarea`.
 
-Renombrar un campo publicado rompe todas las aplicaciones que ya lo leían, y nadie se entera hasta que fallan.
+En producción, ese renombramiento es una **bomba de relojería**:
+* La aplicación móvil de los usuarios (que no se actualiza al mismo tiempo que el backend) sigue enviando y esperando `titulo`.
+* El serializador no encuentra el campo y asigna `null`.
+* Las validaciones fallan, la pantalla del cliente se congela y la tienda de aplicaciones se llena de reseñas de 1 estrella.
 
-### 3–6. Itinerario de trabajo
+<div class="rule">
+  <p class="rule-label">La ley de la inmutabilidad de contratos</p>
+  <p><strong>Un contrato publicado en producción jamás se modifica de forma destructiva.</strong></p>
+  <p>Las APIs evolucionan mediante adición compatible o mediante versionado explícito. Quien rompe un contrato sin aviso ni periodo de transición destruye la confianza de sus consumidores.</p>
+</div>
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+### Cambios compatibles frente a cambios incompatibles
 
-### 7. Comprueba que funciona
+Antes de tocar una sola línea de código en un controlador o DTO, debes clasificar tu cambio:
+
+| Tipo de cambio | Ejemplos concretos | ¿Rompe a los clientes existentes? |
+| :--- | :--- | :--- |
+| **Compatible** (*Non-breaking*) | • Añadir un nuevo endpoint a la API.<br>• Añadir un campo nuevo opcional en la petición de entrada.<br>• Añadir un campo nuevo en el JSON de respuesta.<br>• Relajar una restricción (ej: admitir nombres de hasta 100 caracteres en lugar de 80). | **NO.** Si los clientes están bien programados (lectores tolerantes), ignorarán los campos nuevos y seguirán funcionando. |
+| **Incompatible** (*Breaking*) | • Renombrar o eliminar un campo existente en el JSON.<br>• Cambiar el tipo de dato de un campo (ej: de número a cadena de texto).<br>• Hacer obligatorio un campo que antes era opcional.<br>• Modificar los códigos HTTP semánticos devueltos habitualmente.<br>• Cambiar la estructura de una respuesta (ej: transformar un array plano en un objeto paginado). | **SÍ.** Provoca errores inmediatos de deserialización o validación en cualquier cliente no actualizado. |
+
+### La Ley de Postel (Principio de Robustez)
+
+> *«Sé conservador con lo que envías, y liberal con lo que aceptas.»* — Jon Postel
+
+Aplicado a APIs REST modernas:
+1. **Al recibir datos ( liberal ):** El backend debe ignorar propiedades desconocidas que envíe el cliente en lugar de rechazar la petición con error 400. En Spring Boot esto es el comportamiento por defecto de Jackson (`FAIL_ON_UNKNOWN_PROPERTIES = false`).
+2. **Al enviar datos ( conservador ):** El backend debe enviar únicamente los campos acordados en el contrato, sin alterar sus nombres ni sus tipos de datos.
+
+### Estrategias de versionado de APIs
+
+Cuando un cambio incompatible es estrictamente necesario, la API debe ofrecer **versionado**:
+
+<figure class="diagram">
+  <figcaption>Las tres estrategias de versionado en REST</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Versionado en URI (/api/v1/proyectos)</li>
+    <li>2. Versionado por Header (Accept / Custom)</li>
+    <li>3. Versionado por Query Param (?version=1)</li>
+  </ol>
+</figure>
+
+* **1 · Versionado en la URI (Recomendado en la industria):** `GET /api/v1/proyectos` frente a `GET /api/v2/proyectos`.
+  * *Ventajas:* Totalmente explícito, fácil de probar en el navegador y almacenable en cachés HTTP intermedias sin problemas.
+* **2 · Versionado por Cabecera (Content Negotiation):** `Accept: application/vnd.empresa.v1+json`.
+  * *Ventajas:* Mantiene la URI limpia y puramente orientada al recurso; sin embargo, dificulta las pruebas manuales y complica la configuración de proxies.
+* **3 · Versionado por Parámetro:** `GET /proyectos?v=2`.
+  * *Ventajas:* Sencillo de añadir; sin embargo, no suele considerarse una buena práctica arquitectónica para cambios estructurales de recursos.
+
+### El protocolo de obsolescencia (Deprecation y Sunset Headers)
+
+Cuando una versión o endpoint va a desaparecer, no se apaga sin previo aviso. Se aplica un periodo de gracia informando a los clientes a través de cabeceras HTTP estándar (RFC 8594):
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Deprecation: true
+Sunset: Wed, 11 Nov 2026 00:00:00 GMT
+Link: </api/v2/proyectos>; rel="successor-version"
+```
+
+* `Deprecation: true`: Advierte a las herramientas de monitorización de que el endpoint está obsoleto.
+* `Sunset`: Declara la fecha y hora exacta a partir de la cual el endpoint dejará de existir y devolverá `410 Gone` o `404 Not Found`.
+
+### Paso a paso guiado · Versionar rutas y añadir campos de forma compatible
+
+<p class="stage">Paso 1 · Configurar el prefijo de versión en application.properties o controladores</p>
+
+Podemos establecer el prefijo `/api/v1` de forma explícita en nuestros controladores:
+
+```java
+@RestController
+@RequestMapping("/api/v1/proyectos")
+public class ProyectoV1Controller { ... }
+```
+
+<p class="stage">Paso 2 · Evolucionar un DTO de forma compatible</p>
+
+Supongamos que el equipo de producto nos pide que los proyectos incluyan una etiqueta de color corporativo opcional:
+
+```java
+// Evolución compatible: el nuevo campo tiene valor por defecto si no viene
+public record ProyectoResponse(
+    Long id,
+    String nombre,
+    String descripcion,
+    boolean activo,
+    String colorHex, // Campo nuevo añadido sin eliminar ninguno anterior
+    LocalDateTime creadoEn
+) {}
+```
+
+Un cliente antiguo que solo lea `id` y `nombre` seguirá funcionando al 100 %, mientras que los nuevos clientes podrán hacer uso del nuevo campo `colorHex`.
+
+<p class="stage">Paso 3 · Añadir cabecera de deprecación en un endpoint obsoleto</p>
+
+Si un método antiguo va a ser reemplazado, inyectamos las cabeceras estándar en el `ResponseEntity`:
+
+```java
+@Deprecated(since = "1.5.0", forRemoval = true)
+@Operation(summary = "Endpoint legado de detalle", deprecated = true)
+@GetMapping("/legado/{id}")
+public ResponseEntity<ProyectoResponse> obtenerLegado(@PathVariable Long id) {
+    ProyectoResponse dto = proyectoService.buscarPorId(id);
+
+    return ResponseEntity.ok()
+        .header("Deprecation", "true")
+        .header("Sunset", "Fri, 01 Jan 2027 00:00:00 GMT")
+        .header("Link", "</api/v1/proyectos/" + id + ">; rel=\"successor-version\"")
+        .body(dto);
+}
+```
+
+### La comprobación · Simular clientes antiguos en Bruno
+
+1. **Petición del cliente tolerante:** Ejecuta `POST /api/v1/proyectos` enviando un campo adicional desconocido en el JSON:
+   ```json
+   {
+     "nombre": "Proyecto Beta",
+     "descripcion": "Prueba",
+     "campoExtraClienteAntiguo": "valor-ignorado"
+   }
+   ```
+   * Comprueba que Spring Boot responde con código `201 Created` sin fallar, demostrando el cumplimiento de la Ley de Postel.
+2. **Petición al endpoint legado:** Ejecuta `GET /api/v1/proyectos/legado/1`.
+   * Comprueba en la pestaña de *Headers* de Bruno que la respuesta contiene `Deprecation: true` y la fecha de expiración en `Sunset`.
+
+### Ahora tú · Evolución compatible en Tareas
+
+Aplica una evolución compatible sobre el endpoint de tareas:
+
+1. Modifica `TareaResponse` para incluir el campo `diasActiva` (calculado a partir de la fecha de creación) sin alterar los campos previos.
+2. Comprueba que las pruebas previas de `TareaControllerTest` siguen pasando en verde sin romperse.
+3. Añade la versión `/api/v1/tareas` en el `@RequestMapping` del controlador.
+
+### Reto · Matriz de compatibilidad y contratos automatizados
+
+Cuando múltiples servicios independientes colaboran en producción, la compatibilidad no puede dejarse a la memoria de los programadores.
+
+Investiga el concepto de **pruebas de contrato dirigidas por el consumidor** (*Consumer-Driven Contract Testing*) con herramientas como **Pact**:
+1. ¿Cómo permite un test de contrato asegurar que un cambio en el backend no romperá a la aplicación móvil antes de desplegar en producción?
+2. ¿Por qué las pruebas de contrato son infinitamente más rápidas y estables que desplegar todos los servicios juntos en un entorno de pruebas End-to-End (E2E)?
+
+> [!NOTE]
+> Si en la evaluación se solicita un informe técnico sobre la estrategia de versionado y ciclo de obsolescencia de la API, el formato de entrega de texto es siempre un **documento en PDF** (`informe-versionado.pdf`), nunca un archivo markdown suelto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Clasificación de cambios compatibles e incompatibles comprendida y prefijo `/api/v1` configurado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Evolución compatible de DTOs aplicada con tests en verde y cabeceras `Deprecation` y `Sunset` configuradas.</span></div>
+  <div><strong>Reto</strong><span>Propuesta técnica de Consumer-Driven Contracts documentada y justificada para entornos distribuidos.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 48</p>
   <ul class="checklist">
-    <li>Has obtenido un cambio del contrato aplicado con su análisis de compatibilidad y su nota de versión.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Los cambios sobre el contrato de la API se clasifican rigurosamente antes de su implementación.</li>
+    <li>La aplicación sigue el principio de robustez (Ley de Postel), tolerando propiedades desconocidas sin fallar.</li>
+    <li>Las rutas de la API declaran su versión de forma explícita (`/api/v1/...`).</li>
+    <li>Los endpoints obsoletos emiten las cabeceras estándar de aviso `Deprecation` y `Sunset`.</li>
+    <li>Los clientes existentes continúan operando sin sufrir caídas ante adiciones compatibles de datos.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué renombrar un campo en una respuesta JSON es siempre un cambio incompatible (*breaking change*)?</li>
+    <li>¿Qué establece la Ley de Postel y cómo se aplica al consumo de JSON en Spring Boot?</li>
+    <li>¿Qué ventajas ofrece el versionado en la URI (`/api/v1`) frente al versionado por cabeceras HTTP?</li>
+    <li>¿Qué información obligatoria transmite la cabecera HTTP estándar `Sunset`?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque cualquier cliente previamente desplegado que busque el nombre antiguo recibirá null o sufrirá un error de deserialización, provocando fallos en su interfaz o lógica.</p>
+  <p>2 · «Sé conservador con lo que envías y liberal con lo que aceptas». En Spring Boot implica no rechazar peticiones que incluyan campos adicionales desconocidos (FAIL_ON_UNKNOWN_PROPERTIES=false).</p>
+  <p>3 · Es explícito, directamente legible y fácil de probar en navegadores y herramientas, y compatible de forma nativa con todas las capas de infraestructura y caché HTTP intermedias.</p>
+  <p>4 · La fecha y hora exacta (en formato HTTP-date estándar) a partir de la cual el endpoint dejará de estar disponible y será definitivamente eliminado del servidor.</p>
+</details>
 
 ## Lo que debes recordar
 
-Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben poder justificarse, preguntas de recuperación y una comprobación final del producto.
+### El método
+
+En esta unidad has aprendido lo que distingue a una API de juguete de una API industrial: la capacidad de ser consumida por terceros de forma predecible, eficiente y sostenible en el tiempo.
+
+Para diseñar y publicar contratos de servidor profesionales, aplica siempre este decálogo de refinamiento:
+
+<figure class="diagram">
+  <figcaption>El ciclo de refinamiento de una API REST profesional</figcaption>
+  <ol class="flow">
+    <li>Delimita la profundidad relacional: utiliza <strong>subrecursos canónicos</strong> (<code>/padres/{id}/hijos</code>) para colecciones numerosas y evita la recursión infinita de Jackson.</li>
+    <li>Ofrece una <strong>única ruta de colección en plural</strong> y gestiona filtros y búsquedas mediante parámetros de consulta (<code>@RequestParam</code>).</li>
+    <li>Resuelve búsquedas multicriterio con <strong>JPQL condicional con evaluación de nulos</strong> evitando explosiones de métodos en el repositorio.</li>
+    <li>Blinda la memoria del servidor: <strong>ninguna colección se devuelve sin paginar</strong>; utiliza <code>Pageable</code>, <code>Page&lt;T&gt;</code> y <code>@PageableDefault</code>.</li>
+    <li>Traduce la paginación a nivel de base de datos con <strong><code>LIMIT</code> y <code>OFFSET</code> reales</strong> en PostgreSQL.</li>
+    <li>Comprueba el contrato HTTP completo (rutas, estados, validaciones y cabeceras) con <strong>tests de slice web usando <code>MockMvc</code></strong>.</li>
+    <li>Genera <strong>documentación viva OpenAPI 3.0</strong> a partir del código con <code>springdoc-openapi</code> y Swagger UI.</li>
+    <li>Aplica el <strong>principio de robustez de Postel</strong>: sé tolerante con lo que recibes y riguroso con lo que envías.</li>
+    <li>Versiona de forma explícita tus rutas públicas (<code>/api/v1/...</code>) para aislar evoluciones destructivas.</li>
+    <li>Avisa de la obsolescencia con antelación utilizando las cabeceras estándar <strong><code>Deprecation</code> y <code>Sunset</code></strong>.</li>
+  </ol>
+</figure>
+
+### La idea más importante
+
+> **Una API no se diseña para quien la programa, sino para quien la consume. La calidad de un backend se mide por la predictibilidad de sus contratos, la contención de sus respuestas y la capacidad de evolucionar sin romper a sus clientes.**
+
+Un backend descuidado devuelve árboles gigantes de datos, inventa rutas para cada filtro, agota la memoria del servidor al primer millón de registros y rompe a los clientes móviles con cada cambio de código. Una API profesional mantiene contratos estables, acota el tráfico de red y comunica con claridad cada decisión a través de estándares abiertos.
+
+### Las decisiones que tienes que saber justificar
+
+| Decisión de ingeniería | Lo que tienes que poder defender ante un tribunal |
+| :--- | :--- |
+| **Subrecursos frente a incrustación masiva** | La incrustación de colecciones completas satura el ancho de banda y provoca problemas de rendimiento; externalizar colecciones dinámicas a subrecursos (`/proyectos/{id}/tareas`) permite paginarlas y consultarlas bajo demanda. |
+| **Parámetros de consulta frente a explosión de rutas** | Expresar filtros mediante Query Params (`/tareas?prioridad=ALTA`) respeta la semántica de recurso único en REST y evita crear combinaciones factoriales de endpoints en el controlador. |
+| **JPQL condicional con evaluación de nulos** | La cláusula `(:param IS NULL OR columna = :param)` permite resolver filtros combinables opcionales en una única consulta limpia sin requerir librerías complejas para catálogos medianos. |
+| **Paginación obligatoria con metadatos** | Devolver `Page<T>` protege la memoria Heap de la JVM, previene colapsos del recolector de basura y proporciona al cliente los metadatos indispensables (`totalElements`, `totalPages`) para renderizar interfaces de navegación. |
+| **`@PageableDefault` con ordenación segura** | Fija límites por defecto (ej: 10 o 20 registros) para clientes que no envíen parámetros, impidiendo que peticiones maliciosas o despistadas descarguen tablas enteras. |
+| **`@WebMvcTest` con `MockMvc`** | Valida el protocolo HTTP real (rutas, Bean Validation, deserialización Jackson y códigos semánticos) en milisegundos sin coste de arrancar Tomcat ni conectar a bases de datos. |
+| **Documentación viva OpenAPI con springdoc** | Evita la desincronización entre código y documentación al generarse automáticamente de las clases compiladas, permitiendo la generación de clientes frontend sin errores manuales. |
+| **Versionado en la URI (`/api/v1`)** | Es la estrategia más explícita y compatible con la infraestructura de red (cachés HTTP, proxies inversos y balanceadores), facilitando el mantenimiento simultáneo de contratos durante transiciones. |
+| **Ley de Postel en la deserialización** | Ignorar propiedades desconocidas en el cuerpo JSON permite desplegar nuevas versiones de clientes sin romper a clientes antiguos que envíen campos heredados o adicionales. |
+| **Cabeceras `Deprecation` y `Sunset`** | Informan de forma estandarizada y automatizada a las herramientas de observabilidad de la próxima retirada de un endpoint, ofreciendo un periodo de migración predecible. |
+
+### Al terminar la unidad deberías poder responder
+
+1. ¿Qué problemas técnicos provoca devolver directamente una entidad JPA con relaciones bidireccionales en un `@RestController`?
+2. ¿Qué tres patrones existen para modelar relaciones en una API REST y cuándo se aplica cada uno?
+3. ¿Por qué una petición a `GET /proyectos/999/tareas` debe responder con `404 Not Found` y no con un array vacío `[]`?
+4. ¿Por qué crear rutas como `/tareas/urgentes` o `/tareas/completadas` viola las buenas prácticas de diseño REST?
+5. ¿Cómo funciona la evaluación de nulos `(:prioridad IS NULL OR t.prioridad = :prioridad)` en una consulta JPQL?
+6. ¿Por qué una búsqueda textual con operador `LIKE` debe aplicar la función `LOWER()` a ambos lados de la comparación?
+7. ¿Qué riesgo de rendimiento asume una base de datos cuando una consulta utiliza un comodín inicial (`%termino%`)?
+8. ¿Qué diferencia de consumo de memoria existe entre un método que devuelve `List<Tarea>` y uno que devuelve `Page<Tarea>` sobre una tabla con 300.000 filas?
+9. ¿Cuáles son los metadatos indispensables que componen una respuesta paginada con `Page<T>` en Spring Boot?
+10. ¿Cómo traduce PostgreSQL la paginación de Spring Data a nivel de sintaxis SQL física?
+11. ¿En qué consiste el problema de la «paginación profunda» (*Deep Paging*) con `OFFSET` elevado y cómo lo resuelve la paginación por cursor?
+12. ¿Por qué los tests unitarios con Mockito de la capa de servicio no detectan errores de validación de Bean Validation?
+13. ¿Qué componentes del contexto de Spring se cargan al utilizar la anotación `@WebMvcTest`?
+14. ¿Qué expresiones JSONPath se utilizan para comprobar el estado de un campo y la longitud de un array en `MockMvc`?
+15. ¿Qué diferencia conceptual y práctica existe entre la especificación OpenAPI 3.0 y la herramienta Swagger UI?
+16. ¿Cómo permite un endpoint `/v3/api-docs` generar automáticamente un cliente TypeScript para una aplicación frontend?
+17. ¿Qué distingue a un cambio compatible (*non-breaking*) de un cambio incompatible (*breaking*) en una API pública?
+18. ¿Qué establece la Ley de Postel y por qué es un principio de resiliencia fundamental en el desarrollo web?
+19. ¿Cuáles son las tres estrategias principales para versionar una API REST y qué ventajas tiene el versionado por URI?
+20. ¿Qué propósito tienen las cabeceras HTTP estándar `Deprecation` y `Sunset` durante la retirada de un endpoint?
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| :--- | :--- |
+| **Payload Bloat** | Envío de respuestas JSON con volumen excesivo de datos innecesarios que saturan el ancho de banda y degradan la experiencia de cliente. |
+| **Subrecurso** | Ruta REST jerárquica (`/padres/{id}/hijos`) que modela la relación entre dos recursos subordinados. |
+| **Query Parameter** | Parámetro transmitido tras el signo `?` en la URL para configurar filtros, búsquedas y paginación en colecciones canónicas. |
+| **JPQL condicional** | Consulta JPQL que evalúa condiciones opcionales mediante la comprobación de nulos (`:param IS NULL OR ...`). |
+| **Pageable** | Interfaz de Spring Data que encapsula la información de paginación solicitada (página, tamaño y orden). |
+| **Page&lt;T&gt;** | Contenedor de Spring que agrupa los elementos de la página actual junto con los metadatos globales de conteo y navegación. |
+| **Deep Paging** | Degradación severa del rendimiento en bases de datos relacionales al solicitar páginas con desplazamientos (*offset*) muy elevados. |
+| **Keyset Pagination** | Técnica de paginación por cursor basada en comparar la clave del último registro visto (`WHERE id > :ultimoId LIMIT n`). |
+| **MockMvc** | Utilidad de pruebas de Spring MVC que simula peticiones y respuestas HTTP completas sin levantar un servidor de red real. |
+| **JSONPath** | Lenguaje de expresiones de consulta para inspeccionar y validar atributos anidados dentro de un cuerpo JSON en tests. |
+| **OpenAPI 3.0** | Estándar de especificación abierta e independiente de plataforma para describir contratos de APIs RESTful. |
+| **Swagger UI** | Interfaz web interactiva generada a partir de OpenAPI para explorar y ejecutar peticiones contra una API en vivo. |
+| **Breaking Change** | Modificación en el contrato de una API que rompe el funcionamiento de los clientes existentes no actualizados. |
+| **Ley de Postel** | Principio de diseño: *«sé conservador con lo que envías y liberal con lo que aceptas»* para maximizar la robustez del sistema. |
+| **Sunset Header** | Cabecera HTTP estandarizada (RFC 8594) que comunica la fecha programada para la retirada definitiva de un endpoint. |
+
+### Comprobación final del producto de la unidad
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Auditoría de API REST avanzada · criterios de producción</p>
+  <ul class="checklist">
+    <li>Los recursos relacionados se exponen mediante subrecursos desacoplados (`/proyectos/{id}/tareas`) con DTOs específicos que eliminan riesgos de recursión infinita.</li>
+    <li>Las colecciones se filtran a través de parámetros de consulta (`@RequestParam`) en una única ruta canónica en plural sin duplicar endpoints.</li>
+    <li>La búsqueda textual parcial es insensible a mayúsculas y acentos mediante `LOWER()` y limpia espacios en blanco.</li>
+    <li>Todos los endpoints de listado están protegidos por paginación obligatoria con `@PageableDefault` y metadatos completos (`Page<T>`).</li>
+    <li>PostgreSQL ejecuta sentencias con `LIMIT`, `OFFSET` y `ORDER BY` físicos, auditables en consola.</li>
+    <li>El contrato HTTP completo está blindado por una suite de pruebas automatizadas con `@WebMvcTest` y `MockMvc`.</li>
+    <li>La documentación técnica OpenAPI 3.0 se genera en `/v3/api-docs` y se visualiza interactivamente en `/swagger-ui.html`.</li>
+    <li>Las rutas públicas incorporan prefijo de versión (`/api/v1/...`) para garantizar la estabilidad de los consumidores.</li>
+    <li>Los endpoints u operaciones legadas emiten cabeceras estándar de obsolescencia (`Deprecation` y `Sunset`).</li>
+    <li>La aplicación tolera propiedades desconocidas en peticiones entrantes sin provocar errores 400 injustificados.</li>
+  </ul>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
@@ -908,5 +1508,3 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
     <li>Documentar la API con OpenAPI y evolucionar el contrato sin romper a quien lo consume.</li>
   </ul>
 </div>
-
-> El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
