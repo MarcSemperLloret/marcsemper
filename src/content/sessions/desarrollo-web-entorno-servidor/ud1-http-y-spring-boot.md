@@ -2316,7 +2316,125 @@ Ese tercer apartado no resta nota. Se lee en la primera sesión de la UD2.
 
 ## Lo que debes recordar
 
-Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben poder justificarse, preguntas de recuperación y una comprobación final del producto.
+### El método
+
+Ante cualquier funcionalidad que tengas que exponer por HTTP, esta es la secuencia. No cambia con el framework ni con los años:
+
+<figure class="diagram">
+  <figcaption>Cómo se decide un endpoint</figcaption>
+  <ol class="flow">
+    <li>¿Sobre <em>qué</em> actúo? Un recurso concreto o una colección</li>
+    <li>¿Qué quiero hacerle? Eso, y solo eso, elige el método HTTP</li>
+    <li>¿Qué datos necesito? Identifican, filtran o son contenido: ruta, query o cuerpo</li>
+    <li>¿Qué devuelvo y con qué código de estado?</li>
+    <li>Compruébalo con un cliente HTTP: un caso correcto y un caso que falle</li>
+  </ol>
+</figure>
+
+El paso dos separa a quien ha entendido la unidad de quien ha memorizado anotaciones. Si tu respuesta al «qué quiero hacerle» acaba metida en la ruta —`/tareas/borrar/3`—, es que la has contestado con el nombre en lugar de con el método.
+
+### La idea más importante
+
+Si dentro de un año has olvidado las anotaciones, que quede esta:
+
+> **Nada de esto es magia. Es texto que viaja entre dos programas, y uno de ellos se queda esperando. Todo lo que Spring hace por ti se puede leer en el panel de red o en la consola.**
+
+De ahí sale el resto de la unidad. Por eso abrimos DevTools antes de escribir una línea de Java, por eso un 404 es una respuesta y no un fallo, por eso el 415 se arregla mirando una cabecera, y por eso cuando algo no funciona se leen las últimas veinte líneas de la consola antes de tocar el código.
+
+<p class="term">Un backend publica datos, no páginas</p>
+
+Esa frase es la que hace posible el resto del curso. Si tu servidor devuelve datos con una forma clara, quien los pinte —una web, una app de móvil, otro servidor— es una decisión posterior y sustituible.
+
+### Las decisiones que tienes que saber justificar
+
+No basta con que funcione. En la defensa del proyecto se pregunta por qué:
+
+| Decisión | Lo que tienes que poder decir |
+| :--- | :--- |
+| El id va en la ruta y el filtro en la query | Si quito el filtro, la URL sigue significando algo; si quito el id, no |
+| Borrar es `DELETE`, nunca `GET` | Un `GET` se considera seguro y el navegador lo repite, lo cachea y lo precarga |
+| El id lo asigna el servidor | El cliente no sabe qué ids están libres ni puede coordinarse con otros clientes |
+| El controlador cuelga del paquete de la clase principal | `@ComponentScan` solo recorre ese paquete y sus subpaquetes, y no avisa de lo que no ve |
+| Una colección vacía devuelve `[]` y no `null` | Quien llama espera una lista y sabe recorrer una lista de cero elementos |
+| El modelo necesita constructor vacío | Jackson crea el objeto antes de asignarle valores, y luego usa los *setters* |
+| Una tarea sin título se acepta hoy | Porque todavía no hay validación, y eso es un defecto conocido, no una decisión |
+
+Esa última fila es la más importante de la tabla. **Saber qué le falta a lo que has construido vale tanto como haberlo construido.**
+
+### Al terminar deberías poder responder
+
+1. ¿Qué hace un servidor que no hace un programa de consola?
+2. ¿Qué separa las cabeceras del cuerpo en un mensaje HTTP?
+3. ¿Qué te dice la primera cifra de un código de estado?
+4. ¿Por qué un `404` demuestra que la comunicación ha funcionado?
+5. ¿Qué diferencia hay entre un `404` y un `ERR_CONNECTION_REFUSED`?
+6. ¿Qué significa que HTTP no tenga estado, y cómo «recuerda» entonces una web quién eres?
+7. ¿Qué es un puerto y por qué dos aplicaciones no pueden compartirlo?
+8. ¿Qué hacen las tres anotaciones que contiene `@SpringBootApplication`?
+9. ¿Por qué un controlador fuera del paquete de la clase principal devuelve `404` sin ningún error en consola?
+10. ¿Cuándo se usa `@PathVariable` y cuándo `@RequestParam`?
+11. ¿Qué diferencia hay entre `defaultValue` y `required = false`?
+12. Declaras `int` y llega texto. ¿Qué responde el servidor y por qué no se ejecuta tu método?
+13. ¿De dónde saca Jackson los nombres de las claves del JSON?
+14. ¿Por qué la barra de direcciones no puede hacer un `POST`?
+15. ¿Qué cabecera falta cuando recibes un `415`?
+16. Envías una clave que no existe en la clase. ¿Qué ocurre, y por qué es peligroso?
+17. ¿Por qué la lista sobrevive entre peticiones pero no a un reinicio?
+18. ¿Cuándo falla calcular el siguiente id con `size() + 1`?
+
+Si además puedes añadir un recurso nuevo a la mini-API —modelo, controlador, cinco métodos y su secuencia de pruebas— sin copiar el de tareas, tienes la base para continuar.
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| :--- | :--- |
+| Cliente | El programa que pide. Un navegador, Postman, `curl`, otro servidor |
+| Servidor | El programa que espera y responde. El que escribes tú |
+| HTTP | El acuerdo sobre qué forma tiene un mensaje de petición y uno de respuesta |
+| URL | Esquema, host, puerto, ruta y *query string* |
+| Puerto | El número que distingue a qué programa de una máquina le hablas |
+| `localhost` | Esta misma máquina |
+| Método | La intención: `GET`, `POST`, `PUT`, `PATCH`, `DELETE` |
+| Cabecera | Un dato sobre el mensaje, con formato `Nombre: valor` |
+| Cuerpo | El contenido que se envía o se devuelve, tras una línea en blanco |
+| Código de estado | Tres cifras; la primera dice quién tiene el problema |
+| *Stateless* | Cada petición llega sola: el servidor no recuerda la anterior |
+| Endpoint | Una ruta con un método que tu aplicación atiende |
+| Framework | Armazón que resuelve lo repetitivo y que te llama a ti, no al revés |
+| Spring Boot | La forma de usar Spring que trae el servidor web ya montado |
+| Tomcat embebido | El servidor, incluido como librería dentro de tu propia aplicación |
+| Maven | Quien descarga las dependencias, compila y empaqueta |
+| Dependencia | Una librería que tu proyecto necesita, declarada en el `pom.xml` |
+| *Starter* | Un paquete de dependencias que suelen ir juntas |
+| *Component scan* | El barrido que hace Spring buscando tus clases, solo bajo el paquete principal |
+| `@RestController` | Esta clase atiende peticiones y lo que devuelve es el cuerpo de la respuesta |
+| `@GetMapping` | Conecta un método `GET` y una ruta con un método Java |
+| `@RequestParam` | Lee un valor de la *query string* |
+| `@PathVariable` | Captura un trozo de la ruta declarado entre llaves |
+| `@RequestBody` | Convierte el cuerpo JSON de la petición en un objeto Java |
+| JSON | El formato de texto en el que viajan los datos entre programas |
+| Serializar | Convertir un objeto en memoria a texto |
+| Deserializar | Convertir texto en un objeto en memoria |
+| Jackson | La librería que hace las dos conversiones, leyendo *getters* y *setters* |
+| Cliente HTTP | Postman o Bruno: construye peticiones a mano y enseña la respuesta entera |
+| CRUD | Las cuatro operaciones: crear, leer, actualizar y borrar |
+
+### Comprobación final del producto
+
+Antes de dar la unidad por cerrada, tu proyecto tiene que superar esto:
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación final · con el proyecto delante</p>
+  <ul class="checklist">
+    <li>La aplicación arranca y la consola muestra la línea de Tomcat con el puerto.</li>
+    <li>Los cinco métodos de la mini-API responden sobre una lista en memoria.</li>
+    <li>La secuencia de diez peticiones de la sesión 6 pasa entera y está en <code>PRUEBAS.md</code>.</li>
+    <li>El identificador lo asigna el servidor y no se repite después de un borrado.</li>
+    <li>Ninguna ruta lleva un verbo dentro.</li>
+    <li>Sabes provocar a voluntad un 404, un 405, un 415 y un 400, y explicar cada uno.</li>
+    <li>Puedes enumerar los seis defectos conocidos y decir en qué unidad se resuelve cada uno.</li>
+  </ul>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
@@ -2324,9 +2442,39 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
     <li>Explicar el recorrido completo de una petición y una respuesta HTTP.</li>
     <li>Crear y ejecutar un proyecto Spring Boot entendiendo su estructura básica.</li>
     <li>Diseñar rutas con parámetros y devolver objetos serializados como JSON.</li>
+    <li>Comprobar una API con Postman o Bruno leyendo estado, cabeceras y cuerpo.</li>
     <li>Implementar un CRUD en memoria con GET, POST, PUT y DELETE.</li>
+    <li>Enumerar los defectos conocidos de la API construida y en qué unidad se resuelve cada uno.</li>
   </ul>
 </div>
 
-> El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
+### La siguiente unidad
 
+Durante dos semanas hemos respondido a una pregunta:
+
+> **¿Cómo consigo que esto responda?**
+
+En la UD2 empezamos a responder la otra:
+
+> **¿Cómo consigo que responda bien?**
+
+<figure class="diagram">
+  <figcaption>De que funcione a que esté bien hecho</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>UD1 · una API que responde</li>
+    <li>UD2 · una API que responde con el código y el formato correctos</li>
+  </ol>
+</figure>
+
+Partiremos exactamente del proyecto que has construido aquí, y de su lista de defectos conocidos:
+
+| Lo que hoy hace mal | Se arregla en |
+| :--- | :--- |
+| Un recurso que no existe responde `200` con el cuerpo vacío | UD2, con `ResponseEntity` |
+| Crear algo responde `200` en lugar de `201` | UD2 |
+| El modelo interno se publica entero, tal cual | UD3, con DTO |
+| Una tarea sin título se acepta sin protestar | UD3, con validación |
+| Los errores no explican qué corregir | UD3 |
+| Al reiniciar se pierde todo | UD5, con PostgreSQL |
+
+Y aquí se cobra el trabajo de estas dos semanas: cuando en la UD2 aparezcan `ResponseEntity`, los códigos de estado y la colección de pruebas, no será material nuevo cayendo del cielo. Será la respuesta a problemas que **ya has visto fallar en tu propio proyecto**.
