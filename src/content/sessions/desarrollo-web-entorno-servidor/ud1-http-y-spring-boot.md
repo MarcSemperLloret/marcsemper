@@ -470,7 +470,7 @@ La primera fila va resuelta como ejemplo. Es una URL que **no forma parte del ej
 
 | URL | Código que espero | Por qué lo espero | Código real |
 | :--- | :---: | :--- | :---: |
-| **Ejemplo** · `…/users/1` | `200` | La ruta `/users` existe en esta API y el usuario 1 también, así que el servidor encuentra el recurso y lo devuelve | `200` |
+| *Ejemplo · `…/users/1`* | `200` | La ruta `/users` existe en esta API y el usuario 1 también, así que el servidor encuentra el recurso y lo devuelve | `200` |
 | `…/posts/1` | | | |
 | `…/posts/999999` | | | |
 | `…/pooosts/1` | | | |
