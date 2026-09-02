@@ -1,37 +1,89 @@
 ---
-title: "Autenticación y Spring Security"
-label: "UD8 · Proteger"
-section: "ud-08"
-order: 8
+title: "Sesión, autenticación y Spring Security"
+label: "UD9 · Proteger"
+section: "ud-09"
+order: 9
 lang: "es"
-summary: "Introducir autenticación y autorización después de comprender HTTP, sesiones y REST, aplicando contraseñas seguras y controles web habituales."
+summary: "Desde por qué HTTP no recuerda quién eres hasta una API protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada."
 duration: "18 horas · 3 semanas · 9 sesiones"
-modality: "Laboratorio de seguridad · 30 % guía / 70 % autonomía"
-deliverable: "La aplicación protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada."
-date: "2026-08-31"
+modality: "Taller técnico · 40 % guía / 60 % autonomía"
+deliverable: "La aplicación protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada, consumida desde el cliente Angular."
+date: "2026-09-02"
 outcomes:
+  - "Explicar por qué HTTP no mantiene estado y cómo lo resuelven cookies y sesión."
   - "Distinguir autenticación de autorización."
-  - "Almacenar y verificar contraseñas mediante hashing adecuado."
-  - "Proteger operaciones por identidad, rol y propiedad."
-  - "Comparar sesión y JWT y explicar CORS y CSRF."
+  - "Almacenar contraseñas con un algoritmo de hash adecuado."
+  - "Proteger endpoints por rol y por permiso con Spring Security."
+  - "Elegir entre sesión y token justificando la decisión."
+  - "Reconocer y corregir los fallos habituales de CSRF y de CORS con credenciales."
 requirements:
-  - "La API de la UD7."
-  - "Herramientas para inspeccionar cookies, cabeceras y tokens."
+  - "La API de la UD7 y el cliente de la UD8."
+  - "Usuarios persistidos en base de datos."
 priorKnowledge:
-  - "HTTP, cookies y sesiones."
-  - "Usuarios persistidos, DTO y APIs REST."
+  - "JPA y persistencia."
+  - "APIs REST y códigos de estado 401 y 403."
+  - "Integración con un cliente y CORS básico."
 ---
 
-<p class="lead">La seguridad aparece cuando ya entendemos el problema que resuelve. Primero identidad y permisos; después mecanismos concretos de Spring Security, sesiones y tokens.</p>
+<p class="lead">Hasta ahora cualquiera podía hacer cualquier cosa. Aquí aparece la identidad, y con ella la pregunta que ordena toda la unidad: quién eres y qué te está permitido.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje bajo. Se guía una configuración mínima segura; las reglas de autorización y la estrategia de autenticación deben derivarse del dominio.</p>
+  <p>Andamiaje bajo. Los mecanismos se explican; la estrategia de seguridad de la aplicación la decide y la defiende el alumnado.</p>
 </div>
 
-## Semana 17 · Qué problema estamos resolviendo
+## Semana 18 · HTTP no recuerda quién eres
 
-## Sesión 49 · Autenticación frente a autorización
+## Sesión 52 · Peticiones independientes, cookies y sesión
+
+<div class="today-box">
+  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <ol class="today-steps">
+    <li><strong>Comprende:</strong> una aplicación tiene que reconocer al mismo usuario en peticiones que el protocolo trata como desconocidas entre sí.</li>
+    <li><strong>Construye:</strong> un flujo con estado de sesión observable en las cabeceras de ida y vuelta.</li>
+    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+  </ol>
+</div>
+
+### 1. Qué vamos a conseguir
+
+Al terminar serás capaz de **explicar por qué cada petición llega sola y cómo una cookie de sesión reconstruye la continuidad**.
+
+### 2. El problema
+
+Una aplicación tiene que reconocer al mismo usuario en peticiones que el protocolo trata como desconocidas entre sí.
+
+### 3–6. Itinerario de trabajo
+
+1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
+2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
+3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
+4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+
+### 7. Comprueba que funciona
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Evidencia prevista</p>
+  <ul class="checklist">
+    <li>Has obtenido un flujo con estado de sesión observable en las cabeceras de ida y vuelta.</li>
+    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
+    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
+    <li>El cambio queda integrado en la aplicación común del curso.</li>
+  </ul>
+</div>
+
+### 8. Antes de irte
+
+1. ¿Qué problema resolvía la decisión principal de hoy?
+2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
+3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
+
+<div class="rule">
+  <p class="rule-label">Estado del material</p>
+  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+</div>
+
+## Sesión 53 · Autenticación frente a autorización
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -80,7 +132,7 @@ Estar identificado no implica tener permiso sobre cualquier recurso.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 50 · Contraseñas y hashing
+## Sesión 54 · Contraseñas y hashing
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -129,7 +181,9 @@ Cifrar o guardar contraseñas en claro convierte una filtración en compromiso d
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 51 · Spring Security básico
+## Semana 19 · Identidad y permisos persistentes
+
+## Sesión 55 · Spring Security básico
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -178,9 +232,7 @@ Añadir la dependencia cambia el flujo de cada petición y debe entenderse antes
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 18 · Identidad y permisos persistentes
-
-## Sesión 52 · Usuarios en base de datos
+## Sesión 56 · Usuarios en base de datos
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -229,7 +281,7 @@ Los usuarios definidos en memoria no representan el ciclo de vida real de una ap
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 53 · Roles y permisos
+## Sesión 57 · Roles y permisos
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -278,7 +330,9 @@ Un único rol ADMIN no expresa propiedad, pertenencia a proyecto ni acciones esp
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 54 · Proteger endpoints
+## Semana 20 · Tokens y fronteras web
+
+## Sesión 58 · Proteger endpoints
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -327,63 +381,12 @@ Ocultar un botón en la interfaz no impide invocar directamente el endpoint.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 19 · Sesiones, tokens y fronteras web
-
-## Sesión 55 · Sesión y cookie frente a tokens
+## Sesión 59 · Sesión frente a token: JWT
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> elegir JWT por moda puede añadir complejidad sin resolver una necesidad real.</li>
-    <li><strong>Construye:</strong> una decisión documentada sobre autenticación para un cliente concreto.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
-  </ol>
-</div>
-
-### 1. Qué vamos a conseguir
-
-Al terminar serás capaz de **comparar mecanismos por flujo, revocación, almacenamiento y superficie de ataque**.
-
-### 2. El problema
-
-Elegir JWT por moda puede añadir complejidad sin resolver una necesidad real.
-
-### 3–6. Itinerario de trabajo
-
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
-
-### 7. Comprueba que funciona
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
-  <ul class="checklist">
-    <li>Has obtenido una decisión documentada sobre autenticación para un cliente concreto.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
-  </ul>
-</div>
-
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
-</div>
-
-## Sesión 56 · JWT
-
-<div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
-  <ol class="today-steps">
-    <li><strong>Comprende:</strong> un token firmado no cifra su contenido ni resuelve por sí mismo renovación o revocación.</li>
+    <li><strong>Comprende:</strong> las dos estrategias funcionan, y elegir por costumbre lleva a una API que no encaja con sus clientes.</li>
     <li><strong>Construye:</strong> un flujo JWT mínimo con expiración y claims imprescindibles.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
@@ -391,11 +394,11 @@ Elegir JWT por moda puede añadir complejidad sin resolver una necesidad real.
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **emitir y validar un token comprendiendo firma, claims, caducidad y límites**.
+Al terminar serás capaz de **comparar sesión con cookie y token JWT, y justificar cuál conviene a esta aplicación**.
 
 ### 2. El problema
 
-Un token firmado no cifra su contenido ni resuelve por sí mismo renovación o revocación.
+Las dos estrategias funcionan, y elegir por costumbre lleva a una API que no encaja con sus clientes.
 
 ### 3–6. Itinerario de trabajo
 
@@ -427,12 +430,12 @@ Un token firmado no cifra su contenido ni resuelve por sí mismo renovación o r
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 57 · CORS, CSRF y errores frecuentes
+## Sesión 60 · CSRF, CORS con credenciales y errores frecuentes
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> confundir CORS con autenticación o desactivar CSRF sin analizar el flujo crea una falsa sensación de seguridad.</li>
+    <li><strong>Comprende:</strong> al añadir credenciales, la integración que ya funcionaba en la UD8 vuelve a fallar por motivos nuevos.</li>
     <li><strong>Construye:</strong> una configuración explicada y una batería breve de casos permitidos y bloqueados.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
@@ -444,7 +447,7 @@ Al terminar serás capaz de **distinguir políticas del navegador y ataques de p
 
 ### 2. El problema
 
-Confundir CORS con autenticación o desactivar CSRF sin analizar el flujo crea una falsa sensación de seguridad.
+Al añadir credenciales, la integración que ya funcionaba en la UD8 vuelve a fallar por motivos nuevos.
 
 ### 3–6. Itinerario de trabajo
 
@@ -483,12 +486,13 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
+    <li>Explicar por qué HTTP no mantiene estado y cómo lo resuelven cookies y sesión.</li>
     <li>Distinguir autenticación de autorización.</li>
-    <li>Almacenar y verificar contraseñas mediante hashing adecuado.</li>
-    <li>Proteger operaciones por identidad, rol y propiedad.</li>
-    <li>Comparar sesión y JWT y explicar CORS y CSRF.</li>
+    <li>Almacenar contraseñas con un algoritmo de hash adecuado.</li>
+    <li>Proteger endpoints por rol y por permiso con Spring Security.</li>
+    <li>Elegir entre sesión y token justificando la decisión.</li>
+    <li>Reconocer y corregir los fallos habituales de CSRF y de CORS con credenciales.</li>
   </ul>
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-

@@ -1,54 +1,57 @@
 ---
-title: "Testing, errores, logs y documentación"
-label: "UD10 · Verificar"
-section: "ud-10"
-order: 10
+title: "Peticiones, respuestas y CRUD en memoria"
+label: "UD2 · Comunicar"
+section: "ud-02"
+order: 2
 lang: "es"
-summary: "Formalizar la verificación del backend con tests de servicios y controllers, dobles de prueba, logs, depuración y documentación del contrato."
+summary: "Cómo transforma Spring una petición HTTP en datos Java y cómo construye la respuesta, hasta completar un CRUD en memoria con los códigos de estado correctos."
 duration: "12 horas · 2 semanas · 6 sesiones"
-modality: "Laboratorio de calidad · 20 % guía / 80 % autonomía"
-deliverable: "Una suite de tests útil, observabilidad básica y documentación técnica actualizada."
-date: "2026-08-31"
+modality: "Taller guiado · 70 % guía / 30 % autonomía"
+deliverable: "Un CRUD completo en memoria con códigos de estado correctos y una colección ejecutable de Postman o Bruno."
+date: "2026-09-02"
 outcomes:
-  - "Escribir tests claros con JUnit."
-  - "Aislar servicios mediante Mockito cuando resulte útil."
-  - "Probar controllers y contratos de API."
-  - "Investigar fallos mediante logs y depuración."
-  - "Revisar arquitectura, seguridad y mantenibilidad."
+  - "Seguir una petición desde el cliente HTTP hasta el método del controller."
+  - "Recibir JSON y transformarlo en objetos Java de forma controlada."
+  - "Implementar las operaciones de escritura con el método HTTP que les corresponde."
+  - "Controlar cuerpo, cabeceras y código de estado mediante ResponseEntity."
+  - "Convertir pruebas manuales sueltas en una colección con variables y entornos."
 requirements:
-  - "La aplicación integrada de la UD9."
-  - "Un caso de error reproducible y una colección de peticiones HTTP."
+  - "El proyecto de la UD1 funcionando."
+  - "Postman o Bruno instalado, ya utilizado en la UD1."
+  - "Un navegador con DevTools para comparar clientes."
 priorKnowledge:
-  - "Arquitectura por capas, excepciones, seguridad, REST e integración externa."
+  - "Peticiones y respuestas HTTP."
+  - "Controllers, rutas, objetos, listas y JSON."
+  - "Postman o Bruno a nivel básico: método, URL, cuerpo JSON y lectura de la respuesta."
 ---
 
-<p class="lead">No es el primer contacto con tests, pero sí el momento de construir una estrategia. Un endpoint que responde no basta si nadie puede detectar una regresión ni explicar un fallo.</p>
+<p class="lead">La aplicación sigue sin interfaz visual. Eso es intencionado: primero aprenderemos a observar su contrato HTTP directamente, sin que Angular o una página oculten qué se envía y qué se recibe.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje muy bajo. Se acuerdan riesgos y criterios; cada equipo decide qué probar, con qué nivel y qué evidencias conservar.</p>
+  <p>Andamiaje alto. Cada mecanismo se observa primero con una petición pequeña; la colección final debe poder ejecutar y documentar el flujo completo sin pasos improvisados.</p>
 </div>
 
-## Semana 22 · Tests que protegen decisiones
+## Semana 3 · De HTTP a Java y de vuelta
 
-## Sesión 64 · JUnit
+## Sesión 7 · De HTTP a un método Java
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> probar manualmente todo después de cada cambio es lento, variable y difícil de repetir.</li>
-    <li><strong>Construye:</strong> tests unitarios sobre reglas de dominio con casos significativos.</li>
+    <li><strong>Comprende:</strong> las anotaciones parecen magia si no se relaciona cada valor Java con una parte concreta de la petición.</li>
+    <li><strong>Construye:</strong> una petición trazada desde Postman o Bruno hasta el método que la atiende.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **escribir tests con una estructura clara y aserciones que expliquen el comportamiento esperado**.
+Al terminar serás capaz de **seguir cómo Spring selecciona un controller y enlaza ruta, parámetros y cabeceras con sus argumentos**.
 
 ### 2. El problema
 
-Probar manualmente todo después de cada cambio es lento, variable y difícil de repetir.
+Las anotaciones parecen magia si no se relaciona cada valor Java con una parte concreta de la petición.
 
 ### 3–6. Itinerario de trabajo
 
@@ -62,7 +65,7 @@ Probar manualmente todo después de cada cambio es lento, variable y difícil de
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido tests unitarios sobre reglas de dominio con casos significativos.</li>
+    <li>Has obtenido una petición trazada desde Postman o Bruno hasta el método que la atiende.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -80,24 +83,24 @@ Probar manualmente todo después de cada cambio es lento, variable y difícil de
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 65 · Tests de servicios
+## Sesión 8 · Cuerpo JSON y deserialización
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> si cada test necesita red y base de datos resulta más lento y cuesta localizar el origen del fallo.</li>
-    <li><strong>Construye:</strong> una suite de servicio que cubre caminos felices, límites y errores.</li>
+    <li><strong>Comprende:</strong> crear recursos exige transformar datos externos en objetos Java sin asumir que su forma es correcta.</li>
+    <li><strong>Construye:</strong> un endpoint que recibe JSON y permite observar el objeto resultante.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **probar la lógica de aplicación aislando infraestructura cuando sea conveniente**.
+Al terminar serás capaz de **recibir un cuerpo JSON mediante @RequestBody y detectar diferencias entre JSON válido, inválido e incompleto**.
 
 ### 2. El problema
 
-Si cada test necesita red y base de datos resulta más lento y cuesta localizar el origen del fallo.
+Crear recursos exige transformar datos externos en objetos Java sin asumir que su forma es correcta.
 
 ### 3–6. Itinerario de trabajo
 
@@ -111,7 +114,7 @@ Si cada test necesita red y base de datos resulta más lento y cuesta localizar 
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una suite de servicio que cubre caminos felices, límites y errores.</li>
+    <li>Has obtenido un endpoint que recibe JSON y permite observar el objeto resultante.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -129,24 +132,24 @@ Si cada test necesita red y base de datos resulta más lento y cuesta localizar 
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 66 · Mockito
+## Sesión 9 · Crear, modificar y eliminar recursos
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> simular cada detalle produce tests acoplados a la implementación y sin valor de regresión.</li>
-    <li><strong>Construye:</strong> un test con dobles mínimos cuya necesidad pueda justificarse.</li>
+    <li><strong>Comprende:</strong> un backend útil no solo consulta datos: también debe cambiar su estado con una semántica predecible.</li>
+    <li><strong>Construye:</strong> operaciones de escritura sobre proyectos o incidencias comprobadas desde el cliente HTTP.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **usar mocks solo para controlar colaboraciones relevantes y verificar resultados observables**.
+Al terminar serás capaz de **implementar POST, PUT o PATCH y DELETE distinguiendo la intención de cada operación**.
 
 ### 2. El problema
 
-Simular cada detalle produce tests acoplados a la implementación y sin valor de regresión.
+Un backend útil no solo consulta datos: también debe cambiar su estado con una semántica predecible.
 
 ### 3–6. Itinerario de trabajo
 
@@ -160,7 +163,7 @@ Simular cada detalle produce tests acoplados a la implementación y sin valor de
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un test con dobles mínimos cuya necesidad pueda justificarse.</li>
+    <li>Has obtenido operaciones de escritura sobre proyectos o incidencias comprobadas desde el cliente HTTP.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -178,26 +181,26 @@ Simular cada detalle produce tests acoplados a la implementación y sin valor de
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 23 · Contrato, diagnóstico y revisión
+## Semana 4 · Un contrato que se puede repetir
 
-## Sesión 67 · Tests de controllers y API
+## Sesión 10 · Construir respuestas HTTP
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> la lógica puede estar bien y aun así el contrato HTTP estar roto.</li>
-    <li><strong>Construye:</strong> tests de integración web sobre operaciones representativas.</li>
+    <li><strong>Comprende:</strong> devolver un objeto no siempre expresa si se ha creado, encontrado, rechazado o eliminado un recurso.</li>
+    <li><strong>Construye:</strong> respuestas distintas y verificables para varios resultados de una operación.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **comprobar rutas, validación, seguridad, códigos y formato de respuesta**.
+Al terminar serás capaz de **controlar cuerpo, cabeceras y código de estado mediante ResponseEntity**.
 
 ### 2. El problema
 
-La lógica puede estar bien y aun así el contrato HTTP estar roto.
+Devolver un objeto no siempre expresa si se ha creado, encontrado, rechazado o eliminado un recurso.
 
 ### 3–6. Itinerario de trabajo
 
@@ -211,7 +214,7 @@ La lógica puede estar bien y aun así el contrato HTTP estar roto.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido tests de integración web sobre operaciones representativas.</li>
+    <li>Has obtenido respuestas distintas y verificables para varios resultados de una operación.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -229,24 +232,24 @@ La lógica puede estar bien y aun así el contrato HTTP estar roto.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 68 · Logging y depuración
+## Sesión 11 · Colecciones, variables y entornos
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> sin observabilidad un error de producción se convierte en una conjetura.</li>
-    <li><strong>Construye:</strong> un incidente reproducido y explicado con logs y puntos de depuración.</li>
+    <li><strong>Comprende:</strong> las peticiones sueltas que se escribieron a mano en la UD1 no dejan evidencia repetible ni permiten detectar una regresión.</li>
+    <li><strong>Construye:</strong> una colección con entornos, casos correctos y casos de error.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **registrar contexto útil y seguir un fallo sin exponer secretos ni llenar el log de ruido**.
+Al terminar serás capaz de **organizar peticiones, variables y comprobaciones en una colección reproducible**.
 
 ### 2. El problema
 
-Sin observabilidad un error de producción se convierte en una conjetura.
+Las peticiones sueltas que se escribieron a mano en la UD1 no dejan evidencia repetible ni permiten detectar una regresión.
 
 ### 3–6. Itinerario de trabajo
 
@@ -260,7 +263,7 @@ Sin observabilidad un error de producción se convierte en una conjetura.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un incidente reproducido y explicado con logs y puntos de depuración.</li>
+    <li>Has obtenido una colección con entornos, casos correctos y casos de error.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -278,24 +281,24 @@ Sin observabilidad un error de producción se convierte en una conjetura.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 69 · OpenAPI, documentación y code review
+## Sesión 12 · Backend en memoria verificable
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> que todos los endpoints respondan no demuestra calidad ni facilita que otro equipo continúe.</li>
-    <li><strong>Construye:</strong> una revisión priorizada y documentación sincronizada con el comportamiento real.</li>
+    <li><strong>Comprende:</strong> las piezas aisladas solo son útiles si forman un flujo completo que otra persona puede ejecutar.</li>
+    <li><strong>Construye:</strong> un backend CRUD en memoria acompañado de su colección de pruebas.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **auditar una aplicación funcional buscando problemas de arquitectura, seguridad y mantenibilidad**.
+Al terminar serás capaz de **integrar rutas, cuerpos JSON, DTO y respuestas HTTP en un backend pequeño**.
 
 ### 2. El problema
 
-Que todos los endpoints respondan no demuestra calidad ni facilita que otro equipo continúe.
+Las piezas aisladas solo son útiles si forman un flujo completo que otra persona puede ejecutar.
 
 ### 3–6. Itinerario de trabajo
 
@@ -309,7 +312,7 @@ Que todos los endpoints respondan no demuestra calidad ni facilita que otro equi
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una revisión priorizada y documentación sincronizada con el comportamiento real.</li>
+    <li>Has obtenido un backend CRUD en memoria acompañado de su colección de pruebas.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -334,13 +337,12 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Escribir tests claros con JUnit.</li>
-    <li>Aislar servicios mediante Mockito cuando resulte útil.</li>
-    <li>Probar controllers y contratos de API.</li>
-    <li>Investigar fallos mediante logs y depuración.</li>
-    <li>Revisar arquitectura, seguridad y mantenibilidad.</li>
+    <li>Seguir una petición desde el cliente HTTP hasta el método del controller.</li>
+    <li>Recibir JSON y transformarlo en objetos Java de forma controlada.</li>
+    <li>Implementar las operaciones de escritura con el método HTTP que les corresponde.</li>
+    <li>Controlar cuerpo, cabeceras y código de estado mediante ResponseEntity.</li>
+    <li>Convertir pruebas manuales sueltas en una colección con variables y entornos.</li>
   </ul>
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-

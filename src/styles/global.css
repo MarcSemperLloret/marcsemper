@@ -2866,3 +2866,33 @@ select {
 .session-content .rule > :last-child {
   margin-bottom: 0;
 }
+
+
+/* ---------------------------------------------------------------------------
+   Session content, pieces introduced by the server-side course
+
+   The backend module shows Java, the raw HTTP text of a request, the Maven
+   descriptor and the application's own settings file. Each block type gets its
+   chip for the same reason the others have one: the room for it is reserved
+   unconditionally above, so a block without a chip is a block with a gap.
+   --------------------------------------------------------------------------- */
+
+.session-content pre code.language-java::before {
+  content: "Java";
+}
+
+.session-content pre code.language-http::before {
+  content: "HTTP";
+}
+
+.session-content pre code.language-xml::before {
+  content: "pom.xml";
+}
+
+.session-content pre code.language-properties::before {
+  content: "Configuración";
+}
+
+.session-content pre code.language-sql::before {
+  content: "SQL";
+}

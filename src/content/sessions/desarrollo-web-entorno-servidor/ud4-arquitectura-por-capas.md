@@ -1,54 +1,54 @@
 ---
-title: "Backend avanzado e integración externa"
-label: "UD9 · Conectar"
-section: "ud-09"
-order: 9
+title: "Arquitectura por capas con Spring"
+label: "UD4 · Arquitectar"
+section: "ud-04"
+order: 4
 lang: "es"
-summary: "Conectar el backend con servicios externos y diseñar el comportamiento cuando la red, el proveedor o los datos no responden como se esperaba."
+summary: "Reorganizar un controller que ya hace demasiado en capas con responsabilidades claras, y comprobar por primera vez la lógica con tests automáticos."
 duration: "12 horas · 2 semanas · 6 sesiones"
-modality: "Laboratorio de integración · 20 % guía / 80 % autonomía"
-deliverable: "Una integración externa resiliente y una funcionalidad de ficheros, correo o webhook."
-date: "2026-08-31"
+modality: "Refactorización guiada · 50 % guía / 50 % autonomía"
+deliverable: "La aplicación reorganizada en controller, service y repository, con los primeros tests del service en verde."
+date: "2026-09-02"
 outcomes:
-  - "Consumir una API externa mediante un cliente HTTP."
-  - "Aislar contratos externos con DTO propios."
-  - "Tratar timeouts, errores y servicios no disponibles."
-  - "Subir y descargar ficheros e integrar correo o webhooks."
+  - "Reconocer los síntomas de un controller que acumula responsabilidades."
+  - "Separar controller, service y repository y justificar qué va en cada capa."
+  - "Usar inyección de dependencias en lugar de construir colaboradores a mano."
+  - "Situar las reglas de negocio en el service y protegerlas con tests."
+  - "Escribir tests unitarios de un service con JUnit."
 requirements:
-  - "La aplicación segura de la UD8."
-  - "Acceso a una API pública adecuada para docencia."
+  - "La API rediseñada de la UD3."
 priorKnowledge:
-  - "DTO, servicios, errores centralizados y REST."
-  - "Autenticación y configuración externa."
+  - "DTO, validación y errores centralizados."
+  - "Interfaces y clases en Java."
 ---
 
-<p class="lead">El backend deja de vivir solo. Al conectarlo con otra API aparecen latencia, formatos ajenos, límites y fallos que no controlamos.</p>
+<p class="lead">El código funciona y ya no se puede tocar sin miedo. Esta unidad no añade funcionalidad: la reorganiza, y por primera vez deja tests que avisan cuando algo se rompe.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje muy bajo. Se proporciona un contrato externo y criterios de aceptación; el diseño del adaptador y de la degradación queda en manos del alumnado.</p>
+  <p>Andamiaje medio. La primera separación se hace en común; la refactorización final la dirige el alumnado con una lista de criterios.</p>
 </div>
 
-## Semana 20 · Consumir sin acoplarse
+## Semana 8 · Cuando funcionar ya no es suficiente
 
-## Sesión 58 · Consumir una API externa
+## Sesión 22 · El controller monstruoso
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> el backend necesita información que pertenece a otro sistema y no puede consultarla como una tabla local.</li>
-    <li><strong>Construye:</strong> una consulta real a Open-Meteo, GitHub u otro servicio aprobado.</li>
+    <li><strong>Comprende:</strong> un controller puede funcionar y a la vez convertir cada cambio en una regresión probable.</li>
+    <li><strong>Construye:</strong> un mapa razonado de problemas sobre código existente.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **realizar una petición saliente y observar URL, cabeceras, cuerpo, latencia y respuesta**.
+Al terminar serás capaz de **localizar lógica duplicada, responsabilidades mezcladas y puntos difíciles de probar**.
 
 ### 2. El problema
 
-El backend necesita información que pertenece a otro sistema y no puede consultarla como una tabla local.
+Un controller puede funcionar y a la vez convertir cada cambio en una regresión probable.
 
 ### 3–6. Itinerario de trabajo
 
@@ -62,7 +62,7 @@ El backend necesita información que pertenece a otro sistema y no puede consult
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una consulta real a Open-Meteo, GitHub u otro servicio aprobado.</li>
+    <li>Has obtenido un mapa razonado de problemas sobre código existente.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -80,24 +80,24 @@ El backend necesita información que pertenece a otro sistema y no puede consult
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 59 · Cliente HTTP y DTO externos
+## Sesión 23 · Arquitectura por capas
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> propagar el JSON ajeno por toda la aplicación acopla el dominio a cambios externos.</li>
-    <li><strong>Construye:</strong> un adaptador con DTO externos y transformación al modelo propio.</li>
+    <li><strong>Comprende:</strong> sin límites claros la presentación conoce detalles de negocio y almacenamiento.</li>
+    <li><strong>Construye:</strong> un flujo de dependencias con responsabilidades explícitas.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **encapsular el proveedor detrás de un servicio y mapear solo los datos necesarios**.
+Al terminar serás capaz de **asignar cada responsabilidad a controller, service y repository**.
 
 ### 2. El problema
 
-Propagar el JSON ajeno por toda la aplicación acopla el dominio a cambios externos.
+Sin límites claros la presentación conoce detalles de negocio y almacenamiento.
 
 ### 3–6. Itinerario de trabajo
 
@@ -111,7 +111,7 @@ Propagar el JSON ajeno por toda la aplicación acopla el dominio a cambios exter
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un adaptador con DTO externos y transformación al modelo propio.</li>
+    <li>Has obtenido un flujo de dependencias con responsabilidades explícitas.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -129,24 +129,24 @@ Propagar el JSON ajeno por toda la aplicación acopla el dominio a cambios exter
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 60 · Errores, timeouts y servicios no disponibles
+## Sesión 24 · Inyección de dependencias
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una llamada remota sin límites puede bloquear recursos y convertir un fallo ajeno en caída propia.</li>
-    <li><strong>Construye:</strong> casos simulados de timeout, error y respuesta inesperada tratados de forma observable.</li>
+    <li><strong>Comprende:</strong> crear colaboradores dentro de una clase acopla implementación, configuración y pruebas.</li>
+    <li><strong>Construye:</strong> componentes conectados por constructor y gestionados por Spring.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **definir límites de tiempo y una respuesta útil ante fallo parcial**.
+Al terminar serás capaz de **usar IoC, inyección por constructor y estereotipos de Spring sin ocultar las dependencias**.
 
 ### 2. El problema
 
-Una llamada remota sin límites puede bloquear recursos y convertir un fallo ajeno en caída propia.
+Crear colaboradores dentro de una clase acopla implementación, configuración y pruebas.
 
 ### 3–6. Itinerario de trabajo
 
@@ -160,7 +160,7 @@ Una llamada remota sin límites puede bloquear recursos y convertir un fallo aje
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido casos simulados de timeout, error y respuesta inesperada tratados de forma observable.</li>
+    <li>Has obtenido componentes conectados por constructor y gestionados por Spring.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -178,26 +178,26 @@ Una llamada remota sin límites puede bloquear recursos y convertir un fallo aje
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 21 · Ficheros y eventos
+## Semana 9 · Reglas protegidas por pruebas
 
-## Sesión 61 · Subida y descarga de ficheros
+## Sesión 25 · Reglas de negocio en el service
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> aceptar un archivo sin límites abre problemas de seguridad, espacio y trazabilidad.</li>
-    <li><strong>Construye:</strong> adjuntos de una incidencia con descarga autorizada.</li>
+    <li><strong>Comprende:</strong> repartir reglas entre controllers y repositories hace imposible saber dónde se decide el comportamiento.</li>
+    <li><strong>Construye:</strong> casos de uso y reglas de negocio concentrados en servicios comprobables.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **validar, almacenar y servir un fichero controlando nombre, tipo, tamaño y autorización**.
+Al terminar serás capaz de **distinguir coordinación de casos de uso, reglas de negocio y acceso a datos**.
 
 ### 2. El problema
 
-Aceptar un archivo sin límites abre problemas de seguridad, espacio y trazabilidad.
+Repartir reglas entre controllers y repositories hace imposible saber dónde se decide el comportamiento.
 
 ### 3–6. Itinerario de trabajo
 
@@ -211,7 +211,7 @@ Aceptar un archivo sin límites abre problemas de seguridad, espacio y trazabili
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido adjuntos de una incidencia con descarga autorizada.</li>
+    <li>Has obtenido casos de uso y reglas de negocio concentrados en servicios comprobables.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -229,24 +229,24 @@ Aceptar un archivo sin límites abre problemas de seguridad, espacio y trazabili
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 62 · Correo, servicio externo o webhook
+## Sesión 26 · Primeros tests del service con JUnit
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> notificar otro sistema introduce un segundo resultado que puede fallar después de guardar el dato principal.</li>
-    <li><strong>Construye:</strong> un correo o webhook encapsulado con registro de éxito y fallo.</li>
+    <li><strong>Comprende:</strong> comprobar a mano en Postman cada regla después de cada cambio no es sostenible ni demuestra nada al día siguiente.</li>
+    <li><strong>Construye:</strong> una clase de tests que cubre el camino correcto y al menos un caso de error de una regla del service.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **integrar una salida asíncrona o una notificación sin mezclarla con el controller**.
+Al terminar serás capaz de **escribir tests unitarios que comprueban una regla de negocio sin arrancar el servidor**.
 
 ### 2. El problema
 
-Notificar otro sistema introduce un segundo resultado que puede fallar después de guardar el dato principal.
+Comprobar a mano en Postman cada regla después de cada cambio no es sostenible ni demuestra nada al día siguiente.
 
 ### 3–6. Itinerario de trabajo
 
@@ -260,7 +260,7 @@ Notificar otro sistema introduce un segundo resultado que puede fallar después 
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un correo o webhook encapsulado con registro de éxito y fallo.</li>
+    <li>Has obtenido una clase de tests que cubre el camino correcto y al menos un caso de error de una regla del service.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -278,24 +278,24 @@ Notificar otro sistema introduce un segundo resultado que puede fallar después 
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 63 · Miniintegración
+## Sesión 27 · Refactorización completa
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una demo aislada no demuestra que la integración respete las reglas de la aplicación.</li>
-    <li><strong>Construye:</strong> una funcionalidad integrada con camino feliz y degradación comprobados.</li>
+    <li><strong>Comprende:</strong> una arquitectura solo se aprende cuando se aplica sobre suficiente código real.</li>
+    <li><strong>Construye:</strong> la aplicación organizada en controller, service, repository, model y dto.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **combinar persistencia, seguridad y un servicio externo en un caso de uso completo**.
+Al terminar serás capaz de **transformar la aplicación conservando su comportamiento observable**.
 
 ### 2. El problema
 
-Una demo aislada no demuestra que la integración respete las reglas de la aplicación.
+Una arquitectura solo se aprende cuando se aplica sobre suficiente código real.
 
 ### 3–6. Itinerario de trabajo
 
@@ -309,7 +309,7 @@ Una demo aislada no demuestra que la integración respete las reglas de la aplic
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una funcionalidad integrada con camino feliz y degradación comprobados.</li>
+    <li>Has obtenido la aplicación organizada en controller, service, repository, model y dto.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -334,12 +334,12 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Consumir una API externa mediante un cliente HTTP.</li>
-    <li>Aislar contratos externos con DTO propios.</li>
-    <li>Tratar timeouts, errores y servicios no disponibles.</li>
-    <li>Subir y descargar ficheros e integrar correo o webhooks.</li>
+    <li>Reconocer los síntomas de un controller que acumula responsabilidades.</li>
+    <li>Separar controller, service y repository y justificar qué va en cada capa.</li>
+    <li>Usar inyección de dependencias en lugar de construir colaboradores a mano.</li>
+    <li>Situar las reglas de negocio en el service y protegerlas con tests.</li>
+    <li>Escribir tests unitarios de un service con JUnit.</li>
   </ul>
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-

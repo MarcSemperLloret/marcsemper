@@ -1,36 +1,38 @@
 ---
-title: "APIs REST bien diseñadas"
-label: "UD7 · Diseñar"
-section: "ud-07"
-order: 7
+title: "APIs REST: recursos, DTO, validación y errores"
+label: "UD3 · Diseñar"
+section: "ud-03"
+order: 3
 lang: "es"
-summary: "Diseñar una API orientada a recursos que use correctamente HTTP, DTO, validación, errores, filtros, paginación y documentación."
+summary: "Las reglas de diseño que convierten un montón de endpoints en una API defendible: recursos, representaciones, DTO, entrada validada y errores coherentes."
 duration: "18 horas · 3 semanas · 9 sesiones"
-modality: "Taller de diseño · 30 % guía / 70 % autonomía"
-deliverable: "Una API REST completa, paginada, validada y documentada con OpenAPI."
-date: "2026-08-31"
+modality: "Taller de diseño · 60 % guía / 40 % autonomía"
+deliverable: "La API del gestor rediseñada como recursos, con DTO de entrada y salida, validación y un formato de error único."
+date: "2026-09-02"
 outcomes:
-  - "Distinguir una API HTTP funcional de una API REST coherente."
-  - "Diseñar recursos, rutas y representaciones coherentes."
-  - "Usar códigos de estado y ResponseEntity con intención."
-  - "Publicar filtros, paginación y documentación OpenAPI."
+  - "Distinguir una API HTTP cualquiera de una API orientada a recursos."
+  - "Nombrar recursos y URLs sin meter verbos ni acciones en la ruta."
+  - "Separar el modelo interno de lo que la API publica mediante DTO."
+  - "Validar la entrada antes de que llegue a la lógica y explicar qué falla."
+  - "Devolver errores con un formato único, predecible y útil para quien consume."
 requirements:
-  - "La aplicación persistente del primer trimestre."
-  - "Un cliente HTTP como Bruno, Insomnia o Postman."
+  - "El CRUD en memoria de la UD2."
+  - "Postman o Bruno con la colección de la UD2."
 priorKnowledge:
-  - "HTTP, controllers, DTO, validación, excepciones y JPA."
+  - "Métodos HTTP, códigos de estado y ResponseEntity."
+  - "Serialización y deserialización JSON."
 ---
 
-<p class="lead">La aplicación abre un contrato para otros clientes. El foco deja de estar en conseguir que responda y pasa a estar en diseñar una interfaz predecible, comprobable y documentada.</p>
+<p class="lead">Llevas dos unidades construyendo endpoints. Aquí aprendes a diseñarlos antes de que la aplicación crezca lo suficiente como para que rediseñarla salga caro.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje bajo. Se analizan contratos y ejemplos; el alumnado diseña los recursos y justifica la semántica HTTP de su API.</p>
+  <p>Andamiaje medio. Las reglas de diseño se explican y se aplican juntos sobre el gestor; el rediseño final se entrega a partir de criterios de aceptación, sin una solución de referencia.</p>
 </div>
 
-## Semana 14 · Pensar en recursos
+## Semana 5 · Pensar en recursos
 
-## Sesión 40 · De una API HTTP a una API REST
+## Sesión 13 · De una API HTTP a una API REST
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -79,7 +81,7 @@ Usar JSON y responder por HTTP no convierte automáticamente un backend en una A
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 41 · Recursos y REST
+## Sesión 14 · Recursos y REST
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -128,7 +130,7 @@ Rutas como /crearUsuario convierten la API en una lista irregular de órdenes.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 42 · RestController y representaciones
+## Sesión 15 · RestController y representaciones
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -177,26 +179,26 @@ Devolver entidades directamente filtra estructura interna y hace frágil la evol
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 15 · Contratos fiables
+## Semana 6 · Lo que la API publica
 
-## Sesión 43 · DTO de entrada y salida
+## Sesión 16 · DTO de entrada y salida
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> usar un único objeto para todas las operaciones permite campos indebidos y respuestas poco claras.</li>
-    <li><strong>Construye:</strong> DTO específicos para creación, actualización y lectura.</li>
+    <li><strong>Comprende:</strong> usar la misma clase para recibir, procesar y responder filtra detalles internos y permite campos que el cliente no debería controlar.</li>
+    <li><strong>Construye:</strong> DTO diferentes para crear y consultar un usuario o proyecto.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **separar lo que el cliente puede enviar de lo que la API decide devolver**.
+Al terminar serás capaz de **separar los datos que acepta el backend de los que decide devolver**.
 
 ### 2. El problema
 
-Usar un único objeto para todas las operaciones permite campos indebidos y respuestas poco claras.
+Usar la misma clase para recibir, procesar y responder filtra detalles internos y permite campos que el cliente no debería controlar.
 
 ### 3–6. Itinerario de trabajo
 
@@ -210,7 +212,7 @@ Usar un único objeto para todas las operaciones permite campos indebidos y resp
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido DTO específicos para creación, actualización y lectura.</li>
+    <li>Has obtenido DTO diferentes para crear y consultar un usuario o proyecto.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -228,24 +230,24 @@ Usar un único objeto para todas las operaciones permite campos indebidos y resp
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 44 · HTTP status y ResponseEntity
+## Sesión 17 · Del JSON al modelo y del modelo al JSON
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> responder 200 a todo obliga al cliente a adivinar qué ocurrió.</li>
-    <li><strong>Construye:</strong> respuestas coherentes para creación, consulta, ausencia y eliminación.</li>
+    <li><strong>Comprende:</strong> si cada método convierte a su manera, el mismo recurso acaba publicándose de dos formas distintas.</li>
+    <li><strong>Construye:</strong> una conversión centralizada entre DTO y modelo, con una prueba que la recorre.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **elegir códigos, cabeceras y cuerpo según el resultado real de cada operación**.
+Al terminar serás capaz de **situar la conversión entre DTO y modelo en un punto único y justificarlo**.
 
 ### 2. El problema
 
-Responder 200 a todo obliga al cliente a adivinar qué ocurrió.
+Si cada método convierte a su manera, el mismo recurso acaba publicándose de dos formas distintas.
 
 ### 3–6. Itinerario de trabajo
 
@@ -259,7 +261,7 @@ Responder 200 a todo obliga al cliente a adivinar qué ocurrió.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido respuestas coherentes para creación, consulta, ausencia y eliminación.</li>
+    <li>Has obtenido una conversión centralizada entre DTO y modelo, con una prueba que la recorre.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -277,24 +279,24 @@ Responder 200 a todo obliga al cliente a adivinar qué ocurrió.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 45 · Validación y errores REST
+## Sesión 18 · Validación de entrada
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una traza o un texto variable no constituye un contrato de error consumible.</li>
-    <li><strong>Construye:</strong> un formato común para validación y excepciones de dominio.</li>
+    <li><strong>Comprende:</strong> el JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formulario de Angular valide en el navegador.</li>
+    <li><strong>Construye:</strong> peticiones inválidas rechazadas con información concreta sobre cada campo.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **producir errores estructurados, estables y útiles para una persona o cliente automático**.
+Al terminar serás capaz de **aplicar @Valid y restricciones de Bean Validation a los DTO de entrada**.
 
 ### 2. El problema
 
-Una traza o un texto variable no constituye un contrato de error consumible.
+El JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formulario de Angular valide en el navegador.
 
 ### 3–6. Itinerario de trabajo
 
@@ -308,7 +310,7 @@ Una traza o un texto variable no constituye un contrato de error consumible.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un formato común para validación y excepciones de dominio.</li>
+    <li>Has obtenido peticiones inválidas rechazadas con información concreta sobre cada campo.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -326,26 +328,26 @@ Una traza o un texto variable no constituye un contrato de error consumible.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 16 · Consultar y documentar
+## Semana 7 · Entrada fiable y errores honestos
 
-## Sesión 46 · Filtros, búsqueda y paginación
+## Sesión 19 · Reglas propias y mensajes de validación útiles
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> las colecciones completas y las rutas ad hoc dejan de funcionar cuando crecen datos y casos de uso.</li>
-    <li><strong>Construye:</strong> un endpoint de incidencias filtrable, ordenable y paginado.</li>
+    <li><strong>Comprende:</strong> un «400 Bad Request» sin detalle obliga a quien consume la API a adivinar qué campo ha fallado.</li>
+    <li><strong>Construye:</strong> un conjunto de validaciones con mensajes accionables y su caso de prueba.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **diseñar parámetros combinables para consultar colecciones sin crear una ruta por filtro**.
+Al terminar serás capaz de **escribir restricciones que expresen reglas del dominio y mensajes que digan qué corregir**.
 
 ### 2. El problema
 
-Las colecciones completas y las rutas ad hoc dejan de funcionar cuando crecen datos y casos de uso.
+Un «400 Bad Request» sin detalle obliga a quien consume la API a adivinar qué campo ha fallado.
 
 ### 3–6. Itinerario de trabajo
 
@@ -359,7 +361,7 @@ Las colecciones completas y las rutas ad hoc dejan de funcionar cuando crecen da
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un endpoint de incidencias filtrable, ordenable y paginado.</li>
+    <li>Has obtenido un conjunto de validaciones con mensajes accionables y su caso de prueba.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -377,24 +379,24 @@ Las colecciones completas y las rutas ad hoc dejan de funcionar cuando crecen da
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 47 · OpenAPI y Swagger
+## Sesión 20 · Errores coherentes de API
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una API no documentada obliga a descubrirla por ensayo y error y se vuelve difícil de verificar.</li>
-    <li><strong>Construye:</strong> una especificación OpenAPI navegable con ejemplos y respuestas.</li>
+    <li><strong>Comprende:</strong> tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variables y difíciles de consumir.</li>
+    <li><strong>Construye:</strong> un formato común para recurso inexistente, conflicto y validación fallida.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **generar, leer y corregir documentación que refleje el contrato real**.
+Al terminar serás capaz de **centralizar errores mediante excepciones propias y @RestControllerAdvice**.
 
 ### 2. El problema
 
-Una API no documentada obliga a descubrirla por ensayo y error y se vuelve difícil de verificar.
+Tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variables y difíciles de consumir.
 
 ### 3–6. Itinerario de trabajo
 
@@ -408,7 +410,7 @@ Una API no documentada obliga a descubrirla por ensayo y error y se vuelve difí
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una especificación OpenAPI navegable con ejemplos y respuestas.</li>
+    <li>Has obtenido un formato común para recurso inexistente, conflicto y validación fallida.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -426,7 +428,7 @@ Una API no documentada obliga a descubrirla por ensayo y error y se vuelve difí
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 48 · Diseñar una API completa
+## Sesión 21 · Rediseño completo de la API del gestor
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -482,10 +484,11 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Distinguir una web tradicional de una API.</li>
-    <li>Diseñar recursos, rutas y representaciones coherentes.</li>
-    <li>Usar códigos de estado y ResponseEntity con intención.</li>
-    <li>Publicar filtros, paginación y documentación OpenAPI.</li>
+    <li>Distinguir una API HTTP cualquiera de una API orientada a recursos.</li>
+    <li>Nombrar recursos y URLs sin meter verbos ni acciones en la ruta.</li>
+    <li>Separar el modelo interno de lo que la API publica mediante DTO.</li>
+    <li>Validar la entrada antes de que llegue a la lógica y explicar qué falla.</li>
+    <li>Devolver errores con un formato único, predecible y útil para quien consume.</li>
   </ul>
 </div>
 

@@ -1,52 +1,54 @@
 ---
-title: "Proyecto del primer trimestre"
-label: "UD6 · Integrar"
-section: "ud-06"
-order: 6
+title: "El primer cliente: Angular contra la API"
+label: "UD8 · Conectar"
+section: "ud-08"
+order: 8
 lang: "es"
-summary: "Integrar en un único producto todo lo construido hasta ahora, defenderlo técnicamente y recibir una revisión de código real."
+summary: "Conectar por primera vez un cliente Angular con la API, todavía sin autenticación, para que CORS y el navegador se aprendan aislados y no mezclados con la seguridad."
 duration: "6 horas · 1 semana · 3 sesiones"
-modality: "Proyecto evaluable · 20 % guía / 80 % autonomía"
-deliverable: "Una API Spring Boot completa, revisada, defendida y verificable con Postman o Bruno."
+modality: "Laboratorio de integración · 50 % guía / 50 % autonomía"
+deliverable: "Una pantalla Angular que lista y crea recursos contra la API real, con CORS resuelto y documentado."
 date: "2026-09-02"
 outcomes:
-  - "Traducir unos requisitos en un modelo y un contrato de API."
-  - "Integrar diseño REST, capas y persistencia en un producto que funciona."
-  - "Revisar el código de otro equipo y aceptar una revisión del propio."
-  - "Defender oralmente las decisiones técnicas tomadas."
+  - "Consumir la API desde un cliente Angular con HttpClient."
+  - "Explicar qué es CORS, por qué lo aplica el navegador y por qué Postman no lo sufre."
+  - "Configurar CORS en el backend de forma explícita y acotada."
+  - "Diagnosticar un fallo de integración sabiendo si el problema es del cliente, del servidor o del navegador."
 requirements:
-  - "Todo lo construido de la UD1 a la UD5."
+  - "La API de la UD7 en marcha."
+  - "Un proyecto Angular mínimo, proporcionado o del módulo de cliente."
 priorKnowledge:
-  - "Diseño REST, DTO, validación, capas y JPA."
+  - "APIs REST, JSON y códigos de estado."
+  - "TypeScript básico y componentes Angular."
 ---
 
-<p class="lead">Cierre del primer trimestre. No hay contenido nuevo: hay una especificación, un plazo y una defensa.</p>
+<p class="lead">Es la primera vez que un navegador, y no Postman, llama a tu API. Se hace ahora y sin autenticación a propósito: cuando en la unidad siguiente aparezcan tokens y permisos, CORS ya no será una variable desconocida.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje muy bajo. Se entrega una especificación y unos criterios de aceptación; el diseño y el reparto del trabajo son del equipo.</p>
+  <p>Andamiaje medio. El cliente se proporciona casi hecho: lo que se practica es la integración y el diagnóstico, no Angular.</p>
 </div>
 
-## Semana 14 · Integración y defensa
+## Semana 17 · Del cliente HTTP al navegador
 
-## Sesión 40 · Especificación y planificación
+## Sesión 49 · Un cliente de verdad llama a tu API
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> empezar a programar sin delimitar el producto crea trabajo invisible y decisiones contradictorias.</li>
-    <li><strong>Construye:</strong> un backlog pequeño, ordenado y comprobable.</li>
+    <li><strong>Comprende:</strong> una API comprobada solo con Postman no ha demostrado todavía que un navegador pueda usarla.</li>
+    <li><strong>Construye:</strong> una pantalla que lista recursos reales obtenidos de la API.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **descomponer requisitos en casos de uso, datos, rutas y criterios de aceptación**.
+Al terminar serás capaz de **consumir un endpoint desde Angular con HttpClient y observar la petición en el panel de red**.
 
 ### 2. El problema
 
-Empezar a programar sin delimitar el producto crea trabajo invisible y decisiones contradictorias.
+Una API comprobada solo con Postman no ha demostrado todavía que un navegador pueda usarla.
 
 ### 3–6. Itinerario de trabajo
 
@@ -60,7 +62,7 @@ Empezar a programar sin delimitar el producto crea trabajo invisible y decisione
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un backlog pequeño, ordenado y comprobable.</li>
+    <li>Has obtenido una pantalla que lista recursos reales obtenidos de la API.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -78,24 +80,24 @@ Empezar a programar sin delimitar el producto crea trabajo invisible y decisione
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 41 · Desarrollo del proyecto
+## Sesión 50 · CORS: por qué el navegador bloquea lo que Postman no
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> integrar muchas piezas a la vez multiplica los fallos y dificulta localizar su causa.</li>
-    <li><strong>Construye:</strong> una versión funcional que cubre los criterios imprescindibles.</li>
+    <li><strong>Comprende:</strong> la misma petición funciona en Postman y falla en el navegador, y el mensaje de error no menciona el backend.</li>
+    <li><strong>Construye:</strong> una configuración de CORS explícita que permite el origen del cliente y solo ese.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **implementar el incremento prioritario y mantener la aplicación ejecutable**.
+Al terminar serás capaz de **explicar la política de mismo origen, leer un error de CORS y configurarlo en el backend de forma acotada**.
 
 ### 2. El problema
 
-Integrar muchas piezas a la vez multiplica los fallos y dificulta localizar su causa.
+La misma petición funciona en Postman y falla en el navegador, y el mensaje de error no menciona el backend.
 
 ### 3–6. Itinerario de trabajo
 
@@ -109,7 +111,7 @@ Integrar muchas piezas a la vez multiplica los fallos y dificulta localizar su c
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una versión funcional que cubre los criterios imprescindibles.</li>
+    <li>Has obtenido una configuración de CORS explícita que permite el origen del cliente y solo ese.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -127,24 +129,24 @@ Integrar muchas piezas a la vez multiplica los fallos y dificulta localizar su c
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 42 · Code review, corrección y defensa
+## Sesión 51 · Integración mínima verificada
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> entregar una aplicación que funciona no demuestra que se comprenda ni que sea mantenible.</li>
-    <li><strong>Construye:</strong> una revisión trazable, una versión corregida y una defensa técnica breve.</li>
+    <li><strong>Comprende:</strong> cuando algo no funciona entre dos aplicaciones, el error puede estar en cualquiera de las dos o en medio.</li>
+    <li><strong>Construye:</strong> un flujo de listar y crear funcionando, con una tabla de diagnóstico de tres fallos provocados.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **revisar, corregir y defender decisiones usando evidencias del código y de la aplicación**.
+Al terminar serás capaz de **completar un flujo de lectura y escritura entre cliente y API y diagnosticar dónde falla cuando falla**.
 
 ### 2. El problema
 
-Entregar una aplicación que funciona no demuestra que se comprenda ni que sea mantenible.
+Cuando algo no funciona entre dos aplicaciones, el error puede estar en cualquiera de las dos o en medio.
 
 ### 3–6. Itinerario de trabajo
 
@@ -158,7 +160,7 @@ Entregar una aplicación que funciona no demuestra que se comprenda ni que sea m
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una revisión trazable, una versión corregida y una defensa técnica breve.</li>
+    <li>Has obtenido un flujo de listar y crear funcionando, con una tabla de diagnóstico de tres fallos provocados.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -183,10 +185,10 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Traducir unos requisitos en un modelo y un contrato de API.</li>
-    <li>Integrar diseño REST, capas y persistencia en un producto que funciona.</li>
-    <li>Revisar el código de otro equipo y aceptar una revisión del propio.</li>
-    <li>Defender oralmente las decisiones técnicas tomadas.</li>
+    <li>Consumir la API desde un cliente Angular con HttpClient.</li>
+    <li>Explicar qué es CORS, por qué lo aplica el navegador y por qué Postman no lo sufre.</li>
+    <li>Configurar CORS en el backend de forma explícita y acotada.</li>
+    <li>Diagnosticar un fallo de integración sabiendo si el problema es del cliente, del servidor o del navegador.</li>
   </ul>
 </div>
 

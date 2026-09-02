@@ -1,54 +1,54 @@
 ---
-title: "Arquitectura profesional con Spring"
-label: "UD4 · Arquitectar"
-section: "ud-04"
-order: 4
+title: "APIs REST avanzadas"
+label: "UD7 · Refinar"
+section: "ud-07"
+order: 7
 lang: "es"
-summary: "Detectar los límites del controller monolítico y refactorizar la aplicación en capas con dependencias explícitas, reglas de negocio y contratos claros."
+summary: "Lo que distingue una API que funciona de una que se puede consumir: relaciones expuestas con criterio, filtros, paginación, documentación y tests de endpoint."
 duration: "12 horas · 2 semanas · 6 sesiones"
-modality: "Refactorización guiada · 50 % guía / 50 % autonomía"
-deliverable: "La aplicación anterior reorganizada en controller, service, repository, model y DTO."
-date: "2026-08-31"
+modality: "Taller de diseño · 40 % guía / 60 % autonomía"
+deliverable: "Una API REST con relaciones, filtros, paginación, documentación OpenAPI y tests de endpoint."
+date: "2026-09-02"
 outcomes:
-  - "Reconocer responsabilidades mezcladas y lógica duplicada."
-  - "Separar presentación, negocio y acceso a datos."
-  - "Usar inyección por constructor y componentes de Spring."
-  - "Mantener las reglas de negocio en el service y los mapeos en las fronteras."
+  - "Exponer relaciones sin filtrar el modelo interno ni provocar respuestas gigantes."
+  - "Diseñar filtros y búsquedas que no se conviertan en un lenguaje de consulta improvisado."
+  - "Paginar y ordenar colecciones declarando siempre el total."
+  - "Comprobar endpoints con MockMvc sin depender de un cliente manual."
+  - "Documentar la API con OpenAPI y evolucionar el contrato sin romper a quien lo consume."
 requirements:
-  - "La API CRUD y la colección de pruebas de la UD3."
-  - "Capacidad para ejecutar y probar el flujo completo antes y después de un cambio."
+  - "El proyecto del primer trimestre terminado."
 priorKnowledge:
-  - "Controllers REST, DTO, validación, errores y sesión."
-  - "Clases, interfaces y excepciones en Java."
+  - "Diseño REST básico, DTO, validación y errores."
+  - "JPA, relaciones y consultas."
 ---
 
-<p class="lead">Partimos de código que funciona y precisamente por eso resulta útil: al cambiarlo aparecen el coste de mezclar responsabilidades y la necesidad de una arquitectura.</p>
+<p class="lead">La API ya persiste datos y ya está bien nombrada. Falta lo que se nota cuando otro la consume: relaciones, filtros, páginas y documentación.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje equilibrado. El diagnóstico y el primer corte por capas se hacen juntos; la refactorización completa debe justificarse.</p>
+  <p>Andamiaje bajo. Se plantean requisitos de consumo y el diseño concreto lo decide el alumnado, justificándolo.</p>
 </div>
 
-## Semana 7 · Cuando funcionar ya no es suficiente
+## Semana 15 · Consultar sin ahogar la respuesta
 
-## Sesión 19 · El controller monstruoso
+## Sesión 43 · Exponer relaciones sin romper el contrato
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> un controller puede funcionar y a la vez convertir cada cambio en una regresión probable.</li>
-    <li><strong>Construye:</strong> un mapa razonado de problemas sobre código existente.</li>
+    <li><strong>Comprende:</strong> serializar una entidad con relaciones devuelve la mitad de la base de datos, o entra en un bucle infinito.</li>
+    <li><strong>Construye:</strong> un recurso con relaciones cuya respuesta está acotada y justificada.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **localizar lógica duplicada, responsabilidades mezcladas y puntos difíciles de probar**.
+Al terminar serás capaz de **decidir qué parte de una relación se incluye, cuál se enlaza y cuál no se publica**.
 
 ### 2. El problema
 
-Un controller puede funcionar y a la vez convertir cada cambio en una regresión probable.
+Serializar una entidad con relaciones devuelve la mitad de la base de datos, o entra en un bucle infinito.
 
 ### 3–6. Itinerario de trabajo
 
@@ -62,7 +62,7 @@ Un controller puede funcionar y a la vez convertir cada cambio en una regresión
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un mapa razonado de problemas sobre código existente.</li>
+    <li>Has obtenido un recurso con relaciones cuya respuesta está acotada y justificada.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -80,24 +80,24 @@ Un controller puede funcionar y a la vez convertir cada cambio en una regresión
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 20 · Arquitectura por capas
+## Sesión 44 · Filtros y búsqueda
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> sin límites claros la presentación conoce detalles de negocio y almacenamiento.</li>
-    <li><strong>Construye:</strong> un flujo de dependencias con responsabilidades explícitas.</li>
+    <li><strong>Comprende:</strong> las colecciones completas y las rutas ad hoc dejan de funcionar cuando crecen datos y casos de uso.</li>
+    <li><strong>Construye:</strong> una colección filtrable por al menos dos criterios combinables.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **asignar cada responsabilidad a controller, service y repository**.
+Al terminar serás capaz de **ofrecer filtros combinables sin inventar un lenguaje de consulta propio**.
 
 ### 2. El problema
 
-Sin límites claros la presentación conoce detalles de negocio y almacenamiento.
+Las colecciones completas y las rutas ad hoc dejan de funcionar cuando crecen datos y casos de uso.
 
 ### 3–6. Itinerario de trabajo
 
@@ -111,7 +111,7 @@ Sin límites claros la presentación conoce detalles de negocio y almacenamiento
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un flujo de dependencias con responsabilidades explícitas.</li>
+    <li>Has obtenido una colección filtrable por al menos dos criterios combinables.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -129,24 +129,24 @@ Sin límites claros la presentación conoce detalles de negocio y almacenamiento
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 21 · Inyección de dependencias
+## Sesión 45 · Paginación y ordenación en la API
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> crear colaboradores dentro de una clase acopla implementación, configuración y pruebas.</li>
-    <li><strong>Construye:</strong> componentes conectados por constructor y gestionados por Spring.</li>
+    <li><strong>Comprende:</strong> devolver una colección entera deja de funcionar en cuanto los datos crecen, y quien consume no sabe cuántos hay.</li>
+    <li><strong>Construye:</strong> una colección paginada y ordenable que declara el total de elementos.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **usar IoC, inyección por constructor y estereotipos de Spring sin ocultar las dependencias**.
+Al terminar serás capaz de **devolver colecciones grandes por páginas y con un orden explícito**.
 
 ### 2. El problema
 
-Crear colaboradores dentro de una clase acopla implementación, configuración y pruebas.
+Devolver una colección entera deja de funcionar en cuanto los datos crecen, y quien consume no sabe cuántos hay.
 
 ### 3–6. Itinerario de trabajo
 
@@ -160,7 +160,7 @@ Crear colaboradores dentro de una clase acopla implementación, configuración y
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido componentes conectados por constructor y gestionados por Spring.</li>
+    <li>Has obtenido una colección paginada y ordenable que declara el total de elementos.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -178,26 +178,26 @@ Crear colaboradores dentro de una clase acopla implementación, configuración y
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 8 · Reglas, contratos y refactorización
+## Semana 16 · Un contrato que otros pueden usar
 
-## Sesión 22 · Contratos entre capas
+## Sesión 46 · Tests de endpoints con MockMvc
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> pasar cualquier objeto entre todas las capas hace que un cambio interno se propague por toda la aplicación.</li>
-    <li><strong>Construye:</strong> contratos y mapeos explícitos en las fronteras entre controller, service y repository.</li>
+    <li><strong>Comprende:</strong> los tests del service no detectan que una ruta cambió, que un código de estado es incorrecto o que el JSON dejó de tener un campo.</li>
+    <li><strong>Construye:</strong> tests de endpoint que cubren un caso correcto y un caso de error de un recurso.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **definir qué intercambia cada capa y dónde se transforma cada representación**.
+Al terminar serás capaz de **comprobar el contrato HTTP completo —ruta, estado, cuerpo— sin arrancar un servidor real**.
 
 ### 2. El problema
 
-Pasar cualquier objeto entre todas las capas hace que un cambio interno se propague por toda la aplicación.
+Los tests del service no detectan que una ruta cambió, que un código de estado es incorrecto o que el JSON dejó de tener un campo.
 
 ### 3–6. Itinerario de trabajo
 
@@ -211,7 +211,7 @@ Pasar cualquier objeto entre todas las capas hace que un cambio interno se propa
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido contratos y mapeos explícitos en las fronteras entre controller, service y repository.</li>
+    <li>Has obtenido tests de endpoint que cubren un caso correcto y un caso de error de un recurso.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -229,24 +229,24 @@ Pasar cualquier objeto entre todas las capas hace que un cambio interno se propa
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 23 · Reglas de negocio en el service
+## Sesión 47 · OpenAPI y Swagger
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> repartir reglas entre controllers y repositories hace imposible saber dónde se decide el comportamiento.</li>
-    <li><strong>Construye:</strong> casos de uso y reglas de negocio concentrados en servicios comprobables.</li>
+    <li><strong>Comprende:</strong> una API no documentada obliga a descubrirla por ensayo y error y se vuelve difícil de verificar.</li>
+    <li><strong>Construye:</strong> una especificación OpenAPI navegable con ejemplos y respuestas.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **distinguir coordinación de casos de uso, reglas de negocio y acceso a datos**.
+Al terminar serás capaz de **generar, leer y corregir documentación que refleje el contrato real**.
 
 ### 2. El problema
 
-Repartir reglas entre controllers y repositories hace imposible saber dónde se decide el comportamiento.
+Una API no documentada obliga a descubrirla por ensayo y error y se vuelve difícil de verificar.
 
 ### 3–6. Itinerario de trabajo
 
@@ -260,7 +260,7 @@ Repartir reglas entre controllers y repositories hace imposible saber dónde se 
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido casos de uso y reglas de negocio concentrados en servicios comprobables.</li>
+    <li>Has obtenido una especificación OpenAPI navegable con ejemplos y respuestas.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -278,24 +278,24 @@ Repartir reglas entre controllers y repositories hace imposible saber dónde se 
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 24 · Refactorización completa
+## Sesión 48 · Evolucionar el contrato sin romper a quien lo consume
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una arquitectura solo se aprende cuando se aplica sobre suficiente código real.</li>
-    <li><strong>Construye:</strong> la aplicación organizada en controller, service, repository, model y dto.</li>
+    <li><strong>Comprende:</strong> renombrar un campo publicado rompe todas las aplicaciones que ya lo leían, y nadie se entera hasta que fallan.</li>
+    <li><strong>Construye:</strong> un cambio del contrato aplicado con su análisis de compatibilidad y su nota de versión.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **transformar la aplicación conservando su comportamiento observable**.
+Al terminar serás capaz de **clasificar un cambio como compatible o incompatible y decidir cómo introducirlo**.
 
 ### 2. El problema
 
-Una arquitectura solo se aprende cuando se aplica sobre suficiente código real.
+Renombrar un campo publicado rompe todas las aplicaciones que ya lo leían, y nadie se entera hasta que fallan.
 
 ### 3–6. Itinerario de trabajo
 
@@ -309,7 +309,7 @@ Una arquitectura solo se aprende cuando se aplica sobre suficiente código real.
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido la aplicación organizada en controller, service, repository, model y dto.</li>
+    <li>Has obtenido un cambio del contrato aplicado con su análisis de compatibilidad y su nota de versión.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -334,10 +334,11 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Reconocer responsabilidades mezcladas y lógica duplicada.</li>
-    <li>Separar presentación, negocio y acceso a datos.</li>
-    <li>Usar inyección por constructor y componentes de Spring.</li>
-    <li>Separar DTO y modelo y centralizar el tratamiento de excepciones.</li>
+    <li>Exponer relaciones sin filtrar el modelo interno ni provocar respuestas gigantes.</li>
+    <li>Diseñar filtros y búsquedas que no se conviertan en un lenguaje de consulta improvisado.</li>
+    <li>Paginar y ordenar colecciones declarando siempre el total.</li>
+    <li>Comprobar endpoints con MockMvc sin depender de un cliente manual.</li>
+    <li>Documentar la API con OpenAPI y evolucionar el contrato sin romper a quien lo consume.</li>
   </ul>
 </div>
 

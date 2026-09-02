@@ -1,35 +1,31 @@
 ---
 title: "Proyecto backend completo"
-label: "UD11 · Defender"
-section: "ud-11"
-order: 11
+label: "UD12 · Defender"
+section: "ud-12"
+order: 12
 lang: "es"
-summary: "Resolver de forma autónoma una especificación completa integrando backend, persistencia, REST, seguridad, servicios externos, Angular, tests y documentación."
+summary: "Un proyecto autónomo desde la especificación hasta la defensa técnica, con el cliente Angular ya integrado y la seguridad puesta."
 duration: "18 horas · 3 semanas · 9 sesiones"
-modality: "Proyecto autónomo · especificación sin tutorial"
+modality: "Proyecto evaluable · 10 % guía / 90 % autonomía"
 deliverable: "Un backend completo verificable con Postman o Bruno, conectado a Angular, probado, documentado y defendido técnicamente."
-date: "2026-08-31"
+date: "2026-09-02"
 outcomes:
-  - "Modelar un problema nuevo y diseñar su arquitectura."
-  - "Planificar y desarrollar por incrementos verificables."
-  - "Integrar persistencia, seguridad y servicios externos."
-  - "Conectar el cliente Angular desarrollado en el otro módulo sin acoplar el backend a la interfaz."
-  - "Construir una estrategia de tests y documentación."
-  - "Refactorizar y defender decisiones técnicas con evidencias."
+  - "Traducir una especificación en un modelo, un contrato y una arquitectura."
+  - "Implementar un backend completo con persistencia, seguridad e integraciones."
+  - "Conectar un cliente Angular sin hacer que la comprobación del backend dependa de él."
+  - "Probar, documentar y refactorizar antes de entregar."
+  - "Defender técnicamente las decisiones y reconocer las limitaciones del resultado."
 requirements:
-  - "Repositorio limpio con integración continua básica."
-  - "Entorno reproducible para aplicación y PostgreSQL."
-  - "Especificación y rúbrica del proyecto."
-  - "Proyecto Angular o conocimientos de Angular adquiridos en el módulo cliente."
+  - "Todo lo construido durante el curso."
 priorKnowledge:
-  - "Todo el recorrido de las UD1–UD10."
+  - "El módulo completo, de la UD1 a la UD11."
 ---
 
 <p class="lead">Ya no existe tutorial. Se entrega una especificación y el equipo decide modelo, contrato, arquitectura, estrategia de seguridad, integración y pruebas. Angular actúa como consumidor final, pero el backend debe seguir pudiendo comprobarse de forma completa con Postman o Bruno.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Autonomía plena. El acompañamiento se centra en revisiones de riesgo, preguntas de diseño y evidencias; no en secuencias de implementación.</p>
+  <p>Sin andamiaje. Solo especificación, criterios de aceptación y fechas.</p>
 </div>
 
 ## Semana 24 · Especificar antes de construir
@@ -486,11 +482,11 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Modelar un problema nuevo y diseñar su arquitectura.</li>
-    <li>Planificar y desarrollar por incrementos verificables.</li>
-    <li>Integrar persistencia, seguridad y servicios externos.</li>
-    <li>Construir una estrategia de tests y documentación.</li>
-    <li>Refactorizar y defender decisiones técnicas con evidencias.</li>
+    <li>Traducir una especificación en un modelo, un contrato y una arquitectura.</li>
+    <li>Implementar un backend completo con persistencia, seguridad e integraciones.</li>
+    <li>Conectar un cliente Angular sin hacer que la comprobación del backend dependa de él.</li>
+    <li>Probar, documentar y refactorizar antes de entregar.</li>
+    <li>Defender técnicamente las decisiones y reconocer las limitaciones del resultado.</li>
   </ul>
 </div>
 

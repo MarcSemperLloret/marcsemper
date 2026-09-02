@@ -4,36 +4,38 @@ label: "UD5 · Persistir"
 section: "ud-05"
 order: 5
 lang: "es"
-summary: "Sustituir los datos en memoria por un modelo relacional real con JPA y PostgreSQL, cuidando relaciones, transacciones y rendimiento."
+summary: "Sustituir las listas en memoria por una base de datos relacional real, con relaciones, consultas, transacciones y sus propios tests."
 duration: "24 horas · 4 semanas · 12 sesiones"
-modality: "Laboratorio progresivo · 50 % guía / 50 % autonomía"
-deliverable: "El gestor de proyectos persistido en PostgreSQL con relaciones, consultas, paginación e integridad."
-date: "2026-08-31"
+modality: "Taller técnico · 50 % guía / 50 % autonomía"
+deliverable: "El gestor de proyectos persistido en PostgreSQL con relaciones, consultas, integridad y tests de repositorio."
+date: "2026-09-02"
 outcomes:
+  - "Explicar qué resuelve un ORM y qué problemas introduce."
   - "Configurar PostgreSQL y mapear entidades con JPA."
-  - "Crear, consultar, modificar y eliminar datos persistentes."
-  - "Modelar relaciones uno-a-muchos y muchos-a-muchos."
-  - "Aplicar paginación, ordenación y transacciones."
-  - "Detectar consultas innecesarias y el problema N+1."
+  - "Implementar un CRUD persistente y consultas derivadas."
+  - "Comprobar el acceso a datos con tests de repositorio."
+  - "Modelar relaciones uno a muchos y muchos a muchos sin romper la integridad."
+  - "Reconocer y corregir el problema N+1."
 requirements:
-  - "PostgreSQL disponible en local o contenedor."
-  - "Un cliente de base de datos."
   - "La aplicación por capas de la UD4."
+  - "PostgreSQL instalado o accesible."
+  - "Un cliente de base de datos para inspeccionar las tablas."
 priorKnowledge:
-  - "Modelo relacional, claves y consultas SQL básicas."
-  - "Repository, service, DTO y excepciones."
+  - "Arquitectura por capas e inyección de dependencias."
+  - "SQL básico: tablas, claves y consultas."
+  - "Tests unitarios con JUnit."
 ---
 
-<p class="lead">Los datos dejan de desaparecer al reiniciar. Usuario, Proyecto, Incidencia, Comentario y Etiqueta pasan a formar un dominio persistente cuyos vínculos tienen consecuencias reales.</p>
+<p class="lead">La capa repository deja de ser una lista y pasa a ser una base de datos. La arquitectura no cambia: cambia una implementación, y esa es exactamente la lección.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje equilibrado. La primera entidad se construye de forma guiada; las relaciones y consultas del dominio exigen decisiones y comprobación en la base de datos.</p>
+  <p>Andamiaje medio y decreciente. La primera entidad se hace en común; las relaciones y el rendimiento se abordan con criterios y sin solución cerrada.</p>
 </div>
 
-## Semana 9 · Primera base de datos
+## Semana 10 · Primera base de datos
 
-## Sesión 25 · Persistencia y ORM
+## Sesión 28 · Persistencia y ORM
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -82,7 +84,7 @@ La lista en memoria pierde información y no permite compartir un estado durader
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 26 · Configurar PostgreSQL y Spring
+## Sesión 29 · Configurar PostgreSQL y Spring
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -131,7 +133,7 @@ La aplicación necesita credenciales, URL y driver correctos sin incrustar secre
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 27 · Primera entidad y JpaRepository
+## Sesión 30 · Primera entidad y JpaRepository
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -180,9 +182,9 @@ El repositorio en memoria debe sustituirse sin trasladar SQL a los controllers.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 10 · CRUD real
+## Semana 11 · CRUD real y comprobado
 
-## Sesión 28 · Crear y recuperar entidades
+## Sesión 31 · Crear y recuperar entidades
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -231,7 +233,7 @@ Un objeto Java nuevo todavía no representa necesariamente una fila existente.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 29 · Modificar y eliminar
+## Sesión 32 · Modificar y eliminar
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -280,7 +282,7 @@ Un id recibido no garantiza que el recurso exista ni que pueda eliminarse sin co
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 30 · Consultas derivadas
+## Sesión 33 · Consultas derivadas
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -329,9 +331,58 @@ FindAll no escala como respuesta universal a cualquier necesidad de consulta.
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 11 · Relaciones del dominio
+## Semana 12 · Relaciones del dominio
 
-## Sesión 31 · ManyToOne y OneToMany
+## Sesión 34 · Tests de repositorio con @DataJpaTest
+
+<div class="today-box">
+  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <ol class="today-steps">
+    <li><strong>Comprende:</strong> un repositorio que compila puede seguir devolviendo lo que no es, y el error solo aparece en la interfaz semanas después.</li>
+    <li><strong>Construye:</strong> una clase de tests de repositorio que cubre una consulta derivada y un caso sin resultados.</li>
+    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+  </ol>
+</div>
+
+### 1. Qué vamos a conseguir
+
+Al terminar serás capaz de **comprobar el acceso a datos contra una base de datos real sin arrancar la aplicación entera**.
+
+### 2. El problema
+
+Un repositorio que compila puede seguir devolviendo lo que no es, y el error solo aparece en la interfaz semanas después.
+
+### 3–6. Itinerario de trabajo
+
+1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
+2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
+3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
+4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+
+### 7. Comprueba que funciona
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Evidencia prevista</p>
+  <ul class="checklist">
+    <li>Has obtenido una clase de tests de repositorio que cubre una consulta derivada y un caso sin resultados.</li>
+    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
+    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
+    <li>El cambio queda integrado en la aplicación común del curso.</li>
+  </ul>
+</div>
+
+### 8. Antes de irte
+
+1. ¿Qué problema resolvía la decisión principal de hoy?
+2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
+3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
+
+<div class="rule">
+  <p class="rule-label">Estado del material</p>
+  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+</div>
+
+## Sesión 35 · ManyToOne y OneToMany
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -380,7 +431,7 @@ Guardar identificadores sueltos pierde navegación, integridad y semántica del 
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 32 · Relaciones bidireccionales
+## Sesión 36 · Relaciones bidireccionales
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -429,7 +480,9 @@ Una relación navegable en dos direcciones puede divergir en memoria o crear cic
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 33 · ManyToMany
+## Semana 13 · JPA más allá del tutorial
+
+## Sesión 37 · ManyToMany
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -478,58 +531,7 @@ Las etiquetas parecen simples hasta que la asociación necesita datos propios o 
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 12 · JPA más allá del tutorial
-
-## Sesión 34 · Paginación y ordenación
-
-<div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
-  <ol class="today-steps">
-    <li><strong>Comprende:</strong> cargar y enviar todos los registros degrada memoria, tiempo de respuesta y experiencia.</li>
-    <li><strong>Construye:</strong> un listado paginado y ordenable desde la interfaz.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
-  </ol>
-</div>
-
-### 1. Qué vamos a conseguir
-
-Al terminar serás capaz de **devolver colecciones grandes por páginas y con un orden explícito**.
-
-### 2. El problema
-
-Cargar y enviar todos los registros degrada memoria, tiempo de respuesta y experiencia.
-
-### 3–6. Itinerario de trabajo
-
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
-
-### 7. Comprueba que funciona
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
-  <ul class="checklist">
-    <li>Has obtenido un listado paginado y ordenable desde la interfaz.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
-  </ul>
-</div>
-
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
-</div>
-
-## Sesión 35 · Transacciones e integridad
+## Sesión 38 · Transacciones e integridad
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -578,7 +580,7 @@ Una operación de negocio puede dejar datos incoherentes si cada escritura confi
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 36 · Consultas, rendimiento y N+1
+## Sesión 39 · Consultas, rendimiento y N+1
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
@@ -634,13 +636,13 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
+    <li>Explicar qué resuelve un ORM y qué problemas introduce.</li>
     <li>Configurar PostgreSQL y mapear entidades con JPA.</li>
-    <li>Crear, consultar, modificar y eliminar datos persistentes.</li>
-    <li>Modelar relaciones uno-a-muchos y muchos-a-muchos.</li>
-    <li>Aplicar paginación, ordenación y transacciones.</li>
-    <li>Detectar consultas innecesarias y el problema N+1.</li>
+    <li>Implementar un CRUD persistente y consultas derivadas.</li>
+    <li>Comprobar el acceso a datos con tests de repositorio.</li>
+    <li>Modelar relaciones uno a muchos y muchos a muchos sin romper la integridad.</li>
+    <li>Reconocer y corregir el problema N+1.</li>
   </ul>
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-

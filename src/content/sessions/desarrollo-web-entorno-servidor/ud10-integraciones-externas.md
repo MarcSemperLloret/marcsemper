@@ -1,55 +1,54 @@
 ---
-title: "Validación, errores y estado"
-label: "UD3 · Validar"
-section: "ud-03"
-order: 3
+title: "Integraciones externas"
+label: "UD10 · Ampliar"
+section: "ud-10"
+order: 10
 lang: "es"
-summary: "Modificar recursos de forma fiable, rechazar entrada inválida, responder con errores consistentes y comprender cómo se mantiene estado entre peticiones."
+summary: "Conectar el backend con servicios que no controlamos y diseñar el comportamiento cuando la red, el proveedor o los datos no responden como se esperaba."
 duration: "12 horas · 2 semanas · 6 sesiones"
-modality: "Taller aplicado · 60 % guía / 40 % autonomía"
-deliverable: "Una API CRUD en memoria con entrada validada, errores coherentes y una funcionalidad basada en sesión."
-date: "2026-08-31"
+modality: "Laboratorio de integración · 20 % guía / 80 % autonomía"
+deliverable: "Una integración externa resiliente y una funcionalidad de ficheros, correo o webhook."
+date: "2026-09-02"
 outcomes:
-  - "Crear, modificar y eliminar recursos mediante JSON."
-  - "Validar la entrada en servidor y explicar por qué nunca se confía en el cliente."
-  - "Devolver errores de API estructurados y coherentes."
-  - "Explicar el carácter stateless de HTTP."
-  - "Mantener estado deliberado mediante cookies y sesión."
+  - "Consumir una API externa mediante un cliente HTTP."
+  - "Aislar contratos externos con DTO propios."
+  - "Tratar timeouts, errores y servicios no disponibles."
+  - "Subir y descargar ficheros e integrar correo o webhooks."
 requirements:
-  - "El backend y la colección de pruebas de la UD2."
-  - "DevTools y Postman o Bruno."
+  - "La aplicación segura de la UD9."
+  - "Acceso a una API pública adecuada para docencia."
 priorKnowledge:
-  - "Request body, DTO y ResponseEntity."
-  - "Métodos HTTP y códigos de estado."
+  - "DTO, servicios, errores centralizados y REST."
+  - "Autenticación y configuración externa."
 ---
 
-<p class="lead">El backend ya intercambia JSON, pero todavía debe protegerse de datos incompletos, operaciones imposibles y resultados incoherentes. Después veremos cómo recordar lo imprescindible entre peticiones.</p>
+<p class="lead">El backend deja de vivir solo. Al conectarlo con otra API aparecen latencia, formatos ajenos, límites y fallos que no controlamos.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje medio. Se guía la primera validación y el primer error estructurado; el CRUD completo y la funcionalidad con estado deben quedar cubiertos por la colección del alumnado.</p>
+  <p>Andamiaje muy bajo. Se proporciona un contrato externo y criterios de aceptación; el diseño del adaptador y de la degradación queda en manos del alumnado.</p>
 </div>
 
-## Semana 5 · Cambiar datos sin perder el control
+## Semana 21 · Consumir sin acoplarse
 
-## Sesión 13 · Crear, modificar y eliminar recursos
+## Sesión 61 · Consumir una API externa
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> un backend útil no solo consulta datos: también debe cambiar su estado con una semántica predecible.</li>
-    <li><strong>Construye:</strong> operaciones de escritura sobre proyectos o incidencias comprobadas desde el cliente HTTP.</li>
+    <li><strong>Comprende:</strong> el backend necesita información que pertenece a otro sistema y no puede consultarla como una tabla local.</li>
+    <li><strong>Construye:</strong> una consulta real a Open-Meteo, GitHub u otro servicio aprobado.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **implementar POST, PUT o PATCH y DELETE distinguiendo la intención de cada operación**.
+Al terminar serás capaz de **realizar una petición saliente y observar URL, cabeceras, cuerpo, latencia y respuesta**.
 
 ### 2. El problema
 
-Un backend útil no solo consulta datos: también debe cambiar su estado con una semántica predecible.
+El backend necesita información que pertenece a otro sistema y no puede consultarla como una tabla local.
 
 ### 3–6. Itinerario de trabajo
 
@@ -63,7 +62,7 @@ Un backend útil no solo consulta datos: también debe cambiar su estado con una
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido operaciones de escritura sobre proyectos o incidencias comprobadas desde el cliente HTTP.</li>
+    <li>Has obtenido una consulta real a Open-Meteo, GitHub u otro servicio aprobado.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -81,24 +80,24 @@ Un backend útil no solo consulta datos: también debe cambiar su estado con una
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 14 · Validación de entrada
+## Sesión 62 · Cliente HTTP y DTO externos
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> el JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formulario de Angular valide en el navegador.</li>
-    <li><strong>Construye:</strong> peticiones inválidas rechazadas con información concreta sobre cada campo.</li>
+    <li><strong>Comprende:</strong> propagar el JSON ajeno por toda la aplicación acopla el dominio a cambios externos.</li>
+    <li><strong>Construye:</strong> un adaptador con DTO externos y transformación al modelo propio.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **aplicar @Valid y restricciones de Bean Validation a los DTO de entrada**.
+Al terminar serás capaz de **encapsular el proveedor detrás de un servicio y mapear solo los datos necesarios**.
 
 ### 2. El problema
 
-El JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formulario de Angular valide en el navegador.
+Propagar el JSON ajeno por toda la aplicación acopla el dominio a cambios externos.
 
 ### 3–6. Itinerario de trabajo
 
@@ -112,7 +111,7 @@ El JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formu
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido peticiones inválidas rechazadas con información concreta sobre cada campo.</li>
+    <li>Has obtenido un adaptador con DTO externos y transformación al modelo propio.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -130,24 +129,24 @@ El JSON puede llegar incompleto, mal formado o manipulado aunque el futuro formu
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 15 · Errores coherentes de API
+## Sesión 63 · Errores, timeouts y servicios no disponibles
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variables y difíciles de consumir.</li>
-    <li><strong>Construye:</strong> un formato común para recurso inexistente, conflicto y validación fallida.</li>
+    <li><strong>Comprende:</strong> una llamada remota sin límites puede bloquear recursos y convertir un fallo ajeno en caída propia.</li>
+    <li><strong>Construye:</strong> casos simulados de timeout, error y respuesta inesperada tratados de forma observable.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **centralizar errores mediante excepciones propias y @RestControllerAdvice**.
+Al terminar serás capaz de **definir límites de tiempo y una respuesta útil ante fallo parcial**.
 
 ### 2. El problema
 
-Tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variables y difíciles de consumir.
+Una llamada remota sin límites puede bloquear recursos y convertir un fallo ajeno en caída propia.
 
 ### 3–6. Itinerario de trabajo
 
@@ -161,7 +160,7 @@ Tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variabl
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido un formato común para recurso inexistente, conflicto y validación fallida.</li>
+    <li>Has obtenido casos simulados de timeout, error y respuesta inesperada tratados de forma observable.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -179,26 +178,26 @@ Tratar cada fallo dentro de cada endpoint produce respuestas duplicadas, variabl
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Semana 6 · HTTP no recuerda nada
+## Semana 22 · Ficheros y eventos
 
-## Sesión 16 · Peticiones independientes
+## Sesión 64 · Subida y descarga de ficheros
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> el servidor no puede asumir que dos peticiones pertenecen a la misma conversación sin un mecanismo explícito.</li>
-    <li><strong>Construye:</strong> una secuencia documentada que muestra qué información se conserva y cuál desaparece.</li>
+    <li><strong>Comprende:</strong> aceptar un archivo sin límites abre problemas de seguridad, espacio y trazabilidad.</li>
+    <li><strong>Construye:</strong> adjuntos de una incidencia con descarga autorizada.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **explicar el carácter stateless de HTTP observando varias peticiones consecutivas**.
+Al terminar serás capaz de **validar, almacenar y servir un fichero controlando nombre, tipo, tamaño y autorización**.
 
 ### 2. El problema
 
-El servidor no puede asumir que dos peticiones pertenecen a la misma conversación sin un mecanismo explícito.
+Aceptar un archivo sin límites abre problemas de seguridad, espacio y trazabilidad.
 
 ### 3–6. Itinerario de trabajo
 
@@ -212,7 +211,7 @@ El servidor no puede asumir que dos peticiones pertenecen a la misma conversaci�
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una secuencia documentada que muestra qué información se conserva y cuál desaparece.</li>
+    <li>Has obtenido adjuntos de una incidencia con descarga autorizada.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -230,24 +229,24 @@ El servidor no puede asumir que dos peticiones pertenecen a la misma conversaci�
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 17 · Cookies y sesión
+## Sesión 65 · Correo, servicio externo o webhook
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> la aplicación necesita continuidad en algunos casos, pero guardar estado sin entender su alcance crea acoplamiento y errores.</li>
-    <li><strong>Construye:</strong> una preferencia o selección temporal asociada a una sesión y visible en el cliente HTTP.</li>
+    <li><strong>Comprende:</strong> notificar otro sistema introduce un segundo resultado que puede fallar después de guardar el dato principal.</li>
+    <li><strong>Construye:</strong> un correo o webhook encapsulado con registro de éxito y fallo.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **relacionar una cookie de sesión con el estado almacenado en el servidor**.
+Al terminar serás capaz de **integrar una salida asíncrona o una notificación sin mezclarla con el controller**.
 
 ### 2. El problema
 
-La aplicación necesita continuidad en algunos casos, pero guardar estado sin entender su alcance crea acoplamiento y errores.
+Notificar otro sistema introduce un segundo resultado que puede fallar después de guardar el dato principal.
 
 ### 3–6. Itinerario de trabajo
 
@@ -261,7 +260,7 @@ La aplicación necesita continuidad en algunos casos, pero guardar estado sin en
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una preferencia o selección temporal asociada a una sesión y visible en el cliente HTTP.</li>
+    <li>Has obtenido un correo o webhook encapsulado con registro de éxito y fallo.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -279,24 +278,24 @@ La aplicación necesita continuidad en algunos casos, pero guardar estado sin en
   <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
 </div>
 
-## Sesión 18 · API con estado controlado
+## Sesión 66 · Miniintegración
 
 <div class="today-box">
   <p class="today-label">Plan de la sesión · estructura publicada</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> cada mecanismo funciona aislado, pero debe conservar un contrato coherente cuando se combina con los demás.</li>
-    <li><strong>Construye:</strong> una API en memoria con favoritos o preferencias y una colección que cubre todo el recorrido.</li>
+    <li><strong>Comprende:</strong> una demo aislada no demuestra que la integración respete las reglas de la aplicación.</li>
+    <li><strong>Construye:</strong> una funcionalidad integrada con camino feliz y degradación comprobados.</li>
     <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
   </ol>
 </div>
 
 ### 1. Qué vamos a conseguir
 
-Al terminar serás capaz de **integrar CRUD, validación, errores y sesión en un flujo completo y repetible**.
+Al terminar serás capaz de **combinar persistencia, seguridad y un servicio externo en un caso de uso completo**.
 
 ### 2. El problema
 
-Cada mecanismo funciona aislado, pero debe conservar un contrato coherente cuando se combina con los demás.
+Una demo aislada no demuestra que la integración respete las reglas de la aplicación.
 
 ### 3–6. Itinerario de trabajo
 
@@ -310,7 +309,7 @@ Cada mecanismo funciona aislado, pero debe conservar un contrato coherente cuand
 <div class="checkpoint">
   <p class="checkpoint-label">Evidencia prevista</p>
   <ul class="checklist">
-    <li>Has obtenido una API en memoria con favoritos o preferencias y una colección que cubre todo el recorrido.</li>
+    <li>Has obtenido una funcionalidad integrada con camino feliz y degradación comprobados.</li>
     <li>Puedes explicar qué parte resuelve el problema de partida.</li>
     <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
     <li>El cambio queda integrado en la aplicación común del curso.</li>
@@ -335,13 +334,11 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
   <ul class="checklist">
-    <li>Crear, modificar y eliminar recursos mediante JSON.</li>
-    <li>Validar la entrada en servidor y explicar por qué nunca se confía en el cliente.</li>
-    <li>Devolver errores de API estructurados y coherentes.</li>
-    <li>Explicar el carácter stateless de HTTP.</li>
-    <li>Mantener estado deliberado mediante cookies y sesión.</li>
+    <li>Consumir una API externa mediante un cliente HTTP.</li>
+    <li>Aislar contratos externos con DTO propios.</li>
+    <li>Tratar timeouts, errores y servicios no disponibles.</li>
+    <li>Subir y descargar ficheros e integrar correo o webhooks.</li>
   </ul>
 </div>
 
 > El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
-
