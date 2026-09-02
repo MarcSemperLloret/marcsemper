@@ -902,153 +902,848 @@ Deja los tres arreglados antes de terminar.
 ## Sesión 25 · Reglas de negocio en el service
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> repartir reglas entre controllers y repositories hace imposible saber dónde se decide el comportamiento.</li>
-    <li><strong>Construye:</strong> casos de uso y reglas de negocio concentrados en servicios comprobables.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> a distinguir tres cosas que se confunden siempre: coordinar, decidir y acceder a datos.</li>
+    <li><strong>2. Haz:</strong> dale por fin un sitio a la regla que arrastras desde la sesión 19.</li>
+    <li><strong>3. Comprueba:</strong> tu API rechaza una tarea de un proyecto que no existe, con el código que hayas decidido.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>De la sesión 19: ¿por qué una anotación de validación no puede comprobar que el proyecto 7 existe?</li>
+    <li>¿Qué diferencia hay entre lo que hace tu controller y lo que hace tu service?</li>
+    <li>Enumera las reglas de negocio que tiene hoy tu aplicación. ¿Dónde está escrita cada una?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **distinguir coordinación de casos de uso, reglas de negocio y acceso a datos**.
+### Tres cosas que no son la misma
 
-### 2. El problema
+«Lógica de negocio» se usa para todo, y dentro de un service conviven tres cosas distintas:
 
-Repartir reglas entre controllers y repositories hace imposible saber dónde se decide el comportamiento.
+| Es… | Responde a… | Ejemplo |
+| :--- | :--- | :--- |
+| **Coordinación** | ¿En qué orden se hacen los pasos? | Buscar el proyecto, crear la tarea, guardarla |
+| **Regla de negocio** | ¿Se puede hacer esto? ¿Qué valor toma? | Una tarea nace sin completar; no puede haber dos proyectos con el mismo nombre |
+| **Acceso a datos** | ¿Cómo lo guardo y lo recupero? | Recorrer la lista, o mañana una consulta SQL |
 
-### 3–6. Itinerario de trabajo
+La tercera ya está fuera desde la sesión 23. Hoy separamos las dos primeras, que siguen mezcladas.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<p class="term">Caso de uso</p>
 
-### 7. Comprueba que funciona
+Una cosa completa que alguien quiere hacer con la aplicación: «crear una tarea», «cerrar una incidencia», «listar los proyectos activos». Es la unidad en la que se piensa un service: **un método público por caso de uso**, con el nombre que usaría una persona.
+
+### Validación o regla de negocio
+
+Esta es la distinción de la sesión, y tiene una prueba que la decide:
+
+<div class="rule">
+  <p class="rule-label">La pregunta que las separa</p>
+  <p><strong>¿Se puede responder mirando solo el objeto que ha llegado?</strong></p>
+  <p>Si <strong>sí</strong>, es <em>validación</em>: una regla de formato, y va en el DTO con una anotación. «El título no puede estar vacío» se decide mirando el título.</p>
+  <p>Si <strong>no</strong>, porque hace falta consultar datos, es una <em>regla de negocio</em>: va en el service. «El proyecto debe existir» exige mirar los proyectos que hay.</p>
+</div>
+
+| Regla | ¿Basta con el objeto? | Dónde vive |
+| :--- | :---: | :--- |
+| El título no está vacío | Sí | DTO, `@NotBlank` |
+| La prioridad es baja, media o alta | Sí | DTO, anotación propia |
+| La fecha de fin no es anterior a la de inicio | Sí, mira dos campos | DTO, restricción de clase |
+| El proyecto al que pertenece existe | **No** | Service |
+| No hay otro proyecto con ese nombre | **No** | Service |
+| Un proyecto archivado no admite tareas nuevas | **No** | Service |
+| Solo el autor puede borrar su comentario | **No** | Service, y en la UD9 con seguridad |
+
+Fíjate en que la frontera **no es la dificultad de la regla**, sino de dónde sale la información para decidirla.
+
+### La regla que llevaba dos unidades esperando
+
+En la sesión 19 la encontraste, viste por qué una anotación no podía con ella y la dejaste apuntada. Hoy tiene sitio:
+
+```java
+@Service
+public class TareaService {
+
+    private final TareaRepository repositorio;
+    private final ProyectoRepository proyectos;
+
+    public TareaService(TareaRepository repositorio, ProyectoRepository proyectos) {
+        this.repositorio = repositorio;
+        this.proyectos = proyectos;
+    }
+
+    public Tarea crear(Tarea tarea) {
+        // Regla: toda tarea pertenece a un proyecto que existe.
+        if (!proyectos.existsById(tarea.getProyectoId())) {
+            throw new ReglaDeNegocioException(
+                    "No existe el proyecto " + tarea.getProyectoId());
+        }
+        // Regla: una tarea nace sin completar.
+        tarea.setCompletada(false);
+        return repositorio.save(tarea);
+    }
+}
+```
+
+Y la excepción, junto a las de la UD3:
+
+```java
+package com.ejemplo.gestor.error;
+
+public class ReglaDeNegocioException extends RuntimeException {
+
+    public ReglaDeNegocioException(String mensaje) {
+        super(mensaje);
+    }
+}
+```
+
+Con su manejador, que ya sabes escribir:
+
+```java
+@ExceptionHandler(ReglaDeNegocioException.class)
+public ResponseEntity<ErrorResponse> reglaIncumplida(
+        ReglaDeNegocioException ex, HttpServletRequest peticion) {
+
+    return construir(HttpStatus.CONFLICT, ex.getMessage(), peticion, List.of());
+}
+```
+
+<div class="rule">
+  <p class="rule-label">Fíjate en lo que <em>no</em> hay en el service</p>
+  <p>No aparece <code>409</code>, ni <code>ResponseEntity</code>, ni nada de HTTP. El service dice <strong>qué regla se ha incumplido</strong>; el manejador decide con qué código se cuenta eso.</p>
+  <p>Si mañana esta misma regla la aplica una importación de CSV, la excepción tendrá exactamente el mismo sentido y nadie hablará de códigos de estado.</p>
+</div>
+
+#### ¿400, 404 o 409?
+
+Es la discusión que dejaste abierta en la sesión 19, y ahora toca cerrarla. Las tres posturas son defendibles:
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">404 Not Found</p>
+    <p class="compare-body">«El proyecto que nombras no existe.» Tiene el problema de que la ruta era <code>/tareas</code>: quien lo reciba puede creer que no existe la ruta de tareas.</p>
+  </div>
+  <div>
+    <p class="compare-label">409 Conflict</p>
+    <p class="compare-body">«Tu petición es válida pero choca con el estado de los datos.» Encaja con la definición y no se confunde con la ruta. Es la que usamos aquí.</p>
+  </div>
+</div>
+
+También se defiende un `400`, argumentando que el cliente ha enviado un dato incorrecto. **Elige una, escríbela en `DECISIONES.md` y aplícala igual en toda la API.** Lo que no vale es que una regla parecida responda `409` en un recurso y `400` en otro.
+
+### El service que solo coordina
+
+Cuando un caso de uso crece, conviene ver sus dos mitades separadas:
+
+```java
+public Tarea crear(Tarea tarea) {
+    comprobarQueElProyectoExiste(tarea.getProyectoId());
+    comprobarQueElProyectoAdmiteTareas(tarea.getProyectoId());
+    tarea.setCompletada(false);
+    return repositorio.save(tarea);
+}
+
+private void comprobarQueElProyectoExiste(int proyectoId) {
+    if (!proyectos.existsById(proyectoId)) {
+        throw new ReglaDeNegocioException("No existe el proyecto " + proyectoId);
+    }
+}
+
+private void comprobarQueElProyectoAdmiteTareas(int proyectoId) {
+    Proyecto proyecto = proyectos.findById(proyectoId).orElseThrow();
+    if (!proyecto.isActivo()) {
+        throw new ReglaDeNegocioException(
+                "El proyecto " + proyectoId + " está archivado y no admite tareas");
+    }
+}
+```
+
+El método público **se lee como el enunciado del caso de uso**: comprueba esto, comprueba aquello, aplica esta regla, guarda. Cada regla tiene un nombre, y ese nombre es documentación que no se desactualiza.
+
+<div class="rule">
+  <p class="rule-label">Un método público por caso de uso, con nombre de negocio</p>
+  <p><code>crear</code>, <code>cerrar</code>, <code>archivar</code>, <code>reasignar</code>. No <code>procesarDatos</code>, no <code>gestionar</code>, no <code>hacerTodo</code>.</p>
+  <p>La prueba: si le lees el nombre del método a alguien que conoce el negocio pero no programa, ¿entiende qué hace? Si no, el nombre está describiendo el código en lugar del propósito.</p>
+</div>
+
+### Las reglas que dependen del estado
+
+Hay una familia entera que solo aparece cuando algo puede estar en varias situaciones. Son las que más se olvidan:
+
+<figure class="diagram">
+  <figcaption>Estados de una incidencia y qué se permite en cada uno</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li><strong>abierta</strong><br>se edita, se cierra</li>
+    <li><strong>en curso</strong><br>se edita, se cierra</li>
+    <li><strong>cerrada</strong><br>solo se reabre</li>
+  </ol>
+</figure>
+
+De ahí salen reglas que ninguna anotación puede expresar: «una incidencia cerrada no se puede editar», «no se puede cerrar dos veces», «solo se reabre lo que está cerrado».
+
+Y llevan a una pregunta que conviene hacerse pronto: si alguien envía un `PATCH` cambiando el estado de `abierta` a `cerrada`, ¿es eso una modificación cualquiera o **es un caso de uso propio**? Casi siempre lo segundo, y por eso `POST /incidencias/41/cierre` de la sesión 14 tenía sentido: porque detrás hay reglas que un cambio de campo genérico se salta.
+
+### Ahora tú · El inventario de reglas
+
+1. Escribe la tabla de **todas** las reglas de tu aplicación, con este formato:
+
+| Regla | ¿Basta el objeto? | Dónde vive hoy | Dónde debería vivir |
+| :--- | :---: | :--- | :--- |
+
+2. Mueve al service todas las que no estén en su sitio.
+3. Implementa como mínimo estas tres:
+   * Una tarea pertenece a un proyecto que existe.
+   * No hay dos proyectos con el mismo nombre.
+   * Un proyecto inactivo no admite tareas nuevas.
+4. Dales nombre propio: un método privado por regla, con un nombre que se lea.
+5. Añade a la colección una petición por regla que la incumpla, comprobando código y mensaje.
+
+### Reto · La regla que se cuela por la puerta de atrás
+
+Tienes la regla «un proyecto inactivo no admite tareas nuevas» implementada en `crear`. Ahora piensa:
+
+1. ¿Qué pasa si alguien crea una tarea en un proyecto activo y **después** se archiva el proyecto?
+2. ¿Qué pasa si alguien usa `PUT /tareas/41` para cambiarle el `proyectoId` a uno inactivo? ¿Pasa por tu regla?
+3. Localiza **todos** los caminos por los que una tarea puede acabar asociada a un proyecto inactivo. Hay al menos tres.
+4. Decide qué hacer con cada uno: ¿se prohíbe, se permite, se avisa? No todas las respuestas tienen que ser «prohibir».
+5. Implementa tu decisión y añade una prueba por camino.
+
+Y la pregunta de fondo, que se responde en dos frases:
+
+> Cuando una regla hay que repetirla en tres métodos distintos, ¿es que la regla está mal puesta, o es que falta un concepto en tu modelo?
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>La tabla de reglas completa y las tres reglas implementadas en el service.</span></div>
+  <div><strong>Si lo tienes</strong><span>Cada regla con su método privado y su nombre de negocio, y una petición de incumplimiento por regla en la colección.</span></div>
+  <div><strong>Reto</strong><span>Los tres caminos hacia el proyecto inactivo localizados y resueltos con una decisión escrita.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 25</p>
   <ul class="checklist">
-    <li>Has obtenido casos de uso y reglas de negocio concentrados en servicios comprobables.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Sabes decidir si algo es validación o regla de negocio con la pregunta del objeto.</li>
+    <li>Ninguna regla de negocio vive ya en un controlador.</li>
+    <li>La regla del proyecto inexistente está implementada, con su código de estado decidido y escrito.</li>
+    <li>Cada caso de uso es un método público con nombre de negocio.</li>
+    <li>Ningún service menciona códigos de estado.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué pregunta separa una validación de una regla de negocio?</li>
+    <li>¿Por qué el service lanza una excepción en vez de devolver un código?</li>
+    <li>¿Qué es un caso de uso y cómo se refleja en el código?</li>
+    <li>Da un ejemplo de regla que solo existe porque algo puede estar en varios estados.</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Si se puede decidir mirando solo el objeto que ha llegado, es validación y va en el DTO. Si hace falta consultar datos, es una regla de negocio y va en el service.</p>
+  <p>2 · Porque el service no sabe que existe HTTP. Dice qué regla se ha incumplido, y traducir eso a un código es trabajo de la capa web, que es la única que habla ese idioma.</p>
+  <p>3 · Algo completo que alguien quiere hacer con la aplicación. Se refleja como un método público del service, con un nombre que entendería alguien del negocio.</p>
+  <p>4 · Que una incidencia cerrada no se pueda editar, o que solo se reabra lo que está cerrado. Dependen de la situación actual del recurso, no de los datos enviados.</p>
+</details>
 
 ## Sesión 26 · Primeros tests del service con JUnit
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> comprobar a mano en Postman cada regla después de cada cambio no es sostenible ni demuestra nada al día siguiente.</li>
-    <li><strong>Construye:</strong> una clase de tests que cubre el camino correcto y al menos un caso de error de una regla del service.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> a comprobar una regla sin arrancar el servidor, sin base de datos y sin Postman.</li>
+    <li><strong>2. Haz:</strong> escribe tu primer test, con un repositorio falso construido a mano.</li>
+    <li><strong>3. Comprueba:</strong> rompes una regla a propósito y el test lo dice en menos de un segundo.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Cuánto tardas hoy en comprobar que una tarea nace sin completar? Cuéntalo en pasos.</li>
+    <li>De la sesión 24: ¿por qué se prefiere la inyección por constructor?</li>
+    <li>¿Qué tipo pide hoy el constructor de tu service: una clase o una interfaz?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **escribir tests unitarios que comprueban una regla de negocio sin arrancar el servidor**.
+### Las dos respuestas de antes se cobran hoy
 
-### 2. El problema
+Aquellas dos decisiones de la sesión 24 parecían burocracia. Hoy se ve para qué eran:
 
-Comprobar a mano en Postman cada regla después de cada cambio no es sostenible ni demuestra nada al día siguiente.
+<figure class="diagram">
+  <figcaption>Por qué se puede probar tu service</figcaption>
+  <ol class="flow flow--before">
+    <li>Pide sus dependencias <strong>por constructor</strong>, así que puedo construirlo yo</li>
+    <li>Pide una <strong>interfaz</strong>, así que puedo darle lo que quiera que la cumpla</li>
+    <li>No sabe nada de HTTP, así que <strong>no hace falta arrancar nada</strong></li>
+  </ol>
+</figure>
 
-### 3–6. Itinerario de trabajo
+Sin esas tres, lo de hoy sería imposible. Con ellas, un test cabe en diez líneas.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+### Qué es y qué no es un test
 
-### 7. Comprueba que funciona
+<p class="term">Test unitario</p>
+
+Un trozo de código que ejecuta otro trozo de código y **comprueba automáticamente** que el resultado es el esperado. Si lo es, calla. Si no, avisa.
+
+Lo importante es «automáticamente». Comprobar a mano en Postman también es probar, y tiene tres problemas: lo haces tú, lo haces cuando te acuerdas, y **mañana ya no queda constancia de que lo hiciste**.
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Comprobar en Postman</p>
+    <p class="compare-body">Arrancar, escribir un JSON, enviar, leer. Diez segundos si todo va bien, y si falla no sabes si es la regla, la ruta, el mapper o el JSON.</p>
+  </div>
+  <div>
+    <p class="compare-label">Un test unitario</p>
+    <p class="compare-body">Milisegundos, sin arrancar nada, señalando exactamente qué regla ha fallado y con qué valores.</p>
+  </div>
+</div>
+
+Los dos hacen falta: la colección comprueba **el contrato HTTP**, y los tests comprueban **la lógica**. Comprueban cosas distintas.
+
+### Ya tienes las herramientas instaladas
+
+Mira el `pom.xml`: `spring-boot-starter-test` está desde el primer día, porque lo puso `start.spring.io`. Trae JUnit 5 y todo lo necesario.
+
+Y mira `src/test/java`: existe desde la UD1, con una clase generada dentro. Es la carpeta gemela de `src/main/java`, y **el código de tests no se empaqueta con la aplicación**.
+
+<div class="rule">
+  <p class="rule-label">La estructura se copia, no se inventa</p>
+  <p>El test de <code>com.ejemplo.gestor.service.TareaService</code> va en el mismo paquete, dentro de <code>src/test/java</code>, y se llama <code>TareaServiceTest</code>.</p>
+  <p>Mismo paquete, mismo nombre más <code>Test</code>. Así se encuentran sin buscarlos y Maven los ejecuta sin configurar nada.</p>
+</div>
+
+### El repositorio falso
+
+Para probar el service hace falta darle un repositorio. Podrías darle el de memoria, pero entonces estarías probando dos clases a la vez y, si falla, no sabrías cuál.
+
+<p class="term">Doble de prueba</p>
+
+Una implementación de mentira que se pone en lugar de la de verdad, para controlar exactamente qué datos ve el código que estás probando.
+
+Como tu repositorio es una interfaz, escribir uno es directo:
+
+```java
+package com.ejemplo.gestor.service;
+
+import com.ejemplo.gestor.model.Proyecto;
+import com.ejemplo.gestor.repository.ProyectoRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+class ProyectoRepositorioFalso implements ProyectoRepository {
+
+    private final List<Proyecto> proyectos = new ArrayList<>();
+
+    /** Prepara el escenario del test: estos proyectos existen y ninguno más. */
+    void con(Proyecto... iniciales) {
+        proyectos.addAll(List.of(iniciales));
+    }
+
+    @Override
+    public boolean existsById(int id) {
+        return findById(id).isPresent();
+    }
+
+    @Override
+    public Optional<Proyecto> findById(int id) {
+        return proyectos.stream().filter(p -> p.getId() == id).findFirst();
+    }
+
+    @Override
+    public List<Proyecto> findAll() {
+        return new ArrayList<>(proyectos);
+    }
+
+    @Override
+    public Proyecto save(Proyecto proyecto) {
+        proyectos.add(proyecto);
+        return proyecto;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        return proyectos.removeIf(p -> p.getId() == id);
+    }
+}
+```
+
+Vive en `src/test/java`, así que no se publica con la aplicación.
+
+<details class="aside aside--extra">
+  <summary>Existen librerías que generan estos dobles</summary>
+  <p>La más usada se llama <strong>Mockito</strong>, y ya está en tu proyecto dentro de <code>spring-boot-starter-test</code>. Con ella, lo de arriba se escribe en una línea por comportamiento.</p>
+  <p>Lo hacemos a mano primero porque un doble escrito por ti se entiende sin aprender una sintaxis nueva, y porque así ves que no hay magia: es una clase normal que implementa la misma interfaz. Cuando en la UD11 se ordene la estrategia de pruebas, sabrás qué te está generando la librería.</p>
+</details>
+
+### Tu primer test
+
+```java
+package com.ejemplo.gestor.service;
+
+import com.ejemplo.gestor.error.ReglaDeNegocioException;
+import com.ejemplo.gestor.model.Proyecto;
+import com.ejemplo.gestor.model.Tarea;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class TareaServiceTest {
+
+    @Test
+    @DisplayName("Una tarea nueva nace sin completar")
+    void unaTareaNuevaNaceSinCompletar() {
+        // Preparar
+        ProyectoRepositorioFalso proyectos = new ProyectoRepositorioFalso();
+        proyectos.con(new Proyecto(7, "Web corporativa", "", true));
+        TareaService servicio =
+                new TareaService(new TareaRepositorioFalso(), proyectos);
+
+        Tarea entrada = new Tarea();
+        entrada.setTitulo("Revisar el login");
+        entrada.setProyectoId(7);
+        entrada.setCompletada(true);   // el cliente insiste
+
+        // Actuar
+        Tarea creada = servicio.crear(entrada);
+
+        // Comprobar
+        assertFalse(creada.isCompletada());
+    }
+
+    @Test
+    @DisplayName("No se puede crear una tarea en un proyecto que no existe")
+    void noSePuedeCrearEnUnProyectoInexistente() {
+        ProyectoRepositorioFalso proyectos = new ProyectoRepositorioFalso();
+        // Escenario: no hay ningún proyecto.
+        TareaService servicio =
+                new TareaService(new TareaRepositorioFalso(), proyectos);
+
+        Tarea entrada = new Tarea();
+        entrada.setTitulo("Revisar el login");
+        entrada.setProyectoId(999);
+
+        ReglaDeNegocioException error = assertThrows(
+                ReglaDeNegocioException.class,
+                () -> servicio.crear(entrada));
+
+        assertEquals("No existe el proyecto 999", error.getMessage());
+    }
+}
+```
+
+<dl class="worked">
+  <dt>Las tres zonas · preparar, actuar, comprobar</dt>
+  <dd>Todo test tiene esta forma: se monta el escenario, se ejecuta <strong>una sola</strong> acción, y se comprueba el resultado. Si te cuesta separarlas, normalmente es que el test está probando dos cosas a la vez.</dd>
+  <dt><code>@DisplayName</code></dt>
+  <dd>El nombre que se ve al ejecutar. Escríbelo como una frase que afirme lo que debe pasar: cuando falle, ese texto es lo que vas a leer, y quieres que te diga qué se ha roto sin abrir el código.</dd>
+  <dt><code>assertThrows</code></dt>
+  <dd>Comprueba que algo falla, y falla <strong>como debe</strong>. Devuelve la excepción capturada, así que se puede comprobar además el mensaje. Un test que verifica los errores vale tanto como uno que verifica los aciertos.</dd>
+  <dt>Por qué no hay ninguna anotación de Spring</dt>
+  <dd>Porque no hace falta. Este test no arranca la aplicación, no levanta el contenedor y no toca un puerto: <strong>construye tres objetos Java y llama a un método</strong>. Por eso tarda milisegundos.</dd>
+</dl>
+
+### Ejecútalos
+
+Desde el IDE, con el botón de la clase. Desde el terminal:
+
+```bash
+./mvnw test
+```
+
+```text
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+```
+
+Fíjate en el tiempo total. Ahora compáralo con arrancar la aplicación y comprobar esas dos cosas en Postman.
+
+<p class="stage">La prueba de que sirven</p>
+
+Ve a `TareaService` y **borra la línea** `tarea.setCompletada(false)`. Ejecuta los tests.
+
+```text
+[ERROR] Una tarea nueva nace sin completar
+expected: <false> but was: <true>
+```
+
+El nombre te dice qué regla se ha roto, y el mensaje qué valor esperaba. Sin arrancar nada, sin escribir un JSON y sin acordarte de comprobarlo. **Devuelve la línea.**
+
+<div class="rule">
+  <p class="rule-label">Qué merece un test y qué no</p>
+  <p><strong>Sí:</strong> las reglas de negocio, los casos de error, los límites, y todo lo que alguien pueda romper sin darse cuenta.</p>
+  <p><strong>No:</strong> los <em>getters</em>, los mappers triviales, ni que Spring funcione. Un test que solo comprueba que Java asigna un campo no protege de nada y hay que mantenerlo igual.</p>
+  <p>El criterio: <strong>¿me enteraría si alguien rompiera esto?</strong> Si la respuesta es no, hay que escribir el test.</p>
+</div>
+
+### Ahora tú · Cubre tus reglas
+
+1. Crea `TareaRepositorioFalso` y `ProyectoRepositorioFalso` en `src/test/java`.
+2. Escribe un test por cada regla de la tabla de la sesión 25. Como mínimo cinco.
+3. Cada uno con su `@DisplayName` en forma de frase afirmativa.
+4. Al menos dos deben usar `assertThrows` y comprobar el mensaje.
+5. Ejecuta `./mvnw test` y deja todo en verde.
+
+### Reto · Rompe y demuestra
+
+Este reto mide si tus tests valen algo.
+
+1. Haz una lista de las **cinco reglas** de tu aplicación.
+2. Para cada una, ve al código y **rómpela a propósito**, de una en una: invierte una condición, borra una línea, cambia un valor.
+3. Ejecuta los tests y anota: ¿falló alguno? ¿Cuál? ¿El mensaje te dijo qué se había roto?
+4. Rellena esta tabla:
+
+| Regla | ¿La detectó un test? | ¿El mensaje era útil? |
+| :--- | :---: | :---: |
+
+5. Toda fila con un «no» en la primera columna es **un agujero en tu suite**. Escribe el test que falta.
+6. Restaura el código y comprueba que todo vuelve a verde.
+
+Y una reflexión final, para escribir:
+
+> Si un compañero entra mañana en tu proyecto, cambia una línea y ejecuta los tests, ¿qué le protegería y qué no?
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Los dos dobles escritos y dos tests en verde, uno de ellos con <code>assertThrows</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Cinco tests, uno por regla, con nombres legibles y mensajes comprobados.</span></div>
+  <div><strong>Reto</strong><span>Las cinco reglas rotas una a una, la tabla completa y los agujeros tapados.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 26</p>
   <ul class="checklist">
-    <li>Has obtenido una clase de tests que cubre el camino correcto y al menos un caso de error de una regla del service.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Existe <code>src/test/java</code> con tests que reflejan la estructura de paquetes.</li>
+    <li>Los tests construyen el service a mano, sin arrancar Spring.</li>
+    <li>Hay al menos un doble de prueba escrito por ti.</li>
+    <li>Al menos dos tests comprueban que algo falla como debe.</li>
+    <li>Has roto una regla a propósito y un test lo ha detectado.</li>
+    <li><code>./mvnw test</code> pasa en verde.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué dos decisiones de la sesión 24 hacen posible probar el service?</li>
+    <li>¿Por qué se usa un repositorio falso y no el de memoria?</li>
+    <li>¿Cuáles son las tres zonas de un test?</li>
+    <li>¿Qué comprueba la colección de Postman que no comprueban estos tests, y al revés?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Pedir las dependencias por constructor, que permite construirlo a mano, y depender de una interfaz, que permite pasarle una implementación de mentira.</p>
+  <p>2 · Para probar una sola clase cada vez. Con el repositorio real estarías probando dos, y si el test fallara no sabrías cuál de las dos tiene el fallo.</p>
+  <p>3 · Preparar el escenario, ejecutar una sola acción y comprobar el resultado.</p>
+  <p>4 · La colección comprueba el contrato HTTP: rutas, códigos y formato. Los tests comprueban la lógica de negocio sin pasar por la web. Ninguno sustituye al otro.</p>
+</details>
 
 ## Sesión 27 · Refactorización completa
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> una arquitectura solo se aprende cuando se aplica sobre suficiente código real.</li>
-    <li><strong>Construye:</strong> la aplicación organizada en controller, service, repository, model y dto.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> a terminar una refactorización, que no es lo mismo que empezarla.</li>
+    <li><strong>2. Haz:</strong> aplica la arquitectura a toda la aplicación y tacha uno a uno los problemas que apuntaste.</li>
+    <li><strong>3. Comprueba:</strong> la colección y los tests, los dos en verde, y el comportamiento idéntico al del primer día.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Abre tu <code>PROBLEMAS.md</code> de la sesión 22. ¿Cuántos puntos siguen sin resolver?</li>
+    <li>¿Qué tenía que seguir igual al terminar esta unidad?</li>
+    <li>¿Cuántos tests tienes hoy y cuántas reglas de negocio?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **transformar la aplicación conservando su comportamiento observable**.
+<div class="rule">
+  <p class="rule-label">Cómo es esta sesión</p>
+  <p>Sesión de cierre. No hay contenido nuevo: hay <strong>una lista de criterios y tu propio inventario de problemas</strong>. La refactorización la diriges tú.</p>
+</div>
 
-### 2. El problema
+### Terminar es tachar
 
-Una arquitectura solo se aprende cuando se aplica sobre suficiente código real.
+Una refactorización a medias es peor que no haberla empezado: deja dos formas de hacer lo mismo conviviendo, y quien llegue después no sabrá cuál es la buena.
 
-### 3–6. Itinerario de trabajo
+Abre `PROBLEMAS.md`. Para cada línea, una de tres:
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<figure class="diagram">
+  <figcaption>Qué hacer con cada problema apuntado</figcaption>
+  <ol class="flow flow--before">
+    <li><strong>Resuelto:</strong> táchalo y escribe en qué clase vive ahora eso</li>
+    <li><strong>Sigue vivo:</strong> resuélvelo hoy</li>
+    <li><strong>Ya no aplica:</strong> explica por qué dejó de ser un problema</li>
+  </ol>
+</figure>
 
-### 7. Comprueba que funciona
+No vale dejar líneas sin marcar. Ese documento es la justificación de la unidad y hoy es su comprobación.
+
+### Especificación · el estado final
+
+#### Estructura del proyecto
+
+```text
+com.ejemplo.gestor
+├── controller     · habla HTTP y nada más
+├── dto            · lo que se acepta y lo que se publica
+├── mapper         · traduce entre DTO y modelo
+├── service        · casos de uso y reglas de negocio
+├── repository     · interfaces, con su implementación en memoria
+├── model          · lo que maneja tu código
+├── validacion     · anotaciones propias
+└── error          · excepciones, formato y manejador
+```
+
+#### Reglas que se comprueban
+
+| # | Criterio | Cómo se verifica |
+| :---: | :--- | :--- |
+| 1 | Ningún controlador tiene listas, bucles de búsqueda ni contadores | Búscalos |
+| 2 | Ningún controlador contiene una regla de negocio | Léelos entero |
+| 3 | Ningún service menciona HTTP, códigos, DTO ni `ResponseEntity` | Busca `Response` en el paquete |
+| 4 | Ningún repository conoce reglas de negocio | Léelos |
+| 5 | No queda ningún `new` de un colaborador | Busca `new` en controller y service |
+| 6 | Todas las dependencias se piden por constructor y son `final` | Léelas |
+| 7 | Los repositorios son interfaces | Míralos |
+| 8 | Cada clase lleva el estereotipo de su capa | Míralos |
+| 9 | Cada caso de uso es un método público con nombre de negocio | Lee los nombres en voz alta |
+| 10 | Cada regla de negocio tiene su test | Cuenta reglas y cuenta tests |
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · el controlador de la ruta anidada</summary>
+  <p><code>GET /proyectos/{id}/tareas</code> es el que suele quedarse a medias, porque toca dos recursos y es tentador resolverlo con dos llamadas desde el controlador.</p>
+  <p>Si tu controlador llama a dos servicios y decide algo entre medias, eso es coordinación, y la coordinación es del service. Decide en cuál vive el caso de uso y déjalo ahí entero.</p>
+</details>
+
+### La doble comprobación
+
+Esta unidad se cierra con dos pruebas que dicen cosas distintas:
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">La colección</p>
+    <p class="compare-body">Demuestra que <strong>no has cambiado nada</strong> para quien consume la API. Es la prueba de que fue una refactorización.</p>
+  </div>
+  <div>
+    <p class="compare-label">Los tests</p>
+    <p class="compare-body">Demuestran que <strong>las reglas siguen siendo las que decidiste</strong>, y lo demostrarán otra vez dentro de seis meses.</p>
+  </div>
+</div>
+
+Las dos tienen que estar en verde. Y hay una tercera comprobación, la más honesta:
+
+<div class="rule">
+  <p class="rule-label">La prueba del cambio pequeño</p>
+  <p>Elige uno de estos y cronométralo de verdad:</p>
+  <ol>
+    <li>Que una tarea nueva nazca con prioridad <code>media</code>.</li>
+    <li>Publicar un campo nuevo en la respuesta de proyectos.</li>
+    <li>Añadir un filtro por prioridad al listado de tareas.</li>
+  </ol>
+  <p>Apunta <strong>cuántos archivos has tenido que abrir y cuánto has tardado</strong>. Compáralo con la estimación que hiciste en el apartado 4 de <code>PROBLEMAS.md</code>, cuando todo estaba en el controlador. Esa diferencia es el resultado de la unidad.</p>
+</div>
+
+### Entrega de la unidad
+
+1. **El proyecto** con la estructura de la especificación.
+2. **`PROBLEMAS.md`** revisado, con cada línea tachada o justificada.
+3. **Los tests**, con al menos uno por regla de negocio, en verde con `./mvnw test`.
+4. **La colección**, en verde y sin ninguna petición modificada desde la UD3.
+5. **`DECISIONES.md`** ampliado con tres:
+   * Dónde vive el caso de uso de la ruta anidada y por qué.
+   * Qué código de estado devuelve una regla de negocio incumplida en tu API, y por qué ese.
+   * Qué regla te costó más colocar y qué duda tuviste.
+
+### Autoevaluación · pásale el código a otro
+
+La comprobación final de esta unidad no la puede hacer quien escribió el código.
+
+1. Intercambia el proyecto con un compañero.
+2. Sin preguntarle nada, y solo mirando los nombres de las clases y de los métodos, que responda por escrito:
+   * ¿Dónde se decide qué prioridad tiene una tarea nueva?
+   * ¿Dónde habría que tocar para cambiar de almacenamiento?
+   * ¿Dónde se decide qué código de estado devuelve un error?
+   * ¿Qué reglas de negocio tiene esta aplicación?
+3. Cada respuesta equivocada señala **un nombre confuso o una responsabilidad mal colocada**. Anótalas.
+4. Corrige tu proyecto con lo que salga de ahí.
+
+La cuarta pregunta es la mejor: si tu compañero puede enumerar tus reglas de negocio leyendo los nombres de tus métodos y tus tests, la arquitectura está haciendo su trabajo.
+
+### Lo que sigue faltando
+
+| Lo que sigue mal | Se arregla en |
+| :--- | :--- |
+| Al reiniciar se pierde todo | UD5, con PostgreSQL |
+| Buscar recorre la lista entera, una por una | UD5, con consultas |
+| No hay forma de relacionar datos más allá de guardar un id | UD5, con relaciones |
+| Nadie garantiza que dos operaciones simultáneas no se pisen | UD5, con transacciones |
+
+Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, ni la estructura. Eso ya está.
+
+<div class="rule">
+  <p class="rule-label">Por qué la UD5 va a ser más fácil de lo que parece</p>
+  <p>Tu service pide una interfaz. En la UD5 se borra la implementación en memoria y se pone otra que habla con PostgreSQL.</p>
+  <p><strong>El service, el controller, los DTO, el mapper y los tests no se tocan.</strong> Cambiar la base de datos entera va a ser un cambio localizado, y eso es exactamente lo que has construido estas dos semanas.</p>
+</div>
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Los diez criterios cumplidos y las dos comprobaciones en verde.</span></div>
+  <div><strong>Si lo tienes</strong><span><code>PROBLEMAS.md</code> tachado línea a línea y la prueba del cambio pequeño cronometrada.</span></div>
+  <div><strong>Reto</strong><span>La revisión cruzada con un compañero, con las respuestas equivocadas convertidas en correcciones.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 27</p>
   <ul class="checklist">
-    <li>Has obtenido la aplicación organizada en controller, service, repository, model y dto.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Los diez criterios de la especificación se cumplen en toda la aplicación.</li>
+    <li><code>PROBLEMAS.md</code> no tiene ninguna línea sin tachar ni justificar.</li>
+    <li><code>./mvnw test</code> pasa en verde y hay al menos un test por regla.</li>
+    <li>La colección pasa en verde sin haber modificado ninguna petición desde la UD3.</li>
+    <li>Has cronometrado un cambio pequeño y lo has comparado con la estimación de la sesión 22.</li>
+    <li>Otra persona ha sabido responder dónde vive cada cosa mirando solo los nombres.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué una refactorización a medias es peor que no haberla hecho?</li>
+    <li>¿Qué demuestra la colección y qué demuestran los tests?</li>
+    <li>¿Cuántos archivos habría que tocar para cambiar de almacenamiento?</li>
+    <li>¿Qué mide la prueba del cambio pequeño?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque deja dos formas de hacer lo mismo conviviendo, y quien llegue después no sabrá cuál es la buena ni por qué hay dos.</p>
+  <p>2 · La colección demuestra que el comportamiento observable no ha cambiado. Los tests demuestran que las reglas de negocio siguen siendo las decididas, y lo seguirán demostrando en el futuro.</p>
+  <p>3 · La implementación del repositorio. El service, el controller, los DTO, el mapper y los tests se quedan como están.</p>
+  <p>4 · El coste real de mantener el código: cuántos archivos hay que abrir y cuánto se tarda en un cambio pequeño, comparado con lo que costaba antes.</p>
+</details>
 
 ## Lo que debes recordar
 
-Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben poder justificarse, preguntas de recuperación y una comprobación final del producto.
+### El método
+
+Las tres unidades anteriores enseñaron a diseñar **lo que se ve desde fuera**. Esta enseña a colocar lo que hay detrás, y se decide con una sola pregunta repetida:
+
+<figure class="diagram">
+  <figcaption>Dónde va cada trozo de código</figcaption>
+  <ol class="flow">
+    <li>¿Esto habla de rutas, códigos o formato? Va al <strong>controller</strong></li>
+    <li>¿Decide si algo se puede hacer, o qué valor toma? Va al <strong>service</strong></li>
+    <li>¿Guarda, busca o recupera? Va al <strong>repository</strong></li>
+    <li>¿Traduce entre el contrato y el modelo? Va al <strong>mapper</strong></li>
+    <li>Si encaja en dos sitios, <strong>es que son dos cosas</strong>: sepáralas</li>
+  </ol>
+</figure>
+
+El paso cinco es el que hay que aplicar cuando se duda, y casi siempre acierta.
+
+### La idea más importante
+
+> **Una clase debe tener un solo motivo de cambio. No «hacer una cosa», que no significa nada: un motivo de cambio, que sí se puede comprobar preguntando qué tendría que ocurrir en el mundo para tener que abrir ese archivo.**
+
+De ahí sale todo lo demás. Por eso el controller no guarda datos, por eso el service no sabe qué es un 404, por eso el repositorio es una interfaz, y por eso ahora se puede probar una regla sin arrancar un servidor.
+
+<p class="term">Refactorizar es cambiar cómo, no qué</p>
+
+Al terminar la unidad, tu API responde exactamente lo que respondía. Si algo hubiera cambiado, no habría sido una refactorización, y la colección de la UD2 es lo que te permitió saberlo en diez segundos.
+
+### Las decisiones que tienes que saber justificar
+
+| Decisión | Lo que tienes que poder decir |
+| :--- | :--- |
+| Tres capas y no dos | Cambiar el almacenamiento, cambiar una regla y cambiar el contrato son motivos distintos |
+| Las dependencias van en un solo sentido | Si una capa conociera a la que la llama, no se podría cambiar sin arrastrarla |
+| Los DTO no cruzan al service | El service debe poder usarse sin que exista una API web |
+| El service lanza excepciones, no códigos | Dice qué ha pasado; traducirlo a HTTP es de la capa web |
+| Inyección por constructor | Campos `final`, dependencias a la vista, y la clase se puede construir en un test |
+| El repositorio es una interfaz | Permite cambiar el almacenamiento sin abrir el service, que es justo lo que hará la UD5 |
+| Validación en el DTO, regla en el service | Si basta el objeto que llegó, es formato; si hay que consultar datos, es negocio |
+| Un método público por caso de uso | El nombre lo tiene que entender alguien que conozca el negocio y no programe |
+| Tests del service sin Spring | Prueban la lógica en milisegundos y señalan qué regla se ha roto |
+| Un doble de prueba en vez del repositorio real | Para probar una clase cada vez y saber cuál falla |
+
+### Al terminar deberías poder responder
+
+1. ¿Cuál es la pregunta que revela si una clase tiene demasiadas responsabilidades?
+2. ¿Por qué duplicar es caro, si escribirlo dos veces cuesta poco?
+3. ¿Qué es una refactorización y qué la distingue de reescribir?
+4. Nombra dos situaciones que necesitarían tus reglas sin pasar por HTTP.
+5. ¿En qué dirección se permiten las dependencias entre capas?
+6. ¿Por qué el service no conoce los DTO?
+7. ¿Por qué puede el service lanzar una excepción que acabará siendo un 404?
+8. ¿Qué tres cosas decide una línea con `new`, y cuál de ellas sí es asunto de la clase?
+9. Da dos motivos para preferir la inyección por constructor.
+10. ¿Por qué un bean no debe guardar datos de una petición concreta?
+11. ¿Qué significan `NoSuchBeanDefinitionException` y `NoUniqueBeanDefinitionException`?
+12. ¿Qué indica una dependencia circular sobre el diseño?
+13. ¿Qué pregunta separa una validación de una regla de negocio?
+14. ¿Qué es un caso de uso y cómo se refleja en el código?
+15. ¿Qué dos decisiones de la sesión 24 hacen posible probar el service?
+16. ¿Por qué se usa un doble y no el repositorio de memoria?
+17. ¿Cuáles son las tres zonas de un test?
+18. ¿Qué comprueba la colección que no comprueban los tests, y al revés?
+19. ¿Qué merece un test y qué no?
+20. ¿Cuántos archivos habría que tocar para cambiar de almacenamiento?
+
+Si además puedes coger un controlador ajeno lleno de lógica y decir, método a método, qué se lleva a dónde, tienes lo que esta unidad quería darte.
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| :--- | :--- |
+| Refactorizar | Cambiar cómo está escrito el código sin cambiar lo que hace |
+| Motivo de cambio | Lo que tendría que ocurrir para tener que abrir un archivo |
+| Responsabilidad única | Una clase, un motivo de cambio |
+| Capa | Un grupo de clases con el mismo motivo de cambio |
+| Controller | Habla HTTP: rutas, códigos, cabeceras, DTO |
+| Service | Casos de uso y reglas de negocio. No sabe que existe HTTP |
+| Repository | Guarda y recupera. No sabe de reglas |
+| Regla de la dirección | Controller conoce al service, el service al repository, nunca al revés |
+| Caso de uso | Algo completo que alguien quiere hacer con la aplicación |
+| Regla de negocio | Decisión que necesita consultar datos, no solo mirar el objeto recibido |
+| Inversión de control | Que no seas tú quien construye y conecta los objetos |
+| Contenedor | Lo que crea los beans, los conecta y los administra |
+| Bean | Un objeto gestionado por Spring |
+| Estereotipo | `@Service`, `@Repository`, `@Component`: marcan la clase y su papel |
+| Inyección por constructor | Declarar en el constructor lo que la clase necesita |
+| Singleton | Una sola instancia de cada bean, compartida por toda la aplicación |
+| Dependencia circular | Dos clases que se necesitan mutuamente. Spring se niega, y hace bien |
+| `Optional` | Una caja que puede tener valor o estar vacía. Obliga a considerar el vacío |
+| Test unitario | Código que ejecuta código y comprueba el resultado automáticamente |
+| Doble de prueba | Implementación de mentira que controla qué datos ve lo que estás probando |
+| Preparar, actuar, comprobar | Las tres zonas de todo test |
+
+### Comprobación final del producto
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación final · con el proyecto delante</p>
+  <ul class="checklist">
+    <li>Ningún controlador tiene listas, bucles de búsqueda, contadores ni reglas.</li>
+    <li>Ningún service menciona HTTP, códigos de estado ni DTO.</li>
+    <li>No queda ningún <code>new</code> de un colaborador.</li>
+    <li>Los repositorios son interfaces con su implementación en memoria detrás.</li>
+    <li>Cada regla de negocio tiene su test, y <code>./mvnw test</code> pasa en verde.</li>
+    <li>La colección pasa en verde sin ninguna petición modificada desde la UD3.</li>
+    <li><code>PROBLEMAS.md</code> está tachado línea a línea.</li>
+  </ul>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
@@ -1061,4 +1756,33 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
   </ul>
 </div>
 
-> El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
+### La siguiente unidad
+
+Cuatro unidades, cuatro preguntas:
+
+<figure class="diagram">
+  <figcaption>El recorrido hasta aquí</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>UD1 · que responda</li>
+    <li>UD2 · que responda bien</li>
+    <li>UD3 · que esté bien diseñada</li>
+    <li>UD4 · que se pueda mantener</li>
+  </ol>
+</figure>
+
+Queda la quinta, y es la que lleva cuatro unidades apareciendo al final de cada cierre:
+
+> **¿Y esto dónde se guarda?**
+
+Cada vez que has reiniciado la aplicación se ha perdido todo. Lo has anotado como defecto conocido en la UD1, en la UD2 y en la UD3, y ha llegado el momento.
+
+| Lo que sigue mal | Se arregla en |
+| :--- | :--- |
+| Al reiniciar se pierde todo | UD5, con PostgreSQL |
+| Buscar recorre la lista entera, uno por uno | UD5, con consultas |
+| Las relaciones son un `id` suelto que nadie garantiza | UD5, con integridad referencial |
+| Dos operaciones simultáneas pueden pisarse | UD5, con transacciones |
+
+Y aquí se cobra el trabajo de estas dos semanas: **cambiar de almacenamiento va a ser un cambio localizado**. Se borra la implementación en memoria, aparece una interfaz que extiende `JpaRepository`, y el service, el controller, los DTO, el mapper y los tests se quedan exactamente como están.
+
+Si al terminar la UD5 has tenido que abrir el controlador, algo se colocó mal aquí.
