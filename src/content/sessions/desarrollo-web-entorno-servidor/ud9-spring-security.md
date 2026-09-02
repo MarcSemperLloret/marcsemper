@@ -1379,153 +1379,859 @@ Implementa un `AccessDeniedHandler` personalizado:
 ## Sesión 58 · Proteger endpoints
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> ocultar un botón en la interfaz no impide invocar directamente el endpoint.</li>
-    <li><strong>Construye:</strong> pruebas manuales de acceso con diferentes identidades.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> la falacia de la seguridad por ocultación en el cliente (<em>Client-side Security vs Server-side Enforcement</em>), por qué ocultar o deshabilitar un botón en el navegador no protege un endpoint, y cómo escribir pruebas de integración web de seguridad con <code>MockMvc</code> y <code>@WithMockUser</code>.</li>
+    <li><strong>2. Haz:</strong> escribe una batería de pruebas de integración con <code>@WebMvcTest</code> que comprueba sistemáticamente el acceso de tres identidades distintas (Anónimo, <code>DESARROLLADOR</code> y <code>ADMINISTRADOR</code>) sobre las operaciones de creación y borrado.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw test</code> verificando que las peticiones anónimas reciben <code>401</code>, los roles insuficientes reciben <code>403</code> y los administradores completan la operación con éxito en milisegundos.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Por qué ocultar un botón de «Eliminar» en la interfaz web de React o Angular no ofrece ninguna protección real contra un usuario malintencionado?</li>
+    <li>¿Qué anotación de Spring Security Test permite simular que un usuario con un rol específico está autenticado durante una prueba con MockMvc sin necesidad de consultar la base de datos?</li>
+    <li>Si un endpoint devuelve `403 Forbidden` ante una petición no autorizada, ¿significa que el código del método del controlador llegó a ejecutarse?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **aplicar autorización en rutas y servicios y comprobar intentos permitidos y denegados**.
+### La falacia de la seguridad por ocultación
 
-### 2. El problema
+Uno de los errores más peligrosos de los desarrolladores que vienen del mundo frontend es pensar que la seguridad consiste en esto:
 
-Ocultar un botón en la interfaz no impide invocar directamente el endpoint.
+```html
+<!-- CUIDADO: Esto es experiencia de usuario, NO es seguridad -->
+<button *ngIf="usuario.rol === 'ADMIN'" (click)="eliminarProyecto(id)">
+  Eliminar proyecto
+</button>
+```
 
-### 3–6. Itinerario de trabajo
+Ocultar ese botón es una buena práctica de diseño de interfaces: a un usuario normal no le muestras botones que no puede usar.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+Pero **confundir eso con seguridad es un error catastrófico**:
+* Cualquier usuario puede abrir la consola de DevTools (`F12`), inspeccionar el DOM y eliminar el atributo `disabled` o hacer visible el botón en 3 segundos.
+* Cualquier usuario puede abrir Bruno, Postman o una consola con `curl` y lanzar directamente un `DELETE http://localhost:8080/api/v1/proyectos/1`.
 
-### 7. Comprueba que funciona
+<div class="rule">
+  <p class="rule-label">La ley del servidor como frontera única</p>
+  <p><strong>El cliente web es un entorno bajo el control absoluto del usuario (y del atacante).</strong></p>
+  <p>La única frontera real de seguridad de un sistema es el <strong>backend</strong>. Todo endpoint debe comprobar permisos en el servidor en cada petición, asumiendo siempre que el cliente puede ser malicioso.</p>
+</div>
+
+### Pruebas de seguridad con MockMvc y @WithMockUser
+
+Para garantizar que nuestros endpoints están blindados y que ningún refactor futuro rompa las reglas de seguridad, escribimos pruebas automáticas con **`@WithMockUser`**:
+
+```java
+@Test
+@WithMockUser(username = "dev1", roles = {"DESARROLLADOR"})
+void eliminarProyecto_conRolDesarrollador_devuelve403Forbidden() throws Exception {
+    mockMvc.perform(delete("/api/v1/proyectos/1"))
+        .andExpect(status().isForbidden());
+}
+```
+
+La anotación `@WithMockUser`:
+* Inyecta un `Authentication` en el `SecurityContextHolder` antes de que el filtro de seguridad ejecute la petición.
+* Permite probar autorizaciones (`hasRole`, `@PreAuthorize`) de forma instantánea sin necesidad de crear usuarios en PostgreSQL ni generar hashes BCrypt.
+
+### Paso a paso guiado · Batería de tests de seguridad para ProyectoController
+
+Vamos a crear la suite de pruebas que valida los límites de acceso:
+
+<p class="stage">Paso 1 · Configurar la clase de test con contexto de seguridad</p>
+
+```java
+package com.empresa.proyecto;
+
+import com.empresa.proyecto.controller.ProyectoController;
+import com.empresa.proyecto.service.ProyectoService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(ProyectoController.class)
+class ProyectoSecurityTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ProyectoService proyectoService;
+```
+
+<p class="stage">Paso 2 · Test de rechazo a petición anónima (401)</p>
+
+Verificamos que si no hay identidad en el contexto, el peralte de seguridad intercepta la llamada:
+
+```java
+    @Test
+    void eliminarProyecto_sinAutenticar_devuelve401Unauthorized() throws Exception {
+        mockMvc.perform(delete("/api/v1/proyectos/1"))
+            .andExpect(status().isUnauthorized());
+
+        // Verificamos que la lógica de negocio jamás fue invocada
+        verify(proyectoService, never()).eliminarProyecto(anyLong());
+    }
+```
+
+<p class="stage">Paso 3 · Test de acceso denegado por rol insuficiente (403)</p>
+
+Verificamos que un usuario identificado con rol `DESARROLLADOR` recibe `403`:
+
+```java
+    @Test
+    @WithMockUser(username = "juan.dev", roles = {"DESARROLLADOR"})
+    void eliminarProyecto_conRolDesarrollador_devuelve403Forbidden() throws Exception {
+        mockMvc.perform(delete("/api/v1/proyectos/1"))
+            .andExpect(status().isForbidden());
+
+        verify(proyectoService, never()).eliminarProyecto(anyLong());
+    }
+```
+
+<p class="stage">Paso 4 · Test de acceso autorizado para Administrador (204)</p>
+
+Verificamos que el rol `ADMINISTRADOR` ejecuta la acción con éxito:
+
+```java
+    @Test
+    @WithMockUser(username = "admin.jefe", roles = {"ADMINISTRADOR"})
+    void eliminarProyecto_conRolAdministrador_devuelve204NoContent() throws Exception {
+        doNothing().when(proyectoService).eliminarProyecto(1L);
+
+        mockMvc.perform(delete("/api/v1/proyectos/1"))
+            .andExpect(status().isNoContent());
+
+        verify(proyectoService, times(1)).eliminarProyecto(1L);
+    }
+}
+```
+
+### La comprobación · Ejecutar la suite de seguridad en terminal
+
+Ejecuta las pruebas desde la consola de Maven:
+
+```bash
+./mvnw test -Dtest=ProyectoSecurityTest
+```
+
+Comprueba en la salida:
+* Los 3 tests pasan al 100 % en verde en menos de 1 segundo.
+* Queda matemáticamente demostrado que da igual qué botones oculte el frontend: **un usuario no administrador jamás podrá borrar un proyecto en el servidor**.
+
+### Ahora tú · Batería de tests de seguridad para Tareas
+
+Aplica el mismo patrón para proteger la creación y modificación de tareas:
+
+1. Crea `TareaSecurityTest`.
+2. Escribe un test que verifique que un usuario anónimo recibe `401` al intentar crear una tarea (`POST /api/v1/proyectos/1/tareas`).
+3. Escribe un test con `@WithMockUser(roles = "DESARROLLADOR")` que confirme que un desarrollador sí puede crear tareas (código `201`).
+4. Escribe un test que verifique que el borrado de tareas está prohibido (`403`) para un usuario con rol de invitado o externo.
+
+### Reto · Pruebas de seguridad basadas en atributos con SpEL
+
+En la sesión anterior definimos que un desarrollador solo puede editar las tareas que tiene asignadas a su nombre.
+
+¿Cómo se prueba esa regla con MockMvc?
+1. Escribe un test simulando a `@WithMockUser(username = "carlos")`.
+2. Simula una tarea cuyo responsable es `"maria"`.
+3. Verifica que al intentar hacer `PUT /api/v1/tareas/10` el sistema responde con `403 Forbidden`.
+4. Repite la prueba con una tarea asignada a `"carlos"` y confirma que responde con `200 OK`.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Tests de seguridad con `@WebMvcTest` y `@WithMockUser` verificando casos 401, 403 y 204.</span></div>
+  <div><strong>Si lo tienes</strong><span>Suite completa de proyectos y tareas cubriendo la matriz RBAC completa con aserciones estrictas.</span></div>
+  <div><strong>Reto</strong><span>Tests de autorización a nivel de fila (SpEL) con simulación de propiedad de recursos verificados.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 58</p>
   <ul class="checklist">
-    <li>Has obtenido pruebas manuales de acceso con diferentes identidades.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se erradica la creencia errónea de que la seguridad de la interfaz sustituye a la del backend.</li>
+    <li>Las reglas de control de acceso están blindadas mediante pruebas automatizadas con `MockMvc`.</li>
+    <li>Se utiliza `@WithMockUser` para simular identidades y roles sin coste de base de datos.</li>
+    <li>Se verifica que el servicio de negocio nunca llega a ejecutarse ante accesos no autorizados.</li>
+    <li>La suite completa de tests de seguridad pasa en verde con `./mvnw test`.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué ocultar o deshabilitar un botón en el cliente web no constituye una medida de seguridad?</li>
+    <li>¿Qué diferencia hay entre lo que comprueba un test de `@WebMvcTest` normal y uno con `@WithMockUser`?</li>
+    <li>¿Por qué en los tests de casos 401 y 403 es importante verificar con `verify(service, never())`?</li>
+    <li>¿Cómo se especifica en `@WithMockUser` que un usuario tiene varios roles a la vez?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque el cliente corre en el dispositivo del usuario, quien puede inspeccionar el DOM, modificar el script o lanzar peticiones HTTP directas por consola evadiendo cualquier restricción visual.</p>
+  <p>2 · El test normal evalúa rutas y serialización; @WithMockUser inyecta un contexto de seguridad previo para comprobar si los filtros y @PreAuthorize permiten o bloquean la petición.</p>
+  <p>3 · Para demostrar fehacientemente que la seguridad interceptó la llamada en la frontera de red y que ninguna lógica de negocio llegó a ejecutarse en el servidor.</p>
+  <p>4 · Mediante el atributo roles = {"ROL_A", "ROL_B"} dentro de la anotación.</p>
+</details>
 
 ## Sesión 59 · Sesión frente a token: JWT
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> las dos estrategias funcionan, y elegir por costumbre lleva a una API que no encaja con sus clientes.</li>
-    <li><strong>Construye:</strong> un flujo JWT mínimo con expiración y claims imprescindibles.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> la comparación arquitectónica entre <strong>Sesión con Cookie (con estado)</strong> y <strong>JSON Web Token (JWT, sin estado)</strong>, la anatomía de un token firmado (Header, Payload, Signature), los tipos de <em>Claims</em> y el compromiso de la revocación.</li>
+    <li><strong>2. Haz:</strong> implementa un servicio generador y validador de tokens JWT con una clave secreta segura, y construye un <code>JwtAuthenticationFilter</code> que extrae la cabecera <code>Authorization: Bearer</code> en cada petición.</li>
+    <li><strong>3. Comprueba:</strong> obtienes un token JWT mediante login, lo decodificas e inspeccionas en <code>jwt.io</code> y consumes un endpoint protegido verificando que el servidor valida tu identidad sin almacenar ninguna sesión en memoria.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué tres partes separadas por puntos componen la estructura de un JSON Web Token (JWT)?</li>
+    <li>¿Por qué un JWT se define como un mecanismo de autenticación «sin estado» (<em>stateless</em>)?</li>
+    <li>¿Qué problema fundamental surge si necesitas revocar el acceso a un usuario inmediatamente (por ejemplo, tras un despido) cuando la API utiliza JWT puros sin base de datos centralizada?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **comparar sesión con cookie y token JWT, y justificar cuál conviene a esta aplicación**.
+### El gran debate arquitectónico: ¿Sesión o Token?
 
-### 2. El problema
+Una de las decisiones técnicas más discutidas en arquitectura web es elegir la estrategia de autenticación:
 
-Las dos estrategias funcionan, y elegir por costumbre lleva a una API que no encaja con sus clientes.
+<figure class="diagram">
+  <figcaption>Sesión con Cookie vs Token JWT</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Sesión: El cliente guarda un ID opaco; el servidor guarda los datos en RAM/Redis.</li>
+    <li>JWT: El cliente guarda los datos firmados; el servidor no guarda nada en RAM.</li>
+  </ol>
+</figure>
 
-### 3–6. Itinerario de trabajo
+| Característica | Sesión basada en Cookies (`JSESSIONID`) | Token firmado (JWT) |
+| :--- | :--- | :--- |
+| **Estado en el servidor** | **Con estado (*Stateful*):** El servidor debe recordar la sesión en su memoria RAM o en un almacén Redis compartido. | **Sin estado (*Stateless*):** El servidor no guarda nada en memoria; valida la firma matemática del token en cada petición. |
+| **Escalabilidad horizontal** | Requiere balanceo con sesiones pegajosas (*Sticky Sessions*) o clúster de Redis centralizado. | **Excelente de forma nativa:** Cualquier instancia de Spring Boot con la misma clave secreta puede validar el token sin consultar bases de datos. |
+| **Clientes heterogéneos** | Ideal para aplicaciones web tradicionales en el navegador. | Ideal para aplicaciones móviles (iOS/Android), microservicios y APIs consumidas por terceros. |
+| **Revocación inmediata** | **Trivial:** Basta con ejecutar `session.invalidate()` o borrar la clave en Redis. | **Compleja:** Una vez emitido, el token es válido hasta que expire su fecha `exp`, a menos que mantengas una lista negra en base de datos (reintroduciendo estado). |
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+### Anatomía de un JSON Web Token (JWT)
 
-### 7. Comprueba que funciona
+Un JWT es una cadena de texto compacta dividida en tres partes separadas por puntos:
+
+```text
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbCI6IlJPTEVfQURNSU4iLCJleHAiOjE3NzA5ODc2MDB9.D3f8A9...
+\___________________/ \___________________________________________________________________/ \_______/
+       Header                                       Payload                                 Signature
+```
+
+1. **Header (Cabecera):** Especifica el tipo de token (`JWT`) y el algoritmo de firma criptográfica (ej: `HS256` para HMAC con clave secreta compartida, o `RS256` para clave pública/privada).
+2. **Payload (Cuerpo / Reclamaciones - *Claims*):** Contiene las afirmaciones sobre el usuario en formato JSON:
+   * Reclamaciones estándar: `sub` (*subject*, nombre de usuario), `iat` (*issued at*, fecha de emisión), `exp` (*expiration*, fecha de caducidad).
+   * Reclamaciones personalizadas: `roles`, `email`, `tenantId`.
+   * **¡Atención!** El payload no está cifrado; solo está codificado en Base64Url. **Cualquiera puede leerlo**. Nunca guardes contraseñas ni datos confidenciales dentro de un JWT.
+3. **Signature (Firma criptográfica):** Se calcula combinando el Header y el Payload codificados con una clave secreta conocida solo por el servidor:
+   $$\text{Firma} = \text{HMAC-SHA256}(\text{Header} + "." + \text{Payload}, \text{SECRET\_KEY})$$
+   Si un atacante modifica un solo carácter del payload (por ejemplo, cambia su rol de `ROLE_DEV` a `ROLE_ADMIN`), la firma deja de coincidir y el backend **rechaza el token de inmediato**.
+
+### Paso a paso guiado · Generación y validación de JWT en Spring Boot
+
+Para trabajar con JWT en Java utilizamos la librería estándar de la industria `jjwt`:
+
+```xml
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.12.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.12.5</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.12.5</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+<p class="stage">Paso 1 · Crear el servicio JwtService</p>
+
+Este servicio encapsula la firma y lectura de tokens mediante una clave secreta segura:
+
+```java
+package com.empresa.proyecto.security;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.Map;
+
+@Service
+public class JwtService {
+
+    // Clave secreta de al menos 256 bits (32 caracteres) externalizada
+    @Value("${app.security.jwt.secret:clave-secreta-super-larga-y-segura-de-al-menos-256-bits-2026!}")
+    private String jwtSecret;
+
+    @Value("${app.security.jwt.expiration-minutes:60}")
+    private long expirationMinutes;
+
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String generarToken(UserDetails userDetails, Map<String, Object> claimsExtra) {
+        long ahora = System.currentTimeMillis();
+        long expiracion = ahora + (expirationMinutes * 60 * 1000);
+
+        return Jwts.builder()
+            .claims(claimsExtra)
+            .subject(userDetails.getUsername())
+            .issuedAt(new Date(ahora))
+            .expiration(new Date(expiracion))
+            .signWith(getSigningKey())
+            .compact();
+    }
+
+    public String extraerUsername(String token) {
+        return extraerClaims(token).getSubject();
+    }
+
+    public boolean esTokenValido(String token, UserDetails userDetails) {
+        final String username = extraerUsername(token);
+        return (username.equals(userDetails.getUsername()) && !estaExpirado(token));
+    }
+
+    private boolean estaExpirado(String token) {
+        return extraerClaims(token).getExpiration().before(new Date());
+    }
+
+    private Claims extraerClaims(String token) {
+        return Jwts.parser()
+            .verifyWith(getSigningKey())
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
+    }
+}
+```
+
+<p class="stage">Paso 2 · Crear el filtro JwtAuthenticationFilter</p>
+
+Creamos un filtro que intercepta cada petición, extrae la cabecera `Authorization: Bearer <token>` y puebla el contexto de Spring Security:
+
+```java
+package com.empresa.proyecto.security;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        final String authHeader = request.getHeader("Authorization");
+
+        // 1. Si no hay cabecera Bearer, dejamos pasar la petición a los siguientes filtros
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        final String jwt = authHeader.substring(7); // Extraemos la cadena tras "Bearer "
+        final String username = jwtService.extraerUsername(jwt);
+
+        // 2. Si el token tiene usuario y no está autenticado previamente en el contexto
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+            if (jwtService.esTokenValido(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities()
+                );
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                // 3. Establecemos la identidad verificada en el contexto de la petición
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
+<p class="stage">Paso 3 · Integrar el filtro y establecer SessionCreationPolicy.STATELESS</p>
+
+En `SecurityConfig`, registramos el filtro antes del filtro de usuario/contraseña y declaramos la API como estrictamente sin estado:
+
+```java
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+```
+
+### La comprobación · Inspección de token en jwt.io y Bruno
+
+1. **Crear endpoint de login:** Un endpoint `POST /api/v1/auth/login` que recibe `username` y `password`, valida contra `AuthenticationManager` y responde:
+   ```json
+   {
+     "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIs...",
+     "tipo": "Bearer",
+     "expiraEnMinutos": 60
+   }
+   ```
+2. **Inspeccionar en jwt.io:**
+   * Copia el token devuelto y pégalo en la herramienta web [jwt.io](https://jwt.io).
+   * Comprueba cómo el panel derecho decodifica en tiempo real el Header y el Payload mostrando tu `sub: "admin"`.
+3. **Consumir endpoint protegido con Bearer Token:**
+   * En Bruno, ve a `GET /api/v1/proyectos`.
+   * En la pestaña **Auth**, selecciona **Bearer Token** y pega el JWT.
+   * Envía la petición y comprueba que responde `200 OK`.
+4. **Prueba de manipulación de firma:**
+   * Modifica una sola letra en el centro del token en Bruno y vuelve a enviar.
+   * **Resultado:** Código `401 Unauthorized`. Spring Security detecta que la firma no coincide y rechaza la petición.
+
+### Ahora tú · Guardar y usar el token en el cliente de la UD8
+
+Conecta el cliente web `cliente/index.html`:
+1. Añade un formulario de login con usuario y contraseña.
+2. Al pulsar entrar, lanza `POST /api/v1/auth/login`.
+3. Al recibir el token, guárdalo en memoria o en `sessionStorage.setItem('jwt', data.token)`.
+4. En las peticiones posteriores de listar o crear proyectos, inyecta la cabecera:
+   ```javascript
+   headers: {
+     'Content-Type': 'application/json',
+     'Authorization': 'Bearer ' + sessionStorage.getItem('jwt')
+   }
+   ```
+5. Comprueba que el navegador puede crear y listar recursos sin usar cookies de sesión.
+
+### Reto · El dilema de la revocación de tokens
+
+Un empleado con acceso de Administrador es despedido a las 11:00. Su token JWT expira a las 12:00.
+* Durante 60 minutos, ese token sigue siendo criptográficamente válido ante cualquier servidor del mundo.
+
+Investiga las tres estrategias de la industria para mitigar este problema:
+1. **Tokens de vida corta (*Short-lived Access Tokens* de 10 minutos) + Tokens de refresco (*Refresh Tokens* de 7 días)** almacenados en base de datos.
+2. **Listas negras de revocación en Redis (*Token Blacklisting*)**.
+3. Compara el coste de cada enfoque frente a la sencillez de una sesión clásica con cookies.
+
+> [!NOTE]
+> Si en la evaluación se solicita un informe comparativo entre arquitectura de sesión y arquitectura de tokens, el formato oficial de entrega de texto es siempre un **documento en PDF** (`informe-jwt-sesion.pdf`), nunca un archivo markdown suelto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Servicio `JwtService` implementado, token generado con clave segura y decodificado en `jwt.io`.</span></div>
+  <div><strong>Si lo tienes</strong><span>Filtro `JwtAuthenticationFilter` integrado en `SecurityFilterChain` con política `STATELESS` y probado en Bruno.</span></div>
+  <div><strong>Reto</strong><span>Estrategia de Access Token + Refresh Token analizada y justificada para mitigar el problema de revocación.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 59</p>
   <ul class="checklist">
-    <li>Has obtenido un flujo JWT mínimo con expiración y claims imprescindibles.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se comprende la diferencia entre autenticación con estado (sesión) y sin estado (JWT).</li>
+    <li>La anatomía de un JWT (Header, Payload y Firma) se identifica y decodifica con soltura.</li>
+    <li>La firma criptográfica garantiza que los claims no pueden ser alterados por el cliente.</li>
+    <li>La API opera en modo estrictamente sin estado (`SessionCreationPolicy.STATELESS`).</li>
+    <li>Las peticiones autenticadas viajan mediante el estándar `Authorization: Bearer <token>`.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué es peligroso almacenar datos sensibles como contraseñas en el Payload de un JWT?</li>
+    <li>¿Cómo sabe el servidor si los datos de un JWT fueron alterados durante el tránsito?</li>
+    <li>¿Qué significa que una API opere con `SessionCreationPolicy.STATELESS`?</li>
+    <li>¿Qué formato exacto debe tener la cabecera HTTP estándar para transmitir un token JWT?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque el Payload no está cifrado, solo está codificado en Base64Url; cualquier intermediario o usuario puede decodificarlo y leer su contenido de inmediato.</p>
+  <p>2 · Porque recalcula la firma criptográfica con su clave secreta y los datos recibidos; si los datos cambiaron, la firma calculada no coincidirá con la del token y será rechazado.</p>
+  <p>3 · Que Spring Security nunca creará ni utilizará un objeto HttpSession en la memoria del servidor para almacenar el contexto de seguridad entre peticiones.</p>
+  <p>4 · Authorization: Bearer &lt;cadena-del-token&gt;.</p>
+</details>
 
 ## Sesión 60 · CSRF, CORS con credenciales y errores frecuentes
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> al añadir credenciales, la integración que ya funcionaba en la UD8 vuelve a fallar por motivos nuevos.</li>
-    <li><strong>Construye:</strong> una configuración explicada y una batería breve de casos permitidos y bloqueados.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> el mecanismo del ataque de falsificación de peticiones en sitios cruzados (<strong>CSRF - Cross-Site Request Forgery</strong>), por qué las APIs con tokens Bearer son inmunes mientras que las basadas en cookies son vulnerables, y la interacción crítica entre CORS y credenciales de usuario.</li>
+    <li><strong>2. Haz:</strong> elabora una configuración de seguridad unificada que integra CORS acotado y reglas de CSRF adecuadas según la estrategia de autenticación elegida.</li>
+    <li><strong>3. Comprueba:</strong> construyes una matriz de diagnóstico de los 4 errores clásicos de Spring Security (401 por falta de cabecera, 403 por token CSRF ausente, bloqueo de CORS por credenciales y token JWT expirado), demostrando cómo resolver cada uno en menos de dos minutos.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿En qué consiste exactamente un ataque CSRF y por qué depende de que el navegador envíe cookies automáticamente?</li>
+    <li>¿Por qué una API REST que solo se autentica mediante cabeceras `Authorization: Bearer <token>` puede desactivar la protección CSRF de forma completamente segura?</li>
+    <li>¿Qué sucede si intentas hacer una petición cross-origin con cookies (`credentials: 'include'`) y el backend tiene configurado `allowedOrigins("*")`?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **distinguir políticas del navegador y ataques de petición cruzada aplicando controles adecuados**.
+### Anatomía de un ataque CSRF (Cross-Site Request Forgery)
 
-### 2. El problema
+Imagina este escenario:
+1. Has iniciado sesión en tu banco (`https://tu-banco.com`). El servidor te asignó una cookie de sesión que tu navegador almacena.
+2. Sin cerrar sesión, abres otra pestaña y visitas un foro o una web sospechosa (`https://web-maliciosa.com`).
+3. La web maliciosa contiene este código oculto:
+   ```html
+   <img src="https://tu-banco.com/api/transferir?destino=cuenta-atacante&cantidad=1000" style="display:none;" />
+   ```
+4. El navegador intenta cargar la imagen haciendo una petición `GET` a `tu-banco.com`.
+5. **¡El peligro!** Como la petición va dirigida a `tu-banco.com`, el navegador adjunta **automáticamente la cookie de sesión del banco**.
+6. El servidor del banco recibe la petición con una cookie válida y ejecuta la transferencia pensando que la ordenaste tú.
 
-Al añadir credenciales, la integración que ya funcionaba en la UD8 vuelve a fallar por motivos nuevos.
+<figure class="diagram">
+  <figcaption>El ataque CSRF</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Usuario con sesión activa en tu-banco.com</li>
+    <li>2. Abre web-maliciosa.com en otra pestaña</li>
+    <li>3. Script oculto lanza petición a tu-banco.com</li>
+    <li>4. Navegador adjunta cookies automáticamente</li>
+    <li>5. Servidor ejecuta la orden sin consentimiento</li>
+  </ol>
+</figure>
 
-### 3–6. Itinerario de trabajo
+### ¿Por qué JWT con cabecera Authorization es inmune a CSRF?
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+El ataque CSRF funciona **exclusivamente porque los navegadores envían las cookies de forma automática e implícita** en peticiones hacia el dominio destino.
 
-### 7. Comprueba que funciona
+Cuando usamos tokens JWT transmitidos en la cabecera personalizada:
+`Authorization: Bearer <token>`
+* El navegador **jamás adjunta esa cabecera por su cuenta**.
+* Para enviar esa cabecera, un script JavaScript tiene que leer el token de memoria y colocarlo explícitamente en el objeto `fetch()`.
+* Como una web de terceros no puede leer la memoria ni el almacenamiento de tu origen (gracias a la Política del Mismo Origen), **es matemáticamente imposible ejecutar un ataque CSRF contra una API que use Bearer tokens**.
+
+<div class="rule">
+  <p class="rule-label">La regla de desactivación de CSRF</p>
+  <p><strong>Solo puedes hacer <code>csrf.disable()</code> si tu API no utiliza cookies de sesión implícitas para autorizar mutaciones de datos.</strong></p>
+  <p>Si tu API utiliza sesiones basadas en cookies y navegadores web, debes activar el token sincronizado anti-CSRF (<code>CookieCsrfTokenRepository</code>) de forma obligatoria.</p>
+</div>
+
+### Tabla de diagnóstico de los 4 errores clásicos de Spring Security
+
+Durante la integración entre cliente web y backend protegido se presentan siempre los mismos cuatro tropiezos:
+
+| Error observable | Dónde aparece | Causa técnica real | Solución exacta |
+| :--- | :--- | :--- | :--- |
+| **1 · 401 Unauthorized silencioso** | Pestaña Network de DevTools. | El cliente no envió la cabecera `Authorization` o la envió con un formato incorrecto (ej: falta la palabra `Bearer `). | Revisar el script de `fetch`: asegurar que añade `headers: { 'Authorization': 'Bearer ' + token }`. |
+| **2 · 403 Forbidden inesperado en POST/PUT** | Consola y Network en aplicaciones con sesión. | La protección CSRF de Spring Security está activa y la petición de modificación no aportó el token `X-XSRF-TOKEN`. | Si usas JWT: asegurar `csrf.disable()`. Si usas cookies: leer el token de la cookie `XSRF-TOKEN` y reenviarlo en la cabecera `X-XSRF-TOKEN`. |
+| **3 · Error de CORS al enviar credenciales** | Consola de JavaScript en rojo. | El cliente usó `credentials: 'include'`, pero el backend configuró `allowedOrigins("*")`. | En Spring Boot `WebConfig`, sustituir el comodín `*` por los orígenes exactos (`allowedOrigins("http://localhost:5500")`). |
+| **4 · Token Expired (401 tras un tiempo)** | Consola de JavaScript. | La fecha `exp` del JWT quedó en el pasado y `JwtService` rechazó la firma. | Redirigir al usuario a la pantalla de login o solicitar un nuevo token mediante el endpoint de refresco (*Refresh Token*). |
+
+### Paso a paso guiado · Configuración final unificada de seguridad y CORS
+
+En Spring Security la configuración de CORS debe integrarse dentro de la propia `SecurityFilterChain` para que los filtros de seguridad no bloqueen las peticiones previas `OPTIONS`:
+
+<p class="stage">Paso 1 · Integrar CORS formal en SecurityConfig</p>
+
+```java
+package com.empresa.proyecto.config;
+
+import com.empresa.proyecto.security.JwtAuthenticationFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http, 
+            JwtAuthenticationFilter jwtAuthFilter) throws Exception {
+
+        http
+            // 1. Vinculamos la configuración de CORS al ciclo de vida de Spring Security
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+            // 2. Desactivamos CSRF porque nos autenticamos exclusivamente por Bearer tokens sin cookies
+            .csrf(csrf -> csrf.disable())
+
+            // 3. API estrictamente sin estado
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+            // 4. Reglas de autorización de rutas
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/proyectos/**", "/api/v1/tareas/**").permitAll()
+                .requestMatchers("/api/v1/usuarios/**").hasRole("ADMINISTRADOR")
+                .anyRequest().authenticated()
+            )
+
+            // 5. Inyectamos nuestro filtro de JWT antes del filtro de usuario/contraseña
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        // Orígenes explícitos (nunca comodín '*' cuando hay credenciales)
+        config.setAllowedOrigins(List.of("http://localhost:5500", "http://127.0.0.1:5500"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setExposedHeaders(List.of("Location"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+}
+```
+
+### La comprobación · El flujo de integración completo de cliente a servidor
+
+Realiza la prueba final de integración entre tu cliente web de la UD8 y la API blindada de la UD9:
+
+1. **Abre `cliente/index.html` en `http://localhost:5500`:**
+   * La lista de proyectos públicos se carga de inmediato sin pedir credenciales (`200 OK`).
+2. **Intenta crear un proyecto sin hacer login:**
+   * El formulario emite un `POST` sin cabecera `Authorization`.
+   * En DevTools Network compruebas el código **`401 Unauthorized`**.
+   * La interfaz muestra el mensaje en rojo: *"Debes iniciar sesión para realizar esta acción"*.
+3. **Inicia sesión en la interfaz:**
+   * Introduces usuario `admin` y clave `Password123!`.
+   * El backend responde con el token JWT. El cliente lo almacena en `sessionStorage`.
+4. **Vuelve a crear el proyecto:**
+   * El cliente incluye `Authorization: Bearer <token>`.
+   * El preflight `OPTIONS` responde `200` y el `POST` devuelve **`201 Created`**.
+   * El nuevo proyecto aparece en pantalla al instante sin recargar la página.
+5. **Verifica la consola:** Cero errores de CORS, cero errores de CSRF, cero fugas de seguridad.
+
+### Ahora tú · Manejo del cierre de sesión (Logout) en el cliente
+
+Implementa el cierre de sesión en tu página web:
+1. Añade un botón *«Cerrar sesión»* en la cabecera de `index.html`.
+2. Al pulsar el botón:
+   * Elimina el token de la memoria del navegador: `sessionStorage.removeItem('jwt')`.
+   * Actualiza el estado visual de la pantalla (oculta el panel de creación y muestra el botón de login).
+3. Intenta crear un proyecto tras el logout y verifica que el servidor vuelve a responder `401`.
+
+### Reto · Simulación de ataque CSRF y su contramedida
+
+Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno controlado:
+1. Diseña una página HTML maliciosa local (`atacante.html`) servida en el puerto 9000 con un formulario oculto que envíe un `POST` automático hacia un endpoint protegido por cookies.
+2. Observa cómo el navegador adjunta las cookies y el backend vulnerable ejecuta la orden.
+3. Activa en Spring Security el `CookieCsrfTokenRepository.withHttpOnlyFalse()` y observa cómo el servidor neutraliza el ataque respondiendo **`403 Forbidden (Invalid CSRF Token)`**.
+
+> [!NOTE]
+> Si en la evaluación se solicita un informe de auditoría de seguridad perimetral, CORS y prevención de ataques CSRF, el formato oficial de entrega de texto es siempre un **documento en PDF** (`auditoria-seguridad.pdf`), nunca un archivo markdown suelto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Mecanismo de ataque CSRF comprendido y configuración unificada de CORS y seguridad aplicada.</span></div>
+  <div><strong>Si lo tienes</strong><span>Flujo completo de autenticación por JWT integrado en el cliente web de la UD8 con gestión de errores.</span></div>
+  <div><strong>Reto</strong><span>Simulación de ataque CSRF ejecutada en laboratorio y contramedida con tokens sincronizados verificada.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 60</p>
   <ul class="checklist">
-    <li>Has obtenido una configuración explicada y una batería breve de casos permitidos y bloqueados.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se distingue con precisión por qué las APIs con tokens Bearer son inmunes a ataques CSRF.</li>
+    <li>La configuración de CORS está perfectamente integrada dentro de la `SecurityFilterChain`.</li>
+    <li>Se aplican las reglas estrictas de incompatibilidad entre comodines (`*`) y credenciales.</li>
+    <li>Los 4 errores clásicos de Spring Security se diagnostican y corrigen en menos de dos minutos.</li>
+    <li>El cliente web completa el ciclo de login, consulta pública, creación autorizada y logout.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué un ataque CSRF no puede tener éxito contra una API que exige la cabecera `Authorization: Bearer`?</li>
+    <li>¿Qué configuración de Spring Boot permite que las peticiones previas `OPTIONS` de CORS no sean bloqueadas por los filtros de autenticación?</li>
+    <li>¿Por qué el cierre de sesión en una arquitectura JWT puramente stateless se realiza habitualmente destruyendo el token en el cliente?</li>
+    <li>¿Cuál es la causa exacta cuando un frontend recibe un código 403 al enviar un formulario POST en una aplicación con sesiones y cookies activas?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque el navegador no añade cabeceras personalizadas de forma automática en peticiones cruzadas; para enviarla se requiere JavaScript explícito del propio origen legítimo.</p>
+  <p>2 · Configurar un CorsConfigurationSource vinculado formalmente a http.cors() dentro de la SecurityFilterChain.</p>
+  <p>3 · Porque el servidor no mantiene ningún registro del token en memoria; al borrar el token del cliente, este pierde la capacidad de firmar y autorizar peticiones futuras.</p>
+  <p>4 · Falta del token sincronizado anti-CSRF (la cabecera X-XSRF-TOKEN o parámetro _csrf no fue incluido en la petición).</p>
+</details>
 
 ## Lo que debes recordar
 
-Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben poder justificarse, preguntas de recuperación y una comprobación final del producto.
+### El método
+
+En esta unidad has aprendido a transformar una API abierta en un sistema seguro, gobernado por la identidad y los privilegios.
+
+Para proteger cualquier aplicación web profesional, aplica siempre este decálogo de seguridad:
+
+<figure class="diagram">
+  <figcaption>El decálogo de la arquitectura de seguridad</figcaption>
+  <ol class="flow">
+    <li>Asume la <strong>amnesia congénita de HTTP</strong>: cada petición llega aislada y debe demostrar su identidad en cada llamada.</li>
+    <li><strong>NUNCA almacenes contraseñas en claro ni cifradas</strong>: utiliza siempre funciones hash criptográficas lentas con <em>Salt</em> (<strong>BCrypt</strong> con factor de coste 12).</li>
+    <li>Separa conceptual y técnicamente la <strong>Autenticación (AuthN: ¿quién eres?)</strong> de la <strong>Autorización (AuthZ: ¿qué puedes hacer?)</strong>.</li>
+    <li>Respeta la semántica de códigos HTTP: responde <strong><code>401</code></strong> ante credenciales ausentes o inválidas y <strong><code>403</code></strong> ante permisos insuficientes.</li>
+    <li>Diseña formalmente una <strong>Matriz de Control de Acceso (RBAC)</strong> antes de escribir una sola línea de código de seguridad.</li>
+    <li>Aplica el principio de <strong>seguridad por defecto</strong> mediante una <code>SecurityFilterChain</code> funcional en Spring Security 6.</li>
+    <li>Carga usuarios reales desde PostgreSQL desacoplando tu entidad JPA mediante el contrato <strong><code>UserDetailsService</code></strong> y <strong><code>UserDetails</code></strong>.</li>
+    <li>Combina la seguridad perimetral de rutas con la seguridad en profundidad mediante anotaciones declarativas <strong><code>@PreAuthorize</code></strong> y expresiones SpEL.</li>
+    <li>Elige con criterio técnico entre <strong>Sesión con Cookie</strong> (aplicaciones web tradicionales) o <strong>Token firmado JWT</strong> (APIs móviles y distribuidas sin estado).</li>
+    <li><strong>La seguridad nunca se fía del cliente</strong>: ocultar un botón en la interfaz es ergonomía; verificar el permiso en el backend es ingeniería.</li>
+  </ol>
+</figure>
+
+### La idea más importante
+
+> **La seguridad nunca se implementa en el cliente; el navegador es un entorno que el usuario y el atacante controlan al 100 %. La única frontera real de una aplicación es el backend: toda regla de negocio, permiso y validación debe verificarse en el servidor en cada petición sin asumir jamás que el cliente es de confianza.**
+
+Ocultar botones o deshabilitar enlaces en una página web es una cortesía visual para que el usuario no se confunda. La verdadera seguridad consiste en que cuando un usuario intente saltarse esa interfaz y lanzar la petición a mano, el servidor detenga la operación en la frontera de red y responda con un muro infranqueable.
+
+### Las decisiones que tienes que saber justificar
+
+| Decisión de ingeniería | Lo que tienes que poder defender ante un tribunal |
+| :--- | :--- |
+| **BCrypt con factor 12 frente a SHA-256** | SHA-256 es ultrarrápido y vulnerable a ataques de fuerza bruta masivos con GPUs; BCrypt es deliberadamente lento, incluye *Salt* aleatorio contra tablas arcoíris y su coste computacional es adaptable en el tiempo. |
+| **Diferenciación semántica entre 401 y 403** | 401 indica falta de autenticación válida (el cliente puede reintentar aportando credenciales); 403 indica que la identidad está verificada pero carece de privilegios suficientes (prohibido). |
+| **`SecurityFilterChain` funcional frente a herencia clásica** | `WebSecurityConfigurerAdapter` fue eliminado en Spring Boot 3; la configuración moderna mediante `@Bean SecurityFilterChain` con lambdas ofrece mayor modularidad y desacoplamiento. |
+| **`UserDetailsService` sobre entidad JPA** | Desacopla la lógica interna del modelo de datos de la aplicación del contrato técnico de seguridad requerido por el motor de autenticación de Spring. |
+| **`@PreAuthorize` con `@EnableMethodSecurity`** | Permite aplicar autorización granular junto al método de negocio, accediendo a los parámetros del método (`#id`) y evaluando reglas de propiedad a nivel de fila (SpEL). |
+| **API sin estado (`STATELESS`) con JWT** | Permite escalabilidad horizontal inmediata sin balanceo con sesiones pegajosas ni dependencias de clústeres de memoria compartida (Redis). |
+| **No guardar datos confidenciales en el Payload del JWT** | El Payload de un JWT solo está codificado en Base64Url y no cifrado; cualquier intermediario puede leer su contenido, por lo que solo debe contener identidades y roles. |
+| **Desactivación de CSRF solo en APIs con Bearer tokens** | Los tokens Bearer viajan en cabeceras añadidas manualmente por JavaScript y los navegadores nunca las envían de forma automática, haciendo el ataque CSRF técnicamente inviable. |
+| **Orígenes explícitos en CORS al usar credenciales** | El estándar W3C prohíbe el uso de `allowedOrigins("*")` junto a credenciales para evitar que cualquier sitio web malicioso secuestre sesiones autenticadas de usuarios. |
+| **Pruebas automáticas con `@WithMockUser`** | Garantiza que las restricciones de seguridad están blindadas por tests automatizados que se ejecutan en milisegundos en pipelines de integración continua sin depender de bases de datos. |
+
+### Al terminar la unidad deberías poder responder
+
+1. ¿Por qué el protocolo HTTP es formalmente un protocolo sin estado (*stateless*)?
+2. ¿Cómo reconstruye el servidor la ilusión de continuidad mediante la cabecera `Set-Cookie` y el identificador `JSESSIONID`?
+3. ¿Qué peligros de seguridad neutralizan las directivas `HttpOnly`, `Secure` y `SameSite` en una cookie?
+4. ¿Cuál es la diferencia exacta entre autenticación (AuthN) y autorización (AuthZ)?
+5. ¿En qué escenario exacto una API REST debe responder con código 401 y en cuál con 403?
+6. ¿Qué es una Matriz de Control de Acceso (RBAC) y qué roles estructuran el gestor de proyectos?
+7. ¿Por qué las contraseñas nunca deben guardarse mediante cifrado simétrico reversible (como AES)?
+8. ¿Por qué un algoritmo de hash rápido como SHA-256 o MD5 se considera hoy una negligencia para contraseñas?
+9. ¿Qué función cumple el *Salt* aleatorio en un hash de contraseñas y qué ataque previene?
+10. ¿Qué representa el formato modular `$2a$12$...` en una cadena generada por BCrypt?
+11. ¿Qué ocurre con todos los endpoints de una API inmediatamente después de añadir la dependencia de Spring Security?
+12. ¿Cómo intercepta la `SecurityFilterChain` las peticiones HTTP antes de que alcancen a los controladores?
+13. ¿Qué contrato funcional exige la interfaz `UserDetailsService` y qué objeto devuelve?
+14. ¿Cómo permite la anotación `@AuthenticationPrincipal` inyectar al usuario activo en un controlador?
+15. ¿Qué diferencia práctica existe entre comprobar `hasRole('ADMIN')` y `hasAuthority('ROLE_ADMIN')`?
+16. ¿Qué ventaja ofrece la anotación `@PreAuthorize` frente a definir reglas de seguridad solo por rutas URL?
+17. ¿Qué tres partes componen la estructura de un JSON Web Token (JWT) y qué garantiza su firma?
+18. ¿Cuál es el compromiso (*trade-off*) más grave de usar JWTs puros sin estado respecto a la revocación de accesos?
+19. ¿Por qué un ataque de falsificación de peticiones en sitios cruzados (CSRF) solo afecta a sistemas basados en cookies?
+20. ¿Por qué el navegador bloquea una petición cross-origin si el backend tiene configurado `allowedOrigins("*")` y el cliente envía credenciales?
+
+### El vocabulario de la unidad
+
+| Concepto | Significa |
+| :--- | :--- |
+| **Stateless** | Característica de un protocolo o arquitectura donde el servidor no almacena ningún estado de sesión de los clientes entre peticiones consecutivas. |
+| **HttpSession** | Mecanismo de los contenedores de servlets de Java para mantener atributos y contexto de un usuario en la memoria del servidor. |
+| **HttpOnly** | Directiva de una cookie que prohíbe su acceso mediante código JavaScript (`document.cookie`), protegiéndola contra ataques XSS. |
+| **SameSite** | Atributo de cookie que restringe su envío en peticiones originadas desde sitios web cruzados para neutralizar ataques CSRF. |
+| **Autenticación (AuthN)** | Proceso de verificar la identidad declarada por un usuario o sistema mediante credenciales comprobables. |
+| **Autorización (AuthZ)** | Proceso de determinar si una identidad autenticada dispone de los privilegios necesarios para ejecutar una acción sobre un recurso. |
+| **401 Unauthorized** | Código de estado HTTP que indica que la petición carece de credenciales de autenticación válidas para el recurso solicitado. |
+| **403 Forbidden** | Código de estado HTTP que indica que el servidor ha verificado la identidad del cliente pero este carece de permisos suficientes. |
+| **RBAC** | *Role-Based Access Control*: modelo de seguridad donde los permisos se asignan a roles y los roles a usuarios. |
+| **BCrypt** | Función hash criptográfica adaptativa unidireccional basada en el cifrado Blowfish, deliberadamente lenta para resistir fuerza bruta. |
+| **Salt** | Secuencia aleatoria de bytes generada para cada usuario que se combina con su contraseña antes de computar el hash para evitar tablas precalculadas. |
+| **SecurityFilterChain** | Cadena ordenada de filtros de Spring Security que intercepta e inspecciona cada petición HTTP entrante antes del controlador. |
+| **UserDetailsService** | Interfaz central de Spring Security con el método `loadUserByUsername()` para recuperar credenciales y roles desde cualquier almacén de datos. |
+| **@PreAuthorize** | Anotación de Spring Security que evalúa expresiones de seguridad (SpEL) antes de permitir la ejecución de un método en servicios o controladores. |
+| **JWT** | *JSON Web Token*: estándar abierto (RFC 7519) que define un formato compacto y autónomo para transmitir información de forma segura mediante firmas criptográficas. |
+| **Bearer Token** | Esquema de autenticación HTTP donde el portador del token demuestra su autorización simplemente presentándolo en la cabecera `Authorization`. |
+| **CSRF** | *Cross-Site Request Forgery*: ataque que induce al navegador de una víctima autenticada a ejecutar acciones no deseadas en una aplicación web mediante cookies implícitas. |
+
+### Comprobación final del producto de la unidad
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Auditoría de seguridad backend · criterios de producción</p>
+  <ul class="checklist">
+    <li>Las contraseñas de los usuarios se almacenan exclusivamente con algoritmo BCrypt (factor de coste $\ge 12$) y jamás en texto plano.</li>
+    <li>La identidad y los roles de los usuarios residen en tablas persistentes de PostgreSQL y se cargan mediante `UserDetailsService`.</li>
+    <li>Las cuentas de usuario desactivadas (`activo = false`) son rechazadas automáticamente por `isEnabled()`.</li>
+    <li>La arquitectura de autorización distingue de forma estricta entre códigos `401 Unauthorized` y `403 Forbidden`.</li>
+    <li>Las rutas públicas de consulta y documentación (Swagger UI) están delimitadas sin exigir credenciales innecesarias.</li>
+    <li>Las operaciones destructivas (creación, edición y borrado) están protegidas por roles con `@PreAuthorize` o matchers de `SecurityFilterChain`.</li>
+    <li>La aplicación implementa una estrategia justificada de autenticación (sesión segura con cookies o tokens JWT sin estado).</li>
+    <li>Si se utiliza JWT, el token viaja en la cabecera `Authorization: Bearer` y la política de sesión es `STATELESS`.</li>
+    <li>La configuración de CORS está integrada formalmente en Spring Security y restringe los orígenes a clientes autorizados sin comodines universales (`*`).</li>
+    <li>La seguridad está respaldada por una suite de pruebas automatizadas con `MockMvc` y `@WithMockUser` que pasa al 100 % en verde.</li>
+  </ul>
+</div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Resultados de la unidad</p>
@@ -1538,5 +2244,3 @@ Esta página cerrará la unidad con el mapa conceptual, las decisiones que deben
     <li>Reconocer y corregir los fallos habituales de CSRF y de CORS con credenciales.</li>
   </ul>
 </div>
-
-> El cierre se completará después de desarrollar las sesiones, para que resuma exactamente el material publicado y no un temario teórico distinto.
