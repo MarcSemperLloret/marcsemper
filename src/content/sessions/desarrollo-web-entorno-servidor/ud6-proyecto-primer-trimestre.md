@@ -277,8 +277,8 @@ Analiza estas tres frases extraídas de pliegos de clientes reales y detecta sus
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> la disciplina del desarrollo por cortes verticales (<em>Tracer Bullets</em>), cómo mantener la suite de pruebas en verde continuo y la gestión de incidencias de persistencia.</li>
-    <li><strong>2. Haz:</strong> implementa los casos de uso priorizados en tu <code>BACKLOG.md</code> conectando entidad, repositorio, servicio, controlador y manejo de errores.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw test</code> tras cada historia completada, validas las respuestas en Bruno/Postman y registras los bloqueos resueltos en <code>PROBLEMAS.md</code>.</li>
+    <li><strong>2. Haz:</strong> implementa los casos de uso priorizados en la hoja de ruta de tu <code>README.md</code> conectando entidad, repositorio, servicio, controlador y manejo de errores.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw test</code> tras cada historia completada, validas las respuestas en Bruno/Postman y preparas las evidencias técnicas de resolución de incidencias.</li>
   </ol>
 </div>
 
@@ -340,20 +340,18 @@ Durante el sprint te toparás con errores reales de integración. Esta tabla res
 | `PropertyReferenceException: No property 'xyz' found for type 'Entidad'` | El nombre de un método en `JpaRepository` tiene una errata o hace referencia a un atributo inexistente. | Revisa el nombre exacto de la propiedad Java en la entidad (respetando mayúsculas y minúsculas). |
 | `MultipleBagFetchException: cannot simultaneously fetch multiple bags` | Se intentó hacer `JOIN FETCH` simultáneo sobre dos colecciones de tipo `List` en la misma consulta JPQL. | Cambia las colecciones a `Set` o divide la carga en dos consultas dirigidas dentro de la misma transacción. |
 
-### El cuaderno de bitácora: PROBLEMAS.md
+### El registro de incidencias técnicas
 
-En la UD2 aprendiste que un desarrollador profesional no esconde sus problemas: los documenta y los resuelve con método.
+En ingeniería de software no se esconden los problemas: se diagnostican y se resuelven con método. Si la tarea o evaluación requiere entregar una memoria escrita de incidencias técnicas resueltas, el formato oficial de entrega de texto es siempre un **documento en PDF** (`memoria-incidencias.pdf`), estructurado con este esquema:
 
-Crea en la raíz del repositorio el archivo `PROBLEMAS.md`. Cada vez que te encuentres con un bloqueo técnico que te lleve más de diez minutos, regístralo con esta estructura:
-
-```markdown
-### 1. LazyInitializationException al listar proyectos con tareas
-* **Síntoma:** Al llamar a `GET /proyectos/1/detalle`, Jackson lanzaba error 500 por sesión cerrada.
-* **Causa:** El mapper se ejecutaba en el controlador después de que la transacción del servicio hubiera cerrado la conexión con PostgreSQL.
-* **Solución adoptada:** Añadimos `@Query("SELECT p FROM Proyecto p LEFT JOIN FETCH p.tareas WHERE p.id = :id")` en `ProyectoRepository` para traer las tareas en la misma consulta SQL.
+```text
+1. Incidencia: LazyInitializationException al listar proyectos con tareas
+   - Síntoma: Al llamar a GET /proyectos/1/detalle, Jackson lanzaba error 500 por sesión cerrada.
+   - Causa raíz: El mapper se ejecutaba en el controlador después de que la transacción del servicio hubiera cerrado la conexión con PostgreSQL.
+   - Solución de ingeniería: Añadimos @Query("SELECT p FROM Proyecto p LEFT JOIN FETCH p.tareas WHERE p.id = :id") en ProyectoRepository para traer las tareas en la misma sentencia SQL.
 ```
 
-Este archivo demostrará ante el tribunal de evaluación en la sesión 42 que entiendes la causa de los fallos y dominas las herramientas de diagnóstico.
+Tener identificados y resueltos estos casos te servirá además como evidencia directa para la defensa técnica oral de la sesión 42.
 
 ### Ahora tú · Ejecutar el sprint de desarrollo
 
@@ -400,7 +398,7 @@ Un compañero de equipo sube un cambio y el pipeline de GitHub Actions se pone e
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Iteraciones 1 y 2 completadas: CRUD de Proyectos y Tareas funcionando con validación y DTOs limpios.</span></div>
   <div><strong>Si lo tienes</strong><span>Iteraciones 3 y 4 completadas: Etiquetas N:M, clonación transaccional y cero consultas N+1 con tests en verde.</span></div>
-  <div><strong>Reto</strong><span>Bitácora <code>PROBLEMAS.md</code> documentada con 3 casos reales resueltos y suite de tests 100 % determinista.</span></div>
+  <div><strong>Reto</strong><span>Registro de incidencias resueltas preparado para la defensa técnica y suite de tests 100 % determinista.</span></div>
 </div>
 
 <div class="checkpoint">
@@ -410,7 +408,7 @@ Un compañero de equipo sube un cambio y el pipeline de GitHub Actions se pone e
     <li>Todos los endpoints devuelven códigos de estado HTTP semánticamente correctos (200, 201, 204, 400, 404, 409).</li>
     <li>La suite de pruebas automatizadas pasa en verde íntegramente mediante <code>./mvnw test</code>.</li>
     <li>La base de datos PostgreSQL mantiene la integridad referencial sin registros huérfanos ni anomalías transaccionales.</li>
-    <li>Los problemas encontrados durante el desarrollo están anotados y explicados en <code>PROBLEMAS.md</code>.</li>
+    <li>Las incidencias técnicas encontradas están diagnosticadas con su causa raíz y preparadas para la defensa.</li>
   </ul>
 </div>
 
