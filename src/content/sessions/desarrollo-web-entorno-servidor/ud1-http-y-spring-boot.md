@@ -466,12 +466,17 @@ Para no repetir el dominio entero, escribo `…/posts/1` en lugar de `https://js
 
 Copia esta tabla y rellena **las dos columnas del medio sin abrir nada**. La última se queda vacía de momento.
 
+La primera fila va resuelta como ejemplo. Es una URL que **no forma parte del ejercicio**: está ahí para que veas cuánto detalle se espera en la columna del motivo, que es la que todo el mundo deja en blanco.
+
 | URL | Código que espero | Por qué lo espero | Código real |
 | :--- | :---: | :--- | :---: |
+| **Ejemplo** · `…/users/1` | `200` | La ruta `/users` existe en esta API y el usuario 1 también, así que el servidor encuentra el recurso y lo devuelve | `200` |
 | `…/posts/1` | | | |
 | `…/posts/999999` | | | |
 | `…/pooosts/1` | | | |
 | `…/posts` | | | |
+
+Un motivo es una frase que empieza por «porque» y menciona **qué existe y qué no**. «Porque sí» y «porque me suena» no son motivos: si no sabes justificar la predicción, escribe la duda concreta que tienes y esa será tu predicción.
 
 Fíjate en qué es distinto en cada fila:
 
