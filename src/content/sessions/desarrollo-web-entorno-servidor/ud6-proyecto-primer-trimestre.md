@@ -24,7 +24,7 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje muy bajo. Se entrega una especificación y unos criterios de aceptación; el diseño y el reparto del trabajo son del equipo.</p>
+  <p>Andamiaje muy bajo. El profesorado entrega al comenzar la unidad la especificación y los criterios de aceptación; el diseño y el reparto del trabajo son del equipo.</p>
 </div>
 
 ## Semana 14 · Integración y defensa

@@ -21,7 +21,7 @@ priorKnowledge:
   - "El módulo completo, de la UD1 a la UD11."
 ---
 
-<p class="lead">Ya no existe tutorial. Se entrega una especificación y el equipo decide modelo, contrato, arquitectura, estrategia de seguridad, integración y pruebas. Angular actúa como consumidor final, pero el backend debe seguir pudiendo comprobarse de forma completa con Postman o Bruno.</p>
+<p class="lead">Ya no existe tutorial. El profesorado entrega una especificación y el equipo decide modelo, contrato, arquitectura, estrategia de seguridad, integración y pruebas. Angular actúa como consumidor final, pero el backend debe seguir pudiendo comprobarse de forma completa con Postman o Bruno.</p>
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>

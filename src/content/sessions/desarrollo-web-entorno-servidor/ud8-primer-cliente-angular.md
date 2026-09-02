@@ -16,7 +16,7 @@ outcomes:
   - "Diagnosticar un fallo de integración sabiendo si el problema es del cliente, del servidor o del navegador."
 requirements:
   - "La API de la UD7 en marcha."
-  - "Un proyecto Angular mínimo, proporcionado o del módulo de cliente."
+  - "Un proyecto Angular mínimo: el del módulo de cliente, o uno de una sola pantalla creado en la primera sesión."
 priorKnowledge:
   - "APIs REST, JSON y códigos de estado."
   - "TypeScript básico y componentes Angular."
@@ -26,7 +26,7 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje medio. El cliente se proporciona casi hecho: lo que se practica es la integración y el diagnóstico, no Angular.</p>
+  <p>Andamiaje medio. El cliente se reduce a una pantalla y se monta en la primera sesión: lo que se practica es la integración y el diagnóstico, no Angular.</p>
 </div>
 
 ## Semana 17 · Del cliente HTTP al navegador

@@ -26,7 +26,7 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje muy bajo. Se proporciona un contrato externo y criterios de aceptación; el diseño del adaptador y de la degradación queda en manos del alumnado.</p>
+  <p>Andamiaje muy bajo. El profesorado proporciona al comenzar la unidad el contrato del servicio externo y los criterios de aceptación; el diseño del adaptador y de la degradación queda en manos del alumnado.</p>
 </div>
 
 ## Semana 21 · Consumir sin acoplarse

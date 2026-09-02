@@ -1452,7 +1452,7 @@ El quinto criterio es el que separa una colección de una lista de peticiones. S
 
 ### Entrega
 
-En el repositorio del módulo:
+En tu repositorio del módulo:
 
 1. **El proyecto completo**, arrancable con `mvnw spring-boot:run`.
 2. **La colección exportada**, en una carpeta `pruebas/`.
