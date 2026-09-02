@@ -683,149 +683,696 @@ Spring Security proporciona el método:
 ## Sesión 55 · Spring Security básico
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> añadir la dependencia cambia el flujo de cada petición y debe entenderse antes de personalizarse.</li>
-    <li><strong>Construye:</strong> rutas públicas y protegidas comprobadas de forma explícita.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> el impacto inmediato de añadir <code>spring-boot-starter-security</code> al proyecto, la arquitectura de la cadena de filtros de seguridad (<em>SecurityFilterChain</em> y <code>DelegatingFilterProxy</code>), el DSL funcional de configuración en Spring Security 6 y la autenticación HTTP Basic para APIs.</li>
+    <li><strong>2. Haz:</strong> define una clase de configuración con <code>SecurityFilterChain</code>, declara explícitamente qué rutas son públicas (documentación OpenAPI, Swagger UI) y cuáles requieren autenticación obligatoria.</li>
+    <li><strong>3. Comprueba:</strong> lanzas peticiones desde Bruno con y sin cabecera <code>Authorization: Basic</code>, verificando que los accesos anónimos a rutas protegidas se interceptan con código <code>401 Unauthorized</code> y cabecera <code>WWW-Authenticate</code>.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué ocurre con todos los endpoints de una API en el momento en que añades la dependencia de Spring Security sin escribir ninguna configuración?</li>
+    <li>¿Qué clase o bean central de Spring Security se utiliza para definir las reglas de autorización de rutas HTTP en sustitución de la clase obsoleta <code>WebSecurityConfigurerAdapter</code>?</li>
+    <li>¿Cómo viajan las credenciales (usuario y contraseña) en la cabecera <code>Authorization</code> cuando se utiliza el estándar HTTP Basic?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **leer la cadena de filtros y configurar una protección mínima sin depender de valores mágicos**.
+### El cerrojo automático de Spring Security
 
-### 2. El problema
+En el instante en que añades esta dependencia a tu `pom.xml`:
 
-Añadir la dependencia cambia el flujo de cada petición y debe entenderse antes de personalizarse.
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
 
-### 3–6. Itinerario de trabajo
+Spring Boot activa el principio de **seguridad por defecto (*Secure by Default*)**:
+1. **Todos los endpoints quedan blindados:** Cualquier petición a `/api/v1/proyectos` o a `/swagger-ui.html` es inmediatamente rechazada con código `401 Unauthorized`.
+2. **Genera un usuario provisional:** En la terminal de arranque de la aplicación aparece un mensaje como este:
+   ```text
+   Using generated security password: 4a8b1c2d-9e3f-4123-b890-abcdef123456
+   ```
+   El usuario por defecto es `user` y la contraseña es esa clave aleatoria efímera.
+3. **Inserta la Cadena de Filtros de Seguridad:** Cada petición HTTP entrante es interceptada por una serie de filtros en cascada antes de llegar siquiera al `DispatcherServlet`.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<div class="rule">
+  <p class="rule-label">La arquitectura de filtros</p>
+  <p><strong>Spring Security no vive dentro de tus controladores; vive en la frontera de red.</strong></p>
+  <p>El <code>DelegatingFilterProxy</code> desvía la petición a la <code>SecurityFilterChain</code>. Si un filtro detecta que la petición no aporta credenciales válidas, corta la ejecución de inmediato y responde al cliente sin que tu código de negocio llegue a enterarse.</p>
+</div>
 
-### 7. Comprueba que funciona
+### La cadena de filtros (SecurityFilterChain) en Spring Security 6
+
+En versiones antiguas de Spring Security se heredaba de `WebSecurityConfigurerAdapter`. En Spring Boot 3 esa clase fue eliminada definitivamente.
+
+La configuración moderna se realiza mediante un `@Bean` que construye un **`SecurityFilterChain`** utilizando programación funcional basada en lambdas:
+
+<figure class="diagram">
+  <figcaption>El flujo de inspección de la SecurityFilterChain</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Petición HTTP entrante</li>
+    <li>Filtro CORS (WebConfig)</li>
+    <li>Filtro CSRF / ExceptionTranslation</li>
+    <li>BasicAuthenticationFilter</li>
+    <li>AuthorizationFilter (requestMatchers)</li>
+    <li>DispatcherServlet / Controller</li>
+  </ol>
+</figure>
+
+### Paso a paso guiado · Configurar SecurityConfig con rutas públicas y privadas
+
+Vamos a configurar nuestra primera cadena de seguridad formal:
+
+<p class="stage">Paso 1 · Crear la clase SecurityConfig</p>
+
+```java
+package com.empresa.proyecto.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            // 1. Desactivamos CSRF solo porque estamos construyendo una API REST sin cookies de sesión clásicas
+            .csrf(csrf -> csrf.disable())
+
+            // 2. Definimos las reglas de autorización sobre las rutas HTTP
+            .authorizeHttpRequests(auth -> auth
+                // Documentación OpenAPI y Swagger accesibles para todo el mundo
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+                // Endpoints de solo lectura de proyectos públicos para consulta
+                .requestMatchers(HttpMethod.GET, "/api/v1/proyectos/**").permitAll()
+
+                // Cualquier otra petición (creación, borrado, modificación) exige autenticación
+                .anyRequest().authenticated()
+            )
+
+            // 3. Habilitamos autenticación HTTP Basic estándar para pruebas de API
+            .httpBasic(Customizer.withDefaults());
+
+        return http.build();
+    }
+}
+```
+
+<p class="stage">Paso 2 · Definir usuario temporal en application.properties</p>
+
+Para realizar las primeras pruebas antes de conectar la base de datos en la siguiente sesión, definimos credenciales estáticas en el archivo de propiedades:
+
+```properties
+# Usuario provisional para pruebas iniciales de Spring Security
+spring.security.user.name=desarrollador
+spring.security.user.password=Password123!
+spring.security.user.roles=DESARROLLADOR
+```
+
+### La comprobación · Pruebas de autorización con Bruno
+
+Arranca tu aplicación y ejecuta estas comprobaciones desde tu cliente HTTP (Bruno):
+
+1. **Ruta pública sin credenciales:**
+   * Lanza `GET http://localhost:8080/api/v1/proyectos`.
+   * **Resultado esperado:** Código `200 OK` con la lista de proyectos. Pasa limpia sin pedir usuario.
+2. **Ruta protegida sin credenciales:**
+   * Lanza `POST http://localhost:8080/api/v1/proyectos` con un cuerpo JSON de alta.
+   * **Resultado esperado:** Código **`401 Unauthorized`**.
+   * Revisa la pestaña *Headers*: el servidor ha devuelto la cabecera `WWW-Authenticate: Basic realm="Realm"`.
+3. **Ruta protegida con credenciales válidas:**
+   * En Bruno, ve a la pestaña **Auth** → selecciona **Basic Auth**.
+   * Introduce Usuario: `desarrollador` y Contraseña: `Password123!`.
+   * Lanza de nuevo el `POST`.
+   * **Resultado esperado:** Código **`201 Created`** con la cabecera `Location`.
+   * Inspecciona en *Headers* enviados cómo viaja:
+     `Authorization: Basic ZGVzYXJyb2xsYWRvcjpQYXNzd29yZDEyMyE=` (cadena codificada en Base64).
+
+### Ahora tú · Proteger las rutas de tareas
+
+Aplica las reglas de seguridad sobre los endpoints de tareas:
+
+1. Modifica `SecurityConfig` para que `GET /api/v1/tareas` sea una ruta pública.
+2. Asegura que la creación de tareas (`POST /api/v1/proyectos/{id}/tareas`) y el borrado (`DELETE /api/v1/tareas/{id}`) exijan autenticación obligatoria.
+3. Comprueba con Bruno que una petición anónima de borrado es rechazada de inmediato con `401`.
+
+### Reto · Manejo personalizado de respuestas 401 (RFC 7807)
+
+Por defecto, cuando Spring Security rechaza una petición con `401`, emite una respuesta vacía o el error básico de Tomcat.
+
+Investiga la interfaz `AuthenticationEntryPoint`:
+1. Crea una clase `CustomAuthenticationEntryPoint` que implemente `AuthenticationEntryPoint`.
+2. Sobrescribe `commence()` para que ante accesos no autenticados, el servidor devuelva un JSON estructurado con el estándar **RFC 7807 (Problem Details)**:
+   `{"status": 401, "title": "No autenticado", "detail": "Debes aportar credenciales válidas para acceder a este recurso"}`.
+3. Regístralo en tu `filterChain` con `.exceptionHandling(ex -> ex.authenticationEntryPoint(...))`.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Dependencia integrada, `SecurityConfig` con `filterChain` y rutas públicas/privadas operativas.</span></div>
+  <div><strong>Si lo tienes</strong><span>Pruebas con HTTP Basic verificadas en Bruno alternando peticiones permitidas (200) y bloqueadas (401).</span></div>
+  <div><strong>Reto</strong><span>Punto de entrada personalizado (`AuthenticationEntryPoint`) emitiendo respuestas RFC 7807 ante rechazos 401.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 55</p>
   <ul class="checklist">
-    <li>Has obtenido rutas públicas y protegidas comprobadas de forma explícita.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se comprende la arquitectura de la `SecurityFilterChain` y su ejecución previa al controlador.</li>
+    <li>La configuración moderna sin clases obsoletas se realiza mediante el DSL de Spring Security 6.</li>
+    <li>Las rutas de documentación técnica (OpenAPI/Swagger) quedan explícitamente abiertas al público.</li>
+    <li>Los métodos de modificación (POST, PUT, DELETE) están estrictamente blindados con autenticación.</li>
+    <li>Las respuestas de error `401 Unauthorized` emiten la cabecera estándar `WWW-Authenticate`.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué Spring Security rechaza todas las peticiones por defecto tras añadir su starter?</li>
+    <li>¿Qué método de `HttpSecurity` permite abrir una ruta concreta para visitas anónimas sin credenciales?</li>
+    <li>¿Por qué HTTP Basic no es un mecanismo de cifrado seguro por sí mismo si no se transmite sobre HTTPS?</li>
+    <li>¿Qué cabecera HTTP estándar incluye el servidor en una respuesta 401 para indicar qué esquema de autenticación espera?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Por el principio de seguridad por defecto: previene que endpoints sensibles queden expuestos accidentalmente por olvido del desarrollador.</p>
+  <p>2 · El método permitAll() encadenado a una regla de ruta con requestMatchers().</p>
+  <p>3 · Porque la cabecera Authorization solo codifica el usuario y la contraseña en Base64; Base64 no es cifrado (cualquiera puede decodificarlo al instante en texto claro).</p>
+  <p>4 · La cabecera WWW-Authenticate (ej: WWW-Authenticate: Basic realm="Realm").</p>
+</details>
 
 ## Sesión 56 · Usuarios en base de datos
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> los usuarios definidos en memoria no representan el ciclo de vida real de una aplicación.</li>
-    <li><strong>Construye:</strong> autenticación contra usuarios persistidos y contraseñas hasheadas.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> el contrato del motor de autenticación de Spring Security, la interfaz fundamental <code>UserDetailsService</code>, el objeto <code>UserDetails</code> y cómo desacoplar la entidad JPA de tu dominio de la representación técnica de seguridad.</li>
+    <li><strong>2. Haz:</strong> implementa <code>CustomUserDetailsService</code> conectado a <code>UsuarioRepository</code> en PostgreSQL y pobla la base de datos con usuarios y hashes BCrypt reales.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas peticiones autenticadas contra la API utilizando identidades almacenadas en PostgreSQL, verificando que la contraseña se valida mediante <code>PasswordEncoder</code> y que usuarios desactivados o con contraseñas erróneas son rechazados.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué interfaz de Spring Security tiene un único método encargado de buscar un usuario por su nombre de acceso?</li>
+    <li>¿Por qué nunca se deben definir usuarios fijos en el archivo <code>application.properties</code> en una aplicación en producción?</li>
+    <li>¿Qué método de <code>UserDetails</code> permite a Spring Security saber si la cuenta de un usuario ha sido dada de baja o bloqueada?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **cargar identidades y credenciales desde PostgreSQL**.
+### Cómo busca identidades Spring Security: UserDetailsService
 
-### 2. El problema
+En la sesión anterior usamos un usuario temporal configurado en un archivo de texto. En el mundo real, los usuarios se registran en una pantalla, cambian de contraseña, se dan de baja y sus credenciales viven en tablas de **PostgreSQL**.
 
-Los usuarios definidos en memoria no representan el ciclo de vida real de una aplicación.
+Spring Security no te obliga a usar una estructura de base de datos rígida. En su lugar, define un **contrato funcional mediante una interfaz**:
 
-### 3–6. Itinerario de trabajo
+```java
+public interface UserDetailsService {
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+}
+```
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<figure class="diagram">
+  <figcaption>El flujo de autenticación contra base de datos</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Cliente envía credenciales ("admin", "clave123")</li>
+    <li>AuthenticationManager llama a UserDetailsService</li>
+    <li>loadUserByUsername() consulta UsuarioRepository en PostgreSQL</li>
+    <li>Devuelve UserDetails con hash BCrypt guardado</li>
+    <li>PasswordEncoder.matches("clave123", hashGuardado)</li>
+    <li>Éxito o 401 Unauthorized</li>
+  </ol>
+</figure>
 
-### 7. Comprueba que funciona
+### El desacoplamiento entre Usuario (JPA) y UserDetails (Seguridad)
+
+Tu entidad de dominio `Usuario` representa una persona en tu negocio (nombre, email, fecha de alta, departamento).
+
+Spring Security no sabe qué es un departamento: solo necesita saber qué dice el contrato de **`UserDetails`**:
+* `getUsername()`: Nombre de usuario único.
+* `getPassword()`: Hash BCrypt guardado en la base de datos.
+* `getAuthorities()`: Colección de roles y permisos del usuario (`Collection<? extends GrantedAuthority>`).
+* `isEnabled()`: Si la cuenta está activa (`true`) o desactivada (`false`).
+* `isAccountNonLocked()`: Si la cuenta está bloqueada por intentos fallidos.
+
+Podemos hacer que nuestra entidad `Usuario` implemente directamente `UserDetails`, permitiendo que viaje de forma nativa a través de todo el framework.
+
+### Paso a paso guiado · De la entidad JPA al CustomUserDetailsService
+
+<p class="stage">Paso 1 · Implementar UserDetails en la entidad Usuario</p>
+
+Completamos la entidad `Usuario` que diseñamos en la sesión 53:
+
+```java
+package com.empresa.proyecto.model;
+
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
+@Entity
+@Table(name = "usuarios")
+public class Usuario implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private Rol rol;
+
+    @Column(nullable = false)
+    private boolean activo = true;
+
+    // Métodos obligatorios del contrato UserDetails
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // En Spring Security los roles se representan como GrantedAuthority con prefijo ROLE_
+        return List.of(new SimpleGrantedAuthority(rol.name()));
+    }
+
+    @Override
+    public String getPassword() { return this.password; }
+
+    @Override
+    public String getUsername() { return this.username; }
+
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+
+    @Override
+    public boolean isEnabled() { return this.activo; }
+
+    // Getters y setters de dominio
+    public Long getId() { return id; }
+    public Rol getRol() { return rol; }
+    public void setRol(Rol rol) { this.rol = rol; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+}
+```
+
+<p class="stage">Paso 2 · Crear el repositorio UsuarioRepository</p>
+
+```java
+package com.empresa.proyecto.repository;
+
+import com.empresa.proyecto.model.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    Optional<Usuario> findByUsername(String username);
+}
+```
+
+<p class="stage">Paso 3 · Implementar CustomUserDetailsService</p>
+
+Creamos el servicio anotado con `@Service` para que Spring Security lo detecte automáticamente como el proveedor oficial de identidades:
+
+```java
+package com.empresa.proyecto.service;
+
+import com.empresa.proyecto.repository.UsuarioRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final UsuarioRepository usuarioRepository;
+
+    public CustomUserDetailsService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return usuarioRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("No existe usuario con username: " + username));
+    }
+}
+```
+
+<p class="stage">Paso 4 · Insertar datos iniciales con hashes BCrypt en PostgreSQL</p>
+
+En `src/main/resources/data.sql` insertamos usuarios representativos.
+
+> Recuerda que la contraseña nunca se guarda en claro. El hash para la contraseña `"Password123!"` con factor de coste 12 generado por BCrypt es:
+> `$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L` *(o el generado en tu test de la sesión 54)*.
+
+```sql
+INSERT INTO usuarios (username, password, rol, activo) VALUES
+('admin', '$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L', 'ROLE_ADMINISTRADOR', true),
+('dev1', '$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L', 'ROLE_DESARROLLADOR', true),
+('inactivo', '$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L', 'ROLE_DESARROLLADOR', false);
+```
+
+### La comprobación · Autenticación real contra PostgreSQL
+
+Elimina del archivo `application.properties` las propiedades fijas `spring.security.user.name` y `password` para que no interfieran.
+
+Reinicia Spring Boot y prueba en Bruno:
+1. **Login exitoso con usuario de base de datos:**
+   * Lanza `POST /api/v1/proyectos` con Basic Auth: usuario `admin`, contraseña `Password123!`.
+   * **Resultado:** Código `201 Created`. En los logs de Hibernate verás la consulta:
+     `SELECT ... FROM usuarios WHERE username = ?`.
+2. **Usuario inexistente en base de datos:**
+   * Lanza la petición con usuario `fantasma` y clave `Password123!`.
+   * **Resultado:** Código `401 Unauthorized`.
+3. **Usuario con contraseña errónea:**
+   * Lanza la petición con usuario `admin` y clave `ClaveIncorrecta!`.
+   * **Resultado:** Código `401 Unauthorized`.
+4. **Usuario desactivado (`activo = false`):**
+   * Lanza la petición con usuario `inactivo` y clave `Password123!`.
+   * **Resultado:** Código `401 Unauthorized`. Spring Security lee `isEnabled() == false` y bloquea el acceso de inmediato.
+
+### Ahora tú · Endpoint de perfil del usuario autenticado (/me)
+
+Implementa un endpoint que permita al usuario conocer sus propios datos a partir de su sesión activa:
+
+1. Crea en `UsuarioController` el método:
+   ```java
+   @GetMapping("/me")
+   public ResponseEntity<UsuarioResponse> obtenerMiPerfil(@AuthenticationPrincipal Usuario usuarioAutenticado) {
+       return ResponseEntity.ok(new UsuarioResponse(
+           usuarioAutenticado.getId(),
+           usuarioAutenticado.getUsername(),
+           usuarioAutenticado.getRol().name()
+       ));
+   }
+   ```
+2. La anotación `@AuthenticationPrincipal` inyecta directamente la instancia de `Usuario` que Spring Security validó en la base de datos.
+3. Prueba la llamada con distintos usuarios y comprueba que cada uno recibe su propia identidad.
+
+### Reto · Prevención de ataques de temporización (Timing Attacks)
+
+Cuando un atacante intenta adivinar si un nombre de usuario existe en tu base de datos:
+* Si el usuario no existe, la base de datos responde rápido y la petición tarda 10 ms.
+* Si el usuario existe, la base de datos lo encuentra y el servidor ejecuta la costosa función BCrypt (tardando 250 ms).
+* Midiendo el tiempo de respuesta con un script de milisegundos, el atacante puede enumerar todos los usuarios válidos del sistema.
+
+Investiga cómo Spring Security mitiga este vector mediante **contraseñas simuladas (*dummy hash computation*)**:
+1. ¿Qué hace internamente `DaoAuthenticationProvider` cuando `loadUserByUsername` lanza `UsernameNotFoundException`?
+2. ¿Por qué ejecuta de todos modos una llamada falsa a `passwordEncoder.matches()` antes de responder `401`?
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Interfaz `UserDetailsService` implementada y conectada a PostgreSQL mediante `UsuarioRepository`.</span></div>
+  <div><strong>Si lo tienes</strong><span>Entidad `Usuario` implementando `UserDetails`, verificación de cuenta activa (`isEnabled`) y endpoint `/me`.</span></div>
+  <div><strong>Reto</strong><span>Protección contra ataques de temporización (*Timing Attacks*) comprendida e inspeccionada en los componentes internos.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 56</p>
   <ul class="checklist">
-    <li>Has obtenido autenticación contra usuarios persistidos y contraseñas hasheadas.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Las credenciales e identidades residen exclusivamente en tablas de PostgreSQL.</li>
+    <li>La interfaz `UserDetailsService` carga usuarios reales mediante consultas JPA optimizadas.</li>
+    <li>El objeto `UserDetails` desacopla la seguridad de la lógica del modelo de dominio.</li>
+    <li>Las cuentas desactivadas (`activo = false`) son rechazadas automáticamente por `isEnabled()`.</li>
+    <li>El usuario autenticado se inyecta limpiamente en controladores mediante `@AuthenticationPrincipal`.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué método define la interfaz `UserDetailsService` y qué excepción debe lanzar si el usuario no existe?</li>
+    <li>¿Por qué el enum de roles debe mapearse con el prefijo `ROLE_` al crear instancias de `SimpleGrantedAuthority`?</li>
+    <li>¿Para qué se utiliza la anotación `@AuthenticationPrincipal` en un método controlador?</li>
+    <li>¿Cómo impide el método `isEnabled()` de `UserDetails` el acceso a usuarios dados de baja sin borrar sus registros?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · El método loadUserByUsername(String username), lanzando UsernameNotFoundException si el registro no se localiza.</p>
+  <p>2 · Porque las expresiones de seguridad de Spring (hasRole) asumen internamente la existencia del prefijo ROLE_ por convención.</p>
+  <p>3 · Para inyectar directamente en el parámetro del controlador el objeto UserDetails/Usuario asociado al contexto de seguridad de la petición actual.</p>
+  <p>4 · Spring Security comprueba su valor booleano tras validar la contraseña; si devuelve false, aborta la autenticación con una excepción de cuenta deshabilitada (DisabledException) y responde 401.</p>
+</details>
 
 ## Sesión 57 · Roles y permisos
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> un único rol ADMIN no expresa propiedad, pertenencia a proyecto ni acciones específicas.</li>
-    <li><strong>Construye:</strong> reglas de acceso justificadas para usuario, responsable y administrador.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> la diferencia entre Roles (agrupaciones globales con <code>hasRole()</code>) y Autoridades o Permisos atómicos (capacidades específicas con <code>hasAuthority()</code>), la autorización a nivel de ruta en <code>SecurityFilterChain</code> frente a la autorización granular en métodos con <code>@PreAuthorize</code> y <code>@EnableMethodSecurity</code>.</li>
+    <li><strong>2. Haz:</strong> traslada la Matriz de Control de Acceso (RBAC) diseñada en la sesión 53 a tu aplicación, blindando endpoints sensibles según el rol del usuario autenticado.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas peticiones en Bruno alternando entre identidades con rol `DESARROLLADOR` y `ADMINISTRADOR`, verificando que los desarrolladores reciben <code>403 Forbidden</code> al intentar borrar proyectos mientras que los administradores completan la acción con <code>204 No Content</code>.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué diferencia sintáctica y conceptual existe entre comprobar <code>hasRole('ADMIN')</code> y comprobar <code>hasAuthority('ROLE_ADMIN')</code>?</li>
+    <li>¿Qué anotación de configuración es obligatorio activar para poder utilizar <code>@PreAuthorize</code> sobre métodos de controladores o servicios?</li>
+    <li>¿Por qué proteger la seguridad únicamente por rutas URL en <code>SecurityFilterChain</code> es vulnerable si un método de servicio es invocado internamente desde otro flujo?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **convertir reglas del negocio en autorizaciones comprensibles y mantenibles**.
+### Roles globales frente a Permisos atómicos
 
-### 2. El problema
+En aplicaciones en crecimiento existen dos formas de modelar la autorización:
 
-Un único rol ADMIN no expresa propiedad, pertenencia a proyecto ni acciones específicas.
+<figure class="diagram">
+  <figcaption>Roles vs Permisos en Spring Security</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Usuario</li>
+    <li>Roles (ROLE_ADMIN, ROLE_DEV)</li>
+    <li>Permisos Atómicos (PROYECTO_BORRAR, TAREA_EDITAR)</li>
+    <li>Operación protegida</li>
+  </ol>
+</figure>
 
-### 3–6. Itinerario de trabajo
+* **Roles (`hasRole`):** Representan el cargo de una persona en la organización. Por convención en Spring Security llevan el prefijo `ROLE_` en la base de datos, pero en el código se evalúan sin él:
+  * `hasRole('ADMINISTRADOR')` comprueba internamente si el usuario posee la autoridad `ROLE_ADMINISTRADOR`.
+* **Autoridades / Permisos atómicos (`hasAuthority`):** Representan una acción puntual sobre un recurso (`PROYECTO_WRITE`, `TAREA_DELETE`, `INFORME_EXPORTAR`).
+  * Permiten construir sistemas de permisos ultra-flexibles donde los roles son agrupaciones de permisos configurables en base de datos.
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+### Seguridad en rutas URL frente a Seguridad en métodos con @PreAuthorize
 
-### 7. Comprueba que funciona
+Podemos aplicar reglas de autorización en dos capas complementarias:
+
+| Estrategia | Dónde se define | Sintaxis típica | Ventajas y uso recomendado |
+| :--- | :--- | :--- | :--- |
+| **Seguridad de Rutas (HTTP Filter)** | En `SecurityConfig` dentro de `SecurityFilterChain`. | `.requestMatchers(HttpMethod.DELETE, "/api/v1/proyectos/**").hasRole("ADMINISTRADOR")` | Primera barrera perimetral: rechaza peticiones no autorizadas antes de que lleguen al controlador. |
+| **Seguridad de Métodos (@PreAuthorize)** | Sobre métodos de controladores o clases `@Service`. | `@PreAuthorize("hasRole('ADMINISTRADOR')")`<br>`@PreAuthorize("hasRole('DEV') and #tarea.autor == authentication.name")` | Seguridad en profundidad: permite evaluar reglas de negocio complejas, parámetros del método (`#id`) y expresiones de propiedad (**SpEL**). |
+
+### Paso a paso guiado · Implementar la Matriz RBAC en la aplicación
+
+<p class="stage">Paso 1 · Activar la seguridad de métodos en SecurityConfig</p>
+
+Añadimos la anotación `@EnableMethodSecurity` en nuestra clase de configuración:
+
+```java
+package com.empresa.proyecto.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity // Habilita anotaciones @PreAuthorize y @Secured en toda la aplicación
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                // Rutas públicas de consulta y documentación
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/proyectos/**", "/api/v1/tareas/**").permitAll()
+
+                // Gestión de usuarios: reservada estrictamente a Administradores
+                .requestMatchers("/api/v1/usuarios/**").hasRole("ADMINISTRADOR")
+
+                // Todo lo demás requiere que el usuario esté al menos autenticado
+                .anyRequest().authenticated()
+            )
+            .httpBasic(Customizer.withDefaults());
+
+        return http.build();
+    }
+}
+```
+
+<p class="stage">Paso 2 · Proteger operaciones con @PreAuthorize en ProyectoController</p>
+
+Decoramos los métodos de escritura con anotaciones declarativas:
+
+```java
+@RestController
+@RequestMapping("/api/v1/proyectos")
+public class ProyectoController {
+
+    private final ProyectoService proyectoService;
+
+    public ProyectoController(ProyectoService proyectoService) {
+        this.proyectoService = proyectoService;
+    }
+
+    // Creación permitida a Jefes de Proyecto y Administradores
+    @PostMapping
+    @PreAuthorize("hasAnyRole('JEFE_PROYECTO', 'ADMINISTRADOR')")
+    public ResponseEntity<ProyectoResponse> crear(@Valid @RequestBody ProyectoRequest request) {
+        // ...
+    }
+
+    // Borrado de proyectos: reservado exclusivamente a Administradores
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        proyectoService.eliminarProyecto(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+```
+
+<p class="stage">Paso 3 · Regla de propiedad con Spring Expression Language (SpEL)</p>
+
+Podemos condicionar la edición de una tarea a que el usuario sea el autor de la misma:
+
+```java
+    // El usuario solo puede editar la tarea si es Administrador O si él mismo es el asignado
+    @PutMapping("/tareas/{id}")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or @tareaSecurityService.esAsignado(#id, authentication.name)")
+    public ResponseEntity<TareaResponse> actualizarTarea(
+            @PathVariable Long id, 
+            @Valid @RequestBody TareaRequest request) {
+        // ...
+    }
+```
+
+Donde `tareaSecurityService` es un componente Spring que comprueba la base de datos:
+
+```java
+@Component
+public class TareaSecurityService {
+    private final TareaRepository tareaRepository;
+
+    public TareaSecurityService(TareaRepository tareaRepository) {
+        this.tareaRepository = tareaRepository;
+    }
+
+    public boolean esAsignado(Long tareaId, String username) {
+        return tareaRepository.findById(tareaId)
+            .map(t -> t.getAsignadoA() != null && t.getAsignadoA().getUsername().equals(username))
+            .orElse(false);
+    }
+}
+```
+
+### La comprobación · Simulación de matriz de permisos en Bruno
+
+Con los usuarios cargados en PostgreSQL (`admin` con `ROLE_ADMINISTRADOR` y `dev1` con `ROLE_DESARROLLADOR`), ejecuta estas pruebas en Bruno:
+
+1. **Borrado por Administrador:**
+   * Petición: `DELETE /api/v1/proyectos/1`.
+   * Auth: Basic con `admin` / `Password123!`.
+   * **Resultado esperado:** Código **`204 No Content`**. Operación permitida.
+2. **Borrado fraudulento por Desarrollador:**
+   * Misma petición: `DELETE /api/v1/proyectos/1`.
+   * Auth: Basic con `dev1` / `Password123!`.
+   * **Resultado esperado:** Código **`403 Forbidden`**. Spring Security intercepta la llamada, comprueba que `dev1` carece de `ROLE_ADMINISTRADOR` y deniega el acceso sin ejecutar el método del controlador.
+3. **Acceso anónimo a la misma ruta:**
+   * Misma petición sin credenciales en la pestaña Auth.
+   * **Resultado esperado:** Código **`401 Unauthorized`**.
+
+### Ahora tú · Proteger la creación de tareas
+
+Implementa la autorización en el controlador de tareas:
+1. Permite que tanto `ROLE_DESARROLLADOR`, `ROLE_JEFE_PROYECTO` como `ROLE_ADMINISTRADOR` puedan crear tareas sobre un proyecto existente (`POST /api/v1/proyectos/{id}/tareas`).
+2. Restringe el borrado de tareas (`DELETE /api/v1/tareas/{id}`) exclusivamente a `ROLE_JEFE_PROYECTO` y `ROLE_ADMINISTRADOR`.
+3. Comprueba con Bruno que `dev1` recibe `403` al intentar borrar una tarea pero puede crear una nueva con éxito (`201`).
+
+### Reto · Excepciones de acceso denegado personalizadas
+
+Por defecto, cuando un usuario autenticado recibe un `403 Forbidden`, Spring Security no devuelve un formato amigable.
+
+Implementa un `AccessDeniedHandler` personalizado:
+1. Crea la clase `CustomAccessDeniedHandler` que implemente `AccessDeniedHandler`.
+2. Emite una respuesta estándar **RFC 7807** con código `403`, título *"Acceso Denegado"* y detalle indicando que el rol actual no dispone de los privilegios requeridos.
+3. Regístralo en `SecurityConfig` bajo `.exceptionHandling(ex -> ex.accessDeniedHandler(...))`.
+
+> [!NOTE]
+> Si en la evaluación se solicita un informe técnico sobre la jerarquía de roles y auditoría de accesos denegados, el formato oficial de entrega de texto es siempre un **documento en PDF** (`informe-roles-seguridad.pdf`), nunca un archivo markdown suelto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Reglas de autorización por rol configuradas en `SecurityFilterChain` y probadas con Bruno.</span></div>
+  <div><strong>Si lo tienes</strong><span>Anotación `@PreAuthorize` aplicada en controladores con `hasRole` y `hasAnyRole` diferenciando 401 y 403.</span></div>
+  <div><strong>Reto</strong><span>Expresiones SpEL para seguridad a nivel de fila y `AccessDeniedHandler` emitiendo respuestas RFC 7807 ante 403.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 57</p>
   <ul class="checklist">
-    <li>Has obtenido reglas de acceso justificadas para usuario, responsable y administrador.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Se distingue con rigor entre roles generales (`hasRole`) y autoridades atómicas (`hasAuthority`).</li>
+    <li>La anotación `@EnableMethodSecurity` está activada para habilitar autorización declarativa.</li>
+    <li>Las operaciones destructivas (DELETE, PUT) están estrictamente limitadas a roles autorizados.</li>
+    <li>Se comprueba que los intentos no autorizados por usuarios autenticados devuelven `403 Forbidden`.</li>
+    <li>Se comprende el uso de expresiones SpEL para reglas de control de acceso a nivel de fila (ABAC).</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué `hasRole('ADMIN')` espera encontrar internamente la autoridad `ROLE_ADMIN`?</li>
+    <li>¿Qué ventaja ofrece `@PreAuthorize` frente a declarar todas las reglas de autorización en el `filterChain`?</li>
+    <li>¿Qué código HTTP debe devolver la API si un usuario con rol `ROLE_DESARROLLADOR` intenta invocar un endpoint con `@PreAuthorize("hasRole('ADMINISTRADOR')")`?</li>
+    <li>¿Para qué se utiliza el prefijo `#` en una expresión SpEL dentro de `@PreAuthorize` (ej: `#id`)?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque Spring Security añade automáticamente el prefijo ROLE_ por convención histórica para diferenciar roles de permisos simples.</p>
+  <p>2 · Permite colocar la regla de seguridad junto al método que ejecuta la acción, facilitando la legibilidad, y permite acceder a los parámetros del método y a la lógica de dominio.</p>
+  <p>3 · Código HTTP 403 Forbidden.</p>
+  <p>4 · Para hacer referencia a un argumento formal que recibe el método anotado (evaluación contextual de parámetros).</p>
+</details>
+
 
 ## Semana 20 · Tokens y fronteras web
 
