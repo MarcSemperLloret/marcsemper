@@ -962,149 +962,981 @@ Spring Data comprueba el valor del atributo `@Id`:
 ## Sesión 31 · Crear y recuperar entidades
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> un objeto Java nuevo todavía no representa necesariamente una fila existente.</li>
-    <li><strong>Construye:</strong> altas y consultas comprobadas tanto en la aplicación como en la base de datos.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> los cuatro estados del ciclo de vida de una entidad en JPA (transitoria, gestionada, separada y eliminada) y por qué debes usar siempre la instancia devuelta por <code>save()</code>.</li>
+    <li><strong>2. Haz:</strong> implementa el circuito completo de alta y consulta individual en tu servicio y controlador, conectando DTOs de entrada y salida con la entidad persistida.</li>
+    <li><strong>3. Comprueba:</strong> insertas registros mediante POST, recuperas con GET individual y general, y verificas en PostgreSQL el avance de la secuencia y el SQL generado.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>Si ejecutas <code>Tarea t = new Tarea("Revisar logs", "MEDIA");</code>, ¿qué valor tiene su atributo <code>id</code> antes de llamar al repositorio?</li>
+    <li>¿Qué devuelve el método <code>findById(id)</code> de <code>JpaRepository</code> y qué método encadenas para lanzar una excepción si no existe?</li>
+    <li>¿Por qué en una API REST profesional nunca se debe devolver una clase <code>@Entity</code> directamente en la respuesta del controlador?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **persistir nuevas entidades y distinguir identidad transitoria de identidad almacenada**.
+### De un objeto en memoria a una fila con identidad
 
-### 2. El problema
+En la UD2 creábamos un objeto con `new`, le asignábamos un contador incremental a mano (`siguienteId++`) y lo metíamos en un `ArrayList`. Si el objeto cambiaba de campos en cualquier momento, la lista lo reflejaba al instante porque compartían la misma posición de memoria RAM.
 
-Un objeto Java nuevo todavía no representa necesariamente una fila existente.
+Con una base de datos relacional, **la vida de un objeto es mucho más sofisticada**. Un objeto Java no nace conectado a una tabla: tiene que atravesar una serie de transiciones de estado coordinadas por el **Contexto de Persistencia** (*Persistence Context*) de JPA.
 
-### 3–6. Itinerario de trabajo
+<p class="term">El Contexto de Persistencia y el EntityManager</p>
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+El contexto de persistencia es una zona de memoria gestionada por Hibernate donde residen todas las entidades que la aplicación está manipulando en una transacción activa. El objeto responsable de interactuar con él es el `EntityManager`.
 
-### 7. Comprueba que funciona
+Cuando utilizas Spring Data JPA no ves al `EntityManager` de forma directa, pero está ahí detrás de cada llamada a `save()` o `findById()`.
+
+### Los cuatro estados del ciclo de vida de una entidad
+
+Para no cometer errores sutiles con JPA, debes ser capaz de situar cualquier objeto en uno de estos cuatro estados:
+
+<figure class="diagram">
+  <figcaption>El ciclo de vida de una entidad JPA</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Transitoria (new)</li>
+    <li>Gestionada (persist / find)</li>
+    <li>Separada (close / detach)</li>
+    <li>Eliminada (remove)</li>
+  </ol>
+</figure>
+
+| Estado | ¿Tiene ID en BD? | ¿La conoce Hibernate? | ¿Qué ocurre al modificarla? |
+| :--- | :---: | :---: | :--- |
+| **Transitoria (*Transient*)** | No (`null`) | No | Cambia en la memoria JVM, la BD no se entera. |
+| **Gestionada (*Managed*)** | Sí | **Sí** | Hibernate detecta cambios automáticamente (*dirty checking*). |
+| **Separada (*Detached*)** | Sí | No | Cambia en la memoria JVM, pero no se sincroniza con la BD. |
+| **Eliminada (*Removed*)** | Sí | Sí | Se borrará de la tabla físicamente al confirmar la transacción. |
+
+<p class="stage">1 · Transitoria (Transient)</p>
+
+El objeto acaba de ser instanciado con `new Tarea(...)`. Vive en la memoria ordinaria de Java:
+```java
+Tarea nueva = new Tarea("Configurar HTTPS", "ALTA");
+// nueva.getId() es null. PostgreSQL no sabe que esta tarea existe.
+```
+
+<p class="stage">2 · Gestionada (Managed / Persistent)</p>
+
+Cuando llamas a `repositorio.save(nueva)` o cuando recuperas una tarea con `repositorio.findById(1L)`, el objeto pasa al contexto de persistencia:
+* Tiene un identificador único asignado por PostgreSQL.
+* Hibernate lo monitoriza: cualquier cambio en sus atributos durante la transacción será volcado a la base de datos al finalizar sin necesidad de volver a llamar a `save()`.
+
+<p class="stage">3 · Separada (Detached)</p>
+
+Ocurre cuando la transacción termina o la conexión se cierra y el objeto viaja hacia el controlador:
+* Sigue teniendo su `id` (por ejemplo, `id = 1L`).
+* Pero Hibernate ya no la vigila. Si modificas un campo en una entidad separada, esa modificación **no** se guarda en la base de datos a menos que la reenganches explícitamente con `save()` (que invoca `merge()`).
+
+<p class="stage">4 · Eliminada (Removed)</p>
+
+La entidad estaba gestionada y se ha solicitado su borrado (`delete()`). Al confirmarse la transacción, Hibernate ejecutará la sentencia SQL `DELETE`.
+
+### La regla de oro: usa siempre lo que devuelve save()
+
+Mira con atención estas dos líneas. Una de ellas contiene un error conceptual gravísimo:
+
+```java
+// INCORRECTO: confiar en el parámetro original
+repositorio.save(tarea);
+return tarea; 
+
+// CORRECTO: utilizar la instancia gestionada que devuelve el método
+Tarea guardada = repositorio.save(tarea);
+return guardada;
+```
+
+<div class="rule">
+  <p class="rule-label">Por qué save() devuelve una instancia</p>
+  <p>En JPA, el método <code>save()</code> no garantiza que modifique el mismo objeto que le pasaste por parámetro. Lo que hace es sincronizar con el contexto de persistencia y <strong>devolver la referencia gestionada</strong>.</p>
+  <p>Esa instancia devuelta tiene garantizado el identificador generado por la secuencia de PostgreSQL, las columnas con valores por defecto y el estado interno actualizado. Si devuelves el parámetro original, puedes estar propagando un objeto sin id o con valores desincronizados.</p>
+</div>
+
+### Paso 1 · Altas en el Service y Controller
+
+Vamos a conectar el circuito de creación de tareas respetando el aislamiento entre capas que construimos en las unidades 3 y 4.
+
+<p class="stage">1 · El método crear en TareaService</p>
+
+Abre `TareaService.java`. Observa cómo aplica las reglas de negocio y delega en el repositorio:
+
+```java
+package com.ejemplo.gestor.service;
+
+import com.ejemplo.gestor.error.RecursoNoEncontradoException;
+import com.ejemplo.gestor.model.Tarea;
+import com.ejemplo.gestor.repository.TareaRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class TareaService {
+
+    private final TareaRepository repositorio;
+
+    public TareaService(TareaRepository repositorio) {
+        this.repositorio = repositorio;
+    }
+
+    @Transactional
+    public Tarea crear(Tarea tarea) {
+        // Regla de negocio: una tarea nueva siempre nace sin completar
+        tarea.setCompletada(false);
+
+        // Guardamos y devolvemos la entidad gestionada por JPA
+        return repositorio.save(tarea);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Tarea> listar() {
+        return repositorio.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Tarea obtener(Long id) {
+        return repositorio.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("tarea", id));
+    }
+}
+```
+
+<dl class="worked">
+  <dt><code>@Transactional</code></dt>
+  <dd>Delimita la frontera de la transacción en la base de datos. Si el método termina con éxito, Spring confirma (<code>COMMIT</code>) la transacción en PostgreSQL. Si se lanza una excepción no comprobada (<code>RuntimeException</code>), hace un <code>ROLLBACK</code> automático.</dd>
+  <dt><code>@Transactional(readOnly = true)</code></dt>
+  <dd>Optimización para lecturas. Le indica a Hibernate que no necesita vigilar cambios en los objetos (desactiva el <em>dirty checking</em>), lo que ahorra memoria y tiempo de CPU.</dd>
+  <dt><code>orElseThrow</code> con excepción de dominio</dt>
+  <dd>Si <code>findById</code> devuelve una caja <code>Optional</code> vacía, lanzamos nuestra <code>RecursoNoEncontradoException</code>. Recuerda: esta excepción pertenece al dominio, no a la capa web; será el manejador global (<code>@RestControllerAdvice</code>) quien la traduzca a un código HTTP <code>404 Not Found</code>.</dd>
+</dl>
+
+<p class="stage">2 · El endpoint en TareaController</p>
+
+Abre `TareaController.java`. Asegúrate de que las peticiones se traducen mediante el mapper:
+
+```java
+@PostMapping
+public ResponseEntity<TareaResponse> crear(@Valid @RequestBody TareaRequest peticion) {
+    // 1. Traducir de DTO de entrada a entidad del dominio
+    Tarea entidad = TareaMapper.aModelo(peticion);
+
+    // 2. Ejecutar el caso de uso en el servicio
+    Tarea creada = servicio.crear(entidad);
+
+    // 3. Construir la URI del nuevo recurso para la cabecera Location
+    URI ubicacion = ServletUriComponentsBuilder
+            .fromCurrentRequest().path("/{id}")
+            .buildAndExpand(creada.getId()).toUri();
+
+    // 4. Devolver 201 Created con el DTO de respuesta
+    return ResponseEntity.created(ubicacion).body(TareaMapper.aRespuesta(creada));
+}
+
+@GetMapping("/{id}")
+public TareaResponse detalle(@PathVariable Long id) {
+    return TareaMapper.aRespuesta(servicio.obtener(id));
+}
+```
+
+<div class="rule">
+  <p class="rule-label">Por qué los DTO siguen siendo obligatorios con JPA</p>
+  <p>Ahora que tenemos <code>@Entity</code>, la tentación de devolver la entidad directamente en el controlador es enorme. <strong>No lo hagas jamás.</strong></p>
+  <p>Si devuelves la entidad directamente: expones nombres de columnas de tu base de datos, corres el riesgo de romper Jackson al serializar relaciones perezosas (<em>Lazy Loading</em>) fuera de la sesión, y cualquier cambio en una tabla romperá el contrato de los clientes de tu API. Los DTO son el contrato público; las entidades son un detalle interno de almacenamiento.</p>
+</div>
+
+### Paso 2 · La comprobación: secuencias y SQL en PostgreSQL
+
+Arranca la aplicación y ejecuta las siguientes comprobaciones en orden:
+
+<p class="stage">1 · Crea dos tareas distintas</p>
+
+Envía dos peticiones `POST /tareas`:
+
+```http
+POST http://localhost:8080/tareas
+Content-Type: application/json
+
+{
+  "titulo": "Auditar índices en PostgreSQL",
+  "prioridad": "ALTA"
+}
+```
+
+Y luego:
+
+```http
+POST http://localhost:8080/tareas
+Content-Type: application/json
+
+{
+  "titulo": "Escribir tests de repositorio",
+  "prioridad": "MEDIA"
+}
+```
+
+Observa la consola de Spring Boot. Verás dos sentencias `INSERT`:
+
+```sql
+Hibernate: 
+    insert 
+    into
+        tareas
+        (completada, prioridad, titulo) 
+    values
+        (?, ?, ?)
+```
+
+Y las respuestas HTTP recibirán `id: 1` e `id: 2` respectivamente, con cabeceras `Location: http://localhost:8080/tareas/1` y `Location: http://localhost:8080/tareas/2`.
+
+<p class="stage">2 · Inspecciona la secuencia física en PostgreSQL</p>
+
+Abre tu cliente de base de datos (DBeaver o `psql`) y consulta qué ha ocurrido por debajo:
+
+```sql
+SELECT * FROM tareas;
+```
+
+Y ahora consulta la secuencia que PostgreSQL creó automáticamente para la columna `id`:
+
+```sql
+SELECT sequence_name, last_value FROM information_schema.sequences;
+```
+
+Verás una secuencia llamada `tareas_id_seq` cuyo último valor generado es `2`. Las secuencias de PostgreSQL son independientes de las transacciones: garantizan identificadores únicos incluso si decenas de peticiones escriben a la vez.
+
+<p class="stage">3 · Consulta un recurso existente y uno inexistente</p>
+
+1. Haz un `GET http://localhost:8080/tareas/1`:
+   * Código de respuesta: `200 OK`.
+   * En la consola verás: `select t1_0.id, t1_0.completada, t1_0.prioridad, t1_0.titulo from tareas t1_0 where t1_0.id=?`.
+2. Haz un `GET http://localhost:8080/tareas/999`:
+   * Código de respuesta: `404 Not Found`.
+   * Cuerpo JSON estructurado: `{"error": "Recurso no encontrado", "mensaje": "No existe tarea con id 999"}`.
+
+### Ahora tú · Altas y consultas para proyectos
+
+Replica de forma autónoma el circuito completo de creación y consulta para la entidad `Proyecto`:
+
+1. Crea o actualiza `ProyectoRequest` con validaciones `@NotBlank` en el nombre y fechas coherentes.
+2. Crea `ProyectoResponse` para proyectar los datos hacia la API.
+3. Escribe `ProyectoMapper` para transformar bidireccionalmente entre DTOs y la entidad `@Entity Proyecto`.
+4. Implementa en `ProyectoService` los métodos:
+   * `crear(Proyecto proyecto)` con `@Transactional`: valida que el nombre no esté duplicado antes de guardar (lanzando `409 Conflict` si ya existe).
+   * `obtener(Long id)` con `@Transactional(readOnly = true)`.
+   * `listar()` con `@Transactional(readOnly = true)`.
+5. Implementa en `ProyectoController` los endpoints:
+   * `POST /proyectos` devolviendo `201 Created` con cabecera `Location`.
+   * `GET /proyectos` devolviendo `200 OK` con la lista de DTOs.
+   * `GET /proyectos/{id}` devolviendo `200 OK` o `404 Not Found`.
+6. Inserta tres proyectos desde tu cliente HTTP y verifica en la consola SQL que la secuencia `proyectos_id_seq` avanza correctamente.
+
+### Reto · La caché de primer nivel y el aislamiento de DTO
+
+Resuelve estas dos preguntas de análisis técnico:
+
+<p class="stage stage--solo">1 · El experimento de la caché de primer nivel</p>
+
+En `TareaService`, crea un método temporal de prueba anotado con `@Transactional`:
+
+```java
+@Transactional(readOnly = true)
+public void experimentoCache(Long id) {
+    System.out.println("--- Primera búsqueda ---");
+    repositorio.findById(id);
+
+    System.out.println("--- Segunda búsqueda ---");
+    repositorio.findById(id);
+}
+```
+
+* Invoca ese método y observa la salida de la consola con las consultas SQL.
+* ¿Cuántas sentencias `SELECT` ves entre los dos mensajes?
+* Explica qué es la **caché de primer nivel** de Hibernate, dónde reside en memoria y por qué dentro de una misma transacción no se repiten lecturas para la misma entidad.
+
+<p class="stage stage--solo">2 · ¿Qué pasa si la secuencia salta?</p>
+
+Haz un `POST /tareas` enviando un JSON con un título de más de 300 caracteres (violando la restricción física `VARCHAR(120)`).
+* La base de datos rechazará la inserción y la transacción terminará en `ROLLBACK`.
+* Envía ahora una tarea correcta. ¿Qué `id` recibe? ¿Ha recibido el id anterior o ha saltado al siguiente?
+* Explica por qué las secuencias de PostgreSQL nunca reutilizan números ni retroceden tras un fallo, y por qué las claves primarias numéricas **no garantizan ser correlativas sin huecos**.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Altas y consultas de <code>Tarea</code> funcionando con <code>JpaRepository</code>, usando la instancia de <code>save()</code> y devolviendo 201/404.</span></div>
+  <div><strong>Si lo tienes</strong><span>Circuito completo para <code>Proyecto</code> con DTOs, mappers, regla de unicidad en el servicio y secuencias verificadas.</span></div>
+  <div><strong>Reto</strong><span>Demostración de la caché de primer nivel con una sola consulta SQL en logs y explicación de los huecos en secuencias de PostgreSQL.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 31</p>
   <ul class="checklist">
-    <li>Has obtenido altas y consultas comprobadas tanto en la aplicación como en la base de datos.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Distingues los cuatro estados del ciclo de vida de JPA: transitoria, gestionada, separada y eliminada.</li>
+    <li>Utilizas siempre el valor retornado por <code>repositorio.save()</code> en lugar de la variable original.</li>
+    <li>Los métodos del servicio llevan anotaciones <code>@Transactional</code> y <code>@Transactional(readOnly = true)</code> según corresponda.</li>
+    <li>El endpoint de creación responde <code>201 Created</code> con la cabecera <code>Location</code> apuntando al nuevo recurso.</li>
+    <li>Las consultas por id inexistente retornan un <code>404 Not Found</code> limpio mediante <code>orElseThrow</code>.</li>
+    <li>Entiendes por qué las entidades no cruzan hacia el controlador y los DTOs siguen siendo el contrato de la API.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿En qué estado se encuentra una entidad inmediatamente después de ejecutar `new Tarea()`?</li>
+    <li>¿Por qué una entidad en estado *managed* no necesita llamar a `save()` para que sus cambios se guarden al final de una transacción?</li>
+    <li>¿Qué diferencia a nivel de rendimiento aporta marcar un método como `@Transactional(readOnly = true)`?</li>
+    <li>Si una inserción falla por violar una restricción de PostgreSQL, ¿qué ocurre con el valor de la secuencia autoincremental?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · En estado transitorio (*transient*): vive solo en la memoria ordinaria de Java, no tiene clave primaria asignada y JPA no la conoce.</p>
+  <p>2 · Por el mecanismo de comprobación de suciedad (*dirty checking*): Hibernate compara el estado del objeto con la copia que tomó al entrar en el contexto de persistencia y genera automáticamente el UPDATE antes del commit.</p>
+  <p>3 · Indica a Hibernate que no mantenga copias de comparación para *dirty checking*, ahorrando consumo de memoria heap y procesamiento de inspección en cada consulta.</p>
+  <p>4 · La secuencia no retrocede: el número consumido se pierde y la siguiente inserción correcta recibirá el valor siguiente, dejando un hueco en la numeración.</p>
+</details>
 
 ## Sesión 32 · Modificar y eliminar
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> un id recibido no garantiza que el recurso exista ni que pueda eliminarse sin consecuencias.</li>
-    <li><strong>Construye:</strong> operaciones de modificación y borrado con errores de dominio claros.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> la diferencia entre reemplazo total (<code>PUT</code>) y modificación parcial (<code>PATCH</code>), cómo funciona la comprobación de suciedad (<em>dirty checking</em>) y qué restricciones impone la integridad referencial al borrar.</li>
+    <li><strong>2. Haz:</strong> implementa las operaciones de actualización y borrado en tu servicio y controlador, garantizando códigos <code>200 OK</code>, <code>204 No Content</code> y <code>404 Not Found</code> ante recursos ausentes.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas modificaciones y eliminaciones por HTTP, auditas en la consola las sentencias SQL <code>UPDATE</code> y <code>DELETE</code> y compruebas el estado físico resultante en PostgreSQL.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>¿Qué diferencia conceptual existe entre una petición HTTP <code>PUT</code> y una petición <code>PATCH</code>?</li>
+    <li>¿Qué código de estado HTTP debe devolver una eliminación (<code>DELETE</code>) completada con éxito que no envía cuerpo en la respuesta?</li>
+    <li>Si una tabla de tareas tiene una clave foránea hacia la tabla de proyectos, ¿qué ocurre en PostgreSQL si intentas borrar el proyecto directamente?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **actualizar y borrar entidades controlando ausencia y referencias**.
+### Modificar en JPA no es hacer un UPDATE a ciegas
 
-### 2. El problema
+En una aplicación primitiva con JDBC, modificar un registro consistía en concatenar una sentencia SQL de actualización:
+`UPDATE tareas SET titulo = 'Nuevo', prioridad = 'BAJA' WHERE id = 5;`
 
-Un id recibido no garantiza que el recurso exista ni que pueda eliminarse sin consecuencias.
+Si la tarea con id 5 no existía, PostgreSQL respondía que se habían actualizado cero filas, pero la aplicación no se enteraba a menos que comprobaras el contador de retorno.
 
-### 3–6. Itinerario de trabajo
+En JPA y Spring Data, la modificación sigue un patrón mucho más seguro y riguroso:
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+<figure class="diagram">
+  <figcaption>El flujo de modificación en JPA</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Recuperar entidad (404 si falta)</li>
+    <li>Modificar campos (setters)</li>
+    <li>Dirty Checking automático</li>
+    <li>Commit / UPDATE</li>
+  </ol>
+</figure>
 
-### 7. Comprueba que funciona
+1. **Recuperamos la entidad existente:** llamamos a `findById(id)`. Si no existe, lanzamos de inmediato nuestra `RecursoNoEncontradoException` (que se traduce en un `404 Not Found`). No se actualizan fantasmas.
+2. **La entidad pasa a estar gestionada (*managed*):** entra en el contexto de persistencia de Hibernate.
+3. **Modificamos sus atributos:** aplicamos los nuevos valores mediante sus métodos *setters*.
+4. **Hibernate detecta el cambio (*dirty checking*):** al terminar la transacción (`@Transactional`), Hibernate compara el objeto con la foto que tomó al recuperarlo de la base de datos. Si detecta campos modificados, emite automáticamente la sentencia `UPDATE` correspondiente.
+
+<div class="rule">
+  <p class="rule-label">¿Hace falta llamar a save() para actualizar?</p>
+  <p>Dentro de un método anotado con <code>@Transactional</code>, <strong>no es estrictamente necesario llamar a <code>repositorio.save(entidad)</code> si la entidad ya estaba gestionada</strong>. El mecanismo de <em>dirty checking</em> de Hibernate detecta cualquier llamada a un <em>setter</em> y lanza el <code>UPDATE</code> al confirmar la transacción.</p>
+  <p>Sin embargo, en Spring Data se recomienda mantener la llamada a <code>save()</code> al final del método por claridad y coherencia arquitectónica: hace que el código sea autodocumentado y señala de forma explícita dónde se sella la operación.</p>
+</div>
+
+### Reemplazo total (PUT) frente a modificación parcial (PATCH)
+
+En la UD3 diseñamos el contrato REST distinguiendo claramente estas dos intenciones:
+
+* **`PUT /tareas/{id}`:** Reemplazo completo. El cliente envía todos los campos editables del recurso. Si omite uno, ese campo se sobrescribe o se anula.
+* **`PATCH /tareas/{id}` o `PATCH /tareas/{id}/completar`:** Modificación parcial o cambio de estado. Solo se alteran los campos especificados en la petición, dejando el resto intactos.
+
+Veamos cómo se traduce esto en nuestro `TareaService`:
+
+```java
+@Transactional
+public Tarea reemplazar(Long id, Tarea nuevosDatos) {
+    // 1. Asegurar existencia: 404 si no existe
+    Tarea existente = obtener(id);
+
+    // 2. Sobrescribir todos los campos editables
+    existente.setTitulo(nuevosDatos.getTitulo());
+    existente.setPrioridad(nuevosDatos.getPrioridad());
+    existente.setCompletada(nuevosDatos.isCompletada());
+
+    // 3. Sellar cambios
+    return repositorio.save(existente);
+}
+
+@Transactional
+public Tarea cambiarEstado(Long id, boolean completada) {
+    Tarea existente = obtener(id);
+    existente.setCompletada(completada);
+    return repositorio.save(existente);
+}
+```
+
+<dl class="worked">
+  <dt>Por qué no hacemos <code>nuevosDatos.setId(id); repositorio.save(nuevosDatos);</code></dt>
+  <dd>Ese es el error clásico de quien usa JPA por primera vez. Si creas un objeto nuevo desde el DTO, le plantas el id y llamas a <code>save()</code>, Hibernate ejecutará un <code>SELECT</code> previo, pero sobrescribirá todas las columnas que no vinieran en el DTO con valores <code>null</code> o por defecto, destruyendo información previa como fechas de creación o contadores internos. Cargar primero la entidad existente protege los campos que no deben alterarse.</dd>
+</dl>
+
+### La eliminación segura: cómo borrar sin dejar cabos sueltos
+
+Borrar un registro plantea dos cuestiones clave: **la comprobación previa de existencia** y **las consecuencias sobre otras tablas**.
+
+<p class="stage">1 · Comprobar existencia antes de borrar</p>
+
+En HTTP, un `DELETE` sobre un identificador que no existe debe responder `404 Not Found` (o `204 No Content` si se adopta idempotencia ciega, pero en nuestra API hemos establecido informar al cliente cuando pide borrar algo inexistente).
+
+En el servicio lo implementamos así:
+
+```java
+@Transactional
+public void eliminar(Long id) {
+    if (!repositorio.existsById(id)) {
+        throw new RecursoNoEncontradoException("tarea", id);
+    }
+    repositorio.deleteById(id);
+}
+```
+
+`existsById(id)` ejecuta en PostgreSQL una consulta hiperligera:
+```sql
+SELECT count(*) > 0 FROM tareas WHERE id = ?
+```
+Si devuelve `true`, `deleteById(id)` ejecuta:
+```sql
+DELETE FROM tareas WHERE id = ?
+```
+
+<p class="stage">2 · Borrado físico frente a borrado lógico (Soft Delete)</p>
+
+| Estrategia | Cómo funciona | Ventajas | Inconvenientes |
+| :--- | :--- | :--- | :--- |
+| **Borrado físico (*Hard Delete*)** | Sentencia SQL `DELETE FROM tareas WHERE id = ?`. | Libera espacio en disco, esquema limpio y sencillo. | **Irreversible.** Se pierde la trazabilidad histórica y de auditoría. |
+| **Borrado lógico (*Soft Delete*)** | `UPDATE tareas SET activo = false, fecha_baja = NOW() WHERE id = ?`. | Recuperable, mantiene histórico para analítica o auditorías legales. | Todas las consultas deben filtrar `WHERE activo = true` para no mostrar datos borrados. |
+
+En este taller utilizaremos borrado físico para comprender a fondo el comportamiento de las claves foráneas en PostgreSQL.
+
+<p class="stage">3 · El choque con la integridad referencial</p>
+
+Imagina que un proyecto con `id = 1` tiene cinco tareas asociadas. La columna `proyecto_id` de la tabla `tareas` apunta a la clave primaria de `proyectos`.
+
+¿Qué ocurre si intentas ejecutar `DELETE FROM proyectos WHERE id = 1;`?
+
+PostgreSQL detiene la operación en seco y lanza un error de violación de clave foránea:
+```text
+ERROR: update or delete on table "proyectos" violates foreign key constraint "fk_tareas_proyecto"
+DETAIL: Key (id)=(1) is still referenced from table "tareas".
+```
+
+<div class="rule">
+  <p class="rule-label">La base de datos protege tus datos de tu propio código</p>
+  <p>La base de datos jamás permitirá que queden tareas huérfanas apuntando a un proyecto que ya no existe. Esa es la diferencia entre una base de datos relacional seria y un archivo de texto: la <strong>integridad referencial garantizada por el motor</strong>.</p>
+  <p>Si quieres borrar un proyecto, la aplicación debe decidir explícitamente: o borra primero las tareas que contiene, o las reasigna a otro proyecto, o desactiva el proyecto mediante borrado lógico.</p>
+</div>
+
+### Paso a paso guiado · Conectar PUT, PATCH y DELETE
+
+Abre `TareaController.java` y añade los tres endpoints correspondientes:
+
+```java
+@PutMapping("/{id}")
+public TareaResponse reemplazar(
+        @PathVariable Long id,
+        @Valid @RequestBody TareaRequest peticion) {
+    Tarea datos = TareaMapper.aModelo(peticion);
+    Tarea actualizada = servicio.reemplazar(id, datos);
+    return TareaMapper.aRespuesta(actualizada);
+}
+
+@PatchMapping("/{id}/completar")
+public TareaResponse marcarCompletada(@PathVariable Long id) {
+    Tarea actualizada = servicio.cambiarEstado(id, true);
+    return TareaMapper.aRespuesta(actualizada);
+}
+
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+    servicio.eliminar(id);
+    return ResponseEntity.noContent().build();
+}
+```
+
+<p class="term">ResponseEntity.noContent().build()</p>
+
+Devuelve un código de estado `204 No Content` sin cuerpo en la respuesta. Es el estándar de oro en arquitecturas REST para operaciones `DELETE` que terminan con éxito.
+
+### La comprobación · El ciclo completo de modificación y borrado
+
+Arranca la aplicación y ejecuta las siguientes pruebas en orden:
+
+<p class="stage">1 · Modificación completa con PUT</p>
+
+Envía una petición para modificar la tarea 1:
+
+```http
+PUT http://localhost:8080/tareas/1
+Content-Type: application/json
+
+{
+  "titulo": "Auditar índices en PostgreSQL (Actualizado)",
+  "prioridad": "BAJA"
+}
+```
+
+* Respuesta: `200 OK` con el JSON actualizado y `prioridad: "BAJA"`.
+* Consola SQL de Hibernate:
+```sql
+Hibernate: 
+    update 
+        tareas 
+    set
+        completada=?,
+        prioridad=?,
+        titulo=? 
+    where
+        id=?
+```
+
+<p class="stage">2 · Modificación parcial con PATCH</p>
+
+Marca la tarea como completada:
+
+```http
+PATCH http://localhost:8080/tareas/1/completar
+```
+
+* Respuesta: `200 OK` con `"completada": true`.
+* Consola SQL: comprueba que Hibernate ejecuta el `UPDATE` modificando el valor booleano.
+
+<p class="stage">3 · Eliminación exitosa con DELETE</p>
+
+Borra la tarea 1:
+
+```http
+DELETE http://localhost:8080/tareas/1
+```
+
+* Respuesta: `204 No Content` (cuerpo vacío).
+* Consola SQL:
+```sql
+Hibernate: 
+    delete 
+    from
+        tareas 
+    where
+        id=?
+```
+
+<p class="stage">4 · Comprobación de recurso desaparecido</p>
+
+1. Consulta ahora `GET http://localhost:8080/tareas/1`:
+   * Respuesta: `404 Not Found`. La tarea ya no existe.
+2. Intenta volver a borrar `DELETE http://localhost:8080/tareas/1`:
+   * Respuesta: `404 Not Found`. La aplicación detecta que ya no está y rechaza la operación.
+3. Abre tu cliente SQL (DBeaver o `psql`) y ejecuta `SELECT * FROM tareas WHERE id = 1;`: cero filas.
+
+### Ahora tú · Modificar y eliminar proyectos
+
+Implementa en `Proyecto` las operaciones de actualización y borrado:
+
+1. Añade a `ProyectoService`:
+   * `reemplazar(Long id, Proyecto nuevosDatos)`: carga el existente, actualiza `nombre`, `descripcion` y `activo`, validando que el nombre siga siendo único en el sistema.
+   * `eliminar(Long id)`: comprueba existencia con `existsById(id)` (lanzando `404` si falta) y ejecuta `deleteById(id)`.
+2. Añade los endpoints correspondientes a `ProyectoController`:
+   * `PUT /proyectos/{id}` devolviendo `200 OK`.
+   * `DELETE /proyectos/{id}` devolviendo `204 No Content`.
+3. Comprueba el caso de error: intenta modificar o borrar un proyecto con `id = 9999` y comprueba que recibes un `404 Not Found` en ambos casos.
+
+### Reto · Bloqueo optimista y borrado en cascada
+
+Analiza estas dos situaciones críticas de producción:
+
+<p class="stage stage--solo">1 · El problema de la actualización perdida (Lost Update)</p>
+
+Dos usuarios, Ana y Carlos, cargan en su navegador la tarea 2 al mismo tiempo:
+* Ana cambia el título a `"Revisión urgente"` y pulsa guardar (10:00:01).
+* Carlos, que tenía la pantalla abierta sin el cambio de Ana, cambia la prioridad a `"BAJA"` y pulsa guardar (10:00:02).
+* El guardado de Carlos sobrescribe el título de Ana y lo borra sin que nadie se entere.
+
+Investiga cómo resuelve JPA este problema mediante **bloqueo optimista** (*Optimistic Locking*):
+* ¿Qué hace la anotación `@Version private Long version;` en una `@Entity`?
+* ¿Qué consulta SQL ejecuta Hibernate en el `UPDATE` para comprobar si alguien modificó la fila antes?
+* ¿Qué excepción lanza Spring cuando detecta una colisión concurrente y qué código HTTP (`409 Conflict`) debería devolver la API?
+
+<p class="stage stage--solo">2 · El peligro de ON DELETE CASCADE</p>
+
+En PostgreSQL puedes definir una clave foránea con la cláusula `ON DELETE CASCADE`: si se borra un proyecto, el motor borra automáticamente todas sus tareas asociadas en cascada.
+* Explica qué ventaja tiene esto frente a borrar las tareas una a una con un bucle en Java.
+* Explica por qué muchos arquitectos de software **prohíben terminantemente `ON DELETE CASCADE`** en tablas con información de negocio crítica. ¿Qué ocurriría si un usuario borra un cliente por error en un CRM?
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span><code>PUT</code> y <code>DELETE</code> funcionando en <code>Tarea</code> con respuestas 200, 204 y 404 ante id inexistente.</span></div>
+  <div><strong>Si lo tienes</strong><span>Reemplazo y borrado implementado en <code>Proyecto</code>, con validación de existencia previa y trazabilidad SQL de los <code>UPDATE</code>.</span></div>
+  <div><strong>Reto</strong><span>El mecanismo de <code>@Version</code> (bloqueo optimista) explicado con su SQL correspondiente y el debate técnico de <code>ON DELETE CASCADE</code> documentado.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 32</p>
   <ul class="checklist">
-    <li>Has obtenido operaciones de modificación y borrado con errores de dominio claros.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Comprendes cómo el <em>dirty checking</em> de Hibernate detecta cambios en entidades gestionadas y genera sentencias <code>UPDATE</code>.</li>
+    <li>Distingues cuándo un reemplazo completo requiere cargar la entidad previa para no perder campos inmutables.</li>
+    <li>La operación <code>DELETE</code> responde <code>204 No Content</code> si tiene éxito y <code>404 Not Found</code> si el identificador no existía.</li>
+    <li>Has comprobado en PostgreSQL que las filas borradas desaparecen físicamente del disco.</li>
+    <li>Entiendes qué es la integridad referencial y cómo las restricciones de clave foránea protegen la base de datos contra registros huérfanos.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué es peligroso instanciar un objeto nuevo con `new`, asignarle el id recibido por la URL y llamar a `save()` para actualizar?</li>
+    <li>¿Qué consulta ejecuta Spring Data JPA cuando llamas a `repositorio.existsById(id)`?</li>
+    <li>¿Qué significa que una operación HTTP DELETE deba responder `204 No Content`?</li>
+    <li>¿Qué ocurre en PostgreSQL si intentas borrar una fila que está siendo apuntada por una clave foránea de otra tabla sin borrado en cascada?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque cualquier atributo que no estuviera presente en el DTO recibido se guardará como <code>null</code> o con su valor por defecto, destruyendo información previa de la base de datos.</p>
+  <p>2 · Ejecuta un <code>SELECT count(*) > 0 FROM ... WHERE id = ?</code>, que comprueba la existencia de la fila sin cargar todas sus columnas en la memoria RAM.</p>
+  <p>3 · Que la acción se ha completado con éxito en el servidor y no hay ningún contenido o cuerpo que devolver al cliente.</p>
+  <p>4 · La base de datos aborta la transacción lanzando un error de violación de restricción de clave foránea (FK violation), impidiendo que queden registros huérfanos.</p>
+</details>
 
 ## Sesión 33 · Consultas derivadas
 
 <div class="today-box">
-  <p class="today-label">Plan de la sesión · estructura publicada</p>
+  <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>Comprende:</strong> findAll no escala como respuesta universal a cualquier necesidad de consulta.</li>
-    <li><strong>Construye:</strong> búsquedas por estado, responsable o texto con nombres coherentes.</li>
-    <li><strong>Comprueba:</strong> demuestra el resultado sin depender del ejemplo guiado.</li>
+    <li><strong>1. Aprende:</strong> por qué <code>findAll()</code> con filtrado en memoria es un desastre de rendimiento, cómo Spring Data deriva consultas SQL a partir del nombre del método y el vocabulario de operadores disponibles.</li>
+    <li><strong>2. Haz:</strong> declara métodos de consulta derivados en <code>TareaRepository</code>, conéctalos con parámetros <code>@RequestParam</code> en el controlador y audita las cláusulas <code>WHERE</code> en los logs.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas búsquedas filtradas por estado, prioridad y texto desde HTTP, verificas el SQL generado y experimentas qué ocurre ante un error tipográfico en el repositorio.</li>
   </ol>
 </div>
 
-### 1. Qué vamos a conseguir
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <ol>
+    <li>En la UD2 filtrábamos listas en memoria con <code>.stream().filter(...)</code>. Si tu tabla tiene 100.000 tareas, ¿por qué hacer <code>findAll()</code> y filtrar en Java colapsaría el servidor?</li>
+    <li>¿Qué convención léxica utiliza Spring Data JPA para deducir qué consulta SQL debe construir sin que escribas código?</li>
+    <li>¿En qué momento valida Spring Data JPA si los métodos declarados en la interfaz del repositorio existen realmente en la entidad?</li>
+  </ol>
+</div>
 
-Al terminar serás capaz de **expresar búsquedas frecuentes mediante métodos derivados y verificar el SQL generado**.
+### La falacia de «me lo traigo todo y lo filtro en Java»
 
-### 2. El problema
+En las primeras unidades de este curso, cuando un endpoint necesitaba tareas de prioridad alta, la tentación natural era escribir esto:
 
-FindAll no escala como respuesta universal a cualquier necesidad de consulta.
+```java
+// ANTIPATRÓN: cargar el mundo en memoria para quedarse con tres elementos
+public List<Tarea> buscarUrgentes() {
+    return repositorio.findAll().stream()
+            .filter(t -> "ALTA".equals(t.getPrioridad()))
+            .toList();
+}
+```
 
-### 3–6. Itinerario de trabajo
+Con cincuenta tareas en una lista de pruebas no notas nada raro. Pero analicemos qué ocurre en un entorno real con 200.000 tareas registradas:
 
-1. **Concepto mínimo necesario.** Aislaremos las ideas imprescindibles antes de introducir código nuevo.
-2. **Lo hacemos juntos.** Construiremos un primer caso sobre el gestor de proyectos e incidencias y explicaremos cada decisión.
-3. **Tu turno.** Modificarás el caso guiado con un requisito que obliga a transferir lo aprendido.
-4. **Reto.** Resolverás una variante sin solución completa y registrarás cómo la has comprobado.
+1. **Tráfico de red masivo:** la base de datos lee 200.000 filas de disco y las envía completas por el cable TCP hasta tu aplicación Spring Boot (decenas de megabytes innecesarios).
+2. **Desperdicio de memoria RAM:** Hibernate construye 200.000 instancias completas de `Tarea` en el *heap* de la JVM, saturando el recolector de basura (*Garbage Collector*).
+3. **Desprecio a la base de datos:** has ignorado los índices de PostgreSQL, su optimizador de costes y su memoria caché relacional, convirtiendo un motor de base de datos de millones de euros en un simple volquete de datos.
 
-### 7. Comprueba que funciona
+<div class="rule">
+  <p class="rule-label">La regla de oro del filtrado</p>
+  <p><strong>El filtrado de datos siempre se realiza en el motor de la base de datos, nunca en la memoria de la aplicación.</strong></p>
+  <p>La base de datos tiene estructuras en árbol (índices B-Tree) diseñadas para descartar el 99,9 % de los registros en microsegundos. Por el cable de red solo deben viajar las filas que el cliente realmente solicitó.</p>
+</div>
+
+### Cómo funciona la derivación de consultas en Spring Data
+
+Spring Data JPA incluye un analizador léxico (*query derivation mechanism*) capaz de interpretar el nombre de un método Java y traducirlo automáticamente a sentencias SQL con cláusulas `WHERE`, `ORDER BY` y límites.
+
+Basta con declarar la cabecera del método en tu interfaz de repositorio:
+
+```java
+public interface TareaRepository extends JpaRepository<Tarea, Long> {
+    List<Tarea> findByPrioridad(String prioridad);
+}
+```
+
+Al ver ese método, Spring Data descompone el nombre:
+* **`find` / `read` / `get` / `query`:** indica que se trata de una consulta de selección (`SELECT`).
+* **`By`:** marca el inicio de los criterios de filtrado (`WHERE`).
+* **`Prioridad`:** busca un atributo llamado `prioridad` en la entidad `Tarea`.
+* **`(String prioridad)`:** asocia el primer parámetro del método al valor del filtro (`WHERE prioridad = ?`).
+
+### El vocabulario de operadores
+
+Spring Data ofrece una gramática muy completa combinando palabras clave en el nombre del método:
+
+| Método en el repositorio | Sentencia SQL equivalente generada |
+| :--- | :--- |
+| `findByCompletada(boolean completada)` | `WHERE completada = ?` |
+| `findByPrioridadAndCompletada(String p, boolean c)` | `WHERE prioridad = ? AND completada = ?` |
+| `findByPrioridadOrCompletada(String p, boolean c)` | `WHERE prioridad = ? OR completada = ?` |
+| `findByTituloContaining(String fragmento)` | `WHERE titulo LIKE '%' \|\| ? \|\| '%'` |
+| `findByTituloContainingIgnoreCase(String frag)` | `WHERE LOWER(titulo) LIKE LOWER('%' \|\| ? \|\| '%')` |
+| `findByCompletadaFalseOrderByPrioridadDesc()` | `WHERE completada = false ORDER BY prioridad DESC` |
+| `long countByCompletadaFalse()` | `SELECT count(*) ... WHERE completada = false` |
+| `boolean existsByTitulo(String titulo)` | `SELECT count(*) > 0 ... WHERE titulo = ?` |
+
+<dl class="worked">
+  <dt><code>Containing</code> frente a <code>StartingWith</code> y <code>EndingWith</code></dt>
+  <dd><code>Containing</code> equivale a <code>LIKE '%texto%'</code> (busca en cualquier posición). <code>StartingWith</code> genera <code>LIKE 'texto%'</code> y permite a la base de datos aprovechar un índice B-Tree convencional de texto.</dd>
+  <dt><code>IgnoreCase</code></dt>
+  <dd>Convierte ambos lados a minúsculas con la función SQL <code>LOWER()</code>, garantizando que buscar "servidor" encuentre "Servidor" o "SERVIDOR".</dd>
+</dl>
+
+### El error en tiempo de arranque: seguridad de tipos
+
+¿Qué ocurre si te equivocas al escribir el nombre del método en el repositorio? Por ejemplo, si escribes `findByTitol(String texto)` en lugar de `findByTitulo`.
+
+A diferencia de JDBC (donde un error de tipeo en un String SQL solo se descubría cuando un usuario ejecutaba la pantalla semanas después), **Spring Data valida todos los nombres de métodos al arrancar la aplicación**.
+
+Si un método no coincide con ningún atributo de la entidad, Spring Boot detiene el arranque de inmediato con este mensaje:
+
+```text
+Caused by: org.springframework.data.mapping.PropertyReferenceException: 
+No property 'titol' found for type 'Tarea'; Did you mean 'titulo'?
+```
+
+Fíjate en la potencia de la herramienta: no solo rechaza el error antes de que nadie pueda usar la API, sino que inspecciona los campos reales y te sugiere la corrección.
+
+### Paso 1 · Añadir consultas derivadas a TareaRepository
+
+Abre `TareaRepository.java` y declara los métodos de consulta que nuestra API necesita:
+
+```java
+package com.ejemplo.gestor.repository;
+
+import com.ejemplo.gestor.model.Tarea;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface TareaRepository extends JpaRepository<Tarea, Long> {
+
+    // Buscar por prioridad exacta (ej: "ALTA", "MEDIA", "BAJA")
+    List<Tarea> findByPrioridad(String prioridad);
+
+    // Buscar por estado de compleción
+    List<Tarea> findByCompletada(boolean completada);
+
+    // Buscar por fragmento en el título ignorando mayúsculas/minúsculas
+    List<Tarea> findByTituloContainingIgnoreCase(String fragmento);
+
+    // Contar tareas pendientes
+    long countByCompletadaFalse();
+}
+```
+
+### Paso 2 · Exponer las búsquedas en TareaService y TareaController
+
+Abre `TareaService.java` y añade los casos de uso correspondientes, todos marcados con `readOnly = true`:
+
+```java
+@Transactional(readOnly = true)
+public List<Tarea> buscarPorPrioridad(String prioridad) {
+    return repositorio.findByPrioridad(prioridad);
+}
+
+@Transactional(readOnly = true)
+public List<Tarea> buscarPorEstado(boolean completada) {
+    return repositorio.findByCompletada(completada);
+}
+
+@Transactional(readOnly = true)
+public List<Tarea> buscarPorTexto(String fragmento) {
+    return repositorio.findByTituloContainingIgnoreCase(fragmento);
+}
+
+@Transactional(readOnly = true)
+public long contarPendientes() {
+    return repositorio.countByCompletadaFalse();
+}
+```
+
+Ahora abre `TareaController.java`. En la UD3 aprendimos que los filtros sobre listas se reciben como parámetros de consulta (*Query Parameters*) opcionales sobre el mismo endpoint `GET /tareas`:
+
+```java
+@GetMapping
+public List<TareaResponse> listar(
+        @RequestParam(required = false) String prioridad,
+        @RequestParam(required = false) Boolean completada,
+        @RequestParam(required = false) String texto) {
+
+    List<Tarea> resultado;
+
+    if (prioridad != null) {
+        resultado = servicio.buscarPorPrioridad(prioridad);
+    } else if (completada != null) {
+        resultado = servicio.buscarPorEstado(completada);
+    } else if (texto != null) {
+        resultado = servicio.buscarPorTexto(texto);
+    } else {
+        resultado = servicio.listar();
+    }
+
+    return TareaMapper.aRespuestas(resultado);
+}
+```
+
+### Paso 3 · La comprobación: inspeccionar el SQL generado
+
+Arranca la aplicación y prueba cada consulta desde tu cliente HTTP o navegador:
+
+<p class="stage">1 · Filtro por prioridad</p>
+
+Ejecuta `GET http://localhost:8080/tareas?prioridad=ALTA`.
+
+Observa la consola de Spring Boot:
+```sql
+Hibernate: 
+    select 
+        t1_0.id,
+        t1_0.completada,
+        t1_0.prioridad,
+        t1_0.titulo 
+    from 
+        tareas t1_0 
+    where 
+        t1_0.prioridad=?
+```
+
+Comprueba que PostgreSQL solo devuelve las tareas con prioridad alta.
+
+<p class="stage">2 · Búsqueda por texto que contiene</p>
+
+Ejecuta `GET http://localhost:8080/tareas?texto=postgre`.
+
+Mira la consola de Spring Boot:
+```sql
+Hibernate: 
+    select 
+        t1_0.id,
+        t1_0.completada,
+        t1_0.prioridad,
+        t1_0.titulo 
+    from 
+        tareas t1_0 
+    where 
+        lower(t1_0.titulo) like lower(?) escape ''
+```
+
+PostgreSQL aplica la función `lower()` en ambos lados para hacer la búsqueda insensible a mayúsculas y minúsculas.
+
+<p class="stage">3 · Filtro por estado</p>
+
+Ejecuta `GET http://localhost:8080/tareas?completada=false`.
+
+Comprueba que solo retorna tareas pendientes y que en la consulta aparece `where t1_0.completada=?`.
+
+### Los límites de las consultas derivadas
+
+Las consultas derivadas son perfectas para búsquedas directas sobre uno, dos o tres campos. Pero tienen un límite claro de legibilidad.
+
+Mira este nombre de método hipotético:
+```java
+List<Tarea> findByCompletadaFalseAndPrioridadAndTituloContainingIgnoreCaseOrderByFechaCreacionDesc(
+        String prioridad, String texto);
+```
+
+Es larguísimo, difícil de leer de un vistazo y extremadamente frágil si renombras un campo.
+
+<div class="rule">
+  <p class="rule-label">Cuándo abandonar las consultas derivadas</p>
+  <p>Cuando un método requiere más de dos condiciones combinadas, uniones complejas o funciones agregadas, <strong>deja de ser un buen caso para derivación por nombre</strong>.</p>
+  <p>En esos escenarios se utiliza la anotación <code>@Query</code> con JPQL (lenguaje de consultas orientado a objetos) o criterios dinámicos con <em>Specifications</em>, que abordaremos en unidades posteriores.</p>
+</div>
+
+### Ahora tú · Consultas derivadas para proyectos
+
+Aplica las consultas derivadas a la entidad `Proyecto`:
+
+1. Añade a `ProyectoRepository` los siguientes métodos de consulta:
+   * `List<Proyecto> findByActivoTrue();` (obtiene solo proyectos en activo).
+   * `List<Proyecto> findByNombreContainingIgnoreCase(String fragmento);`
+   * `boolean existsByNombre(String nombre);` (para verificar unicidad de nombre sin tener que cargar la entidad completa).
+   * `long countByActivoTrue();`
+2. Modifica la regla de unicidad en `ProyectoService`: sustituye cualquier búsqueda manual por `repositorio.existsByNombre(nombre)` antes de crear o actualizar.
+3. Expon en `ProyectoController` los filtros:
+   * `GET /proyectos?activo=true`
+   * `GET /proyectos?texto=portal`
+4. Comprueba en la consola de Spring Boot que las consultas SQL generadas aplican las cláusulas `WHERE activo = true` y `LOWER(nombre) LIKE LOWER(?)`.
+
+### Reto · Índices en PostgreSQL y rendimiento de LIKE
+
+Analiza estas dos cuestiones fundamentales de ingeniería de bases de datos:
+
+<p class="stage stage--solo">1 · La creación de índices para consultas frecuentes</p>
+
+Si tu tabla de tareas acumula 500.000 filas y ejecutas constantemente `findByPrioridad("ALTA")`, PostgreSQL tiene que realizar un escaneo secuencial de toda la tabla (*Sequential Scan*), leyendo cada una de las 500.000 filas del disco.
+* Escribe la sentencia SQL nativa para crear un índice sobre la columna `prioridad` en PostgreSQL:
+  ```sql
+  CREATE INDEX idx_tareas_prioridad ON tareas(prioridad);
+  ```
+* Investiga cómo declarar ese mismo índice directamente en el código Java mediante la anotación `@Table` de tu entidad `Tarea`:
+  ```java
+  @Table(name = "tareas", indexes = {
+      @Index(name = "idx_tareas_prioridad", columnList = "prioridad")
+  })
+  ```
+* Explica qué ventaja tiene tener un índice para lecturas y qué coste oculto introduce para las operaciones de `INSERT` y `DELETE`.
+
+<p class="stage stage--solo">2 · El drama de las búsquedas con LIKE '%texto%'</p>
+
+Cuando ejecutamos `findByTituloContainingIgnoreCase("login")`, Hibernate genera `LIKE '%login%'` con un comodín `%` al principio y al final.
+* Explica por qué un índice tradicional B-Tree de PostgreSQL **no se puede utilizar** cuando el patrón empieza con un comodín `%`.
+* Investiga qué extensión oficial de PostgreSQL (`pg_trgm` / trigramas) y qué tipo de índice especializado (índice `GIN` o `GiST`) se utiliza en la industria para acelerar búsquedas de subcadenas en textos reales.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Consultas derivadas de <code>Tarea</code> por prioridad, estado y texto funcionando mediante <code>@RequestParam</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Consultas de <code>Proyecto</code> implementadas, regla de unicidad optimizada con <code>existsByNombre</code> y SQL verificado.</span></div>
+  <div><strong>Reto</strong><span>Índice declarado con <code>@Table(indexes = ...)</code> y análisis técnico de por qué <code>LIKE '%...'</code> anula los índices B-Tree estándar.</span></div>
+</div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Evidencia prevista</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 33</p>
   <ul class="checklist">
-    <li>Has obtenido búsquedas por estado, responsable o texto con nombres coherentes.</li>
-    <li>Puedes explicar qué parte resuelve el problema de partida.</li>
-    <li>Has probado al menos un caso correcto y un caso límite o de error.</li>
-    <li>El cambio queda integrado en la aplicación común del curso.</li>
+    <li>Comprendes por qué el filtrado de datos debe ejecutarse siempre en el motor SQL y nunca en memoria Java con <code>findAll()</code>.</li>
+    <li>Sabes construir nombres de métodos derivados combinando operadores lógicos (<code>And</code>, <code>Or</code>, <code>Containing</code>, <code>IgnoreCase</code>, <code>OrderBy</code>).</li>
+    <li>Has comprobado que Spring Data valida los nombres de métodos al arrancar y aborta si un campo no existe en la entidad.</li>
+    <li>Has conectado parámetros de consulta <code>@RequestParam</code> en el controlador para ofrecer búsquedas dinámicas en tu API.</li>
+    <li>Sabes auditar las sentencias SQL en la consola para confirmar que PostgreSQL aplica los filtros con cláusulas <code>WHERE</code>.</li>
   </ul>
 </div>
 
-### 8. Antes de irte
-
-1. ¿Qué problema resolvía la decisión principal de hoy?
-2. ¿Qué parte podrías modificar mañana sin volver a consultar el ejemplo?
-3. ¿Qué prueba distingue una solución que parece funcionar de una que realmente funciona?
-
-<div class="rule">
-  <p class="rule-label">Estado del material</p>
-  <p>La secuencia, el objetivo y la evidencia ya están definidos. La explicación, el código guiado, la actividad y el reto se completarán al desarrollar esta sesión.</p>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué hacer `findAll()` y filtrar con streams en Java es inviable en tablas con alto volumen de registros?</li>
+    <li>¿Qué hace la palabra clave `Containing` en un método derivado de Spring Data?</li>
+    <li>¿Cuándo detecta Spring Data si has cometido una falta de ortografía en el nombre de un método de consulta?</li>
+    <li>¿Por qué un método derivado con cinco condiciones encadenadas deja de ser una buena solución técnica?</li>
+  </ol>
 </div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque fuerza a transferir miles de filas por la red y crear miles de objetos en el heap de la JVM, saturando la memoria y el recolector de basura sin aprovechar los índices del motor relacional.</p>
+  <p>2 · Traduce el criterio a una cláusula SQL <code>LIKE '%' || ? || '%'</code>, buscando cualquier registro que contenga el fragmento especificado en cualquier posición.</p>
+  <p>3 · En tiempo de arranque de la aplicación, lanzando una <code>PropertyReferenceException</code> antes de que se abra ningún puerto ni se atienda ninguna petición.</p>
+  <p>4 · Porque el nombre se vuelve ilegible, frágil ante cambios de modelo y difícil de mantener; en esos casos es preferible utilizar consultas <code>@Query</code> o <em>Specifications</em>.</p>
+</details>
 
 ## Semana 12 · Relaciones del dominio
 
