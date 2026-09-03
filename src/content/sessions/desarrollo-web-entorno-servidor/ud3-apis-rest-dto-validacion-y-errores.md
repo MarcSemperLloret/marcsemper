@@ -2246,7 +2246,94 @@ Repite los cinco errores del principio. Ahora los cinco responden igual:
 }
 ```
 
+Ese es el formato que acabas de diseñar. Dentro de un momento lo pasaremos al estándar, y lo único que cambiará serán los nombres de los campos:
+
+```json
+{
+  "type": "about:blank",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Hay campos que no son válidos",
+  "instance": "/tareas",
+  "momento": "2026-09-02T10:15:03.122",
+  "invalidParams": [
+    { "campo": "titulo", "motivo": "El título es obligatorio" },
+    { "campo": "prioridad", "motivo": "La prioridad debe ser baja, media o alta" }
+  ]
+}
+```
+
 Mismo formato, campos siempre en el mismo sitio, mensajes en tu idioma y escritos por ti. Un cliente escribe el tratamiento una vez.
+
+### El último paso · pasar tu formato al estándar
+
+Ya sabes qué preguntas tiene que responder un error, porque acabas de decidirlas tú. Ahora conviene dejar de mantener un formato propio: el resto del curso —la documentación OpenAPI de la UD7, los códigos de seguridad de la UD9, el cliente Angular de la UD12— da por supuesto el estándar, y quien consuma tu API lo reconocerá sin leer nada.
+
+El cambio es pequeño, porque el diseño ya está hecho. Solo cambian los nombres de los campos:
+
+| Tu `ErrorResponse` | El estándar RFC 7807 | Qué cambia |
+| :--- | :--- | :--- |
+| `estado` | `status` | Solo el nombre |
+| `error` | `title` | Solo el nombre |
+| `mensaje` | `detail` | Solo el nombre |
+| `ruta` | `instance` | Solo el nombre |
+| `momento` | propiedad extra | No es campo del estándar: se añade aparte |
+| `errores` | propiedad extra | Tampoco lo es; la llamaremos `invalidParams` |
+
+<p class="stage">Paso 1 · Borrar tu record y usar el de Spring</p>
+
+Spring trae la clase `ProblemDetail` de serie. No hay que añadir ninguna dependencia: elimina tu `ErrorResponse` y sustituye el método `construir` por este.
+
+```java
+import org.springframework.http.ProblemDetail;
+
+    private ProblemDetail construir(
+            HttpStatus estado, String mensaje,
+            HttpServletRequest peticion,
+            List<Map<String, String>> campos) {
+
+        ProblemDetail problema = ProblemDetail.forStatusAndDetail(estado, mensaje);
+        problema.setTitle(estado.getReasonPhrase());
+        problema.setInstance(URI.create(peticion.getRequestURI()));
+
+        // Lo que el estándar no cubre se añade como propiedad extra, y
+        // aparece en el JSON al mismo nivel que las demás.
+        problema.setProperty("momento", LocalDateTime.now());
+        if (!campos.isEmpty()) {
+            problema.setProperty("invalidParams", campos);
+        }
+        return problema;
+    }
+```
+
+Cambia también el tipo de retorno de los cuatro manejadores, de `ResponseEntity<ErrorResponse>` a `ProblemDetail`. Ya no hace falta envolver nada en un `ResponseEntity`: Spring lee el `status` del propio `ProblemDetail` y lo usa como código de la respuesta.
+
+<p class="stage">Paso 2 · Comprobar los dos cambios visibles</p>
+
+Repite el `404` y el `400` y compara con lo que devolvías antes:
+
+```json
+{
+  "type": "about:blank",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "No existe tarea con id 999",
+  "instance": "/tareas/999",
+  "momento": "2026-09-02T10:14:22.831"
+}
+```
+
+Fíjate en dos cosas que no estaban:
+
+1. **El campo `type`.** Es una URI que identifica *la clase de problema*, no esta ocurrencia concreta. `about:blank` significa «no tengo nada más que decir que el código HTTP». Si algún día documentas tus errores de negocio, aquí va el enlace a esa documentación.
+2. **La cabecera `Content-Type` ya no es `application/json`, sino `application/problem+json`.** Compruébalo en la pestaña de cabeceras. Es lo que permite a un cliente distinguir un error estructurado de una respuesta normal sin mirar el código de estado.
+
+<div class="rule">
+  <p class="rule-label">Por qué hemos hecho el rodeo</p>
+  <p>Podríamos haber empezado por <code>ProblemDetail</code> y ahorrarnos la clase propia. Pero entonces habrías copiado un formato sin saber por qué tiene esos campos y no otros.</p>
+  <p>Haberlo diseñado tú primero es lo que hace que ahora reconozcas <code>detail</code> como «qué ha ocurrido» y <code>instance</code> como «qué se estaba pidiendo», en lugar de memorizar cinco nombres en inglés. <strong>El estándar se entiende mejor después de haber tenido el problema que resuelve.</strong></p>
+  <p>A partir de aquí, todo el curso usa este formato: los tests de la UD7 comprobarán <code>$.title</code> y <code>$.status</code>, la seguridad de la UD9 devolverá <code>401</code> y <code>403</code> con esta forma, y el cliente Angular de la UD12 leerá <code>detail</code> para mostrarlo en pantalla.</p>
+</div>
 
 ### El error que faltaba · el conflicto
 
@@ -2279,6 +2366,7 @@ Añade su manejador con `HttpStatus.CONFLICT` y úsalo, por ejemplo, para impedi
 4. Añade `ConflictoException` y una regla que la use.
 5. Quita las propiedades `server.error.*`.
 6. Provoca los cinco errores del principio y comprueba que los cinco tienen la misma forma.
+7. Haz la migración a `ProblemDetail` del apartado anterior y vuelve a provocarlos: los cinco deben seguir teniendo la misma forma, ahora con los nombres del estándar y la cabecera `Content-Type: application/problem+json`. Guarda las cinco peticiones en tu colección: son las que la UD7 convertirá en tests automáticos.
 
 ### Reto · La prueba de que no se escapa nada
 

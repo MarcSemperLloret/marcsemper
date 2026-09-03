@@ -341,9 +341,9 @@ Creamos `src/main/resources/data.sql` con datos realistas para verificar inmedia
 ```sql
 -- Usuarios iniciales (contraseñas hasheadas con BCrypt para 'password123')
 INSERT INTO usuarios (username, password_hash, nombre_completo, email, rol) VALUES
-('admin', '$2a$12$e8w6Q0Xp7w/jO4k8z5PzO.r4D1f6W3U2l8K4m7N9o1P3q5R7s9T1u', 'Administrador General', 'admin@empresa.com', 'ADMINISTRADOR'),
-('jefe1', '$2a$12$e8w6Q0Xp7w/jO4k8z5PzO.r4D1f6W3U2l8K4m7N9o1P3q5R7s9T1u', 'Elena Torres', 'elena.torres@empresa.com', 'JEFE_PROYECTO'),
-('operario1', '$2a$12$e8w6Q0Xp7w/jO4k8z5PzO.r4D1f6W3U2l8K4m7N9o1P3q5R7s9T1u', 'Carlos Ramos', 'carlos.ramos@empresa.com', 'DESARROLLADOR');
+('admin', '<pega aquí tu hash de Password123!>', 'Administrador General', 'admin@empresa.com', 'ADMINISTRADOR'),
+('jefe1', '<pega aquí tu hash de Password123!>', 'Elena Torres', 'elena.torres@empresa.com', 'JEFE_PROYECTO'),
+('operario1', '<pega aquí tu hash de Password123!>', 'Carlos Ramos', 'carlos.ramos@empresa.com', 'DESARROLLADOR');
 
 -- Proyecto inicial
 INSERT INTO proyectos (codigo, nombre, descripcion, estado, presupuesto_total, latitud, longitud, responsable_id, fecha_inicio, fecha_fin_estimada) VALUES
@@ -542,11 +542,11 @@ public record CrearProyectoRequest(
 
     @NotNull(message = "La latitud es obligatoria")
     @DecimalMin("-90.0") @DecimalMax("90.0")
-    BigDecimal latitud,
+    Double latitud,
 
     @NotNull(message = "La longitud es obligatoria")
     @DecimalMin("-180.0") @DecimalMax("180.0")
-    BigDecimal longitud,
+    Double longitud,
 
     @NotNull(message = "La fecha de inicio es obligatoria")
     LocalDate fechaInicio,
@@ -591,11 +591,14 @@ public class Proyecto {
     @Column(name = "presupuesto_total", nullable = false, precision = 12, scale = 2)
     private BigDecimal presupuestoTotal;
 
-    @Column(nullable = false, precision = 8, scale = 5)
-    private BigDecimal latitud;
+    // Coordenadas: Double, no BigDecimal. La precisión decimal exacta
+    // solo hace falta donde un redondeo cuesta dinero, y ese es el caso
+    // del presupuesto, no el de una latitud.
+    @Column(nullable = false)
+    private Double latitud;
 
-    @Column(nullable = false, precision = 8, scale = 5)
-    private BigDecimal longitud;
+    @Column(nullable = false)
+    private Double longitud;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responsable_id", nullable = false)
@@ -626,10 +629,10 @@ public class Proyecto {
     public void setEstado(EstadoProyecto estado) { this.estado = estado; }
     public BigDecimal getPresupuestoTotal() { return presupuestoTotal; }
     public void setPresupuestoTotal(BigDecimal presupuestoTotal) { this.presupuestoTotal = presupuestoTotal; }
-    public BigDecimal getLatitud() { return latitud; }
-    public void setLatitud(BigDecimal latitud) { this.latitud = latitud; }
-    public BigDecimal getLongitud() { return longitud; }
-    public void setLongitud(BigDecimal longitud) { this.longitud = longitud; }
+    public Double getLatitud() { return latitud; }
+    public void setLatitud(Double latitud) { this.latitud = latitud; }
+    public Double getLongitud() { return longitud; }
+    public void setLongitud(Double longitud) { this.longitud = longitud; }
     public Usuario getResponsable() { return responsable; }
     public void setResponsable(Usuario responsable) { this.responsable = responsable; }
     public LocalDate getFechaInicio() { return fechaInicio; }
@@ -1285,8 +1288,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
-import java.math.BigDecimal;
-
 @Service
 public class ClimaService {
 
@@ -1301,8 +1302,8 @@ public class ClimaService {
         this.climaRestClient = openMeteoRestClient;
     }
 
-    @Cacheable(value = "climaProyectos", key = "#lat.toString() + '_' + #lon.toString()")
-    public ClimaResultado consultarClimaSeguro(BigDecimal lat, BigDecimal lon) {
+    @Cacheable(value = "climaProyectos", key = "#lat + '_' + #lon")
+    public ClimaResultado consultarClimaSeguro(double lat, double lon) {
         try {
             log.info("Consultando Open-Meteo para coordenadas: lat={}, lon={}", lat, lon);
 
@@ -1854,7 +1855,7 @@ Ejecuta el ciclo de vida completo de Maven en tu terminal:
 1. **Verificación de verde total:**
    Comprueba que la consola concluye con:
    `[INFO] BUILD SUCCESS`
-   `[INFO] Tests run: 48, Failures: 0, Errors: 0, Skipped: 0`
+   `[INFO] Tests run: <los tuyos>, Failures: 0, Errors: 0, Skipped: 0`
 2. **Inspección del informe JaCoCo:**
    Abre `target/site/jacoco/index.html`.
    * Verifica que la cobertura de ramas (*Branch Coverage*) en los paquetes `service` y `security` supera el 75 %.
@@ -1976,7 +1977,7 @@ Un buen `README.md` no cuenta qué es Java ni explica qué es un microservicio. 
 ````markdown
 # Gestor de Proyectos e Incidencias · Backend API
 
-Servicio backend REST modular construido con Spring Boot 3.2, Spring Security (JWT), 
+Servicio backend REST modular construido con Spring Boot 3.5, Spring Security (JWT), 
 PostgreSQL y cliente HTTP saliente hacia Open-Meteo.
 
 ## 1. Requisitos previos
@@ -2028,14 +2029,14 @@ Busca en tu código literales sueltos con `Ctrl+Shift+F`: números que no sean `
 
 ```java
 // ANTES: ¿qué es 150000? ¿por qué 150000?
-if (proyecto.getPresupuesto().compareTo(new BigDecimal("150000.0")) > 0) {
+if (proyecto.getPresupuestoTotal().compareTo(new BigDecimal("150000.0")) > 0) {
     throw new ReglaDeNegocioException("Presupuesto excedido");
 }
 
 // DESPUÉS: el número tiene nombre, y vive en un solo sitio
 public static final BigDecimal PRESUPUESTO_MAXIMO_SIN_APROBACION = new BigDecimal("150000.00");
 
-if (proyecto.getPresupuesto().compareTo(PRESUPUESTO_MAXIMO_SIN_APROBACION) > 0) {
+if (proyecto.getPresupuestoTotal().compareTo(PRESUPUESTO_MAXIMO_SIN_APROBACION) > 0) {
     throw new ReglaDeNegocioException("Presupuesto excedido");
 }
 ```

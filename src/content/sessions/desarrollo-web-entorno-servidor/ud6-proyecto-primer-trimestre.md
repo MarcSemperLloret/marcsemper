@@ -121,7 +121,7 @@ Escenario: Intento de asociar tarea a un proyecto inexistente
   Dado que no existe ningún proyecto con id 999 en PostgreSQL
   Cuando el cliente envía una petición POST /tareas con cuerpo {"titulo": "Fix", "prioridad": "ALTA", "proyectoId": 999}
   Entonces el servidor responde con código de estado HTTP 404 Not Found
-  Y el cuerpo JSON contiene {"error": "Recurso no encontrado", "mensaje": "No existe proyecto con id 999"}
+  Y el cuerpo JSON contiene {"title": "Not Found", "status": 404, "detail": "No existe proyecto con id 999"}
   Y la consola SQL demuestra que no se ejecutó ninguna sentencia INSERT en la tabla tareas
 ```
 

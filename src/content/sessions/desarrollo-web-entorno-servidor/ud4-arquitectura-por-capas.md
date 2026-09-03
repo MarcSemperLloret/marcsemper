@@ -1004,7 +1004,7 @@ Con su manejador, que ya sabes escribir:
 
 ```java
 @ExceptionHandler(ReglaDeNegocioException.class)
-public ResponseEntity<ErrorResponse> reglaIncumplida(
+public ProblemDetail reglaIncumplida(
         ReglaDeNegocioException ex, HttpServletRequest peticion) {
 
     return construir(HttpStatus.CONFLICT, ex.getMessage(), peticion, List.of());

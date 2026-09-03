@@ -324,7 +324,7 @@ Un desarrollador principiante suele caer en la **explosión combinatoria de ruta
 * `GET /tareas/proyecto/{id}/prioridad/{prioridad}`
 * `GET /tareas/proyecto/{id}/completadas`
 
-Con tan solo 4 criterios combinables, ¡necesitarías crear $2^4 = 16$ endpoints distintos en tu controlador!
+Con tan solo 4 criterios combinables, ¡necesitarías crear 2⁴ = 16 endpoints distintos en tu controlador!
 
 <div class="rule">
   <p class="rule-label">La convención REST para filtros</p>
@@ -1134,9 +1134,15 @@ En proyectos Spring Boot 3 utilizamos la librería oficial de la comunidad `spri
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-    <version>2.5.0</version>
+    <version>2.8.6</version>
 </dependency>
 ```
+
+<div class="rule">
+  <p class="rule-label">La versión importa, y aquí no la gestiona Spring Boot</p>
+  <p>Springdoc no forma parte de Spring Boot, así que su versión no la fija el <code>spring-boot-starter-parent</code>: la escribes tú, y tiene que corresponder con la versión de Boot que usas. La rama <strong>2.8.x</strong> es la que acompaña a Spring Boot 3.5; una anterior arranca pero deja Swagger vacío o falla al generar el esquema, y el error no dice en ningún momento que el problema sea de versiones.</p>
+  <p>Si actualizas Spring Boot en el futuro, esta es una de las dependencias que hay que revisar a mano.</p>
+</div>
 
 Al compilar y arrancar la aplicación, Spring Boot habilitará automáticamente los endpoints de documentación sin necesidad de escribir una sola línea de configuración inicial.
 

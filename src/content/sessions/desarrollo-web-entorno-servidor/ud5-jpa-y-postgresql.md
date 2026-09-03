@@ -1218,7 +1218,7 @@ Verás una secuencia llamada `tareas_id_seq` cuyo último valor generado es `2`.
    * En la consola verás: `select t1_0.id, t1_0.completada, t1_0.prioridad, t1_0.titulo from tareas t1_0 where t1_0.id=?`.
 2. Haz un `GET http://localhost:8080/tareas/999`:
    * Código de respuesta: `404 Not Found`.
-   * Cuerpo JSON estructurado: `{"error": "Recurso no encontrado", "mensaje": "No existe tarea con id 999"}`.
+   * Cuerpo JSON estructurado: `{"title": "Not Found", "status": 404, "detail": "No existe tarea con id 999"}`.
 
 ### Ahora tú · Altas y consultas para proyectos
 
@@ -2508,7 +2508,7 @@ Content-Type: application/json
 }
 ```
 * Respuesta: `404 Not Found`.
-* Cuerpo: `{"error": "Recurso no encontrado", "mensaje": "No existe proyecto con id 999"}`.
+* Cuerpo: `{"title": "Not Found", "status": 404, "detail": "No existe proyecto con id 999"}`.
 * En la consola SQL **no se ejecuta ningún INSERT**. La integridad se preservó en la capa de negocio.
 
 <p class="stage">4 · Consulta las tareas del proyecto</p>
@@ -3551,7 +3551,7 @@ Arranca la aplicación y ejecuta las dos pruebas siguientes:
    ```json
    {
      "error": "Regla de negocio violada",
-     "mensaje": "Error simulado: abortando clonación de emergencia"
+     "detail": "Error simulado: abortando clonación de emergencia"
    }
    ```
 4. **La prueba de fuego en PostgreSQL:** abre tu cliente SQL y comprueba:

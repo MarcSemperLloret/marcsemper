@@ -552,13 +552,15 @@ BCrypt empaqueta todo en una cadena modular estándar de 60 caracteres:
 </figure>
 
 ```text
-$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L
+$2a$12$KIXQ0zv4pO3mR7uYbA1c.eW9tHnL5sD2fG8jV4xZ6qC1aB3dE5gHi
  |   |  \____________________/\_____________________________/
 Id  Cost         Salt                        Hash
 ```
 
+Ese ejemplo sirve para ver la estructura, no para copiarlo: cada hash lleva su propia sal, así que el tuyo será distinto aunque la contraseña sea la misma. En la sesión 56 generarás los tuyos.
+
 1. **`$2a$`:** Versión del algoritmo BCrypt.
-2. **`$12$`:** Factor de coste (*Work Factor*). Significa $2^{12} = 4096$ rondas de estiramiento de clave (*Key Stretching*).
+2. **`$12$`:** Factor de coste (*Work Factor*). Significa 2¹² = 4.096 rondas de estiramiento de clave (*Key Stretching*).
 3. **Primeros 22 caracteres:** El *Salt* aleatorio generado automáticamente en el momento del registro.
 4. **Últimos 31 caracteres:** El hash resultante de combinar la contraseña con ese *Salt*.
 
@@ -649,11 +651,11 @@ Ejecuta este benchmark en terminal para entender cómo cada incremento en el fac
 ```
 
 Observa los resultados típicos en una CPU moderna:
-* **Coste 10 ($2^{10} = 1024$ iteraciones):** ~60 ms.
-* **Coste 11 ($2^{11} = 2048$ iteraciones):** ~120 ms.
-* **Coste 12 ($2^{12} = 4096$ iteraciones):** ~240 ms. *(Recomendado en servidores modernos)*.
-* **Coste 13 ($2^{13} = 8192$ iteraciones):** ~490 ms.
-* **Coste 14 ($2^{14} = 16384$ iteraciones):** ~980 ms.
+* **Coste 10 (2¹⁰ = 1.024 iteraciones):** ~60 ms.
+* **Coste 11 (2¹¹ = 2.048 iteraciones):** ~120 ms.
+* **Coste 12 (2¹² = 4.096 iteraciones):** ~240 ms. *(Recomendado en servidores modernos)*.
+* **Coste 13 (2¹³ = 8.192 iteraciones):** ~490 ms.
+* **Coste 14 (2¹⁴ = 16.384 iteraciones):** ~980 ms.
 
 Cada incremento duplica exactamente el coste para el atacante. El coste 12 ofrece una resistencia excepcional sin degradar la experiencia de usuario.
 
@@ -1867,7 +1869,7 @@ Una de las decisiones técnicas más discutidas en arquitectura web es elegir la
 Un JWT es una cadena de texto compacta dividida en tres partes separadas por puntos:
 
 ```text
-eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbCI6IlJPTEVfQURNSU4iLCJleHAiOjE3NzA5ODc2MDB9.D3f8A9...
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbCI6IlJPTEVfQURNSU5JU1RSQURPUiIsImV4cCI6MTc3MDk4NzYwMH0.D3f8A9...
 \___________________/ \___________________________________________________________________/ \_______/
        Header                                       Payload                                 Signature
 ```
