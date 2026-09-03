@@ -500,7 +500,7 @@ Mantener el software actualizado es una de las medidas básicas de seguridad.
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> El rol del servidor web Nginx y por qué existen dos firewalls (el del cloud en Azure y el del sistema en Ubuntu).</li>
-    <li><strong>2. Haz:</strong> Instala y configura Nginx, clona tu repositorio en `/var/www/` y abre el puerto 80 (HTTP) en NSG y UFW.</li>
+    <li><strong>2. Haz:</strong> Instala y configura Nginx, clona tu repositorio en <code>/var/www/</code> y abre el puerto 80 (HTTP) en NSG y UFW.</li>
     <li><strong>3. Comprueba:</strong> Abre la IP pública en tu navegador y comprueba que la web responde desde Internet.</li>
   </ol>
 </div>
@@ -848,7 +848,7 @@ Vamos a solucionar ambos.
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> Cómo funciona la resolución DNS y por qué HTTPS requiere certificados TLS emitidos por una autoridad de confianza.</li>
     <li><strong>2. Haz:</strong> Configura un subdominio en DuckDNS hacia tu IP pública e instala un certificado TLS gratuito con Certbot.</li>
-    <li><strong>3. Comprueba:</strong> Accede a tu dominio con `https://` y verifica el candado verde y la redirección automática desde HTTP.</li>
+    <li><strong>3. Comprueba:</strong> Accede a tu dominio con <code>https://</code> y verifica el candado verde y la redirección automática desde HTTP.</li>
   </ol>
 </div>
 
@@ -1116,7 +1116,7 @@ Queremos entender **por qué el navegador confía en nuestra conexión**.
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> Cómo realizar despliegues continuos con Git y cómo explicar y defender la arquitectura desplegada.</li>
-    <li><strong>2. Haz:</strong> Despliega una actualización de tu web con `git pull`, dibuja el mapa de arquitectura y completa la memoria técnica.</li>
+    <li><strong>2. Haz:</strong> Despliega una actualización de tu web con <code>git pull</code>, dibuja el mapa de arquitectura y completa la memoria técnica.</li>
     <li><strong>3. Entrega:</strong> Entrega la URL pública HTTPS de tu web y la memoria técnica con el diagrama de red y componentes.</li>
   </ol>
 </div>

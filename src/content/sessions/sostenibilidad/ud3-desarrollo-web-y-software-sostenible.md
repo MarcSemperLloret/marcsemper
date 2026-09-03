@@ -318,7 +318,7 @@ Esto no es un trámite. Al final de la unidad compararéis vuestra hipótesis co
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Optimización de recursos multimedia: formatos modernos (WebP/AVIF), dimensionado responsivo (`srcset`), lazy loading y compresión.</li>
+    <li><strong>1. Aprende:</strong> Optimización de recursos multimedia: formatos modernos (WebP/AVIF), dimensionado responsivo (<code>srcset</code>), lazy loading y compresión.</li>
     <li><strong>2. Haz:</strong> Convierte y optimiza las imágenes de la web reduciendo su peso drásticamente sin perder calidad visual apreciable.</li>
     <li><strong>3. Comprueba:</strong> Valida el ahorro de bytes en la pestaña Network del navegador.</li>
   </ol>

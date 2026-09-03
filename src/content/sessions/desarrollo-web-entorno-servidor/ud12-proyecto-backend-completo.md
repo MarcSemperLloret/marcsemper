@@ -29,6 +29,12 @@ priorKnowledge:
   <p>Sin andamiaje. Solo especificación, criterios de aceptación y fechas.</p>
 </div>
 
+<div class="rule">
+  <p class="rule-label">Qué traes puesto al empezar</p>
+  <p>No se parte de cero: se parte de once unidades. El <strong>modelo y las relaciones</strong> vienen de la UD5, el <strong>diseño de recursos, DTO, validación y errores</strong> de la UD3, la <strong>separación en capas</strong> de la UD4, los <strong>filtros, la paginación y OpenAPI</strong> de la UD7, <strong>CORS</strong> de la UD8, la <strong>autenticación con JWT y la matriz de permisos</strong> de la UD9, el <strong>cliente saliente resiliente y los adjuntos</strong> de la UD10 y la <strong>estrategia de pruebas y de logs</strong> de la UD11.</p>
+  <p>Lo único que se añade aquí es la decisión: qué usar de todo eso, en qué orden y por qué. Esa justificación es lo que se defiende en la sesión 78.</p>
+</div>
+
 ## Semana 24 · Especificar antes de construir
 
 ## Sesión 70 · Especificación y modelado
@@ -139,15 +145,39 @@ Somete tu modelo a tres preguntas trampa para verificar su solidez:
 2. **Caso límite 2 (Integridad de datos):** Un usuario borra un proyecto que tiene 50 tareas y 10 incidencias históricas. ¿Se borran en cascada perdiendo la auditoría o se aplica un borrado lógico (*Soft Delete*)?
 3. **Caso límite 3 (Degradación):** El servicio externo de firma digital o meteorología no responde durante el alta. ¿Se bloquea el caso de uso o se guarda en estado pendiente de sincronización?
 
+### Los tres vicios de una especificación mal escrita
+
+Antes de redactar la tuya, aprende a reconocer lo que la invalida. Los tres aparecen siempre y los tres se arreglan con la misma medicina: **un número**.
+
+<dl class="worked">
+  <dt>1 · El requisito que no se puede comprobar</dt>
+  <dd><em>«El sistema debe ser rápido.»</em> ¿Cuánto es rápido? Nadie puede decir si eso se ha cumplido, así que no es un requisito: es un deseo. La versión utilizable es <em>«el listado de proyectos responde en menos de 300 ms con 500 proyectos en la base de datos»</em>. Ahora se puede medir, y por tanto se puede aprobar o suspender.</dd>
+  <dt>2 · El requisito que esconde una decisión</dt>
+  <dd><em>«Un proyecto no puede cerrarse si tiene tareas pendientes.»</em> Parece cerrado y no lo está: ¿qué es «pendiente»? ¿Cuenta una tarea bloqueada? ¿Y una cancelada? Enumera los estados concretos, o descubrirás la ambigüedad el día de la demostración.</dd>
+  <dt>3 · El requisito que solo describe el camino feliz</dt>
+  <dd><em>«El usuario adjunta una fotografía a la incidencia.»</em> ¿Y si pesa 40 MB? ¿Y si es un <code>.exe</code>? ¿Y si el disco está lleno? Cada caso de uso necesita, como mínimo, un escenario de rechazo con su código HTTP. Si tu especificación solo tiene escenarios que terminan bien, no has especificado: has ilustrado.</dd>
+</dl>
+
 ### Ahora tú · Redactar la especificación formal del proyecto
 
 Elabora el documento de especificación formal de tu proyecto backend:
-1. Define los 4 actores y la matriz de control de acceso basada en roles (RBAC).
-2. Detalla al menos 6 casos de uso principales con sus correspondientes escenarios *Given-When-Then*.
-3. Enumera las 5 reglas de negocio invariantes que tu código garantizará bajo cualquier circunstancia.
 
-> [!NOTE]
-> Si en la evaluación se solicita la memoria formal de análisis y especificación del proyecto, el formato oficial de entrega de texto es siempre un **documento en PDF** (`especificacion-proyecto.pdf`), nunca un archivo markdown suelto.
+1. Define los 4 actores y la matriz de control de acceso basada en roles (RBAC), con el mismo formato de la sesión 53: una fila por endpoint y método, una columna por rol y el código HTTP esperado en cada casilla. Esta tabla es el contrato de seguridad y va a ser lo que se pruebe en la sesión 76.
+2. Detalla al menos **6 casos de uso** con sus escenarios *Given-When-Then*. Cada uno necesita un escenario feliz **y al menos dos de rechazo**, con su código de estado.
+3. Enumera **5 reglas de negocio invariantes** que tu código garantizará siempre. Una invariante es una afirmación que nunca puede ser falsa: «la suma de costes de las tareas no supera el presupuesto del proyecto» lo es; «el usuario debería revisar el presupuesto» no lo es.
+4. Para cada invariante, escribe **dónde va a vivir**: ¿una restricción `CHECK` en PostgreSQL, una validación en el DTO, una comprobación en el servicio? Esta columna es la que convierte la especificación en un plan de trabajo, y es la que dicta el modelo de la sesión 71.
+5. **Pasa la prueba de la ambigüedad:** dale la especificación a otro equipo y pídeles que anoten cada punto donde tengan que suponer algo. Cada suposición es un hueco. Los que no cierres ahora se convertirán en una discusión en la semana 26, cuando ya no haya tiempo.
+6. Marca lo que **no** vas a hacer. Una especificación sin alcance excluido es una especificación que crecerá hasta que se acabe el plazo. «No habrá recuperación de contraseña por correo» es una decisión legítima y defendible, siempre que esté escrita.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Cada requisito se puede comprobar con una petición HTTP y un resultado esperado; cada caso de uso tiene escenarios de rechazo además del feliz; cada invariante tiene asignado el sitio donde se hará cumplir; otro equipo ha leído el documento y su lista de suposiciones está vacía o resuelta; y hay un apartado que dice qué queda fuera.</dd>
+</dl>
+
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita la memoria formal de análisis y especificación del proyecto, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>especificacion-proyecto.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 ### Reto · Formalización de contratos con OpenAPI antes de codificar (API-First)
 
@@ -204,8 +234,8 @@ En la metodología **API-First**, antes de escribir una clase en Java, se redact
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Por qué en entornos de producción está terminantemente prohibido utilizar `spring.jpa.hibernate.ddl-auto=update` o `create-drop`?</li>
-    <li>¿Por qué nunca se debe utilizar el tipo de datos `DOUBLE` o `FLOAT` para almacenar cantidades monetarias o presupuestos en una base de datos?</li>
+    <li>¿Por qué en entornos de producción está terminantemente prohibido utilizar <code>spring.jpa.hibernate.ddl-auto=update</code> o <code>create-drop</code>?</li>
+    <li>¿Por qué nunca se debe utilizar el tipo de datos <code>DOUBLE</code> o <code>FLOAT</code> para almacenar cantidades monetarias o presupuestos en una base de datos?</li>
     <li>¿Qué ventaja ofrece estructurar los paquetes Java por componente de negocio (*Package by Feature*) frente a hacerlo por capa técnica (*Package by Layer*) en un proyecto mediano o grande?</li>
   </ol>
 </div>
@@ -364,7 +394,7 @@ spring.jpa.properties.hibernate.format_sql=true
 
 Organiza los paquetes de tu código fuente bajo la estrategia de **componentes de negocio** (*Package by Feature*):
 ```text
-com.empresa.proyecto/
+com.ejemplo.gestor/
 ├── core/                  # Seguridad global, filtros MDC, gestión de excepciones RFC 7807
 │   ├── exception/
 │   ├── filter/
@@ -376,6 +406,20 @@ com.empresa.proyecto/
 ```
 Explica en tu cuaderno de diseño qué ventajas aporta esta estructura cuando varios desarrolladores trabajan en paralelo sobre ramas distintas de Git.
 
+<div class="rule">
+  <p class="rule-label">Por qué cambiamos de criterio justo ahora</p>
+  <p>Durante once unidades has organizado por capas: <code>controller</code>, <code>service</code>, <code>repository</code>, <code>model</code>, <code>dto</code>. Era lo correcto mientras aprendías qué hace cada capa, porque el paquete enseñaba la arquitectura.</p>
+  <p>Con el proyecto ya crecido, ese criterio empieza a estorbar: tocar «las tareas» obliga a abrir cinco paquetes distintos, y dos personas trabajando en dominios diferentes chocan en los mismos directorios. Organizar por funcionalidad junta lo que cambia junto. <strong>Las capas no desaparecen</strong>: siguen existiendo dentro de cada paquete de dominio. Lo que cambia es qué se pone en el primer nivel.</p>
+  <p>No hay una opción correcta: hay una que encaja mejor con el tamaño del proyecto y con cuánta gente lo toca a la vez. Poder argumentar eso es lo que se evalúa.</p>
+</div>
+
+Además de mover paquetes, completa estas cuatro decisiones de modelo y anota la razón de cada una en el cuaderno de diseño:
+
+1. **Tipos de los campos delicados.** El dinero nunca es `double`: `BigDecimal` en Java y `NUMERIC(12,2)` en PostgreSQL, porque un `double` no puede representar exactamente 0,10 y los céntimos se pierden al sumar. Las fechas sin hora son `LocalDate`, no `Date`.
+2. **Qué es obligatorio en la base de datos y no solo en el DTO.** Una validación de Bean Validation protege de un cliente descuidado; un `NOT NULL` protege de un `INSERT` hecho a mano, de una migración y de un fallo tuyo. Las reglas que no pueden violarse nunca van en los dos sitios.
+3. **Qué se borra en cascada y qué no.** Borrar un proyecto, ¿borra sus tareas? ¿Y sus incidencias con adjuntos en disco? Decídelo explícitamente: por omisión, PostgreSQL rechazará el borrado y te encontrarás un `500` que en realidad era una regla de negocio sin declarar.
+4. **Qué índices necesitas.** Todo campo por el que filtres o busques (el `codigo` del proyecto, la clave ajena de tarea a proyecto, el `username`) merece un índice. Sin ellos, la paginación de la UD7 hace un recorrido completo de la tabla en cada página.
+
 ### Reto · Versionado formal con Flyway
 
 En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **Flyway**:
@@ -386,8 +430,8 @@ En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **F
 3. Comprueba cómo Flyway crea la tabla `flyway_schema_history` garantizando que las migraciones solo se aplican una vez y de forma estrictamente incremental.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Script `schema.sql` con claves primarias, foráneas y tipos de datos óptimos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Restricciones de chequeo (`CHECK`), índices estratégicos y modo `ddl-auto=validate`.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Script <code>schema.sql</code> con claves primarias, foráneas y tipos de datos óptimos.</span></div>
+  <div><strong>Si lo tienes</strong><span>Restricciones de chequeo (<code>CHECK</code>), índices estratégicos y modo <code>ddl-auto=validate</code>.</span></div>
   <div><strong>Reto</strong><span>Migraciones incrementales versionadas gestionadas automáticamente con Flyway.</span></div>
 </div>
 
@@ -395,8 +439,8 @@ En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **F
   <p class="checkpoint-label">Checkpoint · fin de la sesión 71</p>
   <ul class="checklist">
     <li>Se erradica la dependencia de Hibernate para alterar el esquema en entornos reales.</li>
-    <li>Los importes monetarios están blindados con tipos decimales exactos (`NUMERIC` / `BigDecimal`).</li>
-    <li>Las restricciones de integridad referencial (`ON DELETE RESTRICT`) impiden borrados accidentales.</li>
+    <li>Los importes monetarios están blindados con tipos decimales exactos (<code>NUMERIC</code> / <code>BigDecimal</code>).</li>
+    <li>Las restricciones de integridad referencial (<code>ON DELETE RESTRICT</code>) impiden borrados accidentales.</li>
     <li>Se crean índices específicos sobre claves foráneas y campos frecuentes de filtrado.</li>
     <li>La arquitectura de paquetes por componente favorece la mantenibilidad y el trabajo en equipo.</li>
   </ul>
@@ -405,10 +449,10 @@ En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **F
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué el modo `spring.jpa.hibernate.ddl-auto=validate` es el más seguro para producción?</li>
-    <li>¿Por qué debe evitarse `ON DELETE CASCADE` en entidades que contienen información contable o de auditoría?</li>
+    <li>¿Por qué el modo <code>spring.jpa.hibernate.ddl-auto=validate</code> es el más seguro para producción?</li>
+    <li>¿Por qué debe evitarse <code>ON DELETE CASCADE</code> en entidades que contienen información contable o de auditoría?</li>
     <li>¿Qué beneficio aporta crear un índice sobre la columna de una clave foránea en una tabla hija?</li>
-    <li>¿Por qué se utiliza el tipo `TIMESTAMP WITH TIME ZONE` en lugar de una simple fecha sin zona horaria?</li>
+    <li>¿Por qué se utiliza el tipo <code>TIMESTAMP WITH TIME ZONE</code> en lugar de una simple fecha sin zona horaria?</li>
   </ol>
 </div>
 
@@ -436,7 +480,7 @@ En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **F
   <ol>
     <li>¿Qué riesgo asume un equipo que pasa dos semanas programando todas las entidades JPA y repositorios antes de crear su primer controlador REST?</li>
     <li>¿Qué es un <em>Walking Skeleton</em> en el desarrollo de software ágil?</li>
-    <li>¿Por qué la respuesta a una petición `POST` exitosa de creación de recurso debe incluir la cabecera HTTP `Location`?</li>
+    <li>¿Por qué la respuesta a una petición <code>POST</code> exitosa de creación de recurso debe incluir la cabecera HTTP <code>Location</code>?</li>
   </ol>
 </div>
 
@@ -474,7 +518,7 @@ En lugar de construir el 100 % de las entidades sin probarlas, **construyes un �
 <p class="stage">Paso 1 · El DTO de entrada con validación estricta</p>
 
 ```java
-package com.empresa.proyecto.proyecto.dto;
+package com.ejemplo.gestor.proyecto.dto;
 
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
@@ -515,9 +559,9 @@ public record CrearProyectoRequest(
 <p class="stage">Paso 2 · La entidad JPA y el Repositorio</p>
 
 ```java
-package com.empresa.proyecto.proyecto.model;
+package com.ejemplo.gestor.proyecto.model;
 
-import com.empresa.proyecto.usuario.model.Usuario;
+import com.ejemplo.gestor.usuario.model.Usuario;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -596,9 +640,9 @@ public class Proyecto {
 ```
 
 ```java
-package com.empresa.proyecto.proyecto.repository;
+package com.ejemplo.gestor.proyecto.repository;
 
-import com.empresa.proyecto.proyecto.model.Proyecto;
+import com.ejemplo.gestor.proyecto.model.Proyecto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
@@ -611,14 +655,14 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
 <p class="stage">Paso 3 · La capa de Servicio con lógica de negocio</p>
 
 ```java
-package com.empresa.proyecto.proyecto.service;
+package com.ejemplo.gestor.proyecto.service;
 
-import com.empresa.proyecto.proyecto.dto.CrearProyectoRequest;
-import com.empresa.proyecto.proyecto.dto.ProyectoDetalleResponse;
-import com.empresa.proyecto.proyecto.model.Proyecto;
-import com.empresa.proyecto.proyecto.repository.ProyectoRepository;
-import com.empresa.proyecto.usuario.model.Usuario;
-import com.empresa.proyecto.usuario.repository.UsuarioRepository;
+import com.ejemplo.gestor.proyecto.dto.CrearProyectoRequest;
+import com.ejemplo.gestor.proyecto.dto.ProyectoDetalleResponse;
+import com.ejemplo.gestor.proyecto.model.Proyecto;
+import com.ejemplo.gestor.proyecto.repository.ProyectoRepository;
+import com.ejemplo.gestor.usuario.model.Usuario;
+import com.ejemplo.gestor.usuario.repository.UsuarioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -683,11 +727,11 @@ public class ProyectoService {
 <p class="stage">Paso 4 · El Controlador REST con cabecera Location</p>
 
 ```java
-package com.empresa.proyecto.proyecto.controller;
+package com.ejemplo.gestor.proyecto.controller;
 
-import com.empresa.proyecto.proyecto.dto.CrearProyectoRequest;
-import com.empresa.proyecto.proyecto.dto.ProyectoDetalleResponse;
-import com.empresa.proyecto.proyecto.service.ProyectoService;
+import com.ejemplo.gestor.proyecto.dto.CrearProyectoRequest;
+import com.ejemplo.gestor.proyecto.dto.ProyectoDetalleResponse;
+import com.ejemplo.gestor.proyecto.service.ProyectoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -732,7 +776,7 @@ public class ProyectoController {
 Verificamos el corte vertical con una prueba que recorre todas las capas sin levantar el navegador:
 
 ```java
-package com.empresa.proyecto.proyecto;
+package com.ejemplo.gestor.proyecto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -800,7 +844,7 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Corte vertical de creación operativo con DTO, servicio, entidad y respuesta 201.</span></div>
-  <div><strong>Si lo tienes</strong><span>Cabecera `Location`, validación de fechas, seguridad por rol y test con MockMvc.</span></div>
+  <div><strong>Si lo tienes</strong><span>Cabecera <code>Location</code>, validación de fechas, seguridad por rol y test con MockMvc.</span></div>
   <div><strong>Reto</strong><span>Generación secuencial atómica del código de proyecto tolerante a concurrencia.</span></div>
 </div>
 
@@ -809,7 +853,7 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
   <ul class="checklist">
     <li>Se adopta la metodología de desarrollo por cortes verticales frente al diseño por capas aisladas.</li>
     <li>El Walking Skeleton de la aplicación está vivo, persistiendo datos reales en PostgreSQL.</li>
-    <li>La petición `POST` emite correctamente el código `201 Created` y la cabecera `Location`.</li>
+    <li>La petición <code>POST</code> emite correctamente el código <code>201 Created</code> y la cabecera <code>Location</code>.</li>
     <li>Las reglas de negocio de fechas y códigos duplicados están protegidas en la capa de servicio.</li>
     <li>Un test de integración automatizado con MockMvc valida todo el circuito de extremo a extremo.</li>
   </ul>
@@ -819,9 +863,9 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué el enfoque de corte vertical reduce el riesgo técnico al inicio de un proyecto?</li>
-    <li>¿Qué información debe contener la cabecera HTTP `Location` en una respuesta `201 Created`?</li>
+    <li>¿Qué información debe contener la cabecera HTTP <code>Location</code> en una respuesta <code>201 Created</code>?</li>
     <li>¿Por qué la validación de que la fecha de fin sea posterior a la de inicio se implementa en el servicio y no solo con anotaciones estándar de campo en el DTO?</li>
-    <li>¿Qué papel cumple la anotación `@WithMockUser` en los tests de integración con MockMvc?</li>
+    <li>¿Qué papel cumple la anotación <code>@WithMockUser</code> en los tests de integración con MockMvc?</li>
   </ol>
 </div>
 
@@ -841,7 +885,7 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> a priorizar los casos de uso por valor de negocio frente a dispersar el esfuerzo, el modelado de relaciones entre agregados (<code>Proyecto</code> $\leftrightarrow$ <code>Tarea</code>), la protección de reglas de integridad presupuestaria mediante transacciones ACID y la paginación eficiente de resultados con <code>Pageable</code>.</li>
+    <li><strong>1. Aprende:</strong> a priorizar los casos de uso por valor de negocio frente a dispersar el esfuerzo, el modelado de relaciones entre agregados (<code>Proyecto</code> ↔ <code>Tarea</code>), la protección de reglas de integridad presupuestaria mediante transacciones ACID y la paginación eficiente de resultados con <code>Pageable</code>.</li>
     <li><strong>2. Haz:</strong> implementa los casos de uso de alta de tareas vinculadas con cálculo de techo presupuestario, cambio de estado regulado por máquina de estados y cierre atómico de proyectos condicionado a la resolución de tareas.</li>
     <li><strong>3. Comprueba:</strong> ejecutas pruebas en Bruno intentando sobrepasar el presupuesto del proyecto o cerrar un proyecto con tareas pendientes, verificando que el backend responde con los códigos semánticos <code>400 Bad Request</code> y <code>409 Conflict</code> protegiendo la base de datos de inconsistencias.</li>
   </ol>
@@ -852,7 +896,7 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
   <ol>
     <li>¿Por qué intentar programar todas las entidades secundarias a la vez suele dejar el backend con muchos endpoints a medias y ninguno completamente probado?</li>
     <li>¿Qué ocurriría si dos usuarios crean tareas simultáneas en el mismo proyecto y la comprobación del presupuesto disponible no se ejecuta dentro de una transacción con aislamiento adecuado?</li>
-    <li>¿Por qué los endpoints que devuelven colecciones de datos siempre deben implementar paginación mediante `Pageable` en lugar de devolver listas completas con `findAll()`?</li>
+    <li>¿Por qué los endpoints que devuelven colecciones de datos siempre deben implementar paginación mediante <code>Pageable</code> en lugar de devolver listas completas con <code>findAll()</code>?</li>
   </ol>
 </div>
 
@@ -894,10 +938,10 @@ En nuestro dominio empresarial, un `Proyecto` actúa como **raíz de agregado (*
 Necesitamos saber de forma instantánea cuánto presupuesto se ha consumido sin traernos todas las tareas a memoria:
 
 ```java
-package com.empresa.proyecto.tarea.repository;
+package com.ejemplo.gestor.tarea.repository;
 
-import com.empresa.proyecto.tarea.model.EstadoTarea;
-import com.empresa.proyecto.tarea.model.Tarea;
+import com.ejemplo.gestor.tarea.model.EstadoTarea;
+import com.ejemplo.gestor.tarea.model.Tarea;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -923,15 +967,15 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 <p class="stage">Paso 2 · Lógica de negocio en TareaService</p>
 
 ```java
-package com.empresa.proyecto.tarea.service;
+package com.ejemplo.gestor.tarea.service;
 
-import com.empresa.proyecto.proyecto.model.Proyecto;
-import com.empresa.proyecto.proyecto.repository.ProyectoRepository;
-import com.empresa.proyecto.tarea.dto.CrearTareaRequest;
-import com.empresa.proyecto.tarea.dto.TareaResponse;
-import com.empresa.proyecto.tarea.model.EstadoTarea;
-import com.empresa.proyecto.tarea.model.Tarea;
-import com.empresa.proyecto.tarea.repository.TareaRepository;
+import com.ejemplo.gestor.proyecto.model.Proyecto;
+import com.ejemplo.gestor.proyecto.repository.ProyectoRepository;
+import com.ejemplo.gestor.tarea.dto.CrearTareaRequest;
+import com.ejemplo.gestor.tarea.dto.TareaResponse;
+import com.ejemplo.gestor.tarea.model.EstadoTarea;
+import com.ejemplo.gestor.tarea.model.Tarea;
+import com.ejemplo.gestor.tarea.repository.TareaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -1009,11 +1053,11 @@ public class TareaService {
 <p class="stage">Paso 4 · Controlador REST de Tareas con Paginación</p>
 
 ```java
-package com.empresa.proyecto.tarea.controller;
+package com.ejemplo.gestor.tarea.controller;
 
-import com.empresa.proyecto.tarea.dto.CrearTareaRequest;
-import com.empresa.proyecto.tarea.dto.TareaResponse;
-import com.empresa.proyecto.tarea.service.TareaService;
+import com.ejemplo.gestor.tarea.dto.CrearTareaRequest;
+import com.ejemplo.gestor.tarea.dto.TareaResponse;
+import com.ejemplo.gestor.tarea.service.TareaService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -1068,15 +1112,30 @@ public class TareaController {
    * Lanza `POST /api/v1/proyectos/1/cerrar`.
    * **Resultado:** Código **`409 Conflict`** indicando que existen tareas pendientes. El estado del proyecto permanece inalterado en `EN_CURSO`.
 
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| La regla de negocio se salta cuando llamas desde otro método del servicio | Llamada interna: el proxy de `@Transactional` no interviene | Extrae el método a otro bean, o llama siempre desde fuera |
+| El `rollback` no revierte nada | La excepción es comprobada (*checked*) | Spring solo revierte ante `RuntimeException` salvo que declares `rollbackFor` |
+| Dos peticiones simultáneas se saltan el límite de presupuesto | Condición de carrera clásica | Es exactamente el reto de esta sesión: bloqueo pesimista sobre la fila del proyecto |
+| El `409` sale como `500` | Falta el `@ExceptionHandler` de tu excepción de negocio | Tu `@RestControllerAdvice` de la UD3 debe conocer la excepción nueva |
+| `LazyInitializationException` al construir la respuesta | Estás leyendo una relación fuera de la transacción | Mapea a DTO **dentro** del servicio, no en el controlador |
+
 ### Ahora tú · Máquina de estados para Tareas
 
 Implementa el endpoint de transición de estados de tarea:
 1. Diseña `PATCH /api/v1/tareas/{id}/estado`.
 2. Define las transiciones permitidas:
-   * `PENDIENTE` $\to$ `EN_CURSO`
-   * `EN_CURSO` $\to$ `BLOQUEADA` (requiere indicar motivo de bloqueo) o `FINALIZADA`
-   * `BLOQUEADA` $\to$ `EN_CURSO`
+   * `PENDIENTE` → `EN_CURSO`
+   * `EN_CURSO` → `BLOQUEADA` (requiere indicar motivo de bloqueo) o `FINALIZADA`
+   * `BLOQUEADA` → `EN_CURSO`
 3. Si el cliente intenta saltarse un estado (por ejemplo, pasar directamente de `PENDIENTE` a `FINALIZADA`), el servicio debe rechazar la mutación con `409 Conflict`.
+4. **Escribe la tabla de transiciones antes que el código.** Con 4 estados hay 16 combinaciones posibles; solo cuatro son legales. Escríbelas todas en una tabla y decide qué pasa con cada una: eso es lo que evita que la regla acabe siendo una escalera de `if` inconexos que nadie puede auditar.
+5. **Modélalo dentro del enum**, no en el servicio. Un método `puedeTransitarA(EstadoTarea destino)` en el propio `EstadoTarea` mantiene la regla junto al dato al que pertenece, y hace imposible olvidarla en un segundo sitio.
+6. Prueba las cuatro transiciones legales y **al menos tres ilegales**. Comprueba que las ilegales devuelven `409` con un `detail` que dice qué transición se intentó y cuáles eran posibles: un `409` sin explicación obliga al cliente a adivinar.
+7. Comprueba el caso que casi nadie prueba: transitar a **el mismo estado** en el que ya está. Decide si es un `409`, un `204` inocuo o una operación idempotente que responde `200`. Cualquiera se defiende; no haberlo pensado, no.
+8. Escribe el test de la regla antes de darla por terminada. Es una de las que la sesión 76 clasificará como riesgo crítico, porque afecta a la integridad de los datos.
 
 ### Reto · Control de concurrencia pesimista en presupuestos
 
@@ -1089,27 +1148,27 @@ Investiga cómo resolver esta condición de carrera:
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Relación Proyecto-Tarea operativa con consultas paginadas y respuesta 201.</span></div>
   <div><strong>Si lo tienes</strong><span>Cálculo atómico de techo presupuestario y rechazo 409 al cerrar con tareas pendientes.</span></div>
-  <div><strong>Reto</strong><span>Bloqueo pesimista (`PESSIMISTIC_WRITE`) para blindar el presupuesto ante concurrencia extrema.</span></div>
+  <div><strong>Reto</strong><span>Bloqueo pesimista (<code>PESSIMISTIC_WRITE</code>) para blindar el presupuesto ante concurrencia extrema.</span></div>
 </div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 73</p>
   <ul class="checklist">
     <li>Se prioriza el desarrollo del núcleo de negocio antes de incorporar entidades accesorias.</li>
-    <li>Las operaciones de cálculo se delegan eficientemente en la base de datos SQL (`SUM`, `COUNT`).</li>
+    <li>Las operaciones de cálculo se delegan eficientemente en la base de datos SQL (<code>SUM</code>, <code>COUNT</code>).</li>
     <li>La regla de techo presupuestario está garantizada en la capa de servicios mediante transacciones.</li>
-    <li>Las listas de datos utilizan paginación estándar (`Pageable`) para proteger la memoria RAM.</li>
-    <li>El cierre de proyectos respeta la integridad de sus tareas emitiendo código `409 Conflict`.</li>
+    <li>Las listas de datos utilizan paginación estándar (<code>Pageable</code>) para proteger la memoria RAM.</li>
+    <li>El cierre de proyectos respeta la integridad de sus tareas emitiendo código <code>409 Conflict</code>.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué es más eficiente calcular el sumatorio de costes con `SUM` en SQL que iterar una lista Java en memoria?</li>
+    <li>¿Por qué es más eficiente calcular el sumatorio de costes con <code>SUM</code> en SQL que iterar una lista Java en memoria?</li>
     <li>¿Qué código de estado HTTP estándar de la RFC 9110 debe devolverse cuando una acción choca con el estado actual del negocio?</li>
-    <li>¿Por qué el método de servicio que verifica y descuenta el presupuesto debe estar anotado con `@Transactional`?</li>
-    <li>¿Qué ventajas aporta la anotación `@PageableDefault` en los métodos de un controlador REST?</li>
+    <li>¿Por qué el método de servicio que verifica y descuenta el presupuesto debe estar anotado con <code>@Transactional</code>?</li>
+    <li>¿Qué ventajas aporta la anotación <code>@PageableDefault</code> en los métodos de un controlador REST?</li>
   </ol>
 </div>
 
@@ -1135,7 +1194,7 @@ Investiga cómo resolver esta condición de carrera:
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Por qué una comprobación simple de roles como `@PreAuthorize("hasRole('JEFE_PROYECTO')")` no es suficiente para evitar que un usuario modifique datos ajenos?</li>
+    <li>¿Por qué una comprobación simple de roles como <code>@PreAuthorize("hasRole('JEFE_PROYECTO')")</code> no es suficiente para evitar que un usuario modifique datos ajenos?</li>
     <li>¿Cómo se define una expresión SpEL (Spring Expression Language) para delegar la autorización en un bean de Spring propio?</li>
     <li>¿Qué ocurre con la experiencia del usuario si el servicio externo de meteorología sufre una caída de red durante el registro de una incidencia en obra?</li>
   </ol>
@@ -1164,9 +1223,9 @@ Comprobar roles (`ADMINISTRADOR`, `JEFE_PROYECTO`, `DESARROLLADOR`) es solo la p
 Creamos un bean gestionado por Spring que resuelve la propiedad del recurso consultando la base de datos:
 
 ```java
-package com.empresa.proyecto.core.security;
+package com.ejemplo.gestor.core.security;
 
-import com.empresa.proyecto.proyecto.repository.ProyectoRepository;
+import com.ejemplo.gestor.proyecto.repository.ProyectoRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -1217,7 +1276,7 @@ Vinculamos la comprobación directamente en la anotación `@PreAuthorize`:
 Conectamos la integración de la UD10 garantizando que el alta de incidencias nunca colapse ante averías de Open-Meteo:
 
 ```java
-package com.empresa.proyecto.integration;
+package com.ejemplo.gestor.integration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1234,10 +1293,12 @@ public class ClimaService {
     private static final Logger log = LoggerFactory.getLogger(ClimaService.class);
     private final RestClient climaRestClient;
 
-    public ClimaService(RestClient.Builder restClientBuilder) {
-        this.climaRestClient = restClientBuilder
-            .baseUrl("https://api.open-meteo.com/v1")
-            .build();
+    // Inyectamos el bean openMeteoRestClient de la UD10: es el que trae la
+    // factoría con connect-timeout y read-timeout ya configurados. Construir
+    // aquí un cliente nuevo desde el Builder dejaría la llamada sin límite de
+    // espera, y una API externa lenta bloquearía el hilo indefinidamente.
+    public ClimaService(RestClient openMeteoRestClient) {
+        this.climaRestClient = openMeteoRestClient;
     }
 
     @Cacheable(value = "climaProyectos", key = "#lat.toString() + '_' + #lon.toString()")
@@ -1246,7 +1307,7 @@ public class ClimaService {
             log.info("Consultando Open-Meteo para coordenadas: lat={}, lon={}", lat, lon);
 
             var respuesta = climaRestClient.get()
-                .uri("/forecast?latitude={lat}&longitude={lon}&current_weather=true", lat, lon)
+                .uri("/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true", lat, lon)
                 .retrieve()
                 .body(OpenMeteoResponse.class);
 
@@ -1265,6 +1326,25 @@ public class ClimaService {
     }
 }
 ```
+
+<p class="stage">Paso 4 · Enganchar los adjuntos al alta de incidencias</p>
+
+Los adjuntos ya los sabes tratar: la sesión 64 dejó el almacenamiento con nombre saneado por UUID y validación de tipo MIME. Aquí solo hay que conectarlo al caso de uso y protegerlo como todo lo demás:
+
+1. Recupera de la UD10 tu `AlmacenamientoService` y el endpoint `POST /api/v1/incidencias` de tipo `multipart/form-data`.
+2. Protégelo con la misma regla de propiedad: solo el `DESARROLLADOR` asignado a la tarea, el `JEFE_PROYECTO` responsable o un `ADMINISTRADOR` pueden adjuntar un parte a una incidencia.
+3. Comprueba que el fichero se guarda con su UUID **antes** de consultar el clima, para que un fallo de Open-Meteo no deje un adjunto huérfano en disco sin fila en la base de datos.
+
+<dl class="worked">
+  <dt>Por qué la expresión lleva <code>@</code> delante</dt>
+  <dd>En SpEL, <code>@nombreDelBean</code> busca un bean en el contexto de Spring. Por eso <code>@Service("seguridadService")</code> lleva el nombre escrito a mano: para que la expresión sea legible y no dependa de cómo Spring derive el nombre de la clase. Si cambias el nombre del bean y no el de la expresión, el fallo llega en tiempo de ejecución, no al compilar.</dd>
+  <dt><code>#id</code> y <code>authentication</code></dt>
+  <dd><code>#id</code> es el <strong>parámetro del método anotado</strong>: solo existe si el método tiene un argumento llamado así. <code>authentication</code> es una variable que Spring Security pone siempre a tu disposición dentro de estas expresiones, con el usuario ya verificado.</dd>
+  <dt>El coste que estás aceptando</dt>
+  <dd><code>esResponsableDeProyecto</code> hace una consulta a la base de datos <strong>antes</strong> de ejecutar el método, y otra dentro. Son dos viajes para una operación. Es asumible en una edición puntual, pero si lo pusieras en un listado tendrías el N+1 de la UD5 disfrazado de seguridad. Regla práctica: la seguridad por propiedad va en operaciones sobre <strong>un</strong> recurso, no sobre colecciones.</dd>
+  <dt>El atajo del administrador va primero, y no es casualidad</dt>
+  <dd>La comprobación de <code>ROLE_ADMINISTRADOR</code> está antes de tocar el repositorio: un administrador no paga la consulta. Ordenar las condiciones de más barata a más cara es lo que evita que la seguridad se convierta en el cuello de botella.</dd>
+</dl>
 
 ### La comprobación · Pruebas de matriz de permisos en Bruno
 
@@ -1289,6 +1369,19 @@ Implementa la regla de propiedad para tareas:
 2. Permite la edición si el usuario es `ADMINISTRADOR`, o si es el `JEFE_PROYECTO` del proyecto padre, o si es el `DESARROLLADOR` que tiene asignada esa tarea.
 3. Protege el endpoint `PATCH /api/v1/tareas/{id}/estado` con esta comprobación.
 
+4. **Prueba de la lectura ajena:** comprueba también qué pasa cuando `jefe2` **lee** el proyecto de `jefe1`. Decide si eso debe permitirse o no, anótalo, e impleméntalo. No hay respuesta única —en muchas organizaciones los proyectos son visibles para todos y solo la edición es privada—, pero tiene que ser una decisión tomada y no un descuido.
+
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| `EL1008E: Property or field 'seguridadService' cannot be found` | El nombre del bean no coincide | El de `@Service("seguridadService")` debe ser idéntico al de la expresión |
+| Todos reciben `403`, incluso el responsable | La comparación falla | ¿`getResponsable()` llega `null` por carga perezosa? Compara `username`, no objetos `Usuario` |
+| `LazyInitializationException` dentro de `SeguridadService` | Se accede al responsable fuera de la transacción | Anota el método con `@Transactional(readOnly = true)`, o usa una consulta con `JOIN FETCH` |
+| El administrador recibe `403` | La condición del atajo no encaja | La autoridad guardada es `ROLE_ADMINISTRADOR` con prefijo; compárala tal cual |
+| La regla no se aplica en absoluto | Falta `@EnableMethodSecurity` | Igual que en la sesión 57: sin esa anotación, `@PreAuthorize` es decoración |
+| La incidencia se guarda sin adjunto cuando cae Open-Meteo | Orden de operaciones equivocado | Guarda el fichero y la fila antes de enriquecer con el clima, no al revés |
+
 ### Reto · Auditoría de accesos denegados en base de datos
 
 Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un error inocente o de un ataque malicioso de fuerza bruta / enumeración de IDs.
@@ -1297,26 +1390,26 @@ Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un e
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Seguridad JWT activa en endpoints y cliente de clima con captura de excepciones.</span></div>
-  <div><strong>Si lo tienes</strong><span>Evaluador SpEL `esResponsableDeProyecto` protegiendo recursos frente a accesos ajenos.</span></div>
-  <div><strong>Reto</strong><span>Auditoría reactiva de eventos `AuthorizationFailureEvent` persistida en base de datos.</span></div>
+  <div><strong>Si lo tienes</strong><span>Evaluador SpEL <code>esResponsableDeProyecto</code> protegiendo recursos frente a accesos ajenos.</span></div>
+  <div><strong>Reto</strong><span>Auditoría reactiva de eventos <code>AuthorizationFailureEvent</code> persistida en base de datos.</span></div>
 </div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 74</p>
   <ul class="checklist">
     <li>Se superan los roles genéricos implementando seguridad a nivel de dominio y propiedad.</li>
-    <li>El evaluador `@seguridadService` encapsula las reglas de acceso en expresiones SpEL legibles.</li>
-    <li>El cliente `RestClient` cuenta con timeouts y contingencia garantizada ante caídas de red.</li>
+    <li>El evaluador <code>@seguridadService</code> encapsula las reglas de acceso en expresiones SpEL legibles.</li>
+    <li>El cliente <code>RestClient</code> cuenta con timeouts y contingencia garantizada ante caídas de red.</li>
     <li>Los ficheros adjuntos se gestionan mediante almacenamiento seguro con UUIDs y tipo MIME validado.</li>
-    <li>El sistema distingue con exactitud entre no autenticado (`401`) y no autorizado (`403`).</li>
+    <li>El sistema distingue con exactitud entre no autenticado (<code>401</code>) y no autorizado (<code>403</code>).</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué un rol `JEFE_PROYECTO` no debe tener barra libre para modificar cualquier proyecto del sistema?</li>
-    <li>¿Qué objeto proporciona Spring Security a través del parámetro `authentication` en las expresiones SpEL?</li>
+    <li>¿Por qué un rol <code>JEFE_PROYECTO</code> no debe tener barra libre para modificar cualquier proyecto del sistema?</li>
+    <li>¿Qué objeto proporciona Spring Security a través del parámetro <code>authentication</code> en las expresiones SpEL?</li>
     <li>¿Qué ventaja ofrece el patrón de degradación elegante frente a relanzar una excepción cuando una API externa falla?</li>
     <li>¿Cuál es la diferencia entre el error HTTP 401 y el error HTTP 403?</li>
   </ol>
@@ -1335,7 +1428,7 @@ Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un e
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> los desafíos de la integración frontend-backend: el protocolo <strong>CORS (Cross-Origin Resource Sharing)</strong> y las peticiones de sondeo previo (<strong>Preflight OPTIONS</strong>), la alineación de contratos de datos TypeScript $\leftrightarrow$ Java DTO, y el manejo centralizado de errores RFC 7807 mediante interceptores HTTP.</li>
+    <li><strong>1. Aprende:</strong> los desafíos de la integración frontend-backend: el protocolo <strong>CORS (Cross-Origin Resource Sharing)</strong> y las peticiones de sondeo previo (<strong>Preflight OPTIONS</strong>), la alineación de contratos de datos TypeScript ↔ Java DTO, y el manejo centralizado de errores RFC 7807 mediante interceptores HTTP.</li>
     <li><strong>2. Haz:</strong> configura <code>CorsConfigurationSource</code> en Spring Security con orígenes específicos y cabeceras expuestas, conecta los servicios Angular a la API y sincroniza los modelos tipados con el cliente web.</li>
     <li><strong>3. Comprueba:</strong> abres la aplicación Angular en el navegador, inspeccionas en DevTools la petición previa <code>OPTIONS</code> confirmando el código <code>200 OK</code> y las cabeceras CORS, y verificas el flujo interactivo de creación y visualización de proyectos sin que el backend pierda su independencia.</li>
   </ol>
@@ -1371,12 +1464,18 @@ Antes de enviar una petición destructiva (`POST`, `PUT`, `DELETE`) con cabecera
 
 ### Paso a paso guiado · Configuración de CORS y sincronización de contratos
 
+<div class="rule">
+  <p class="rule-label">Qué se evalúa hoy y qué no</p>
+  <p>Esta sesión es de <strong>backend</strong>, aunque se vea TypeScript. Lo que se evalúa es que tu API se deje consumir desde un navegador con seguridad puesta: CORS acotado, cabeceras expuestas, errores legibles. El cliente Angular es el instrumento de medida, no el entregable.</p>
+  <p>La regla de la UD8 sigue vigente y es la que te salva si Angular no está listo: <strong>el backend debe poder comprobarse entero sin él</strong>. Si algo no funciona, la primera pregunta es siempre si la misma petición funciona desde tu cliente HTTP. Si desde ahí va y desde el navegador no, el problema es CORS. Si no va desde ninguno de los dos, el problema no tiene nada que ver con Angular.</p>
+</div>
+
 <p class="stage">Paso 1 · Configurar CorsConfigurationSource en Spring Security</p>
 
 Configuramos de forma granular los orígenes y cabeceras permitidas en `SecurityConfig`:
 
 ```java
-package com.empresa.proyecto.core.security;
+package com.ejemplo.gestor.core.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1510,6 +1609,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 };
 ```
 
+<dl class="worked">
+  <dt>Por qué CORS se configura aquí y no en el <code>@CrossOrigin</code> de la UD8</dt>
+  <dd>Con Spring Security en medio, la petición se rechaza en la cadena de filtros <strong>antes</strong> de llegar a tu controlador, y una anotación en el controlador ya no llega a tiempo. El <code>.cors(...)</code> del <code>SecurityFilterChain</code> lo resuelve en el sitio correcto: en la frontera.</dd>
+  <dt>El <code>OPTIONS</code> tiene que ser público</dt>
+  <dd>El navegador envía el <em>preflight</em> <strong>sin</strong> la cabecera <code>Authorization</code>. Si tu cadena exige autenticación para todo, ese <code>OPTIONS</code> recibe un <code>401</code>, el navegador cancela y en la consola verás un error de CORS que no es de CORS. Spring Security lo permite solo si <code>.cors(...)</code> está declarado antes de las reglas de autorización.</dd>
+  <dt><code>setExposedHeaders</code>: la que se olvida siempre</dt>
+  <dd>Por defecto, JavaScript solo puede leer un puñado de cabeceras de la respuesta. Tu <code>Location</code> del <code>201 Created</code> <strong>llega</strong>, pero el navegador se la esconde a Angular salvo que la declares aquí. El síntoma es desconcertante: la petición sale bien y aun así el cliente no encuentra la cabecera.</dd>
+  <dt><code>allowCredentials(true)</code> y el comodín</dt>
+  <dd>Con credenciales activadas, el estándar prohíbe <code>setAllowedOrigins(List.of("*"))</code>. Spring lanza una excepción al arrancar. Si necesitas varios orígenes, enuméralos, o usa <code>setAllowedOriginPatterns</code>. Y en producción, jamás el comodín.</dd>
+</dl>
+
 ### La comprobación · Inspección de red en DevTools
 
 1. **Arranca el backend (`:8080`) y el cliente Angular (`:4200`).**
@@ -1522,12 +1632,35 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
    * Intenta introducir un código duplicado o un presupuesto de -500 €.
    * Comprueba que la pantalla de Angular muestra el mensaje amigable extraído directamente de `error.error.detail` y el identificador de correlación para soporte.
 
-### Ahora tú · Integrar la visualización del Clima en Angular
+5. **Provoca el fallo de CORS a propósito, para saber reconocerlo:** cambia `setAllowedOrigins` a `http://localhost:9999`, reinicia el backend y repite la operación desde Angular. Lee el mensaje exacto de la consola del navegador y anótalo. Comprueba a la vez que **la misma petición sigue funcionando desde tu cliente HTTP**: esa asimetría es la firma inconfundible de un problema de CORS y te ahorrará horas el día que aparezca de verdad. Devuelve el origen a `:4200`.
 
-Modifica el componente de detalle de proyecto en Angular:
-1. Añade un botón *"Consultar Meteorología en Obra"*.
-2. Llama al endpoint de incidencias y muestra la temperatura actual y el icono correspondiente.
-3. Si el backend responde con aviso de degradación (*"Servicio no disponible"*), muestra una alerta visual amarilla sin romper la vista del proyecto.
+### Si algo no sale como dice el guion
+
+| Síntoma en la consola del navegador | Causa real | Qué mirar |
+| :--- | :--- | :--- |
+| `No 'Access-Control-Allow-Origin' header is present` | El origen no está en la lista | ¿`http://localhost:4200` exacto? El puerto y el esquema forman parte del origen |
+| `Response to preflight request doesn't pass access control check: 401` | El `OPTIONS` está siendo autenticado | `.cors(...)` debe ir declarado en el `SecurityFilterChain`, antes de las reglas |
+| `Request header field authorization is not allowed` | Falta en `setAllowedHeaders` | Añade `Authorization` a la lista |
+| La petición va bien pero Angular no ve la cabecera `Location` | Falta en `setExposedHeaders` | Es lo que impide leerla desde JavaScript |
+| `Cannot use wildcard in Access-Control-Allow-Origin when credentials flag is true` | Comodín + credenciales | Enumera los orígenes o usa `setAllowedOriginPatterns` |
+| `401` en todas las llamadas de Angular pero no en el cliente HTTP | El interceptor no adjunta el token | Comprueba en DevTools → Network → Headers que sale `Authorization: Bearer …` |
+| Funciona todo salvo la subida de ficheros | El interceptor fija `Content-Type: application/json` | En un `multipart`, el navegador debe poner él el `Content-Type` con su `boundary`: no lo sobrescribas |
+
+### Ahora tú · Cerrar el circuito completo desde el navegador
+
+El objetivo no es que Angular quede bonito, sino que **todas** las capacidades de tu backend se puedan ejercer desde un navegador con seguridad puesta.
+
+1. Añade al detalle de proyecto un botón *«Consultar meteorología en obra»* que muestre la temperatura y la recomendación que devuelve tu API.
+2. Si el backend responde con el aviso de degradación de la UD10 (*«Servicio no disponible»*), muestra una alerta amarilla **sin romper la vista del proyecto**. Es la demostración visible de que la degradación elegante servía para algo.
+3. Comprueba desde el navegador las tres respuestas de error que más cuesta ver bien: un `400` de validación (envía un presupuesto negativo), un `403` de permisos (entra como operario e intenta editar un proyecto ajeno) y un `404`. Las tres deben mostrar el `detail` del RFC 7807 y ninguna debe dejar la pantalla en blanco.
+4. Verifica que la cabecera `Location` del `201 Created` **se lee desde Angular** y la usas para navegar al recurso recién creado. Si no la ves, vuelve a `setExposedHeaders`.
+5. Repite el recorrido con los tres roles y comprueba que la interfaz oculta lo que el usuario no puede hacer **y** que el backend lo rechaza igualmente si lo fuerzas desde el cliente HTTP. Esa doble comprobación es la lección de la sesión 58 aplicada a tu propio proyecto.
+6. Anota en la memoria técnica los orígenes permitidos y **por qué** esos: es una decisión de seguridad y hay que defenderla en la sesión 78.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>En DevTools ves el par <code>OPTIONS 200</code> + <code>POST 201</code>; Angular lee la cabecera <code>Location</code>; los errores del backend llegan a la pantalla como texto legible y no como una pantalla en blanco; ninguna operación depende del cliente para poder comprobarse; y sabes reconocer un fallo de CORS por el hecho de que tu cliente HTTP sí funciona.</dd>
+</dl>
 
 ### Reto · Descarga de ficheros binarios Blob en Angular
 
@@ -1535,13 +1668,15 @@ La descarga de un archivo binario mediante un enlace `<a>` tradicional no permit
 1. Investiga cómo descargar el archivo mediante Angular `HttpClient` configurando `{ responseType: 'blob' }`.
 2. Crea una URL de objeto en memoria con `window.URL.createObjectURL(blob)` y dispara la descarga programática asignando el nombre de fichero extraído de la cabecera `Content-Disposition`.
 
-> [!NOTE]
-> Si en la evaluación se solicita una memoria técnica justificando la integración entre cliente y servidor, el formato oficial de entrega de texto es siempre un **documento en PDF** (`memoria-integracion-cliente.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita una memoria técnica justificando la integración entre cliente y servidor, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>memoria-integracion-cliente.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Configuración de CORS operativa permitiendo peticiones desde `http://localhost:4200`.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Configuración de CORS operativa permitiendo peticiones desde <code>http://localhost:4200</code>.</span></div>
   <div><strong>Si lo tienes</strong><span>Interceptor HTTP en Angular inyectando tokens Bearer y capturando errores RFC 7807.</span></div>
-  <div><strong>Reto</strong><span>Descarga programática de binarios Blob con inyección de JWT y extracción de `Content-Disposition`.</span></div>
+  <div><strong>Reto</strong><span>Descarga programática de binarios Blob con inyección de JWT y extracción de <code>Content-Disposition</code>.</span></div>
 </div>
 
 <div class="checkpoint">
@@ -1629,7 +1764,7 @@ El principio rector del **Testing Basado en Riesgos (*Risk-Based Testing*)** est
 <p class="stage">Paso 2 · Test de integración de los tres riesgos críticos</p>
 
 ```java
-package com.empresa.proyecto;
+package com.ejemplo.gestor;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -1673,6 +1808,41 @@ class RiesgosCriticosIntegrationTest {
 }
 ```
 
+<dl class="worked">
+  <dt>Por qué aquí sí es <code>@SpringBootTest</code> y no <code>@WebMvcTest</code></dt>
+  <dd>En la UD7 y la UD9 usabas cortes (<em>slices</em>) para probar una capa aislada y rápido. Estos tests son distintos: comprueban que las piezas <strong>encajan entre sí</strong> —seguridad, servicio, transacción y base de datos en la misma petición—, y eso solo se ve con el contexto entero levantado. Tardan segundos en vez de milisegundos, y por eso son pocos y elegidos.</dd>
+  <dt>Contra qué base de datos corren</dt>
+  <dd>Contra una de verdad. Crea <code>src/test/resources/application-test.properties</code> apuntando a una base <code>gestion_proyectos_test</code> separada, añade <code>@ActiveProfiles("test")</code> a la clase y usa <code>ddl-auto=create-drop</code> ahí: cada ejecución parte de un esquema limpio. Nunca ejecutes la suite contra la base de datos donde tienes tus datos de demostración.</dd>
+  <dt>El orden importa, y eso es un problema</dt>
+  <dd>El test del riesgo 2 asume que el proyecto <code>1</code> existe y tiene tareas pendientes. Si otro test lo cierra antes, este falla sin que nada esté roto. Anota <code>@Sql</code> o un <code>@BeforeEach</code> que cree sus propios datos: un test que depende de lo que hicieron los anteriores es un test que mentirá tarde o temprano.</dd>
+</dl>
+
+<p class="stage">Paso 3 · El tercer riesgo: que un error filtre las tripas del servidor</p>
+
+Los dos tests anteriores comprueban lo que la aplicación **hace**. Este comprueba lo que no debe **decir**:
+
+```java
+    @Test
+    @WithMockUser(username = "jefe1", roles = {"JEFE_PROYECTO"})
+    @DisplayName("Riesgo 3: un error interno no revela clases, SQL ni trazas de pila")
+    void errorInterno_noFiltraDetallesTecnicos() throws Exception {
+        String cuerpo = mockMvc.perform(post("/api/v1/proyectos/999999/cerrar"))
+            .andExpect(status().is4xxClientError())
+            .andReturn().getResponse().getContentAsString();
+
+        // Ninguna de estas cadenas puede aparecer jamás en una respuesta al cliente
+        for (String prohibido : new String[] {
+                "org.hibernate", "org.springframework", "com.ejemplo.gestor",
+                "SQL", "select ", "Exception", ".java:" }) {
+            assertThat(cuerpo)
+                .as("La respuesta no debe contener '%s'", prohibido)
+                .doesNotContain(prohibido);
+        }
+    }
+```
+
+Un `500` con una traza de Hibernate le regala a un atacante el nombre de tus tablas, tu versión de Spring y la estructura de tus paquetes. Este test convierte esa regla en algo que la suite vigila sola.
+
 ### La comprobación · Auditoría completa con Maven y JaCoCo
 
 Ejecuta el ciclo de vida completo de Maven en tu terminal:
@@ -1690,11 +1860,36 @@ Ejecuta el ciclo de vida completo de Maven en tu terminal:
    * Verifica que la cobertura de ramas (*Branch Coverage*) en los paquetes `service` y `security` supera el 75 %.
    * Constata que no quedan ramas condicionales críticas en color amarillo.
 
-### Ahora tú · Prueba de caja negra con Bruno
+3. **Lectura crítica del informe, no solo del porcentaje:**
+   * Ordena los paquetes por cobertura ascendente y quédate con los tres peores.
+   * De cada uno, decide una de dos cosas: o escribes el test que falta, o anotas por qué esa clase no lo necesita (un DTO sin lógica, por ejemplo). Las dos respuestas son válidas; lo que no vale es no haber mirado.
+   * Busca en `service` los `if` que JaCoCo pinta en **amarillo**: significa que la condición se ha ejecutado, pero solo por una de sus dos ramas. En una regla de negocio, la rama que nunca se ha probado suele ser justo la que rechaza.
 
-Ejecuta la colección completa de Bruno sobre el servidor en marcha:
-1. Corre la suite completa de peticiones de principio a fin (secuencia de autenticación $\to$ alta de proyectos $\to$ tareas $\to$ incidencias $\to$ descargas).
-2. Comprueba que no hay ningún error inesperado de serialización JSON ni fallos de autenticación cruzada.
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| Los tests pasan sueltos pero fallan todos juntos | Se pisan los datos entre sí | Cada test debe crear lo que necesita; añade `@Transactional` a la clase para que revierta al terminar |
+| `Table 'proyectos' not found` en los tests | El perfil de test no se aplica | Falta `@ActiveProfiles("test")` o el archivo `application-test.properties` |
+| `403` en todos los `POST` y `PATCH` de los tests | CSRF activo en el contexto completo | Añade `.with(csrf())` a la petición, o comprueba que tu configuración JWT lo desactiva |
+| JaCoCo no genera informe | El plugin no está enganchado a la fase | El `prepare-agent` debe ejecutarse antes de `test`, y `report` en `verify` |
+| Cobertura muy alta y aun así aparecen fallos a mano | Estás midiendo líneas, no ramas | Mira la columna *Branch*, no la de *Instructions* |
+
+### Ahora tú · La prueba de caja negra, y lo que revele
+
+Los tests automáticos comprueban lo que se te ocurrió comprobar. Esta pasada busca lo que no.
+
+1. Ejecuta la colección completa de tu cliente HTTP de principio a fin: autenticación → alta de proyecto → tareas → incidencia con adjunto → descarga → cierre.
+2. Hazlo **contra la base de datos vacía**, arrancando de cero. Es la única forma de detectar los pasos que solo funcionan porque tienes datos antiguos a mano.
+3. Repite la secuencia entera con cada uno de los tres roles. Anota cada respuesta que te sorprenda, aunque sea un código correcto con un mensaje confuso.
+4. Prueba a propósito las cinco barbaridades que un usuario real acabará haciendo: enviar el cuerpo vacío, mandar un `id` que no existe, mandar texto donde esperas un número, repetir dos veces la misma alta y usar el token de otro usuario.
+5. Por cada fallo encontrado, haz dos cosas en este orden: **primero escribe el test que lo reproduce en rojo**, y después arréglalo. Si lo arreglas antes, nunca sabrás si el test lo habría cazado.
+6. Cierra con el número que resume la sesión: cuántos fallos ha encontrado la pasada manual que la suite automática no había visto. Ese número es la medida real de la calidad de tus tests, y es lo que se defiende en la sesión 78.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd><code>./mvnw clean verify</code> termina en <code>BUILD SUCCESS</code>; la cobertura de <strong>ramas</strong> de <code>service</code> y <code>security</code> pasa del 75 %; ningún cuerpo de respuesta contiene el nombre de un paquete o de una tabla; y cada fallo que encontraste a mano tiene ahora un test que lo vigila.</dd>
+</dl>
 
 ### Reto · Detección de fugas de memoria y rendimiento en carga
 
@@ -1705,7 +1900,7 @@ ab -n 500 -c 20 -H "Authorization: Bearer <token>" http://localhost:8080/api/v1/
 Comprueba que el tiempo medio de respuesta se mantiene por debajo de 50 ms y que el pool de conexiones de HikariCP en PostgreSQL no sufre agotamiento.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Suite de pruebas automatizadas pasando al 100 % con `./mvnw test`.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Suite de pruebas automatizadas pasando al 100 % con <code>./mvnw test</code>.</span></div>
   <div><strong>Si lo tienes</strong><span>Matriz de riesgos implementada y cobertura de ramas superior al 75 % en JaCoCo.</span></div>
   <div><strong>Reto</strong><span>Prueba de carga concurrente validando tiempos de respuesta y estabilidad del pool HikariCP.</span></div>
 </div>
@@ -1753,9 +1948,9 @@ Comprueba que el tiempo medio de respuesta se mantiene por debajo de 50 ms y que
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Por qué un proyecto con código excelente pero un `README` desactualizado o incompleto suspende en una auditoría profesional?</li>
+    <li>¿Por qué un proyecto con código excelente pero un <code>README</code> desactualizado o incompleto suspende en una auditoría profesional?</li>
     <li>¿Qué significa el principio de «refactorización con red de seguridad»?</li>
-    <li>¿Qué cinco apartados mínimos debe contener el archivo `README.md` de un backend profesional?</li>
+    <li>¿Qué cinco apartados mínimos debe contener el archivo <code>README.md</code> de un backend profesional?</li>
   </ol>
 </div>
 
@@ -1778,7 +1973,7 @@ Si el código espera el campo `fechaInicio` pero el Swagger dice `fecha_inicio` 
 
 Un buen `README.md` no cuenta qué es Java ni explica qué es un microservicio. Es una **guía operacional concisa** para que otro ingeniero levante y verifique el proyecto en 3 minutos:
 
-```markdown
+````markdown
 # Gestor de Proyectos e Incidencias · Backend API
 
 Servicio backend REST modular construido con Spring Boot 3.2, Spring Security (JWT), 
@@ -1799,8 +1994,8 @@ PostgreSQL y cliente HTTP saliente hacia Open-Meteo.
    ```bash
    ./mvnw spring-boot:run
    ```
-3. **Verificar la salud del sistema:**
-   Abrir en el navegador: `http://localhost:8080/actuator/health`
+3. **Verificar que el servicio responde:**
+   Abrir en el navegador: `http://localhost:8080/swagger-ui.html`
 
 ## 3. Credenciales de prueba (data.sql)
 | Usuario | Contraseña | Rol | Ámbito |
@@ -1815,18 +2010,71 @@ PostgreSQL y cliente HTTP saliente hacia Open-Meteo.
 
 ## 5. Colección de pruebas de integración
 En la carpeta `/bruno` se incluye la colección completa exportada para verificar los flujos de negocio sin depender del frontend.
-```
+````
 
 ### Paso a paso guiado · Refactorización limpia y eliminación de deuda
 
-Aplica estas tres reglas de limpieza sobre tu código:
+<p class="stage">Paso 1 · Poner la red de seguridad antes de tocar nada</p>
 
-1. **Erradicar números y cadenas mágicas:**
-   Sustituye valores literales sueltos como `150000.0` o `"PRJ-"` por constantes `public static final` en clases de negocio o propiedades en `application.properties`.
-2. **Simplificar controladores delgados (*Skinny Controllers*):**
-   Asegúrate de que ningún controlador contiene lógica condicional de negocio (`if`, cálculos matemáticos o llamadas a repositorios). Los controladores solo mapean peticiones, llaman a un servicio y devuelven respuestas HTTP.
-3. **Limpieza de código muerto:**
-   Elimina imports no utilizados, métodos privados que nadie llama y comentarios obsoletos que contradicen el código actual.
+Refactorizar es cambiar la forma sin cambiar el comportamiento. Sin una manera de comprobar que el comportamiento no ha cambiado, no estás refactorizando: estás reescribiendo a ciegas.
+
+1. Ejecuta `./mvnw clean verify` y comprueba que **todo está en verde antes de empezar**.
+2. Haz `git commit` de ese estado. Es tu punto de retorno.
+3. A partir de aquí, la regla es: un cambio pequeño → ejecutar los tests → commit. Si algo se pone en rojo, sabes exactamente qué lo rompió porque solo has tocado una cosa.
+
+<p class="stage">Paso 2 · Erradicar números y cadenas mágicas</p>
+
+Busca en tu código literales sueltos con `Ctrl+Shift+F`: números que no sean `0` o `1`, y cadenas entre comillas que no sean mensajes.
+
+```java
+// ANTES: ¿qué es 150000? ¿por qué 150000?
+if (proyecto.getPresupuesto().compareTo(new BigDecimal("150000.0")) > 0) {
+    throw new ReglaDeNegocioException("Presupuesto excedido");
+}
+
+// DESPUÉS: el número tiene nombre, y vive en un solo sitio
+public static final BigDecimal PRESUPUESTO_MAXIMO_SIN_APROBACION = new BigDecimal("150000.00");
+
+if (proyecto.getPresupuesto().compareTo(PRESUPUESTO_MAXIMO_SIN_APROBACION) > 0) {
+    throw new ReglaDeNegocioException("Presupuesto excedido");
+}
+```
+
+Si el valor puede cambiar sin recompilar —un límite de tamaño de fichero, una URL, un tiempo de expiración—, no es una constante: es una propiedad. Sácalo a `application.properties` e inyéctalo con `@Value`.
+
+<p class="stage">Paso 3 · Adelgazar los controladores</p>
+
+Recorre tus controladores y comprueba que **ningún método contiene**: un `if` de negocio, una cuenta, una llamada a un repositorio o un `try/catch`. Un método de controlador tiene tres líneas: recibe, delega, responde.
+
+```java
+// ANTES: el controlador está decidiendo
+@PatchMapping("/{id}/estado")
+public ResponseEntity<TareaResponse> cambiarEstado(@PathVariable Long id, @RequestBody EstadoRequest req) {
+    Tarea tarea = tareaRepository.findById(id).orElseThrow();
+    if (tarea.getEstado() == EstadoTarea.FINALIZADA) {
+        return ResponseEntity.status(409).build();
+    }
+    tarea.setEstado(req.nuevoEstado());
+    tareaRepository.save(tarea);
+    return ResponseEntity.ok(TareaMapper.aRespuesta(tarea));
+}
+
+// DESPUÉS: el controlador solo traduce HTTP; la regla y el 409 viven en el servicio
+@PatchMapping("/{id}/estado")
+public ResponseEntity<TareaResponse> cambiarEstado(@PathVariable Long id,
+                                                   @Valid @RequestBody EstadoRequest req) {
+    return ResponseEntity.ok(tareaService.cambiarEstado(id, req.nuevoEstado()));
+}
+```
+
+Si esto te suena, es porque es exactamente el ejercicio de la sesión 22, «El controller monstruoso». Cinco meses después, el código vuelve a engordar por el mismo sitio: esa recurrencia es la lección.
+
+<p class="stage">Paso 4 · Limpieza de código muerto</p>
+
+1. Elimina los `import` no utilizados (tu IDE los marca en gris; `Ctrl+Alt+O` en IntelliJ los quita todos).
+2. Borra los métodos privados que nadie llama y los endpoints de prueba que fuiste dejando por el camino: `/clima-raw` de la sesión 61, cualquier `/test`, `/boom` o `/diagnostico`. Están sin proteger y sin documentar.
+3. Borra los comentarios que ya mienten. Un comentario que contradice al código es peor que no tener comentario: el código es verdad por definición y el comentario engaña al que lo lee.
+4. Ejecuta `./mvnw clean verify` una última vez. Si sigue verde, has refactorizado. Si no, has cambiado el comportamiento sin querer, y ahí tienes el porqué del paso 1.
 
 ### La comprobación · La prueba del desarrollador nuevo
 
@@ -1839,19 +2087,39 @@ Simula que eres un nuevo integrante del equipo que acaba de clonar el proyecto:
    * Puedes autenticarte en Swagger UI con las credenciales documentadas.
    * La colección de Bruno pasa todas las peticiones con éxito.
 
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| Tras refactorizar, un test se pone en rojo | Has cambiado comportamiento, no solo forma | Vuelve al último commit verde y repite el cambio en trozos más pequeños |
+| `docker compose up -d` falla con `port is already allocated` | Ya tienes un PostgreSQL escuchando en 5432 | Párale, o mapea otro puerto en el `docker-compose.yml` y ajusta la URL |
+| La aplicación arranca en tu máquina pero no en la limpia | Hay configuración que solo existe en tu equipo | Variables de entorno, rutas absolutas de la carpeta de adjuntos o una base de datos creada a mano meses atrás |
+| `Schema-validation: missing table` con `ddl-auto=validate` | El `schema.sql` no está sincronizado con las entidades | Es justo lo que este modo existe para detectar: corrige el script, no bajes a `update` |
+| El `README` funciona para ti y para nadie más | Lo has probado con la aplicación ya arrancada | La prueba solo vale desde una terminal nueva y una base de datos recién creada |
+
 ### Ahora tú · Pulir y validar Swagger UI
 
-Entra en `http://localhost:8080/swagger-ui.html`:
-1. Revisa cada uno de los endpoints de la aplicación.
-2. Comprueba que todos los esquemas de respuesta tienen ejemplos legibles y que los códigos de error 400, 401, 403, 404 y 409 están formalmente documentados.
-3. Corrige cualquier incoherencia tipográfica o de nombres en los DTOs.
+Entra en `http://localhost:8080/swagger-ui.html` y haz la última pasada de contrato:
+
+1. Revisa cada uno de los endpoints de la aplicación, uno por uno, sin saltarte ninguno.
+2. Comprueba que todos los esquemas de respuesta tienen ejemplos legibles y que los códigos de error 400, 401, 403, 404 y 409 están formalmente documentados con `@ApiResponse`.
+3. Configura el esquema de seguridad para que Swagger sepa pedir el token: añade a `OpenApiConfig` un `SecurityScheme` de tipo `HTTP` con esquema `bearer` y formato `JWT`, y comprueba que aparece el botón **Authorize**. Sin él, ningún endpoint protegido se puede probar desde la documentación, y un evaluador que solo tenga tu Swagger no verá funcionar la mitad de la aplicación.
+4. Corrige cualquier incoherencia de nombres entre los DTO: si en un sitio es `fechaInicio` y en otro `fecha_inicio`, quien consuma tu API va a tropezar exactamente ahí.
+5. Descarga `http://localhost:8080/v3/api-docs` y guárdalo como `openapi.json` junto al `README`. Es el contrato congelado de la versión que entregas.
+6. **La prueba del contrato de tres minutos:** dale a un compañero la URL de tu Swagger, sin explicarle nada, y pídele que se autentique y cree un proyecto con una tarea. Cronométralo. Si tarda más de tres minutos o tiene que preguntarte algo, la documentación no está terminada.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>La suite sigue verde después de refactorizar; no queda ningún literal numérico de negocio suelto en el código; ningún controlador contiene un <code>if</code>; una persona ajena ha levantado tu proyecto siguiendo solo el <code>README</code>, y otra ha usado tu API entera desde Swagger sin preguntarte nada.</dd>
+</dl>
 
 ### Reto · Contenedorización completa con Docker Compose
 
 Diseña un archivo `docker-compose.yml` que levante tanto la base de datos PostgreSQL como la propia aplicación Spring Boot empaquetada:
-1. Diseña un `Dockerfile` multietapa (*Multi-stage Build*) con Eclipse Temurin 21.
-2. Configura en `docker-compose.yml` la dependencia `depends_on` con comprobación de salud (`healthcheck`) para que Spring Boot no arranque hasta que PostgreSQL esté listo para aceptar conexiones.
-3. Comprueba que con un único comando `docker compose up --build` el sistema completo queda operativo en cualquier ordenador.
+1. Diseña un `Dockerfile` multietapa (*Multi-stage Build*) con Eclipse Temurin 21: una primera etapa con Maven que compile el `.jar`, y una segunda que solo copie ese `.jar` sobre una imagen con JRE.
+2. Configura en `docker-compose.yml` la dependencia `depends_on` con comprobación de salud (`healthcheck`) usando `pg_isready`, para que Spring Boot no arranque hasta que PostgreSQL acepte conexiones.
+3. Recuerda que dentro de la red de Docker el host de la base de datos **ya no es `localhost`**, sino el nombre del servicio (`db`). Externaliza la URL con una variable de entorno en lugar de dejarla escrita en `application.properties`.
+4. Comprueba que con un único comando `docker compose up --build` el sistema completo queda operativo en un ordenador que no tenga ni Java ni PostgreSQL instalados.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>README técnico operativo con requisitos, credenciales y puesta en marcha.</span></div>
@@ -1863,7 +2131,7 @@ Diseña un archivo `docker-compose.yml` que levante tanto la base de datos Postg
   <p class="checkpoint-label">Checkpoint · fin de la sesión 77</p>
   <ul class="checklist">
     <li>La entrega está sincronizada en sus tres dimensiones: código, contrato y guía técnica.</li>
-    <li>El archivo `README.md` permite desplegar el proyecto en menos de 3 minutos.</li>
+    <li>El archivo <code>README.md</code> permite desplegar el proyecto en menos de 3 minutos.</li>
     <li>Las credenciales de prueba por cada rol están claramente documentadas.</li>
     <li>El código fuente ha sido refactorizado manteniendo los controladores delgados.</li>
     <li>La especificación OpenAPI 3 refleja fielmente el comportamiento real del sistema.</li>
@@ -1941,7 +2209,7 @@ Distribuye tu exposición con rigor profesional siguiendo este minutaje:
    * Justifica la elección de tipos de datos (`BIGINT IDENTITY`, `NUMERIC(12,2)` para dinero) y la estrategia de esquemas versionados con `ddl-auto=validate`.
 2. **Bloque 2: Demostración en vivo en Bruno (5 minutos):**
    * No uses diapositivas estáticas: **abre Bruno y ejecuta peticiones reales**.
-   * Demuestra el camino feliz: autenticación JWT $\to$ creación de proyecto $\to$ respuesta `201 Created` con cabecera `Location`.
+   * Demuestra el camino feliz: autenticación JWT → creación de proyecto → respuesta `201 Created` con cabecera `Location`.
    * Demuestra la robustez ante errores de negocio: intenta sobrepasar el presupuesto total de un proyecto y muestra el error `400 Bad Request` o intenta cerrar con tareas pendientes mostrando el código `409 Conflict`.
 3. **Bloque 3: Seguridad, Resiliencia y Observabilidad (4 minutos):**
    * Muestra la matriz de permisos: autentícate con un rol no autorizado y muestra el `403 Forbidden`.
@@ -1961,6 +2229,40 @@ Las cuatro preguntas clásicas que formulará el tribunal y cómo argumentarlas:
 | *«¿Por qué no guardas los ficheros directamente en una tabla de base de datos como campos BLOB?»* | *"Porque saturaría el tamaño de las copias de seguridad de PostgreSQL y penalizaría la memoria RAM del motor relacional; almacenar los binarios en un volumen de almacenamiento externo con nombres UUID opacos y guardar solo los metadatos en la base de datos es el estándar de la industria."* |
 | *«Si tu servicio meteorológico externo se congela, ¿se congela tu backend?»* | *"No, porque hemos configurado un Connect Timeout de 2 segundos y un Read Timeout de 3 segundos mediante `SimpleClientHttpRequestFactory` en `RestClient`, acompañado de un bloque de degradación elegante que devuelve datos por defecto."* |
 
+| *«Me dices que tienes un 80 % de cobertura. ¿Qué parte del sistema es la que peor está probada?»* | *"La cobertura de líneas es engañosa. Nuestro punto más débil es la concurrencia sobre el presupuesto: los tests la comprueban en secuencia, no con hilos simultáneos. Lo detectamos en la sesión 76 y está anotado como riesgo abierto en la memoria."* |
+| *«Enséñame dónde está escrita la regla de que un operario no puede cerrar un proyecto.»* | Aquí no se contesta con palabras: se abre el código. *"Está en dos sitios, y a propósito: el `@PreAuthorize` de este método y el test `operario_noPuedeCerrarProyecto` que lo vigila. Si alguien quita la anotación, la suite se pone en rojo."* |
+| *«¿Qué harías distinto si empezaras hoy?»* | La peor respuesta es «nada». *"Habría sacado el esquema a Flyway desde el primer día en vez de a `schema.sql`: lo hicimos en la sesión 71 y ya arrastrábamos datos que hubo que migrar a mano."* |
+
+<p class="stage">Paso 1 · Construir el guion sobre evidencias, no sobre afirmaciones</p>
+
+Escribe tu guion en una tabla de tres columnas. La tercera es la que decide si apruebas:
+
+| Minuto | Lo que digo | Lo que **enseño** mientras lo digo |
+| :--- | :--- | :--- |
+| 0–3 | El modelo y por qué estos tipos de datos | El diagrama y la clase `Proyecto` con su `@Column(precision = 12, scale = 2)` |
+| 3–8 | El camino feliz y dos casos límite | La colección ejecutándose en vivo |
+| 8–12 | Seguridad, resiliencia y trazas | Un `403` real, la red caída y el log filtrado por `correlationId` |
+| 12–15 | Lo que no está terminado | La lista de deuda técnica de la memoria |
+
+Cualquier fila cuya tercera columna quede vacía es una afirmación sin prueba. O le buscas evidencia, o la quitas del guion: en una defensa técnica, lo que no se enseña no cuenta.
+
+<p class="stage">Paso 2 · Preparar el entorno de la demostración</p>
+
+Una demostración se cae por logística, no por código. Prepara esto **antes** del día:
+
+1. Una carpeta en tu cliente HTTP llamada `defensa`, con las peticiones **en el orden exacto** del guion y numeradas: `01-login-admin`, `02-crear-proyecto`, `03-crear-tarea`…
+2. Variables de entorno configuradas para que el token se guarde solo tras el login. Nadie debe verte copiando y pegando un JWT de 300 caracteres en directo.
+3. Un `data.sql` con datos de demostración creíbles: proyectos con nombres reales, no `aaa` ni `test1`.
+4. Una segunda ventana de terminal con los logs ya corriendo, y el tamaño de letra subido para que se lea desde el fondo del aula.
+5. Un plan B: si la red del centro falla, tu degradación elegante hará que la demostración siga funcionando. Practica **contando eso** como una virtud, porque lo es.
+
+<p class="stage">Paso 3 · Ensayar con un compañero haciendo de tribunal</p>
+
+1. Intercambia proyectos con otro equipo.
+2. Cada uno prepara **cinco preguntas** sobre el proyecto ajeno, mirando el código, no la memoria.
+3. Haced la defensa completa cronometrada, con preguntas al final.
+4. Anota las preguntas que no supiste contestar: esa lista es tu única tarea pendiente hasta el día de la defensa.
+
 ### La comprobación · Ensayo general cronometrado
 
 1. **Prepara el entorno:**
@@ -1972,17 +2274,37 @@ Las cuatro preguntas clásicas que formulará el tribunal y cómo argumentarlas:
    * Comprueba que completas la exposición en exactamente 12 minutos, dejando 3 minutos limpios para preguntas.
    * Si alguna petición falla en vivo, **no entres en pánico**: copia el `correlationId` del JSON de error, búscalo en la terminal de logs y explica al tribunal con total calma qué regla de validación o seguridad ha actuado. **Eso demuestra madurez de ingeniería.**
 
+### Si algo se tuerce en directo
+
+| Lo que pasa | Lo que no hay que hacer | Lo que demuestra madurez |
+| :--- | :--- | :--- |
+| Una petición devuelve un error que no esperabas | Recargar cinco veces en silencio | Leer el `detail` en voz alta, buscar el `correlationId` en los logs y explicar qué ha pasado |
+| No hay red en el aula | Abandonar la demostración | Enseñar que la degradación elegante mantiene la aplicación en pie: es una prueba mejor que la prevista |
+| Te preguntan algo que no sabes | Improvisar una explicación falsa | *«No lo he medido, así que no te lo puedo afirmar. Lo que sí sé es…»* |
+| Se te acaba el tiempo | Acelerar y saltarte los límites | Ir directo al bloque 4: reconocer la deuda técnica puntúa más que un caso feliz de más |
+| El tribunal encuentra un fallo real | Justificarlo o minimizarlo | Reconocerlo, decir qué test lo habría cazado y dónde lo colocarías |
+
 ### Ahora tú · Redactar la Memoria Técnica de la Defensa
 
-Elabora la memoria técnica consolidada del proyecto:
-1. Resumen ejecutivo de la arquitectura y tecnologías empleadas.
-2. Diagrama entidad-relación y justificación del esquema SQL.
-3. Matriz de seguridad RBAC/ABAC y endpoints implementados.
-4. Análisis de resiliencia y plan de contingencia ante caídas de servicios externos.
-5. Inventario de deuda técnica y catálogo de mejoras para la versión 2.0.
+Elabora la memoria técnica consolidada del proyecto. Cada apartado debe apoyarse en algo que existe en el repositorio, no en una descripción general:
 
-> [!NOTE]
-> La memoria técnica final y el guion de defensa del proyecto backend se entregarán exclusivamente en **documento en formato PDF** (`memoria-defensa-tecnica.pdf`), sin archivos markdown como tarea de alumnos.
+1. **Resumen ejecutivo:** qué resuelve el sistema y con qué tecnologías, en una página.
+2. **Modelo de datos:** diagrama entidad-relación y justificación del esquema SQL, tipo por tipo en los campos delicados (dinero, fechas, estados).
+3. **Contrato de la API:** matriz de seguridad RBAC/ABAC frente a la lista de endpoints, con el `openapi.json` de la sesión 77 como anexo.
+4. **Resiliencia:** qué servicios externos consumes, con qué timeouts, qué pasa cuando fallan y cómo lo has comprobado.
+5. **Estrategia de pruebas:** qué cubre la suite, qué **no** cubre, y el dato de la sesión 76 sobre cuántos fallos encontró la pasada manual que los tests no vieron.
+6. **Deuda técnica:** inventario honesto de lo que dejarías distinto, ordenado por lo que más duele. Este apartado, bien hecho, vale más que cualquier otro: es el que demuestra que sabes juzgar tu propio trabajo.
+7. **Trazabilidad del curso:** una tabla final que asocie cada capacidad del sistema con la unidad donde la aprendiste. Es tu propio índice de lo que sabes hacer, y es lo que te llevas del módulo.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Has completado la defensa entera dentro del tiempo, con la demostración en vivo funcionando de principio a fin; cada afirmación del guion tiene una evidencia que la acompaña; sabes contestar las cinco preguntas que te hizo el equipo con el que ensayaste; y la memoria incluye un apartado de límites que no rebaja lo que hiciste, sino que lo sitúa.</dd>
+</dl>
+
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>La memoria técnica final y el guion de defensa del proyecto backend se entregarán exclusivamente en <strong>documento en formato PDF</strong> (<code>memoria-defensa-tecnica.pdf</code>), sin archivos markdown como tarea de alumnos.</p>
+</div>
 
 ### Reto · Automatización de la demo con Newman o Bruno CLI
 
@@ -2121,8 +2443,8 @@ Cualquiera puede hacer una demo que funcione con tres datos ideales en su portá
   <p class="checkpoint-label">Proyecto backend completo · criterios de producción</p>
   <ul class="checklist">
     <li>La especificación de negocio está formalizada en actores, reglas invariantes y escenarios Gherkin.</li>
-    <li>El esquema relacional de PostgreSQL se gestiona mediante scripts SQL versionados con `ddl-auto=validate`.</li>
-    <li>Los importes monetarios utilizan tipos de precisión decimal exacta (`NUMERIC` / `BigDecimal`).</li>
+    <li>El esquema relacional de PostgreSQL se gestiona mediante scripts SQL versionados con <code>ddl-auto=validate</code>.</li>
+    <li>Los importes monetarios utilizan tipos de precisión decimal exacta (<code>NUMERIC</code> / <code>BigDecimal</code>).</li>
     <li>La arquitectura sigue una organización modular por componentes de negocio (*Package by Feature*).</li>
     <li>La relación entre agregados garantiza la integridad presupuestaria mediante transacciones ACID.</li>
     <li>El perímetro de seguridad combina autenticación JWT con autorización por rol (RBAC) y propiedad (ABAC).</li>

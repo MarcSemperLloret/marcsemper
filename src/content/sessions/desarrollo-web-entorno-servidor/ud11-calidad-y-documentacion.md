@@ -28,6 +28,12 @@ priorKnowledge:
   <p>Andamiaje bajo. Se audita la propia aplicación con una rúbrica y se corrige lo que la auditoría revele.</p>
 </div>
 
+<div class="rule">
+  <p class="rule-label">Tres cosas que ya has hecho, y en qué se diferencian ahora</p>
+  <p>Nada de lo que aparece en estas tres sesiones es nuevo, y es intencionado. <strong>Los tests</strong> los escribes desde la UD4; aquí decides cuáles faltan. <strong>La documentación OpenAPI</strong> la generaste en la UD7; aquí deja de ser una cáscara autogenerada y pasa a documentar errores, seguridad y ejemplos. <strong>La revisión por pares</strong> la practicaste en la UD6 sobre una API sin seguridad ni integraciones; aquí la rúbrica tiene cinco dimensiones porque la aplicación ya las tiene.</p>
+  <p>Son seis horas para auditar un proyecto de veintitrés semanas, así que el inventario de la sesión 67 no es un trámite: es lo que decide en qué se gastan las otras dos sesiones.</p>
+</div>
+
 ## Semana 23 · Demostrar que funciona y contarlo
 
 ## Sesión 67 · Estrategia de pruebas y cobertura
@@ -128,10 +134,10 @@ Antes de escribir nuevos tests, clasificamos las pruebas construidas durante el 
 Utilizamos `@ParameterizedTest` para probar múltiples valores frontera sin duplicar código:
 
 ```java
-package com.empresa.proyecto;
+package com.ejemplo.gestor;
 
-import com.empresa.proyecto.dto.ProyectoRequest;
-import com.empresa.proyecto.service.ProyectoService;
+import com.ejemplo.gestor.dto.ProyectoRequest;
+import com.ejemplo.gestor.service.ProyectoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -187,12 +193,12 @@ class ProyectoBoundaryTest {
 Verificamos que si se produce un fallo durante la creación de un proyecto con tareas iniciales, ninguna fila queda persistida a medias en la base de datos:
 
 ```java
-package com.empresa.proyecto;
+package com.ejemplo.gestor;
 
-import com.empresa.proyecto.model.Proyecto;
-import com.empresa.proyecto.repository.ProyectoRepository;
-import com.empresa.proyecto.repository.TareaRepository;
-import com.empresa.proyecto.service.ProyectoService;
+import com.ejemplo.gestor.model.Proyecto;
+import com.ejemplo.gestor.repository.ProyectoRepository;
+import com.ejemplo.gestor.repository.TareaRepository;
+import com.ejemplo.gestor.service.ProyectoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -246,12 +252,36 @@ Ejecuta el ciclo de verificación de Maven:
    * Si una línea aparece en **amarillo**, significa que solo se probó una rama del condicional (ej: se probó el caso `if (true)` pero nunca el caso `else`).
    * Comprueba cómo tras añadir los tests de casos límite, las ramas críticas pasan a color **verde completo**.
 
+### Las cuatro familias de caso límite que siempre faltan
+
+Cuando alguien dice «no sé qué más probar», casi siempre es porque solo ha pensado en valores razonables. Recorre estas cuatro listas sobre cada regla de negocio de tu aplicación y aparecerán los huecos solos:
+
+<dl class="worked">
+  <dt>1 · Los bordes de un rango</dt>
+  <dd>Si el presupuesto máximo son 150.000 €, hay que probar <strong>149.999, 150.000 y 150.001</strong>. El error de programación más común del mundo es confundir <code>&gt;</code> con <code>&gt;=</code>, y solo el valor exacto del borde lo detecta. Lo mismo con longitudes: un campo de 3 a 80 caracteres se prueba con 2, 3, 80 y 81.</dd>
+  <dt>2 · El vacío y la ausencia</dt>
+  <dd>No son lo mismo y se comportan distinto: una cadena vacía, una cadena de espacios, un <code>null</code> y un campo que ni siquiera viene en el JSON. Y en las colecciones: la lista vacía, que es el caso que revienta cualquier cálculo de media o de máximo.</dd>
+  <dt>3 · Lo que rompe el formato</dt>
+  <dd>Acentos y eñes, emojis, comillas simples dentro de un texto, cadenas de 10.000 caracteres, números negativos donde esperas positivos, y una fecha de fin anterior a la de inicio. Ninguno es rebuscado: todos llegan de usuarios reales.</dd>
+  <dt>4 · El orden y la repetición</dt>
+  <dd>Hacer dos veces la misma operación, deshacer algo que no se ha hecho, borrar un recurso que ya se borró, cerrar un proyecto ya cerrado. La pregunta en todos: ¿es un error, o debería ser idempotente y responder lo mismo?</dd>
+</dl>
+
+Cuando varios de estos casos comparten la misma lógica, `@ParameterizedTest` con `@ValueSource` o `@CsvSource` te ahorra escribir el mismo test cinco veces cambiando un número.
+
 ### Ahora tú · Auditar y blindar el servicio de Tareas
 
-Aplica el mismo análisis sobre `TareaService`:
-1. Revisa en el informe JaCoCo qué métodos o ramas de `TareaService` tienen menos del 70 % de cobertura.
-2. Identifica al menos dos casos límite sin probar (por ejemplo: cambiar el estado de una tarea a `FINALIZADA` sin fecha de fin, o asignar una tarea a un usuario inactivo).
-3. Escribe los tests correspondientes y vuelve a compilar con `./mvnw verify jacoco:report` hasta que la cobertura de ramas supere el 80 %.
+1. **Haz primero el inventario, antes de escribir ningún test.** Una tabla con una fila por regla de negocio de tu aplicación y tres columnas: qué la comprueba hoy, qué caso límite le falta, y qué pasaría en producción si fallase. Sin ese inventario, escribirás tests de lo que ya está probado, que es lo que hace subir la cobertura sin mejorar nada.
+2. Revisa en el informe JaCoCo qué métodos o ramas de `TareaService` tienen menos del 70 % de cobertura de **ramas** —no de líneas—, y crúzalo con tu inventario.
+3. Aplica las cuatro familias de arriba a las reglas de tarea: valores en el borde del presupuesto, título vacío o con solo espacios, título de 10.000 caracteres, fecha de fin anterior a la de inicio, transición de estado repetida y asignación a un usuario inactivo.
+4. Escribe los tests correspondientes, usando `@ParameterizedTest` donde se repita la lógica, y vuelve a compilar hasta que la cobertura de ramas supere el 80 %.
+5. **Comprueba el rollback**, que es el caso límite que casi nadie prueba: provoca un fallo a mitad de una operación que escribe en dos tablas y verifica en PostgreSQL que **no ha quedado nada** de la primera escritura. Una transacción que no revierte deja datos corruptos que ningún test de código detecta.
+6. Cierra con la pregunta honesta que ordena toda la unidad: **¿qué parte de tu aplicación sigue sin estar probada, y por qué has decidido dejarla así?** Esa respuesta, escrita, vale más que un porcentaje: es el punto de partida de la sesión 69 y un apartado de la memoria de la UD12.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Tienes el inventario de reglas con sus huecos identificados; la cobertura de ramas de <code>service</code> supera el 80 %; cada rango numérico está probado en sus tres valores frontera; has comprobado al menos un <code>rollback</code> mirando la base de datos; y puedes decir qué queda sin probar y por qué.</dd>
+</dl>
 
 ### Reto · Umbrales de cobertura mínimos obligatorios en CI/CD
 
@@ -259,16 +289,18 @@ En proyectos profesionales se configura Maven para que la compilación **falle a
 
 Configura una regla de verificación en `jacoco-maven-plugin`:
 1. Añade una ejecución con el objetivo `check` en `pom.xml`.
-2. Establece un límite mínimo de cobertura de ramas (*BRANCH*) del 75 % a nivel de paquete de servicios (`com.empresa.proyecto.service.*`).
+2. Establece un límite mínimo de cobertura de ramas (*BRANCH*) del 75 % a nivel de paquete de servicios (`com.ejemplo.gestor.service.*`).
 3. Comprueba que si borras un test crítico, `./mvnw verify` termina con código de error y aborta el empaquetado del archivo JAR.
 
-> [!NOTE]
-> Si en la evaluación se solicita un documento de auditoría de pruebas y análisis de casos límite, el formato oficial de entrega de texto es siempre un **documento en PDF** (`estrategia-pruebas.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un documento de auditoría de pruebas y análisis de casos límite, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>estrategia-pruebas.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Plugin JaCoCo integrado en `pom.xml` e informe HTML generado con `./mvnw verify`.</span></div>
-  <div><strong>Si lo tienes</strong><span>Tests parametrizados con `@ParameterizedTest` cubriendo valores límite y verificación de rollback.</span></div>
-  <div><strong>Reto</strong><span>Regla obligatoria de umbral de cobertura (`jacoco:check`) bloqueando compilaciones sin tests.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Plugin JaCoCo integrado en <code>pom.xml</code> e informe HTML generado con <code>./mvnw verify</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Tests parametrizados con <code>@ParameterizedTest</code> cubriendo valores límite y verificación de rollback.</span></div>
+  <div><strong>Reto</strong><span>Regla obligatoria de umbral de cobertura (<code>jacoco:check</code>) bloqueando compilaciones sin tests.</span></div>
 </div>
 
 <div class="checkpoint">
@@ -277,7 +309,7 @@ Configura una regla de verificación en `jacoco-maven-plugin`:
     <li>Se supera la falacia de evaluar la calidad de los tests únicamente por líneas cubiertas.</li>
     <li>Se conoce y aplica la estructura de la Pirámide de Pruebas en el ecosistema Spring.</li>
     <li>El plugin JaCoCo genera informes visuales diferenciando cobertura de líneas y de ramas.</li>
-    <li>Se utilizan tests parametrizados (`@ParameterizedTest`) para verificar valores frontera.</li>
+    <li>Se utilizan tests parametrizados (<code>@ParameterizedTest</code>) para verificar valores frontera.</li>
     <li>Se comprueba la atomicidad transaccional verificando rollbacks ante fallos imprevistos.</li>
   </ul>
 </div>
@@ -286,8 +318,8 @@ Configura una regla de verificación en `jacoco-maven-plugin`:
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Qué mide exactamente la métrica de «cobertura de ramas» (*Branch Coverage*) a diferencia de la cobertura de líneas?</li>
-    <li>¿Por qué es preferible escribir 20 tests unitarios con Mockito que 20 tests con `@SpringBootTest`?</li>
-    <li>¿Para qué se utiliza la fuente `@NullAndEmptySource` en una prueba parametrizada?</li>
+    <li>¿Por qué es preferible escribir 20 tests unitarios con Mockito que 20 tests con <code>@SpringBootTest</code>?</li>
+    <li>¿Para qué se utiliza la fuente <code>@NullAndEmptySource</code> en una prueba parametrizada?</li>
     <li>¿Qué significa que una prueba transaccional verifique la propiedad de atomicidad (la A de ACID)?</li>
   </ol>
 </div>
@@ -314,7 +346,7 @@ Configura una regla de verificación en `jacoco-maven-plugin`:
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Por qué está totalmente desaconsejado utilizar `System.out.println()` en el código de un backend empresarial?</li>
+    <li>¿Por qué está totalmente desaconsejado utilizar <code>System.out.println()</code> en el código de un backend empresarial?</li>
     <li>¿En qué nivel de log (ERROR, WARN, INFO o DEBUG) clasificarías un intento fallido de login por contraseña incorrecta de un usuario?</li>
     <li>¿Qué problema surge al inspeccionar un archivo de log con 100.000 líneas cuando 50 usuarios concurrentes están usando la aplicación a la vez?</li>
   </ol>
@@ -369,7 +401,7 @@ Para no volverse loco buscando qué línea corresponde a qué petición, utiliza
 <p class="stage">Paso 1 · Crear el filtro de correlación CorrelationIdFilter</p>
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -458,23 +490,24 @@ Creamos el archivo `src/main/resources/logback-spring.xml` configurando consola 
     </root>
 
     <!-- Nivel específico para nuestro paquete de negocio -->
-    <logger name="com.empresa.proyecto" level="DEBUG"/>
+    <logger name="com.ejemplo.gestor" level="DEBUG"/>
 </configuration>
 ```
 
 <p class="stage">Paso 3 · Añadir trazas de log útiles y seguras en ProyectoService</p>
 
-> [!CAUTION]
-> **Privacidad y cumplimiento normativo (GDPR / OWASP):**
-> Nunca registres contraseñas en claro, tokens JWT completos ni datos personales sensibles en los logs. Usa identificadores o máscaras:
+<div class="rule">
+  <p class="rule-label">Privacidad y cumplimiento normativo (GDPR / OWASP)</p>
+  <p>Nunca registres contraseñas en claro, tokens JWT completos ni datos personales sensibles en los logs. Usa identificadores o máscaras:</p>
+</div>
 
 ```java
-package com.empresa.proyecto.service;
+package com.ejemplo.gestor.service;
 
-import com.empresa.proyecto.dto.ProyectoRequest;
-import com.empresa.proyecto.dto.ProyectoResponse;
-import com.empresa.proyecto.model.Proyecto;
-import com.empresa.proyecto.repository.ProyectoRepository;
+import com.ejemplo.gestor.dto.ProyectoRequest;
+import com.ejemplo.gestor.dto.ProyectoResponse;
+import com.ejemplo.gestor.model.Proyecto;
+import com.ejemplo.gestor.repository.ProyectoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -545,18 +578,18 @@ Diseña un filtro o conversor personalizado en Logback (`PatternLayoutEncoder` o
 2. Comprueba que si un programador despistado escribe `log.info("Usuario: {}", usuario)` la contraseña o datos protegidos nunca lleguen en texto plano al archivo de disco.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Sustitución de `System.out` por `Logger` de SLF4J y niveles clasificados con criterio.</span></div>
-  <div><strong>Si lo tienes</strong><span>Filtro de `CorrelationIdFilter` con MDC y rotación de archivos en `logback-spring.xml`.</span></div>
-  <div><strong>Reto</strong><span>Inclusión de `correlationId` en respuestas RFC 7807 y enmascaramiento automático de datos sensibles.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Sustitución de <code>System.out</code> por <code>Logger</code> de SLF4J y niveles clasificados con criterio.</span></div>
+  <div><strong>Si lo tienes</strong><span>Filtro de <code>CorrelationIdFilter</code> con MDC y rotación de archivos en <code>logback-spring.xml</code>.</span></div>
+  <div><strong>Reto</strong><span>Inclusión de <code>correlationId</code> en respuestas RFC 7807 y enmascaramiento automático de datos sensibles.</span></div>
 </div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 68</p>
   <ul class="checklist">
-    <li>Se erradica por completo el uso de `System.out.println` en el código backend.</li>
+    <li>Se erradica por completo el uso de <code>System.out.println</code> en el código backend.</li>
     <li>Se utiliza la jerarquía estricta de 5 niveles de log (ERROR, WARN, INFO, DEBUG, TRACE).</li>
-    <li>El archivo `logback-spring.xml` gestiona la rotación y compresión diaria de trazas.</li>
-    <li>El patrón MDC asigna un `Correlation ID` único a cada hilo de petición HTTP.</li>
+    <li>El archivo <code>logback-spring.xml</code> gestiona la rotación y compresión diaria de trazas.</li>
+    <li>El patrón MDC asigna un <code>Correlation ID</code> único a cada hilo de petición HTTP.</li>
     <li>Se respeta la privacidad de datos personales garantizando que no se loguean secretos.</li>
   </ul>
 </div>
@@ -564,10 +597,10 @@ Diseña un filtro o conversor personalizado en Logback (`PatternLayoutEncoder` o
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué es fundamental ejecutar `MDC.remove("correlationId")` en el bloque `finally` de un filtro?</li>
-    <li>¿Cuál es la diferencia de severidad entre emitir un log a nivel `WARN` y uno a nivel `ERROR`?</li>
+    <li>¿Por qué es fundamental ejecutar <code>MDC.remove("correlationId")</code> en el bloque <code>finally</code> de un filtro?</li>
+    <li>¿Cuál es la diferencia de severidad entre emitir un log a nivel <code>WARN</code> y uno a nivel <code>ERROR</code>?</li>
     <li>¿Qué ventaja ofrece la rotación de archivos de log (*Log Rolling*) frente a escribir en un único archivo infinito?</li>
-    <li>¿Cómo ayuda el `Correlation ID` al equipo de soporte cuando un cliente reporta una incidencia en producción?</li>
+    <li>¿Cómo ayuda el <code>Correlation ID</code> al equipo de soporte cuando un cliente reporta una incidencia en producción?</li>
   </ol>
 </div>
 
@@ -659,7 +692,7 @@ Utiliza esta lista de comprobación para auditar la aplicación:
 Configuramos el bean de OpenAPI para que Swagger UI incluya el botón **Authorize** permitiendo probar endpoints protegidos con tokens Bearer:
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -723,12 +756,43 @@ public class OpenApiConfig {
    * Aplica la Rúbrica de Auditoría Técnica de las 5 dimensiones.
    * Identifica y redacta los 3 hallazgos principales con sugerencias constructivas de mejora.
 
-### Ahora tú · Redactar el informe de auditoría técnica
+<div class="rule">
+  <p class="rule-label">Cómo se revisa el código de otra persona sin que la revisión se estropee</p>
+  <p>Una revisión existe para mejorar el código, no para puntuar a quien lo escribió. Tres reglas que la mantienen útil:</p>
+  <p><strong>Se comenta el código, no a la persona.</strong> «Este método hace tres cosas» se puede discutir; «no has separado responsabilidades» se defiende. La primera abre una conversación técnica, la segunda la cierra.</p>
+  <p><strong>Cada hallazgo lleva una razón y una consecuencia.</strong> «Cambia esto» no es revisable. «Este listado carga las tareas dentro del bucle: con 200 proyectos son 201 consultas» sí lo es, porque quien lo lee puede comprobarlo y decidir.</p>
+  <p><strong>Se separa lo que bloquea de lo que es opinión.</strong> Marca cada comentario como <em>bloqueante</em> (un fallo de seguridad, una pérdida de datos), <em>recomendado</em> o <em>sugerencia</em>. Sin esa etiqueta, quien recibe la revisión no sabe qué es urgente y acaba ignorándola entera o rehaciéndolo todo.</p>
+</div>
 
-A partir de la revisión de tu aplicación:
-1. Identifica al menos un hallazgo de mejora en cada una de las 5 dimensiones de la rúbrica.
-2. Corrige en tu código los dos problemas más graves (por ejemplo: añadir validación de límites ausente y eliminar consultas N+1 en un repositorio).
-3. Vuelve a ejecutar la suite completa de pruebas con `./mvnw test` asegurando que ninguna corrección rompió el comportamiento existente.
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| Swagger sale vacío tras añadir seguridad | Las rutas de documentación no están permitidas | `/v3/api-docs/**` y `/swagger-ui/**` con `permitAll()` en tu `SecurityFilterChain` |
+| *Try it out* devuelve `401` en todo | Falta declarar el esquema de seguridad | Añade el `SecurityScheme` `bearer`/`JWT` a `OpenApiConfig` para que aparezca el botón **Authorize** |
+| La revisión del compañero no encuentra nada | El proyecto no se puede arrancar | Si no arranca en la máquina del revisor, ese ya es el primer hallazgo, y de los graves |
+| Corriges un hallazgo y se rompen tres tests | Estabas cambiando comportamiento, no forma | Es información valiosa: significa que el comportamiento estaba probado. Decide cuál de los dos es correcto |
+| SonarLint devuelve cientos de avisos | Estás mirando todas las severidades | Filtra por *Blocker* y *Critical*: el resto es ruido para lo que toca hoy |
+
+### Ahora tú · Auditar y ser auditado
+
+1. **Recibe:** intercambia repositorios con otro equipo. Clona el suyo desde cero y arráncalo siguiendo solo su documentación, sin preguntarles nada. Cronometra cuánto tardas.
+2. **Audita:** recorre las cinco dimensiones de la rúbrica y anota **al menos un hallazgo en cada una**, con la etiqueta de gravedad y la razón. Un informe con quince comentarios de estilo y ninguno de seguridad es un informe que no ha hecho su trabajo.
+3. **Busca específicamente estas cinco cosas**, que son las que más se repiten a estas alturas del curso:
+   * Un endpoint de escritura sin `@PreAuthorize` ni regla en el `filterChain`.
+   * Un listado que carga una relación dentro del bucle (el N+1 de la UD5).
+   * Un `catch (Exception e)` vacío o que solo hace `printStackTrace()`.
+   * Un DTO de respuesta que publica un campo que no debería salir (una contraseña, un campo interno).
+   * Un endpoint sin ningún test.
+4. **Entrega:** pásales el informe ordenado por gravedad, no por el orden en que fuiste encontrando las cosas.
+5. **Recibe el tuyo y respóndelo entero**, punto por punto. Por cada hallazgo, una de tres respuestas: lo corrijo, no lo corrijo y este es el motivo, o lo anoto como deuda técnica para la UD12. Ninguna de las tres es peor que las otras; lo que no vale es dejar un hallazgo sin respuesta.
+6. **Corrige los bloqueantes** y vuelve a ejecutar `./mvnw verify` para comprobar que ninguna corrección rompió nada.
+7. Guarda el informe recibido: el apartado de deuda técnica de la memoria de la UD12 sale casi entero de aquí.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Has arrancado el proyecto de otro equipo sin ayuda; tu informe tiene hallazgos en las cinco dimensiones, etiquetados por gravedad y con su razón; has respondido a todos los que te hicieron; los bloqueantes están corregidos y la suite sigue verde.</dd>
+</dl>
 
 ### Reto · Detección estática de deuda técnica con SonarLint
 
@@ -740,8 +804,10 @@ Instala la extensión **SonarLint** en tu entorno de desarrollo (IntelliJ o VS C
    * *Vulnerabilidades de seguridad*.
 3. Resuelve las incidencias detectadas hasta dejar el código con cero advertencias de severidad alta.
 
-> [!NOTE]
-> Si en la evaluación se solicita una memoria de auditoría técnica y revisión por pares de la aplicación, el formato oficial de entrega de texto es siempre un **documento en PDF** (`informe-revision-pares.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita una memoria de auditoría técnica y revisión por pares de la aplicación, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-revision-pares.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Documentación OpenAPI 3 enriquecida con seguridad JWT visible en Swagger UI.</span></div>
@@ -871,14 +937,14 @@ Hacer que un programa funcione con datos perfectos en local lo consigue cualquie
 <div class="checkpoint">
   <p class="checkpoint-label">Calidad, observabilidad y documentación · criterios de producción</p>
   <ul class="checklist">
-    <li>La suite de pruebas combina tests unitarios puros, tests de corte (`@WebMvcTest`, `@DataJpaTest`) y tests de integración.</li>
+    <li>La suite de pruebas combina tests unitarios puros, tests de corte (<code>@WebMvcTest</code>, <code>@DataJpaTest</code>) y tests de integración.</li>
     <li>Se audita y alcanza una cobertura de ramas (*Branch Coverage*) superior al 75 % en la capa de servicios con JaCoCo.</li>
-    <li>Los casos límite (nulos, vacíos, límites numéricos y caracteres especiales) están probados con `@ParameterizedTest`.</li>
+    <li>Los casos límite (nulos, vacíos, límites numéricos y caracteres especiales) están probados con <code>@ParameterizedTest</code>.</li>
     <li>Se verifica la atomicidad transaccional comprobando que los fallos provocan el rollback íntegro en la base de datos.</li>
-    <li>El código fuente está libre de llamadas a `System.out.println`, utilizando exclusivamente el `Logger` de SLF4J.</li>
+    <li>El código fuente está libre de llamadas a <code>System.out.println</code>, utilizando exclusivamente el <code>Logger</code> de SLF4J.</li>
     <li>Los mensajes de log están clasificados con criterio estricto entre ERROR, WARN, INFO y DEBUG.</li>
-    <li>El archivo `logback-spring.xml` implementa rotación y compresión de archivos diarios con límite de tamaño.</li>
-    <li>Cada petición HTTP dispone de un `X-Correlation-ID` inyectado en el MDC y devuelto en las cabeceras de respuesta.</li>
+    <li>El archivo <code>logback-spring.xml</code> implementa rotación y compresión de archivos diarios con límite de tamaño.</li>
+    <li>Cada petición HTTP dispone de un <code>X-Correlation-ID</code> inyectado en el MDC y devuelto en las cabeceras de respuesta.</li>
     <li>Los contratos OpenAPI 3 están enriquecidos y sincronizados con descripciones, códigos de error y seguridad JWT.</li>
     <li>El código ha superado una revisión por pares con rúbrica técnica corrigiendo defectos de arquitectura y consultas N+1.</li>
   </ul>

@@ -110,8 +110,10 @@ async function cargarProyectos() {
 }
 ```
 
-> [!NOTE]
-> `fetch()` solo rechaza la promesa (entra en el bloque `catch`) si ocurre un fallo catastrófico de red (cable desconectado, DNS fallido o servidor completamente apagado). Si el servidor responde con un código de error como `404 Not Found` o `500 Internal Server Error`, la promesa se resuelve con éxito. Por eso es obligatorio comprobar siempre `if (!response.ok)`.
+<div class="rule">
+  <p class="rule-label">fetch() no falla ante un 404</p>
+  <p><code>fetch()</code> solo rechaza la promesa (entra en el bloque <code>catch</code>) si ocurre un fallo catastrófico de red (cable desconectado, DNS fallido o servidor completamente apagado). Si el servidor responde con un código de error como <code>404 Not Found</code> o <code>500 Internal Server Error</code>, la promesa se resuelve con éxito. Por eso es obligatorio comprobar siempre <code>if (!response.ok)</code>.</p>
+</div>
 
 ### Paso a paso guiado · El primer cliente web (index.html)
 
@@ -182,6 +184,15 @@ Arranca un servidor estático ligero en la carpeta `cliente`. Puedes usar cualqu
 * **Con Python:** Ejecuta en la terminal de la carpeta `cliente`: `python -m http.server 5500`.
 * **Con Node.js:** `npx serve . -l 5500`.
 
+<dl class="worked">
+  <dt>Por qué <code>data.content || data</code></dt>
+  <dd>Porque desde la sesión 45 tu endpoint devuelve una página, no una lista: el array viene dentro de <code>content</code>, junto a los metadatos de paginación. Esa línea acepta las dos formas para que el cliente funcione hayas paginado ya o no. Es un apaño consciente de una página de prueba; en un cliente de verdad, el contrato se fija y no se adivina.</dd>
+  <dt><code>if (!res.ok) throw</code>: la línea que casi todo el mundo olvida</dt>
+  <dd><code>fetch()</code> solo rechaza la promesa ante un fallo de red. Un <code>404</code> o un <code>500</code> son respuestas perfectamente válidas para <code>fetch</code>, así que sin esa comprobación tu código seguiría adelante e intentaría recorrer un objeto de error como si fuera una lista de proyectos. El síntoma es una página en blanco sin ningún error en la consola.</dd>
+  <dt><code>await</code> dos veces</dt>
+  <dd>El primer <code>await</code> espera a que lleguen las cabeceras y el estado. El segundo, el de <code>res.json()</code>, espera a que llegue y se interprete el cuerpo. Son dos esperas porque son dos momentos distintos: el navegador ya sabe el código de estado antes de haber descargado la respuesta entera.</dd>
+</dl>
+
 ### La comprobación · Inspección forense en DevTools
 
 Con tu backend Spring Boot arrancado en el puerto 8080, abre `http://localhost:5500` en tu navegador y pulsa `F12`:
@@ -199,15 +210,34 @@ Con tu backend Spring Boot arrancado en el puerto 8080, abre `http://localhost:5
 4. **Analiza la pestaña Preview / Response:**
    * Comprueba que visualizas el árbol de objetos JSON exactamente como lo programaste en Spring Boot.
 
+5. **Compara con tu cliente HTTP:** lanza la misma petición desde Bruno o Postman y pon las dos respuestas una al lado de otra. Son idénticas. Tu backend no se ha enterado de que quien llama es un navegador, y eso es exactamente lo que debe pasar: HTTP es HTTP venga de donde venga.
+
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| `blocked by CORS policy` en la consola | Es el fallo que esta sesión quiere provocar | No lo arregles todavía: es el tema entero de la sesión 50 |
+| La barra del navegador dice `file:///C:/...` | Has abierto el HTML con doble clic | Tienes que servirlo: sin origen, ni CORS ni `fetch` se comportan como en la vida real |
+| `Failed to fetch` y la terminal de Spring en silencio | El backend no está escuchando | ¿Arrancado? ¿En el 8080? Prueba la URL directamente en otra pestaña |
+| La lista sale vacía sin ningún error | La respuesta no tiene la forma esperada | Pon `console.log(data)` justo después del `res.json()` y mira qué llega de verdad |
+| `Cannot read properties of undefined` | Estás leyendo un campo que el DTO no publica | Compara los nombres con los del `ProyectoResponse` de la UD7, no con los de la entidad |
+| Cambias el HTML y el navegador no se entera | Caché del navegador | `Ctrl+Shift+R`, o marca *Disable cache* en DevTools con las herramientas abiertas |
+
 ### Ahora tú · Visualizar las tareas al seleccionar un proyecto
 
 Amplía el cliente para consultar el subrecurso de tareas desarrollado en la UD7:
 
-1. Modifica la generación de cada `<li>` para que incluya un botón *«Ver tareas»*.
-2. Al pulsar el botón, lanza una segunda llamada fetch:
-   `fetch('http://localhost:8080/api/v1/proyectos/' + id + '/tareas')`
-3. Renderiza las tareas devueltas en una sublista indentada bajo el proyecto correspondiente.
-4. Inspecciona en DevTools cómo se suceden ambas peticiones en cascada.
+1. Modifica la generación de cada elemento de la lista para que incluya un botón *«Ver tareas»*.
+2. Al pulsarlo, lanza una segunda llamada a `/api/v1/proyectos/{id}/tareas` y renderiza las tareas en una sublista bajo el proyecto.
+3. Inspecciona en DevTools cómo se suceden ambas peticiones en cascada, y fíjate en el *Initiator* de la segunda: apunta a la línea de tu código que la disparó.
+4. **Trata los tres estados de una petición**, que es lo que separa una página que funciona de una que parece rota: mientras carga, muestra un texto de espera; si responde bien pero la lista viene vacía, di «este proyecto no tiene tareas» en vez de dejar el hueco en blanco; si falla, muestra el código de estado.
+5. Pide un proyecto que no exista (`/api/v1/proyectos/9999/tareas`) y comprueba que tu página muestra el `404` en lugar de quedarse pensando. Ese `404` es la regla que implementaste en la sesión 43: ahora la estás viendo desde el otro lado.
+6. Anota en tu cuaderno cuántas peticiones lanza tu página al mostrar cinco proyectos con sus tareas. Si has puesto un botón por proyecto son seis, y bajo demanda. Si las cargaras todas de golpe serían seis siempre. Ese es el mismo N+1 de la UD5, ahora sobre la red.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>La página lista proyectos y sus tareas contra tu API real; los tres estados —cargando, vacío y error— se ven distintos en pantalla; y has comprobado que la respuesta es idéntica a la que te daba tu cliente HTTP.</dd>
+</dl>
 
 ### Reto · Indicador de latencia y simulación de redes lentas
 
@@ -229,10 +259,10 @@ Aprende a diagnosticar la experiencia de usuario ante redes degradadas:
   <p class="checkpoint-label">Checkpoint · fin de la sesión 49</p>
   <ul class="checklist">
     <li>La API es consumida directamente desde un navegador web real utilizando JavaScript nativo sin frameworks.</li>
-    <li>La página web se sirve mediante un servidor HTTP local y no a través del protocolo `file:///`.</li>
+    <li>La página web se sirve mediante un servidor HTTP local y no a través del protocolo <code>file:///</code>.</li>
     <li>La petición HTTP se localiza e inspecciona con soltura en la pestaña Red de DevTools.</li>
-    <li>El código gestiona la asincronía en dos fases (`fetch` de cabeceras y `.json()` de cuerpo) con `async/await`.</li>
-    <li>El script comprueba `response.ok` para interceptar respuestas de error del servidor.</li>
+    <li>El código gestiona la asincronía en dos fases (<code>fetch</code> de cabeceras y <code>.json()</code> de cuerpo) con <code>async/await</code>.</li>
+    <li>El script comprueba <code>response.ok</code> para interceptar respuestas de error del servidor.</li>
   </ul>
 </div>
 
@@ -240,9 +270,9 @@ Aprende a diagnosticar la experiencia de usuario ante redes degradadas:
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué una llamada a <code>fetch()</code> no lanza un error en el bloque <code>catch</code> cuando el servidor responde 404 o 500?</li>
-    <li>¿Qué diferencia hay entre servir una página mediante un servidor web (`http://localhost:5500`) y abrirla con doble clic (`file:///`)?</li>
+    <li>¿Qué diferencia hay entre servir una página mediante un servidor web (<code>http://localhost:5500</code>) y abrirla con doble clic (<code>file:///</code>)?</li>
     <li>¿Qué información técnica aporta el panel *Waterfall* en la pestaña Red de DevTools?</li>
-    <li>¿Por qué debemos extraer <code>data.content</code> en lugar de usar <code>data</code> directamente si la API devuelve un `Page<T>` de Spring?</li>
+    <li>¿Por qué debemos extraer <code>data.content</code> en lugar de usar <code>data</code> directamente si la API devuelve un <code>Page&lt;T&gt;</code> de Spring?</li>
   </ol>
 </div>
 
@@ -351,7 +381,7 @@ La forma profesional de configurar CORS en Spring Boot es de forma **centralizad
 En tu proyecto Spring Boot, crea una clase de configuración que implemente `WebMvcConfigurer`:
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -377,6 +407,17 @@ public class WebConfig implements WebMvcConfigurer {
 }
 ```
 
+<dl class="worked">
+  <dt>Qué es exactamente un «origen»</dt>
+  <dd>La terna <strong>esquema + host + puerto</strong>. <code>http://localhost:5500</code> y <code>http://127.0.0.1:5500</code> son orígenes <strong>distintos</strong> aunque apunten a la misma máquina, y <code>http://localhost:5500</code> y <code>https://localhost:5500</code> también. Por eso la lista de arriba trae los dos: es el motivo número uno de que «a mí me funciona y a ti no».</dd>
+  <dt>Por qué <code>addMapping("/api/**")</code> y no <code>"/**"</code></dt>
+  <dd>Porque solo tu API necesita ser consumida desde otro origen. Abrir la aplicación entera incluiría rutas que no tienen por qué estar expuestas. La regla es la misma que en cualquier permiso: el ámbito más estrecho que haga el trabajo.</dd>
+  <dt><code>exposedHeaders("Location")</code>, la línea que parece sobrar</dt>
+  <dd>El navegador solo deja leer a JavaScript un puñado de cabeceras «seguras». Tu <code>Location</code> del <code>201 Created</code> llega en la respuesta —lo verás en DevTools— pero el cliente no la encuentra si no la declaras aquí. Es un fallo desconcertante porque la petición ha ido bien.</dd>
+  <dt><code>maxAge(3600)</code></dt>
+  <dd>Sin esto, el navegador lanza un <code>OPTIONS</code> extra <strong>antes de cada</strong> petición: duplicas el número de viajes. Con la caché de <em>preflight</em>, el navegador pregunta una vez por hora. Ojo al depurar: si cambias la configuración y parece que no surte efecto, es esta caché.</dd>
+</dl>
+
 <p class="stage">Paso 2 · Externalizar los orígenes en application.properties</p>
 
 Configuramos los orígenes permitidos en el archivo de propiedades para poder adaptarlos según el entorno (desarrollo, pruebas o producción):
@@ -385,6 +426,11 @@ Configuramos los orígenes permitidos en el archivo de propiedades para poder ad
 # Orígenes web autorizados para interactuar con la API
 app.cors.allowed-origins=http://localhost:5500,http://127.0.0.1:5500
 ```
+
+<div class="rule">
+  <p class="rule-label">Por qué esto no se escribe a fuego en el código</p>
+  <p>El origen del cliente cambia con el entorno: <code>:5500</code> en tu portátil, <code>:4200</code> cuando llegue Angular en la UD12, y un dominio real el día del despliegue. Si la lista está dentro de una clase Java, cada entorno exige recompilar. En <code>application.properties</code> —y mejor aún, como variable de entorno— es configuración, que es lo que es.</p>
+</div>
 
 ### La comprobación · Verificar el Preflight en DevTools
 
@@ -396,13 +442,55 @@ app.cors.allowed-origins=http://localhost:5500,http://127.0.0.1:5500
      `Access-Control-Allow-Origin: http://localhost:5500`
 5. Abre la consola de JavaScript: 0 advertencias, 0 errores.
 
-### Ahora tú · Habilitar CORS para un cliente en un nuevo puerto
+<p class="stage">Comprobación 2 · Cazar el preflight, que hasta ahora no habías visto</p>
 
-Simula la llegada de un equipo de desarrollo frontend que trabaja con Angular o React en el puerto 3000:
+Un `GET` sencillo no dispara *preflight*: el navegador lo considera una «petición simple» y va directo. Para verlo hay que provocarlo.
+
+1. En DevTools → Network, marca la casilla **Preserve log** y filtra por `Fetch/XHR`.
+2. Desde tu página, lanza un `POST` con `Content-Type: application/json` (el botón de crear proyecto).
+3. Ahora sí aparecen **dos** líneas para una sola operación:
+
+   | # | Método | Ruta | Estado | Qué es |
+   | :--- | :--- | :--- | :--- | :--- |
+   | 1 | `OPTIONS` | `/api/v1/proyectos` | `200` | El navegador preguntando «¿me dejas?» |
+   | 2 | `POST` | `/api/v1/proyectos` | `201` | La petición de verdad, ya autorizada |
+
+4. Pincha la primera y busca en *Request Headers* la cabecera `Access-Control-Request-Method: POST`, y en *Response Headers* la respuesta de Spring: `Access-Control-Allow-Methods`.
+5. **Lo importante:** ese `OPTIONS` lo envía el navegador solo. Tú no lo has programado y tu controlador no lo atiende. Y tu backend nunca ejecutó la lógica del `POST` hasta que el navegador dio el visto bueno.
+
+<div class="rule">
+  <p class="rule-label">Qué convierte una petición en «no simple»</p>
+  <p>Basta con cualquiera de estas tres cosas: un método distinto de <code>GET</code>, <code>POST</code> o <code>HEAD</code>; un <code>Content-Type</code> que no sea de formulario o texto plano —<code>application/json</code> lo es—; o una cabecera propia como <code>Authorization</code>.</p>
+  <p>Es decir: en cuanto tu API empiece a recibir JSON o tokens, <strong>toda</strong> escritura llevará su <em>preflight</em> por delante. Conviene verlo hoy, con una página de veinte líneas, y no en la UD9 con seguridad de por medio.</p>
+</div>
+
+### Si algo no sale como dice el guion
+
+| Mensaje en la consola del navegador | Qué significa de verdad | Qué mirar |
+| :--- | :--- | :--- |
+| `No 'Access-Control-Allow-Origin' header is present` | Spring respondió, pero sin autorizar tu origen | Compara letra a letra el origen de tu página con el de `application.properties`, puerto incluido |
+| `must not be the wildcard '*' when credentials mode is 'include'` | Comodín más credenciales | Enumera los orígenes, o quita `allowCredentials(true)` si no lo necesitas |
+| El `OPTIONS` responde `403` | La ruta del *preflight* no está permitida | Con Spring Security aún sin instalar esto no debería pasar; si pasa, revisa el `addMapping` |
+| Cambias la configuración y no surte efecto | La caché del *preflight* | `maxAge` es de una hora: recarga con `Ctrl+Shift+R` o desmarca la caché en DevTools |
+| Funciona en tu cliente HTTP y falla en el navegador | Es CORS, por definición | Postman y Bruno no aplican la política de mismo origen: esa asimetría es el diagnóstico |
+| `Failed to fetch` sin más detalle | El servidor no llegó a responder | Comprueba que la aplicación está arrancada y que el puerto es el correcto: esto no es CORS |
+
+### Ahora tú · Convertirte en el equipo de frontend
 
 1. Añade `http://localhost:3000` a la lista de orígenes en `application.properties`.
-2. Reinicia la aplicación y comprueba que ambos orígenes (`5500` y `3000`) son aceptados.
-3. Prueba a añadir temporalmente un origen no autorizado (por ejemplo `http://localhost:9999`) y observa en DevTools cómo el navegador vuelve a bloquearlo.
+2. Reinicia y comprueba que los tres orígenes (`5500`, `127.0.0.1:5500` y `3000`) son aceptados.
+3. Añade temporalmente `http://localhost:9999` y observa cómo el navegador vuelve a bloquearlo. Copia el mensaje exacto en tu cuaderno: es el que te vas a encontrar en la UD12 con Angular.
+4. **Lee la cabecera `Location`:** haz que tu página, tras crear un proyecto, muestre la URL del recurso recién creado leyendo esa cabecera de la respuesta. Comprueba que llega vacía, quita `exposedHeaders("Location")` de la configuración para confirmar que era eso, y vuelve a ponerlo. Es un fallo que se busca durante horas si no lo has visto antes.
+5. **Diagnóstico a tres bandas:** por cada uno de estos tres fallos, di si el problema es del cliente, del servidor o del navegador, y cómo lo has sabido:
+   * La página muestra la lista vacía y la consola no dice nada.
+   * La consola dice `blocked by CORS policy` pero la pestaña Network muestra que el servidor respondió `200`.
+   * El servidor responde `404` y la página se queda en blanco.
+6. Escribe en tres líneas, con tus palabras, por qué CORS **no** protege tu API. Si la respuesta no menciona que cualquiera puede llamarla desde fuera de un navegador, vuelve a leer el primer apartado de la sesión: es la idea que hay que llevarse a la UD9.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Has visto el par <code>OPTIONS</code> + <code>POST</code> en DevTools con tus propios ojos; sabes provocar y reconocer un bloqueo de CORS; tu página lee la cabecera <code>Location</code>; y puedes explicar por qué la misma petición pasa desde tu cliente HTTP y no desde el navegador.</dd>
+</dl>
 
 ### Reto · La incompatibilidad entre credenciales y comodines
 
@@ -413,8 +501,10 @@ Investiga y responde con criterio técnico:
 1. ¿Qué vulnerabilidad crítica sufrirían los usuarios si un navegador permitiera `Access-Control-Allow-Origin: *` combinado con el envío de cookies de sesión autenticadas (`withCredentials: true`)?
 2. ¿Por qué Spring Boot lanza una excepción al arrancar si detectas que has configurado simultáneamente `allowedOrigins("*")` y `allowCredentials(true)`?
 
-> [!NOTE]
-> Si en la evaluación se solicita una justificación de la configuración de CORS y políticas de orígenes, el formato de entrega de texto es siempre un **documento en PDF** (`informe-cors.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita una justificación de la configuración de CORS y políticas de orígenes, el formato de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-cors.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Error de CORS reproducido en el navegador y comprendido como una restricción de cliente (SOP).</span></div>
@@ -427,9 +517,9 @@ Investiga y responde con criterio técnico:
   <ul class="checklist">
     <li>Se distingue con precisión por qué una petición funciona en Postman pero falla en un navegador.</li>
     <li>Se identifican los tres componentes de un origen (Esquema, Dominio y Puerto).</li>
-    <li>La configuración de CORS se realiza de forma centralizada sin abusar de comodines universales (`*`).</li>
-    <li>Las peticiones Preflight (`OPTIONS`) se comprenden y se inspeccionan en DevTools.</li>
-    <li>Las cabeceras de respuesta `Access-Control-Allow-Origin` y `ExposedHeaders` están verificadas.</li>
+    <li>La configuración de CORS se realiza de forma centralizada sin abusar de comodines universales (<code>*</code>).</li>
+    <li>Las peticiones Preflight (<code>OPTIONS</code>) se comprenden y se inspeccionan en DevTools.</li>
+    <li>Las cabeceras de respuesta <code>Access-Control-Allow-Origin</code> y <code>ExposedHeaders</code> están verificadas.</li>
   </ul>
 </div>
 
@@ -438,7 +528,7 @@ Investiga y responde con criterio técnico:
   <ol>
     <li>¿Por qué dos URLs con distinta numeración de puerto (5500 y 8080) se consideran de distinto origen?</li>
     <li>¿Qué método HTTP utiliza el navegador para la petición de sondeo previa (*Preflight*)?</li>
-    <li>¿Por qué la cabecera <code>Access-Control-Expose-Headers</code> es necesaria para que JavaScript lea la cabecera `Location`?</li>
+    <li>¿Por qué la cabecera <code>Access-Control-Expose-Headers</code> es necesaria para que JavaScript lea la cabecera <code>Location</code>?</li>
     <li>¿Qué riesgo de seguridad previene la Política del Mismo Origen en los navegadores web?</li>
   </ol>
 </div>
@@ -457,7 +547,7 @@ Investiga y responde con criterio técnico:
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> el método de diagnóstico de tres capas (Cliente JS, Red/Navegador y Servidor Spring Boot) para aislar fallos de integración, la gestión de formularios con <code>event.preventDefault()</code> y la traducción de errores RFC 7807 a mensajes de interfaz legibles.</li>
-    <li><strong>2. Haz:</strong> completa el cliente web con un formulario para dar de alta proyectos (`POST`), actualizar la lista en tiempo real ante códigos 201 y resaltar campos con mensajes de error ante códigos 400.</li>
+    <li><strong>2. Haz:</strong> completa el cliente web con un formulario para dar de alta proyectos (<code>POST</code>), actualizar la lista en tiempo real ante códigos 201 y resaltar campos con mensajes de error ante códigos 400.</li>
     <li><strong>3. Comprueba:</strong> ejecutas el ciclo completo de lectura y escritura en el navegador, provocas intencionadamente tres fallos distintos y verificas que el sistema los diagnostica con precisión.</li>
   </ol>
 </div>
@@ -466,8 +556,8 @@ Investiga y responde con criterio técnico:
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Cuando un usuario hace clic en el botón de guardar de un formulario y la pantalla no reacciona, ¿cuáles son los tres lugares exactos donde debes mirar antes de tocar una sola línea de código?</li>
-    <li>¿Por qué es imprescindible llamar a <code>event.preventDefault()</code> dentro del evento `submit` de un formulario HTML al comunicarse con una API REST?</li>
-    <li>Si la API responde con código `400 Bad Request` y formato RFC 7807, ¿cómo puede el frontend saber qué campo concreto falló la validación?</li>
+    <li>¿Por qué es imprescindible llamar a <code>event.preventDefault()</code> dentro del evento <code>submit</code> de un formulario HTML al comunicarse con una API REST?</li>
+    <li>Si la API responde con código <code>400 Bad Request</code> y formato RFC 7807, ¿cómo puede el frontend saber qué campo concreto falló la validación?</li>
   </ol>
 </div>
 
@@ -611,15 +701,33 @@ Para dominar el diagnóstico de integración, vamos a **provocar intencionadamen
 | **3 · El conflicto de duplicado** | Volvemos a escribir `"App Clientes"` idéntico. | Petición `POST` con código `409 Conflict`. | Mensaje ámbar *"Ya existe un proyecto con ese nombre"*. |
 | **4 · El servidor apagado** | Detenemos Spring Boot y pulsamos guardar. | Petición `(failed)` en rojo con tipo `net::ERR_CONNECTION_REFUSED`. | Mensaje rojo *"No se pudo contactar con el servidor"*. |
 
-### Ahora tú · Borrado interactivo con DELETE
+### Si algo no sale como dice el guion
 
-Añade la funcionalidad de borrado directo desde la página web:
+| Síntoma | Dónde está el problema | Qué mirar |
+| :--- | :--- | :--- |
+| `415 Unsupported Media Type` | Cliente | Falta la cabecera `Content-Type: application/json` en las opciones del `fetch` |
+| `400` con `JSON parse error` | Cliente | Estás enviando el objeto tal cual en lugar de convertirlo a texto JSON |
+| `400` con la lista de campos inválidos | Servidor, y funcionando bien | Es tu Bean Validation de la UD3 haciendo su trabajo: muestra el `detail` en pantalla |
+| El `POST` responde `201` pero la lista no cambia | Cliente | Has creado el recurso pero no has vuelto a pintar la lista |
+| `204` y el elemento sigue en pantalla | Cliente | El `204` no trae cuerpo: no intentes hacer `res.json()` con él, reventaría |
+| El `OPTIONS` aparece y el `POST` no | Navegador | El *preflight* fue rechazado: revisa la configuración de la sesión 50 |
 
-1. En cada elemento de la lista de proyectos, añade un botón rojo *«Eliminar»*.
-2. Al pulsar eliminar, pide confirmación nativa con `confirm('¿Seguro que deseas eliminar este proyecto?')`.
-3. Si el usuario acepta, envía la petición:
-   `fetch('http://localhost:8080/api/v1/proyectos/' + id, { method: 'DELETE' })`
-4. Comprueba que si la API responde con código `204 No Content`, el elemento `<li>` se elimina del DOM inmediatamente con `item.remove()`.
+### Ahora tú · Cerrar el ciclo completo desde el navegador
+
+1. En cada proyecto de la lista, añade un botón *«Eliminar»* que pida confirmación antes de lanzar un `DELETE`.
+2. Si la API responde `204 No Content`, quita el elemento de la pantalla. **No intentes leer el cuerpo**: un `204` no tiene, y hacerlo lanza un error de análisis que parece un fallo del servidor y no lo es.
+3. Encadena el ciclo entero sin recargar la página: crear un proyecto, verlo aparecer en la lista, añadirle una tarea y borrarlo. Cuatro verbos HTTP, una sola pantalla.
+4. Provoca a propósito estos tres errores y comprueba que **cada uno se ve distinto** en pantalla:
+   * Nombre vacío al crear → `400`, con el mensaje de validación del servidor.
+   * Borrar un proyecto que ya no existe → `404`.
+   * Backend apagado → fallo de red, que no trae código de estado ninguno.
+5. Escribe al lado de cada uno quién tiene la culpa: el usuario, tu cliente, tu servidor o la red. Esa clasificación es la competencia real de esta sesión, y es lo que evita las tardes perdidas discutiendo de quién es el fallo.
+6. Guarda la carpeta `cliente` dentro del repositorio del proyecto, junto a un `README` de tres líneas que diga cómo servirla y contra qué puerto habla. En la UD9 vas a volver a esta página para añadirle el token.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Una sola pantalla ejecuta <code>GET</code>, <code>POST</code>, <code>DELETE</code> y el subrecurso de tareas sin recargarse; los tres tipos de error se distinguen a simple vista; y sabes decir, ante cualquiera de ellos, en qué capa está el problema y con qué evidencia lo has determinado.</dd>
+</dl>
 
 ### Reto · Diagnóstico forense de integración cliente-servidor
 
@@ -630,11 +738,13 @@ Analiza estas tres situaciones y determina con precisión técnica en qué capa 
 2. **Situación B:** El usuario pulsa el botón, en la pestaña Red la petición aparece con estado `(canceled)` y en la consola de JavaScript salta `TypeError: Failed to fetch`. La terminal de Spring Boot está en silencio absoluto. ¿Qué ha ocurrido?
 3. **Situación C:** El usuario pulsa el botón, en la pestaña Red el `POST` devuelve `201 Created` y el cuerpo contiene el nuevo recurso con `id: 5`, pero la pantalla del navegador no muestra ningún cambio y el nuevo proyecto no aparece en la lista. ¿En qué línea del cliente está el fallo?
 
-> [!NOTE]
-> Si en la evaluación se solicita una memoria o informe de integración técnica cliente-servidor, el formato oficial de entrega de texto es siempre un **documento en PDF** (`diagnostico-integracion.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita una memoria o informe de integración técnica cliente-servidor, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>diagnostico-integracion.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Formulario de alta conectado por `POST` con `JSON.stringify` y actualización de lista ante 201.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Formulario de alta conectado por <code>POST</code> con <code>JSON.stringify</code> y actualización de lista ante 201.</span></div>
   <div><strong>Si lo tienes</strong><span>Manejo granular de errores RFC 7807 (400 y 409) con mensajes visuales en la interfaz y borrado con DELETE.</span></div>
   <div><strong>Reto</strong><span>Tabla de diagnóstico forense de las 3 situaciones resuelta y argumentada a nivel de protocolos.</span></div>
 </div>
@@ -642,8 +752,8 @@ Analiza estas tres situaciones y determina con precisión técnica en qué capa 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 51</p>
   <ul class="checklist">
-    <li>El ciclo completo de lectura (`GET`), creación (`POST`) y borrado (`DELETE`) funciona desde el navegador.</li>
-    <li>El formulario utiliza `event.preventDefault()` para evitar la recarga destructiva del navegador.</li>
+    <li>El ciclo completo de lectura (<code>GET</code>), creación (<code>POST</code>) y borrado (<code>DELETE</code>) funciona desde el navegador.</li>
+    <li>El formulario utiliza <code>event.preventDefault()</code> para evitar la recarga destructiva del navegador.</li>
     <li>Los errores de validación emitidos por Bean Validation se procesan y muestran bajo cada input.</li>
     <li>El método de diagnóstico en tres capas (Consola JS, Red DevTools y Logs Spring Boot) se aplica con fluidez.</li>
     <li>La aplicación web informa con claridad al usuario ante cualquier caída o fallo de conexión.</li>
@@ -653,7 +763,7 @@ Analiza estas tres situaciones y determina con precisión técnica en qué capa 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Qué ocurre en una página web si olvidas invocar `event.preventDefault()` en el submit de un formulario?</li>
+    <li>¿Qué ocurre en una página web si olvidas invocar <code>event.preventDefault()</code> en el submit de un formulario?</li>
     <li>¿Por qué una petición fallida con error 500 debe diagnosticarse mirando la terminal de Spring Boot y no solo el navegador?</li>
     <li>¿Qué código de estado HTTP devuelve habitualmente una operación DELETE exitosa que no retorna contenido?</li>
     <li>¿Qué método de JavaScript convierte un objeto en memoria en una cadena de texto JSON para enviarla por red?</li>
@@ -760,13 +870,13 @@ Entender la diferencia entre cómo procesa el tráfico un proceso de escritorio 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría de integración web · criterios de producción</p>
   <ul class="checklist">
-    <li>La página web (`index.html`) se sirve desde un servidor HTTP local y consume la API real sin depender de ningún framework.</li>
-    <li>La configuración de CORS en Spring Boot está centralizada en una clase `WebConfig` que implementa `WebMvcConfigurer`.</li>
-    <li>Los orígenes autorizados están explícitamente declarados y externalizados en `application.properties` sin comodines universales (`*`).</li>
-    <li>La cabecera `Location` está expuesta mediante `exposedHeaders("Location")` para permitir su lectura en el cliente.</li>
-    <li>Las peticiones Preflight (`OPTIONS`) son respondidas con éxito (código 200 o 204) por el backend.</li>
-    <li>El cliente maneja el ciclo completo de lectura (`GET`), creación (`POST`) y borrado (`DELETE`) mediante `fetch()` asíncrono.</li>
-    <li>Los formularios capturan el evento con `event.preventDefault()` y transmiten el cuerpo serializado con `JSON.stringify()`.</li>
+    <li>La página web (<code>index.html</code>) se sirve desde un servidor HTTP local y consume la API real sin depender de ningún framework.</li>
+    <li>La configuración de CORS en Spring Boot está centralizada en una clase <code>WebConfig</code> que implementa <code>WebMvcConfigurer</code>.</li>
+    <li>Los orígenes autorizados están explícitamente declarados y externalizados en <code>application.properties</code> sin comodines universales (<code>*</code>).</li>
+    <li>La cabecera <code>Location</code> está expuesta mediante <code>exposedHeaders("Location")</code> para permitir su lectura en el cliente.</li>
+    <li>Las peticiones Preflight (<code>OPTIONS</code>) son respondidas con éxito (código 200 o 204) por el backend.</li>
+    <li>El cliente maneja el ciclo completo de lectura (<code>GET</code>), creación (<code>POST</code>) y borrado (<code>DELETE</code>) mediante <code>fetch()</code> asíncrono.</li>
+    <li>Los formularios capturan el evento con <code>event.preventDefault()</code> y transmiten el cuerpo serializado con <code>JSON.stringify()</code>.</li>
     <li>Los errores de validación de Bean Validation (RFC 7807) se procesan en el cliente y se muestran junto a los campos correspondientes.</li>
     <li>La consola de JavaScript del navegador no arroja advertencias ni errores en rojo de CORS ni de promesas no capturadas.</li>
     <li>El estudiante es capaz de diagnosticar en menos de un minuto si un fallo reside en el script cliente, en la red o en el servidor Spring Boot.</li>

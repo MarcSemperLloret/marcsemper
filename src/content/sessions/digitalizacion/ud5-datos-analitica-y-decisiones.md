@@ -30,7 +30,7 @@ priorKnowledge:
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> Cómo explorar un dataset real en bruto, identificar tipos de variables y detectar anomalías de calidad.</li>
-    <li><strong>2. Haz:</strong> Carga `online_retail.csv` con pandas, calcula estadísticas descriptivas e inspecciona valores nulos y negativos.</li>
+    <li><strong>2. Haz:</strong> Carga <code>online_retail.csv</code> con pandas, calcula estadísticas descriptivas e inspecciona valores nulos y negativos.</li>
     <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
   </ol>
 </div>

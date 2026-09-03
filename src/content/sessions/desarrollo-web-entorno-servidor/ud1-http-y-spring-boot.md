@@ -206,7 +206,7 @@ Hay decenas. Estas cinco explican casi todo lo que verás este curso:
 | `Content-Type` | Ambas | En qué formato está el cuerpo: `application/json`, `text/html`… |
 | `Content-Length` | Ambas | Cuántos bytes ocupa el cuerpo |
 | `Accept` | Petición | Qué formato le gustaría recibir al cliente |
-| `Authorization` | Petición | Quién dice ser quien llama. Lo trabajaremos en la UD8 |
+| `Authorization` | Petición | Quién dice ser quien llama. Lo trabajaremos en la UD9 |
 
 ### La respuesta, por dentro
 
@@ -316,7 +316,7 @@ Detente un segundo en ese número. Tú has escrito **una** dirección y has pedi
 
 <div class="rule">
   <p class="rule-label">Idea que hay que retener</p>
-  <p>Una página no se descarga: se <strong>reconstruye</strong> a partir de muchas respuestas separadas, que además llegan en desorden. Cuando en la UD9 hablemos de rendimiento y de <em>timeouts</em>, este será el punto de partida.</p>
+  <p>Una página no se descarga: se <strong>reconstruye</strong> a partir de muchas respuestas separadas, que además llegan en desorden. Cuando en la UD10 hablemos de rendimiento y de <em>timeouts</em> al llamar a servicios ajenos, este será el punto de partida.</p>
 </div>
 
 <p class="stage">Paso 3 · Disecciona la primera fila</p>
@@ -671,7 +671,7 @@ gestor/
 | `src/main/resources` | Configuración y archivos que no son código |
 | `application.properties` | Los ajustes de la aplicación. Hoy está vacío |
 | `static/` | Archivos servidos tal cual: imágenes, CSS. Este curso apenas la usa |
-| `src/test/java` | Las pruebas automáticas. Llegan en la UD10 |
+| `src/test/java` | Las pruebas automáticas. Llegan en la UD4 |
 
 #### El `pom.xml`, sin miedo
 
@@ -1234,7 +1234,7 @@ public String incidenciaDeProyecto(
 | `/incidencias/abierta` | No | Parece una incidencia llamada «abierta» |
 | `/proyectos/7/incidencias?prioridad=alta` | Sí | Identifica el proyecto y filtra sus incidencias |
 
-Esa última fila combina las dos ideas, y es la forma que tendrá casi toda tu API a partir de la UD7.
+Esa última fila combina las dos ideas, y es la forma que tendrá casi toda tu API a partir de la UD3.
 
 ### Agrupar rutas con `@RequestMapping`
 
@@ -1279,7 +1279,7 @@ Un `@GetMapping` sin argumento significa «la ruta de la clase, tal cual».
   <summary>Curiosidad · qué pasa si dos rutas encajan a la vez</summary>
   <p>Imagina que añades <code>/usuarios/nuevo</code> y ya tienes <code>/usuarios/{id}</code>. Una petición a <code>/usuarios/nuevo</code> encaja con las dos.</p>
   <p>Spring no elige al azar ni por orden de escritura: prefiere siempre <strong>la ruta más específica</strong>, y un texto literal es más específico que una variable. Gana <code>/usuarios/nuevo</code>.</p>
-  <p>Aun así, mezclar identificadores y palabras en el mismo nivel envejece mal. Cuando lleguemos al diseño REST de la UD7 veremos por qué se evita.</p>
+  <p>Aun así, mezclar identificadores y palabras en el mismo nivel envejece mal. Cuando lleguemos al diseño REST de la UD3 veremos por qué se evita.</p>
 </details>
 
 ### Práctica guiada · Las rutas del gestor

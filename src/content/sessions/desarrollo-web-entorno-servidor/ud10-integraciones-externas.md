@@ -29,6 +29,11 @@ priorKnowledge:
   <p>Andamiaje muy bajo. El profesorado proporciona al comenzar la unidad el contrato del servicio externo y los criterios de aceptación; el diseño del adaptador y de la degradación queda en manos del alumnado.</p>
 </div>
 
+<div class="rule">
+  <p class="rule-label">Por qué esta unidad llega ahora y no antes</p>
+  <p>Hasta aquí tu backend siempre ha sido el que responde. Al llamar a otro servicio pasa a ser también el que pregunta, y eso solo se puede enseñar cuando ya tienes con qué protegerte: los <strong>DTO</strong> de la UD3 son lo que evita que un contrato ajeno se cuele en tu modelo, el <strong>manejador de errores</strong> de la UD3 es donde aterriza un timeout, la <strong>capa de servicio</strong> de la UD4 es la que decide qué hacer cuando el proveedor no contesta, y la <strong>seguridad</strong> de la UD9 es la que decide quién puede subir un fichero.</p>
+</div>
+
 ## Semana 21 · Consumir sin acoplarse
 
 ## Sesión 61 · Consumir una API externa
@@ -92,12 +97,47 @@ Para aprender integración utilizaremos la API pública de **Open-Meteo** ([open
 
 ### Paso a paso guiado · Configuración y primer cliente con RestClient
 
-<p class="stage">Paso 1 · Crear la configuración del cliente RestClient</p>
+<p class="stage">Paso 1 · Llamar a la API a mano, antes de escribir Java</p>
+
+Antes de programar nada, mira con tus ojos lo que vas a consumir. En tu cliente HTTP, lanza directamente:
+
+```text
+GET https://api.open-meteo.com/v1/forecast?latitude=39.47&longitude=-0.38&current_weather=true
+```
+
+Recibirás algo parecido a esto:
+
+```json
+{
+  "latitude": 39.5,
+  "longitude": -0.375,
+  "generationtime_ms": 0.0349,
+  "utc_offset_seconds": 0,
+  "timezone": "GMT",
+  "elevation": 16.0,
+  "current_weather": {
+    "temperature": 18.4,
+    "windspeed": 11.2,
+    "winddirection": 91,
+    "weathercode": 3,
+    "is_day": 1,
+    "time": "2026-03-12T09:00"
+  }
+}
+```
+
+Anota tres cosas, porque las tres condicionan todo lo que viene después:
+
+1. **El proveedor decide los nombres.** `windspeed` va en una palabra, `current_weather` en `snake_case`, `weathercode` es un número y no un texto. Tú no eliges nada de eso y puede cambiar sin avisarte.
+2. **Viene mucho más de lo que necesitas.** De ese objeto entero, a tu gestor de proyectos le interesan dos campos.
+3. **Tarda.** Fíjate en el tiempo que marca tu cliente HTTP: unas décimas de segundo. Comparado con los milisegundos de una consulta a tu PostgreSQL local, es una eternidad, y ese tiempo se lo vas a añadir a cada petición que lo use.
+
+<p class="stage">Paso 2 · Crear la configuración del cliente RestClient</p>
 
 Configuramos un `@Bean` de `RestClient` en una clase de configuración:
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -123,12 +163,12 @@ public class RestClientConfig {
 }
 ```
 
-<p class="stage">Paso 2 · Implementar el servicio cliente de integración</p>
+<p class="stage">Paso 3 · Implementar el servicio cliente de integración</p>
 
 Creamos un servicio que efectúa la llamada saliente mediante la API fluida de `RestClient`:
 
 ```java
-package com.empresa.proyecto.integration;
+package com.ejemplo.gestor.integration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,12 +207,12 @@ public class ClimaExternoClient {
 }
 ```
 
-<p class="stage">Paso 3 · Exponer un endpoint en el controlador para probar la llamada</p>
+<p class="stage">Paso 4 · Exponer un endpoint en el controlador para probar la llamada</p>
 
 ```java
-package com.empresa.proyecto.controller;
+package com.ejemplo.gestor.controller;
 
-import com.empresa.proyecto.integration.ClimaExternoClient;
+import com.ejemplo.gestor.integration.ClimaExternoClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -199,6 +239,17 @@ public class ProyectoClimaController {
 }
 ```
 
+<dl class="worked">
+  <dt>Por qué el <code>RestClient</code> es un <code>@Bean</code> y no un <code>new</code></dt>
+  <dd>Por lo mismo por lo que en la UD4 dejaste de hacer <code>new TareaRepositorio()</code>: el destino, las cabeceras y —en la sesión 63— los timeouts son configuración, y la configuración se declara una vez en un sitio y se inyecta. Además te permitirá sustituirlo por un doble en los tests sin tocar el servicio.</dd>
+  <dt>Por qué de momento devolvemos <code>String</code></dt>
+  <dd>Es deliberado y dura una sola sesión. Hoy interesa ver el JSON ajeno tal cual llega, con todos sus campos y sus nombres raros. En la sesión 62 ese <code>String</code> se convierte en un DTO propio, y entenderás la diferencia mucho mejor habiendo visto antes el volcado crudo.</dd>
+  <dt><code>.retrieve().body(...)</code></dt>
+  <dd><code>retrieve()</code> ejecuta la petición y <code>body()</code> deserializa la respuesta al tipo que le pidas. Con <code>String</code> no deserializa nada: te entrega el texto. Ojo, <code>retrieve()</code> lanza excepción ante un <code>4xx</code> o <code>5xx</code> remoto, y eso hoy todavía no lo estamos tratando: es justo el tema de la sesión 63.</dd>
+  <dt>La cabecera <code>User-Agent</code></dt>
+  <dd>No es decorativa. Muchos proveedores rechazan o limitan peticiones anónimas, y algunos (GitHub, sin ir más lejos) devuelven <code>403</code> si no la envías. Identificar tu cliente es una cortesía que además evita bloqueos.</dd>
+</dl>
+
 ### La comprobación · Inspección forense de la petición saliente en Bruno
 
 1. **Arranca la aplicación Spring Boot.**
@@ -213,12 +264,32 @@ public class ProyectoClimaController {
    ```
    Comprueba cómo tu backend tardó más de 200 ms: ese tiempo no fue CPU local, fue el tiempo que tardó el paquete IP en viajar por Internet, cruzar routers, ser procesado por el proveedor remoto y volver.
 
+5. **Mide el coste de la integración:** lanza `GET /api/v1/proyectos/1` (el endpoint normal, sin clima) y compara el tiempo que marca tu cliente HTTP con el de `/clima-raw`. La diferencia es lo que cuesta salir a Internet, y es el número que justifica toda la sesión 63.
+
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| `UnknownHostException: api.open-meteo.com` | No hay salida a Internet | Proxy del centro o firewall. Comprueba primero que la URL del paso 1 funciona en el navegador |
+| `404 Not Found` desde Open-Meteo | La ruta está duplicada o incompleta | Si el `baseUrl` ya trae `https://api.open-meteo.com`, el `path` debe ser `/v1/forecast`, ni `/forecast` ni la URL entera |
+| `Parameter 'openMeteoRestClient' not found` | Hay más de un bean `RestClient` | Inyecta por nombre exacto, o marca uno con `@Qualifier` |
+| La respuesta llega vacía o `null` | Faltan parámetros obligatorios | Open-Meteo exige `latitude` y `longitude`; sin `current_weather=true` no devuelve el bloque que buscas |
+| Tarda muchísimo y acaba colgado | No hay timeout configurado | Es correcto: todavía no lo has puesto. Ese es exactamente el problema de la sesión 63 |
+
 ### Ahora tú · Parametrizar la ubicación de la sede del proyecto
 
 En lugar de pasar las coordenadas por parámetros de query en cada llamada:
-1. Añade a tu entidad `Proyecto` dos campos persistentes: `latitud` (Double) y `longitud` (Double).
+
+1. Añade a tu entidad `Proyecto` dos campos persistentes: `latitud` (Double) y `longitud` (Double). Recuerda que con `ddl-auto=update` Hibernate añade las columnas solo, pero las filas que ya existían quedan a `null`: actualízalas con un `UPDATE` a mano o dales valor por defecto.
 2. Modifica el endpoint para que consulte el proyecto en base de datos (`ProyectoRepository.findById(id)`) y utilice automáticamente sus coordenadas geográficas reales.
-3. Prueba en Bruno con dos proyectos distintos: uno situado en Valencia (39.47, -0.38) y otro en Madrid (40.41, -3.70), verificando que cada uno devuelve el tiempo atmosférico de su propia ubicación.
+3. Decide qué debe pasar si un proyecto **no tiene coordenadas**. No hay respuesta única, pero sí una mala: reventar con un `NullPointerException`. Elige entre devolver `400` explicando que ese proyecto no tiene sede geográfica, o no llamar a Open-Meteo y devolver el proyecto sin clima. Escribe en tu cuaderno cuál eliges y por qué.
+4. Prueba con dos proyectos distintos: uno en Valencia (39.47, -0.38) y otro en Madrid (40.41, -3.70), verificando que cada uno devuelve el tiempo de su propia ubicación, y un tercero sin coordenadas para comprobar la decisión del punto 3.
+5. Añade las tres peticiones a una carpeta `10-integraciones` de tu colección.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Dos proyectos con coordenadas distintas devuelven temperaturas distintas; el proyecto sin coordenadas responde lo que tú decidiste y no un <code>500</code>; y en los logs aparece una línea de inicio y una de fin con los milisegundos reales de cada llamada saliente.</dd>
+</dl>
 
 ### Reto · Consumir la API pública de GitHub para inspeccionar repositorios
 
@@ -229,8 +300,8 @@ Muchos proyectos de software tienen un repositorio de código asociado.
 3. Implementa un método que consulte un repositorio (por ejemplo, `spring-projects/spring-boot`) y devuelva el número de estrellas (`stargazers_count`) y si está archivado (`archived`).
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Bean `RestClient` configurado y llamada funcional a Open-Meteo recuperando el JSON de respuesta.</span></div>
-  <div><strong>Si lo tienes</strong><span>Coordenadas vinculadas a la entidad `Proyecto` y tiempo de latencia registrado en logs.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Bean <code>RestClient</code> configurado y llamada funcional a Open-Meteo recuperando el JSON de respuesta.</span></div>
+  <div><strong>Si lo tienes</strong><span>Coordenadas vinculadas a la entidad <code>Proyecto</code> y tiempo de latencia registrado en logs.</span></div>
   <div><strong>Reto</strong><span>Segundo cliente HTTP integrado consultando la API de repositorios de GitHub con cabeceras requeridas.</span></div>
 </div>
 
@@ -238,8 +309,8 @@ Muchos proyectos de software tienen un repositorio de código asociado.
   <p class="checkpoint-label">Checkpoint · fin de la sesión 61</p>
   <ul class="checklist">
     <li>Se comprende el rol dual del backend como servidor entrante y cliente HTTP saliente.</li>
-    <li>Se utiliza la API moderna `RestClient` de Spring Boot 3.2 en lugar de clientes obsoletos.</li>
-    <li>La URL base y las cabeceras por defecto (`Accept`, `User-Agent`) quedan centralizadas.</li>
+    <li>Se utiliza la API moderna <code>RestClient</code> de Spring Boot 3.2 en lugar de clientes obsoletos.</li>
+    <li>La URL base y las cabeceras por defecto (<code>Accept</code>, <code>User-Agent</code>) quedan centralizadas.</li>
     <li>Se observa y mide el impacto de la latencia de red en las peticiones hacia servicios remotos.</li>
     <li>El backend actúa con éxito como orquestador consumiendo datos en tiempo real de Internet.</li>
   </ul>
@@ -248,9 +319,9 @@ Muchos proyectos de software tienen un repositorio de código asociado.
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué Spring introdujo `RestClient` en Spring Boot 3.2 si ya existía `RestTemplate` y `WebClient`?</li>
-    <li>¿Qué método de `RestClient` se utiliza para iniciar una petición de tipo GET?</li>
-    <li>¿Por qué es una buena práctica definir siempre una cabecera `User-Agent` identificativa al invocar APIs de terceros?</li>
+    <li>¿Por qué Spring introdujo <code>RestClient</code> en Spring Boot 3.2 si ya existía <code>RestTemplate</code> y <code>WebClient</code>?</li>
+    <li>¿Qué método de <code>RestClient</code> se utiliza para iniciar una petición de tipo GET?</li>
+    <li>¿Por qué es una buena práctica definir siempre una cabecera <code>User-Agent</code> identificativa al invocar APIs de terceros?</li>
     <li>¿Qué componente de red provoca que una llamada a una API remota sea dos órdenes de magnitud más lenta que una consulta a PostgreSQL?</li>
   </ol>
 </div>
@@ -338,7 +409,7 @@ Si devuelves este JSON a tu cliente web o lo guardas tal cual en tu base de dato
 Creamos registros que representan exactamente la estructura que envía Open-Meteo. Usamos `@JsonIgnoreProperties(ignoreUnknown = true)` para que Jackson ignore de forma segura cualquier campo que no nos interese:
 
 ```java
-package com.empresa.proyecto.integration.dto;
+package com.ejemplo.gestor.integration.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -354,7 +425,7 @@ public record OpenMeteoResponse(
 Y el objeto anidado `CurrentWeatherExternal`:
 
 ```java
-package com.empresa.proyecto.integration.dto;
+package com.ejemplo.gestor.integration.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -369,12 +440,21 @@ public record CurrentWeatherExternal(
 ) {}
 ```
 
+<dl class="worked">
+  <dt><code>@JsonIgnoreProperties(ignoreUnknown = true)</code>, la anotación que evita que te rompan la aplicación desde fuera</dt>
+  <dd>Sin ella, Jackson lanza <code>UnrecognizedPropertyException</code> en cuanto el JSON trae un campo que tu <code>record</code> no declara. Y ese campo lo añade el proveedor cuando quiere, sin avisarte. Con ella, tu integración sobrevive a que Open-Meteo publique diez campos nuevos mañana.</dd>
+  <dt><code>@JsonProperty</code>: dónde muere el <code>snake_case</code> ajeno</dt>
+  <dd><code>current_weather</code> no es un nombre válido en tu código Java. <code>@JsonProperty("current_weather")</code> hace la traducción <strong>una sola vez, en la frontera</strong>. A partir de ahí, dentro de tu aplicación, el campo se llama <code>current</code> y nadie tiene que recordar cómo lo llamaba el proveedor.</dd>
+  <dt>Por qué estos DTO viven en <code>integration.dto</code> y no en <code>dto</code></dt>
+  <dd>Porque el paquete es documentación. Cualquiera que abra <code>integration.dto</code> sabe que lo de dentro no lo decides tú y que puede cambiar sin previo aviso. Si mezclas esas clases con las tuyas, en seis meses nadie sabrá cuáles se pueden refactorizar con libertad y cuáles están atadas a un contrato ajeno.</dd>
+</dl>
+
 <p class="stage">Paso 2 · Diseñar el DTO interno del Dominio</p>
 
 Este es el contrato que le pertenece a **nuestra aplicación**: nombres limpios, unidades explícitas y descripción humana:
 
 ```java
-package com.empresa.proyecto.dto;
+package com.ejemplo.gestor.dto;
 
 public record ClimaProyectoResponse(
     double temperaturaCelsius,
@@ -389,10 +469,10 @@ public record ClimaProyectoResponse(
 El adaptador interpreta los códigos numéricos del proveedor y genera nuestra regla de negocio:
 
 ```java
-package com.empresa.proyecto.integration;
+package com.ejemplo.gestor.integration;
 
-import com.empresa.proyecto.dto.ClimaProyectoResponse;
-import com.empresa.proyecto.integration.dto.OpenMeteoResponse;
+import com.ejemplo.gestor.dto.ClimaProyectoResponse;
+import com.ejemplo.gestor.integration.dto.OpenMeteoResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -437,10 +517,10 @@ public class ClimaAdapter {
 Modificamos el cliente para que deserialice directamente al DTO externo y devuelva el modelo interno mediante el adaptador:
 
 ```java
-package com.empresa.proyecto.integration;
+package com.ejemplo.gestor.integration;
 
-import com.empresa.proyecto.dto.ClimaProyectoResponse;
-import com.empresa.proyecto.integration.dto.OpenMeteoResponse;
+import com.ejemplo.gestor.dto.ClimaProyectoResponse;
+import com.ejemplo.gestor.integration.dto.OpenMeteoResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -493,12 +573,43 @@ Comprueba la diferencia:
 * Añadido valor de negocio real (`esFavorableParaTrabajoExterior`).
 * **Inmunidad garantizada:** Si Open-Meteo decide añadir 10 campos nuevos mañana, Jackson los ignorará en silencio y tu aplicación seguirá funcionando sin tocar ni una línea.
 
+<p class="stage">Comprobación 2 · Demostrar que la capa anticorrupción aguanta</p>
+
+La inmunidad de la que habla el punto anterior no es una promesa: se comprueba en dos minutos.
+
+1. Abre `CurrentWeatherExternal` y **borra** el componente `isDay`.
+2. Vuelve a lanzar la petición. Sigue funcionando: Jackson descarta el campo que ya no declaras.
+3. Ahora, en `OpenMeteoResponse`, quita la anotación `@JsonIgnoreProperties(ignoreUnknown = true)`.
+4. Lanza otra vez. **Ahora falla**, con `UnrecognizedPropertyException: Unrecognized field "generationtime_ms"`.
+5. Devuelve la anotación a su sitio.
+
+Acabas de ver, en tu propia aplicación, cómo un campo que a ti no te importa —y que ni siquiera pediste— puede tumbar tu backend. Esa línea es lo único que separa una integración robusta de una que se cae el día que el proveedor despliega.
+
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| Todos los campos llegan a `0.0` o `null` | Los nombres no coinciden | El JSON dice `windspeed`, en una palabra. Compara letra a letra con el volcado del paso 1 de la sesión 61 |
+| `UnrecognizedPropertyException` | Falta la anotación | `@JsonIgnoreProperties(ignoreUnknown = true)` en **cada** record externo, también en los anidados |
+| `current` llega `null` y peta el adaptador | Falta el `@JsonProperty` del anidado | `current_weather` no se mapea solo a `current` |
+| `Cannot construct instance ... no Creators` | Estás usando una clase, no un `record` | Con `record`, Jackson usa el constructor canónico. Con una clase necesitarías constructor vacío y setters |
+| El adaptador devuelve `null` y el controlador lanza `NullPointerException` | El `null` del adaptador no lo trata nadie | Es una decisión pendiente: la resuelve la sesión 63 con la degradación elegante |
+
 ### Ahora tú · Integrar el clima en la respuesta completa del proyecto
 
 Modifica `ProyectoResponse` (el DTO que devuelve `GET /api/v1/proyectos/{id}`):
+
 1. Añade un campo opcional `ClimaProyectoResponse clima`.
 2. En `ProyectoService.obtenerPorId(id)`, llama a `climaService.consultarClima(proyecto.getLatitud(), proyecto.getLongitud())` e incrusta el clima en la respuesta.
-3. Verifica con Bruno que al consultar los detalles de un proyecto, la respuesta contiene tanto los datos de la base de datos local (nombre, cliente, tareas) como el clima en tiempo real de su ubicación.
+3. Verifica que al consultar los detalles de un proyecto, la respuesta contiene tanto los datos de la base de datos local (nombre, cliente, tareas) como el clima en tiempo real de su ubicación.
+4. Amplía la regla de negocio del adaptador: añade a `ClimaProyectoResponse` un campo `String recomendacion` que devuelva `"Aplazar trabajo en exterior"` cuando no sea favorable y `"Condiciones adecuadas"` cuando sí lo sea. Fíjate en dónde estás poniendo esa regla: en **tu** adaptador, no en el DTO externo. Open-Meteo no sabe nada de obras.
+5. Repasa la sesión 45: `GET /api/v1/proyectos` devuelve una **lista paginada**. Si incrustas el clima también ahí, una página de 20 proyectos dispara 20 llamadas a Internet y tarda cuatro segundos. Decide qué haces —incrustarlo solo en el detalle, o solo cuando se pida con `?incluirClima=true`— y anótalo con su justificación. Es el mismo razonamiento del N+1 de la UD5, pero contra una red en lugar de contra una base de datos.
+6. Actualiza la documentación OpenAPI de la UD7: el nuevo campo `clima` necesita su `@Schema` con ejemplo, y el endpoint debe declarar que ese campo puede venir vacío.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>El JSON que devuelve tu API no contiene ni un solo nombre de campo de Open-Meteo; ningún <code>OpenMeteoResponse</code> sale del paquete <code>integration</code>; has decidido y justificado qué pasa con el listado paginado; y borrar un campo del DTO externo no rompe nada.</dd>
+</dl>
 
 ### Reto · Pruebas unitarias del Adaptador sin llamadas de red
 
@@ -510,8 +621,8 @@ Una de las enormes ventajas de la Capa Anticorrupción es que el mapeador puede 
    * Un viento de 55 km/h o un código 95 (tormenta) marca `esFavorableParaTrabajoExterior` en `false`.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>DTOs externos anotados con `@JsonIgnoreProperties` y deserialización automática con Jackson.</span></div>
-  <div><strong>Si lo tienes</strong><span>Adaptador `ClimaAdapter` desacoplando el modelo ajeno y traduciendo a `ClimaProyectoResponse`.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>DTOs externos anotados con <code>@JsonIgnoreProperties</code> y deserialización automática con Jackson.</span></div>
+  <div><strong>Si lo tienes</strong><span>Adaptador <code>ClimaAdapter</code> desacoplando el modelo ajeno y traduciendo a <code>ClimaProyectoResponse</code>.</span></div>
   <div><strong>Reto</strong><span>Suite de pruebas unitarias sobre el adaptador validando reglas de negocio climáticas sin red.</span></div>
 </div>
 
@@ -520,7 +631,7 @@ Una de las enormes ventajas de la Capa Anticorrupción es que el mapeador puede 
   <ul class="checklist">
     <li>Se erradica el antipatrón de propagar JSONs ajenos por el controlador y el dominio.</li>
     <li>Se comprende y aplica el patrón Capa Anticorrupción (Anticorruption Layer - ACL).</li>
-    <li>La anotación `@JsonIgnoreProperties(ignoreUnknown = true)` protege ante campos nuevos imprevistos.</li>
+    <li>La anotación <code>@JsonIgnoreProperties(ignoreUnknown = true)</code> protege ante campos nuevos imprevistos.</li>
     <li>Los DTOs propios reflejan la semántica, unidades y reglas de negocio de la aplicación.</li>
     <li>El adaptador aísla el resto del backend ante cualquier evolución del contrato del proveedor.</li>
   </ul>
@@ -530,8 +641,8 @@ Una de las enormes ventajas de la Capa Anticorrupción es que el mapeador puede 
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué es una mala práctica arquitectónica usar las mismas clases para deserializar una API ajena que para exponer datos a tu frontend?</li>
-    <li>¿Qué hace la anotación `@JsonProperty("current_weather")` en un atributo Java?</li>
-    <li>¿Qué ocurriría al deserializar un JSON con Jackson si el proveedor añade un campo nuevo y la clase no tiene `@JsonIgnoreProperties(ignoreUnknown = true)`?</li>
+    <li>¿Qué hace la anotación <code>@JsonProperty("current_weather")</code> en un atributo Java?</li>
+    <li>¿Qué ocurriría al deserializar un JSON con Jackson si el proveedor añade un campo nuevo y la clase no tiene <code>@JsonIgnoreProperties(ignoreUnknown = true)</code>?</li>
     <li>¿Dónde reside la regla de negocio que decide si el clima es favorable para trabajar en el exterior?</li>
   </ol>
 </div>
@@ -607,7 +718,7 @@ Debemos configurar dos límites independientes en la factoría de conexiones HTT
 Configuramos `SimpleClientHttpRequestFactory` con límites estrictos parametrizados en `application.properties`:
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -648,10 +759,10 @@ public class RestClientConfig {
 Protegemos la llamada con un bloque `try-catch` específico que captura fallos de red (`ResourceAccessException`) y errores HTTP del servidor remoto (`HttpStatusCodeException`):
 
 ```java
-package com.empresa.proyecto.integration;
+package com.ejemplo.gestor.integration;
 
-import com.empresa.proyecto.dto.ClimaProyectoResponse;
-import com.empresa.proyecto.integration.dto.OpenMeteoResponse;
+import com.ejemplo.gestor.dto.ClimaProyectoResponse;
+import com.ejemplo.gestor.integration.dto.OpenMeteoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -734,6 +845,29 @@ Vamos a verificar empíricamente que la degradación funciona:
 4. **Inspecciona la consola:**
    Aparece un `WARN` limpio registrado en los logs sin saturar la consola con trazas descontroladas.
 
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| La petición sigue tardando 30 segundos | Los timeouts no se aplican | Deben ir en la `requestFactory` del `RestClient`, no en `application.properties` a secas |
+| Un `404` del proveedor llega al cliente como `500` | Solo capturas `ResourceAccessException` | Un error HTTP remoto es `HttpStatusCodeException`, que es otra rama distinta |
+| El `catch` no salta nunca al cortar la red | Estabas mirando una respuesta cacheada | Reinicia la aplicación: la caché en memoria se vacía con ella |
+| `@Cacheable` no hace nada | Falta `@EnableCaching` | Va en la clase principal o en una `@Configuration` |
+| `@Cacheable` no hace nada aunque esté habilitado | Llamada interna | Si el método se invoca desde otro método de la misma clase, el proxy no interviene |
+| El clima se queda congelado durante horas | La caché no expira | Una caché sin `ttl` no caduca nunca: para datos que cambian, configura el tiempo de vida |
+
+<p class="stage">La comprobación 2 · Medir el coste de no tener timeout</p>
+
+Antes de configurar nada, comprueba qué pasa sin red y sin límite de espera:
+
+1. Comenta temporalmente la `requestFactory` del bean.
+2. Apunta el `base-url` a un host que no responde, por ejemplo `http://10.255.255.1`.
+3. Lanza la petición y **cronométrala**. Se quedará colgada decenas de segundos.
+4. Mientras tanto, lanza otras cinco peticiones a `GET /api/v1/proyectos`. Observa que también se ralentizan: cada llamada colgada retiene un hilo de Tomcat, y los hilos son un recurso finito. Con suficientes peticiones simultáneas, un proveedor lento tumba tu aplicación entera sin haber fallado él.
+5. Restaura la factoría con sus timeouts y repite: ahora falla en 2 segundos, de forma controlada y sin arrastrar a nadie.
+
+Ese es el argumento completo de la sesión: **un timeout no sirve para responder rápido, sirve para que el fallo de otro no se convierta en el tuyo.**
+
 ### Ahora tú · Cachear respuestas climáticas para ahorrar peticiones
 
 El tiempo meteorológico no cambia cada medio segundo: consultar la API en cada petición a `/proyectos/{id}` desperdicia ancho de banda y aumenta la latencia innecesariamente.
@@ -744,9 +878,17 @@ El tiempo meteorológico no cambia cada medio segundo: consultar la API en cada 
    @Cacheable(value = "clima", key = "#latitud + '_' + #longitud")
    public ClimaProyectoResponse consultarClimaSeguro(double latitud, double longitud) { ... }
    ```
-3. Lanza dos peticiones consecutivas en Bruno al mismo proyecto:
+3. Lanza dos peticiones consecutivas al mismo proyecto:
    * Primera petición: tarda ~200 ms (llama a Internet).
-   * Segunda petición: responde en 1 ms (se recupera instantáneamente de la memoria caché de Spring).
+   * Segunda petición: responde en 1 ms (se recupera de la memoria caché de Spring).
+4. **Decide y justifica el tiempo de vida.** Una caché sin caducidad devuelve el tiempo de ayer indefinidamente. Configura un `ttl` y escribe en tu cuaderno por qué ese y no otro: para datos meteorológicos, entre diez y treinta minutos es defendible; treinta segundos no ahorra nada y un día es directamente mentir al usuario.
+5. **Comprueba que la clave es correcta:** pide el clima de dos proyectos con coordenadas distintas y confirma que devuelven temperaturas distintas. Si devuelven la misma, tu `key` no incluye las coordenadas y estás sirviendo el tiempo de Valencia a un proyecto de Madrid. Es el fallo más silencioso de esta sesión, porque la aplicación funciona perfectamente y los datos son falsos.
+6. **Documenta las tres decisiones de resiliencia** que has tomado hoy, con su número: cuánto esperas para conectar, cuánto para leer y cuánto dura la caché. Las tres van a la memoria técnica de la UD12 y las tres te las van a preguntar en la defensa.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Con el proveedor caído, tu API responde en el tiempo del timeout, con código correcto y un aviso legible, nunca un <code>500</code>; dos proyectos distintos reciben climas distintos; y sabes decir de memoria tus tres números y por qué son esos.</dd>
+</dl>
 
 ### Reto · El patrón Circuit Breaker con Resilience4j
 
@@ -757,13 +899,15 @@ Investiga la librería **Resilience4j**:
 2. ¿Por qué en estado `OPEN` el disyuntor corta la llamada de inmediato (en 0 ms) ejecutando el método de fallback sin tocar la red?
 3. Diseña en un documento técnico las ventajas de incorporar Resilience4j en integraciones críticas.
 
-> [!NOTE]
-> Si en la evaluación se solicita un informe técnico sobre resiliencia, políticas de timeout y contingencia ante caída de proveedores externos, el formato oficial de entrega de texto es siempre un **documento en PDF** (`analisis-resiliencia.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un informe técnico sobre resiliencia, políticas de timeout y contingencia ante caída de proveedores externos, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-resiliencia.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Factoría de conexiones configurada con Connect Timeout (2s) y Read Timeout (3s).</span></div>
-  <div><strong>Si lo tienes</strong><span>Tratamiento de `ResourceAccessException` y degradación elegante devolviendo datos locales con aviso.</span></div>
-  <div><strong>Reto</strong><span>Caché en memoria con `@Cacheable` y diseño conceptual del patrón Circuit Breaker con Resilience4j.</span></div>
+  <div><strong>Si lo tienes</strong><span>Degradación elegante ante <code>ResourceAccessException</code> y caché en memoria con <code>@Cacheable</code> evitando llamadas repetidas.</span></div>
+  <div><strong>Reto</strong><span>Diseño conceptual del patrón Circuit Breaker con Resilience4j y sus tres estados.</span></div>
 </div>
 
 <div class="checkpoint">
@@ -781,7 +925,7 @@ Investiga la librería **Resilience4j**:
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Qué es el agotamiento de hilos (*Thread Starvation*) y cómo lo provoca una llamada externa colgada?</li>
-    <li>¿Qué excepción lanza Spring cuando se agota el tiempo límite de conexión configurado en `RestClient`?</li>
+    <li>¿Qué excepción lanza Spring cuando se agota el tiempo límite de conexión configurado en <code>RestClient</code>?</li>
     <li>¿En qué consiste el principio de degradación elegante (*Graceful Degradation*)?</li>
     <li>¿Por qué almacenar en caché una respuesta meteorológica durante 15 minutos mejora tanto el rendimiento como la resiliencia?</li>
   </ol>
@@ -861,7 +1005,7 @@ app.almacenamiento.directorio-subidas=./almacenamiento/adjuntos
 La base de datos almacena la trazabilidad y la relación con la tarea:
 
 ```java
-package com.empresa.proyecto.model;
+package com.ejemplo.gestor.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -917,7 +1061,7 @@ public class Adjunto {
 Este servicio valida el fichero, genera el UUID y escribe los bytes en el disco con control estricto:
 
 ```java
-package com.empresa.proyecto.service;
+package com.ejemplo.gestor.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -1009,12 +1153,12 @@ public class AlmacenamientoService {
 <p class="stage">Paso 4 · Controlador de subida y descarga autorizada</p>
 
 ```java
-package com.empresa.proyecto.controller;
+package com.ejemplo.gestor.controller;
 
-import com.empresa.proyecto.model.Adjunto;
-import com.empresa.proyecto.repository.AdjuntoRepository;
-import com.empresa.proyecto.repository.TareaRepository;
-import com.empresa.proyecto.service.AlmacenamientoService;
+import com.ejemplo.gestor.model.Adjunto;
+import com.ejemplo.gestor.repository.AdjuntoRepository;
+import com.ejemplo.gestor.repository.TareaRepository;
+import com.ejemplo.gestor.service.AlmacenamientoService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -1083,7 +1227,7 @@ public class AdjuntoController {
 
 1. **Subida de fichero mediante Bruno:**
    * Crea una petición `POST http://localhost:8080/api/v1/tareas/1/adjuntos`.
-   * En la pestaña **Auth**, introduce un Bearer Token válido con rol `DESARROLLADOR`.
+   * En la pestaña **Auth** de la petición, introduce un Bearer Token válido con rol `DESARROLLADOR`.
    * En la pestaña **Body**, selecciona **Multipart Form**.
    * Añade el campo con nombre `archivo`, selecciona el tipo **File** y escoge un archivo PDF o PNG real de tu ordenador.
    * Envía la petición y comprueba que responde **`201 Created`**.
@@ -1127,17 +1271,17 @@ Investiga cómo inspeccionar los **Magic Bytes** del flujo binario:
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Configuración de límites multipart y servicio de almacenamiento local con UUIDs operativos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Subida y descarga autorizada con Spring Security, metadatos en PostgreSQL y `Content-Disposition`.</span></div>
+  <div><strong>Si lo tienes</strong><span>Subida y descarga autorizada con Spring Security, metadatos en PostgreSQL y <code>Content-Disposition</code>.</span></div>
   <div><strong>Reto</strong><span>Validación profunda de tipos de archivo mediante inspección de firmas mágicas (*Magic Bytes*).</span></div>
 </div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 64</p>
   <ul class="checklist">
-    <li>Se comprende el protocolo `multipart/form-data` para el transporte de binarios.</li>
+    <li>Se comprende el protocolo <code>multipart/form-data</code> para el transporte de binarios.</li>
     <li>Se neutraliza el ataque de *Path Traversal* generando UUIDs opacos para el disco.</li>
     <li>Los ficheros se almacenan en un directorio externo, nunca en carpetas web públicas.</li>
-    <li>Los límites de tamaño (`max-file-size`) protegen el servidor contra saturación de disco.</li>
+    <li>Los límites de tamaño (<code>max-file-size</code>) protegen el servidor contra saturación de disco.</li>
     <li>La descarga está blindada por autorización y emite cabeceras de descarga correctas.</li>
   </ul>
 </div>
@@ -1145,9 +1289,9 @@ Investiga cómo inspeccionar los **Magic Bytes** del flujo binario:
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué nunca se debe guardar un fichero usando directamente `archivo.getOriginalFilename()`?</li>
+    <li>¿Por qué nunca se debe guardar un fichero usando directamente <code>archivo.getOriginalFilename()</code>?</li>
     <li>¿Qué cabecera HTTP le indica al navegador que no intente renderizar el archivo en la pestaña sino que lo descargue al disco?</li>
-    <li>¿Qué dos propiedades de `application.properties` establecen el tamaño máximo permitido para subidas?</li>
+    <li>¿Qué dos propiedades de <code>application.properties</code> establecen el tamaño máximo permitido para subidas?</li>
     <li>¿Por qué es peligroso validar el tipo de fichero únicamente a través de la extensión de su nombre?</li>
   </ol>
 </div>
@@ -1176,7 +1320,7 @@ Investiga cómo inspeccionar los **Magic Bytes** del flujo binario:
   <ol>
     <li>¿Qué ocurre con la respuesta de tu API si el controlador envía un correo electrónico de forma síncrona y el servidor SMTP tarda 8 segundos en conectar?</li>
     <li>Si la llamada externa de notificación falla con una excepción, ¿debería cancelarse (*rollback*) la tarea que el usuario acaba de guardar en PostgreSQL?</li>
-    <li>¿Qué diferencia fundamental existe entre un listener estándar con `@EventListener` y uno con `@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)`?</li>
+    <li>¿Qué diferencia fundamental existe entre un listener estándar con <code>@EventListener</code> y uno con <code>@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)</code>?</li>
   </ol>
 </div>
 
@@ -1239,7 +1383,7 @@ Para resolver este problema con elegancia, Spring proporciona un bus de eventos 
 Configuramos el ejecutor de tareas asíncronas con un pool de hilos dimensionado:
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1270,7 +1414,7 @@ public class AsyncConfig {
 Creamos un registro inmutable que transporta los datos mínimos necesarios:
 
 ```java
-package com.empresa.proyecto.event;
+package com.ejemplo.gestor.event;
 
 public record TareaCriticaCreadaEvent(
     Long tareaId,
@@ -1286,14 +1430,14 @@ public record TareaCriticaCreadaEvent(
 El servicio solo se preocupa de guardar el dato y publicar el evento. Cero código de correos o webhooks:
 
 ```java
-package com.empresa.proyecto.service;
+package com.ejemplo.gestor.service;
 
-import com.empresa.proyecto.dto.TareaRequest;
-import com.empresa.proyecto.dto.TareaResponse;
-import com.empresa.proyecto.event.TareaCriticaCreadaEvent;
-import com.empresa.proyecto.model.Prioridad;
-import com.empresa.proyecto.model.Tarea;
-import com.empresa.proyecto.repository.TareaRepository;
+import com.ejemplo.gestor.dto.TareaRequest;
+import com.ejemplo.gestor.dto.TareaResponse;
+import com.ejemplo.gestor.event.TareaCriticaCreadaEvent;
+import com.ejemplo.gestor.model.Prioridad;
+import com.ejemplo.gestor.model.Tarea;
+import com.ejemplo.gestor.repository.TareaRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1338,9 +1482,9 @@ public class TareaService {
 El listener se ejecuta en segundo plano solo tras el commit de la base de datos:
 
 ```java
-package com.empresa.proyecto.listener;
+package com.ejemplo.gestor.listener;
 
-import com.empresa.proyecto.event.TareaCriticaCreadaEvent;
+import com.ejemplo.gestor.event.TareaCriticaCreadaEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -1418,14 +1562,36 @@ public class NotificacionWebhookListener {
    * El hilo de Tomcat `http-nio-8080-exec-1` guardó en la base de datos y respondió al cliente en 18 ms.
    * El hilo `notif-thread-1` procesó el webhook en segundo plano durante 330 ms sin que el usuario sufriera ninguna espera.
 
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| El listener se ejecuta pero la tarea no está en la base de datos | Se está escuchando antes del `commit` | `@TransactionalEventListener(phase = AFTER_COMMIT)`, no `@EventListener` a secas |
+| El listener no se ejecuta nunca | Falta habilitar la asincronía | `@EnableAsync` en una clase de configuración; sin ella, `@Async` es decoración |
+| El listener corre en el hilo de la petición y la ralentiza | Falta `@Async`, o la llamada es interna | Si el evento se publica desde el mismo bean que lo escucha, el proxy no interviene |
+| El webhook falla y se pierde la tarea | El listener está dentro de la transacción | Con `AFTER_COMMIT` esto no puede pasar: la tarea ya está guardada pase lo que pase |
+| El webhook falla y nadie se entera | La excepción muere en el hilo asíncrono | Un `@Async` sin `try/catch` traga el error en silencio: registra siempre el fallo |
+
 ### Ahora tú · Notificación simulada por correo electrónico
 
 Añade un segundo listener que simule el envío de un correo de alerta:
+
 1. Crea `NotificacionEmailListener`.
 2. Escucha el mismo evento `TareaCriticaCreadaEvent` con `@Async` y `@TransactionalEventListener(phase = AFTER_COMMIT)`.
-3. Simula la redacción del mensaje y registra en logs:
-   `"[Email] Enviando correo a jefatura@empresa.com con asunto: ALERTA en proyecto X"`.
-4. Comprueba que un único evento dispara concurrentemente tanto el webhook como el correo sin interferir entre sí.
+3. Simula la redacción del mensaje y registra en logs el destinatario y el asunto.
+4. Comprueba que un único evento dispara tanto el webhook como el correo sin que ninguno espere al otro.
+5. **Demuestra que el desacoplamiento funciona de verdad**, que es toda la razón de ser de la sesión: haz que el listener del webhook lance una excepción a propósito, crea una tarea crítica y comprueba tres cosas a la vez:
+   * la tarea **está** en la base de datos,
+   * el cliente recibió su `201 Created` sin enterarse de nada,
+   * y el listener del correo se ejecutó igualmente.
+   Si alguna de las tres falla, tu notificación no está desacoplada: está escondida dentro de la transacción.
+6. **Mide el tiempo de respuesta** del alta con y sin los listeners activos. Deben ser prácticamente iguales. Si el alta tarda más al añadir notificaciones, el `@Async` no está actuando y estás haciendo esperar al usuario a que se envíe un correo.
+7. Anota el agujero que queda abierto, porque te lo van a preguntar en la defensa: si el servidor se apaga entre el `commit` y la ejecución del listener, **la notificación se pierde y nadie lo sabe**. Es exactamente el problema que resuelve el patrón Outbox del reto.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Un evento dispara dos listeners independientes; un fallo en uno no afecta al otro ni al alta; el tiempo de respuesta del endpoint no cambia al añadirlos; y sabes explicar en qué caso concreto una notificación se perdería.</dd>
+</dl>
 
 ### Reto · El patrón Outbox para garantizar entrega (Transactional Outbox)
 
@@ -1436,8 +1602,8 @@ Investiga el patrón **Transactional Outbox**:
 2. ¿Cómo lee un proceso programado (`@Scheduled`) esa tabla periódicamente para enviar los webhooks y marcar su estado como `ENVIADO`?
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Configuración de `@EnableAsync`, evento de dominio y listener desacoplado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Listener con `@TransactionalEventListener(phase = AFTER_COMMIT)` y llamada a webhook con `RestClient`.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Configuración de <code>@EnableAsync</code>, evento de dominio y listener desacoplado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Listener con <code>@TransactionalEventListener(phase = AFTER_COMMIT)</code> y llamada a webhook con <code>RestClient</code>.</span></div>
   <div><strong>Reto</strong><span>Diseño conceptual del patrón Transactional Outbox para tolerancia a fallos y reintentos.</span></div>
 </div>
 
@@ -1445,9 +1611,9 @@ Investiga el patrón **Transactional Outbox**:
   <p class="checkpoint-label">Checkpoint · fin de la sesión 65</p>
   <ul class="checklist">
     <li>Se erradica el antipatrón de encadenar llamadas externas síncronas en transacciones locales.</li>
-    <li>Se utiliza el bus de eventos en memoria de Spring (`ApplicationEventPublisher`).</li>
-    <li>La anotación `@TransactionalEventListener(phase = AFTER_COMMIT)` evita notificar transacciones abortadas.</li>
-    <li>El procesamiento asíncrono con `@Async` mantiene tiempos de respuesta de milisegundos en la API.</li>
+    <li>Se utiliza el bus de eventos en memoria de Spring (<code>ApplicationEventPublisher</code>).</li>
+    <li>La anotación <code>@TransactionalEventListener(phase = AFTER_COMMIT)</code> evita notificar transacciones abortadas.</li>
+    <li>El procesamiento asíncrono con <code>@Async</code> mantiene tiempos de respuesta de milisegundos en la API.</li>
     <li>Los fallos en servicios de terceros quedan contenidos en auditoría sin romper el flujo de negocio.</li>
   </ul>
 </div>
@@ -1455,10 +1621,10 @@ Investiga el patrón **Transactional Outbox**:
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué es un error ejecutar una llamada HTTP externa dentro de un método anotado con `@Transactional`?</li>
-    <li>¿Qué garantiza la fase `TransactionPhase.AFTER_COMMIT` en un `@TransactionalEventListener`?</li>
+    <li>¿Por qué es un error ejecutar una llamada HTTP externa dentro de un método anotado con <code>@Transactional</code>?</li>
+    <li>¿Qué garantiza la fase <code>TransactionPhase.AFTER_COMMIT</code> en un <code>@TransactionalEventListener</code>?</li>
     <li>¿Qué sucede con la petición del usuario si el listener asíncrono falla con una excepción no controlada?</li>
-    <li>¿Por qué es recomendable definir un `ThreadPoolTaskExecutor` propio en lugar de usar el executor por defecto de Spring?</li>
+    <li>¿Por qué es recomendable definir un <code>ThreadPoolTaskExecutor</code> propio en lugar de usar el executor por defecto de Spring?</li>
   </ol>
 </div>
 
@@ -1530,7 +1696,7 @@ Un operario de campo registra una incidencia urgente sobre un proyecto:
 <p class="stage">Paso 1 · El DTO de respuesta integral</p>
 
 ```java
-package com.empresa.proyecto.dto;
+package com.ejemplo.gestor.dto;
 
 import java.time.LocalDateTime;
 
@@ -1549,17 +1715,17 @@ public record IncidenciaCompletaResponse(
 <p class="stage">Paso 2 · El servicio orquestador IncidenciaService</p>
 
 ```java
-package com.empresa.proyecto.service;
+package com.ejemplo.gestor.service;
 
-import com.empresa.proyecto.dto.ClimaProyectoResponse;
-import com.empresa.proyecto.dto.IncidenciaCompletaResponse;
-import com.empresa.proyecto.event.TareaCriticaCreadaEvent;
-import com.empresa.proyecto.integration.ClimaService;
-import com.empresa.proyecto.model.Adjunto;
-import com.empresa.proyecto.model.Incidencia;
-import com.empresa.proyecto.model.Proyecto;
-import com.empresa.proyecto.repository.IncidenciaRepository;
-import com.empresa.proyecto.repository.ProyectoRepository;
+import com.ejemplo.gestor.dto.ClimaProyectoResponse;
+import com.ejemplo.gestor.dto.IncidenciaCompletaResponse;
+import com.ejemplo.gestor.event.TareaCriticaCreadaEvent;
+import com.ejemplo.gestor.integration.ClimaService;
+import com.ejemplo.gestor.model.Adjunto;
+import com.ejemplo.gestor.model.Incidencia;
+import com.ejemplo.gestor.model.Proyecto;
+import com.ejemplo.gestor.repository.IncidenciaRepository;
+import com.ejemplo.gestor.repository.ProyectoRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1652,10 +1818,10 @@ public class IncidenciaService {
 <p class="stage">Paso 3 · Controlador protegido con Multipart y Seguridad</p>
 
 ```java
-package com.empresa.proyecto.controller;
+package com.ejemplo.gestor.controller;
 
-import com.empresa.proyecto.dto.IncidenciaCompletaResponse;
-import com.empresa.proyecto.service.IncidenciaService;
+import com.ejemplo.gestor.dto.IncidenciaCompletaResponse;
+import com.ejemplo.gestor.service.IncidenciaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -1713,12 +1879,32 @@ Ejecuta la suite de verificación de integración:
    * Intenta adjuntar un archivo ejecutable `virus.exe`.
    * **Resultado:** Código **`400 Bad Request`**. La transacción se aborta limpiamente.
 
-### Ahora tú · Integrar la visualización en el cliente web de la UD8
+### Si algo no sale como dice el guion
 
-Actualiza tu página web `index.html`:
-1. Añade una sección para consultar incidencias de un proyecto.
-2. Si la incidencia incluye condiciones climáticas favorables (`esFavorableParaTrabajoExterior: true`), muestra un icono en verde; si no es favorable o hubo aviso de degradación, muéstralo en naranja.
-3. Añade el botón de descarga del fichero adjunto con su enlace a `/api/v1/adjuntos/{id}/descargar` inyectando el token JWT en la cabecera.
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| El adjunto se guarda en disco pero no hay fila en la base de datos | El guardado del fichero está fuera de la transacción | El sistema de archivos no participa en el `rollback`: guarda primero la fila y el fichero después, o borra el fichero en el `catch` |
+| La incidencia falla entera cuando cae Open-Meteo | El `try/catch` no envuelve la llamada saliente | La degradación de la sesión 63 debe aplicarse aquí también: el clima es un extra, no un requisito |
+| `413 Payload Too Large` con un fichero de 3 MB | El límite por defecto de Spring es 1 MB | `spring.servlet.multipart.max-file-size` y `max-request-size` en `application.properties` |
+| El `multipart` responde `415` | El cliente fija mal el `Content-Type` | En una petición multiparte, deja que el cliente ponga él el `boundary`: no lo escribas a mano |
+| La descarga baja un fichero con nombre UUID ilegible | Falta la cabecera `Content-Disposition` | Devuelve el nombre original en `filename=`, guardando el UUID solo en disco |
+| Todo funciona pero la petición tarda 3 segundos | Estás esperando a Open-Meteo antes de responder | Es correcto y es el coste que decidiste asumir: mídelo y anótalo, o pásalo a asíncrono |
+
+### Ahora tú · Cerrar la integración de extremo a extremo
+
+El objetivo de la sesión es que un caso de uso completo atraviese **todas** las piezas del curso a la vez: validación, persistencia, seguridad, fichero y servicio externo.
+
+1. Ejecuta el alta completa de una incidencia con fotografía adjunta y comprueba que la respuesta `201 Created` incluye el identificador del adjunto y el bloque de clima.
+2. **Repite el alta con la red cortada** (desactiva el wifi o apunta el `base-url` a un host inexistente). Debe seguir devolviendo `201`, con el aviso de degradación en el campo del clima y el fichero correctamente guardado. Si devuelve `500`, la resiliencia de la sesión 63 no está aplicada en este camino.
+3. Comprueba en disco que el fichero existe con su nombre UUID, y en la base de datos que la fila del adjunto apunta a él. Los dos o ninguno: un fichero huérfano en disco o una fila apuntando a nada son los dos fallos clásicos de esta sesión.
+4. Actualiza tu página web de la UD8: añade una sección de incidencias de un proyecto, pinta en verde las condiciones favorables y en naranja las desfavorables o degradadas, y añade el botón de descarga del adjunto.
+5. Documenta el endpoint en OpenAPI. Un `multipart` necesita su `@RequestBody` anotado con el tipo de contenido correcto, o Swagger no ofrecerá el selector de archivo y nadie podrá probarlo desde ahí.
+6. Mide y anota tres números que vas a necesitar en la memoria de la UD12: cuánto tarda el alta con la red disponible, cuánto tarda con la red caída (debería ser el timeout que configuraste, ni un segundo más) y cuánto ocupa en disco un adjunto típico.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>El alta funciona con red y sin red, devolviendo <code>201</code> en los dos casos; fichero y fila siempre van juntos; el tiempo con la red caída coincide con tu timeout; y la operación se puede ejecutar entera desde Swagger.</dd>
+</dl>
 
 ### Reto · Auditoría de integraciones externas
 
@@ -1736,8 +1922,10 @@ CREATE TABLE auditoria_integraciones (
 ```
 Implementa un aspecto `@Aspect` o un interceptor en `RestClient` (`ClientHttpRequestInterceptor`) que registre automáticamente cada petición saliente a Open-Meteo o al Webhook en esta tabla.
 
-> [!NOTE]
-> Si en la evaluación se solicita una memoria técnica justificando la arquitectura integral y la resiliencia del sistema frente a fallos de terceros, el formato oficial de entrega de texto es siempre un **documento en PDF** (`memoria-integracion.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita una memoria técnica justificando la arquitectura integral y la resiliencia del sistema frente a fallos de terceros, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>memoria-integracion.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Flujo integral de subida multipart con persistencia en PostgreSQL y respuesta tipada.</span></div>
@@ -1762,7 +1950,7 @@ Implementa un aspecto `@Aspect` o un interceptor en `RestClient` (`ClientHttpReq
     <li>¿Por qué la consulta meteorológica debe realizarse antes de guardar la incidencia pero el webhook debe dispararse después?</li>
     <li>¿Qué ocurriría con el archivo guardado en disco si la transacción de PostgreSQL falla al final con un error de clave duplicada?</li>
     <li>¿Cómo se asegura que un usuario solo pueda descargar adjuntos si está autenticado?</li>
-    <li>¿Qué ventajas ofrece devolver un DTO integral (`IncidenciaCompletaResponse`) frente a hacer que el frontend consulte tres endpoints distintos?</li>
+    <li>¿Qué ventajas ofrece devolver un DTO integral (<code>IncidenciaCompletaResponse</code>) frente a hacer que el frontend consulte tres endpoints distintos?</li>
   </ol>
 </div>
 
@@ -1788,7 +1976,7 @@ Para diseñar e implementar cualquier integración externa profesional, aplica s
     <li>Utiliza siempre clientes modernos y fluidos: <strong><code>RestClient</code></strong> es el estándar síncrono oficial desde Spring Boot 3.2.</li>
     <li><strong>Nunca reutilices contratos ajenos</strong>: aplica el patrón <strong>Capa Anticorrupción (ACL)</strong> aislando los DTOs del proveedor de tu modelo de dominio.</li>
     <li>Protege la deserialización con <code>@JsonIgnoreProperties(ignoreUnknown = true)</code> para que cambios ajenos no rompan tu aplicación.</li>
-    <li><strong>Asume las falacias de la red</strong>: toda llamada saliente debe tener <strong>Timeouts estrictos</strong> (Connect Timeout $\le 2$ s, Read Timeout $\le 3$ s).</li>
+    <li><strong>Asume las falacias de la red</strong>: toda llamada saliente debe tener <strong>Timeouts estrictos</strong> (Connect Timeout 2 s o menos, Read Timeout 3 s o menos).</li>
     <li>Aplica el principio de <strong>Degradación Elegante (<em>Graceful Degradation</em>)</strong>: el fallo de una API externa nunca debe provocar un <code>500 Internal Server Error</code> en tu backend.</li>
     <li>Optimiza el consumo con <strong><code>@Cacheable</code></strong> para ahorrar peticiones, evitar costes y reducir latencias de cientos de milisegundos a 1 ms.</li>
     <li><strong>Sanitiza todo archivo entrante</strong>: almacena los binarios con <strong>UUIDs aleatorios</strong> fuera del classpath y guarda el nombre original solo en base de datos.</li>
@@ -1869,16 +2057,16 @@ Un desarrollador principiante asume que la red es mágica y que los proveedores 
 <div class="checkpoint">
   <p class="checkpoint-label">Integración externa y resiliencia · criterios de producción</p>
   <ul class="checklist">
-    <li>Las peticiones salientes utilizan el cliente moderno `RestClient` con URL base y cabeceras centralizadas.</li>
+    <li>Las peticiones salientes utilizan el cliente moderno <code>RestClient</code> con URL base y cabeceras centralizadas.</li>
     <li>Los contratos de proveedores externos están completamente aislados mediante el patrón Capa Anticorrupción (ACL).</li>
-    <li>Los DTOs externos utilizan `@JsonIgnoreProperties(ignoreUnknown = true)` para tolerar adiciones futuras de campos.</li>
-    <li>Toda llamada HTTP externa dispone de límites estrictos de `Connect Timeout` ($\le 2$ s) y `Read Timeout` ($\le 3$ s).</li>
+    <li>Los DTOs externos utilizan <code>@JsonIgnoreProperties(ignoreUnknown = true)</code> para tolerar adiciones futuras de campos.</li>
+    <li>Toda llamada HTTP externa dispone de límites estrictos de <code>Connect Timeout</code> (2 s o menos) y <code>Read Timeout</code> (3 s o menos).</li>
     <li>La aplicación aplica degradación elegante ante caídas de red o errores 4xx/5xx sin colapsar con código 500.</li>
-    <li>Las consultas a servicios externos con datos estables se optimizan mediante caché con `@Cacheable`.</li>
+    <li>Las consultas a servicios externos con datos estables se optimizan mediante caché con <code>@Cacheable</code>.</li>
     <li>Los ficheros subidos se almacenan con UUIDs en un directorio externo al proyecto para prevenir ataques de *Path Traversal*.</li>
-    <li>Los límites de tamaño para subidas (`max-file-size`) y validación de tipos MIME están estrictamente configurados.</li>
-    <li>La descarga de ficheros está protegida por autorización y emite la cabecera estándar `Content-Disposition: attachment`.</li>
-    <li>Los efectos secundarios (correos y webhooks) se ejecutan de forma asíncrona tras el commit (`@TransactionalEventListener`).</li>
+    <li>Los límites de tamaño para subidas (<code>max-file-size</code>) y validación de tipos MIME están estrictamente configurados.</li>
+    <li>La descarga de ficheros está protegida por autorización y emite la cabecera estándar <code>Content-Disposition: attachment</code>.</li>
+    <li>Los efectos secundarios (correos y webhooks) se ejecutan de forma asíncrona tras el commit (<code>@TransactionalEventListener</code>).</li>
   </ul>
 </div>
 

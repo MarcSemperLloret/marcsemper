@@ -17,12 +17,21 @@
  * it into. A `##` heading that is neither a class nor a week divider, sitting
  * between two classes, would silently land on a page it does not belong to, so
  * it fails the build here instead.
+ *
+ * Three more failures share that same shape — the Markdown compiles, the build
+ * succeeds, and the defect is only visible by opening the page:
+ *
+ *   - Backticks inside an HTML block. Markdown does not read them there, so
+ *     `<li>Configura `ddl-auto`</li>` prints the backticks. Use <code>.
+ *   - GitHub's alert syntax (`> [!NOTE]`). This site's Markdown pipeline does
+ *     not implement it, so the marker is printed as text.
+ *   - TeX left in the prose (`$	o$`, `$$…$$`). Nothing renders maths here.
  */
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, sep } from "node:path";
 
-import { splitUnit } from "../plugins/unit-split.mjs";
+import { splitUnit, FENCE } from "../plugins/unit-split.mjs";
 
 const ROOT = "src/content";
 
@@ -39,6 +48,12 @@ const DANGEROUS = new Set([
 
 const TAG = /<\/?([a-zA-Z][a-zA-Z0-9]*)/g;
 
+/** `> [!NOTE]`, `> [!WARNING]`… GitHub renders these; this site does not. */
+const ALERT = /^>\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/i;
+
+/** `$	o$`, `$\le 2$`, `$$	ext{…}$$`: TeX with no renderer behind it. */
+const TEX = /\$\$?[^$]*\\[a-zA-Z]+[^$]*\$\$?/;
+
 function markdownFiles(dir) {
   const found = [];
   for (const entry of readdirSync(dir)) {
@@ -54,19 +69,52 @@ function scan(path) {
   const lines = readFileSync(path, "utf8").split(/\r?\n/);
 
   let inHtmlBlock = false;
-  let inFence = false;
   let inSvg = false;
+  // The marker that opened the current code block, or undefined outside one.
+  // Tracked exactly as `unit-split.mjs` tracks it: a fence closes only on a
+  // line of the same character, at least as long, and with nothing after it.
+  // Toggling on any ``` instead would disagree with the split about where a
+  // block ends, which is how a nested ```bash once swallowed a whole session.
+  let fence;
 
   lines.forEach((line, index) => {
     const trimmed = line.trim();
 
     // Fenced code is shown verbatim and escaped by the compiler, so anything
     // inside it is fine however it is written.
-    if (/^(```|~~~)/.test(trimmed)) {
-      inFence = !inFence;
+    const fenceMatch = FENCE.exec(line);
+    if (fenceMatch) {
+      const [, marker, rest] = fenceMatch;
+      if (!fence) fence = marker;
+      else if (
+        marker[0] === fence[0] &&
+        marker.length >= fence.length &&
+        rest.trim() === ""
+      ) {
+        fence = undefined;
+      }
       return;
     }
-    if (inFence) return;
+    if (fence) return;
+
+    // Neither of these is read inside an HTML block or out of it, so they are
+    // checked on every line of prose.
+    if (ALERT.test(trimmed)) {
+      problems.push({
+        line: index + 1,
+        reason: "aviso [!NOTE] de GitHub",
+        advice: 'aquí no se renderiza: usa <div class="rule">',
+        text: trimmed
+      });
+    }
+    if (TEX.test(line)) {
+      problems.push({
+        line: index + 1,
+        reason: "fórmula TeX",
+        advice: "no hay renderizador de matemáticas: escríbelo en texto",
+        text: trimmed
+      });
+    }
 
     // A blank line closes an HTML block; a line starting with `<` opens one.
     if (trimmed === "") {
@@ -90,6 +138,18 @@ function scan(path) {
         line: index + 1,
         reason: "código con backticks",
         advice: "escríbelo como &lt;etiqueta&gt;",
+        text: trimmed
+      });
+      return;
+    }
+
+    // Any other backtick here is the same mistake with a milder outcome: it
+    // does not break the page, it just prints the backticks on it.
+    if (trimmed.includes("`")) {
+      problems.push({
+        line: index + 1,
+        reason: "backticks dentro de un bloque HTML",
+        advice: "Markdown no los lee aquí: usa <code>…</code>",
         text: trimmed
       });
       return;
@@ -168,11 +228,12 @@ if (strays > 0) {
 
 if (total > 0) {
   console.error(
-    `${total} etiqueta(s) HTML problemática(s) dentro de un bloque HTML.\n` +
-      "Dentro de un bloque HTML los backticks no escapan nada: hay que escribir\n" +
-      "&lt;head&gt; en lugar de `<head>`, o el navegador se come el resto de la página."
+    `${total} problema(s) de marcado que el compilador no puede detectar.\n` +
+      "Dentro de un bloque HTML, Markdown no lee nada: un `<head>` inserta la\n" +
+      "etiqueta de verdad y un `código` imprime los backticks. Y ni los avisos\n" +
+      "[!NOTE] de GitHub ni las fórmulas TeX tienen aquí quien los renderice."
   );
   process.exit(1);
 }
 
-console.log("Unidades revisadas: sin tags HTML vivos y con todas las secciones ubicadas.");
+console.log("Unidades revisadas: marcado limpio y todas las secciones ubicadas.");

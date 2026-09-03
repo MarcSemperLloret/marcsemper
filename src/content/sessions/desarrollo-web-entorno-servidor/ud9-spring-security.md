@@ -102,7 +102,7 @@ Vamos a crear un endpoint de prueba para observar el comportamiento nativo de se
 <p class="stage">Paso 1 · Crear SesionDemoController</p>
 
 ```java
-package com.empresa.proyecto.controller;
+package com.ejemplo.gestor.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
@@ -157,8 +157,10 @@ server.servlet.session.cookie.same-site=lax
 server.servlet.session.timeout=30m
 ```
 
-> [!NOTE]
-> En desarrollo local mantenemos `server.servlet.session.cookie.secure=false` porque trabajamos sobre `http://localhost`. En producción con certificados TLS/HTTPS, debe ser siempre `true`.
+<div class="rule">
+  <p class="rule-label">En local sin HTTPS, en producción con él</p>
+  <p>En desarrollo local mantenemos <code>server.servlet.session.cookie.secure=false</code> porque trabajamos sobre <code>http://localhost</code>. En producción con certificados TLS/HTTPS, debe ser siempre <code>true</code>.</p>
+</div>
 
 ### La comprobación · Inspección forense en DevTools
 
@@ -179,6 +181,16 @@ Arranca tu aplicación y realiza este experimento en tu navegador abriendo `http
    * Haz clic derecho sobre la cookie `JSESSIONID` en DevTools y selecciona **Delete** (Borrar).
    * Recarga la página: el servidor te asigna un nuevo `JSESSIONID` y el contador vuelve a empezar en `1`.
 
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| El contador vuelve a 1 en cada petición | La cookie no viaja de vuelta | En DevTools → Application → Cookies, comprueba que existe `JSESSIONID` para `localhost:8080` |
+| Funciona en el cliente HTTP y no en el navegador | Falta `credentials: 'include'` | En una petición a otro origen, el navegador no manda cookies salvo que se lo pidas |
+| Con `credentials: 'include'` salta un error de CORS | El servidor no admite credenciales | `allowCredentials(true)` y orígenes enumerados, nunca comodín: es la sesión 50 |
+| El contador se comparte entre dos pestañas | Es el comportamiento correcto | La sesión es del navegador, no de la pestaña. Para verlo con otra identidad, abre una ventana de incógnito |
+| El contador se reinicia al recompilar | La sesión vive en la memoria del proceso | Es exactamente el problema del reto de esta sesión |
+
 ### Ahora tú · Integrar la cookie con el cliente web de la UD8
 
 Vuelve a tu página `cliente/index.html` de la UD8:
@@ -190,6 +202,15 @@ Vuelve a tu página `cliente/index.html` de la UD8:
    });
    ```
 3. Comprueba que el contador de visitas se incrementa en la interfaz web sin recargar la página.
+4. **Localiza la cookie con tus ojos.** DevTools → pestaña *Application* (o *Almacenamiento*) → *Cookies* → `http://localhost:8080`. Ahí está `JSESSIONID` con su valor. Anótalo.
+5. **Comprueba que la cookie es la sesión, y no otra cosa.** Bórrala desde ese mismo panel y vuelve a lanzar la petición: el contador empieza de cero y aparece un `JSESSIONID` nuevo. El servidor no te ha reconocido, aunque eres la misma persona en el mismo ordenador. Eso es lo que significa que HTTP no tiene memoria.
+6. **Comprueba que la sesión vive en el servidor.** Con el contador en 5, reinicia Spring Boot sin tocar el navegador y vuelve a pedir. Vuelve a 1: la cookie sigue en tu navegador, pero los datos que apuntaba estaban en la memoria del proceso, y el proceso ha muerto. Es el mismo hecho que descubriste en la sesión 1 con las tareas en memoria, aplicado ahora a la identidad.
+7. Escribe en tres líneas la diferencia entre lo que guarda el navegador (un identificador opaco) y lo que guarda el servidor (los datos asociados). Esa distinción es lo que hará que en la sesión 59 entiendas de golpe qué cambia con un JWT.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Has visto la cookie <code>JSESSIONID</code> en DevTools, la has borrado y has comprobado el efecto; sabes que reiniciar el servidor pierde la sesión aunque la cookie siga; y puedes explicar por qué la misma petición desde tu cliente HTTP no arrastra estado.</dd>
+</dl>
 
 ### Reto · El coste de la sesión: ¿Qué pasa al escalar a 5 servidores?
 
@@ -211,9 +232,9 @@ Imagina que tu empresa tiene tanto éxito que un solo servidor Spring Boot no da
   <p class="checkpoint-label">Checkpoint · fin de la sesión 52</p>
   <ul class="checklist">
     <li>Se comprende por qué HTTP es un protocolo sin estado y cómo las cookies reconstruyen la continuidad.</li>
-    <li>Se identifica el ciclo completo de vida de la cabecera `Set-Cookie` y el identificador `JSESSIONID`.</li>
-    <li>Las directivas críticas de seguridad (`HttpOnly`, `Secure`, `SameSite`) están configuradas y auditadas.</li>
-    <li>El cliente web envía credenciales en peticiones cross-origin con `credentials: 'include'`.</li>
+    <li>Se identifica el ciclo completo de vida de la cabecera <code>Set-Cookie</code> y el identificador <code>JSESSIONID</code>.</li>
+    <li>Las directivas críticas de seguridad (<code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>) están configuradas y auditadas.</li>
+    <li>El cliente web envía credenciales en peticiones cross-origin con <code>credentials: 'include'</code>.</li>
     <li>Se conoce el impacto de almacenar sesiones en la memoria del servidor frente al escalado horizontal.</li>
   </ul>
 </div>
@@ -222,9 +243,9 @@ Imagina que tu empresa tiene tanto éxito que un solo servidor Spring Boot no da
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué HTTP se define como un protocolo sin estado (*stateless*)?</li>
-    <li>¿Qué almacena exactamente el identificador `JSESSIONID`: los datos del usuario o una clave de búsqueda en memoria?</li>
-    <li>¿Qué sucede si un script malicioso intenta ejecutar `document.cookie` sobre una cookie marcada con `HttpOnly`?</li>
-    <li>¿Por qué una petición fetch entre distintos puertos requiere `credentials: 'include'` para enviar cookies?</li>
+    <li>¿Qué almacena exactamente el identificador <code>JSESSIONID</code>: los datos del usuario o una clave de búsqueda en memoria?</li>
+    <li>¿Qué sucede si un script malicioso intenta ejecutar <code>document.cookie</code> sobre una cookie marcada con <code>HttpOnly</code>?</li>
+    <li>¿Por qué una petición fetch entre distintos puertos requiere <code>credentials: 'include'</code> para enviar cookies?</li>
   </ol>
 </div>
 
@@ -251,8 +272,8 @@ Imagina que tu empresa tiene tanto éxito que un solo servidor Spring Boot no da
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Si un usuario no autenticado intenta consultar una ruta privada, ¿qué código HTTP debe devolver la API: 401 o 403?</li>
-    <li>Si un usuario con rol de `DESARROLLADOR` intenta borrar un proyecto (acción reservada para `ADMIN`), ¿qué código HTTP debe recibir: 401 o 403?</li>
-    <li>¿Por qué se dice en ingeniería de software que el nombre del código HTTP `401 Unauthorized` fue una mala elección histórica de vocabulario?</li>
+    <li>Si un usuario con rol de <code>DESARROLLADOR</code> intenta borrar un proyecto (acción reservada para <code>ADMIN</code>), ¿qué código HTTP debe recibir: 401 o 403?</li>
+    <li>¿Por qué se dice en ingeniería de software que el nombre del código HTTP <code>401 Unauthorized</code> fue una mala elección histórica de vocabulario?</li>
   </ol>
 </div>
 
@@ -275,7 +296,7 @@ En conversaciones informales es muy habitual escuchar a desarrolladores mezclar 
   * Mecanismos: Usuario y contraseña, biometría, tarjeta inteligente, token criptográfico firmado.
 * **Autorización (AuthZ - *Authorization*):** Es el proceso de **determinar si una identidad confirmada tiene permiso** para ejecutar una acción sobre un recurso.
   * Responde a la pregunta: *¿Este usuario autenticado tiene derecho a ejecutar `DELETE /api/v1/proyectos/1`?*
-  * Mecanismos: Roles (`ROLE_ADMIN`), permisos puntuales (`TAREA_EDITAR`), listas de control de acceso (ACL).
+  * Mecanismos: Roles (`ROLE_ADMINISTRADOR`), permisos puntuales (`TAREA_EDITAR`), listas de control de acceso (ACL).
 
 <div class="rule">
   <p class="rule-label">La regla de oro de la precedencia</p>
@@ -296,13 +317,14 @@ Uno de los errores más frecuentes en APIs REST es devolver el código HTTP equi
 
 Para que el desarrollo de la seguridad no sea caótico, el equipo de ingeniería define una **Matriz RBAC (Role-Based Access Control)** antes de escribir código de seguridad:
 
-Definimos los 4 roles del sistema:
-1. **Anónimo (`ANON`):** Visitante sin autenticar.
-2. **Desarrollador (`DEV`):** Miembro técnico del equipo.
-3. **Jefe de Proyecto (`LEAD`):** Responsable de planificación y asignación.
-4. **Administrador (`ADMIN`):** Administrador global de la plataforma.
+Definimos los 4 roles del sistema. Son los nombres que usará el resto del curso, del `enum Rol` que escribes dentro de un momento hasta el proyecto final, así que conviene fijarlos aquí y no volver a tocarlos:
 
-| Endpoint | Método HTTP | `ANON` | `DEV` | `LEAD` | `ADMIN` |
+1. **`ANON`:** visitante sin autenticar. No es un rol de la aplicación: es la ausencia de credenciales.
+2. **`DESARROLLADOR`:** miembro técnico del equipo.
+3. **`JEFE_PROYECTO`:** responsable de planificación y asignación.
+4. **`ADMINISTRADOR`:** administrador global de la plataforma.
+
+| Endpoint | Método HTTP | `ANON` | `DESARROLLADOR` | `JEFE_PROYECTO` | `ADMINISTRADOR` |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `/api/v1/proyectos` | `GET` (Listar) | 401 | 200 OK | 200 OK | 200 OK |
 | `/api/v1/proyectos/{id}` | `GET` (Detalle) | 401 | 200 OK | 200 OK | 200 OK |
@@ -321,7 +343,7 @@ Para representar roles en Spring Boot de forma limpia, creamos un enumerado est�
 <p class="stage">Paso 1 · Crear el Enum Rol</p>
 
 ```java
-package com.empresa.proyecto.model;
+package com.ejemplo.gestor.model;
 
 public enum Rol {
     ROLE_DESARROLLADOR,
@@ -383,6 +405,22 @@ Diseña la regla de negocio para el control de acceso a nivel de fila (*Row-Leve
 1. Añade a la entidad `Tarea` el campo `Usuario asignadoA`.
 2. Define la condición lógica: *«Un usuario con rol `DESARROLLADOR` solo puede modificar el estado de una tarea si `tarea.asignadoA.id == usuarioAutenticado.id`»*.
 3. Si intenta editar la tarea de otro desarrollador, ¿qué código HTTP debe responder la API?
+4. **Construye la matriz completa** de la que va a depender el resto de la unidad. Una fila por cada combinación de endpoint y método, una columna por rol, y en cada casilla el código de estado exacto. Son las 9 filas de la tabla de esta sesión, y ese documento se convierte en:
+   * la configuración que escribes en la sesión 55,
+   * las anotaciones `@PreAuthorize` de la sesión 57,
+   * y los tests automáticos de la sesión 58.
+   Si la matriz está mal, las tres sesiones siguientes construyen sobre un error, así que merece la pena discutirla ahora.
+5. **Resuelve las cuatro casillas que siempre generan debate**, y anota la razón de cada decisión:
+   * ¿Un `DESARROLLADOR` puede **ver** los proyectos que no son suyos, aunque no pueda editarlos?
+   * ¿Un `JEFE_PROYECTO` puede borrar un proyecto, o eso solo el `ADMINISTRADOR`?
+   * ¿Alguien que no sea `ADMINISTRADOR` puede listar los usuarios del sistema?
+   * ¿La documentación Swagger es pública o exige credenciales?
+6. **El dilema del 403 frente al 404.** Si un usuario pide un recurso que existe pero no le pertenece, un `403` le confirma que ese recurso existe. Con identificadores numéricos secuenciales, alguien puede recorrer `1, 2, 3…` y averiguar cuántos proyectos tiene la empresa sin ver ninguno. Devolver `404` lo oculta, a costa de un mensaje de error más confuso para el usuario legítimo. Elige una de las dos, aplícala de forma coherente en toda la matriz y déjalo escrito: es una de las preguntas clásicas de la defensa de la UD12.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Tienes una tabla con todas las casillas rellenas, sin ninguna «depende»; las cuatro decisiones polémicas están tomadas y justificadas por escrito; y has elegido entre <code>403</code> y <code>404</code> con un criterio que puedes defender.</dd>
+</dl>
 
 ### Reto · Matriz formal de seguridad de la aplicación
 
@@ -393,8 +431,10 @@ Elabora una matriz formal de control de accesos completa para el sistema:
 2. Define con precisión el código de respuesta HTTP esperado ante cada escenario (éxito, anónimo, rol insuficiente y recurso inexistente).
 3. Evalúa el compromiso entre seguridad y divulgación de información: ¿debe responderse `403 Forbidden` o `404 Not Found` cuando un usuario no tiene permiso para saber siquiera si un recurso existe?
 
-> [!NOTE]
-> Si en la evaluación se solicita la entrega de la matriz de permisos y especificación de seguridad, el formato oficial de entrega de texto es siempre un **documento en PDF** (`matriz-permisos.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita la entrega de la matriz de permisos y especificación de seguridad, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>matriz-permisos.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Diferenciación conceptual y semántica entre AuthN y AuthZ comprendida (401 vs 403).</span></div>
@@ -406,7 +446,7 @@ Elabora una matriz formal de control de accesos completa para el sistema:
   <p class="checkpoint-label">Checkpoint · fin de la sesión 53</p>
   <ul class="checklist">
     <li>Se distingue con precisión matemática entre autenticación (identidad) y autorización (permisos).</li>
-    <li>Los códigos de respuesta HTTP `401 Unauthorized` y `403 Forbidden` se aplican con estricta semántica.</li>
+    <li>Los códigos de respuesta HTTP <code>401 Unauthorized</code> y <code>403 Forbidden</code> se aplican con estricta semántica.</li>
     <li>La matriz de control de accesos basada en roles (RBAC) está formalmente definida para todos los endpoints.</li>
     <li>Se comprende la limitación de los roles globales y la necesidad del control de acceso por atributos (ABAC).</li>
     <li>El modelo conceptual de usuarios y roles está preparado para su persistencia en base de datos.</li>
@@ -529,7 +569,7 @@ Id  Cost         Salt                        Hash
 En Spring Boot definimos el codificador de contraseñas oficial como un `@Bean` reutilizable:
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -552,7 +592,7 @@ public class SecurityBeansConfig {
 Creamos una prueba unitaria para experimentar cómo opera `PasswordEncoder`:
 
 ```java
-package com.empresa.proyecto;
+package com.ejemplo.gestor;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -639,8 +679,10 @@ Spring Security proporciona el método:
 1. ¿Cómo permite este método detectar si un hash guardado en base de datos se generó con un factor de coste inferior al estándar actual de la empresa?
 2. Diseña el flujo durante el login: si el login tiene éxito y `upgradeEncoding` devuelve `true`, ¿cómo actualiza la aplicación el hash en la base de datos con el nuevo coste sin pedirle al usuario que vuelva a escribir su contraseña?
 
-> [!NOTE]
-> Si en la evaluación se solicita un informe de auditoría criptográfica y políticas de contraseñas, el formato oficial de entrega de texto es siempre un **documento en PDF** (`analisis-hashing.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un informe de auditoría criptográfica y políticas de contraseñas, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-hashing.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Distinción entre cifrado reversible y hash unidireccional y bean <code>BCryptPasswordEncoder</code> configurado.</span></div>
@@ -654,7 +696,7 @@ Spring Security proporciona el método:
     <li>Se prohíbe terminantemente el almacenamiento de contraseñas en claro o mediante cifrado reversible.</li>
     <li>Se comprende el principio de las funciones hash lentas frente al uso negligente de algoritmos rápidos (MD5/SHA).</li>
     <li>La anatomía de un hash BCrypt (versión, factor de coste, salt y digest) se analiza con precisión.</li>
-    <li>El método `matches()` se utiliza para verificar credenciales sin descifrar nunca la contraseña original.</li>
+    <li>El método <code>matches()</code> se utiliza para verificar credenciales sin descifrar nunca la contraseña original.</li>
     <li>Las contraseñas de los usuarios en PostgreSQL quedan blindadas ante cualquier filtración de datos.</li>
   </ul>
 </div>
@@ -665,7 +707,7 @@ Spring Security proporciona el método:
     <li>¿Por qué nunca se debe utilizar cifrado reversible (como AES) para almacenar contraseñas?</li>
     <li>¿Qué función cumple el Salt aleatorio y qué tipo de ataque previene de raíz?</li>
     <li>¿Por qué BCrypt es una función hash adecuada para contraseñas mientras que SHA-256 no lo es?</li>
-    <li>¿Cómo sabe el método `passwordEncoder.matches()` qué Salt se utilizó si solo le pasas la contraseña plana y el hash guardado?</li>
+    <li>¿Cómo sabe el método <code>passwordEncoder.matches()</code> qué Salt se utilizó si solo le pasas la contraseña plana y el hash guardado?</li>
   </ol>
 </div>
 
@@ -746,16 +788,44 @@ La configuración moderna se realiza mediante un `@Bean` que construye un **`Sec
 
 ### Paso a paso guiado · Configurar SecurityConfig con rutas públicas y privadas
 
-Vamos a configurar nuestra primera cadena de seguridad formal:
+Vamos a configurar nuestra primera cadena de seguridad formal. No escribas todavía ninguna clase: el primer paso es **ver el cerrojo funcionando solo**, porque entender qué hace Spring sin que se lo pidas es lo que explica todo lo que viene después.
 
-<p class="stage">Paso 1 · Crear la clase SecurityConfig</p>
+<p class="stage">Paso 1 · Añadir la dependencia y arrancar sin configurar nada</p>
+
+1. Abre tu `pom.xml` y añade el `starter` de seguridad dentro de `<dependencies>`, junto a los que ya tienes:
+   ```xml
+   <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-security</artifactId>
+   </dependency>
+   ```
+2. Recarga las dependencias de Maven en tu IDE (o ejecuta `./mvnw clean compile` en la terminal).
+3. Arranca la aplicación con `./mvnw spring-boot:run` y **no toques nada más**.
+4. Busca en la terminal, entre los mensajes de arranque, una línea como esta:
+   ```text
+   Using generated security password: 4a8b1c2d-9e3f-4123-b890-abcdef123456
+
+   This generated password is for development use only. Your security configuration
+   must be updated before running your application in production.
+   ```
+5. Lanza `GET http://localhost:8080/api/v1/proyectos` **sin ninguna credencial**.
+
+<dl class="worked">
+  <dt>Qué acaba de pasar</dt>
+  <dd>No has escrito ni una línea de código y tu API entera ha dejado de responder con <code>401</code>. Eso es <em>Secure by Default</em>: Spring Security prefiere que una aplicación nazca cerrada y que seas tú quien abra puertas conscientemente, antes que nacer abierta y depender de que te acuerdes de cerrarlas.</dd>
+  <dt>Por qué esa contraseña no sirve</dt>
+  <dd>Cambia en cada arranque, es la misma para todo el mundo y el usuario se llama <code>user</code>. Sirve para comprobar que el cerrojo está puesto y para nada más. Sustituirla es justo el trabajo del paso 3.</dd>
+</dl>
+
+<p class="stage">Paso 2 · Crear la clase SecurityConfig</p>
+
+Crea el archivo `src/main/java/com/ejemplo/gestor/config/SecurityConfig.java`. Es una clase de configuración normal: no hereda de nada y no implementa ninguna interfaz; solo publica un `@Bean`.
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -773,13 +843,12 @@ public class SecurityConfig {
 
             // 2. Definimos las reglas de autorización sobre las rutas HTTP
             .authorizeHttpRequests(auth -> auth
-                // Documentación OpenAPI y Swagger accesibles para todo el mundo
+                // Lo único público es la documentación: sin ella, quien todavía
+                // no sabe cómo autenticarse no tiene por dónde empezar
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-                // Endpoints de solo lectura de proyectos públicos para consulta
-                .requestMatchers(HttpMethod.GET, "/api/v1/proyectos/**").permitAll()
-
-                // Cualquier otra petición (creación, borrado, modificación) exige autenticación
+                // Todo lo demás exige credenciales, tal y como declara la
+                // matriz de control de acceso de la sesión 53
                 .anyRequest().authenticated()
             )
 
@@ -791,9 +860,20 @@ public class SecurityConfig {
 }
 ```
 
-<p class="stage">Paso 2 · Definir usuario temporal en application.properties</p>
+<dl class="worked">
+  <dt><code>@EnableWebSecurity</code></dt>
+  <dd>Le dice a Spring que tú te haces cargo de la configuración de seguridad. En cuanto publicas tu propio <code>SecurityFilterChain</code>, la configuración automática se retira: ya no hay usuario <code>user</code> ni contraseña generada en la terminal.</dd>
+  <dt><code>http</code> y el punto al final de cada línea</dt>
+  <dd><code>HttpSecurity</code> es un constructor encadenado: cada método devuelve el mismo objeto, así que se leen en cascada. El orden entre bloques (<code>csrf</code>, <code>authorizeHttpRequests</code>, <code>httpBasic</code>) da igual; el orden <strong>dentro</strong> de <code>authorizeHttpRequests</code> es crítico.</dd>
+  <dt>Por qué <code>anyRequest()</code> va siempre la última</dt>
+  <dd>Las reglas se evalúan de arriba abajo y gana la primera que encaje. Si pusieras <code>anyRequest().authenticated()</code> arriba, engulliría todas las peticiones y las reglas de debajo no se aplicarían nunca. Spring, de hecho, se niega a arrancar si detecta una regla inalcanzable.</dd>
+  <dt><code>/**</code> frente a <code>/*</code></dt>
+  <dd><code>/swagger-ui/*</code> encaja con <code>/swagger-ui/index.html</code> pero no con <code>/swagger-ui/css/tema.css</code>. <code>/**</code> atraviesa cuantos niveles haga falta, y por eso es lo que se usa para árboles de recursos.</dd>
+</dl>
 
-Para realizar las primeras pruebas antes de conectar la base de datos en la siguiente sesión, definimos credenciales estáticas en el archivo de propiedades:
+<p class="stage">Paso 3 · Definir usuario temporal en application.properties</p>
+
+Con tu `SecurityFilterChain` publicado ya no hay contraseña generada en la terminal, así que necesitas unas credenciales propias. Para las primeras pruebas, antes de conectar la base de datos en la sesión siguiente, valen unas estáticas en el archivo de propiedades:
 
 ```properties
 # Usuario provisional para pruebas iniciales de Spring Security
@@ -802,32 +882,55 @@ spring.security.user.password=Password123!
 spring.security.user.roles=DESARROLLADOR
 ```
 
+<div class="rule">
+  <p class="rule-label">Esto es un andamio, y se cae en la sesión 56</p>
+  <p>Un usuario en un archivo de propiedades no tiene roles múltiples, no se puede dar de alta desde la API, no se puede desactivar y su contraseña viaja en texto plano dentro del repositorio. Está aquí por una única razón: para que puedas probar la cadena de filtros hoy sin arrastrar todavía la base de datos. En la sesión 56 estas tres líneas se borran.</p>
+</div>
+
 ### La comprobación · Pruebas de autorización con Bruno
 
-Arranca tu aplicación y ejecuta estas comprobaciones desde tu cliente HTTP (Bruno):
+Arranca tu aplicación y ejecuta estas comprobaciones desde tu cliente HTTP (Bruno o Postman):
 
 1. **Ruta pública sin credenciales:**
+   * Abre en el navegador `http://localhost:8080/swagger-ui.html`.
+   * **Resultado esperado:** Código `200 OK`. La documentación carga sin pedir usuario, que es justo lo que necesita quien todavía no sabe cómo autenticarse.
+2. **Lectura sin credenciales:**
    * Lanza `GET http://localhost:8080/api/v1/proyectos`.
-   * **Resultado esperado:** Código `200 OK` con la lista de proyectos. Pasa limpia sin pedir usuario.
-2. **Ruta protegida sin credenciales:**
-   * Lanza `POST http://localhost:8080/api/v1/proyectos` con un cuerpo JSON de alta.
-   * **Resultado esperado:** Código **`401 Unauthorized`**.
+   * **Resultado esperado:** Código **`401 Unauthorized`**, que es la fila `ANON` de la matriz de la sesión 53. Esta API no publica nada: hasta para leer hay que identificarse.
    * Revisa la pestaña *Headers*: el servidor ha devuelto la cabecera `WWW-Authenticate: Basic realm="Realm"`.
-3. **Ruta protegida con credenciales válidas:**
-   * En Bruno, ve a la pestaña **Auth** → selecciona **Basic Auth**.
+3. **Escritura con credenciales válidas:**
+   * Abre la pestaña **Auth** de la petición (existe igual en Bruno y en Postman) y selecciona **Basic Auth**.
    * Introduce Usuario: `desarrollador` y Contraseña: `Password123!`.
    * Lanza de nuevo el `POST`.
    * **Resultado esperado:** Código **`201 Created`** con la cabecera `Location`.
    * Inspecciona en *Headers* enviados cómo viaja:
      `Authorization: Basic ZGVzYXJyb2xsYWRvcjpQYXNzd29yZDEyMyE=` (cadena codificada en Base64).
 
-### Ahora tú · Proteger las rutas de tareas
+### Si algo no sale como dice el guion
 
-Aplica las reglas de seguridad sobre los endpoints de tareas:
+Los cuatro tropiezos de esta sesión, en orden de frecuencia:
 
-1. Modifica `SecurityConfig` para que `GET /api/v1/tareas` sea una ruta pública.
-2. Asegura que la creación de tareas (`POST /api/v1/proyectos/{id}/tareas`) y el borrado (`DELETE /api/v1/tareas/{id}`) exijan autenticación obligatoria.
-3. Comprueba con Bruno que una petición anónima de borrado es rechazada de inmediato con `401`.
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| Sigue apareciendo `Using generated security password` al arrancar | Tu `SecurityConfig` no se está cargando | ¿Está la clase dentro del paquete `com.ejemplo.gestor` o de un subpaquete suyo? Spring solo escanea a partir de donde vive `GestorApplication` |
+| `GET /swagger-ui.html` devuelve `401` | La ruta real no es la que has escrito en `requestMatchers` | Mira en la terminal a qué ruta redirige Springdoc; suele hacer falta `/swagger-ui/**` **y** `/v3/api-docs/**` |
+| Con usuario y contraseña correctos sigues recibiendo `401` | El cliente no está enviando la cabecera | Comprueba en la pestaña de cabeceras enviadas que aparece `Authorization: Basic …`; si no está, la pestaña **Auth** no se aplicó a esa petición |
+| La aplicación no arranca: `Cannot configure an AuthenticationProvider` o una regla inalcanzable | Una regla más general tapa a otra más concreta | Reordena: `anyRequest()` siempre al final |
+
+### Ahora tú · Contrastar la configuración con la matriz de permisos
+
+Todavía no puedes distinguir un `DESARROLLADOR` de un `ADMINISTRADOR` —eso llega en la sesión 57—, pero la primera columna de la matriz ya la puedes auditar entera:
+
+1. Recorre la tabla de la sesión 53 y comprueba, sin credenciales, que **las nueve filas** de la columna `ANON` responden `401`.
+2. Añade a `SecurityConfig` la única excepción que esta API sí quiere publicar: la ruta de login que construirás en la sesión 59, `POST /api/v1/auth/**`. Déjala escrita con `permitAll()` aunque el endpoint todavía no exista.
+3. Repite `GET /api/v1/proyectos` con las credenciales de `application.properties` y comprueba que ahora pasa: la ruta no ha cambiado, lo que ha cambiado es quién la pide.
+4. Guarda las tres peticiones —documentación pública, lectura anónima rechazada, lectura autenticada— como una carpeta **`09-seguridad`** dentro de la colección que arrastras desde la UD2. A partir de aquí cada sesión de esta unidad añade peticiones a esa carpeta, y en la sesión 60 tendrás que poder ejecutarla entera de una pasada.
+5. Documenta en tu cuaderno, en tres líneas, qué ruta has abierto y **por qué esa y no otra**. Es la primera decisión de seguridad que tomas tú y es la que tendrás que defender.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Las nueve filas de la columna <code>ANON</code> responden <code>401</code>; <code>/swagger-ui.html</code> responde <code>200</code> sin credenciales; la misma petición que fallaba pasa a <code>200</code> solo añadiendo Basic Auth; y la terminal de arranque ya no imprime ninguna contraseña generada.</dd>
+</dl>
 
 ### Reto · Manejo personalizado de respuestas 401 (RFC 7807)
 
@@ -840,19 +943,19 @@ Investiga la interfaz `AuthenticationEntryPoint`:
 3. Regístralo en tu `filterChain` con `.exceptionHandling(ex -> ex.authenticationEntryPoint(...))`.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Dependencia integrada, `SecurityConfig` con `filterChain` y rutas públicas/privadas operativas.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Dependencia integrada, <code>SecurityConfig</code> con <code>filterChain</code> y rutas públicas/privadas operativas.</span></div>
   <div><strong>Si lo tienes</strong><span>Pruebas con HTTP Basic verificadas en Bruno alternando peticiones permitidas (200) y bloqueadas (401).</span></div>
-  <div><strong>Reto</strong><span>Punto de entrada personalizado (`AuthenticationEntryPoint`) emitiendo respuestas RFC 7807 ante rechazos 401.</span></div>
+  <div><strong>Reto</strong><span>Punto de entrada personalizado (<code>AuthenticationEntryPoint</code>) emitiendo respuestas RFC 7807 ante rechazos 401.</span></div>
 </div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 55</p>
   <ul class="checklist">
-    <li>Se comprende la arquitectura de la `SecurityFilterChain` y su ejecución previa al controlador.</li>
+    <li>Se comprende la arquitectura de la <code>SecurityFilterChain</code> y su ejecución previa al controlador.</li>
     <li>La configuración moderna sin clases obsoletas se realiza mediante el DSL de Spring Security 6.</li>
     <li>Las rutas de documentación técnica (OpenAPI/Swagger) quedan explícitamente abiertas al público.</li>
-    <li>Los métodos de modificación (POST, PUT, DELETE) están estrictamente blindados con autenticación.</li>
-    <li>Las respuestas de error `401 Unauthorized` emiten la cabecera estándar `WWW-Authenticate`.</li>
+    <li>Ninguna ruta de negocio responde sin credenciales: la lectura también exige identificarse.</li>
+    <li>Las respuestas de error <code>401 Unauthorized</code> emiten la cabecera estándar <code>WWW-Authenticate</code>.</li>
   </ul>
 </div>
 
@@ -860,7 +963,7 @@ Investiga la interfaz `AuthenticationEntryPoint`:
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué Spring Security rechaza todas las peticiones por defecto tras añadir su starter?</li>
-    <li>¿Qué método de `HttpSecurity` permite abrir una ruta concreta para visitas anónimas sin credenciales?</li>
+    <li>¿Qué método permite abrir una ruta concreta a visitas anónimas, y por qué la documentación es la única que lo merece aquí?</li>
     <li>¿Por qué HTTP Basic no es un mecanismo de cifrado seguro por sí mismo si no se transmite sobre HTTPS?</li>
     <li>¿Qué cabecera HTTP estándar incluye el servidor en una respuesta 401 para indicar qué esquema de autenticación espera?</li>
   </ol>
@@ -938,7 +1041,7 @@ Podemos hacer que nuestra entidad `Usuario` implemente directamente `UserDetails
 Completamos la entidad `Usuario` que diseñamos en la sesión 53:
 
 ```java
-package com.empresa.proyecto.model;
+package com.ejemplo.gestor.model;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -1005,9 +1108,9 @@ public class Usuario implements UserDetails {
 <p class="stage">Paso 2 · Crear el repositorio UsuarioRepository</p>
 
 ```java
-package com.empresa.proyecto.repository;
+package com.ejemplo.gestor.repository;
 
-import com.empresa.proyecto.model.Usuario;
+import com.ejemplo.gestor.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -1022,9 +1125,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 Creamos el servicio anotado con `@Service` para que Spring Security lo detecte automáticamente como el proveedor oficial de identidades:
 
 ```java
-package com.empresa.proyecto.service;
+package com.ejemplo.gestor.service;
 
-import com.empresa.proyecto.repository.UsuarioRepository;
+import com.ejemplo.gestor.repository.UsuarioRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -1047,23 +1150,60 @@ public class CustomUserDetailsService implements UserDetailsService {
 }
 ```
 
-<p class="stage">Paso 4 · Insertar datos iniciales con hashes BCrypt en PostgreSQL</p>
+<p class="stage">Paso 4 · Generar tus propios hashes BCrypt</p>
 
-En `src/main/resources/data.sql` insertamos usuarios representativos.
+Aquí no vale copiar un hash de unos apuntes. BCrypt incorpora una **sal aleatoria** dentro del propio hash, así que el de tu compañero no es el tuyo aunque la contraseña sea la misma, y un hash mal copiado se traduce siempre en un `401` que parece un fallo de configuración y no lo es.
 
-> Recuerda que la contraseña nunca se guarda en claro. El hash para la contraseña `"Password123!"` con factor de coste 12 generado por BCrypt es:
-> `$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L` *(o el generado en tu test de la sesión 54)*.
+Genera los tuyos reutilizando el `PasswordEncoder` de la sesión 54. Crea `src/test/java/com/ejemplo/gestor/GenerarHashesTest.java`:
+
+```java
+package com.ejemplo.gestor;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+class GenerarHashesTest {
+
+    @Test
+    void imprimirHashesParaDataSql() {
+        PasswordEncoder encoder = new BCryptPasswordEncoder(12);
+        for (String clave : new String[] { "Password123!", "Dev2026!" }) {
+            System.out.println(clave + "  ->  " + encoder.encode(clave));
+        }
+    }
+}
+```
+
+Ejecútalo con `./mvnw test -Dtest=GenerarHashesTest` y copia de la consola las cadenas que empiezan por `$2a$12$`. Cada una mide exactamente **60 caracteres**: si la tuya mide otra cosa, se ha partido al copiarla.
+
+<p class="stage">Paso 5 · Poblar la tabla con data.sql</p>
+
+Crea `src/main/resources/data.sql` **pegando tus propios hashes**, no los de este guion:
 
 ```sql
 INSERT INTO usuarios (username, password, rol, activo) VALUES
-('admin', '$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L', 'ROLE_ADMINISTRADOR', true),
-('dev1', '$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L', 'ROLE_DESARROLLADOR', true),
-('inactivo', '$2a$12$e8kM.V3kM5aU4L4O5Q6R7eJ7Z8X9Y0A1B2C3D4E5F6G7H8I9J0K1L', 'ROLE_DESARROLLADOR', false);
+('admin',    '<pega aquí tu hash de Password123!>', 'ROLE_ADMINISTRADOR', true),
+('dev1',     '<pega aquí tu hash de Dev2026!>',     'ROLE_DESARROLLADOR', true),
+('inactivo', '<pega aquí tu hash de Dev2026!>',     'ROLE_DESARROLLADOR', false);
 ```
+
+Y añade esta línea a `application.properties`:
+
+```properties
+# Sin esto, data.sql se ejecuta ANTES de que Hibernate cree la tabla usuarios
+spring.jpa.defer-datasource-initialization=true
+```
+
+<div class="rule">
+  <p class="rule-label">La línea que se olvida todo el mundo</p>
+  <p>Con <code>ddl-auto=update</code>, Spring Boot ejecuta <code>data.sql</code> <strong>antes</strong> de que Hibernate haya creado las tablas. El arranque falla con un <code>relation "usuarios" does not exist</code> que no tiene nada que ver con tu SQL. <code>defer-datasource-initialization=true</code> invierte ese orden.</p>
+  <p>El otro efecto que conviene conocer: <code>data.sql</code> se ejecuta en <strong>cada</strong> arranque. Si reinicias dos veces tendrás el error de clave única del <code>username</code>. Empieza el archivo con <code>DELETE FROM usuarios;</code> mientras estés en desarrollo.</p>
+</div>
 
 ### La comprobación · Autenticación real contra PostgreSQL
 
-Elimina del archivo `application.properties` las propiedades fijas `spring.security.user.name` y `password` para que no interfieran.
+Elimina del archivo `application.properties` las tres propiedades fijas `spring.security.user.name`, `.password` y `.roles` de la sesión 55: mientras sigan ahí, Spring Boot registra ese usuario en memoria y no sabrás si estás autenticándote contra PostgreSQL o contra el archivo de texto.
 
 Reinicia Spring Boot y prueba en Bruno:
 1. **Login exitoso con usuario de base de datos:**
@@ -1080,6 +1220,17 @@ Reinicia Spring Boot y prueba en Bruno:
    * Lanza la petición con usuario `inactivo` y clave `Password123!`.
    * **Resultado:** Código `401 Unauthorized`. Spring Security lee `isEnabled() == false` y bloquea el acceso de inmediato.
 
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| Al arrancar: `relation "usuarios" does not exist` | `data.sql` corre antes que Hibernate | Falta `spring.jpa.defer-datasource-initialization=true` |
+| Al reiniciar: `duplicate key value violates unique constraint` | `data.sql` se ejecuta en cada arranque | Añade `DELETE FROM usuarios;` como primera línea del archivo |
+| `401` con el usuario y la contraseña correctos | El hash de `data.sql` no corresponde a esa contraseña | Cuenta los caracteres: deben ser 60. Regenéralo con el test del paso 4 |
+| `Encoded password does not look like BCrypt` en el log | La columna guarda la contraseña en claro | Estás insertando `'Password123!'` en vez de su hash |
+| `401` siempre, y en los logs no aparece ningún `SELECT ... FROM usuarios` | Tu `CustomUserDetailsService` no se está usando | ¿Tiene `@Service`? ¿Hay algún otro bean `UserDetailsService` (por ejemplo, el de `application.properties`) todavía activo? |
+| `LazyInitializationException` al leer los roles | La colección de roles se carga fuera de la transacción | Con un solo `Rol` mapeado como `@Enumerated` esto no pasa; si has pasado a `Set<Rol>`, necesitarás `FetchType.EAGER` en esa colección |
+
 ### Ahora tú · Endpoint de perfil del usuario autenticado (/me)
 
 Implementa un endpoint que permita al usuario conocer sus propios datos a partir de su sesión activa:
@@ -1095,8 +1246,16 @@ Implementa un endpoint que permita al usuario conocer sus propios datos a partir
        ));
    }
    ```
-2. La anotación `@AuthenticationPrincipal` inyecta directamente la instancia de `Usuario` que Spring Security validó en la base de datos.
-3. Prueba la llamada con distintos usuarios y comprueba que cada uno recibe su propia identidad.
+2. La anotación `@AuthenticationPrincipal` inyecta directamente la instancia de `Usuario` que Spring Security validó en la base de datos. Funciona porque tu entidad **es** un `UserDetails`: ese es el rédito de haber implementado la interfaz en el paso 1.
+3. Define el `record UsuarioResponse(Long id, String username, String rol)` en `com.ejemplo.gestor.dto`. Fíjate en lo que **no** lleva: la contraseña. Aunque sea un hash, un endpoint de perfil no tiene ninguna razón para publicarla, y este es exactamente el escenario que la UD3 anticipó al separar entidad y DTO.
+4. Prueba la llamada con `admin` y con `dev1` y comprueba que cada uno recibe su propia identidad, sin que el endpoint reciba ningún `id` por parámetro: la identidad no se pide, se deduce del token o de las credenciales.
+5. Lanza `GET /api/v1/usuarios/me` **sin credenciales** y confirma que responde `401` antes de entrar al método. Añade las tres peticiones a la carpeta `09-seguridad` de tu colección.
+6. Añade al `data.sql` un cuarto usuario `jefe1` con rol `ROLE_JEFE_PROYECTO`: lo vas a necesitar en la sesión 57 para probar la fila intermedia de la matriz, y es mejor tener los tres roles poblados desde ya.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>En los logs de Hibernate aparece un <code>select ... from usuarios where username=?</code> por cada intento de autenticación; <code>admin</code> entra, <code>fantasma</code> y <code>inactivo</code> no; <code>/me</code> devuelve identidades distintas para credenciales distintas sin recibir ningún parámetro; y en <code>application.properties</code> ya no queda ni rastro de <code>spring.security.user</code>.</dd>
+</dl>
 
 ### Reto · Prevención de ataques de temporización (Timing Attacks)
 
@@ -1110,8 +1269,8 @@ Investiga cómo Spring Security mitiga este vector mediante **contraseñas simul
 2. ¿Por qué ejecuta de todos modos una llamada falsa a `passwordEncoder.matches()` antes de responder `401`?
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Interfaz `UserDetailsService` implementada y conectada a PostgreSQL mediante `UsuarioRepository`.</span></div>
-  <div><strong>Si lo tienes</strong><span>Entidad `Usuario` implementando `UserDetails`, verificación de cuenta activa (`isEnabled`) y endpoint `/me`.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Interfaz <code>UserDetailsService</code> implementada y conectada a PostgreSQL mediante <code>UsuarioRepository</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Entidad <code>Usuario</code> implementando <code>UserDetails</code>, verificación de cuenta activa (<code>isEnabled</code>) y endpoint <code>/me</code>.</span></div>
   <div><strong>Reto</strong><span>Protección contra ataques de temporización (*Timing Attacks*) comprendida e inspeccionada en los componentes internos.</span></div>
 </div>
 
@@ -1119,20 +1278,20 @@ Investiga cómo Spring Security mitiga este vector mediante **contraseñas simul
   <p class="checkpoint-label">Checkpoint · fin de la sesión 56</p>
   <ul class="checklist">
     <li>Las credenciales e identidades residen exclusivamente en tablas de PostgreSQL.</li>
-    <li>La interfaz `UserDetailsService` carga usuarios reales mediante consultas JPA optimizadas.</li>
-    <li>El objeto `UserDetails` desacopla la seguridad de la lógica del modelo de dominio.</li>
-    <li>Las cuentas desactivadas (`activo = false`) son rechazadas automáticamente por `isEnabled()`.</li>
-    <li>El usuario autenticado se inyecta limpiamente en controladores mediante `@AuthenticationPrincipal`.</li>
+    <li>La interfaz <code>UserDetailsService</code> carga usuarios reales mediante consultas JPA optimizadas.</li>
+    <li>El objeto <code>UserDetails</code> desacopla la seguridad de la lógica del modelo de dominio.</li>
+    <li>Las cuentas desactivadas (<code>activo = false</code>) son rechazadas automáticamente por <code>isEnabled()</code>.</li>
+    <li>El usuario autenticado se inyecta limpiamente en controladores mediante <code>@AuthenticationPrincipal</code>.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Qué método define la interfaz `UserDetailsService` y qué excepción debe lanzar si el usuario no existe?</li>
-    <li>¿Por qué el enum de roles debe mapearse con el prefijo `ROLE_` al crear instancias de `SimpleGrantedAuthority`?</li>
-    <li>¿Para qué se utiliza la anotación `@AuthenticationPrincipal` en un método controlador?</li>
-    <li>¿Cómo impide el método `isEnabled()` de `UserDetails` el acceso a usuarios dados de baja sin borrar sus registros?</li>
+    <li>¿Qué método define la interfaz <code>UserDetailsService</code> y qué excepción debe lanzar si el usuario no existe?</li>
+    <li>¿Por qué el enum de roles debe mapearse con el prefijo <code>ROLE_</code> al crear instancias de <code>SimpleGrantedAuthority</code>?</li>
+    <li>¿Para qué se utiliza la anotación <code>@AuthenticationPrincipal</code> en un método controlador?</li>
+    <li>¿Cómo impide el método <code>isEnabled()</code> de <code>UserDetails</code> el acceso a usuarios dados de baja sin borrar sus registros?</li>
   </ol>
 </div>
 
@@ -1151,14 +1310,14 @@ Investiga cómo Spring Security mitiga este vector mediante **contraseñas simul
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> la diferencia entre Roles (agrupaciones globales con <code>hasRole()</code>) y Autoridades o Permisos atómicos (capacidades específicas con <code>hasAuthority()</code>), la autorización a nivel de ruta en <code>SecurityFilterChain</code> frente a la autorización granular en métodos con <code>@PreAuthorize</code> y <code>@EnableMethodSecurity</code>.</li>
     <li><strong>2. Haz:</strong> traslada la Matriz de Control de Acceso (RBAC) diseñada en la sesión 53 a tu aplicación, blindando endpoints sensibles según el rol del usuario autenticado.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas peticiones en Bruno alternando entre identidades con rol `DESARROLLADOR` y `ADMINISTRADOR`, verificando que los desarrolladores reciben <code>403 Forbidden</code> al intentar borrar proyectos mientras que los administradores completan la acción con <code>204 No Content</code>.</li>
+    <li><strong>3. Comprueba:</strong> ejecutas peticiones en Bruno alternando entre identidades con rol <code>DESARROLLADOR</code> y <code>ADMINISTRADOR</code>, verificando que los desarrolladores reciben <code>403 Forbidden</code> al intentar borrar proyectos mientras que los administradores completan la acción con <code>204 No Content</code>.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Qué diferencia sintáctica y conceptual existe entre comprobar <code>hasRole('ADMIN')</code> y comprobar <code>hasAuthority('ROLE_ADMIN')</code>?</li>
+    <li>¿Qué diferencia sintáctica y conceptual existe entre comprobar <code>hasRole('ADMINISTRADOR')</code> y comprobar <code>hasAuthority('ROLE_ADMINISTRADOR')</code>?</li>
     <li>¿Qué anotación de configuración es obligatorio activar para poder utilizar <code>@PreAuthorize</code> sobre métodos de controladores o servicios?</li>
     <li>¿Por qué proteger la seguridad únicamente por rutas URL en <code>SecurityFilterChain</code> es vulnerable si un método de servicio es invocado internamente desde otro flujo?</li>
   </ol>
@@ -1172,7 +1331,7 @@ En aplicaciones en crecimiento existen dos formas de modelar la autorización:
   <figcaption>Roles vs Permisos en Spring Security</figcaption>
   <ol class="flow flow--row flow--chain">
     <li>Usuario</li>
-    <li>Roles (ROLE_ADMIN, ROLE_DEV)</li>
+    <li>Roles (ROLE_ADMINISTRADOR, ROLE_DESARROLLADOR)</li>
     <li>Permisos Atómicos (PROYECTO_BORRAR, TAREA_EDITAR)</li>
     <li>Operación protegida</li>
   </ol>
@@ -1199,7 +1358,7 @@ Podemos aplicar reglas de autorización en dos capas complementarias:
 Añadimos la anotación `@EnableMethodSecurity` en nuestra clase de configuración:
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1220,9 +1379,11 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // Rutas públicas de consulta y documentación
+                // Lo único público sigue siendo la documentación
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/proyectos/**", "/api/v1/tareas/**").permitAll()
+
+                // Borrar un proyecto es la operación irreversible de la matriz
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/proyectos/**").hasRole("ADMINISTRADOR")
 
                 // Gestión de usuarios: reservada estrictamente a Administradores
                 .requestMatchers("/api/v1/usuarios/**").hasRole("ADMINISTRADOR")
@@ -1236,6 +1397,17 @@ public class SecurityConfig {
     }
 }
 ```
+
+<dl class="worked">
+  <dt>Por qué hay dos sitios donde escribir reglas</dt>
+  <dd>El <code>filterChain</code> decide por <strong>ruta y método HTTP</strong>, antes de que Spring sepa siquiera qué controlador va a atender la petición. <code>@PreAuthorize</code> decide por <strong>método Java</strong>, cuando ya conoce los argumentos. La primera es una valla perimetral; la segunda, una cerradura en cada puerta.</dd>
+  <dt>Cuál usar</dt>
+  <dd>Todo lo que se pueda expresar como «esta ruta con este verbo es solo para este rol» va en el <code>filterChain</code>: se rechaza antes y en un solo sitio. En cuanto la regla necesita mirar <strong>el dato concreto</strong> —«solo si esta tarea es tuya»— no hay ruta que la exprese y hace falta <code>@PreAuthorize</code>.</dd>
+  <dt>Qué pasa si las dos hablan de lo mismo</dt>
+  <dd>Se aplican las dos, y gana la más restrictiva, porque la del filtro se evalúa primero y corta. No es un error tener las dos: es defensa en profundidad. Pero mantén una sola como fuente de verdad para cada regla, o acabarás cambiando una y no la otra.</dd>
+  <dt>El prefijo <code>ROLE_</code>, de una vez</dt>
+  <dd>En la base de datos guardas <code>ROLE_ADMINISTRADOR</code>. En <code>hasRole()</code> escribes <code>'ADMINISTRADOR'</code>, <strong>sin</strong> prefijo, porque el método lo añade solo. Si escribes <code>hasRole('ROLE_ADMINISTRADOR')</code>, Spring buscará <code>ROLE_ROLE_ADMINISTRADOR</code> y nadie pasará nunca. La versión sin magia es <code>hasAuthority('ROLE_ADMINISTRADOR')</code>, que compara literalmente.</dd>
+</dl>
 
 <p class="stage">Paso 2 · Proteger operaciones con @PreAuthorize en ProyectoController</p>
 
@@ -1319,12 +1491,31 @@ Con los usuarios cargados en PostgreSQL (`admin` con `ROLE_ADMINISTRADOR` y `dev
    * Misma petición sin credenciales en la pestaña Auth.
    * **Resultado esperado:** Código **`401 Unauthorized`**.
 
-### Ahora tú · Proteger la creación de tareas
+### Si algo no sale como dice el guion
 
-Implementa la autorización en el controlador de tareas:
-1. Permite que tanto `ROLE_DESARROLLADOR`, `ROLE_JEFE_PROYECTO` como `ROLE_ADMINISTRADOR` puedan crear tareas sobre un proyecto existente (`POST /api/v1/proyectos/{id}/tareas`).
-2. Restringe el borrado de tareas (`DELETE /api/v1/tareas/{id}`) exclusivamente a `ROLE_JEFE_PROYECTO` y `ROLE_ADMINISTRADOR`.
-3. Comprueba con Bruno que `dev1` recibe `403` al intentar borrar una tarea pero puede crear una nueva con éxito (`201`).
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| `@PreAuthorize` no hace absolutamente nada | Falta `@EnableMethodSecurity` | Va sobre la clase `SecurityConfig`, junto a `@EnableWebSecurity` |
+| Todo el mundo recibe `403`, incluso `admin` | Prefijo duplicado | ¿Has escrito `hasRole('ROLE_ADMINISTRADOR')`? Quita el `ROLE_` |
+| `admin` recibe `403` y el rol está bien escrito | La autoridad guardada no lleva el prefijo | En `data.sql` la columna debe decir `ROLE_ADMINISTRADOR`, no `ADMINISTRADOR` |
+| `EL1008E: Property or field 'tareaSecurityService' cannot be found` | El bean no existe con ese nombre | El nombre en la expresión es el del bean: `@Component` sobre `TareaSecurityService` lo registra como `tareaSecurityService`, con minúscula inicial |
+| El `403` llega, pero el método se ejecutó igualmente | Estás anotando un método privado, o llamándolo desde la misma clase | Las anotaciones de seguridad funcionan por proxy: solo actúan en llamadas públicas que entran desde fuera del bean |
+
+### Ahora tú · Trasladar la matriz entera al código
+
+Hasta ahora la matriz de la sesión 53 era un documento. Aquí se convierte en código ejecutable.
+
+1. Permite que `ROLE_DESARROLLADOR`, `ROLE_JEFE_PROYECTO` y `ROLE_ADMINISTRADOR` puedan crear tareas sobre un proyecto existente (`POST /api/v1/proyectos/{id}/tareas`).
+2. Restringe el borrado de tareas (`DELETE /api/v1/tareas/{id}`) a `ROLE_JEFE_PROYECTO` y `ROLE_ADMINISTRADOR`.
+3. Aplica la fila más incómoda de la matriz: `POST /api/v1/proyectos` es de `JEFE_PROYECTO` y `ADMINISTRADOR`, pero `DELETE /api/v1/proyectos/{id}` es **solo** de `ADMINISTRADOR`. Un `JEFE_PROYECTO` que borra debe recibir `403`, no `204`.
+4. Decide, y anota por qué, **dónde** pones cada una de esas tres reglas: en el `filterChain` o en `@PreAuthorize`. No hay una respuesta única, pero sí tiene que haber un criterio.
+5. Comprueba con tu cliente HTTP la matriz completa: son 9 filas × 4 columnas = **36 comprobaciones**. Guárdalas en la carpeta `09-seguridad` con un nombre que diga qué esperas, del tipo `dev1-borra-proyecto-403`.
+6. Marca en la tabla de la sesión 53, con un ✔, cada casilla que ya devuelve lo que decía. Las que no coincidan son tu lista de tareas: o está mal el código, o está mal la matriz, y decidir cuál de las dos es parte del ejercicio.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Las 36 casillas de la matriz responden lo que la tabla dice. En particular: un <code>DESARROLLADOR</code> nunca ve un <code>401</code> (ya está identificado, sus rechazos son <code>403</code>), y un <code>JEFE_PROYECTO</code> puede crear proyectos pero no borrarlos.</dd>
+</dl>
 
 ### Reto · Excepciones de acceso denegado personalizadas
 
@@ -1335,22 +1526,24 @@ Implementa un `AccessDeniedHandler` personalizado:
 2. Emite una respuesta estándar **RFC 7807** con código `403`, título *"Acceso Denegado"* y detalle indicando que el rol actual no dispone de los privilegios requeridos.
 3. Regístralo en `SecurityConfig` bajo `.exceptionHandling(ex -> ex.accessDeniedHandler(...))`.
 
-> [!NOTE]
-> Si en la evaluación se solicita un informe técnico sobre la jerarquía de roles y auditoría de accesos denegados, el formato oficial de entrega de texto es siempre un **documento en PDF** (`informe-roles-seguridad.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un informe técnico sobre la jerarquía de roles y auditoría de accesos denegados, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-roles-seguridad.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Reglas de autorización por rol configuradas en `SecurityFilterChain` y probadas con Bruno.</span></div>
-  <div><strong>Si lo tienes</strong><span>Anotación `@PreAuthorize` aplicada en controladores con `hasRole` y `hasAnyRole` diferenciando 401 y 403.</span></div>
-  <div><strong>Reto</strong><span>Expresiones SpEL para seguridad a nivel de fila y `AccessDeniedHandler` emitiendo respuestas RFC 7807 ante 403.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Reglas de autorización por rol configuradas en <code>SecurityFilterChain</code> y probadas con Bruno.</span></div>
+  <div><strong>Si lo tienes</strong><span>Anotación <code>@PreAuthorize</code> aplicada en controladores con <code>hasRole</code> y <code>hasAnyRole</code> diferenciando 401 y 403.</span></div>
+  <div><strong>Reto</strong><span>Expresiones SpEL para seguridad a nivel de fila y <code>AccessDeniedHandler</code> emitiendo respuestas RFC 7807 ante 403.</span></div>
 </div>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Checkpoint · fin de la sesión 57</p>
   <ul class="checklist">
-    <li>Se distingue con rigor entre roles generales (`hasRole`) y autoridades atómicas (`hasAuthority`).</li>
-    <li>La anotación `@EnableMethodSecurity` está activada para habilitar autorización declarativa.</li>
+    <li>Se distingue con rigor entre roles generales (<code>hasRole</code>) y autoridades atómicas (<code>hasAuthority</code>).</li>
+    <li>La anotación <code>@EnableMethodSecurity</code> está activada para habilitar autorización declarativa.</li>
     <li>Las operaciones destructivas (DELETE, PUT) están estrictamente limitadas a roles autorizados.</li>
-    <li>Se comprueba que los intentos no autorizados por usuarios autenticados devuelven `403 Forbidden`.</li>
+    <li>Se comprueba que los intentos no autorizados por usuarios autenticados devuelven <code>403 Forbidden</code>.</li>
     <li>Se comprende el uso de expresiones SpEL para reglas de control de acceso a nivel de fila (ABAC).</li>
   </ul>
 </div>
@@ -1358,10 +1551,10 @@ Implementa un `AccessDeniedHandler` personalizado:
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué `hasRole('ADMIN')` espera encontrar internamente la autoridad `ROLE_ADMIN`?</li>
-    <li>¿Qué ventaja ofrece `@PreAuthorize` frente a declarar todas las reglas de autorización en el `filterChain`?</li>
-    <li>¿Qué código HTTP debe devolver la API si un usuario con rol `ROLE_DESARROLLADOR` intenta invocar un endpoint con `@PreAuthorize("hasRole('ADMINISTRADOR')")`?</li>
-    <li>¿Para qué se utiliza el prefijo `#` en una expresión SpEL dentro de `@PreAuthorize` (ej: `#id`)?</li>
+    <li>¿Por qué <code>hasRole('ADMINISTRADOR')</code> espera encontrar internamente la autoridad <code>ROLE_ADMINISTRADOR</code>?</li>
+    <li>¿Qué ventaja ofrece <code>@PreAuthorize</code> frente a declarar todas las reglas de autorización en el <code>filterChain</code>?</li>
+    <li>¿Qué código HTTP debe devolver la API si un usuario con rol <code>ROLE_DESARROLLADOR</code> intenta invocar un endpoint con <code>@PreAuthorize("hasRole('ADMINISTRADOR')")</code>?</li>
+    <li>¿Para qué se utiliza el prefijo <code>#</code> en una expresión SpEL dentro de <code>@PreAuthorize</code> (ej: <code>#id</code>)?</li>
   </ol>
 </div>
 
@@ -1392,7 +1585,7 @@ Implementa un `AccessDeniedHandler` personalizado:
   <ol>
     <li>¿Por qué ocultar un botón de «Eliminar» en la interfaz web de React o Angular no ofrece ninguna protección real contra un usuario malintencionado?</li>
     <li>¿Qué anotación de Spring Security Test permite simular que un usuario con un rol específico está autenticado durante una prueba con MockMvc sin necesidad de consultar la base de datos?</li>
-    <li>Si un endpoint devuelve `403 Forbidden` ante una petición no autorizada, ¿significa que el código del método del controlador llegó a ejecutarse?</li>
+    <li>Si un endpoint devuelve <code>403 Forbidden</code> ante una petición no autorizada, ¿significa que el código del método del controlador llegó a ejecutarse?</li>
   </ol>
 </div>
 
@@ -1440,17 +1633,31 @@ La anotación `@WithMockUser`:
 
 Vamos a crear la suite de pruebas que valida los límites de acceso:
 
-<p class="stage">Paso 1 · Configurar la clase de test con contexto de seguridad</p>
+<p class="stage">Paso 1 · Añadir la dependencia de test de Spring Security</p>
+
+`@WithMockUser` no viene con el `starter` de test. Añade a tu `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+<p class="stage">Paso 2 · Configurar la clase de test con tu contexto de seguridad</p>
 
 ```java
-package com.empresa.proyecto;
+package com.ejemplo.gestor;
 
-import com.empresa.proyecto.controller.ProyectoController;
-import com.empresa.proyecto.service.ProyectoService;
+import com.ejemplo.gestor.config.SecurityConfig;
+import com.ejemplo.gestor.controller.ProyectoController;
+import com.ejemplo.gestor.service.ProyectoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -1459,6 +1666,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProyectoController.class)
+@Import(SecurityConfig.class)   // sin esta línea, tus reglas NO se aplican
 class ProyectoSecurityTest {
 
     @Autowired
@@ -1468,7 +1676,13 @@ class ProyectoSecurityTest {
     private ProyectoService proyectoService;
 ```
 
-<p class="stage">Paso 2 · Test de rechazo a petición anónima (401)</p>
+<div class="rule">
+  <p class="rule-label">La línea que decide si este test sirve para algo</p>
+  <p><code>@WebMvcTest</code> carga controladores, no clases de configuración cualesquiera. Tu <code>SecurityConfig</code> es una <code>@Configuration</code> normal, así que <strong>no entra</strong>: el test se ejecutaría contra la cadena de seguridad por defecto de Spring Boot, sin tus <code>requestMatchers</code> y sin <code>@EnableMethodSecurity</code>.</p>
+  <p>El resultado es el peor posible: el test de <code>401</code> pasa igualmente (la cadena por defecto también exige autenticación), pero el de <code>403</code> devuelve <code>204</code> y falla, o peor, pasa por una razón equivocada. Tendrías una suite verde que no está probando tus reglas. <code>@Import(SecurityConfig.class)</code> es lo que hace que el test hable de tu configuración y no de otra.</p>
+</div>
+
+<p class="stage">Paso 3 · Test de rechazo a petición anónima (401)</p>
 
 Verificamos que si no hay identidad en el contexto, el peralte de seguridad intercepta la llamada:
 
@@ -1483,7 +1697,7 @@ Verificamos que si no hay identidad en el contexto, el peralte de seguridad inte
     }
 ```
 
-<p class="stage">Paso 3 · Test de acceso denegado por rol insuficiente (403)</p>
+<p class="stage">Paso 4 · Test de acceso denegado por rol insuficiente (403)</p>
 
 Verificamos que un usuario identificado con rol `DESARROLLADOR` recibe `403`:
 
@@ -1498,7 +1712,7 @@ Verificamos que un usuario identificado con rol `DESARROLLADOR` recibe `403`:
     }
 ```
 
-<p class="stage">Paso 4 · Test de acceso autorizado para Administrador (204)</p>
+<p class="stage">Paso 5 · Test de acceso autorizado para Administrador (204)</p>
 
 Verificamos que el rol `ADMINISTRADOR` ejecuta la acción con éxito:
 
@@ -1526,16 +1740,43 @@ Ejecuta las pruebas desde la consola de Maven:
 
 Comprueba en la salida:
 * Los 3 tests pasan al 100 % en verde en menos de 1 segundo.
-* Queda matemáticamente demostrado que da igual qué botones oculte el frontend: **un usuario no administrador jamás podrá borrar un proyecto en el servidor**.
+* Queda demostrado que da igual qué botones oculte el frontend: **un usuario no administrador jamás podrá borrar un proyecto en el servidor**.
+
+<p class="stage">Comprobación 2 · Asegurarte de que el test puede fallar</p>
+
+Un test de seguridad que nunca ha fallado no ha demostrado nada todavía. Rómpelo a propósito y míralo caer:
+
+1. Comenta la línea `@PreAuthorize("hasRole('ADMINISTRADOR')")` del método `eliminar`.
+2. Ejecuta `./mvnw test -Dtest=ProyectoSecurityTest`.
+3. **Resultado esperado:** el test del `403` falla con `Status expected:<403> but was:<204>`. Ahí está la regresión que este test existe para cazar.
+4. Descomenta la anotación y vuelve a ejecutar. Verde otra vez.
+5. Repite la jugada quitando `@Import(SecurityConfig.class)` de la clase de test. Verás el **mismo** fallo, y esa es la lección: un test verde solo vale si estás seguro de contra qué configuración corre.
+
+### Si algo no sale como dice el guion
+
+| Síntoma | Causa casi segura | Qué mirar |
+| :--- | :--- | :--- |
+| `cannot find symbol: class WithMockUser` | Falta la dependencia | `spring-security-test` con `<scope>test</scope>` en el `pom.xml` |
+| El test de `403` recibe `204` | Tus reglas no están cargadas | Falta `@Import(SecurityConfig.class)`, o falta `@EnableMethodSecurity` en `SecurityConfig` |
+| El test de `401` recibe `403` | El usuario anónimo se considera autenticado | ¿Has puesto `@WithMockUser` a nivel de clase? Solo debe estar en los métodos que lo necesitan |
+| `POST` y `DELETE` reciben `403` en todos los tests | CSRF activo dentro del test | O usas `.with(csrf())` en la petición, o mantienes `csrf.disable()` en la config que importas |
+| `No qualifying bean of type UserDetailsService` | Tu `SecurityConfig` arrastra dependencias que el slice no carga | Añade `@MockBean private CustomUserDetailsService userDetailsService;` a la clase de test |
 
 ### Ahora tú · Batería de tests de seguridad para Tareas
 
 Aplica el mismo patrón para proteger la creación y modificación de tareas:
 
-1. Crea `TareaSecurityTest`.
+1. Crea `TareaSecurityTest` con `@WebMvcTest(TareaController.class)` y `@Import(SecurityConfig.class)`.
 2. Escribe un test que verifique que un usuario anónimo recibe `401` al intentar crear una tarea (`POST /api/v1/proyectos/1/tareas`).
 3. Escribe un test con `@WithMockUser(roles = "DESARROLLADOR")` que confirme que un desarrollador sí puede crear tareas (código `201`).
-4. Escribe un test que verifique que el borrado de tareas está prohibido (`403`) para un usuario con rol de invitado o externo.
+4. Escribe un test que verifique que el borrado de tareas devuelve `403` para `@WithMockUser(roles = "DESARROLLADOR")` y `204` para `@WithMockUser(roles = "JEFE_PROYECTO")`.
+5. Añade a **todos** los tests de rechazo la verificación `verify(tareaService, never()).…`. Comprobar el código de estado demuestra que el cliente recibió un `403`; comprobar que el servicio nunca se llamó demuestra que la operación no llegó a ocurrir. No son lo mismo, y solo la segunda descarta un borrado que sucedió y luego respondió mal.
+6. Cuenta cuántas casillas de la matriz de la sesión 53 cubre ya tu suite. Si has hecho los pasos 2 a 4, son 6 de 36. Anota en tu cuaderno cuáles faltan: la sesión 67 va a partir de ese inventario.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd><code>./mvnw test</code> pasa en verde; cada test de rechazo verifica además que el servicio no se invocó; y has visto al menos un test tuyo fallar en rojo al quitarle la anotación de seguridad que protege.</dd>
+</dl>
 
 ### Reto · Pruebas de seguridad basadas en atributos con SpEL
 
@@ -1548,7 +1789,7 @@ En la sesión anterior definimos que un desarrollador solo puede editar las tare
 4. Repite la prueba con una tarea asignada a `"carlos"` y confirma que responde con `200 OK`.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tests de seguridad con `@WebMvcTest` y `@WithMockUser` verificando casos 401, 403 y 204.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Tests de seguridad con <code>@WebMvcTest</code> y <code>@WithMockUser</code> verificando casos 401, 403 y 204.</span></div>
   <div><strong>Si lo tienes</strong><span>Suite completa de proyectos y tareas cubriendo la matriz RBAC completa con aserciones estrictas.</span></div>
   <div><strong>Reto</strong><span>Tests de autorización a nivel de fila (SpEL) con simulación de propiedad de recursos verificados.</span></div>
 </div>
@@ -1557,10 +1798,10 @@ En la sesión anterior definimos que un desarrollador solo puede editar las tare
   <p class="checkpoint-label">Checkpoint · fin de la sesión 58</p>
   <ul class="checklist">
     <li>Se erradica la creencia errónea de que la seguridad de la interfaz sustituye a la del backend.</li>
-    <li>Las reglas de control de acceso están blindadas mediante pruebas automatizadas con `MockMvc`.</li>
-    <li>Se utiliza `@WithMockUser` para simular identidades y roles sin coste de base de datos.</li>
+    <li>Las reglas de control de acceso están blindadas mediante pruebas automatizadas con <code>MockMvc</code>.</li>
+    <li>Se utiliza <code>@WithMockUser</code> para simular identidades y roles sin coste de base de datos.</li>
     <li>Se verifica que el servicio de negocio nunca llega a ejecutarse ante accesos no autorizados.</li>
-    <li>La suite completa de tests de seguridad pasa en verde con `./mvnw test`.</li>
+    <li>La suite completa de tests de seguridad pasa en verde con <code>./mvnw test</code>.</li>
   </ul>
 </div>
 
@@ -1568,9 +1809,9 @@ En la sesión anterior definimos que un desarrollador solo puede editar las tare
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué ocultar o deshabilitar un botón en el cliente web no constituye una medida de seguridad?</li>
-    <li>¿Qué diferencia hay entre lo que comprueba un test de `@WebMvcTest` normal y uno con `@WithMockUser`?</li>
-    <li>¿Por qué en los tests de casos 401 y 403 es importante verificar con `verify(service, never())`?</li>
-    <li>¿Cómo se especifica en `@WithMockUser` que un usuario tiene varios roles a la vez?</li>
+    <li>¿Qué diferencia hay entre lo que comprueba un test de <code>@WebMvcTest</code> normal y uno con <code>@WithMockUser</code>?</li>
+    <li>¿Por qué en los tests de casos 401 y 403 es importante verificar con <code>verify(service, never())</code>?</li>
+    <li>¿Cómo se especifica en <code>@WithMockUser</code> que un usuario tiene varios roles a la vez?</li>
   </ol>
 </div>
 
@@ -1637,8 +1878,10 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbCI6IlJPTEVfQURNSU4iLCJleHAiOjE3NzA
    * Reclamaciones personalizadas: `roles`, `email`, `tenantId`.
    * **¡Atención!** El payload no está cifrado; solo está codificado en Base64Url. **Cualquiera puede leerlo**. Nunca guardes contraseñas ni datos confidenciales dentro de un JWT.
 3. **Signature (Firma criptográfica):** Se calcula combinando el Header y el Payload codificados con una clave secreta conocida solo por el servidor:
-   $$\text{Firma} = \text{HMAC-SHA256}(\text{Header} + "." + \text{Payload}, \text{SECRET\_KEY})$$
-   Si un atacante modifica un solo carácter del payload (por ejemplo, cambia su rol de `ROLE_DEV` a `ROLE_ADMIN`), la firma deja de coincidir y el backend **rechaza el token de inmediato**.
+   ```text
+   firma = HMAC-SHA256(cabecera + "." + payload, CLAVE_SECRETA)
+   ```
+   Si un atacante modifica un solo carácter del payload (por ejemplo, cambia su rol de `ROLE_DESARROLLADOR` a `ROLE_ADMINISTRADOR`), la firma deja de coincidir y el backend **rechaza el token de inmediato**.
 
 ### Paso a paso guiado · Generación y validación de JWT en Spring Boot
 
@@ -1669,7 +1912,7 @@ Para trabajar con JWT en Java utilizamos la librería estándar de la industria 
 Este servicio encapsula la firma y lectura de tokens mediante una clave secreta segura:
 
 ```java
-package com.empresa.proyecto.security;
+package com.ejemplo.gestor.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -1738,9 +1981,10 @@ public class JwtService {
 Creamos un filtro que intercepta cada petición, extrae la cabecera `Authorization: Bearer <token>` y puebla el contexto de Spring Security:
 
 ```java
-package com.empresa.proyecto.security;
+package com.ejemplo.gestor.security;
 
 import jakarta.servlet.FilterChain;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -1778,9 +2022,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         final String jwt = authHeader.substring(7); // Extraemos la cadena tras "Bearer "
-        final String username = jwtService.extraerUsername(jwt);
 
-        // 2. Si el token tiene usuario y no está autenticado previamente en el contexto
+        // 2. Un token caducado o manipulado hace que jjwt lance una excepción.
+        //    Si la dejásemos salir del filtro, el cliente recibiría un 500:
+        //    la capturamos, no autenticamos a nadie y dejamos que la cadena
+        //    siga hasta el AuthenticationEntryPoint, que responderá 401.
+        final String username;
+        try {
+            username = jwtService.extraerUsername(jwt);
+        } catch (JwtException ex) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 3. Si el token tiene usuario y no está autenticado previamente en el contexto
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
@@ -1790,7 +2045,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // 3. Establecemos la identidad verificada en el contexto de la petición
+                // 4. Establecemos la identidad verificada en el contexto de la petición
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
@@ -1834,12 +2089,16 @@ En `SecurityConfig`, registramos el filtro antes del filtro de usuario/contrase�
    * Copia el token devuelto y pégalo en la herramienta web [jwt.io](https://jwt.io).
    * Comprueba cómo el panel derecho decodifica en tiempo real el Header y el Payload mostrando tu `sub: "admin"`.
 3. **Consumir endpoint protegido con Bearer Token:**
-   * En Bruno, ve a `GET /api/v1/proyectos`.
-   * En la pestaña **Auth**, selecciona **Bearer Token** y pega el JWT.
+   * Abre la petición `GET /api/v1/proyectos`.
+   * En su pestaña **Auth**, selecciona **Bearer Token** y pega el JWT.
    * Envía la petición y comprueba que responde `200 OK`.
 4. **Prueba de manipulación de firma:**
-   * Modifica una sola letra en el centro del token en Bruno y vuelve a enviar.
+   * Modifica una sola letra en el centro del token y vuelve a enviar.
    * **Resultado:** Código `401 Unauthorized`. Spring Security detecta que la firma no coincide y rechaza la petición.
+5. **Prueba de token caducado:**
+   * Baja temporalmente `app.security.jwt.expiration-minutes` a `1`, reinicia, pide un token nuevo y espera poco más de un minuto antes de usarlo.
+   * **Resultado:** Código `401 Unauthorized`, no `500`. Es exactamente lo que compra el `catch (JwtException ex)` del filtro: sin él, la excepción de jjwt saldría del filtro y el cliente vería un error del servidor en lugar de «tu sesión ha caducado».
+   * Devuelve la propiedad a `60` cuando termines.
 
 ### Ahora tú · Guardar y usar el token en el cliente de la UD8
 
@@ -1866,12 +2125,14 @@ Investiga las tres estrategias de la industria para mitigar este problema:
 2. **Listas negras de revocación en Redis (*Token Blacklisting*)**.
 3. Compara el coste de cada enfoque frente a la sencillez de una sesión clásica con cookies.
 
-> [!NOTE]
-> Si en la evaluación se solicita un informe comparativo entre arquitectura de sesión y arquitectura de tokens, el formato oficial de entrega de texto es siempre un **documento en PDF** (`informe-jwt-sesion.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un informe comparativo entre arquitectura de sesión y arquitectura de tokens, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-jwt-sesion.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Servicio `JwtService` implementado, token generado con clave segura y decodificado en `jwt.io`.</span></div>
-  <div><strong>Si lo tienes</strong><span>Filtro `JwtAuthenticationFilter` integrado en `SecurityFilterChain` con política `STATELESS` y probado en Bruno.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Servicio <code>JwtService</code> implementado, token generado con clave segura y decodificado en <code>jwt.io</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Filtro <code>JwtAuthenticationFilter</code> integrado en <code>SecurityFilterChain</code> con política <code>STATELESS</code> y probado en Bruno.</span></div>
   <div><strong>Reto</strong><span>Estrategia de Access Token + Refresh Token analizada y justificada para mitigar el problema de revocación.</span></div>
 </div>
 
@@ -1881,8 +2142,8 @@ Investiga las tres estrategias de la industria para mitigar este problema:
     <li>Se comprende la diferencia entre autenticación con estado (sesión) y sin estado (JWT).</li>
     <li>La anatomía de un JWT (Header, Payload y Firma) se identifica y decodifica con soltura.</li>
     <li>La firma criptográfica garantiza que los claims no pueden ser alterados por el cliente.</li>
-    <li>La API opera en modo estrictamente sin estado (`SessionCreationPolicy.STATELESS`).</li>
-    <li>Las peticiones autenticadas viajan mediante el estándar `Authorization: Bearer <token>`.</li>
+    <li>La API opera en modo estrictamente sin estado (<code>SessionCreationPolicy.STATELESS</code>).</li>
+    <li>Las peticiones autenticadas viajan mediante el estándar <code>Authorization: Bearer &lt;token&gt;</code>.</li>
   </ul>
 </div>
 
@@ -1891,7 +2152,7 @@ Investiga las tres estrategias de la industria para mitigar este problema:
   <ol>
     <li>¿Por qué es peligroso almacenar datos sensibles como contraseñas en el Payload de un JWT?</li>
     <li>¿Cómo sabe el servidor si los datos de un JWT fueron alterados durante el tránsito?</li>
-    <li>¿Qué significa que una API opere con `SessionCreationPolicy.STATELESS`?</li>
+    <li>¿Qué significa que una API opere con <code>SessionCreationPolicy.STATELESS</code>?</li>
     <li>¿Qué formato exacto debe tener la cabecera HTTP estándar para transmitir un token JWT?</li>
   </ol>
 </div>
@@ -1919,8 +2180,8 @@ Investiga las tres estrategias de la industria para mitigar este problema:
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>¿En qué consiste exactamente un ataque CSRF y por qué depende de que el navegador envíe cookies automáticamente?</li>
-    <li>¿Por qué una API REST que solo se autentica mediante cabeceras `Authorization: Bearer <token>` puede desactivar la protección CSRF de forma completamente segura?</li>
-    <li>¿Qué sucede si intentas hacer una petición cross-origin con cookies (`credentials: 'include'`) y el backend tiene configurado `allowedOrigins("*")`?</li>
+    <li>¿Por qué una API REST que solo se autentica mediante cabeceras <code>Authorization: Bearer &lt;token&gt;</code> puede desactivar la protección CSRF de forma completamente segura?</li>
+    <li>¿Qué sucede si intentas hacer una petición cross-origin con cookies (<code>credentials: 'include'</code>) y el backend tiene configurado <code>allowedOrigins("*")</code>?</li>
   </ol>
 </div>
 
@@ -1982,9 +2243,9 @@ En Spring Security la configuración de CORS debe integrarse dentro de la propia
 <p class="stage">Paso 1 · Integrar CORS formal en SecurityConfig</p>
 
 ```java
-package com.empresa.proyecto.config;
+package com.ejemplo.gestor.config;
 
-import com.empresa.proyecto.security.JwtAuthenticationFilter;
+import com.ejemplo.gestor.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -2023,7 +2284,7 @@ public class SecurityConfig {
             // 4. Reglas de autorización de rutas
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/proyectos/**", "/api/v1/tareas/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/proyectos/**").hasRole("ADMINISTRADOR")
                 .requestMatchers("/api/v1/usuarios/**").hasRole("ADMINISTRADOR")
                 .anyRequest().authenticated()
             )
@@ -2071,14 +2332,42 @@ Realiza la prueba final de integración entre tu cliente web de la UD8 y la API 
    * El nuevo proyecto aparece en pantalla al instante sin recargar la página.
 5. **Verifica la consola:** Cero errores de CORS, cero errores de CSRF, cero fugas de seguridad.
 
-### Ahora tú · Manejo del cierre de sesión (Logout) en el cliente
+### Ahora tú · La auditoría de cierre de la unidad
 
-Implementa el cierre de sesión en tu página web:
-1. Añade un botón *«Cerrar sesión»* en la cabecera de `index.html`.
-2. Al pulsar el botón:
-   * Elimina el token de la memoria del navegador: `sessionStorage.removeItem('jwt')`.
-   * Actualiza el estado visual de la pantalla (oculta el panel de creación y muestra el botón de login).
-3. Intenta crear un proyecto tras el logout y verifica que el servidor vuelve a responder `401`.
+Esta es la última sesión de la UD9: lo que no quede blindado hoy, llega así al proyecto final.
+
+<p class="stage">1 · Cerrar sesión de verdad</p>
+
+1. Añade un botón *«Cerrar sesión»* en la cabecera de tu página, que borre el token del navegador y actualice la pantalla.
+2. Intenta crear un proyecto tras el cierre de sesión y verifica que el servidor responde `401`.
+3. **La pregunta incómoda:** copia el token *antes* de cerrar sesión, ciérrala, y vuelve a lanzar la petición pegando ese token a mano en tu cliente HTTP. Funciona. Acabas de comprobar que en una arquitectura sin estado **el cierre de sesión es un gesto del cliente, no del servidor**: el token sigue siendo válido hasta que caduque. Anota en tu cuaderno las dos formas de resolverlo —tokens de vida corta o una lista negra en base de datos— y cuál de las dos reintroduce estado en el servidor.
+
+<p class="stage">2 · Recorrer la matriz de diagnóstico entera</p>
+
+Provoca a propósito los cuatro fallos de la tabla de esta sesión y, en cada uno, anota qué se ve en la consola del navegador, qué se ve en la pestaña Red y qué se ve en los logs del servidor. Son tres puntos de vista del mismo problema, y saber cuál mirar primero es la competencia que se lleva de aquí:
+
+1. Quita la palabra `Bearer` de la cabecera y deja solo el token.
+2. Activa CSRF (`csrf` sin `.disable()`) y lanza un `POST`.
+3. Quita tu origen de la lista de CORS con `credentials` activadas.
+4. Usa un token caducado (baja `expiration-minutes` a 1 y espera).
+
+<p class="stage">3 · Auditar la unidad completa antes de cerrarla</p>
+
+Recorre esta lista sobre tu propio proyecto. Cada punto que no puedas marcar es trabajo pendiente, no una observación:
+
+* Ninguna contraseña se guarda ni se registra en claro, tampoco en los logs.
+* Ningún endpoint de escritura responde sin credenciales.
+* Un usuario autenticado sin permisos recibe `403`, nunca `401` ni `500`.
+* Ningún DTO de respuesta publica la contraseña, ni siquiera su hash.
+* El secreto del JWT no está escrito en el código ni subido al repositorio.
+* Las rutas públicas son exactamente tres y sabes nombrarlas: documentación, login y poco más.
+* Los tests de seguridad de la sesión 58 siguen en verde tras todos los cambios de la semana 20.
+* La colección `09-seguridad` ejecuta la matriz completa y todas las peticiones devuelven lo esperado.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Sabes reconocer los cuatro fallos por su síntoma sin tener que probar a ciegas; entiendes por qué un token sigue siendo válido después de cerrar sesión y qué harías al respecto; y los ocho puntos de la auditoría están marcados.</dd>
+</dl>
 
 ### Reto · Simulación de ataque CSRF y su contramedida
 
@@ -2087,8 +2376,10 @@ Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno 
 2. Observa cómo el navegador adjunta las cookies y el backend vulnerable ejecuta la orden.
 3. Activa en Spring Security el `CookieCsrfTokenRepository.withHttpOnlyFalse()` y observa cómo el servidor neutraliza el ataque respondiendo **`403 Forbidden (Invalid CSRF Token)`**.
 
-> [!NOTE]
-> Si en la evaluación se solicita un informe de auditoría de seguridad perimetral, CORS y prevención de ataques CSRF, el formato oficial de entrega de texto es siempre un **documento en PDF** (`auditoria-seguridad.pdf`), nunca un archivo markdown suelto.
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un informe de auditoría de seguridad perimetral, CORS y prevención de ataques CSRF, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>auditoria-seguridad.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Mecanismo de ataque CSRF comprendido y configuración unificada de CORS y seguridad aplicada.</span></div>
@@ -2100,8 +2391,8 @@ Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno 
   <p class="checkpoint-label">Checkpoint · fin de la sesión 60</p>
   <ul class="checklist">
     <li>Se distingue con precisión por qué las APIs con tokens Bearer son inmunes a ataques CSRF.</li>
-    <li>La configuración de CORS está perfectamente integrada dentro de la `SecurityFilterChain`.</li>
-    <li>Se aplican las reglas estrictas de incompatibilidad entre comodines (`*`) y credenciales.</li>
+    <li>La configuración de CORS está perfectamente integrada dentro de la <code>SecurityFilterChain</code>.</li>
+    <li>Se aplican las reglas estrictas de incompatibilidad entre comodines (<code>*</code>) y credenciales.</li>
     <li>Los 4 errores clásicos de Spring Security se diagnostican y corrigen en menos de dos minutos.</li>
     <li>El cliente web completa el ciclo de login, consulta pública, creación autorizada y logout.</li>
   </ul>
@@ -2110,8 +2401,8 @@ Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué un ataque CSRF no puede tener éxito contra una API que exige la cabecera `Authorization: Bearer`?</li>
-    <li>¿Qué configuración de Spring Boot permite que las peticiones previas `OPTIONS` de CORS no sean bloqueadas por los filtros de autenticación?</li>
+    <li>¿Por qué un ataque CSRF no puede tener éxito contra una API que exige la cabecera <code>Authorization: Bearer</code>?</li>
+    <li>¿Qué configuración de Spring Boot permite que las peticiones previas <code>OPTIONS</code> de CORS no sean bloqueadas por los filtros de autenticación?</li>
     <li>¿Por qué el cierre de sesión en una arquitectura JWT puramente stateless se realiza habitualmente destruyendo el token en el cliente?</li>
     <li>¿Cuál es la causa exacta cuando un frontend recibe un código 403 al enviar un formulario POST en una aplicación con sesiones y cookies activas?</li>
   </ol>
@@ -2186,7 +2477,7 @@ Ocultar botones o deshabilitar enlaces en una página web es una cortesía visua
 12. ¿Cómo intercepta la `SecurityFilterChain` las peticiones HTTP antes de que alcancen a los controladores?
 13. ¿Qué contrato funcional exige la interfaz `UserDetailsService` y qué objeto devuelve?
 14. ¿Cómo permite la anotación `@AuthenticationPrincipal` inyectar al usuario activo en un controlador?
-15. ¿Qué diferencia práctica existe entre comprobar `hasRole('ADMIN')` y `hasAuthority('ROLE_ADMIN')`?
+15. ¿Qué diferencia práctica existe entre comprobar `hasRole('ADMINISTRADOR')` y `hasAuthority('ROLE_ADMINISTRADOR')`?
 16. ¿Qué ventaja ofrece la anotación `@PreAuthorize` frente a definir reglas de seguridad solo por rutas URL?
 17. ¿Qué tres partes componen la estructura de un JSON Web Token (JWT) y qué garantiza su firma?
 18. ¿Cuál es el compromiso (*trade-off*) más grave de usar JWTs puros sin estado respecto a la revocación de accesos?
@@ -2220,16 +2511,16 @@ Ocultar botones o deshabilitar enlaces en una página web es una cortesía visua
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría de seguridad backend · criterios de producción</p>
   <ul class="checklist">
-    <li>Las contraseñas de los usuarios se almacenan exclusivamente con algoritmo BCrypt (factor de coste $\ge 12$) y jamás en texto plano.</li>
-    <li>La identidad y los roles de los usuarios residen en tablas persistentes de PostgreSQL y se cargan mediante `UserDetailsService`.</li>
-    <li>Las cuentas de usuario desactivadas (`activo = false`) son rechazadas automáticamente por `isEnabled()`.</li>
-    <li>La arquitectura de autorización distingue de forma estricta entre códigos `401 Unauthorized` y `403 Forbidden`.</li>
+    <li>Las contraseñas de los usuarios se almacenan exclusivamente con algoritmo BCrypt (factor de coste 12 o superior) y jamás en texto plano.</li>
+    <li>La identidad y los roles de los usuarios residen en tablas persistentes de PostgreSQL y se cargan mediante <code>UserDetailsService</code>.</li>
+    <li>Las cuentas de usuario desactivadas (<code>activo = false</code>) son rechazadas automáticamente por <code>isEnabled()</code>.</li>
+    <li>La arquitectura de autorización distingue de forma estricta entre códigos <code>401 Unauthorized</code> y <code>403 Forbidden</code>.</li>
     <li>Las rutas públicas de consulta y documentación (Swagger UI) están delimitadas sin exigir credenciales innecesarias.</li>
-    <li>Las operaciones destructivas (creación, edición y borrado) están protegidas por roles con `@PreAuthorize` o matchers de `SecurityFilterChain`.</li>
+    <li>Las operaciones destructivas (creación, edición y borrado) están protegidas por roles con <code>@PreAuthorize</code> o matchers de <code>SecurityFilterChain</code>.</li>
     <li>La aplicación implementa una estrategia justificada de autenticación (sesión segura con cookies o tokens JWT sin estado).</li>
-    <li>Si se utiliza JWT, el token viaja en la cabecera `Authorization: Bearer` y la política de sesión es `STATELESS`.</li>
-    <li>La configuración de CORS está integrada formalmente en Spring Security y restringe los orígenes a clientes autorizados sin comodines universales (`*`).</li>
-    <li>La seguridad está respaldada por una suite de pruebas automatizadas con `MockMvc` y `@WithMockUser` que pasa al 100 % en verde.</li>
+    <li>Si se utiliza JWT, el token viaja en la cabecera <code>Authorization: Bearer</code> y la política de sesión es <code>STATELESS</code>.</li>
+    <li>La configuración de CORS está integrada formalmente en Spring Security y restringe los orígenes a clientes autorizados sin comodines universales (<code>*</code>).</li>
+    <li>La seguridad está respaldada por una suite de pruebas automatizadas con <code>MockMvc</code> y <code>@WithMockUser</code> que pasa al 100 % en verde.</li>
   </ul>
 </div>
 

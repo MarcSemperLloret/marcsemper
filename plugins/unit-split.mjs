@@ -22,8 +22,17 @@ const LESSON = /^(sesi[oó]n|session)\s+(\d+)\s*(?:·|:|-|–|—)\s*(.+)$/i;
  */
 const GROUP = /^(semana|week)\s+(\d+)\s*(?:·|:|-|–|—)\s*(.+)$/i;
 
-/** Opening or closing fence of a code block, with its indentation and length. */
-const FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
+/**
+ * Opening or closing fence of a code block, with its indentation and length.
+ *
+ * Exported because `check-sessions.mjs` has to read fences exactly as the split
+ * does. A fence written with three backticks is closed by the first line of
+ * three backticks and nothing else, so a ` ```bash ` nested inside a
+ * ` ```markdown ` block closes it early and the rest of the unit is parsed as
+ * Markdown. That is a real bug this file has already met; the checker only
+ * catches it if it agrees with this module about where a block ends.
+ */
+export const FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 
 /** An ATX heading of exactly level two, at the start of a line. */
 const H2 = /^ {0,3}##(?!#)\s*(.+?)\s*#*\s*$/;

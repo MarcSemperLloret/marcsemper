@@ -238,7 +238,7 @@ Examina estas tres situaciones reales y explica por qué son decisiones técnica
     <li>Sabes definir qué es el desajuste de impedancia objeto-relacional y citar al menos tres divergencias entre objetos y tablas.</li>
     <li>Distingues con precisión entre JDBC (API de bajo nivel), Hibernate (motor ORM) y JPA (especificación estándar).</li>
     <li>Entiendes por qué usar un ORM exige conocer SQL mejor, no peor (la ley de las abstracciones con fugas).</li>
-    <li>Has traducido tipos Java (`Long`, `String`, `boolean`, `LocalDate`) a sus equivalentes precisos en PostgreSQL (`BIGINT`, `VARCHAR`, `BOOLEAN`, `DATE`).</li>
+    <li>Has traducido tipos Java (<code>Long</code>, <code>String</code>, <code>boolean</code>, <code>LocalDate</code>) a sus equivalentes precisos en PostgreSQL (<code>BIGINT</code>, <code>VARCHAR</code>, <code>BOOLEAN</code>, <code>DATE</code>).</li>
     <li>Comprendes la necesidad de duplicar restricciones: en la capa web para informar al usuario y en la base de datos para blindar el dato.</li>
   </ul>
 </div>
@@ -249,7 +249,7 @@ Examina estas tres situaciones reales y explica por qué son decisiones técnica
     <li>¿Por qué JPA no puede ejecutar consultas por sí mismo y necesita una librería como Hibernate?</li>
     <li>¿Cuál es la diferencia fundamental entre cómo se relacionan dos entidades en Java y cómo se relacionan dos filas en SQL?</li>
     <li>¿Por qué un archivo JSON en disco no sustituye a una base de datos relacional en una API concurrente?</li>
-    <li>¿Qué ocurriría si intentamos guardar una tarea con un título de 200 caracteres si la columna se definió como `VARCHAR(120)`?</li>
+    <li>¿Qué ocurriría si intentamos guardar una tarea con un título de 200 caracteres si la columna se definió como <code>VARCHAR(120)</code>?</li>
   </ol>
 </div>
 
@@ -537,7 +537,9 @@ Demuestra que la configuración de `${DB_PASSWORD:postgres}` funciona en la prá
 
 Muchos programadores novatos razonan así: *«Si mi servidor va a recibir 500 peticiones por segundo, debo configurar `maximum-pool-size=500` para que nadie espere»*.
 * Investiga la fórmula de dimensionamiento recomendada por los creadores de HikariCP:
-  $$\text{Conexiones} = (\text{núcleos de CPU} \times 2) + \text{disco}$$
+  ```text
+  conexiones = (núcleos de CPU × 2) + husos de disco
+  ```
 * Explica por qué tener 500 conexiones simultáneas compitiendo por 4 núcleos de CPU provoca que la base de datos vaya **más lenta** y consuma más recursos que teniendo solo 10 conexiones encoladas de forma ordenada.
 
 <div class="practice-levels">
@@ -562,9 +564,9 @@ Muchos programadores novatos razonan así: *«Si mi servidor va a recibir 500 pe
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué es preferible reutilizar conexiones de un pool como HikariCP en lugar de abrir una nueva en cada petición HTTP?</li>
-    <li>¿Qué diferencia hay entre configurar `ddl-auto=validate` y `ddl-auto=update`?</li>
-    <li>¿Qué significa la directiva `${DB_PORT:5432}` en un archivo de propiedades de Spring?</li>
-    <li>Si en el log ves `Connection refused: localhost:5432`, ¿dónde está el problema?</li>
+    <li>¿Qué diferencia hay entre configurar <code>ddl-auto=validate</code> y <code>ddl-auto=update</code>?</li>
+    <li>¿Qué significa la directiva <code>${DB_PORT:5432}</code> en un archivo de propiedades de Spring?</li>
+    <li>Si en el log ves <code>Connection refused: localhost:5432</code>, ¿dónde está el problema?</li>
   </ol>
 </div>
 
@@ -942,10 +944,10 @@ Spring Data comprueba el valor del atributo `@Id`:
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué es obligatorio que una clase `@Entity` tenga un constructor sin argumentos?</li>
-    <li>¿Quién escribe el código real de los métodos `findAll()` o `findById()` cuando usamos `JpaRepository`?</li>
-    <li>¿Por qué el servicio `TareaService` no necesitó cambiar su lógica de negocio al cambiar de lista en memoria a PostgreSQL?</li>
-    <li>¿Cómo decide Spring Data JPA si una llamada a `save()` debe traducirse en un `INSERT` o en un `UPDATE`?</li>
+    <li>¿Por qué es obligatorio que una clase <code>@Entity</code> tenga un constructor sin argumentos?</li>
+    <li>¿Quién escribe el código real de los métodos <code>findAll()</code> o <code>findById()</code> cuando usamos <code>JpaRepository</code>?</li>
+    <li>¿Por qué el servicio <code>TareaService</code> no necesitó cambiar su lógica de negocio al cambiar de lista en memoria a PostgreSQL?</li>
+    <li>¿Cómo decide Spring Data JPA si una llamada a <code>save()</code> debe traducirse en un <code>INSERT</code> o en un <code>UPDATE</code>?</li>
   </ol>
 </div>
 
@@ -1286,9 +1288,9 @@ Haz un `POST /tareas` enviando un JSON con un título de más de 300 caracteres 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿En qué estado se encuentra una entidad inmediatamente después de ejecutar `new Tarea()`?</li>
-    <li>¿Por qué una entidad en estado *managed* no necesita llamar a `save()` para que sus cambios se guarden al final de una transacción?</li>
-    <li>¿Qué diferencia a nivel de rendimiento aporta marcar un método como `@Transactional(readOnly = true)`?</li>
+    <li>¿En qué estado se encuentra una entidad inmediatamente después de ejecutar <code>new Tarea()</code>?</li>
+    <li>¿Por qué una entidad en estado *managed* no necesita llamar a <code>save()</code> para que sus cambios se guarden al final de una transacción?</li>
+    <li>¿Qué diferencia a nivel de rendimiento aporta marcar un método como <code>@Transactional(readOnly = true)</code>?</li>
     <li>Si una inserción falla por violar una restricción de PostgreSQL, ¿qué ocurre con el valor de la secuencia autoincremental?</li>
   </ol>
 </div>
@@ -1599,9 +1601,9 @@ En PostgreSQL puedes definir una clave foránea con la cláusula `ON DELETE CASC
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué es peligroso instanciar un objeto nuevo con `new`, asignarle el id recibido por la URL y llamar a `save()` para actualizar?</li>
-    <li>¿Qué consulta ejecuta Spring Data JPA cuando llamas a `repositorio.existsById(id)`?</li>
-    <li>¿Qué significa que una operación HTTP DELETE deba responder `204 No Content`?</li>
+    <li>¿Por qué es peligroso instanciar un objeto nuevo con <code>new</code>, asignarle el id recibido por la URL y llamar a <code>save()</code> para actualizar?</li>
+    <li>¿Qué consulta ejecuta Spring Data JPA cuando llamas a <code>repositorio.existsById(id)</code>?</li>
+    <li>¿Qué significa que una operación HTTP DELETE deba responder <code>204 No Content</code>?</li>
     <li>¿Qué ocurre en PostgreSQL si intentas borrar una fila que está siendo apuntada por una clave foránea de otra tabla sin borrado en cascada?</li>
   </ol>
 </div>
@@ -1923,8 +1925,8 @@ Cuando ejecutamos `findByTituloContainingIgnoreCase("login")`, Hibernate genera 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué hacer `findAll()` y filtrar con streams en Java es inviable en tablas con alto volumen de registros?</li>
-    <li>¿Qué hace la palabra clave `Containing` en un método derivado de Spring Data?</li>
+    <li>¿Por qué hacer <code>findAll()</code> y filtrar con streams en Java es inviable en tablas con alto volumen de registros?</li>
+    <li>¿Qué hace la palabra clave <code>Containing</code> en un método derivado de Spring Data?</li>
     <li>¿Cuándo detecta Spring Data si has cometido una falta de ortografía en el nombre de un método de consulta?</li>
     <li>¿Por qué un método derivado con cinco condiciones encadenadas deja de ser una buena solución técnica?</li>
   </ol>
@@ -2231,9 +2233,9 @@ void tareaSinTitulo_debeFallar_malEscrito() {
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Qué componentes de Spring carga `@DataJpaTest` y cuáles ignora por completo?</li>
-    <li>¿Por qué llamar a `save()` y consultar inmediatamente sin hacer `clear()` puede falsear un test de repositorio?</li>
-    <li>¿Por qué no quedan filas guardadas en PostgreSQL después de ejecutar una clase de tests con `@DataJpaTest`?</li>
+    <li>¿Qué componentes de Spring carga <code>@DataJpaTest</code> y cuáles ignora por completo?</li>
+    <li>¿Por qué llamar a <code>save()</code> y consultar inmediatamente sin hacer <code>clear()</code> puede falsear un test de repositorio?</li>
+    <li>¿Por qué no quedan filas guardadas en PostgreSQL después de ejecutar una clase de tests con <code>@DataJpaTest</code>?</li>
     <li>¿Qué instrucción fuerza a Hibernate a ejecutar las sentencias SQL pendientes antes de que termine la transacción?</li>
   </ol>
 </div>
@@ -2260,9 +2262,9 @@ void tareaSinTitulo_debeFallar_malEscrito() {
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>Si en la clase `Tarea` tenemos `private Long proyectoId;`, ¿por qué eso rompe los principios de la programación orientada a objetos?</li>
+    <li>Si en la clase <code>Tarea</code> tenemos <code>private Long proyectoId;</code>, ¿por qué eso rompe los principios de la programación orientada a objetos?</li>
     <li>En una relación entre tareas (muchas) y proyectos (uno), ¿cuál es el lado propietario en JPA y qué anotación define la columna física?</li>
-    <li>¿Por qué el comportamiento por defecto de `@ManyToOne` en JPA (`FetchType.EAGER`) es peligroso en bases de datos con miles de registros?</li>
+    <li>¿Por qué el comportamiento por defecto de <code>@ManyToOne</code> en JPA (<code>FetchType.EAGER</code>) es peligroso en bases de datos con miles de registros?</li>
   </ol>
 </div>
 
@@ -2582,10 +2584,10 @@ Cuando configuras `fetch = FetchType.LAZY`, Hibernate no rellena `tarea.getProye
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿En qué tabla de la base de datos se ubica físicamente la columna de clave foránea en una relación `@ManyToOne`?</li>
-    <li>¿Qué objeto coloca Hibernate en el atributo relacionado cuando una entidad se carga con `FetchType.LAZY`?</li>
-    <li>¿Qué es el problema N+1 y qué valor de `FetchType` ayuda a combatirlo?</li>
-    <li>¿Por qué se produce una `LazyInitializationException` al acceder a una relación fuera de una transacción?</li>
+    <li>¿En qué tabla de la base de datos se ubica físicamente la columna de clave foránea en una relación <code>@ManyToOne</code>?</li>
+    <li>¿Qué objeto coloca Hibernate en el atributo relacionado cuando una entidad se carga con <code>FetchType.LAZY</code>?</li>
+    <li>¿Qué es el problema N+1 y qué valor de <code>FetchType</code> ayuda a combatirlo?</li>
+    <li>¿Por qué se produce una <code>LazyInitializationException</code> al acceder a una relación fuera de una transacción?</li>
   </ol>
 </div>
 
@@ -2611,9 +2613,9 @@ Cuando configuras `fetch = FetchType.LAZY`, Hibernate no rellena `tarea.getProye
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>En una relación bidireccional entre `Proyecto` y `Tarea`, ¿qué significa el parámetro `mappedBy = "proyecto"` dentro de `@OneToMany`?</li>
-    <li>Si ejecutas `tarea.setProyecto(p);` pero no haces `p.getTareas().add(tarea);`, ¿qué problema de coherencia ocurre si consultas `p.getTareas()` dentro de la misma transacción?</li>
-    <li>¿Por qué la biblioteca Jackson se bloquea con un `StackOverflowError` si intentas serializar directamente entidades bidireccionales a JSON?</li>
+    <li>En una relación bidireccional entre <code>Proyecto</code> y <code>Tarea</code>, ¿qué significa el parámetro <code>mappedBy = "proyecto"</code> dentro de <code>@OneToMany</code>?</li>
+    <li>Si ejecutas <code>tarea.setProyecto(p);</code> pero no haces <code>p.getTareas().add(tarea);</code>, ¿qué problema de coherencia ocurre si consultas <code>p.getTareas()</code> dentro de la misma transacción?</li>
+    <li>¿Por qué la biblioteca Jackson se bloquea con un <code>StackOverflowError</code> si intentas serializar directamente entidades bidireccionales a JSON?</li>
   </ol>
 </div>
 
@@ -2942,9 +2944,9 @@ public int hashCode() {
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué una relación en la base de datos solo necesita una columna física mientras que en Java necesitamos gestionar dos referencias?</li>
-    <li>¿Qué ocurre si añades una tarea a la lista `proyecto.getTareas()` pero no ejecutas `tarea.setProyecto(proyecto)`?</li>
-    <li>¿Qué hace la opción `orphanRemoval = true` cuando eliminas un elemento de una colección gestionada?</li>
-    <li>¿Cómo solucionan los DTOs el error `StackOverflowError` al serializar relaciones bidireccionales?</li>
+    <li>¿Qué ocurre si añades una tarea a la lista <code>proyecto.getTareas()</code> pero no ejecutas <code>tarea.setProyecto(proyecto)</code>?</li>
+    <li>¿Qué hace la opción <code>orphanRemoval = true</code> cuando eliminas un elemento de una colección gestionada?</li>
+    <li>¿Cómo solucionan los DTOs el error <code>StackOverflowError</code> al serializar relaciones bidireccionales?</li>
   </ol>
 </div>
 
@@ -3333,9 +3335,9 @@ Imagina que una etiqueta no solo se asocia a una tarea, sino que debemos guardar
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Qué columnas mínimas forman la clave primaria compuesta de una tabla puente N:M?</li>
-    <li>¿Qué problema de rendimiento provoca usar `List` en lugar de `Set` en una relación `@ManyToMany` al eliminar un elemento?</li>
-    <li>¿Por qué nunca se debe configurar `CascadeType.REMOVE` en una colección `@ManyToMany` de etiquetas?</li>
-    <li>¿En qué momento es obligatorio sustituir un `@ManyToMany` directo por dos relaciones `@ManyToOne` con una entidad intermedia?</li>
+    <li>¿Qué problema de rendimiento provoca usar <code>List</code> en lugar de <code>Set</code> en una relación <code>@ManyToMany</code> al eliminar un elemento?</li>
+    <li>¿Por qué nunca se debe configurar <code>CascadeType.REMOVE</code> en una colección <code>@ManyToMany</code> de etiquetas?</li>
+    <li>¿En qué momento es obligatorio sustituir un <code>@ManyToMany</code> directo por dos relaciones <code>@ManyToOne</code> con una entidad intermedia?</li>
   </ol>
 </div>
 
@@ -3607,8 +3609,8 @@ En `@Transactional` puedes configurar el parámetro `isolation`:
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Qué ocurre con las operaciones previas de una transacción si la última sentencia lanza una RuntimeException?</li>
-    <li>¿Por qué Spring no ejecuta rollback por defecto ante una excepción comprobada como `IOException`?</li>
-    <li>¿Por qué llamar a un método `@Transactional` desde otro método de la misma clase no abre una transacción?</li>
+    <li>¿Por qué Spring no ejecuta rollback por defecto ante una excepción comprobada como <code>IOException</code>?</li>
+    <li>¿Por qué llamar a un método <code>@Transactional</code> desde otro método de la misma clase no abre una transacción?</li>
     <li>¿En qué archivo de disco escribe PostgreSQL los cambios confirmados para garantizar la durabilidad incluso si se apaga el servidor?</li>
   </ol>
 </div>
@@ -3636,8 +3638,8 @@ En `@Transactional` puedes configurar el parámetro `isolation`:
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Si un endpoint devuelve 50 tareas y al mapearlas a DTO accedes al nombre de su proyecto asociado, ¿cuántas consultas SQL se enviarán a PostgreSQL si no has optimizado la carga?</li>
-    <li>¿Qué diferencia hay entre un `JOIN` ordinario en SQL y la cláusula `JOIN FETCH` en una consulta JPQL de Hibernate?</li>
-    <li>¿Por qué devolver listas sin paginar (`List<Tarea>`) en una API pública es un riesgo crítico para la estabilidad del servidor?</li>
+    <li>¿Qué diferencia hay entre un <code>JOIN</code> ordinario en SQL y la cláusula <code>JOIN FETCH</code> en una consulta JPQL de Hibernate?</li>
+    <li>¿Por qué devolver listas sin paginar (<code>List&lt;Tarea&gt;</code>) en una API pública es un riesgo crítico para la estabilidad del servidor?</li>
   </ol>
 </div>
 
@@ -3859,7 +3861,7 @@ List<Tarea> findTodo();
   cannot simultaneously fetch multiple bags: [com.ejemplo.gestor.model.Tarea.comentarios, com.ejemplo.gestor.model.Tarea.etiquetas]
   ```
 * ¿Qué es una *bag* en la terminología de Hibernate? (Una colección de tipo `List` sin orden definido).
-* Explica qué es el **producto cartesiano relacional**: si una tarea tiene 5 comentarios y 4 etiquetas, ¿cuántas filas devuelve un doble `JOIN` en PostgreSQL para esa sola tarea? ($5 \times 4 = 20$ filas duplicadas).
+* Explica qué es el **producto cartesiano relacional**: si una tarea tiene 5 comentarios y 4 etiquetas, ¿cuántas filas devuelve un doble `JOIN` en PostgreSQL para esa sola tarea? (5 × 4 = 20 filas duplicadas).
 * Explica las dos soluciones de la industria para este problema:
   1. Cambiar las colecciones a `Set` (que no admiten duplicados).
   2. Dividir la carga en dos consultas dirigidas dentro de la misma transacción (aprovechando la caché de primer nivel de Hibernate).
@@ -3885,18 +3887,18 @@ List<Tarea> findTodo();
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
     <li>¿Por qué el problema N+1 pasa desapercibido en los entornos de desarrollo locales?</li>
-    <li>¿Qué diferencia a nivel de Hibernate existe entre `JOIN` y `JOIN FETCH` en una consulta JPQL?</li>
-    <li>¿Por qué se utiliza `LEFT JOIN FETCH` en lugar de `INNER JOIN FETCH` al cargar una colección de hijos opcional?</li>
-    <li>¿Qué parámetros SQL genera Spring Data al recibir una petición con `Pageable`?</li>
+    <li>¿Qué diferencia a nivel de Hibernate existe entre <code>JOIN</code> y <code>JOIN FETCH</code> en una consulta JPQL?</li>
+    <li>¿Por qué se utiliza <code>LEFT JOIN FETCH</code> en lugar de <code>INNER JOIN FETCH</code> al cargar una colección de hijos opcional?</li>
+    <li>¿Qué parámetros SQL genera Spring Data al recibir una petición con <code>Pageable</code>?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque en local la base de datos tiene pocos datos y la latencia de red es cero (localhost), ocultando el impacto del volumen de peticiones.</p>
-  <p>2 · `JOIN` ordinario solo permite aplicar condiciones de filtrado en la consulta; `JOIN FETCH` además inicializa y puebla el objeto relacionado directamente en la misma sentencia sin dejar un Proxy perezoso.</p>
-  <p>3 · Porque si la entidad padre no tiene ningún hijo asociado, un `INNER JOIN` descartaría al padre de la lista de resultados, mientras que `LEFT JOIN` devuelve al padre con la colección vacía.</p>
-  <p>4 · Genera las cláusulas `LIMIT` (tamaño de página) y `OFFSET` (desplazamiento inicial según el número de página).</p>
+  <p>2 · <code>JOIN</code> ordinario solo permite aplicar condiciones de filtrado en la consulta; <code>JOIN FETCH</code> además inicializa y puebla el objeto relacionado directamente en la misma sentencia sin dejar un Proxy perezoso.</p>
+  <p>3 · Porque si la entidad padre no tiene ningún hijo asociado, un <code>INNER JOIN</code> descartaría al padre de la lista de resultados, mientras que <code>LEFT JOIN</code> devuelve al padre con la colección vacía.</p>
+  <p>4 · Genera las cláusulas <code>LIMIT</code> (tamaño de página) y <code>OFFSET</code> (desplazamiento inicial según el número de página).</p>
 </details>
 
 ## Lo que debes recordar

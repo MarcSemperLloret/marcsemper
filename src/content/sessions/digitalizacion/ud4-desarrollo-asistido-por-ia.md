@@ -442,7 +442,7 @@ Comparad ambos resultados y responded:
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo dotar de reglas persistentes al agente mediante instrucciones de proyecto (`.github/copilot-instructions.md`) y skills especializadas.</li>
+    <li><strong>1. Aprende:</strong> Cómo dotar de reglas persistentes al agente mediante instrucciones de proyecto (<code>.github/copilot-instructions.md</code>) y skills especializadas.</li>
     <li><strong>2. Haz:</strong> Redacta las directrices de tu repositorio y crea una skill de revisión automática de código.</li>
     <li><strong>3. Comprueba:</strong> Valida que el agente respeta las directrices del proyecto sin tener que repetírselas en cada prompt.</li>
   </ol>

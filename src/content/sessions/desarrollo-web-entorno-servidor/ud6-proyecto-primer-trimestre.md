@@ -109,8 +109,8 @@ La aplicación debe satisfacer **cinco bloques de requisitos indispensables**:
 * **Restricción estricta:** borrar una tarea jamás debe borrar la etiqueta del catálogo maestro.
 
 <p class="stage">5 · Operaciones Transaccionales Complejas y Rendimiento</p>
-* Caso de uso atómico multioperación: `POST /proyectos/{id}/clonar?nuevoNombre=...` protegido con `@Transactional(rollbackFor = Exception.class)`. Si una tarea falla, el proyecto clonado se revierte por completo.
-* Cero consultas N+1: el listado de tareas con proyecto y etiquetas debe resolverse mediante `JOIN FETCH` en una sola sentencia SQL verificable en consola.
+* Caso de uso atómico multioperación: <code>POST /proyectos/{id}/clonar?nuevoNombre=...</code> protegido con <code>@Transactional(rollbackFor = Exception.class)</code>. Si una tarea falla, el proyecto clonado se revierte por completo.
+* Cero consultas N+1: el listado de tareas con proyecto y etiquetas debe resolverse mediante <code>JOIN FETCH</code> en una sola sentencia SQL verificable en consola.
 
 ### De requisitos informales a criterios de aceptación (Gherkin)
 
@@ -233,7 +233,7 @@ Analiza estas tres frases extraídas de pliegos de clientes reales y detecta sus
 
 <p class="stage stage--solo">3 · La trampa de la unicidad blanda</p>
 * *Frase del cliente:* «No puede haber dos proyectos con el mismo nombre».
-* ¿Qué ocurre si un usuario intenta crear `"Mi Proyecto"` y otro intenta crear `"mi proyecto"` o `"Mi Proyecto "` (con espacio al final)?
+* ¿Qué ocurre si un usuario intenta crear <code>"Mi Proyecto"</code> y otro intenta crear <code>"mi proyecto"</code> o <code>"Mi Proyecto "</code> (con espacio al final)?
 * ¿Cómo debe formularse este criterio a nivel de DTO, de Servicio y de base de datos relacional para que sea invulnerable?
 
 <div class="practice-levels">
@@ -293,11 +293,11 @@ Analiza estas tres frases extraídas de pliegos de clientes reales y detecta sus
 
 ### La trampa del corte horizontal frente al corte vertical
 
-El error más destructivo durante una semana de proyecto es organizar el trabajo por «capas horizontales»:
-* **Día 1:** Escribir todas las clases `@Entity`.
-* **Día 2:** Escribir todas las interfaces `JpaRepository`.
-* **Día 3:** Escribir todos los servicios.
-* **Día 4:** Escribir los controladores e intentar arrancar por primera vez.
+El error más destructivo cuando el plazo es corto es organizar el trabajo por «capas horizontales»:
+* **Primer tramo:** escribir todas las clases `@Entity`.
+* **Segundo tramo:** escribir todas las interfaces `JpaRepository`.
+* **Tercer tramo:** escribir todos los servicios.
+* **Último tramo:** escribir los controladores e intentar arrancar por primera vez.
 
 ¿Qué ocurre el jueves por la tarde? La aplicación arroja 35 errores en cascada: tipos de datos incompatibles, dependencias circulares, mapeos erróneos de Hibernate y excepciones `PropertyReferenceException`. Como has tocado 40 archivos de golpe, **es imposible saber qué línea originó el desastre**.
 
@@ -352,6 +352,13 @@ En ingeniería de software no se esconden los problemas: se diagnostican y se re
 ```
 
 Tener identificados y resueltos estos casos te servirá además como evidencia directa para la defensa técnica oral de la sesión 42.
+
+<div class="rule">
+  <p class="rule-label">Cuánto trabajo cabe aquí, dicho sin rodeos</p>
+  <p>Esta unidad son <strong>tres sesiones de aula</strong>. En dos horas no se construye un proyecto completo, y nadie espera que lo hagas: lo que se construye aquí es la <strong>integración</strong> de piezas que ya sabes escribir, y por eso las cuatro iteraciones de abajo no son contenido nuevo, sino ensamblaje.</p>
+  <p>Trabaja siempre en este orden: <strong>termina una iteración entera antes de empezar la siguiente</strong>. Es preferible entregar dos iteraciones que funcionan de punta a punta que cuatro a medias. La rúbrica valora lo que funciona, no lo que está empezado.</p>
+  <p>Al final de cada sesión, haz un <code>commit</code> de lo que funcione, aunque esté incompleto. Un repositorio con historial es también una evidencia de cómo trabajas.</p>
+</div>
 
 ### Ahora tú · Ejecutar el sprint de desarrollo
 
@@ -418,7 +425,7 @@ Un compañero de equipo sube un cambio y el pipeline de GitHub Actions se pone e
     <li>¿Por qué el desarrollo por cortes verticales reduce drásticamente el tiempo total de integración?</li>
     <li>¿Cuál es la causa técnica de que un método @Transactional no haga rollback si lanza una excepción comprobada?</li>
     <li>¿Qué herramienta utilizas durante el desarrollo para verificar el número de sentencias SQL que genera una petición HTTP?</li>
-    <li>¿Por qué un test nunca debe verificar que un id autoincremental sea exactamente igual a un número fijo como `1L`?</li>
+    <li>¿Por qué un test nunca debe verificar que un id autoincremental sea exactamente igual a un número fijo como <code>1L</code>?</li>
   </ol>
 </div>
 
@@ -537,23 +544,43 @@ En esta sesión realizarás la revisión de código de otro equipo y corregirás
 
 <p class="stage">3 · Ensaya la defensa oral</p>
 
-Prepara tu guion de 5 minutos asegurándote de tener la terminal lista con PostgreSQL arrancado, el proyecto corriendo y las peticiones de Bruno preparadas en pestañas.
+Prepara tu guion de 5 minutos asegurándote de tener la terminal lista con PostgreSQL arrancado, el proyecto corriendo y las peticiones preparadas en pestañas.
+
+Estructura el guion en cuatro bloques breves, y para cada uno ten preparado **qué vas a enseñar en pantalla** mientras hablas:
+
+| Tiempo | Qué cuentas | Qué enseñas mientras |
+| :--- | :--- | :--- |
+| 0–1 min | El modelo: qué entidades hay y cómo se relacionan | El diagrama y las clases `@Entity` |
+| 1–3 min | El camino feliz completo | La colección ejecutándose: alta, consulta y borrado |
+| 3–4 min | Un caso de error de verdad | Un `400` de validación y un `404`, con su cuerpo RFC 7807 |
+| 4–5 min | Qué no está terminado | La lista de deuda técnica |
+
+Las tres preguntas que caen casi siempre en esta primera defensa, y que conviene llevar preparadas:
+
+* *«Enséñame dónde está la regla de negocio.»* No se contesta con palabras: se abre el `service` y se señala el método.
+* *«¿Por qué este endpoint devuelve 404 y este otro 409?»* Es la pregunta que comprueba si entendiste la UD3 o si copiaste los códigos.
+* *«Si te pido cambiar de PostgreSQL a otra base de datos, ¿qué tendrías que tocar?»* La respuesta correcta señala que el `service` no cambia, y es la prueba de que la arquitectura de la UD4 sirvió para algo.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Tu proyecto arranca desde cero en la máquina del equipo revisor; has dejado y recibido observaciones categorizadas por severidad; las bloqueantes están corregidas y la suite sigue en verde; y has ensayado la defensa entera con el cronómetro delante al menos una vez.</dd>
+</dl>
 
 ### Reto · El simulador de preguntas de tribunal técnico
 
 Ensaya tu respuesta a estas tres preguntas típicas de tribunal de evaluación y entrevistas técnicas:
 
 <p class="stage stage--solo">1 · La optimización de lectura en transacciones</p>
-* *Pregunta del tribunal:* «Veo que en tus consultas de lectura pones `@Transactional(readOnly = true)`. ¿Qué optimización concreta hace Hibernate y el driver JDBC con esa anotación?»
+* *Pregunta del tribunal:* «Veo que en tus consultas de lectura pones <code>@Transactional(readOnly = true)</code>. ¿Qué optimización concreta hace Hibernate y el driver JDBC con esa anotación?»
 * *(Respuesta esperada: Hibernate desactiva el dirty checking sobre las entidades leídas, ahorrando ciclos de CPU y memoria RAM al no tener que mantener copias de comparación para actualización).*
 
 <p class="stage stage--solo">2 · El impacto de desacoplar contratos</p>
-* *Pregunta del tribunal:* «Si mañana el equipo de frontend te pide que en la respuesta de `GET /proyectos/{id}` el campo `activo` se llame `estaHabilitado`, ¿cuántos archivos de tu aplicación tendrías que modificar?»
-* *(Respuesta esperada: Únicamente el DTO `ProyectoResponse` y el `ProyectoMapper`. La entidad JPA, la base de datos PostgreSQL y las reglas del servicio permanecen 100 % inalteradas gracias a la arquitectura desacoplada).*
+* *Pregunta del tribunal:* «Si mañana el equipo de frontend te pide que en la respuesta de <code>GET /proyectos/{id}</code> el campo <code>activo</code> se llame <code>estaHabilitado</code>, ¿cuántos archivos de tu aplicación tendrías que modificar?»
+* *(Respuesta esperada: Únicamente el DTO <code>ProyectoResponse</code> y el <code>ProyectoMapper</code>. La entidad JPA, la base de datos PostgreSQL y las reglas del servicio permanecen 100 % inalteradas gracias a la arquitectura desacoplada).*
 
 <p class="stage stage--solo">3 · Concurrencia y condiciones de carrera</p>
 * *Pregunta del tribunal:* «¿Qué ocurriría si dos peticiones HTTP intentan crear simultáneamente un proyecto con el mismo nombre en el mismo milisegundo?»
-* *(Respuesta esperada: Ambas pasarían la validación del servicio `existsByNombre`, pero la restricción física `UNIQUE` de PostgreSQL abortaría una de ellas con `DataIntegrityViolationException`, garantizando la integridad de datos).*
+* *(Respuesta esperada: Ambas pasarían la validación del servicio <code>existsByNombre</code>, pero la restricción física <code>UNIQUE</code> de PostgreSQL abortaría una de ellas con <code>DataIntegrityViolationException</code>, garantizando la integridad de datos).*
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Revisión de código completada con observaciones técnicas fundamentadas en los 5 vectores.</span></div>
@@ -577,7 +604,7 @@ Ensaya tu respuesta a estas tres preguntas típicas de tribunal de evaluación y
   <ol>
     <li>¿Cuáles son los tres niveles de severidad con los que se categoriza una observación de Code Review?</li>
     <li>¿Por qué exponer entidades JPA directamente como respuesta de un controlador se considera un fallo bloqueante?</li>
-    <li>¿Qué optimización de rendimiento aporta `@Transactional(readOnly = true)` a nivel de memoria en Hibernate?</li>
+    <li>¿Qué optimización de rendimiento aporta <code>@Transactional(readOnly = true)</code> a nivel de memoria en Hibernate?</li>
     <li>¿Cómo debe reaccionar un desarrollador ante una pregunta de tribunal cuya respuesta desconoce en el momento?</li>
   </ol>
 </div>
