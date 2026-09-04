@@ -975,33 +975,49 @@ export const teachingCourses: TeachingCourse[] = [
     title: "Lenguaje de marcas",
     titleEs: "Lenguaje de marcas",
     term: "2026/2027",
-    hours: "~36 hours",
-    hoursEs: "~36 horas",
+    hours: "~108 hours",
+    hoursEs: "~108 horas",
     status: "current",
-    updatedAt: "2026-08-30",
+    updatedAt: "2026-09-04",
     summary:
-      "Structuring and styling web information with modern semantic HTML, accessible forms, CSS layout systems, and responsive design.",
+      "The whole front-to-back path over three terms: semantic HTML and modern CSS, then JavaScript and the DOM, and finally Node.js and an Express API the site consumes as its own.",
     summaryEs:
-      "Estructuración y presentación de la información web con HTML semántico, formularios accesibles, maquetación moderna con CSS y diseño responsive.",
+      "El camino completo a lo largo de tres trimestres: HTML semántico y CSS moderno, después JavaScript y el DOM, y finalmente Node.js y una API con Express que el propio sitio consume.",
     overview:
-      "A foundational software development module focused, for now, on the two layers used to build a web interface: semantic HTML for structure, meaning and accessibility, followed by modern CSS for visual design, Flexbox, Grid and responsive layouts.",
+      "A three-term, project-led module built around a single site that grows with the class. The first term writes it as a document —semantic HTML, accessible forms, then modern CSS with Flexbox, Grid and responsive layout without a framework. The second term makes it behave: JavaScript as a language first, deliberately away from the page, so that a filter that does not filter is diagnosed as logic rather than as a button; then the DOM, events, state and fetch, with one rule throughout — data is the truth and the page is its reflection. The third term crosses to the other side: Node.js, npm, files, and an HTTP server written by hand before Express, so that every piece of the framework answers a problem the student has already felt; it closes with a designed REST API, layered code, an error contract, security, tests and a deployed application. Scaffolding is withdrawn on purpose: the first unit explains every step, and the last one starts from a specification.",
     overviewEs:
-      "Módulo fundamental de desarrollo centrado, de momento, en las dos capas con las que se construye una interfaz web: HTML semántico para la estructura, el significado y la accesibilidad, seguido de CSS moderno para el diseño visual, Flexbox, Grid y la adaptación a distintas pantallas.",
+      "Módulo de tres trimestres articulado alrededor de un único sitio que crece con la clase. El primer trimestre lo escribe como documento: HTML semántico, formularios accesibles y después CSS moderno con Flexbox, Grid y diseño adaptable sin frameworks. El segundo lo hace comportarse: primero JavaScript como lenguaje, deliberadamente lejos de la página, para que un filtro que no filtra se diagnostique como un problema de lógica y no del botón; después el DOM, los eventos, el estado y fetch, con una regla que gobierna todo: los datos mandan y la página es su reflejo. El tercero cruza al otro lado: Node.js, npm, ficheros y un servidor HTTP escrito a mano antes de Express, para que cada pieza del framework responda a un problema ya sufrido; termina con una API REST diseñada, código por capas, contrato de errores, seguridad, pruebas y una aplicación desplegada. El andamiaje se retira de forma deliberada: la primera unidad explica cada paso y la última parte de una especificación.",
     outcomes: [
       "Write valid, accessible and semantic HTML5 documents.",
-      "Design modern, responsive user interfaces using Flexbox, CSS Grid and design tokens."
+      "Design modern, responsive user interfaces using Flexbox, CSS Grid and design tokens.",
+      "Program with JavaScript: data, decisions, functions, arrays of objects, modules and error handling.",
+      "Build an interface driven by a single source of truth, with events, rendering and fetch.",
+      "Run JavaScript outside the browser with Node.js, working with files, npm and HTTP.",
+      "Design and implement a REST API with Express, layered code, tests and a deployment."
     ],
     outcomesEs: [
       "Escribir documentos HTML5 válidos, accesibles y con semántica estricta.",
-      "Maquetar interfaces web modernas y adaptables con Flexbox, CSS Grid y diseño responsive."
+      "Maquetar interfaces web modernas y adaptables con Flexbox, CSS Grid y diseño responsive.",
+      "Programar con JavaScript: datos, decisiones, funciones, arrays de objetos, módulos y errores.",
+      "Construir una interfaz gobernada por una única fuente de verdad, con eventos, render y fetch.",
+      "Ejecutar JavaScript fuera del navegador con Node.js, trabajando con ficheros, npm y HTTP.",
+      "Diseñar e implementar una API REST con Express, separada en capas, probada y desplegada."
     ],
     topics: [
       "Semantic HTML5 and accessibility",
-      "Modern CSS, Flexbox and Grid"
+      "Modern CSS, Flexbox and Grid",
+      "JavaScript: the language",
+      "DOM, events, state and fetch",
+      "Node.js, npm and HTTP",
+      "REST APIs with Express, testing and deployment"
     ],
     topicsEs: [
       "HTML5 semántico y accesibilidad",
-      "CSS moderno, Flexbox y Grid"
+      "CSS moderno, Flexbox y Grid",
+      "JavaScript: el lenguaje",
+      "DOM, eventos, estado y fetch",
+      "Node.js, npm y HTTP",
+      "APIs REST con Express, pruebas y despliegue"
     ],
     resources: [],
     sections: [
@@ -1010,6 +1026,8 @@ export const teachingCourses: TeachingCourse[] = [
         number: "UD1",
         verb: "STRUCTURE",
         verbEs: "ESTRUCTURAR",
+        phase: "TERM 1 · THE DOCUMENT",
+        phaseEs: "TRIMESTRE 1 · EL DOCUMENTO",
         title: "HTML: Structure and content of the Web",
         titleEs: "HTML: estructura y contenido de la Web",
         description:
@@ -1023,12 +1041,74 @@ export const teachingCourses: TeachingCourse[] = [
         number: "UD2",
         verb: "LAY OUT",
         verbEs: "MAQUETAR",
+        phase: "TERM 1 · THE DOCUMENT",
+        phaseEs: "TRIMESTRE 1 · EL DOCUMENTO",
         title: "CSS: design, layout and responsive",
         titleEs: "CSS: diseño, maquetación y responsive",
         description:
           "Turn the HTML site into a responsive, accessible one, using Flexbox and Grid rather than a framework.",
         descriptionEs:
           "Convertir el sitio HTML en una web adaptable y accesible, maquetada con Flexbox y Grid en lugar de con un framework.",
+        resources: []
+      },
+      {
+        id: "ud-03",
+        number: "UD3",
+        verb: "REASON",
+        verbEs: "RAZONAR",
+        phase: "TERM 2 · BEHAVIOUR IN THE BROWSER",
+        phaseEs: "TRIMESTRE 2 · EL COMPORTAMIENTO EN EL NAVEGADOR",
+        title: "JavaScript: the language",
+        titleEs: "JavaScript: el lenguaje",
+        description:
+          "Learn the language away from the page: data, decisions, functions, arrays of objects, modules and errors.",
+        descriptionEs:
+          "Aprender el lenguaje lejos de la página: datos, decisiones, funciones, arrays de objetos, módulos y errores.",
+        resources: []
+      },
+      {
+        id: "ud-04",
+        number: "UD4",
+        verb: "REACT",
+        verbEs: "REACCIONAR",
+        phase: "TERM 2 · BEHAVIOUR IN THE BROWSER",
+        phaseEs: "TRIMESTRE 2 · EL COMPORTAMIENTO EN EL NAVEGADOR",
+        title: "The DOM: the web that responds",
+        titleEs: "El DOM: la web que responde",
+        description:
+          "Connect the three layers: rendering from data, events, a single source of truth, accessible forms and fetch.",
+        descriptionEs:
+          "Conectar las tres capas: render desde datos, eventos, una única fuente de verdad, formularios accesibles y fetch.",
+        resources: []
+      },
+      {
+        id: "ud-05",
+        number: "UD5",
+        verb: "SERVE",
+        verbEs: "SERVIR",
+        phase: "TERM 3 · JAVASCRIPT ON THE SERVER",
+        phaseEs: "TRIMESTRE 3 · JAVASCRIPT EN EL SERVIDOR",
+        title: "Node.js: JavaScript outside the browser",
+        titleEs: "Node.js: JavaScript fuera del navegador",
+        description:
+          "The same language without a browser: npm, files, and an HTTP server written by hand before rewriting it with Express.",
+        descriptionEs:
+          "El mismo lenguaje sin navegador: npm, ficheros y un servidor HTTP escrito a mano antes de reescribirlo con Express.",
+        resources: []
+      },
+      {
+        id: "ud-06",
+        number: "UD6",
+        verb: "PUBLISH",
+        verbEs: "PUBLICAR",
+        phase: "TERM 3 · JAVASCRIPT ON THE SERVER",
+        phaseEs: "TRIMESTRE 3 · JAVASCRIPT EN EL SERVIDOR",
+        title: "Web server and API with Node",
+        titleEs: "Servidor web y API con Node",
+        description:
+          "A designed REST API: full CRUD, layered code, an error contract, security, tests and a deployed application.",
+        descriptionEs:
+          "Una API REST diseñada: CRUD completo, código por capas, contrato de errores, seguridad, pruebas y despliegue.",
         resources: []
       }
     ]

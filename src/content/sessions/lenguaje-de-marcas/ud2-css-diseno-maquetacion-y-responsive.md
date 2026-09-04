@@ -3206,4 +3206,6 @@ Lo que todavía no sabe es **reaccionar con lógica**.
   </ol>
 </figure>
 
-En la siguiente unidad empezamos a programar el comportamiento de la interfaz. Y ahí se cobrará otra vez el trabajo de estas semanas: sobre un documento semántico y un CSS que separa estructura de presentación, añadir comportamiento es añadir una capa. Sobre lo otro, es empezar de nuevo.
+En la siguiente unidad empezamos a programar. Y lo haremos, a propósito, casi sin tocar la página: primero el lenguaje —datos, decisiones, funciones y estructuras— porque un filtro que no filtra casi nunca es un problema del botón, sino de una lógica que todavía no se sabe leer. La interfaz que reacciona llega justo después, en la UD4.
+
+Y ahí se cobrará otra vez el trabajo de estas semanas: sobre un documento semántico y un CSS que separa estructura de presentación, añadir comportamiento es añadir una capa. Sobre lo otro, es empezar de nuevo.
