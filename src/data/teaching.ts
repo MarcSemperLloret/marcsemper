@@ -385,6 +385,8 @@ export const teachingCourses: TeachingCourse[] = [
     level: "Second year of Web Application Development",
     levelEs: "2.º de Desarrollo de Aplicaciones Web",
     term: "2026/2027",
+    hours: "~78 hours",
+    hoursEs: "~78 horas",
     status: "current",
     updatedAt: "2026-08-31",
     summary: "A complete web product taken from a defensible idea to a public release, a professional portfolio case study and a technical defence.",
