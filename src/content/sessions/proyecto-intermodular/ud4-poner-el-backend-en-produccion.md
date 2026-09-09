@@ -4,10 +4,10 @@ label: "UD4 · Conectar"
 section: "ud-04"
 order: 4
 lang: "es"
-summary: "Llevar al circuito la API que se está construyendo en Servidor: repositorio propio, un CI que compila y ejecuta los tests, despliegue en Azure App Service, y el portfolio consumiéndola desde el navegador."
-duration: "12 horas · 4 sesiones de 3 h"
+summary: "Llevar al circuito la API que se está construyendo en Servidor —repositorio propio, CI que compila y prueba, despliegue en Azure App Service— y escribir el cliente que la consume: listar, crear, modificar y borrar desde el portfolio."
+duration: "15 horas · 5 sesiones de 3 h"
 modality: "Taller · el 80 % de la sesión es trabajo del alumnado"
-deliverable: "API desplegada en una URL pública con su propio pipeline, y el portfolio mostrando y modificando sus datos."
+deliverable: "API desplegada en una URL pública con su propio pipeline, y el CRUD completo funcionando desde el portfolio publicado."
 date: "2026-09-09"
 outcomes:
   - "Poner un proyecto Java bajo el mismo circuito de trabajo que el portfolio."
@@ -16,6 +16,7 @@ outcomes:
   - "Diagnosticar un fallo de arranque en producción leyendo el registro del servicio."
   - "Explicar qué es CORS y configurarlo sin abrirlo a todo el mundo."
   - "Consumir una API desde el navegador contemplando carga, error y vacío."
+  - "Escribir contra la API creando, modificando y borrando, con los errores de validación junto al campo que los provoca."
   - "Coordinar dos piezas que se despliegan por separado y saber qué se rompe cuando una va por delante."
 requirements:
   - "El portfolio de las unidades anteriores, publicado y con su pipeline."
@@ -416,7 +417,7 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
   </ul>
 </div>
 
-## Sesión 9 · Que las dos piezas se hablen
+## Sesión 9 · El cliente que lee
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -431,9 +432,24 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 
 ### Se explica
 
+#### El JavaScript ya lo sabéis; lo nuevo es contra qué
+
+Pedir datos con `fetch`, recorrer un array y pintarlo en el documento es de primero. Lo que cambia hoy es que al otro lado no hay un fichero de ejemplo ni una API pública de prácticas: **está vuestro propio servidor**, escrito por vosotros, desplegado por vosotros y con los fallos que le hayáis dejado dentro.
+
+Eso tiene una consecuencia práctica desde el primer minuto: cuando algo no funcione, el problema puede estar en tres sitios distintos, y hay que saber en cuál mirar.
+
+| Síntoma | Dónde está el problema |
+| ------- | ---------------------- |
+| La consola habla de CORS o de política de origen | En la API: no ha dado permiso a vuestro origen |
+| La petición sale y devuelve 404 | En la ruta: la que pide el cliente no es la que expone la API |
+| La petición devuelve 500 | En la API: hay una excepción, y el registro del servicio dice cuál |
+| Todo responde bien y no se ve nada | En el cliente: los datos llegaron y no los estáis pintando |
+
+Esa tabla es media sesión. Sabed en qué fila estáis antes de tocar nada.
+
 #### CORS, o por qué el navegador os corta
 
-Vuestra petición va a fallar hoy, y no por un error vuestro. El navegador impide que una página de un origen lea la respuesta de otro origen distinto, salvo que ese otro origen dé permiso explícito.
+Vuestra primera petición va a fallar, y no por un error vuestro. El navegador impide que una página de un origen lea la respuesta de otro origen distinto, salvo que ese otro origen dé permiso explícito.
 
 <p class="term">Origen</p>
 
@@ -505,12 +521,7 @@ public class CorsConfig implements WebMvcConfigurer {
 
 Fijaos en lo que acabáis de hacer: **la URL de vuestro portfolio no está en el código**. Si mañana cambia, se cambia la variable y no hace falta compilar nada.
 
-<details class="aside aside--help">
-  <summary>Por qué al guardar aparecen dos peticiones en vez de una</summary>
-  <p>Para las peticiones que modifican datos, el navegador manda antes una petición de sondeo preguntando si tiene permiso, y solo después manda la de verdad. Se llama <em>preflight</em>. Si veis una petición <code>OPTIONS</code> en la pestaña de red, no es un error: es el navegador comprobando lo que acabáis de configurar.</p>
-</details>
-
-#### Bloque B · La URL de la API en el portfolio
+#### Bloque B · La dirección de la API, en un solo sitio
 
 <p class="stage stage--solo">Individual, en el repositorio del portfolio</p>
 
@@ -524,44 +535,89 @@ export const API = location.hostname === "localhost"
 
 Es simple a propósito. Lo importante no es la técnica, es la regla: **una dirección que cambia entre entornos se escribe en un solo sitio**. El día que la tengáis repetida en cuatro ficheros y cambie, os enteraréis por un usuario.
 
-#### Bloque C · Leer los datos
+#### Bloque C · Una sola función habla con la red
 
-<p class="stage stage--solo">Individual, con los tres estados</p>
+<p class="stage stage--solo">Individual</p>
 
-Escribid la pantalla que lista los datos de vuestra API contemplando los tres finales:
+Antes de pintar nada, escribid la función por la que van a pasar **todas** vuestras peticiones, esta sesión y la siguiente. Se hace ahora porque en la sesión 10 vais a añadir tres llamadas más, y sin esto acabaréis con la misma lógica de errores copiada cuatro veces.
 
 ```js
-async function cargar() {
-  mostrarCargando();
-  try {
-    const respuesta = await fetch(`${API}/api/vuestro-recurso`);
-    if (!respuesta.ok) throw new Error(`El servidor respondió ${respuesta.status}`);
-    const datos = await respuesta.json();
-    datos.length === 0 ? mostrarVacio() : mostrarLista(datos);
-  } catch (error) {
-    mostrarError(error.message);
+import { API } from "./config.js";
+
+export class ErrorDeApi extends Error {
+  constructor(estado, detalle) {
+    super(`El servidor respondió ${estado}`);
+    this.estado = estado;
+    this.detalle = detalle;
   }
+}
+
+export async function pedir(ruta, opciones = {}) {
+  const respuesta = await fetch(`${API}${ruta}`, {
+    headers: { "Content-Type": "application/json" },
+    ...opciones
+  });
+
+  if (!respuesta.ok) {
+    const detalle = await respuesta.json().catch(() => null);
+    throw new ErrorDeApi(respuesta.status, detalle);
+  }
+
+  return respuesta.status === 204 ? null : respuesta.json();
 }
 ```
 
-Y probad los tres de verdad, no de palabra:
+<dl class="worked">
+  <dt>Por qué una clase de error propia</dt>
+  <dd>Porque en la sesión 10 vais a necesitar distinguir un 400 de validación —culpa de lo que escribió el usuario— de un 500 —culpa vuestra—. Con un error genérico no se puede.</dd>
+  <dt>Por qué se intenta leer el cuerpo del error</dt>
+  <dd>Porque vuestra API, tal como la habéis hecho en Servidor, no devuelve un error vacío: devuelve un cuerpo que explica qué ha fallado. Tirarlo y enseñar «ha habido un error» es desperdiciar el trabajo que hicisteis allí.</dd>
+  <dt>Por qué el 204</dt>
+  <dd>Es la respuesta correcta a un borrado: «hecho, y no tengo nada que devolverte». Si intentáis leer JSON de un 204, revienta.</dd>
+</dl>
+
+#### Bloque D · Pintar desde una sola fuente de verdad
+
+<p class="stage stage--solo">Individual</p>
+
+Nada de ir añadiendo elementos al documento a medida que llegan. Se guardan los datos en una variable y se pinta desde ella, porque en la sesión 10 esa variable va a cambiar y la pantalla tendrá que reflejarlo sin que reescribáis el renderizado.
+
+```js
+let estado = { carga: "cargando", datos: [], error: null };
+
+function pintar() {
+  const zona = document.querySelector("#lista");
+  if (estado.carga === "cargando") return pintarCargando(zona);
+  if (estado.error) return pintarError(zona, estado.error);
+  if (estado.datos.length === 0) return pintarVacio(zona);
+  pintarFilas(zona, estado.datos);
+}
+
+async function cargar() {
+  estado = { carga: "cargando", datos: [], error: null };
+  pintar();
+  try {
+    estado = { carga: "listo", datos: await pedir("/api/vuestro-recurso"), error: null };
+  } catch (error) {
+    estado = { carga: "listo", datos: [], error };
+  }
+  pintar();
+}
+```
+
+**Y probad los estados de verdad**, no de palabra:
 
 | Cómo se provoca | Qué tenéis que ver |
 | --------------- | ------------------ |
 | Parar la API en Azure desde el portal | El mensaje de error, no una página en blanco |
-| Borrar todos los datos de la API | El mensaje de vacío, distinto del de error |
+| Vaciar los datos de la API | El mensaje de vacío, distinto del de error |
 | Abrir la página con la API dormida | El aviso de carga durante todo el rato que tarde |
-
-#### Bloque D · Escribir datos
-
-<p class="stage stage--solo">Individual</p>
-
-Añadid el formulario que crea un elemento nuevo y el botón que borra uno. Al terminar, el portfolio hace las cuatro operaciones del CRUD contra una API que está en otra máquina.
+| Quitar la variable del origen permitido | El fallo de CORS en la consola, para reconocerlo cuando os pase de verdad |
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La lista se ve en el portfolio publicado, con los tres estados contemplados.</span></div>
-  <div><strong>Si lo tenéis</strong><span>Crear y borrar funcionando desde la web publicada, no solo en local.</span></div>
-  <div><strong>Reto</strong><span>Haced que un fallo de validación de la API —de los que devuelven 400 con el detalle del error— se muestre en el formulario junto al campo que lo provocó, en vez de como un mensaje genérico.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>La lista se ve en el portfolio publicado leyendo de la API publicada, con los tres estados contemplados.</span></div>
+  <div><strong>Si lo tenéis</strong><span>Los cuatro fallos de la tabla provocados y reconocidos, sabiendo decir en qué fila de la tabla del principio cae cada uno.</span></div>
+  <div><strong>Reto</strong><span>Haced que el aviso de carga solo aparezca si la respuesta tarda más de un cuarto de segundo, para que las cargas rápidas no den un parpadeo.</span></div>
 </div>
 
 ---
@@ -574,8 +630,8 @@ Añadid el formulario que crea un elemento nuevo y el botón que borra uno. Al t
     <li>¿Qué es un origen y por qué el portfolio y la API son dos distintos?</li>
     <li>¿Protege CORS vuestra API de que alguien la llame?</li>
     <li>¿Por qué la URL permitida está en una variable de entorno y no en el código?</li>
-    <li>¿Qué tres estados tiene una pantalla que pide datos por la red?</li>
-    <li>¿Por qué la dirección de la API se escribe en un solo fichero?</li>
+    <li>La consola dice 404. ¿En qué lado está el problema?</li>
+    <li>¿Por qué se pinta desde una variable en vez de ir añadiendo elementos según llegan?</li>
   </ol>
 </div>
 
@@ -584,20 +640,229 @@ Añadid el formulario que crea un elemento nuevo y el botón que borra uno. Al t
   <p>1 · Esquema, dominio y puerto. Están en dominios distintos, así que para el navegador son orígenes distintos.</p>
   <p>2 · No. Es una regla del navegador: cualquiera puede llamarla desde una terminal. Quien decide qué se puede hacer es la autorización.</p>
   <p>3 · Para poder cambiarla sin recompilar ni tocar el código, y para que el mismo artefacto sirva en cualquier entorno.</p>
-  <p>4 · Cargando, error y vacío. Los tres son funcionalidad.</p>
-  <p>5 · Para que cambiarla sea un cambio en un sitio y no una búsqueda por todo el proyecto.</p>
+  <p>4 · En la ruta: la que pide el cliente no coincide con la que expone la API. La petición sí llegó al servidor.</p>
+  <p>5 · Porque la pantalla tiene que poder repintarse cuando los datos cambien, y eso empieza en la sesión siguiente.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Antes de la sesión 10</p>
   <ul class="checklist">
-    <li>El portfolio publicado lee datos de la API publicada.</li>
-    <li>Los tres estados están probados provocándolos, no imaginándolos.</li>
+    <li>El portfolio publicado lee datos de la API publicada, con los tres estados probados.</li>
+    <li>Traéis a mano el contrato de errores de vuestra API: qué devuelve exactamente cuando una validación falla.</li>
+    <li>Traéis dibujado en papel el formulario que va a crear elementos, con sus campos y sus reglas.</li>
+  </ul>
+</div>
+
+## Sesión 10 · El cliente que escribe
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
+  <ol>
+    <li>El usuario envía un formulario y la API responde que un campo no vale. ¿De quién es el fallo y qué debería ver?</li>
+    <li>Acabáis de crear un elemento. ¿Cómo se entera la lista que ya estaba pintada?</li>
+    <li>¿Qué debería pasar si alguien pulsa dos veces seguidas el botón de guardar?</li>
+  </ol>
+</div>
+
+---
+
+### Se explica
+
+#### Escribir no es leer con otro verbo
+
+Una lectura que falla es una molestia: se reintenta. Una escritura que falla puede dejar al usuario sin saber si sus datos se han guardado, y puede duplicarlos si insiste. Por eso escribir trae tres problemas que leer no tiene.
+
+<figure class="diagram">
+  <figcaption>Lo que aparece al escribir</figcaption>
+  <ol class="flow">
+    <li><span class="flow-role">La respuesta importa</span>Un 400 no es un fallo del programa: es el servidor diciendo que lo enviado no vale, y con el detalle de por qué.</li>
+    <li><span class="flow-role">La pantalla se ha quedado vieja</span>La lista que estaba pintada ya no refleja lo que hay al otro lado. Alguien tiene que actualizarla.</li>
+    <li><span class="flow-role">El usuario puede insistir</span>Si el botón sigue activo mientras la petición viaja, se envía dos veces y se crean dos elementos.</li>
+  </ol>
+</figure>
+
+#### El 400 de vuestra API es información, no un error
+
+En Servidor habéis dedicado semanas a que la API valide lo que recibe y devuelva errores con una forma acordada. Ese trabajo se tira a la basura en el momento en que el cliente lo convierte en un «ha habido un error».
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Lo que hace casi todo el mundo</p>
+    <p class="compare-body">Un mensaje rojo genérico arriba del formulario. El usuario tiene que adivinar qué campo está mal y qué se esperaba de él.</p>
+  </div>
+  <div>
+    <p class="compare-label">Lo que se hace</p>
+    <p class="compare-body">Se lee el detalle del 400, se busca cada campo del formulario que aparece en él y se pone el mensaje al lado. Vuestra API ya os ha dicho exactamente eso.</p>
+  </div>
+</div>
+
+<div class="rule">
+  <p class="rule-label">Validar en el cliente no sustituye a validar en el servidor</p>
+  <p>El navegador valida para ser amable: avisa antes de molestar al servidor. El servidor valida porque <strong>es el único sitio donde la validación no se puede saltar</strong>: cualquiera puede mandar una petición sin pasar por vuestro formulario. Que existan las dos no es duplicar trabajo; quitar la del servidor sí es dejar la puerta abierta.</p>
+</div>
+
+#### Después de escribir, la lista miente
+
+Tenéis dos formas de arreglarlo, y conviene elegir a sabiendas:
+
+| Estrategia | Cómo funciona | Cuándo conviene |
+| ---------- | ------------- | --------------- |
+| **Recargar del servidor** | Después de crear o borrar, se vuelve a pedir la lista entera | Casi siempre, mientras las listas sean pequeñas. Es simple y no puede desincronizarse |
+| **Tocar el estado local** | Se añade o se quita el elemento del array que ya tenéis y se repinta | Cuando recargar sea caro. Es más rápido, y se desincroniza en cuanto os equivoquéis en un detalle |
+
+Empezad por la primera. La segunda es una optimización, y optimizar antes de tener el problema es como se introducen los fallos que nadie sabe reproducir.
+
+#### Lo que cambia en pantalla hay que anunciarlo
+
+Un elemento que aparece o desaparece sin recargar la página es invisible para quien usa un lector de pantalla, salvo que se lo digáis. Y quien acaba de borrar la fila donde tenía el foco se queda con el foco en ninguna parte.
+
+Dos reglas, y las dos las mide el job de calidad que ya tenéis:
+
+<ul class="checklist">
+  <li>La zona donde aparecen los avisos —guardado, error, vacío— se marca como región activa para que se anuncie sola al cambiar.</li>
+  <li>Después de borrar una fila, el foco se lleva a un sitio con sentido: la fila siguiente, o el encabezado de la lista.</li>
+</ul>
+
+---
+
+### Se trabaja
+
+#### Bloque A · Crear
+
+<p class="stage stage--solo">Individual, issue y rama como siempre</p>
+
+**1 · El formulario**, en HTML de verdad: etiquetas asociadas a sus campos, tipos correctos y los atributos de obligatoriedad que correspondan. Nada de una fila de cajas de texto sueltas.
+
+**2 · El envío**, sin recargar la página:
+
+```js
+formulario.addEventListener("submit", async (evento) => {
+  evento.preventDefault();
+  limpiarErrores();
+  boton.disabled = true;
+  try {
+    await pedir("/api/vuestro-recurso", {
+      method: "POST",
+      body: JSON.stringify(Object.fromEntries(new FormData(formulario)))
+    });
+    formulario.reset();
+    anunciar("Elemento creado");
+    await cargar();
+  } catch (error) {
+    mostrarFallo(error);
+  } finally {
+    boton.disabled = false;
+  }
+});
+```
+
+Fijaos en el `finally`: el botón se vuelve a activar **pase lo que pase**. Si eso estuviera dentro del `try`, un error dejaría el formulario bloqueado para siempre.
+
+**3 · Mirad la pestaña de red mientras guardáis.** Vais a ver dos peticiones donde esperabais una.
+
+<details class="aside aside--help">
+  <summary>Por qué aparecen dos peticiones en vez de una</summary>
+  <p>Para las peticiones que modifican datos, el navegador manda antes una petición de sondeo preguntando si tiene permiso, y solo después manda la de verdad. Se llama <em>preflight</em>. Si veis una petición <code>OPTIONS</code> en la pestaña de red, no es un error: es el navegador comprobando el permiso que configurasteis en la sesión anterior.</p>
+</details>
+
+#### Bloque B · Los errores del servidor, en su campo
+
+<p class="stage stage--solo">Individual, con el contrato de errores de vuestra API delante</p>
+
+Enviad a propósito algo que vuestra API rechace: un campo vacío, un número fuera de rango, un texto demasiado largo. Mirad en la pestaña de red **qué cuerpo devuelve exactamente** ese 400. Esa forma la acordasteis vosotros en Servidor, así que el código que la lee tiene que corresponderse con ella y no con la que salga en un tutorial.
+
+```js
+function mostrarFallo(error) {
+  if (error.estado === 400 && error.detalle) {
+    for (const [campo, mensaje] of Object.entries(erroresPorCampo(error.detalle))) {
+      const destino = formulario.querySelector(`[name="${campo}"]`);
+      if (destino) ponerMensajeJunto(destino, mensaje);
+    }
+    anunciar("Revisa los campos marcados");
+    return;
+  }
+  anunciar("No se ha podido guardar. Inténtalo de nuevo en unos segundos.");
+}
+```
+
+`erroresPorCampo` la escribís vosotros, y es donde se traduce **vuestro** contrato a un objeto de campo y mensaje. Si no sabéis qué poner ahí, es que no habéis mirado la respuesta real todavía.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación del bloque B</p>
+  <ul class="checklist">
+    <li>Un campo obligatorio vacío muestra el mensaje junto a ese campo, no arriba del formulario.</li>
+    <li>Un fallo que no sea de validación muestra un mensaje distinto, y no dice «400».</li>
+    <li>Con la API parada, el formulario avisa y el botón vuelve a estar activo.</li>
+  </ul>
+</div>
+
+#### Bloque C · Borrar
+
+<p class="stage stage--solo">Individual</p>
+
+**1 · Un solo escuchador para todas las filas.** Las filas se crean y se destruyen, así que el escuchador va en la lista, no en cada botón:
+
+```js
+lista.addEventListener("click", async (evento) => {
+  const boton = evento.target.closest("[data-borrar]");
+  if (!boton) return;
+  if (!confirm("¿Seguro que quieres borrarlo?")) return;
+  await pedir(`/api/vuestro-recurso/${boton.dataset.borrar}`, { method: "DELETE" });
+  anunciar("Elemento borrado");
+  await cargar();
+});
+```
+
+**2 · El foco.** Después de recargar la lista, el elemento donde estaba el foco ya no existe. Llevadlo al encabezado de la lista o a la fila siguiente. Probadlo navegando solo con el teclado: si después de borrar hay que pulsar el tabulador quince veces para volver, está mal.
+
+**3 · La confirmación.** `confirm` sirve hoy. Si os apetece hacerlo bien, un diálogo propio; si no, no pasa nada. Lo que no vale es borrar sin preguntar.
+
+#### Bloque D · Cerrar el CRUD
+
+<p class="stage stage--solo">Individual</p>
+
+Con crear, listar y borrar funcionando contra la API publicada, falta la operación que más se salta todo el mundo: **modificar**. Añadidla reutilizando el mismo formulario en modo edición.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Crear, listar y borrar funcionando desde la web publicada contra la API publicada, con los errores de validación en su campo.</span></div>
+  <div><strong>Si lo tenéis</strong><span>Modificar, reutilizando el formulario, y el foco bien llevado después de cada operación.</span></div>
+  <div><strong>Reto</strong><span>Haced que pulsar dos veces muy rápido el botón de guardar cree un solo elemento, y demostradlo en la pestaña de red.</span></div>
+</div>
+
+---
+
+### Cierre
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
+  <ol>
+    <li>Un 400 con detalle, ¿es un fallo de vuestro programa?</li>
+    <li>Si el navegador ya valida el formulario, ¿para qué valida también el servidor?</li>
+    <li>¿Por qué el botón se reactiva en el <code>finally</code> y no al final del <code>try</code>?</li>
+    <li>¿Por qué el escuchador del borrado va en la lista y no en cada botón?</li>
+    <li>Habéis borrado la fila donde estaba el foco. ¿Qué hay que hacer?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · No: es el servidor diciendo que lo enviado no cumple las reglas, con el detalle de cuál. Mostrarlo bien es aprovechar el trabajo hecho en Servidor.</p>
+  <p>2 · Porque la del navegador se puede saltar mandando la petición por otro medio. La del servidor es la única que no.</p>
+  <p>3 · Para que se reactive también cuando haya un error; si no, un fallo deja el formulario bloqueado.</p>
+  <p>4 · Porque las filas se crean y se destruyen: un escuchador en la lista sigue funcionando con las filas que todavía no existen.</p>
+  <p>5 · Llevarlo a un sitio con sentido —la fila siguiente o el encabezado— para que quien navega con teclado no se quede perdido.</p>
+</details>
+
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Antes de la sesión 12</p>
+  <ul class="checklist">
+    <li>El CRUD completo funcionando entre las dos URL públicas, no en local.</li>
+    <li>Los errores de validación de vuestra API se ven junto al campo que los provocó.</li>
     <li>Traéis anotado qué pasaría si mañana cambiarais el nombre de un campo en la API.</li>
   </ul>
 </div>
 
-## Sesión 10 · Dos piezas, una entrega
+## Sesión 11 · Dos piezas, una entrega
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -740,7 +1005,7 @@ Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres
   <ul class="checklist">
     <li>Las dos piezas publicadas, enlazadas entre sí desde sus README.</li>
     <li>Una revisión vuestra en cada repositorio de vuestra pareja: el del portfolio y el de la API.</li>
-    <li>Traéis pensado, de las dos semanas siguientes, qué proyecto os gustaría hacer de verdad: en la sesión 11 se empieza a elegir el problema del proyecto grande.</li>
+    <li>Traéis pensado, de las dos semanas siguientes, qué proyecto os gustaría hacer de verdad: en la sesión 12 se empieza a elegir el problema del proyecto grande.</li>
   </ul>
 </div>
 
@@ -766,6 +1031,8 @@ Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres
 | **La configuración vive fuera del código** | Es lo que permite que el mismo artefacto funcione en el portátil y en producción |
 | **CORS no es seguridad** | Es una regla del navegador. Quien decide qué se puede hacer es la autorización |
 | **Cargando, error y vacío son funcionalidad** | Sin ellos, cualquier lentitud o cualquier fallo se ve igual: una pantalla rota sin explicación |
+| **Se pinta desde una sola fuente de verdad** | La pantalla es el reflejo de una variable. Así puede repintarse cuando los datos cambien, sin reescribir el renderizado |
+| **El error del servidor es información** | Un 400 con detalle dice qué campo falla. Convertirlo en «ha habido un error» tira el trabajo hecho en Servidor |
 | **Las limitaciones se escriben** | Un límite conocido y documentado es criterio; el mismo límite descubierto en directo es un fallo |
 
 ### El vocabulario de la unidad
@@ -781,3 +1048,5 @@ Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres
 | Flujo de registro | La salida de vuestra aplicación en producción, leída en directo |
 | Contrato | El acuerdo entre dos piezas sobre qué se pide y qué se devuelve. No lo vigila ninguna herramienta |
 | Cambio compatible | Un cambio que se puede desplegar sin romper a quien todavía usa lo anterior |
+| Fuente de verdad | La variable de la que se pinta la pantalla. Cambia ella, se repinta todo |
+| Delegación de eventos | Un solo escuchador en el contenedor, que sigue funcionando con los elementos que aún no existen |
