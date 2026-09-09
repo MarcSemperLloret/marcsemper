@@ -459,6 +459,19 @@ export const teachingCourses: TeachingCourse[] = [
         phase: "1 · WORKING METHOD",
         phaseEs: "1 · MÉTODO DE TRABAJO",
         resources: []
+      },
+      {
+        id: "ud-02",
+        number: "UD2",
+        verb: "CHECK",
+        verbEs: "COMPROBAR",
+        title: "Let the machine check it",
+        titleEs: "Que lo compruebe la máquina",
+        description: "Build the real portfolio through pull requests while writing a pipeline that validates HTML, formatting, links and accessibility, and that refuses the merge when any of them fails.",
+        descriptionEs: "Construir el portfolio de verdad entrando por pull request, y escribir un pipeline que valide HTML, formato, enlaces y accesibilidad, y que impida fusionar cuando algo falla.",
+        phase: "1 · WORKING METHOD",
+        phaseEs: "1 · MÉTODO DE TRABAJO",
+        resources: []
       }
     ]
   },
