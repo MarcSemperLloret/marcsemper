@@ -38,21 +38,8 @@ priorKnowledge:
 
 ## Sesión 1 · Del repositorio vacío a una URL pública
 
-<div class="today-box">
-  <p class="today-label">Hoy · El reloj</p>
-  <ol class="today-steps">
-    <li><strong>0:00 – 0:30 · Se explica:</strong> qué se evalúa en este módulo, qué es el circuito y por qué se despliega el primer día.</li>
-    <li><strong>0:30 – 0:55 · Bloque A:</strong> la cuenta de Azure para estudiantes. Se hace lo primero porque es lo único que no depende de vosotros.</li>
-    <li><strong>0:55 – 1:30 · Bloque B:</strong> el repositorio y la página más fea que sepáis escribir.</li>
-    <li><strong>1:30 – 2:15 · Bloque C:</strong> Azure conectado al repositorio. Sale una URL pública.</li>
-    <li><strong>2:15 – 2:40 · Bloque D:</strong> leer el fichero que Azure ha escrito en vuestro repositorio sin pediros permiso.</li>
-    <li><strong>2:40 – 2:55 · Bloque E:</strong> evidencia. README y URL registrada.</li>
-    <li><strong>2:55 – 3:00 · Cierre.</strong></li>
-  </ol>
-</div>
-
 <div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
     <li>Cuando subís un cambio a GitHub, ¿quién lo comprueba antes de que quede publicado?</li>
     <li>Habéis abierto alguna web y visto que está «en una URL». ¿Dónde está guardado ese HTML?</li>
@@ -62,7 +49,7 @@ priorKnowledge:
 
 ---
 
-### Se explica · 30 minutos
+### Se explica
 
 #### Este módulo evalúa el método, no el producto
 
@@ -133,9 +120,9 @@ Esa vista previa es la pieza que hace que la revisión de la semana que viene se
 
 ---
 
-### Se trabaja · 2 horas y 25 minutos
+### Se trabaja
 
-#### Bloque A · La cuenta de Azure — 25 minutos
+#### Bloque A · La cuenta de Azure
 
 <p class="stage stage--solo">Individual, y lo primero de todo</p>
 
@@ -154,10 +141,10 @@ Se hace antes que nada porque es el único paso que depende de que un tercero os
 <details class="aside aside--help">
   <summary>Si la verificación falla</summary>
   <p>Tres causas, en orden de frecuencia. <strong>Una:</strong> habéis usado el correo personal. Repetid con el del centro. <strong>Dos:</strong> sois menores de 18 y la oferta pide una comprobación adicional; avisadme y lo gestionamos, pero no os quedéis parados. <strong>Tres:</strong> el dominio no está reconocido todavía; es cuestión de días y no depende de vosotros.</p>
-  <p>En cualquiera de los tres casos <strong>no se pierde la sesión</strong>: seguid con el bloque B, y en el bloque C usad el plan alternativo con GitHub Pages que está al final de ese bloque. El circuito es el mismo; solo cambia quién sirve los ficheros. Cuando la cuenta esté lista, migráis en quince minutos.</p>
+  <p>En cualquiera de los tres casos <strong>no se pierde la sesión</strong>: seguid con el bloque B, y en el bloque C usad el plan alternativo con GitHub Pages que está al final de ese bloque. El circuito es el mismo; solo cambia quién sirve los ficheros. Cuando la cuenta esté lista, se migra sin rehacer nada.</p>
 </details>
 
-#### Bloque B · El repositorio y la página fea — 35 minutos
+#### Bloque B · El repositorio y la página fea
 
 <p class="stage stage--solo">Individual. Este repositorio es vuestro y os lo lleváis</p>
 
@@ -222,7 +209,7 @@ git push
   <p>GitHub no acepta la contraseña de la cuenta desde la línea de comandos. Instalad <strong>Git Credential Manager</strong> (viene con Git para Windows y abre una ventana del navegador la primera vez) o usad un <em>personal access token</em> como contraseña: foto de perfil → Settings → Developer settings → Personal access tokens.</p>
 </details>
 
-#### Bloque C · Conectar Azure — 45 minutos
+#### Bloque C · Conectar Azure
 
 <p class="stage stage--guided">Se hace a la vez, paso a paso, todos a la misma pantalla</p>
 
@@ -292,7 +279,7 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
   <p>En vuestro repositorio: <strong>Settings → Pages → Build and deployment → Source: GitHub Actions</strong>, y elegid la plantilla <em>Static HTML</em>. GitHub escribe un workflow equivalente y publica en <code>vuestrousuario.github.io/portfolio</code>. El circuito de la sesión 2 funciona igual; lo único que pierde es la vista previa por pull request, así que en cuanto tengáis Azure hay que migrar.</p>
 </details>
 
-#### Bloque D · Leer lo que Azure ha escrito — 25 minutos
+#### Bloque D · Leer lo que Azure ha escrito
 
 <p class="stage stage--solo">Individual, con el fichero abierto</p>
 
@@ -363,7 +350,7 @@ Un fichero que le dice a GitHub qué ejecutar y cuándo. Vive dentro del reposit
   <dd></dd>
 </dl>
 
-#### Bloque E · Evidencia — 15 minutos
+#### Bloque E · Evidencia
 
 <p class="stage stage--solo">Antes de salir del aula</p>
 
@@ -389,10 +376,10 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 
 ---
 
-### Cierre · 5 minutos
+### Cierre
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
     <li>¿Por qué se despliega una página vacía el primer día en lugar de esperar a tener contenido?</li>
     <li>¿Quién ha escrito el fichero de <code>.github/workflows/</code> y cuándo?</li>
@@ -428,20 +415,8 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 
 ## Sesión 2 · Issues, tablero y la primera pull request
 
-<div class="today-box">
-  <p class="today-label">Hoy · El reloj</p>
-  <ol class="today-steps">
-    <li><strong>0:00 – 0:30 · Se explica:</strong> qué distingue una issue de una lista de deseos, qué es estar terminado y por qué se cierra la rama principal.</li>
-    <li><strong>0:30 – 1:00 · Bloque A:</strong> el tablero y seis issues escritas de verdad.</li>
-    <li><strong>1:00 – 1:30 · Bloque B:</strong> proteger <code>main</code> y comprobar que os bloquea a vosotros.</li>
-    <li><strong>1:30 – 2:20 · Bloque C:</strong> el circuito entero, dos veces, con la vista previa abierta.</li>
-    <li><strong>2:20 – 2:45 · Bloque D:</strong> revisar la pull request de vuestra pareja sin escribir «ok».</li>
-    <li><strong>2:45 – 3:00 · Cierre.</strong></li>
-  </ol>
-</div>
-
 <div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
+  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
     <li>«Mejorar el portfolio». ¿Cómo sabríais que esa tarea está terminada?</li>
     <li>Si trabajáis solos en vuestro repositorio, ¿para qué querríais una rama?</li>
@@ -451,7 +426,7 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 
 ---
 
-### Se explica · 30 minutos
+### Se explica
 
 #### Una issue no es un recordatorio
 
@@ -517,9 +492,9 @@ Cuando `main` está protegida pasan tres cosas a la vez. La primera, que nadie p
 
 ---
 
-### Se trabaja · 2 horas y 15 minutos
+### Se trabaja
 
-#### Bloque A · El tablero y seis issues — 30 minutos
+#### Bloque A · El tablero y seis issues
 
 <p class="stage stage--solo">Individual, con las seis frases que traíais de casa</p>
 
@@ -559,7 +534,7 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
   </ul>
 </div>
 
-#### Bloque B · Cerrar la rama principal — 30 minutos
+#### Bloque B · Cerrar la rama principal
 
 <p class="stage stage--guided">A la vez, y al final se comprueba rompiéndolo</p>
 
@@ -612,11 +587,11 @@ git reset --hard origin/main
   <dd></dd>
 </dl>
 
-#### Bloque C · El circuito entero, dos veces — 50 minutos
+#### Bloque C · El circuito entero, dos veces
 
 <p class="stage stage--solo">Individual, pero con vuestra pareja al lado: sus pull requests las revisáis vosotros</p>
 
-Primera vuelta, despacio, los nueve pasos. La segunda saldrá en quince minutos.
+La primera vuelta se hace despacio, mirando los diez pasos. La segunda sale sola.
 
 **1 · Coger una tarea.** En el tablero, la primera issue de *Todo*: movedla a *In Progress* y asignáosla (campo *Assignees*). Apuntad su número; supongamos que es la 3.
 
@@ -690,7 +665,7 @@ git branch -d 3-cabecera-con-nombre
   <div><strong>Reto</strong><span>Provocad un fallo a propósito: abrid una pull request que rompa el despliegue, comprobad que el check sale en rojo y que GitHub no os deja fusionar. Después arregladlo en la misma rama y ved cómo el check se pone verde solo.</span></div>
 </div>
 
-#### Bloque D · Revisar sin escribir «ok» — 25 minutos
+#### Bloque D · Revisar sin escribir «ok»
 
 <p class="stage stage--guided">Por parejas, sobre la pull request del otro</p>
 
@@ -730,7 +705,7 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 
 ---
 
-### Cierre · 15 minutos
+### Cierre
 
 <div class="checkpoint">
   <p class="checkpoint-label">Producto de la unidad</p>
@@ -744,7 +719,7 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
     <li>¿Qué le falta a la tarea «mejorar la página de inicio» para ser una issue?</li>
     <li>¿Qué hace exactamente <code>Closes #7</code> y dónde se escribe?</li>
