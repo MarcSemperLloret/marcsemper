@@ -472,6 +472,19 @@ export const teachingCourses: TeachingCourse[] = [
         phase: "1 · WORKING METHOD",
         phaseEs: "1 · MÉTODO DE TRABAJO",
         resources: []
+      },
+      {
+        id: "ud-03",
+        number: "UD3",
+        verb: "PUBLISH",
+        verbEs: "PUBLICAR",
+        title: "Close and publish the version",
+        titleEs: "Cerrar y publicar la versión",
+        description: "Write the README that makes the repository legible to a stranger, publish the first named version, and audit a classmate's six weeks of work against the definition of done.",
+        descriptionEs: "Escribir el README que hace comprensible el repositorio para quien llega de fuera, publicar la primera versión con nombre, y auditar seis semanas de trabajo ajeno contra la definición de terminado.",
+        phase: "1 · WORKING METHOD",
+        phaseEs: "1 · MÉTODO DE TRABAJO",
+        resources: []
       }
     ]
   },
