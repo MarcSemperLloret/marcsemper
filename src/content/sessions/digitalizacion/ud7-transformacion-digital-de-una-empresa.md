@@ -16,7 +16,7 @@ outcomes:
   - "Definir cómo se medirá si la transformación ha funcionado."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 date: "2026-09-09"
@@ -26,13 +26,13 @@ date: "2026-09-09"
 
 ## Cómo trabajar esta unidad
 
-Son 6 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 6 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Plan de transformación de TecnoClima.** Guarda el trabajo en `digitalizacion/ud7/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Plan de transformación de TecnoClima.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -86,11 +86,12 @@ La tecnología es un medio. El objetivo es **mejorar cómo funciona la organizac
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Hay un diagnóstico y proceso actual de TecnoClima. Puedes explicar qué información necesitas antes de elegir una tecnología.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Diseñar la solución
 
@@ -168,11 +169,12 @@ Una empresa digital también tiene nuevos riesgos. Debemos pensar quién accede,
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El proceso futuro y la arquitectura resuelven problemas del diagnóstico. No se valora añadir más componentes.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Plan de integración, datos y seguridad
 
@@ -198,11 +200,12 @@ Un diseño completo contempla el fallo: una factura no debe desaparecer porque u
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La propuesta conecta tecnologías con datos, permisos y fallos concretos. Se reutiliza un método aprendido, no las respuestas de otra actividad.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Priorizar, roadmap y propuesta económica
 
@@ -262,11 +265,12 @@ Definid tres indicadores concretos. Por ejemplo:
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El plan tiene fases, restricciones e indicadores comprobables. La priorización explica qué se hará primero y qué no cabe todavía.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · Presentación y defensa de los proyectos
 
@@ -287,16 +291,17 @@ El feedback debe poder convertirse en una revisión. Una duda sobre conectividad
 1. Organiza cinco diapositivas o secciones: problema, proceso futuro, arquitectura, fases/coste e indicadores/límites. Enlaza el documento de trabajo para consultar detalles.
 2. Ensaya en cinco minutos con otra pareja. Cada integrante explica una decisión de la que se responsabiliza; repartid la explicación por argumentos, no por leer párrafos.
 3. La pareja revisora plantea una duda de viabilidad y otra de evidencia. Anota la pregunta y la parte del plan afectada antes de responder.
-4. Realiza el turno asignado por el docente. Si no caben todas las exposiciones colectivas, continúa con mesas de revisión en paralelo; todo el grupo debe producir feedback y conservar tiempo de trabajo.
+4. Presenta la propuesta con el recorrido preparado: problema, decisión, coste e indicador. Escucha las preguntas, responde con los datos del caso y anota qué parte necesita una explicación más clara.
 5. Registra dos observaciones y decide qué comprobarás en la siguiente sesión. Entrega el enlace a la propuesta presentada, conservando esta versión para comparar la revisión.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La exposición está vinculada al plan y cada persona aporta una justificación. El feedback se utilizará para mejorar la misma actividad.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 6 · Evaluación, retrospectiva y consolidación
 
@@ -318,15 +323,16 @@ El cierre del módulo reúne las actividades realizadas y corrige sus pendientes
 2. Aplica las revisiones y registra observación, cambio y evidencia. Si falta información externa, formula la comprobación que harías antes de ejecutar la propuesta.
 3. Contrasta el plan con la rúbrica de UD7. Localiza un párrafo, tabla o diagrama que permita valorar cada criterio; corrige las afirmaciones sin respaldo.
 4. Actualiza el índice con enlaces a las siete actividades del módulo y su versión final. No copies sus contenidos en un dossier nuevo.
-5. Cada integrante escribe un hecho que le hizo cambiar una decisión y una mejora para su siguiente trabajo. Entrega el plan revisado y el índice; usa el feedback docente para identificar criterios pendientes.
+5. Cada integrante escribe un hecho que le hizo cambiar una decisión y una mejora para su siguiente trabajo. Comprueba que el plan revisado y su índice incorporan las mejoras y que los criterios pendientes están identificados.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El módulo se evalúa mediante sus actividades. El cierre conserva evidencias y revisiones sin añadir un examen ni repetir informes completos.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 6»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 

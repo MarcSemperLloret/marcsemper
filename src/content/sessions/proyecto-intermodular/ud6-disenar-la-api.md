@@ -332,12 +332,12 @@ La prueba de un contrato es que alguien lo pueda usar sin preguntar. Intercambia
 
 Las dos últimas preguntas son las que rinden. **Casi siempre falta un permiso sin decidir y un error de conflicto**, y encontrarlos hoy cuesta una conversación.
 
-### Producto de la unidad
+### Trabajo esperado de la unidad
 
 <p class="stage stage--solo">Ahora tú</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Primera especificación de la API, versión 0.1.</p>
   <ul class="checklist">
     <li>Tabla de pantallas con lo que muestran y las acciones que disparan.</li>

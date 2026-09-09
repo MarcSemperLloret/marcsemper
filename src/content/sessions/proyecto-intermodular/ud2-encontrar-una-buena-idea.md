@@ -544,12 +544,12 @@ La decisión se escribe una vez, se guarda y no se vuelve a discutir salvo que a
 
 La última casilla es la que distingue un registro de decisión de un acta. **Una decisión que no dice qué la haría cambiar no es una decisión: es una declaración.**
 
-### Producto de la unidad
+### Trabajo esperado de la unidad
 
 <p class="stage stage--solo">Paso 3 · Ahora tú</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Tres ideas candidatas y una selección justificada.</p>
   <ul class="checklist">
     <li>Las tres fichas completas, una página cada una, con origen y fecha.</li>

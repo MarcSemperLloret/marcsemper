@@ -7,7 +7,7 @@ lang: "es"
 summary: "Cómo transforma Spring una petición HTTP en datos Java y cómo construye la respuesta, hasta completar un CRUD en memoria con los códigos de estado correctos."
 duration: "12 horas · 2 semanas · 4 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Operaciones de lectura y escritura con respuestas HTTP justificadas y comprobadas."
 date: "2026-09-09"
 outcomes:
   - "Seguir una petición desde el cliente HTTP hasta el método del controller."
@@ -25,15 +25,13 @@ priorKnowledge:
   - "Postman o Bruno a nivel básico: método, URL, cuerpo JSON y lectura de la respuesta."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">El CRUD elegido sigue en memoria. En estas cuatro sesiones completas y verificas sus entradas, escrituras y respuestas HTTP antes de consolidar el diseño REST.</p>
 
 ## Semana 3 · De la petición al objeto Java
 
 ## Sesión 5 · De la petición al objeto Java
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 3: Vuestro primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-3).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [vuestro primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -536,24 +534,16 @@ Cuando lo tengas escrito, cópialo al proyecto y compruébalo.
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Podéis explicar de dónde procede cada argumento y conservar peticiones que reproducen los tres casos.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 5 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-05.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 6 · Escrituras y respuestas HTTP
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 3: Vuestro primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-3).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [vuestro primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -786,26 +776,18 @@ La número 4 es la difícil, y merece un párrafo aparte explicando tu decisión
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El cliente distingue una creación, una modificación, un borrado y un recurso inexistente por la respuesta recibida.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 6 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-06.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 4 · Colección ejecutable y entornos
 
 ## Sesión 7 · Colección ejecutable y entornos
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 4: Enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-4).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1251,24 +1233,16 @@ La condición 5 es la difícil y es la más importante: una colección que ensuc
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Una ejecución limpia crea, consulta, modifica y borra sus propios datos sin depender de pruebas anteriores.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 7 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-07.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 8 · Contrato en memoria listo para evolucionar
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 4: Enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-4).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1370,7 +1344,7 @@ En tu repositorio del módulo:
 1. **El proyecto completo**, arrancable con `mvnw spring-boot:run`.
 2. **La colección exportada**, en una carpeta `pruebas/`.
 3. Un **`README.md`** que quepa en una pantalla y responda a tres cosas: cómo se arranca, qué endpoints hay y cómo se ejecuta la colección.
-4. Un **`DECISIONES.pdf`** con estas cuatro, cada una en dos o tres frases:
+4. Un **las decisiones técnicas** con estas cuatro, cada una en dos o tres frases:
    * Qué responde tu `DELETE` sobre algo inexistente, y por qué elegiste eso.
    * Qué hace tu API si el `id` del cuerpo no coincide con el de la ruta.
    * Qué devuelve `GET /proyectos/{id}/tareas` cuando el proyecto existe y no tiene tareas, y por qué no es un `404`.
@@ -1381,7 +1355,7 @@ En tu repositorio del módulo:
   <p>Es la parte del entregable que se lee primero y la que decide si alguien puede usar tu trabajo. Un backend excelente con un README que no explica cómo arrancarlo es, para quien llega nuevo, un backend que no funciona.</p>
 </div>
 
-#### Paso 5 · Autoevaluación antes de entregar
+#### Paso 5 · Comprobar el resultado
 
 Pásate esta lista tú mismo. Es la misma con la que se corrige.
 
@@ -1392,7 +1366,7 @@ Pásate esta lista tú mismo. Es la misma con la que se corrige.
 | Los códigos son correctos | La colección está en verde |
 | Es repetible | La ejecutas dos veces seguidas |
 | Se entiende sin ti | Se lo das a un compañero y no te pregunta nada |
-| Las decisiones están escritas | `DECISIONES.pdf` responde a las cuatro |
+| Las decisiones están escritas | las decisiones técnicas responde a las cuatro |
 
 La quinta es la de verdad. **Dáselo a alguien y no le expliques nada.** Cada pregunta que te haga es una línea que le falta a tu README.
 
@@ -1434,19 +1408,11 @@ Fíjate en la tercera fila: tu API acepta tareas que pertenecen a proyectos que 
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Otra persona reproduce las operaciones principales y un fallo previsto usando únicamente el repositorio y sus instrucciones.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 8 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-08.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

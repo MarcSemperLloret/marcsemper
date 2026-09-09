@@ -40,7 +40,7 @@ draft: true
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> Por qué el trabajo se trocea en vertical, cómo se ordena un backlog por riesgo y no por gusto, y qué es una definición de terminado.</li>
     <li><strong>2. Haz:</strong> Trocea el MVP en tareas, monta el repositorio y el tablero, acuerda el flujo de ramas y escribe el roadmap hasta la semana 26.</li>
-    <li><strong>3. Comprueba:</strong> Entrega el repositorio preparado y revisa la evaluación.</li>
+    <li><strong>3. Comprueba:</strong> </li>
   </ol>
 </div>
 
@@ -251,7 +251,7 @@ Las doce semanas que quedan, con el hito de cada una. No es una promesa: es el m
 </ol>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Repositorio, tablero y roadmap inicial preparados.</p>
   <ul class="checklist">
     <li>Repositorio con README, exclusiones de Git, configuración de ejemplo y toda la documentación de las semanas 1 a 13.</li>

@@ -275,7 +275,7 @@ El registro de riesgos de la semana 13 lo dejó anotado: la red del centro puede
 </ol>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Aplicación accesible públicamente.</p>
   <ul class="checklist">
     <li>URL pública funcionando, con tráfico cifrado y sin partes sin cifrar.</li>

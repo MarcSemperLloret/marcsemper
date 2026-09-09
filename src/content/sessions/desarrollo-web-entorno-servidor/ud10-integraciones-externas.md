@@ -7,7 +7,7 @@ lang: "es"
 summary: "Conectar el backend con servicios que no controlamos y diseñar el comportamiento cuando la red, el proveedor o los datos no responden como se esperaba."
 duration: "12 horas · 2 semanas · 4 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Integraciones externas y gestión de archivos verificadas, incluidos sus casos de fallo."
 date: "2026-09-09"
 outcomes:
   - "Consumir una API externa mediante un cliente HTTP."
@@ -22,15 +22,13 @@ priorKnowledge:
   - "Autenticación y configuración externa."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">El backend se conecta con servicios externos e incorpora ficheros y comunicación. Cada integración debe responder a un caso de uso del producto y contemplar fallos.</p>
 
 ## Semana 21 · Consumir un servicio externo
 
 ## Sesión 41 · Consumir un servicio externo
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 21: Comprobar una dependencia externa y su degradación](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-21/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-21).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [publicar el acceso con jwt sin perder permisos](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-21/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -583,24 +581,16 @@ Una de las enormes ventajas de la Capa Anticorrupción es que el mapeador puede 
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El dominio no depende directamente del formato externo y las credenciales no aparecen en el repositorio.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 41 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-41.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 42 · Timeouts y fallos parciales
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 21: Comprobar una dependencia externa y su degradación](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-21/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-21).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [publicar el acceso con jwt sin perder permisos](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-21/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -903,26 +893,18 @@ Investiga la librería **Resilience4j**:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El servicio no queda esperando indefinidamente y las pruebas reproducen los fallos externos.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 42 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-42.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 22 · Ficheros y comunicación externa
 
 ## Sesión 43 · Ficheros y comunicación externa
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 22: Verificar archivos y efectos externos](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-22/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-22).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [comprobar una dependencia externa y su degradación](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-22/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1546,24 +1528,16 @@ Investiga el patrón **Transactional Outbox**:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Un archivo no permitido se rechaza y una persona sin permisos no descarga un adjunto ajeno.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 43 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-43.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 44 · Integración completa comprobada
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 22: Verificar archivos y efectos externos](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-22/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-22).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [comprobar una dependencia externa y su degradación](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-22/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1813,19 +1787,11 @@ Implementa un aspecto `@Aspect` o un interceptor en `RestClient` (`ClientHttpReq
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El caso de uso funciona desde el cliente y sus limitaciones y respuestas ante fallos están documentadas.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 44 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-44.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

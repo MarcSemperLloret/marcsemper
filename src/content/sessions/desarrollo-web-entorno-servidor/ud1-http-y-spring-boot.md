@@ -7,7 +7,7 @@ lang: "es"
 summary: "Entender qué ocurre entre el navegador y el servidor, y construir con Spring Boot una primera API en memoria que ya se comprueba con un cliente HTTP."
 duration: "12 horas · 2 semanas · 4 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Aplicación Spring Boot con rutas HTTP y CRUD en memoria, comprobada con un cliente HTTP."
 date: "2026-09-09"
 outcomes:
   - "Explicar el recorrido completo de una petición y una respuesta HTTP."
@@ -20,14 +20,12 @@ requirements:
   - "JDK 21 o superior."
   - "Un IDE con soporte para Java y Maven."
   - "Un navegador con DevTools."
-  - "Git instalado y una cuenta de GitHub para entregar el repositorio."
+  - "Git instalado y una cuenta de GitHub para conservar las versiones del proyecto."
   - "Postman o Bruno instalado, a partir de la sesión 3."
 priorKnowledge:
   - "Sintaxis básica de Java."
   - "Clases, objetos, métodos y colecciones."
 ---
-
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
 
 ### La meta del proyecto durante el primer trimestre
 
@@ -50,23 +48,23 @@ Esta tabla describe lo que aprenderás a construir durante el trimestre. No pres
 
 La autenticación y la autorización se incorporan en el segundo trimestre. Una entidad que represente a un socio, responsable o cliente en el primero todavía no implica cuentas con inicio de sesión. En la primera sesión basta con un esquema inicial que permita alcanzar esta complejidad; se concreta a medida que se aprende.
 
-### Qué se entrega en cada sesión
+### Qué debe quedar hecho en cada sesión
 
-La entrega de cada sesión es el **enlace al repositorio de GitHub con el trabajo realizado**, acompañado del enlace al commit que identifica esa versión. Se utiliza el mismo repositorio durante el módulo. El código, los ejercicios escritos y las comprobaciones quedan guardados allí; cada sesión tiene un registro en `docs/sesiones/sesion-NN.pdf`, donde `NN` es su número con dos cifras. La página de cada sesión indica su archivo concreto y los pasos para entregar.
+El cierre indica qué debe funcionar, qué debes haber comprobado y qué decisiones debes poder explicar. El mismo proyecto crece durante el módulo; conserva sus cambios y distingue los resultados comprobados de los problemas pendientes.
 
 ### Tiempo y coordinación
 
 Cada semana tiene dos sesiones de tres horas. Cada sesión reserva 25 minutos para explicar y demostrar, 140 minutos para trabajar sobre tu proyecto y 15 minutos para comprobar el resultado: 180 minutos. Las consultas durante el taller se atienden sobre el código. La explicación aparece completa en «Se explica» y los procedimientos, el código y las comprobaciones están desarrollados en «Se trabaja». Las ayudas desplegables se reservan para respuestas o dudas puntuales.
 
-Se mantienen las 156 horas previstas: primer trimestre, 28 sesiones y 84 horas; segundo trimestre, 24 sesiones y 72 horas. Las semanas son bloques docentes orientativos, no fechas de evaluación del centro. La [GVA fija para FP en 2026/2027](https://sede.gva.es/es/detall-tramit?id_proc=G25685) el inicio el 9 de septiembre de 2026, Navidad del 22 de diciembre al 6 de enero y Pascua del 25 de marzo al 5 de abril. El tramo de septiembre a Navidad es mayor que el de enero a Pascua; los días concretos se ajustarán al horario, las evaluaciones, la formación en empresa y los festivos locales del centro.
+Se mantienen las 156 horas previstas: primer trimestre, 28 sesiones y 84 horas; segundo trimestre, 24 sesiones y 72 horas. La [GVA fija para FP en 2026/2027](https://sede.gva.es/es/detall-tramit?id_proc=G25685) el inicio el 9 de septiembre de 2026, Navidad del 22 de diciembre al 6 de enero y Pascua del 25 de marzo al 5 de abril. El tramo de septiembre a Navidad es mayor que el de enero a Pascua.
 
-Servidor evalúa implementación, arquitectura, persistencia, contrato, reglas y pruebas. Intermodular evalúa cómo ese mismo código recorre issues, ramas, revisiones, CI y puesta en producción. La API se publica primero en memoria cuando llega su taller de despliegue y se actualiza con PostgreSQL dentro del primer trimestre. El portfolio presenta el producto; el cliente que consume la API se construye en la UD8 de Servidor y se publica en Intermodular 17, antes de incorporar autenticación.
+Servidor evalúa implementación, arquitectura, persistencia, contrato, reglas y pruebas. Intermodular evalúa cómo ese mismo código recorre issues, ramas, revisiones, CI y puesta en producción. La API se publica primero en memoria cuando llega su taller de despliegue y se actualiza con PostgreSQL dentro del primer trimestre. El portfolio presenta el producto; el cliente que consume la API se construye en la UD8 de Servidor y se publica en Intermodular 18, antes de incorporar autenticación.
 
 ## Semana 1 · Elegir el CRUD y arrancar el servidor
 
 ## Sesión 1 · Elegir el CRUD y arrancar el servidor
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 1: Del repositorio vacío a una URL pública](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-1/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-1).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [del repositorio vacío a una url pública](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-1/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -96,7 +94,7 @@ Para utilizar ese código de otras bibliotecas, nuestro proyecto necesita **depe
 | Spring Boot con Spring Web | Prepara una aplicación Java capaz de responder a peticiones web |
 | Maven | Prepara y ejecuta el proyecto con las dependencias declaradas |
 | Navegador | Envía una petición y muestra lo que responde nuestra aplicación |
-| Git y GitHub | Git guarda versiones del código; GitHub aloja el repositorio que entregamos |
+| Git y GitHub | Git guarda versiones del código; GitHub aloja el repositorio del proyecto |
 
 El proyecto incluirá **Maven Wrapper**: los archivos `mvnw` y `mvnw.cmd`. Permiten utilizar la versión de Maven configurada en el proyecto sin instalar Maven por separado. La primera ejecución necesita Internet para descargarla y obtener las dependencias. El JDK sí debe estar instalado.
 
@@ -154,7 +152,7 @@ git --version
 
 **Spring Initializr** es una web que genera los archivos iniciales de un proyecto Spring Boot. No aloja tu aplicación ni escribe las reglas de tu CRUD.
 
-1. Abre [Spring Initializr](https://start.spring.io) y localiza los campos Project, Language, Dependencies y los datos del proyecto. El profesor mostrará cómo esas elecciones determinan los archivos del ZIP.
+1. Abre [Spring Initializr](https://start.spring.io) y localiza los campos Project, Language, Dependencies y los datos del proyecto. Esas elecciones determinan los archivos que contendrá el ZIP.
 2. Para realizar el taller, descarga la [plantilla inicial del curso: gestor con Spring Boot 3.5.16](/teaching/downloads/gestor-spring-boot-3.5.16.zip). Contiene la estructura generada y ajustada a la serie 3.5 que utiliza el módulo, todavía sin controladores. La descarga fija las versiones para que los cambios de Initializr no cambien las bibliotecas a mitad del curso. Estos son sus valores; no tienes que volver a seleccionarlos en la web:
 
 | Campo | Valor y motivo |
@@ -316,7 +314,7 @@ public String resumen() {
 Un **repositorio** guarda los archivos y su historial. Un **commit** registra una versión local; **push** envía los commits a GitHub. Es el mismo repositorio que utilizaremos en Intermodular para practicar el flujo de trabajo y el despliegue.
 
 1. En la carpeta de `pom.xml`, abre el `README.md` de la plantilla. Completa la propuesta del paso 1, revisa el comando de arranque y añade tus tres rutas.
-2. Prepara el registro que exportarás como `docs/sesiones/sesion-01.pdf`. Escribe qué has hecho, qué archivos has cambiado, la tabla de comprobaciones de los pasos 7 y 8 y cualquier dificultad pendiente. Redacta el registro en tu editor de documentos y expórtalo a PDF en esa carpeta; no basta con cambiar la extensión de un archivo de texto.
+2. Revisa la tabla de comprobaciones de los pasos 7 y 8. Debe indicar la petición, la respuesta observada y cualquier dificultad pendiente. Explica qué parte de la aplicación produce cada respuesta.
 3. Abre `.gitignore`, el archivo que indica a Git qué no debe subir. Comprueba que excluye `target/` (archivos generados al compilar), la configuración local del IDE y `.env` si lo utilizas más adelante. Conserva los archivos del wrapper, incluidos `.mvn/`, `mvnw` y `mvnw.cmd`.
 
 **Si aún no hay repositorio del proyecto**, crea uno vacío en GitHub con el botón **New repository**. No añadas allí README ni `.gitignore`: ya existen en tu ordenador. Copia su dirección HTTPS. En la terminal del proyecto, ejecuta cada comando por separado:
@@ -324,7 +322,7 @@ Un **repositorio** guarda los archivos y su historial. Un **commit** registra un
 ```bash
 git init -b main
 git status
-git add .gitignore README.md pom.xml mvnw mvnw.cmd .mvn src docs
+git add .gitignore README.md pom.xml mvnw mvnw.cmd .mvn src
 git diff --cached --stat
 ```
 
@@ -347,23 +345,20 @@ Completa el inicio de sesión que solicite Git. La [guía de GitHub para subir c
 
 **Si ya hay repositorio en Intermodular**, utiliza su carpeta clonada. Coloca allí el proyecto sin copiar otra carpeta `.git`; conserva el README existente y complétalo. No repitas `git init` ni `git remote add`: guarda y sube los cambios con las ramas y revisiones que estéis usando allí.
 
-**Comprueba en la web de GitHub:** abre `README.md`, el controlador y `docs/sesiones/sesion-01.pdf`. En el historial de commits, abre la versión que acabas de subir y copia su enlace. Si no ves los archivos en GitHub, el trabajo todavía no está entregado. Si el repositorio es privado, comprueba que el profesor tiene acceso.
+**Comprueba en GitHub:** abre el README y el controlador. Contrasta su contenido con tu copia local y localiza en el historial el cambio que acabas de guardar. Debes poder recuperar esa versión del proyecto.
 
 ### Cierre
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-Con tu proyecto abierto, explica para qué utilizas Spring Boot y Maven, señala el método que atiende una de tus rutas y reproduce una respuesta correcta y un 404. Explica qué cambia si detienes el programa. El profesor revisará también que la propuesta del CRUD tiene recorrido para el trimestre.
+**Al terminar la sesión:**
 
-#### Entrega de la sesión 1 · Repositorio de GitHub
-
-Entrega **el enlace a tu repositorio de GitHub y al commit de esta sesión**. Debe contener la aplicación que has realizado, el README y `docs/sesiones/sesion-01.pdf` con sus comprobaciones y pendientes. Esta será la base que abrirás en la sesión 2. Si queda un fallo, descríbelo y entrega igualmente el trabajo realizado para poder revisarlo.
-
+Con tu proyecto abierto, explica para qué utilizas Spring Boot y Maven, señala el método que atiende una de tus rutas y reproduce una respuesta correcta y un 404. Explica qué cambia si detienes el programa. Comprueba también que tu propuesta tiene las entidades y reglas necesarias para seguir ampliándola durante el trimestre.
 
 
 ## Sesión 2 · Rutas y primeras consultas del proyecto
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 1: Del repositorio vacío a una URL pública](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-1/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-1).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [del repositorio vacío a una url pública](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-1/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -742,26 +737,18 @@ Después copia el controlador en tu proyecto y compruébalas una a una. **De las
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Las rutas de listado y detalle devuelven textos que incorporan los parámetros recibidos. Podéis localizar el método que atendió cada petición; la consulta de objetos reales comienza en la sesión 3.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 2 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-02.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Durante las primeras sesiones utiliza el procedimiento inicial de Git de esta unidad; tras Intermodular 2, utiliza issue, rama y PR. Comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 2 · JSON y primera escritura con un cliente HTTP
 
 ## Sesión 3 · JSON y primera escritura con un cliente HTTP
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 2: Issues, tablero y la primera pull request](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-2/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-2).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [issues, tablero y la primera pull request](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-2/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -840,7 +827,7 @@ Y los valores pueden ser de seis tipos, incluidos otro objeto y otro array, que 
 
 #### Por qué necesitamos un cliente que pueda enviar POST
 
-En la demostración, el profesor utilizará un controlador temporal con solo este método bajo la ruta `/tareas`. Observa el resultado; crearás tu controlador durante la práctica:
+En este ejemplo se utiliza un controlador temporal con solo este método bajo la ruta `/tareas`. Observa el resultado; crearás tu controlador durante la práctica:
 
 ```java
 @PostMapping
@@ -1406,24 +1393,16 @@ Después provoca las tres en tu proyecto para confirmar tus hipótesis. La terce
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Las peticiones de alta y consulta funcionan sin editar el código entre envíos. Podéis explicar la conversión entre JSON y Java y por qué los datos se pierden al reiniciar. En la sesión 4 el servidor pasará a asignar el identificador.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 3 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-03.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Durante las primeras sesiones utiliza el procedimiento inicial de Git de esta unidad; tras Intermodular 2, utiliza issue, rama y PR. Comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 4 · Primera versión CRUD en memoria
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 2: Issues, tablero y la primera pull request](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-2/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-2).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [issues, tablero y la primera pull request](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-2/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1608,7 +1587,7 @@ Que sepas enumerar estos seis defectos vale tanto como haber hecho funcionar la 
 Sube a tu repositorio del módulo:
 
 1. El proyecto completo, arrancable con `mvnw spring-boot:run`.
-2. Un archivo `PRUEBAS.pdf` con la tabla de las diez peticiones y el resultado real de cada una.
+2. Un archivo la tabla de comprobaciones con la tabla de las diez peticiones y el resultado real de cada una.
 3. Al final de ese archivo, tres apartados breves:
    * **Decisiones.** Por qué el id lo pone el servidor y por qué el filtro va en la query string.
    * **Defectos conocidos.** Los seis de la tabla anterior, con tus palabras.
@@ -1639,19 +1618,11 @@ Ese tercer apartado no resta nota. Se lee en la primera sesión de la UD2.
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El CRUD funciona desde la colección HTTP y el README declara que esta primera versión pierde datos al reiniciar.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 4 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-04.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Durante las primeras sesiones utiliza el procedimiento inicial de Git de esta unidad; tras Intermodular 2, utiliza issue, rama y PR. Comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar
@@ -1768,7 +1739,7 @@ Antes de dar la unidad por cerrada, tu proyecto tiene que superar esto:
   <ul class="checklist">
     <li>La aplicación arranca y la consola muestra la línea de Tomcat con el puerto.</li>
     <li>Los cinco métodos de la mini-API responden sobre una lista en memoria.</li>
-    <li>La secuencia de diez peticiones de la sesión 4 pasa entera y está en <code>PRUEBAS.pdf</code>.</li>
+    <li>La secuencia de diez peticiones de la sesión 4 pasa entera y está en la tabla de comprobaciones.</li>
     <li>El identificador lo asigna el servidor y no se repite después de un borrado.</li>
     <li>Ninguna ruta lleva un verbo dentro.</li>
     <li>Sabes provocar a voluntad un 404, un 405, un 415 y un 400, y explicar cada uno.</li>

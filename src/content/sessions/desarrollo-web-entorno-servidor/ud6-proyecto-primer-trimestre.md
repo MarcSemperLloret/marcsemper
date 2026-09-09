@@ -7,7 +7,7 @@ lang: "es"
 summary: "Cerrar, revisar y defender la versión persistente y publicada del CRUD elegido al comenzar el trimestre."
 duration: "6 horas · 1 semana · 2 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "CRUD persistente del primer trimestre, con reglas de negocio comprobadas y explicación de sus decisiones."
 date: "2026-09-09"
 outcomes:
   - "Traducir unos requisitos en un modelo y un contrato de API."
@@ -20,15 +20,13 @@ priorKnowledge:
   - "Diseño REST, DTO, validación, capas y JPA."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">Estas dos sesiones cierran las 84 horas del primer trimestre. Se revisa y defiende el CRUD elegido y construido desde la primera sesión; no se inicia otro proyecto. La matriz de complejidad de la UD1 es el criterio de alcance y la versión publicada es común a Servidor e Intermodular.</p>
 
 ## Semana 14 · Cerrar la primera versión del proyecto elegido
 
 ## Sesión 27 · Cerrar la primera versión del proyecto elegido
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 14: La defensa del proceso](/es/docencia/proyecto-intermodular/ud6-defender-el-metodo/sesion-14/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-14).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [la defensa del proceso](/es/docencia/proyecto-intermodular/ud6-defender-el-metodo/sesion-14/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -247,7 +245,7 @@ Durante el sprint te toparás con errores reales de integración. Esta tabla res
 
 #### Paso 7 · El registro de incidencias técnicas
 
-En ingeniería de software no se esconden los problemas: se diagnostican y se resuelven con método. Registra las incidencias técnicas resueltas en `docs/sesiones/sesion-27.pdf`, dentro del mismo repositorio, con este esquema:
+En ingeniería de software no se esconden los problemas: se diagnostican y se resuelven con método. Registra las incidencias técnicas resueltas en las comprobaciones de la sesión, dentro del mismo repositorio, con este esquema:
 
 ```text
 1. Incidencia: LazyInitializationException al listar proyectos con tareas
@@ -354,24 +352,16 @@ Un compañero de equipo sube un cambio y el pipeline de GitHub Actions se pone e
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El mismo commit identifica la API evaluable y su despliegue; el CRUD, las relaciones y las operaciones complejas tienen evidencias.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 27 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-27.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 28 · Revisión y defensa del backend en producción
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 14: La defensa del proceso](/es/docencia/proyecto-intermodular/ud6-defender-el-metodo/sesion-14/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-14).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [la defensa del proceso](/es/docencia/proyecto-intermodular/ud6-defender-el-metodo/sesion-14/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -380,7 +370,7 @@ Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que
 
 Ya has revisado los criterios del primer trimestre. Hoy defenderás cómo funciona el backend y comprobarás que otra persona puede verificarlo. En Servidor explicarás código, reglas, persistencia y pruebas; en Intermodular se evalúa el flujo seguido para publicar esa versión.
 
-Esta demostración es común con Intermodular 14. El docente distribuye los turnos entre las sesiones de cierre de ambos módulos: cada persona demuestra el producto una vez y añade las evidencias de proceso al mismo guion. El bloque de cinco minutos descrito abajo corresponde a la parte técnica, no a una segunda defensa independiente.
+Esta demostración es común con Intermodular 14. Relaciona la explicación técnica con las evidencias de proceso del mismo producto. El bloque de cinco minutos descrito abajo corresponde a la parte técnica, no a una segunda defensa independiente.
 
 #### La revisión de código no es buscar erratas
 
@@ -535,19 +525,11 @@ Ensaya tu respuesta a estas tres preguntas típicas de tribunal de evaluación y
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Se entrega la misma versión en ambos módulos: aquí se evalúan código y funcionamiento; en Intermodular, workflow, CI, revisión y puesta en producción.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 28 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-28.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

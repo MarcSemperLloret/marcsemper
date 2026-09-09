@@ -4,10 +4,10 @@ label: "UD1 · Arrancar"
 section: "ud-01"
 order: 1
 lang: "es"
-summary: "Preparar una URL de presentación y el circuito de issues, ramas, revisión y despliegue, conservando el repositorio de backend creado en Servidor."
+summary: "Preparar una URL de presentación y el circuito de issues, ramas, revisión y despliegue, preparando el método que aplicarás al backend de Servidor."
 duration: "6 horas · 2 semanas · 2 sesiones de 3 h"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
-deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
+deliverable: "Portfolio publicado y circuito de issues, ramas y revisión de cambios funcionando."
 date: "2026-09-09"
 outcomes:
   - "Explicar qué evalúa este módulo y qué evalúa Desarrollo Web en Entorno Servidor sobre el mismo código."
@@ -24,8 +24,6 @@ priorKnowledge:
   - "HTML mínimo: un documento que abre en el navegador."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">Objetivo de la unidad: que exista una URL pública con vuestro nombre y que el único camino para cambiar lo que hay en ella pase por una pull request revisada por otra persona.</p>
 
 <div class="rule">
@@ -35,13 +33,12 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Un producto de negocio y su presentación</p>
-  <p>El CRUD elegido en Servidor se mantiene durante los dos trimestres. El portfolio es su presentación y un soporte sencillo para aprender el workflow; no sustituye ese producto. El backend conserva desde el primer día su repositorio e historial. En diciembre se demuestra una versión común: funcionamiento en Servidor y proceso de revisión, CI y despliegue en Intermodular.</p>
+  <p>El CRUD elegido en Servidor se mantiene durante los dos trimestres. El portfolio es su presentación y un soporte sencillo para aprender el workflow; no sustituye ese producto. Cuando lo inicies en Servidor, conserva su repositorio e historial durante el curso. En diciembre se demuestra una versión común: funcionamiento en Servidor y proceso de revisión, CI y despliegue en Intermodular.</p>
 </div>
 
 ## Sesión 1 · Del repositorio vacío a una URL pública
 
-**Punto de partida compartido.** Semana lectiva 1: sitúa este taller después de las sesiones 1–2 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-1). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** Hoy empiezas preparando un portfolio y su publicación automática. Necesitas tu cuenta de GitHub, Git y un editor. El backend se iniciará después en Servidor; para este taller basta una página HTML.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -149,7 +146,7 @@ Se hace antes que nada porque es el único paso que depende de que un tercero os
 
 <details class="aside aside--help">
   <summary>Si la verificación falla</summary>
-  <p>Tres causas, en orden de frecuencia. <strong>Una:</strong> habéis usado el correo personal. Repetid con el del centro. <strong>Dos:</strong> no cumplís los requisitos de edad o de centro de la oferta; avisad al docente y utilizad el entorno alternativo acordado, pero no os quedéis parados. <strong>Tres:</strong> el dominio no está reconocido todavía; es cuestión de días y no depende de vosotros.</p>
+  <p>Tres causas, en orden de frecuencia. <strong>Una:</strong> habéis usado el correo personal. Repetid con el del centro. <strong>Dos:</strong> no cumplís los requisitos de edad o de centro de la oferta; utilizad el entorno de prácticas disponible. <strong>Tres:</strong> el dominio no está reconocido todavía; es cuestión de días y no depende de vosotros.</p>
   <p>En cualquiera de los tres casos <strong>no se pierde la sesión</strong>: seguid con el bloque B, y en el bloque C usad el plan alternativo con GitHub Pages que está al final de ese bloque. El circuito es el mismo; solo cambia quién sirve los ficheros. Cuando la cuenta esté lista, se migra sin rehacer nada.</p>
 </details>
 
@@ -270,7 +267,7 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
   <ul class="checklist">
     <li>La URL abre y muestra vuestro nombre.</li>
     <li>En la pestaña Actions del repositorio hay una ejecución en verde.</li>
-    <li>Habéis pegado la URL en el canal de clase.</li>
+    <li>Habéis abierto la URL publicada y comprobado su contenido.</li>
   </ul>
 </div>
 
@@ -387,9 +384,8 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 1.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-01.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-01.pdf` y `sesion-02.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
@@ -412,24 +408,23 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 2</p>
+  <p class="checkpoint-label">Al terminar la sesión</p>
   <ul class="checklist">
-    <li>La URL de Azure abre y muestra vuestra página. Si no, escribid en el canal de clase antes del jueves, no el día antes de la sesión.</li>
+    <li>La URL de Azure abre y muestra vuestra página; si hay un fallo, podéis identificar el paso y el mensaje de error.</li>
     <li>El README tiene la URL y las cuatro cosas del bloque E.</li>
-    <li>Traéis pensadas <strong>seis cosas concretas</strong> que le faltan al portfolio, en frases cortas y empezando por un verbo. Serán las issues de la próxima sesión.</li>
-    <li>Sabéis quién es vuestra pareja de revisión: la lista está publicada en Aules.</li>
+    <li>Podéis localizar el workflow y explicar qué cambio dispara una publicación.</li>
+    <li>Habéis comprobado que un segundo cambio actualiza la página mediante el mismo circuito.</li>
   </ul>
 </div>
 
 <div class="rule">
   <p class="rule-label">Qué pasa en la sesión 2</p>
-  <p>Se cierra <code>main</code>. A partir del martes que viene ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request, y ninguna se fusiona sin que vuestra pareja la haya revisado antes. La sesión consiste en montar eso y recorrerlo dos veces.</p>
+  <p>Se cierra <code>main</code>. En la próxima sesión ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request, y ninguna se fusiona sin que vuestra pareja la haya revisado antes. La sesión consiste en montar eso y recorrerlo dos veces.</p>
 </div>
 
 ## Sesión 2 · Issues, tablero y la primera pull request
 
-**Punto de partida compartido.** Semana lectiva 2: sitúa este taller después de las sesiones 3–4 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-2). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** Ya tienes el portfolio publicado y has iniciado el backend en Servidor. Hoy aprenderás a organizar tareas y revisar cambios mediante ramas y pull requests.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -556,13 +551,13 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
 
 #### Bloque B · Cerrar la rama principal
 
-Aplica el procedimiento al portfolio y también al repositorio de backend que ya entregas en Servidor. No copies código entre ellos. En el backend todavía no existe el check de Maven: exige PR desde ahora y añade «Compilar y probar» después de su primera ejecución en Intermodular 7. Hasta entonces conserva la comprobación local de Servidor en la descripción de la PR. Si la revisión usa cero aprobaciones obligatorias, el control es docente; si requiere una aprobación, el revisor debe tener el permiso que exige GitHub.
+Aplica el procedimiento al portfolio y también al repositorio de backend que ya utilizas en Servidor. No copies código entre ellos. En el backend todavía no existe el check de Maven: exige PR desde ahora y añade «Compilar y probar» después de su primera ejecución en Intermodular 7. Hasta entonces conserva la comprobación local de Servidor en la descripción de la PR. Comprueba si la regla exige aprobación: para que GitHub la haga obligatoria, la persona revisora necesita los permisos correspondientes.
 
 <p class="stage stage--guided">A la vez, y al final se comprueba rompiéndolo</p>
 
 <div class="rule">
   <p class="rule-label">Revisión y permisos del repositorio</p>
-  <p>El portfolio conserva la autoría acordada; los permisos de revisión se configuran según la política del grupo. Vuestra pareja puede revisar sin ningún acceso especial, porque el repositorio es público y cualquiera con una cuenta de GitHub puede entrar en una pull request, comentar sobre las líneas y dejar su revisión. Con Required approvals en 0, GitHub exige PR y checks, pero no bloquea por ausencia de aprobación: la revisión se comprueba mediante su evidencia docente. Para exigirla técnicamente, el docente configura un revisor con permiso de escritura y al menos una aprobación, con sustitución prevista si falta. Conservad la política acordada para la autoría/equipo de Servidor.</p>
+  <p>El portfolio conserva la autoría acordada; los permisos de revisión se configuran según la política del grupo. Vuestra pareja puede revisar sin ningún acceso especial, porque el repositorio es público y cualquiera con una cuenta de GitHub puede entrar en una pull request, comentar sobre las líneas y dejar su revisión. Con Required approvals en 0, GitHub exige PR y checks, pero no bloquea por ausencia de aprobación: la revisión queda registrada, pero no es obligatoria para fusionar. Para que lo sea, configura al menos una aprobación de una persona con permiso de escritura. Conservad la política acordada para la autoría/equipo de Servidor.</p>
 </div>
 
 **1 · Crear la regla.** **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
@@ -737,12 +732,11 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 2.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-02.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-03.pdf` y `sesion-04.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <ul class="checklist">
     <li>URL pública en Azure funcionando, y el repositorio público enlazado desde ella.</li>
     <li>Tablero con seis issues, dos de ellas en <em>Done</em> cerradas por su pull request.</li>

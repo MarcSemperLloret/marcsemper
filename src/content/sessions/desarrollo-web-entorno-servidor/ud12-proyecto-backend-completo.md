@@ -7,7 +7,7 @@ lang: "es"
 summary: "Un proyecto autónomo desde la especificación hasta la defensa técnica, con el cliente Angular ya integrado y la seguridad puesta."
 duration: "18 horas · 3 semanas · 6 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Backend completo y demostración de sus requisitos, decisiones, pruebas y limitaciones."
 date: "2026-09-09"
 outcomes:
   - "Traducir una especificación en un modelo, un contrato y una arquitectura."
@@ -22,15 +22,13 @@ priorKnowledge:
   - "Angular, del módulo de desarrollo web en entorno cliente."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">Las seis sesiones finales completan y defienden la ampliación del mismo producto: especificación, arquitectura, desarrollo, seguridad, integraciones, cliente Angular, pruebas y documentación. El backend se sigue comprobando de forma independiente del cliente.</p>
 
 ## Semana 24 · Especificar la ampliación final
 
 ## Sesión 47 · Especificar la ampliación final
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 24: Preparar la actualización y su recuperación](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-24/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-24).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [cerrar una candidata con evidencias de calidad](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-24/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -385,24 +383,16 @@ En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **F
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Cada requisito pendiente se vincula a una operación del producto y una comprobación.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 47 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-47.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 48 · Implementar la ampliación por capas
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 24: Preparar la actualización y su recuperación](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-24/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-24).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [cerrar una candidata con evidencias de calidad](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-24/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -811,26 +801,18 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Una operación nueva funciona completa y las operaciones existentes siguen verificadas.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 48 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-48.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 25 · Completar núcleo, seguridad e integración
 
 ## Sesión 49 · Completar núcleo, seguridad e integración
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 25: Publicar el incremento y preparar el caso de portfolio](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-25/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-25).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [ensayar la recuperación y publicar el incremento](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-25/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1313,24 +1295,16 @@ Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un e
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El backend satisface los criterios del producto sin depender de que exista ya una pantalla para cada operación.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 49 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-49.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 50 · Conectar Angular al backend del proyecto
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 25: Publicar el incremento y preparar el caso de portfolio](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-25/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-25).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [ensayar la recuperación y publicar el incremento](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-25/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1598,19 +1572,11 @@ La descarga de un archivo binario mediante un enlace `<a>` tradicional no permit
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El cliente Angular utiliza la misma API que sigue verificándose de manera independiente con la colección HTTP.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 50 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-50.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 26 · Verificar, documentar y preparar la versión
@@ -1618,7 +1584,7 @@ Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que
 
 ## Sesión 51 · Verificar, documentar y preparar la versión
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 26: Defender el producto y el proceso sobre la misma versión](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-26/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-26).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [defender el producto y el proceso sobre la misma versión](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-26/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1996,24 +1962,16 @@ Diseña un archivo `docker-compose.yml` que levante tanto la base de datos Postg
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El commit desplegado se corresponde con la versión probada y otra persona puede reproducir el recorrido principal.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 51 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-51.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 52 · Defender el backend completo
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 26: Defender el producto y el proceso sobre la misma versión](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-26/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-26).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [defender el producto y el proceso sobre la misma versión](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-26/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -2022,7 +1980,7 @@ Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que
 
 La versión final ya está preparada y documentada. Hoy defenderás las decisiones del backend con demostraciones sobre el mismo commit. La memoria técnica conecta requisito, implementación y evidencia para que la evaluación no dependa de una explicación de memoria.
 
-La defensa se coordina con Intermodular 26: se hace una sola demostración y cada módulo aplica sus criterios. El docente reparte los turnos entre las sesiones finales de ambos módulos. Enlaza `docs/memoria-tecnica.pdf` desde el documento común `docs/entrega-final.pdf`; no prepares otra memoria ni repitas el recorrido completo para Intermodular.
+La defensa se coordina con Intermodular 26: se hace una sola demostración y cada módulo aplica sus criterios. Relaciona las decisiones técnicas con el balance final del proyecto y reutiliza las comprobaciones de Intermodular.
 
 #### La prueba definitiva: La Defensa Técnica
 
@@ -2140,7 +2098,7 @@ Prepara la versión que has entregado con su configuración de demostración y d
 
 #### Paso 5 · Redactar la Memoria Técnica de la Defensa
 
-Redacta la memoria en tu documento editable y expórtala como `docs/memoria-tecnica.pdf` dentro del repositorio. Para cada apartado sigue requisito → decisión → archivo o método → prueba y resultado; enlaza los registros de sesiones cuando contengan la evidencia para no volver a copiarla. Añade el commit y la URL de la versión demostrada, más las limitaciones conocidas. La entrega sigue siendo el repositorio: la memoria lo explica y no sustituye su código ni sus pruebas.
+Prepara una explicación técnica del proyecto. Para cada apartado sigue requisito → decisión → archivo o método → prueba y resultado; enlaza los registros de sesiones cuando contengan la evidencia para no volver a copiarla. Añade el commit y la URL de la versión demostrada, más las limitaciones conocidas. La explicación debe corresponder al código y a las pruebas que realmente funcionan.
 
 1. **Resumen ejecutivo:** qué resuelve el sistema y con qué tecnologías, en una página.
 2. **Modelo de datos:** diagrama entidad-relación y justificación del esquema SQL, tipo por tipo en los campos delicados (dinero, fechas, estados).
@@ -2157,7 +2115,7 @@ Redacta la memoria en tu documento editable y expórtala como `docs/memoria-tecn
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Guarda la memoria y el guion de defensa en <code>docs/memoria-tecnica.pdf</code> y enlázalos desde el README. Entrega el repositorio de GitHub y el commit final, con el código y las evidencias de ejecución.</p>
+  <p>Guarda la memoria y el guion de defensa en la explicación técnica del proyecto y enlázalos desde el README. </p>
 </div>
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
@@ -2195,19 +2153,11 @@ En lugar de pulsar las peticiones una a una en la interfaz gráfica durante la d
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Se evalúan individualmente comprensión, implementación y verificación del backend; Intermodular utiliza sus propias evidencias del flujo de trabajo.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 52 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-52.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

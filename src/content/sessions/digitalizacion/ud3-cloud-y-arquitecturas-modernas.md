@@ -17,7 +17,7 @@ outcomes:
   - "Dibujar y defender la arquitectura que habéis montado."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 ---
@@ -26,13 +26,13 @@ priorKnowledge:
 
 ## Cómo trabajar esta unidad
 
-Son 5 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 5 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Sitio de laboratorio y arquitectura.** Guarda el trabajo en `digitalizacion/ud3/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Sitio de laboratorio y arquitectura.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **5/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -85,7 +85,7 @@ Una máquina virtual es un ordenador definido por software. Su IP identifica una
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Abre la [guía de arranque](/es/docencia/talleres-transversales/#cloud) y descarga el sitio inicial. Extrae el ZIP, abre `index.html` y cambia el nombre de la empresa. Guarda una copia en la carpeta de la UD3.
+1. Abre la [guía de arranque](/es/docencia/talleres-transversales/#cloud) y descarga el sitio inicial. Extrae el ZIP, abre `index.html` y cambia el nombre de la empresa. Conserva la versión inicial para compararla después.
 2. Sigue el apartado GitHub de la guía para crear un repositorio y subir los archivos, con `index.html` en su raíz. Comprueba los archivos desde GitHub; si ya tenías un sitio, utiliza una copia de laboratorio y conserva su autoría.
 3. Utiliza el entorno Ubuntu asignado o crea la VM siguiendo la ficha de cloud. Registra proveedor, sistema, usuario e IP, junto con quién administra y revisa el coste. La cuenta personal no es requisito si el centro proporciona el entorno.
 4. Desde la terminal local ejecuta el comando SSH de la ficha, sustituyendo usuario, ruta de clave e IP por los de tu entorno. Comprueba con `whoami` y `hostname` que estás dentro de Ubuntu.
@@ -93,11 +93,12 @@ Una máquina virtual es un ordenador definido por software. Su IP identifica una
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
 
-El sitio inicial está disponible y puedes identificar el entorno remoto. Nunca incluyas la clave privada en la entrega. Registra una incidencia de acceso sin inventar un despliegue completado.
+**Al terminar la sesión:**
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
+El sitio inicial está disponible y puedes identificar el entorno remoto. Mantén la clave privada fuera de los archivos compartidos. Registra una incidencia de acceso sin inventar un despliegue completado.
+
 
 ## Sesión 2 · Nginx y abrir la puerta a Internet
 
@@ -123,11 +124,12 @@ La raíz del sitio es la carpeta donde Nginx busca los archivos. Si sirve su bie
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La IP sirve vuestro sitio y el mapa identifica sus dos niveles de control de red. Se evalúa la arquitectura y su comprobación, no un workflow de CI.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Un nombre propio y HTTPS
 
@@ -148,16 +150,17 @@ La IP sirve vuestro sitio y el mapa identifica sus dos niveles de control de red
 1. Obtén el nombre de laboratorio proporcionado por el centro o configura el subdominio siguiendo la guía. Anota el nombre y la IP a la que debe apuntar; no compartas el token del proveedor DNS.
 2. Comprueba la resolución con `nslookup TU_NOMBRE`. Compara la dirección devuelta con la IP pública actual de la VM. Si difieren, revisa el registro antes de tocar Nginx.
 3. Sustituye `server_name` por ese nombre en la configuración del sitio. Comprueba y recarga Nginx; visita primero `http://TU_NOMBRE` y confirma que aparece tu página.
-4. Sigue los pasos de Certbot de la guía y permite el puerto 443. El entorno debe aceptar el desafío de validación; si no puede hacerlo, registra el paso exacto y utiliza el entorno docente preparado.
+4. Sigue los pasos de Certbot de la guía y permite el puerto 443. El entorno debe aceptar el desafío de validación; si no puede hacerlo, registra el paso exacto y utiliza el entorno de prácticas disponible.
 5. Abre `https://TU_NOMBRE`, inspecciona el certificado y anota nombre, emisor y fecha de caducidad. Comprueba que imágenes y estilos cargan también y que HTTP redirige si activaste esa opción.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Nombre, resolución y certificado corresponden al mismo sitio. Explica qué protege HTTPS y qué no. La evidencia no incluye secretos DNS ni claves SSH.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Mantener y endurecer
 
@@ -183,11 +186,12 @@ El mantenimiento incluye paquetes del sistema, configuración y recursos contrat
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La actualización se puede relacionar con una versión concreta y se ha comprobado desde el navegador. No hace falta construir automatización de despliegue.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · Explicar la arquitectura
 
@@ -213,11 +217,12 @@ Después de montar una VM podemos comparar su coste de administración con un se
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La actividad demuestra publicación y comprensión de la arquitectura. La alternativa elegida debe justificarse; una URL por sí sola no explica el trabajo.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 

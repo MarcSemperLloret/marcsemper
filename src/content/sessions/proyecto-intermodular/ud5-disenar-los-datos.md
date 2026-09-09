@@ -414,10 +414,10 @@ Un modelo sin datos es una hipótesis. Antes de cerrar la unidad, inventad un ju
 
 El segundo punto es el que rinde: **un juego de datos donde todo va bien no sirve para probar nada**, y es exactamente el que se genera solo si no se piensa.
 
-### Producto de la unidad
+### Trabajo esperado de la unidad
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Modelo de datos inicial.</p>
   <ul class="checklist">
     <li>Lista de entidades, con la justificación de las candidatas descartadas y de las dudosas.</li>

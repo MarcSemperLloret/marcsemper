@@ -20,7 +20,7 @@ outcomes:
   - "Decir qué puede hacer al respecto un desarrollador, en su trabajo y fuera de él."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "No se requieren conocimientos previos de estos contenidos. La guía explica cómo abrir y guardar el trabajo; no se necesita ningún otro módulo."
 date: "2026-09-09"
@@ -30,13 +30,13 @@ date: "2026-09-09"
 
 ## Cómo trabajar esta unidad
 
-Son 4 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 4 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Diagnóstico ASG de PixelStore.** Guarda el trabajo en `sostenibilidad/ud1/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Diagnóstico ASG de PixelStore.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -173,7 +173,7 @@ Relacionar una actividad con un ODS **no demuestra que estemos mejorando nada**.
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Abre la [ficha de PixelStore](/teaching/transversales/casos.pdf) y crea una carpeta `sostenibilidad/ud1` con un documento de actividad. No necesitas Git ni el proyecto de Servidor para empezar; la guía de arranque explica cómo guardar y entregar archivos.
+1. Abre la [ficha de PixelStore](/teaching/transversales/casos.pdf). Identifica qué vende la empresa, qué recursos utiliza y a quién afecta su actividad. No necesitas Git ni el proyecto de Servidor para empezar.
 2. Lee las áreas de la empresa y elige seis hechos: equipos, visitas, datos, personas, infraestructura y proveedores. Escribe una posible consecuencia de cada uno.
 3. Clasifica las consecuencias como ambientales, sociales o de gobernanza. Ejemplo: no saber quién puede acceder a datos de clientes es un problema de responsabilidades y protección de personas.
 4. Selecciona un hecho que afecte a dos dimensiones y explica ambas relaciones. No fuerces que todos los hechos pertenezcan a las tres.
@@ -181,11 +181,12 @@ Relacionar una actividad con un ODS **no demuestra que estemos mejorando nada**.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El mapa inicial contiene hechos, consecuencias y clasificación razonada. Explica por qué reducir papel no basta para calificar toda la empresa como sostenible.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Del reto global a tu trabajo
 
@@ -248,11 +249,12 @@ Fijaos en que el impacto y el riesgo **no siempre van juntos**. Puede haber un i
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Hay tres relaciones entre reto y actividad empresarial. Cada una indica quién puede actuar y qué información permitiría juzgar el resultado.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Impactos, datos y greenwashing
 
@@ -333,7 +335,6 @@ La primera pregunta debería ser: ¿cuánto? Si la respuesta es «muchísimo», 
 Vamos a convertir tres afirmaciones en datos. La primera la hacemos juntos.
 
 
-
 <dl class="worked">
   <dt>Afirmación</dt>
   <dd>«Nuestra web es más ligera.»</dd>
@@ -346,7 +347,6 @@ Vamos a convertir tres afirmaciones en datos. La primera la hacemos juntos.
 </dl>
 
 Fijaos en el paso intermedio. La afirmación no se convierte en indicador de golpe: primero hay que decidir **qué se puede observar**. Ahí es donde se cae la mayoría de las promesas de sostenibilidad.
-
 
 
 Ahora esta:
@@ -378,11 +378,12 @@ Hay al menos tres cosas observables: la vida media de cada ordenador, el porcent
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La prioridad tiene razones y el indicador tiene unidad y forma de obtenerse. Distingue ausencia de datos de una afirmación demostrada falsa.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · ¿Es PixelStore una empresa sostenible?
 
@@ -404,15 +405,16 @@ Una propuesta defendible sigue la cadena impacto → prioridad → acción → i
 2. Consolida el mapa ASG y los cinco asuntos importantes. Mantén las justificaciones; no vuelvas a redactar toda la teoría del módulo.
 3. Propón una mejora para tres asuntos prioritarios. Añade indicador, dato que falta y responsable que debería participar.
 4. Resume el diagnóstico en una página, diapositiva o panel, enlazando las tablas de trabajo. Señala una afirmación débil y cómo tendría que reformularse para ser defendible.
-5. Explica una decisión a otra pareja y recoge una pregunta. Cada integrante responde sobre su contribución. Corrige la entrega y guarda esta versión inicial para compararla con el plan final de UD6.
+5. Explica una decisión a otra pareja y recoge una pregunta. Cada integrante responde sobre su contribución. Corrige el diagnóstico y conserva esta versión inicial para compararla con el plan final de UD6.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
 
-Se entrega una sola actividad de diagnóstico ASG con su registro de trabajo. Las propuestas son hipótesis de mejora, no resultados ya medidos.
+**Al terminar la sesión:**
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
+El diagnóstico ASG reúne los impactos identificados, las prioridades y los indicadores justificados. Las propuestas son hipótesis de mejora, no resultados ya medidos.
+
 
 ## Lo que debes recordar
 

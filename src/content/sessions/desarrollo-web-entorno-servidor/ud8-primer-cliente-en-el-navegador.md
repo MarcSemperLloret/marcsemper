@@ -7,7 +7,7 @@ lang: "es"
 summary: "Construir el primer cliente del backend, comprender CORS y verificar su integración antes de publicarlo en Intermodular."
 duration: "6 horas · 1 semana · 2 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Cliente web que consulta y modifica datos de la API, con estados de carga y error."
 date: "2026-09-09"
 outcomes:
   - "Consumir la API desde el navegador con fetch, sin ningún framework."
@@ -22,15 +22,13 @@ priorKnowledge:
   - "HTML básico y nociones mínimas de JavaScript."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
-<p class="lead">El backend ya está publicado y probado con una colección HTTP. Ahora construirás su primer cliente web con HTML y JavaScript: una página que envía peticiones y muestra las respuestas. En Intermodular 17 publicarás este mismo cliente y comprobarás su conexión con la API de producción.</p>
+<p class="lead">El backend ya está publicado y probado con una colección HTTP. Ahora construirás su primer cliente web con HTML y JavaScript: una página que envía peticiones y muestra las respuestas. En Intermodular 18 publicarás este mismo cliente y comprobarás su conexión con la API de producción.</p>
 
 ## Semana 17 · Construir el primer cliente y diagnosticar CORS
 
 ## Sesión 33 · Construir el primer cliente y diagnosticar CORS
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 17: Integrar el cliente ya construido en Servidor](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-17/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-17).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [revisar y publicar un contrato compatible](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-17/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -482,24 +480,16 @@ Investiga y responde con criterio técnico:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Podéis distinguir un fallo de red, de CORS y una respuesta de error de la API.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 33 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-33.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 34 · Integración del navegador antes de la seguridad
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 17: Integrar el cliente ya construido en Servidor](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-17/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-17).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [revisar y publicar un contrato compatible](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-17/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -733,19 +723,11 @@ Analiza estas tres situaciones y determina con precisión técnica en qué capa 
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El CRUD completo funciona desde el navegador publicado y queda una comprobación repetible previa a autenticación.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 34 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-34.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

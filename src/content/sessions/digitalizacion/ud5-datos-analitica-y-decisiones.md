@@ -17,7 +17,7 @@ outcomes:
   - "Decir qué NO pueden responder los datos que tenéis."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 ---
@@ -26,13 +26,13 @@ priorKnowledge:
 
 ## Cómo trabajar esta unidad
 
-Son 4 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 4 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Análisis de datos e informe de decisiones.** Guarda el trabajo en `digitalizacion/ud5/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Análisis de datos e informe de decisiones.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -174,11 +174,12 @@ Significa comprender qué representa.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El cuaderno carga el Excel real y contiene una descripción interpretada de los datos. No se exige crear un CSV ni dominar previamente pandas.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD5 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Haz preguntas al negocio
 
@@ -220,7 +221,6 @@ Los datos deben decirnos qué ocurre realmente.
 ---
 
 
-
 Sin guion. Formulad vuestra propia pregunta de negocio, decidid qué métrica la responde y comprobad qué podría estar engañándoos.
 
 </details>
@@ -237,11 +237,12 @@ Sin guion. Formulad vuestra propia pregunta de negocio, decidid qué métrica la
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Las dos preguntas tienen reglas y resultados reproducibles. Puedes explicar una exclusión y qué cambiaría si utilizases otra métrica.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD5 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · De análisis a decisión
 
@@ -326,11 +327,12 @@ Esta distinción es importante.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Hay una conclusión revisada y una decisión acotada. Debes poder mostrar la celda que respalda la cifra y una cosa que el dataset no permite saber.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD5 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · El informe para dirección
 
@@ -356,11 +358,12 @@ Una frase como «este producto vende más unidades en este periodo» es defendib
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Se evalúan comprensión de datos, análisis, decisiones y límites. No se añade un examen de Python ni otra memoria sobre las mismas cifras.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD5 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 

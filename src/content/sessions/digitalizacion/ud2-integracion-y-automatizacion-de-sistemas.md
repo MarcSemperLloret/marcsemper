@@ -16,7 +16,7 @@ outcomes:
   - "Decidir qué NO conviene automatizar."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 ---
@@ -25,13 +25,13 @@ priorKnowledge:
 
 ## Cómo trabajar esta unidad
 
-Son 3 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 3 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Automatización diseñada y simulada.** Guarda el trabajo en `digitalizacion/ud2/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Automatización diseñada y simulada.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -447,11 +447,12 @@ puede ser mejor desarrollar la solución mediante código.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Hay un intercambio completo con datos, respuesta y responsables. Distingue la orden «crear factura» del evento «factura creada».
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Diseña la automatización de una empresa
 
@@ -477,11 +478,12 @@ Una **cola** conserva mensajes pendientes para procesarlos después. Si facturac
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El flujo incluye gestión de fallos y duplicados. Debes poder explicar qué mensaje queda pendiente y qué hecho permite darlo por terminado.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Pruebas de integración, gestión de fallos y consolidación
 
@@ -503,15 +505,16 @@ Un caso de prueba necesita situación inicial, acción, resultado esperado y res
 2. Reparte los papeles de reparaciones y facturación entre dos personas. En el caso normal, pasa el mensaje y registra la respuesta y el estado final de la reparación.
 3. Repite con facturación marcada como caída. Guarda el mensaje en pendientes; cuando vuelva a estar disponible, procésalo y anota cómo cambia su estado.
 4. Envía dos veces el mismo identificador. Comprueba en el diseño si se crea una factura o dos. Si no hay regla que lo impida, añádela y repite la simulación.
-5. Intercambia los casos con otra pareja para que los siga sin explicaciones. Corrige las ambigüedades y entrega flujo, tabla de pruebas y justificación de la solución elegida.
+5. Intercambia los casos con otra pareja para que los siga sin explicaciones. Corrige las ambigüedades y comprueba que el flujo, la tabla de pruebas y la justificación de la solución sean coherentes.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Se evalúa la automatización diseñada y simulada, incluida su respuesta al fallo. No se exige una aplicación real ni pruebas de Servidor.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 

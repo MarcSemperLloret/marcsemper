@@ -7,7 +7,7 @@ lang: "es"
 summary: "Salir de la primera sesión con tres candidatos de problema propios, fichados y contrastados, listos para decidir en la sesión 2."
 duration: "3 horas · 30 min de explicación + 2 h 20 de taller"
 modality: "Taller · el 80 % de la sesión es trabajo del alumnado"
-deliverable: "candidatos.pdf en el repositorio, con tres problemas fichados."
+deliverable: "las tres propuestas de problema con tres problemas descritos y contrastados."
 date: "2026-09-07"
 outcomes:
   - "Explicar qué evalúa este módulo y qué evalúa Desarrollo Web en Entorno Servidor sobre el mismo producto."
@@ -21,8 +21,6 @@ draft: true
 priorKnowledge:
   []
 ---
-
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
 
 <p class="lead">Objetivo: terminar la sesión con tres problemas propios sobre la mesa, no con una idea a la que ya os habéis enamorado.</p>
 
@@ -41,7 +39,7 @@ priorKnowledge:
     <li><strong>1:05 – 1:35 · Criba:</strong> cuatro preguntas que matan candidatos. De doce quedan cinco.</li>
     <li><strong>1:35 – 2:15 · Ficha:</strong> tres candidatos escritos en serio, con el suelo técnico comprobado.</li>
     <li><strong>2:15 – 2:40 · Contraste:</strong> otra pareja intenta tumbar vuestros tres. Vosotros los suyos.</li>
-    <li><strong>2:40 – 2:50 · Evidencia:</strong> commit de <code>candidatos.pdf</code> en el repositorio.</li>
+    <li><strong>2:40 – 2:50 · Evidencia:</strong> tres propuestas descritas y contrastadas.</li>
     <li><strong>2:50 – 3:00 · Cierre.</strong></li>
   </ol>
 </div>
@@ -87,7 +85,7 @@ El curso no es un recorrido de veintiséis semanas hasta una entrega final. Es *
 
 En la primera vuelta el objetivo no es que el producto sea bueno: es que **el ciclo entero se complete**. Un producto diminuto y feo, pero desplegado en diciembre, es un éxito. Desplegar en diciembre es exactamente lo que hace que marzo no sea un drama.
 
-La nota sale de las dos defensas. No hay catorce entregas documentales. Las rúbricas de las dos defensas están publicadas en Aules desde hoy: leedlas antes de elegir problema, porque describen con qué se os va a medir.
+La nota sale de las dos defensas. No hay catorce entregas documentales. Lee los criterios de las defensas antes de elegir el problema para entender qué tendrás que demostrar.
 
 #### Qué hace defendible a un problema
 
@@ -253,7 +251,7 @@ Coged **tres** de los supervivientes y escribid esta ficha para cada uno. Sin ad
 
 <div class="rule">
   <p class="rule-label">La línea que separa este bloque de una lluvia de ideas</p>
-  <p>«¿En qué momento exacto se rompe?» es la pregunta cara. Si no sabéis responderla, no conocéis el problema todavía: conocéis su titular. Escribid «no lo sé» y anotad a quién vais a preguntárselo antes del viernes.</p>
+  <p>«¿En qué momento exacto se rompe?» es la pregunta cara. Si no sabéis responderla, no conocéis el problema todavía: conocéis su titular. Escribid «no lo sé» y anotad a quién vais a preguntárselo para contrastar el problema.</p>
 </div>
 
 #### Bloque D · Contraste — 25 minutos
@@ -282,7 +280,7 @@ Anotad las respuestas, incluidas las malas. Una ficha que no sobrevive al ataque
 
 #### Bloque E · Evidencia — 10 minutos
 
-<p class="stage stage--solo">Al repositorio, antes de salir</p>
+<p class="stage stage--solo">Resultado esperado al terminar</p>
 
 <p class="term">Evidencia</p>
 
@@ -290,7 +288,7 @@ Algo que existe fuera de vuestra cabeza y que otra persona puede consultar sin p
 
 <div class="checkpoint">
   <p class="checkpoint-label">Producto de la sesión</p>
-  <p><code>candidatos.pdf</code>, commiteado en el repositorio del equipo antes de salir del aula.</p>
+  <p>Tres propuestas de problema descritas y contrastadas, con sus personas afectadas, proceso actual y límites.</p>
   <ul class="checklist">
     <li>Los tres candidatos con la ficha completa, incluidas las casillas donde pone «no lo sé».</li>
     <li>La lista de los descartados, con la pregunta que los mató. Una línea cada uno.</li>
@@ -326,10 +324,10 @@ Algo que existe fuera de vuestra cabeza y que otra persona puede consultar sin p
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Antes de la sesión 2</p>
   <ul class="checklist">
-    <li>El fichero <code>candidatos.pdf</code> está en el repositorio y los dos miembros del equipo pueden abrirlo.</li>
+    <li>Las tres propuestas describen problemas concretos y ambos miembros del equipo pueden explicarlos.</li>
     <li>Habéis hablado con al menos una persona que sufre uno de los tres problemas, y traéis anotado qué os dijo.</li>
     <li>Traéis una foto, una captura o una descripción de cómo lo resuelven hoy: la libreta, el Excel, el grupo de mensajería.</li>
-    <li>Habéis leído las dos rúbricas de defensa publicadas en Aules.</li>
+    <li>Habéis leído los criterios de las dos defensas.</li>
   </ul>
 </div>
 

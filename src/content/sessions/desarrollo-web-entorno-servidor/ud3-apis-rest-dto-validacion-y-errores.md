@@ -7,7 +7,7 @@ lang: "es"
 summary: "Las reglas de diseño que convierten un montón de endpoints en una API defendible: recursos, representaciones, DTO, entrada validada y errores coherentes."
 duration: "18 horas · 3 semanas · 6 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "API con DTO, validaciones y errores coherentes, acompañada de sus comprobaciones."
 date: "2026-09-09"
 outcomes:
   - "Distinguir una API HTTP cualquiera de una API orientada a recursos."
@@ -23,15 +23,13 @@ priorKnowledge:
   - "Serialización y deserialización JSON."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">El mismo CRUD aprende a publicar un contrato estable: recursos, DTO, validación y errores. Al terminar, Intermodular dispone de una versión que puede compilar, desplegar y consumir.</p>
 
 ## Semana 5 · Recursos y contrato REST del dominio
 
 ## Sesión 9 · Recursos y contrato REST del dominio
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 5: El presupuesto de calidad](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-5/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-5).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el presupuesto de calidad](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-5/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -407,7 +405,7 @@ Haz el cambio ruta por ruta: modifica la anotación del controlador, reinicia, a
 1. Renombra en tu proyecto todas las rutas que incumplan alguna de las siete reglas.
 2. Actualiza la colección de Postman para que siga en verde con las rutas nuevas. Si sacaste el servidor a `{{baseUrl}}`, esto es rápido; si no, ya sabes por qué se hacía.
 3. Añade el recurso `Comentario` a la API, anidado donde corresponda, con al menos listar y crear.
-4. Anota en `DECISIONES.pdf` qué rutas cambiaron y por qué.
+4. Anota en las decisiones técnicas qué rutas cambiaron y por qué.
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
@@ -481,24 +479,16 @@ Hazlo también al revés, con la API de él.
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Cada ruta tiene un recurso o una operación de negocio justificable; la colección sigue funcionando.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 9 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-09.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 10 · Representaciones y DTO
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 5: El presupuesto de calidad](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-5/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-5).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el presupuesto de calidad](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-5/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -759,26 +749,18 @@ La tercera pregunta no tiene una respuesta cerrada. Existen APIs que dejan al cl
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Una modificación interna no añade campos accidentalmente a la respuesta JSON.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 10 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-10.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 6 · Entradas, salidas y mapeo
 
 ## Sesión 11 · Entradas, salidas y mapeo
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 6: Cerrar el primer proyecto](/es/docencia/proyecto-intermodular/ud3-cerrar-y-publicar-la-version/sesion-6/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-6).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [cerrar el primer proyecto](/es/docencia/proyecto-intermodular/ud3-cerrar-y-publicar-la-version/sesion-6/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1032,7 +1014,7 @@ public ResponseEntity<TareaResponse> modificar(
 2. Crea `ProyectoPatchRequest` con tipos envoltorio.
 3. Cambia el controlador para usarlos en `POST`, `PUT` y `PATCH`.
 4. Comprueba con Postman que un `POST` con un `id` y con un campo interno responde `201` e ignora los dos.
-5. Anota en `DECISIONES.pdf` qué campos dejaste fuera de la entrada y por qué.
+5. Anota en las decisiones técnicas qué campos dejaste fuera de la entrada y por qué.
 
 <p class="stage">Del JSON al modelo y del modelo al JSON</p>
 
@@ -1319,24 +1301,16 @@ Y responde por escrito:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Identificadores y valores calculados conservan el control del servidor; los mapeos de ambas entidades son coherentes.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 11 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-11.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 12 · Validar las entradas del CRUD
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 6: Cerrar el primer proyecto](/es/docencia/proyecto-intermodular/ud3-cerrar-y-publicar-la-version/sesion-6/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-6).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [cerrar el primer proyecto](/es/docencia/proyecto-intermodular/ud3-cerrar-y-publicar-la-version/sesion-6/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1611,26 +1585,18 @@ La pregunta 1 abre el trabajo siguiente, y la 2 apunta a la UD4. La 3 no tiene r
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Las entradas inválidas no crean ni modifican recursos y el cliente recibe una respuesta que puede interpretar.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 12 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-12.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 7 · Reglas propias y errores coherentes
 
 ## Sesión 13 · Reglas propias y errores coherentes
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 7: El CI del repositorio de Servidor](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-7/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-7).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el ci del repositorio de servidor](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-7/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1986,7 +1952,7 @@ Se escribe igual que la de antes, cambiando dos cosas: `@Target(TYPE)` en la ano
 1. Implementa `@PrioridadValida` y úsala en los dos DTO de tareas.
 2. Crea una segunda anotación propia para una regla real de **tu** dominio. Algunas ideas: un código de proyecto con un formato concreto, un nombre sin caracteres especiales, una fecha que no sea festivo.
 3. Añade a la colección una petición que la incumpla y comprueba que responde `400` con **tu** mensaje.
-4. Escribe en `DECISIONES.pdf` por qué esa regla merece una anotación propia en lugar de un `@Pattern`.
+4. Escribe en las decisiones técnicas por qué esa regla merece una anotación propia en lugar de un `@Pattern`.
 
 <p class="stage">Errores coherentes de API</p>
 
@@ -2349,7 +2315,7 @@ public String boom() {
 
 3. Llámalo y comprueba dos cosas: que el cliente recibe `500` con **tu** formato, y que **ese texto no aparece por ninguna parte de la respuesta**.
 4. Comprueba que sí aparece en la consola del servidor.
-5. Borra el endpoint y explica en `DECISIONES.pdf` qué habría pasado si el manejador genérico devolviera `ex.getMessage()`.
+5. Borra el endpoint y explica en las decisiones técnicas qué habría pasado si el manejador genérico devolviera `ex.getMessage()`.
 
 El paso 3 es el que hay que ver con los propios ojos. Es la diferencia entre entender la regla del 500 y creérsela.
 
@@ -2371,24 +2337,16 @@ El paso 3 es el que hay que ver con los propios ojos. Es la diferencia entre ent
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Las respuestas 400, 404 y 409 tienen una estructura coherente y mensajes útiles, sin trazas internas.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 13 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-13.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 14 · Publicar el contrato que consumirá el portfolio
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 7: El CI del repositorio de Servidor](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-7/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-7).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el ci del repositorio de servidor](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-7/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -2515,8 +2473,8 @@ Reutiliza la colección de la sesión 8. Crea una carpeta para errores y guarda 
 
 1. **El proyecto**, con la estructura de paquetes de la especificación.
 2. **La colección exportada**, en `pruebas/`.
-3. **`AUDITORIA.pdf`**: la rúbrica con sus dos columnas y un párrafo comentando la diferencia.
-4. **`DECISIONES.pdf`**, ampliado con estas cinco:
+3. **la auditoría**: la rúbrica con sus dos columnas y un párrafo comentando la diferencia.
+4. **las decisiones técnicas**, ampliado con estas cinco:
    * Qué campos dejaste fuera de cada DTO de entrada y de salida, y por qué.
    * Qué anotación de validación propia escribiste y por qué no bastaba `@Pattern`.
    * Qué formato de error elegiste y qué campo añadirías si tuvieras que depurar un fallo reportado por un cliente.
@@ -2589,19 +2547,11 @@ Esa cuarta fila viene de la sesión 13: la encontraste, viste por qué una anota
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El repositorio compila y el contrato queda disponible para el CI y el despliegue de Intermodular; los cambios siguientes se comunican al cliente.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 14 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-14.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

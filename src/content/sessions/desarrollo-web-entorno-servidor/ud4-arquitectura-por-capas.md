@@ -7,7 +7,7 @@ lang: "es"
 summary: "Reorganizar un controller que ya hace demasiado en capas con responsabilidades claras, y comprobar por primera vez la lógica con tests automáticos."
 duration: "12 horas · 2 semanas · 4 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Backend organizado por capas, con responsabilidades y decisiones de refactorización justificadas."
 date: "2026-09-09"
 outcomes:
   - "Reconocer los síntomas de un controller que acumula responsabilidades."
@@ -22,15 +22,13 @@ priorKnowledge:
   - "Interfaces y clases en Java."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">Refactorizas la aplicación que ya funciona. Conservas el contrato mientras separas responsabilidades y añades pruebas de las reglas del dominio.</p>
 
 ## Semana 8 · Separar controller, service y repository
 
 ## Sesión 15 · Separar controller, service y repository
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 8: La API en una URL](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-8/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-8).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [la api en una url](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-8/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -201,7 +199,7 @@ Marca cada casilla donde ese método haga algo de esa categoría. Después respo
 
 #### Paso 5 · El inventario de problemas
 
-Redacta un documento con cuatro apartados y expórtalo como `PROBLEMAS.pdf`. Sé concreto: nada de «está desordenado».
+Analiza los problemas del código en los cuatro apartados siguientes. Sé concreto: nada de «está desordenado».
 
 Lista, con número de línea, los sitios donde una misma clase hace cosas de categorías distintas. Formato: *«líneas 34-41: el método `crear` decide una regla de negocio y además construye una URL»*.
 
@@ -464,7 +462,7 @@ Un compañero te describe su API así, sin enseñarte nada:
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>La tabla de categorías por método completa y las tres preguntas respondidas.</span></div>
-  <div><strong>Si lo tienes</strong><span><code>PROBLEMAS.pdf</code> con los cuatro apartados, concretos y con números de línea.</span></div>
+  <div><strong>Si lo tienes</strong><span>el análisis de problemas con los cuatro apartados, concretos y con números de línea.</span></div>
   <div><strong>Reto</strong><span>El diagnóstico a ciegas con los cuatro problemas priorizados y el peor identificado.</span></div>
 </div>
 
@@ -506,24 +504,16 @@ La pregunta 4 no la vamos a resolver hoy, pero tienes que saber verla venir.
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El contrato público no cambia y podéis seguir una petición a través de las tres capas.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 15 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-15.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 16 · Inyección de dependencias
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 8: La API en una URL](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-8/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-8).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [la api en una url](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-8/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -834,26 +824,18 @@ Deja los tres arreglados antes de terminar.
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La aplicación arranca, la colección pasa y cada dependencia del servicio se ve en su constructor.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 16 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-16.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 9 · Reglas de negocio probadas
 
 ## Sesión 17 · Reglas de negocio probadas
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 9: Comprobar el contrato publicado](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-9/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-9).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [comprobar el contrato publicado](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-9/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1021,7 +1003,7 @@ Es la discusión que dejaste abierta en la sesión 13, y ahora toca cerrarla. La
   </div>
 </div>
 
-También se defiende un `400`, argumentando que el cliente ha enviado un dato incorrecto. **Elige una, escríbela en `DECISIONES.pdf` y aplícala igual en toda la API.** Lo que no vale es que una regla parecida responda `409` en un recurso y `400` en otro.
+También se defiende un `400`, argumentando que el cliente ha enviado un dato incorrecto. **Elige una, escríbela en las decisiones técnicas y aplícala igual en toda la API.** Lo que no vale es que una regla parecida responda `409` en un recurso y `400` en otro.
 
 #### Paso 3 · El service que solo coordina
 
@@ -1354,24 +1336,16 @@ Y una reflexión final, para escribir:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Una regresión deliberada hace fallar una prueba y, al corregirla, vuelve a pasar.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 17 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-17.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 18 · Consolidar las capas del mismo proyecto
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 9: Comprobar el contrato publicado](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-9/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-9).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [comprobar el contrato publicado](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-9/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1384,7 +1358,7 @@ Ya dispones de capas, inyección y pruebas de reglas. Hoy revisarás que toda la
 
 Una refactorización a medias es peor que no haberla empezado: deja dos formas de hacer lo mismo conviviendo, y quien llegue después no sabrá cuál es la buena.
 
-Abre `PROBLEMAS.pdf`. Para cada línea, una de tres:
+Abre el análisis de problemas. Para cada línea, una de tres:
 
 <figure class="diagram">
   <figcaption>Qué hacer con cada problema apuntado</figcaption>
@@ -1477,16 +1451,16 @@ Las dos tienen que estar en verde. Y hay una tercera comprobación, la más hone
     <li>Publicar un campo nuevo en la respuesta de proyectos.</li>
     <li>Añadir un filtro por prioridad al listado de tareas.</li>
   </ol>
-  <p>Apunta <strong>cuántos archivos has tenido que abrir y cuánto has tardado</strong>. Compáralo con la estimación que hiciste en el apartado 4 de <code>PROBLEMAS.pdf</code>, cuando todo estaba en el controlador. Esa diferencia es el resultado de la unidad.</p>
+  <p>Apunta <strong>cuántos archivos has tenido que abrir y cuánto has tardado</strong>. Compáralo con la estimación que hiciste en el apartado 4 de el análisis de problemas, cuando todo estaba en el controlador. Esa diferencia es el resultado de la unidad.</p>
 </div>
 
 #### Paso 4 · Preparar la evidencia de esta versión
 
 1. **El proyecto** con la estructura de la especificación.
-2. **`PROBLEMAS.pdf`** revisado, con cada línea tachada o justificada.
+2. **el análisis de problemas** revisado, con cada línea tachada o justificada.
 3. **Los tests**, con al menos uno por regla de negocio, en verde con `./mvnw test`.
 4. **La colección**, en verde y sin ninguna petición modificada desde la UD3.
-5. **`DECISIONES.pdf`** ampliado con tres:
+5. **las decisiones técnicas** ampliado con tres:
    * Dónde vive el caso de uso de la ruta anidada y por qué.
    * Qué código de estado devuelve una regla de negocio incumplida en tu API, y por qué ese.
    * Qué regla te costó más colocar y qué duda tuviste.
@@ -1525,7 +1499,7 @@ Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, 
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Los diez criterios cumplidos y las dos comprobaciones en verde.</span></div>
-  <div><strong>Si lo tienes</strong><span><code>PROBLEMAS.pdf</code> tachado línea a línea y la prueba del cambio pequeño cronometrada.</span></div>
+  <div><strong>Si lo tienes</strong><span>el análisis de problemas tachado línea a línea y la prueba del cambio pequeño cronometrada.</span></div>
   <div><strong>Reto</strong><span>La revisión cruzada con un compañero, con las respuestas equivocadas convertidas en correcciones.</span></div>
 </div>
 
@@ -1546,19 +1520,11 @@ Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, 
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La versión en capas supera las comprobaciones anteriores y podéis justificar dónde está cada regla.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 18 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-18.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar
@@ -1667,7 +1633,7 @@ Si además puedes coger un controlador ajeno lleno de lógica y decir, método a
     <li>Los repositorios son interfaces con su implementación en memoria detrás.</li>
     <li>Cada regla de negocio tiene su test, y <code>./mvnw test</code> pasa en verde.</li>
     <li>La colección pasa en verde sin ninguna petición modificada desde la UD3.</li>
-    <li><code>PROBLEMAS.pdf</code> está tachado línea a línea.</li>
+    <li>el análisis de problemas está tachado línea a línea.</li>
   </ul>
 </div>
 

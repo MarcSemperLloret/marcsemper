@@ -7,7 +7,7 @@ lang: "es"
 summary: "Sustituir las listas en memoria por una base de datos relacional real, con relaciones, consultas, transacciones y sus propios tests."
 duration: "24 horas · 4 semanas · 8 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Backend conectado a PostgreSQL, con relaciones, consultas y transacciones comprobadas."
 date: "2026-09-09"
 outcomes:
   - "Explicar qué resuelve un ORM y qué problemas introduce."
@@ -26,15 +26,13 @@ priorKnowledge:
   - "Tests unitarios con JUnit."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">El proyecto deja la memoria y pasa a PostgreSQL. Las ocho sesiones mantienen relaciones, transacciones, consultas y rendimiento. La persistencia se entrega también en producción dentro del primer trimestre, coordinando configuración y despliegue con Intermodular.</p>
 
 ## Semana 10 · Preparar PostgreSQL y la persistencia
 
 ## Sesión 19 · Preparar PostgreSQL y la persistencia
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 10: Preparar el CI de la versión persistente](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-10/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-10).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [preparar la transición a persistencia](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-10/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -440,7 +438,7 @@ Comprueba que devuelve una fila con el nombre de tu base de datos y la versión 
 #### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
 
 1. Arranca el backend y verifica en los logs que se conecta a la base de datos elegida. Confirma la misma conexión desde el cliente SQL.
-2. Provoca por separado un puerto incorrecto y unas credenciales incorrectas en tu entorno local; identifica sus mensajes y restaura la configuración válida antes de entregar.
+2. Provoca por separado un puerto incorrecto y unas credenciales incorrectas en tu entorno local; identifica sus mensajes y restaura la configuración válida antes de terminar.
 
 #### Ampliación si has completado el trabajo
 
@@ -504,24 +502,16 @@ Muchos programadores novatos razonan así: *«Si mi servidor va a recibir 500 pe
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La aplicación conecta a la base de datos sin credenciales en el repositorio y se identifica qué configuración cambia entre entornos.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 19 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-19.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 20 · Primera entidad persistente
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 10: Preparar el CI de la versión persistente](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-10/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-10).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [preparar la transición a persistencia](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-10/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -905,26 +895,18 @@ Spring Data comprueba el valor del atributo `@Id`:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Los datos sobreviven al reinicio y el cliente recibe el mismo contrato.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 20 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-20.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 11 · CRUD persistente y consultas del dominio
 
 ## Sesión 21 · CRUD persistente y consultas del dominio
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 11: La base de datos en producción](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-11/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-11).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [preparar el ci de la versión persistente](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-11/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1766,24 +1748,16 @@ Cuando ejecutamos `findByTituloContainingIgnoreCase("login")`, Hibernate genera 
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El CRUD completo opera en PostgreSQL y sus errores siguen el contrato acordado.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 21 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-21.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 22 · Probar los repositorios
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 11: La base de datos en producción](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-11/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-11).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [preparar el ci de la versión persistente](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-11/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -2113,26 +2087,18 @@ void tareaSinTitulo_debeFallar_malEscrito() {
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La misma consulta devuelve el resultado esperado en ejecuciones repetidas y una restricción incumplida se detecta.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 22 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-22.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 12 · Relaciones uno a muchos
 
 ## Sesión 23 · Relaciones uno a muchos
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 12: Dos piezas, una entrega](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-12/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-12).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [la base de datos en producción](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-12/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -2772,24 +2738,16 @@ public int hashCode() {
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La base de datos conserva la relación, la API devuelve una representación acotada y el borrado respeta la integridad.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 23 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-23.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 24 · Relaciones muchos a muchos
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 12: Dos piezas, una entrega](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-12/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-12).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [la base de datos en producción](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-12/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -3206,26 +3164,18 @@ Imagina que una etiqueta no solo se asocia a una tarea, sino que debemos guardar
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Borrar un recurso principal no elimina los elementos compartidos por otros; la tabla de unión queda coherente.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 24 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-24.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 13 · Transacciones y reglas de integridad
 
 ## Sesión 25 · Transacciones y reglas de integridad
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 13: Priorizar la evolución del mismo producto](/es/docencia/proyecto-intermodular/ud5-elegir-el-problema-grande/sesion-13/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-13).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [priorizar la evolución del mismo producto](/es/docencia/proyecto-intermodular/ud5-elegir-el-problema-grande/sesion-13/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -3484,24 +3434,16 @@ En `@Transactional` puedes configurar el parámetro `isolation`:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 No quedan cambios parciales al fallar y la operación correcta cumple todas las reglas del dominio.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 25 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-25.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 26 · Consultas, N+1 y versión persistente desplegada
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 13: Priorizar la evolución del mismo producto](/es/docencia/proyecto-intermodular/ud5-elegir-el-problema-grande/sesion-13/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-13).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [priorizar la evolución del mismo producto](/es/docencia/proyecto-intermodular/ud5-elegir-el-problema-grande/sesion-13/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -3761,19 +3703,11 @@ List<Tarea> findTodo();
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Los logs muestran el comportamiento de las consultas y los datos creados en la URL pública sobreviven a un reinicio del backend.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 26 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-26.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

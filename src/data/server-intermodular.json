@@ -18,7 +18,8 @@
       "title": "Del repositorio vacío a una URL pública",
       "href": "/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-1/"
     },
-    "evidence": "Backend iniciado en Servidor; portfolio como presentación y ensayo de publicación."
+    "evidence": "Hoy empiezas preparando un portfolio y su publicación automática. Necesitas tu cuenta de GitHub, Git y un editor. El backend se iniciará después en Servidor; para este taller basta una página HTML.",
+    "serverAvailable": []
   },
   {
     "week": 2,
@@ -39,7 +40,19 @@
       "title": "Issues, tablero y la primera pull request",
       "href": "/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-2/"
     },
-    "evidence": "Repositorio e historial conservados; issue, rama y revisión con la política acordada."
+    "evidence": "Ya tienes el portfolio publicado y has iniciado el backend en Servidor. Hoy aprenderás a organizar tareas y revisar cambios mediante ramas y pull requests.",
+    "serverAvailable": [
+      {
+        "number": 1,
+        "title": "Elegir el CRUD y arrancar el servidor",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud1-http-y-spring-boot/sesion-1/"
+      },
+      {
+        "number": 2,
+        "title": "Rutas y primeras consultas del proyecto",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud1-http-y-spring-boot/sesion-2/"
+      }
+    ]
   },
   {
     "week": 3,
@@ -60,7 +73,19 @@
       "title": "Vuestro primer workflow",
       "href": "/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/"
     },
-    "evidence": "Un fallo controlado de HTML demuestra el bloqueo del CI en una rama de prueba."
+    "evidence": "Ya has practicado issues y revisión de cambios. Hoy el portfolio incorporará su primera comprobación automática; el backend sigue desarrollándose en su propio repositorio.",
+    "serverAvailable": [
+      {
+        "number": 3,
+        "title": "JSON y primera escritura con un cliente HTTP",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud1-http-y-spring-boot/sesion-3/"
+      },
+      {
+        "number": 4,
+        "title": "Primera versión CRUD en memoria",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud1-http-y-spring-boot/sesion-4/"
+      }
+    ]
   },
   {
     "week": 4,
@@ -81,7 +106,19 @@
       "title": "Enlaces rotos y formato",
       "href": "/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/"
     },
-    "evidence": "Enlaces y formato comprobados; la ficha remite al mismo producto."
+    "evidence": "Tu workflow ya valida el HTML. Hoy añadirás comprobaciones de enlaces y formato para detectar errores antes de fusionar cambios.",
+    "serverAvailable": [
+      {
+        "number": 5,
+        "title": "De la petición al objeto Java",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud2-peticiones-respuestas-y-crud-en-memoria/sesion-5/"
+      },
+      {
+        "number": 6,
+        "title": "Escrituras y respuestas HTTP",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud2-peticiones-respuestas-y-crud-en-memoria/sesion-6/"
+      }
+    ]
   },
   {
     "week": 5,
@@ -102,7 +139,19 @@
       "title": "El presupuesto de calidad",
       "href": "/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-5/"
     },
-    "evidence": "Umbral de calidad justificado y comprobación accesible reproducible."
+    "evidence": "El portfolio tiene controles automáticos de HTML, enlaces y formato. Hoy definirás y comprobarás un umbral de calidad.",
+    "serverAvailable": [
+      {
+        "number": 7,
+        "title": "Colección ejecutable y entornos",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud2-peticiones-respuestas-y-crud-en-memoria/sesion-7/"
+      },
+      {
+        "number": 8,
+        "title": "Contrato en memoria listo para evolucionar",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud2-peticiones-respuestas-y-crud-en-memoria/sesion-8/"
+      }
+    ]
   },
   {
     "week": 6,
@@ -123,7 +172,19 @@
       "title": "Cerrar el primer proyecto",
       "href": "/es/docencia/proyecto-intermodular/ud3-cerrar-y-publicar-la-version/sesion-6/"
     },
-    "evidence": "Release del portfolio y auditoría del proceso; el backend sigue creciendo."
+    "evidence": "El portfolio ya pasa las comprobaciones del pipeline. Hoy cerrarás una versión identificada y revisarás si otra persona puede entenderla y utilizarla.",
+    "serverAvailable": [
+      {
+        "number": 9,
+        "title": "Recursos y contrato REST del dominio",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud3-apis-rest-dto-validacion-y-errores/sesion-9/"
+      },
+      {
+        "number": 10,
+        "title": "Representaciones y DTO",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud3-apis-rest-dto-validacion-y-errores/sesion-10/"
+      }
+    ]
   },
   {
     "week": 7,
@@ -144,7 +205,19 @@
       "title": "El CI del repositorio de Servidor",
       "href": "/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-7/"
     },
-    "evidence": "CI del repositorio de Servidor con Java y Maven compatibles, sin copiar la API."
+    "evidence": "La API de Servidor ya tiene DTO, validaciones y respuestas de error. Hoy configurarás su compilación y pruebas automáticas utilizando el Maven Wrapper del proyecto.",
+    "serverAvailable": [
+      {
+        "number": 11,
+        "title": "Entradas, salidas y mapeo",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud3-apis-rest-dto-validacion-y-errores/sesion-11/"
+      },
+      {
+        "number": 12,
+        "title": "Validar las entradas del CRUD",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud3-apis-rest-dto-validacion-y-errores/sesion-12/"
+      }
+    ]
   },
   {
     "week": 8,
@@ -165,7 +238,19 @@
       "title": "La API en una URL",
       "href": "/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-8/"
     },
-    "evidence": "JAR publicado, versión identificada y petición a una ruta existente."
+    "evidence": "El backend está organizado por capas y su CI ya funciona. Hoy publicarás esa versión en memoria y comprobarás su respuesta desde una URL pública.",
+    "serverAvailable": [
+      {
+        "number": 13,
+        "title": "Reglas propias y errores coherentes",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud3-apis-rest-dto-validacion-y-errores/sesion-13/"
+      },
+      {
+        "number": 14,
+        "title": "Publicar el contrato que consumirá el portfolio",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud3-apis-rest-dto-validacion-y-errores/sesion-14/"
+      }
+    ]
   },
   {
     "week": 9,
@@ -186,7 +271,19 @@
       "title": "Comprobar el contrato publicado",
       "href": "/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-9/"
     },
-    "evidence": "Misma colección en local y producción; el cliente completo espera a la semana 17."
+    "evidence": "Tienes una API publicada y una colección de peticiones. Hoy comprobarás que la versión pública conserva el contrato que funciona en local.",
+    "serverAvailable": [
+      {
+        "number": 15,
+        "title": "Separar controller, service y repository",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud4-arquitectura-por-capas/sesion-15/"
+      },
+      {
+        "number": 16,
+        "title": "Inyección de dependencias",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud4-arquitectura-por-capas/sesion-16/"
+      }
+    ]
   },
   {
     "week": 10,
@@ -204,10 +301,22 @@
     ],
     "intermodular": {
       "number": 10,
-      "title": "Preparar el CI de la versión persistente",
+      "title": "Preparar la transición a persistencia",
       "href": "/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-10/"
     },
-    "evidence": "PostgreSQL aislado en CI; se ejecutan las pruebas disponibles de la versión."
+    "evidence": "La API aún utiliza memoria. Hoy prepararás los casos y las tareas que permitirán comprobar su transición a PostgreSQL.",
+    "serverAvailable": [
+      {
+        "number": 17,
+        "title": "Reglas de negocio probadas",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud4-arquitectura-por-capas/sesion-17/"
+      },
+      {
+        "number": 18,
+        "title": "Consolidar las capas del mismo proyecto",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud4-arquitectura-por-capas/sesion-18/"
+      }
+    ]
   },
   {
     "week": 11,
@@ -225,10 +334,22 @@
     ],
     "intermodular": {
       "number": 11,
-      "title": "La base de datos en producción",
+      "title": "Preparar el CI de la versión persistente",
       "href": "/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-11/"
     },
-    "evidence": "Tests JPA en CI y registro que sobrevive al reinicio del backend público."
+    "evidence": "En Servidor ya has conectado PostgreSQL y trabajado el acceso a los datos. Hoy prepararás una base de pruebas aislada para ejecutar esa versión en CI.",
+    "serverAvailable": [
+      {
+        "number": 19,
+        "title": "Preparar PostgreSQL y la persistencia",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud5-jpa-y-postgresql/sesion-19/"
+      },
+      {
+        "number": 20,
+        "title": "Primera entidad persistente",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud5-jpa-y-postgresql/sesion-20/"
+      }
+    ]
   },
   {
     "week": 12,
@@ -246,10 +367,22 @@
     ],
     "intermodular": {
       "number": 12,
-      "title": "Dos piezas, una entrega",
+      "title": "La base de datos en producción",
       "href": "/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-12/"
     },
-    "evidence": "Relaciones disponibles publicadas; contrato probado y release intermedia identificada."
+    "evidence": "La API ya trabaja con PostgreSQL y relaciones entre entidades; su entorno de pruebas está preparado en CI. Hoy conectarás la versión publicada a una base de datos persistente.",
+    "serverAvailable": [
+      {
+        "number": 21,
+        "title": "CRUD persistente y consultas del dominio",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud5-jpa-y-postgresql/sesion-21/"
+      },
+      {
+        "number": 22,
+        "title": "Probar los repositorios",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud5-jpa-y-postgresql/sesion-22/"
+      }
+    ]
   },
   {
     "week": 13,
@@ -270,7 +403,19 @@
       "title": "Priorizar la evolución del mismo producto",
       "href": "/es/docencia/proyecto-intermodular/ud5-elegir-el-problema-grande/sesion-13/"
     },
-    "evidence": "Transacciones y consultas revisadas; una mejora priorizada del mismo producto."
+    "evidence": "El backend persistente ya está publicado y has trabajado transacciones en Servidor. Hoy priorizarás la evolución del mismo producto para el segundo trimestre.",
+    "serverAvailable": [
+      {
+        "number": 23,
+        "title": "Relaciones uno a muchos",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud5-jpa-y-postgresql/sesion-23/"
+      },
+      {
+        "number": 24,
+        "title": "Relaciones muchos a muchos",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud5-jpa-y-postgresql/sesion-24/"
+      }
+    ]
   },
   {
     "week": 14,
@@ -291,7 +436,19 @@
       "title": "La defensa del proceso",
       "href": "/es/docencia/proyecto-intermodular/ud6-defender-el-metodo/sesion-14/"
     },
-    "evidence": "Misma versión persistente, entrega y demostración para los dos módulos."
+    "evidence": "El CRUD persistente del primer trimestre ya ha pasado sus comprobaciones de integración. Hoy explicarás cómo lo has organizado, revisado y publicado; en Servidor continuarás con su demostración técnica.",
+    "serverAvailable": [
+      {
+        "number": 25,
+        "title": "Transacciones y reglas de integridad",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud5-jpa-y-postgresql/sesion-25/"
+      },
+      {
+        "number": 26,
+        "title": "Consultas, N+1 y versión persistente desplegada",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud5-jpa-y-postgresql/sesion-26/"
+      }
+    ]
   },
   {
     "week": 15,
@@ -312,7 +469,19 @@
       "title": "Planificar el incremento y sus dependencias",
       "href": "/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-15/"
     },
-    "evidence": "Incremento dividido en issues con dependencias y criterio de aceptación."
+    "evidence": "Retomas la versión del primer trimestre y la propuesta de evolución. Hoy organizarás el siguiente incremento; las nuevas consultas se implementarán después en Servidor.",
+    "serverAvailable": [
+      {
+        "number": 27,
+        "title": "Cerrar la primera versión del proyecto elegido",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud6-proyecto-primer-trimestre/sesion-27/"
+      },
+      {
+        "number": 28,
+        "title": "Revisión y defensa del backend en producción",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud6-proyecto-primer-trimestre/sesion-28/"
+      }
+    ]
   },
   {
     "week": 16,
@@ -330,10 +499,22 @@
     ],
     "intermodular": {
       "number": 16,
-      "title": "Revisar y publicar un contrato compatible",
+      "title": "Revisar búsquedas y paginación",
       "href": "/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-16/"
     },
-    "evidence": "OpenAPI y colección contrastados; transición de rutas compatible."
+    "evidence": "Ya has implementado búsquedas y paginación en Servidor. Hoy comprobarás sus límites y revisarás cómo se utilizan desde fuera del backend.",
+    "serverAvailable": [
+      {
+        "number": 29,
+        "title": "Relaciones expuestas y filtros",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud7-apis-rest-avanzadas/sesion-29/"
+      },
+      {
+        "number": 30,
+        "title": "Paginación y ordenación",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud7-apis-rest-avanzadas/sesion-30/"
+      }
+    ]
   },
   {
     "week": 17,
@@ -351,10 +532,22 @@
     ],
     "intermodular": {
       "number": 17,
-      "title": "Integrar el cliente ya construido en Servidor",
+      "title": "Revisar y publicar un contrato compatible",
       "href": "/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-17/"
     },
-    "evidence": "Cliente de Servidor reutilizado: crear, leer, modificar y borrar en el entorno publicado."
+    "evidence": "Ya has trabajado la evolución y el versionado de rutas en Servidor. Hoy comprobarás la compatibilidad del contrato antes de integrar un cliente.",
+    "serverAvailable": [
+      {
+        "number": 31,
+        "title": "Tests HTTP y documentación OpenAPI",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud7-apis-rest-avanzadas/sesion-31/"
+      },
+      {
+        "number": 32,
+        "title": "Evolucionar el contrato sin romper el cliente",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud7-apis-rest-avanzadas/sesion-32/"
+      }
+    ]
   },
   {
     "week": 18,
@@ -372,10 +565,22 @@
     ],
     "intermodular": {
       "number": 18,
-      "title": "Planificar permisos y preparar el entorno de seguridad",
+      "title": "Integrar el cliente ya construido en Servidor",
       "href": "/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-18/"
     },
-    "evidence": "Matriz de permisos y configuración preparadas; todavía no se exige JWT."
+    "evidence": "El cliente web de Servidor ya realiza peticiones al backend y maneja sus respuestas. Hoy integrarás y publicarás ambas piezas con sus versiones identificadas.",
+    "serverAvailable": [
+      {
+        "number": 33,
+        "title": "Construir el primer cliente y diagnosticar CORS",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud8-primer-cliente-en-el-navegador/sesion-33/"
+      },
+      {
+        "number": 34,
+        "title": "Integración del navegador antes de la seguridad",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud8-primer-cliente-en-el-navegador/sesion-34/"
+      }
+    ]
   },
   {
     "week": 19,
@@ -393,10 +598,22 @@
     ],
     "intermodular": {
       "number": 19,
-      "title": "Comprobar roles y propiedad en el proceso de revisión",
+      "title": "Planificar permisos y preparar el entorno de seguridad",
       "href": "/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-19/"
     },
-    "evidence": "Usuarios persistentes y reglas de rol/propiedad comprobadas en revisión y CI."
+    "evidence": "Ya has introducido autenticación y almacenamiento de contraseñas en Servidor. Hoy prepararás la matriz de permisos y la configuración necesaria para comprobar el acceso.",
+    "serverAvailable": [
+      {
+        "number": 35,
+        "title": "Identidad, sesión y permisos del producto",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud9-spring-security/sesion-35/"
+      },
+      {
+        "number": 36,
+        "title": "Contraseñas y Spring Security",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud9-spring-security/sesion-36/"
+      }
+    ]
   },
   {
     "week": 20,
@@ -414,10 +631,22 @@
     ],
     "intermodular": {
       "number": 20,
-      "title": "Publicar el acceso con JWT sin perder permisos",
+      "title": "Comprobar roles y propiedad en el proceso de revisión",
       "href": "/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-20/"
     },
-    "evidence": "JWT y CORS integrados después de explicarse; se conservan todos los permisos."
+    "evidence": "En Servidor ya has trabajado usuarios persistentes, roles y control de propiedad. Hoy revisarás esos permisos con identidades distintas.",
+    "serverAvailable": [
+      {
+        "number": 37,
+        "title": "Usuarios persistentes y roles",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud9-spring-security/sesion-37/"
+      },
+      {
+        "number": 38,
+        "title": "Permisos sobre cada recurso",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud9-spring-security/sesion-38/"
+      }
+    ]
   },
   {
     "week": 21,
@@ -435,10 +664,22 @@
     ],
     "intermodular": {
       "number": 21,
-      "title": "Comprobar una dependencia externa y su degradación",
+      "title": "Publicar el acceso con JWT sin perder permisos",
       "href": "/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-21/"
     },
-    "evidence": "Fallo de proveedor y caché comprobados con casos controlados."
+    "evidence": "El backend ya permite acceso mediante JWT. Hoy comprobarás que esa transición mantiene los permisos y funciona en el entorno publicado.",
+    "serverAvailable": [
+      {
+        "number": 39,
+        "title": "Sesión y token: integrar JWT",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud9-spring-security/sesion-39/"
+      },
+      {
+        "number": 40,
+        "title": "CSRF, CORS con credenciales y cierre seguro",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud9-spring-security/sesion-40/"
+      }
+    ]
   },
   {
     "week": 22,
@@ -456,10 +697,22 @@
     ],
     "intermodular": {
       "number": 22,
-      "title": "Verificar archivos y efectos externos",
+      "title": "Comprobar una dependencia externa y su degradación",
       "href": "/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-22/"
     },
-    "evidence": "Archivo, fila, descarga y notificación observados también después de un rechazo."
+    "evidence": "Ya has implementado y probado una integración externa en Servidor. Hoy comprobarás la experiencia completa cuando el proveedor responde, tarda demasiado o falla.",
+    "serverAvailable": [
+      {
+        "number": 41,
+        "title": "Consumir un servicio externo",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud10-integraciones-externas/sesion-41/"
+      },
+      {
+        "number": 42,
+        "title": "Timeouts y fallos parciales",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud10-integraciones-externas/sesion-42/"
+      }
+    ]
   },
   {
     "week": 23,
@@ -477,10 +730,22 @@
     ],
     "intermodular": {
       "number": 23,
-      "title": "Cerrar una candidata con evidencias de calidad",
+      "title": "Verificar archivos y efectos externos",
       "href": "/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-23/"
     },
-    "evidence": "Candidata identificada, pruebas enlazadas y arranque desde un clon limpio."
+    "evidence": "El backend ya gestiona archivos y efectos externos. Hoy seguirás sus resultados en la API, la base de datos, el almacenamiento y el receptor de notificaciones.",
+    "serverAvailable": [
+      {
+        "number": 43,
+        "title": "Ficheros y comunicación externa",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud10-integraciones-externas/sesion-43/"
+      },
+      {
+        "number": 44,
+        "title": "Integración completa comprobada",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud10-integraciones-externas/sesion-44/"
+      }
+    ]
   },
   {
     "week": 24,
@@ -498,10 +763,22 @@
     ],
     "intermodular": {
       "number": 24,
-      "title": "Preparar la actualización y su recuperación",
+      "title": "Cerrar una candidata con evidencias de calidad",
       "href": "/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-24/"
     },
-    "evidence": "Actualización del entorno existente y recuperación ensayadas con datos ficticios."
+    "evidence": "Las pruebas y la documentación técnica ya están trabajadas en Servidor. Hoy revisarás las evidencias para decidir si una candidata puede publicarse.",
+    "serverAvailable": [
+      {
+        "number": 45,
+        "title": "Estrategia de pruebas y diagnóstico",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud11-calidad-y-documentacion/sesion-45/"
+      },
+      {
+        "number": 46,
+        "title": "Documentación y revisión de calidad",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud11-calidad-y-documentacion/sesion-46/"
+      }
+    ]
   },
   {
     "week": 25,
@@ -519,10 +796,22 @@
     ],
     "intermodular": {
       "number": 25,
-      "title": "Publicar el incremento y preparar el caso de portfolio",
+      "title": "Ensayar la recuperación y publicar el incremento",
       "href": "/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-25/"
     },
-    "evidence": "Versiones compatibles publicadas, aceptación registrada y ficha de portfolio actualizada."
+    "evidence": "La candidata tiene su calidad revisada y el producto sigue evolucionando. Hoy ensayarás su recuperación y comprobarás la publicación antes de preparar la defensa.",
+    "serverAvailable": [
+      {
+        "number": 47,
+        "title": "Especificar la ampliación final",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud12-proyecto-backend-completo/sesion-47/"
+      },
+      {
+        "number": 48,
+        "title": "Implementar la ampliación por capas",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud12-proyecto-backend-completo/sesion-48/"
+      }
+    ]
   },
   {
     "week": 26,
@@ -543,6 +832,18 @@
       "title": "Defender el producto y el proceso sobre la misma versión",
       "href": "/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-26/"
     },
-    "evidence": "Versión final común, defensa coordinada y contribuciones individuales justificadas."
+    "evidence": "Dispones de la versión integrada y publicada del producto y de los resultados del ensayo de recuperación. Hoy explicarás el proceso y tu aportación sobre esa versión; la parte técnica se completa en las sesiones finales de Servidor.",
+    "serverAvailable": [
+      {
+        "number": 49,
+        "title": "Completar núcleo, seguridad e integración",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud12-proyecto-backend-completo/sesion-49/"
+      },
+      {
+        "number": 50,
+        "title": "Conectar Angular al backend del proyecto",
+        "href": "/es/docencia/desarrollo-web-entorno-servidor/ud12-proyecto-backend-completo/sesion-50/"
+      }
+    ]
   }
 ]

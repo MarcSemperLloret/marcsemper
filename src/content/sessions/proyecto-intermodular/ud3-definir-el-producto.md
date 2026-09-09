@@ -824,7 +824,7 @@ Intercambiad la especificación completa con otro equipo. Cada equipo lee la del
 ### El producto de la unidad
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Especificación inicial del proyecto.</p>
   <ul class="checklist">
     <li>Enunciado del problema con las siete casillas, incluida «qué NO es este problema».</li>

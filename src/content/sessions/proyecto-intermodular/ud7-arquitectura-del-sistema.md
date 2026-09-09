@@ -241,7 +241,7 @@ Un riesgo mal escrito es un miedo. Uno bien escrito tiene **señal temprana** y 
 </ol>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Diagrama de arquitectura y registro inicial de riesgos técnicos.</p>
   <ul class="checklist">
     <li>Diagrama que cabe de un vistazo, con las piezas, las direcciones y el límite del servidor.</li>

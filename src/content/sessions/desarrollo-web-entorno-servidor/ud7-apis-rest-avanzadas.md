@@ -7,7 +7,7 @@ lang: "es"
 summary: "Lo que distingue una API que funciona de una que se puede consumir: relaciones expuestas con criterio, filtros, paginación, documentación y tests de endpoint."
 duration: "12 horas · 2 semanas · 4 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "API con búsquedas, paginación y evolución del contrato verificadas."
 date: "2026-09-09"
 outcomes:
   - "Exponer relaciones sin filtrar el modelo interno ni provocar respuestas gigantes."
@@ -22,15 +22,13 @@ priorKnowledge:
   - "JPA, relaciones y consultas."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">Comienza el segundo trimestre sobre la versión persistente del mismo producto. Se profundiza en relaciones expuestas, filtros, paginación, contrato y pruebas HTTP.</p>
 
 ## Semana 15 · Relaciones expuestas y filtros
 
 ## Sesión 29 · Relaciones expuestas y filtros
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 15: Planificar el incremento y sus dependencias](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-15/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-15).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [planificar el incremento y sus dependencias](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-15/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -486,24 +484,16 @@ Analiza qué ocurre si un usuario malicioso o despistado introduce en el buscado
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El cliente puede consultar relaciones y filtrar sin conocer las tablas internas.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 29 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-29.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 30 · Paginación y ordenación
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 15: Planificar el incremento y sus dependencias](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-15/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-15).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [planificar el incremento y sus dependencias](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-15/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -761,26 +751,18 @@ Analiza las consecuencias técnicas y diseña una alternativa:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La API informa del contenido y los metadatos previstos y no devuelve todo el catálogo por defecto.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 30 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-30.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 16 · Tests HTTP y documentación OpenAPI
 
 ## Sesión 31 · Tests HTTP y documentación OpenAPI
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 16: Revisar y publicar un contrato compatible](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-16/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-16).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [revisar búsquedas y paginación](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-16/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1266,24 +1248,16 @@ Investiga cómo funciona la herramienta de código abierto `openapi-generator-cl
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Una modificación incompatible hace fallar el test y la documentación describe el contrato ejecutado.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 31 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-31.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 32 · Evolucionar el contrato sin romper el cliente
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 16: Revisar y publicar un contrato compatible](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-16/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-16).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [revisar búsquedas y paginación](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-16/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1485,19 +1459,11 @@ Investiga el concepto de **pruebas de contrato dirigidas por el consumidor** (*C
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El consumidor sigue funcionando durante la transición y las versiones compatibles quedan registradas.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 32 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-32.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

@@ -221,10 +221,10 @@ La última hora es el ensayo, y no es opcional: casi todos los problemas de una 
   <dd></dd>
 </dl>
 
-### Producto de la unidad
+### Trabajo esperado de la unidad
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Presentación y defensa técnica final.</p>
   <ul class="checklist">
     <li>Presentación con el reparto de tiempo, empezando por el problema y no por la tecnología.</li>

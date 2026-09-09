@@ -18,7 +18,7 @@ outcomes:
   - "Defender el plan ante preguntas incómodas, con evidencias."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 date: "2026-09-09"
@@ -28,13 +28,13 @@ date: "2026-09-09"
 
 ## Cómo trabajar esta unidad
 
-Son 8 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 8 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Plan de sostenibilidad de PixelStore.** Guarda el trabajo en `sostenibilidad/ud6/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Plan de sostenibilidad de PixelStore.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **8/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -103,11 +103,12 @@ Un conjunto organizado de objetivos, acciones e indicadores para gestionar los p
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El primer objetivo conecta una necesidad con una acción y una comprobación. La UD6 reutiliza las evidencias; no exige rehacer las auditorías anteriores.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · La empresa · PixelStore
 
@@ -133,11 +134,12 @@ El mapa de UD1 es el punto de partida. Ahora lo revisamos con lo aprendido sobre
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El mapa actualizado utiliza resultados del módulo y hace visibles compromisos entre grupos. No se evalúa otra copia del mapa inicial.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Auditoría ASG
 
@@ -163,11 +165,12 @@ Las actividades del laboratorio no equivalen automáticamente a datos de toda la
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La auditoría distingue medición, estimación y propuesta. No convierte supuestos de un caso didáctico en resultados empíricos.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Materialidad · no se puede arreglar todo
 
@@ -213,11 +216,12 @@ No pretendemos hacer una evaluación profesional. Queremos aprender a **justific
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La selección es trazable hasta los hallazgos y reconoce lo que se aplaza. No se obtiene mejor resultado por poner prioridad máxima a todo.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · De los problemas a los objetivos
 
@@ -256,11 +260,12 @@ Cuando escribáis cada objetivo, preguntaos qué comportamiento absurdo permitir
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Los objetivos son verificables y no premian degradar el servicio. Cada meta declara su referencia y sus límites.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 6 · Acciones e indicadores
 
@@ -294,11 +299,12 @@ Para decidir obligaciones reales hay que comprobar la normativa vigente, el ámb
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Al menos un indicador se reproduce con evidencia del módulo y los demás tienen método. El plan no declara certificaciones ni cumplimiento global no comprobado.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 6»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 7 · Priorización y roadmap
 
@@ -324,11 +330,12 @@ La viabilidad exige reconocer recursos limitados. El caso permite proponer respo
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El roadmap puede seguirse de principio a fin y declara sus supuestos de recursos. Las fases están justificadas por dependencias y prioridades.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 7»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 8 · Informe y presentación
 
@@ -348,17 +355,18 @@ Una crítica útil cambia una decisión o confirma que se mantiene por una razó
 
 1. Revisa que el documento reúna diagnóstico, grupos afectados, cinco prioridades, objetivos, acciones, indicadores y fases. Enlaza las actividades anteriores en lugar de copiar sus informes.
 2. Pide una crítica acotada a otra pareja o al asistente: una incoherencia, un indicador débil y un supuesto no justificado. Contrasta cada observación con las fuentes de tu trabajo.
-3. Corrige al menos una debilidad confirmada o documenta por qué una objeción no procede. Conserva observación, decisión y cambio; no inventes una crítica aceptada para completar la entrega.
-4. Prepara una explicación breve de una cadena completa del plan. Cada integrante defiende una decisión; los turnos colectivos o las mesas de revisión se ajustan al tiempo disponible.
+3. Corrige al menos una debilidad confirmada o documenta por qué una objeción no procede. Conserva observación, decisión y cambio; no inventes una crítica aceptada para completar el trabajo.
+4. Prepara una explicación breve de una cadena completa del plan. Cada integrante defiende una decisión. Escucha las preguntas y responde con las evidencias del plan.
 5. Entrega plan e índice de las seis actividades con sus versiones finales. Señala pendientes, alcance de las mediciones y qué habría que confirmar antes de aplicar el plan a una empresa real.
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La evaluación se basa en actividades y evidencias, incluida la integración final. El cierre no añade un examen ni exige volver a elaborar las auditorías del curso.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 8»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 

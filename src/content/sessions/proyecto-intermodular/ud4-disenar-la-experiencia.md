@@ -390,12 +390,12 @@ El método es incómodo y funciona:
   <dd></dd>
 </dl>
 
-### Producto de la unidad
+### Trabajo esperado de la unidad
 
 <p class="stage stage--solo">Ahora tú</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Prototipo navegable y público.</p>
   <ul class="checklist">
     <li>Inventario de pantallas, con la historia y el requisito que cubre cada una.</li>

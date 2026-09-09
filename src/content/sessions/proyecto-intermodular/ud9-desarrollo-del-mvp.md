@@ -566,12 +566,12 @@ Lo que no se cumpla tiene dos destinos posibles, y hay que elegir hoy:
 
 Lo que no vale es dejarlo en un limbo de «casi está», porque en la semana 25 seguirá casi.
 
-### Producto de la unidad
+### Trabajo esperado de la unidad
 
 <p class="stage stage--solo">Ahora tú</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Primera versión funcional del MVP.</p>
   <ul class="checklist">
     <li>Producto desplegado en una URL pública, con los datos de prueba cargables en un paso.</li>

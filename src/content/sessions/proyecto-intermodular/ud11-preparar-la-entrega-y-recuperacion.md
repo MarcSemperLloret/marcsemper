@@ -1,27 +1,66 @@
 ---
-title: "Preparar la entrega y recuperación"
+title: "Verificar efectos y revisar la candidata"
 label: "UD11 · Proyecto compartido"
 section: "ud-11"
 order: 11
 lang: "es"
-summary: "Cerrar una candidata con evidencias de calidad y preparar la actualización y su recuperación, sobre la misma versión del producto de Servidor."
+summary: "Verificar archivos y efectos externos; Cerrar una candidata con evidencias de calidad, con resultados comprobados."
 duration: "6 horas · 2 sesiones de 3 h"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
-deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
+deliverable: "Verificar archivos y efectos externos; Cerrar una candidata con evidencias de calidad, con resultados comprobados."
 date: "2026-09-09"
-outcomes: ["Cerrar una candidata con evidencias de calidad sobre una versión identificada del producto.", "Preparar la actualización y su recuperación sobre una versión identificada del producto."]
-requirements: ["Repositorio del backend de Servidor y cliente existente.", "Colección de peticiones, acceso a CI y al entorno de pruebas."]
+outcomes: ["Verificar archivos y efectos externos con resultados comprobados.", "Cerrar una candidata con evidencias de calidad con resultados comprobados."]
+requirements: ["Repositorio del backend y, desde la sesión 18, cliente desarrollado en Servidor.", "Colección de peticiones, acceso a CI y al entorno de pruebas."]
 priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Circuito de revisión y despliegue del primer trimestre."]
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 El producto, su autoría/equipo y su repositorio de backend continúan desde el primer trimestre. Consulta la [secuencia conjunta y los criterios de evaluación](/es/docencia/coordinacion-servidor-intermodular/).
 
-## Sesión 23 · Cerrar una candidata con evidencias de calidad
+## Sesión 23 · Verificar archivos y efectos externos
 
-**Punto de partida compartido.** Semana lectiva 23: sitúa este taller después de las sesiones 45–46 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-23). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+**Antes de empezar.** El backend ya gestiona archivos y efectos externos. Hoy seguirás sus resultados en la API, la base de datos, el almacenamiento y el receptor de notificaciones.
 
+### Se explica
+
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
+
+Servidor 43–44 integra archivos y notificaciones. Hoy revisamos sus efectos completos: respuesta HTTP, fila de base de datos, archivo almacenado y aviso enviado. Cada pieza tiene un ciclo de vida distinto; un rollback de PostgreSQL no borra automáticamente un archivo ni retira un webhook.
+
+La evidencia debe comprobar qué queda después de la operación. No basta una captura del 201, ni un mensaje «enviado» escrito antes de confirmar el envío. Usaremos el receptor local y la limpieza implementados en Servidor, con sus límites documentados.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+
+#### Bloque A · Preparar datos y almacenamiento
+
+Crea un recurso padre válido con el procedimiento de la colección y guarda su id. Prepara un archivo pequeño ficticio y revisa la carpeta configurada en el entorno de prueba. El directorio de subidas no se incluye en Git; el README indica cómo se crea y cómo se conserva en el entorno desplegado.
+
+#### Bloque B · Seguir el archivo
+
+Sube el archivo mediante el endpoint actual, conserva el id devuelto y descarga desde Location con una identidad permitida. Compara el contenido y comprueba la relación en la base de datos. Repite sin permiso y con archivo rechazado; no deben aparecer efectos inesperados.
+
+#### Bloque C · Observar commit y notificación
+
+Arranca el receptor de webhook local de Servidor 43. Ejecuta el caso que publica el evento y comprueba su recepción después del guardado. Detén solo el receptor y repite: observa el fallo y verifica la política real de reintento. No describas como implementada una cola que el código todavía no tiene.
+
+#### Bloque D · Verificar un fallo intermedio
+
+Reutiliza el test de rollback y limpieza de Servidor 44 en un entorno aislado. Consulta filas y archivos después del fallo y conserva el resultado. Documenta el límite ante caída del proceso si la limpieza depende de una acción en memoria. Restaura el escenario normal antes de publicar.
+
+#### Bloque E · Revisar la operación desplegada
+
+Comprueba si el almacenamiento del proveedor persiste entre reinicios y despliegues según la configuración elegida. Registra el directorio o servicio utilizado y un ensayo con archivo ficticio. Si el almacenamiento es efímero, no declares persistencia de adjuntos: corrige el entorno o registra esa limitación pendiente de aceptación.
+
+### Cierre
+
+<p class="stage">15 minutos · comprobación del resultado</p>
+
+**Al terminar la sesión:** Has seguido una operación de archivo o notificación hasta sus efectos reales y comprobado un caso de fallo. Distingues qué cambios comparten una transacción y qué limpieza requiere cada recurso.
+
+## Sesión 24 · Cerrar una candidata con evidencias de calidad
+
+**Antes de empezar.** Las pruebas y la documentación técnica ya están trabajadas en Servidor. Hoy revisarás las evidencias para decidir si una candidata puede publicarse.
 
 ### Se explica
 
@@ -53,60 +92,13 @@ Abre issues con entrada, pasos, resultado esperado, resultado real y versión. P
 
 #### Bloque E · Publicar el estado de la candidata
 
-Actualiza sus notas con criterios superados y pendientes. Si el código cambia, registra el nuevo SHA y su ejecución; una evidencia del commit anterior no valida automáticamente el nuevo. Guarda el resultado en `docs/intermodular/sesion-23.pdf`.
+Actualiza sus notas con criterios superados y pendientes. Si el código cambia, registra el nuevo SHA y su ejecución; una evidencia del commit anterior no valida automáticamente el nuevo. Guarda el resultado en las comprobaciones de la sesión.
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 23.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-23.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-45.pdf` y `sesion-46.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
-
-Entrega repositorio y commit. Explica por qué una candidata puede avanzar o qué defecto concreto lo impide. Servidor conserva la evaluación de las pruebas; aquí se evalúa cómo sustentan la decisión de entrega.
-
-## Sesión 24 · Preparar la actualización y su recuperación
-
-**Punto de partida compartido.** Semana lectiva 24: sitúa este taller después de las sesiones 47–48 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-24). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
-
-### Se explica
-
-<p class="stage stage--brief">25 minutos · explicación y demostración</p>
-
-Servidor 47–48 revisa el alcance final y la evolución del modelo. Intermodular prepara cómo desplegar esos cambios sobre el producto que ya tiene datos. No volvemos a crear la infraestructura del primer trimestre.
-
-Un cambio de esquema y un cambio de código deben ser compatibles en el orden en que se aplican. Volver a un JAR anterior no deshace una modificación de datos. Antes de desplegar debemos conocer el punto de partida, el cambio previsto y cómo recuperar un entorno de prueba.
-
-### Se trabaja
-
-<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
-
-#### Bloque A · Comparar versiones
-
-Compara la versión desplegada con los cambios de Servidor 47–48. Anota qué afecta al esquema, las variables, las rutas y los datos existentes. Reutiliza el modelo y las decisiones de Servidor; aquí documentas su aplicación al entorno.
-
-#### Bloque B · Preparar el procedimiento
-
-En `docs/despliegue.pdf` escribe comprobación previa, copia de seguridad, cambio de esquema, publicación del artefacto y prueba posterior. Identifica quién ejecuta cada acción y dónde se registra. No uses create-drop ni scripts de creación completa sobre una base que contiene datos a conservar.
-
-#### Bloque C · Ensayar con datos ficticios
-
-Prepara una base aislada con la versión anterior y algunos registros. Obtén una copia con la herramienta documentada del proveedor o PostgreSQL, restaúrala en otra base de ensayo y comprueba su lectura. Registra comandos sin contraseñas y cuenta filas relevantes antes y después.
-
-#### Bloque D · Probar actualización y recuperación
-
-Aplica en el ensayo el cambio revisado de esquema y arranca la candidata. Ejecuta los casos acordados. Si falla, utiliza el procedimiento de recuperación sobre ese entorno aislado y comprueba que los datos vuelven a ser legibles. Describe cuándo basta revertir código y cuándo hay que recuperar datos.
-
-#### Bloque E · Revisar el procedimiento
-
-Otra persona sigue el documento sin instrucciones verbales y marca el punto de decisión para continuar o detenerse. Enlaza evidencias y pendientes. Esta sesión prepara la actualización; el cierre final se coordina con las funcionalidades de Servidor 49–52.
-
-### Cierre
-
-<p class="stage">15 minutos · comprobación y entrega</p>
-
-**Entrega de Intermodular 24.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-24.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-47.pdf` y `sesion-48.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
-
-Entrega repositorio y commit con el procedimiento ensayado. Explica qué protege los datos y qué evidencia tienes de que la recuperación funciona.
+**Al terminar la sesión:** La candidata tiene evidencias de calidad revisadas y defectos clasificados. Puedes justificar si está preparada para publicarse o qué problema concreto lo impide.
 
 ## Lo que debes recordar
 

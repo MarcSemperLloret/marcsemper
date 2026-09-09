@@ -19,7 +19,7 @@ outcomes:
   - "Comparar una web antes y después con datos comparables."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 date: "2026-09-09"
@@ -29,13 +29,13 @@ date: "2026-09-09"
 
 ## Cómo trabajar esta unidad
 
-Son 6 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 6 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Optimización y comparación de la web.** Guarda el trabajo en `sostenibilidad/ud3/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Optimización y comparación de la web.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -47,7 +47,7 @@ Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del
 | **Comparación cuantitativa antes/después** |  **2** |
 | Mantenimiento de funcionalidad y calidad   |      1 |
 | Uso crítico de IA                          |    0,5 |
-| Claridad de la entrega                     |    0,5 |
+| Claridad del trabajo                     |    0,5 |
 
 En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
@@ -108,11 +108,12 @@ Por eso **rendimiento y sostenibilidad suelen apuntar en la misma dirección**. 
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El objetivo conserva el servicio y las hipótesis se podrán contrastar. No necesitas conocimientos de agentes de Digitalización para realizar la práctica.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Primero medir, después optimizar
 
@@ -169,11 +170,12 @@ Un *Performance* de 92 no significa que la web sea «un 92 % sostenible». Y un 
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La medición es reproducible y la página funciona. Cada hipótesis menciona un recurso observado, no una recomendación genérica del asistente.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Imágenes: casi siempre, el primer objetivo
 
@@ -235,11 +237,12 @@ Una página con 30 imágenes de las que al abrirla se ven 4. ¿Hace falta descar
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La reducción está medida y las imágenes conservan su función. Puedes localizar el cambio en el archivo y explicar por qué elegiste esa calidad.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Código, terceros, caché y datos
 
@@ -333,11 +336,12 @@ Vuelve a aparecer el principio de la unidad: **procesar y transferir solo lo nec
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La evidencia distingue una optimización real del cliente de una propuesta para el servidor. No se exige Nginx, paginación de Spring ni CI.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · Optimizar nuestra web
 
@@ -363,11 +367,12 @@ Un asistente puede sugerir una optimización, pero la persona que trabaja decide
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Existe un registro de cambios medidos y comprobados. Una propuesta rechazada con fundamento también informa del criterio, pero no se presenta como una optimización aplicada.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 6 · ¿Realmente hemos mejorado?
 
@@ -393,11 +398,12 @@ La utilidad se conserva como condición de la mejora. La tabla de recursos y la 
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La mejora está respaldada por medidas comparables y mantiene el producto. No se exige estimar emisiones ni producir otro informe por cada sesión.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 6»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 

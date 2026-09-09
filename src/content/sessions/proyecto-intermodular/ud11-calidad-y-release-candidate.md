@@ -323,7 +323,7 @@ El paso 3 es el que la gente se salta, y es donde aparecen las regresiones: una 
 ### El checklist de release
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Release candidate revisada y lista para desplegar.</p>
   <ul class="checklist">
     <li>Todos los criterios de aceptación del MVP pasan, con evidencia de la ejecución.</li>

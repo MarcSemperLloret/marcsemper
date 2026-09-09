@@ -7,7 +7,7 @@ lang: "es"
 summary: "Construir el portfolio de verdad haciendo entrar cada sección por pull request, y escribir un pipeline propio que valide HTML, formato, enlaces y accesibilidad, y que impida fusionar cuando algo de eso falla."
 duration: "9 horas · 3 sesiones de 3 h"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
-deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
+deliverable: "Pipeline que comprueba HTML, enlaces, formato y umbrales de calidad."
 date: "2026-09-09"
 outcomes:
   - "Escribir un workflow de GitHub Actions desde cero y explicar qué lo dispara."
@@ -24,8 +24,6 @@ priorKnowledge:
   - "HTML y CSS del módulo de Lenguaje de Marcas."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">Hasta ahora vuestro único check dice que los ficheros se subieron. No dice que la página esté bien escrita, ni que sus enlaces lleven a algún sitio, ni que se pueda usar con un lector de pantalla. En estas tres sesiones el portfolio se llena de contenido de verdad y, a la vez, se le pone debajo una red que avisa antes de que lo vea nadie.</p>
 
 <div class="rule">
@@ -40,8 +38,7 @@ priorKnowledge:
 
 ## Sesión 3 · Vuestro primer workflow
 
-**Punto de partida compartido.** Semana lectiva 3: sitúa este taller después de las sesiones 5–6 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-3). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** Ya has practicado issues y revisión de cambios. Hoy el portfolio incorporará su primera comprobación automática; el backend sigue desarrollándose en su propio repositorio.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -254,9 +251,8 @@ Se acabó la página de tres líneas. Coged del tablero la issue de la cabecera 
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 3.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-03.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-05.pdf` y `sesion-06.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
@@ -289,8 +285,7 @@ Se acabó la página de tres líneas. Coged del tablero la issue de la cabecera 
 
 ## Sesión 4 · Enlaces rotos y formato
 
-**Punto de partida compartido.** Semana lectiva 4: sitúa este taller después de las sesiones 7–8 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-4). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** Tu workflow ya valida el HTML. Hoy añadirás comprobaciones de enlaces y formato para detectar errores antes de fusionar cambios.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -452,9 +447,8 @@ Añadid también los enlaces externos que traíais: GitHub, LinkedIn si lo tené
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 4.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-04.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-07.pdf` y `sesion-08.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
@@ -487,8 +481,7 @@ Añadid también los enlaces externos que traíais: GitHub, LinkedIn si lo tené
 
 ## Sesión 5 · El presupuesto de calidad
 
-**Punto de partida compartido.** Semana lectiva 5: sitúa este taller después de las sesiones 9–10 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-5). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** El portfolio tiene controles automáticos de HTML, enlaces y formato. Hoy definirás y comprobarás un umbral de calidad.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -639,7 +632,7 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
 <p class="stage stage--solo">Individual, la última pull request de la semana</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <ul class="checklist">
     <li>Portfolio con cabecera, presentación, proyectos y contacto, publicado y con estilos propios.</li>
     <li>Un <code>ci.yml</code> escrito por vosotros con cuatro jobs: HTML, enlaces, formato y calidad.</li>
@@ -659,9 +652,8 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 5.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-05.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-09.pdf` y `sesion-10.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>

@@ -7,7 +7,7 @@ lang: "es"
 summary: "Cerrar la evaluación defendiendo cómo se ha trabajado, con tres evidencias que no se pueden improvisar: el tablero, la pull request más discutida y una ejecución del pipeline que falló."
 duration: "3 horas · 1 sesión"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
-deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
+deliverable: "Demostración del proceso de trabajo y del backend persistente del primer trimestre."
 date: "2026-09-09"
 outcomes:
   - "Reconstruir el rastro de trabajo propio y leerlo como lo leerá quien evalúa."
@@ -22,8 +22,6 @@ priorKnowledge:
   - "Todo el trimestre."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">Hoy se presenta la misma versión que en Servidor 27–28. La demostración del producto se comparte; aquí se justifican su organización, revisión, pruebas en CI y puesta en producción.</p>
 
 <div class="rule">
@@ -33,8 +31,7 @@ priorKnowledge:
 
 ## Sesión 14 · La defensa del proceso
 
-**Punto de partida compartido.** Semana lectiva 14: sitúa este taller después de las sesiones 27–28 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-14). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** El CRUD persistente del primer trimestre ya ha pasado sus comprobaciones de integración. Hoy explicarás cómo lo has organizado, revisado y publicado; en Servidor continuarás con su demostración técnica.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -190,26 +187,25 @@ Quien hace de tribunal anota **la pregunta que peor fue** y se la dice al otro. 
 
 #### Bloque D · La defensa
 
-La defensa se coordina con Servidor 27–28 sobre el mismo commit. El docente distribuye los turnos entre las sesiones de cierre de ambos módulos; no se repite una exposición completa por asignatura ni se presupone que todas las defensas individuales caben en tres horas.
+La defensa se coordina con Servidor 27–28 sobre el mismo commit. Explica aquí el proceso sobre la versión que ya has comprobado; las sesiones 27–28 de Servidor completarán la explicación técnica de ese mismo producto.
 
-1. Abre `docs/entrega-t1.pdf` con URL, SHA, PR, CI y pruebas. Comprueba que la release final incluye persistencia, relaciones y reglas de Servidor 25–26; una release intermedia no sustituye esta comprobación.
+1. Abre el balance del primer trimestre con URL, SHA, PR, CI y pruebas. Comprueba que la release final incluye persistencia, relaciones y reglas de Servidor 25–26; una release intermedia no sustituye esta comprobación.
 2. Demuestra un recorrido del CRUD, una entrada rechazada y persistencia tras reinicio. Servidor evalúa implementación, integridad y pruebas de esos casos.
 3. Sigue una issue del mismo recorrido hasta su rama, revisión, ejecución y despliegue. Intermodular evalúa la trazabilidad, la revisión y la entrega reproducible.
 4. Explica un fallo controlado del CI y su diagnóstico. No se puntúa haber roto producción ni acumular errores.
 5. Cada integrante identifica su contribución según la autoría/equipo acordado en Servidor. Quienes no estén defendiendo realizan una comprobación cruzada y registran observaciones.
-6. Actualiza la entrega con el resultado y las limitaciones. El documento, los enlaces y la versión son comunes; los criterios y las calificaciones de cada módulo se mantienen diferenciados.
+6. Contrasta el resultado con las limitaciones identificadas. Las comprobaciones y la versión son comunes; los criterios y las calificaciones de cada módulo se mantienen diferenciados.
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 14.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-14.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-27.pdf` y `sesion-28.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Producto de la evaluación</p>
   <ul class="checklist">
     <li>Portfolio publicado, con contenido real y su pipeline de cuatro comprobaciones.</li>
-    <li>API desplegada, con su repositorio, su CI que compila y prueba, y su CRUD funcionando desde el portfolio.</li>
+    <li>API persistente desplegada, con CI y operaciones CRUD comprobadas mediante la colección de peticiones.</li>
     <li>Releases publicadas en los dos repositorios, con READMEs que se entienden.</li>
     <li>Un rastro de catorce semanas: issues, ramas, pull requests, revisiones y fallos resueltos.</li>
     <li>La evolución del mismo producto, priorizada y con sus dependencias.</li>

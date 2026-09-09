@@ -7,7 +7,7 @@ lang: "es"
 summary: "Desde por qué HTTP no recuerda quién eres hasta una API protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada."
 duration: "18 horas · 3 semanas · 6 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Backend con autenticación, roles, control de propiedad y acceso mediante JWT comprobados."
 date: "2026-09-09"
 outcomes:
   - "Explicar por qué HTTP no mantiene estado y cómo lo resuelven cookies y sesión."
@@ -25,15 +25,13 @@ priorKnowledge:
   - "Integración con un cliente y CORS básico."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">El mismo producto incorpora identidad, usuarios persistentes y permisos. La matriz de autorización nace de su dominio e incluye tanto roles como acceso a recursos propios y ajenos.</p>
 
 ## Semana 18 · Identidad, sesión y permisos del producto
 
 ## Sesión 35 · Identidad, sesión y permisos del producto
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 18: Planificar permisos y preparar el entorno de seguridad](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-18/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-18).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [integrar el cliente ya construido en servidor](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-18/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -414,24 +412,16 @@ Elabora una matriz formal de control de accesos completa para el sistema:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La matriz incluye usuario anónimo, usuario autenticado, recurso propio y recurso ajeno.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 35 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-35.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 36 · Contraseñas y Spring Security
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 18: Planificar permisos y preparar el entorno de seguridad](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-18/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-18).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [integrar el cliente ya construido en servidor](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-18/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -559,7 +549,7 @@ La configuración moderna se realiza mediante un `@Bean` que construye un **`Sec
 
 Una filtración de una tabla con contraseñas en texto plano permitiría leerlas directamente. Guardar un hash evita esa lectura, pero un atacante todavía puede probar contraseñas candidatas y comparar resultados. BCrypt incorpora una sal aleatoria y un coste de cálculo para dificultar esas pruebas.
 
-1. Prepara el documento que exportarás como `docs/seguridad.pdf` y dibuja dos recorridos: registro (contraseña → hash → base de datos) y acceso (contraseña recibida + hash guardado → comparación).
+1. Analiza la seguridad del acceso y dibuja dos recorridos: registro (contraseña → hash → base de datos) y acceso (contraseña recibida + hash guardado → comparación).
 2. Marca qué dato se guarda y qué dato se descarta. El hash también es sensible y no se incluye en las respuestas públicas ni en logs.
 3. En el siguiente paso ejecutarás una prueba con contraseñas ficticias: dos hashes diferentes pueden verificar la misma contraseña. Esa observación explica por qué no se compara `encode(entrada).equals(hashGuardado)`.
 
@@ -876,26 +866,18 @@ Investiga la interfaz `AuthenticationEntryPoint`:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 No se almacenan ni devuelven contraseñas en claro y los rechazos se distinguen de los errores de negocio.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 36 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-36.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 19 · Usuarios persistentes y roles
 
 ## Sesión 37 · Usuarios persistentes y roles
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 19: Comprobar roles y propiedad en el proceso de revisión](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-19/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-19).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [planificar permisos y preparar el entorno de seguridad](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-19/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1210,24 +1192,16 @@ Investiga cómo Spring Security mitiga este vector mediante **contraseñas simul
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Los usuarios sobreviven al reinicio y las operaciones responden de acuerdo con su rol.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 37 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-37.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 38 · Permisos sobre cada recurso
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 19: Comprobar roles y propiedad en el proceso de revisión](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-19/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-19).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [planificar permisos y preparar el entorno de seguridad](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-19/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -1690,26 +1664,18 @@ En el trabajo anterior definimos que un desarrollador solo puede editar las tare
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Los tests demuestran que un usuario no lee ni modifica recursos ajenos fuera de la política del producto.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 38 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-38.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Semana 20 · Sesión y token: integrar JWT
 
 ## Sesión 39 · Sesión y token: integrar JWT
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 20: Publicar el acceso con JWT sin perder permisos](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-20/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-20).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [comprobar roles y propiedad en el proceso de revisión](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-20/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -2143,24 +2109,16 @@ Investiga las tres estrategias de la industria para mitigar este problema:
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La API rechaza tokens inválidos y conserva las comprobaciones de permisos sobre cada recurso.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 39 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-39.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 40 · CSRF, CORS con credenciales y cierre seguro
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 20: Publicar el acceso con JWT sin perder permisos](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-20/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-20).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [comprobar roles y propiedad en el proceso de revisión](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-20/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -2407,19 +2365,11 @@ Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno 
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 El cliente autorizado funciona y quedan probados los rechazos por identidad, permisos y configuración web.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 40 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-40.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

@@ -7,7 +7,7 @@ lang: "es"
 summary: "Priorizar una mejora del mismo producto a partir de necesidades observadas, sin cambiar de tema ni de repositorio."
 duration: "3 horas · 1 sesión"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
-deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
+deliverable: "Evolución priorizada del producto, con necesidad y dependencias justificadas."
 date: "2026-09-09"
 outcomes: ["Identificar mejoras observables del producto existente.", "Priorizar un incremento y sus dependencias con Servidor.", "Reutilizar las evidencias del primer trimestre para planificar el segundo."]
 requirements: ["Versión del backend persistente y publicado.", "Tablero e incidencias del mismo producto."]
@@ -15,14 +15,11 @@ priorKnowledge:
   - "Lo que cuesta llevar dos piezas a producción, aprendido a base de hacerlo."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 La versión del primer trimestre continúa durante el segundo. Esta unidad prioriza su evolución a partir de necesidades observadas. Consulta la [secuencia conjunta](/es/docencia/coordinacion-servidor-intermodular/).
 
 ## Sesión 13 · Priorizar la evolución del mismo producto
 
-**Punto de partida compartido.** Semana lectiva 13: sitúa este taller después de las sesiones 25–26 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-13). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** El backend persistente ya está publicado y has trabajado transacciones en Servidor. Hoy priorizarás la evolución del mismo producto para el segundo trimestre.
 
 ### Se explica
 
@@ -44,7 +41,7 @@ Abre la versión persistente publicada y pide a otra persona que realice un reco
 
 #### Bloque B · Proponer tres mejoras del mismo dominio
 
-En `docs/evolucion.pdf` escribe tres candidatas con necesidad, persona afectada, comportamiento actual y criterio de aceptación. Ejemplo: en préstamos, impedir que un socio cierre el préstamo de otro. Conserva las entidades del producto y señala qué relación o regla cambia; no añadas tablas únicamente para aumentar el número.
+En la propuesta de evolución escribe tres candidatas con necesidad, persona afectada, comportamiento actual y criterio de aceptación. Ejemplo: en préstamos, impedir que un socio cierre el préstamo de otro. Conserva las entidades del producto y señala qué relación o regla cambia; no añadas tablas únicamente para aumentar el número.
 
 #### Bloque C · Ordenar por dependencias
 
@@ -56,15 +53,13 @@ La persona revisora intenta reproducir la necesidad y comprobar el criterio sin 
 
 #### Bloque E · Preparar el cierre común
 
-Enlaza `docs/evolucion.pdf` desde el registro de la sesión y desde la release candidata del primer trimestre. Comprueba que los defectos que impiden la entrega siguen siendo prioritarios frente a las mejoras futuras. Prepara los enlaces a producto, PR, CI y versión para la defensa conjunta de la próxima semana.
+Enlaza la propuesta de evolución desde el registro de la sesión y desde la release candidata del primer trimestre. Comprueba que los defectos que impiden la entrega siguen siendo prioritarios frente a las mejoras futuras. Prepara los enlaces a producto, PR, CI y versión para la defensa conjunta de la próxima semana.
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 13.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-13.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-25.pdf` y `sesion-26.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
-
-Entrega el mismo repositorio y el commit de esta sesión. Debes poder explicar qué necesidad mejora vuestro producto, qué conserva y qué sesión de Servidor desbloquea su implementación.
+**Al terminar la sesión:** Tienes una mejora priorizada, su necesidad justificada y sus dependencias identificadas. Explica qué conserva del producto actual y qué cambio observable aportará.
 
 ## Lo que debes recordar
 

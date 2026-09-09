@@ -294,12 +294,12 @@ Un documento del repositorio que dice, por versión, qué se añadió, qué se c
 
 Fijaos en las dos últimas entradas. **La lista de lo que no se hizo, con su motivo, vale tanto como la de lo que sí**, y es exactamente lo que un tribunal usa para distinguir un equipo que decidió de uno que no llegó.
 
-### Producto de la unidad
+### Trabajo esperado de la unidad
 
 <p class="stage stage--solo">Ahora tú</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Segunda versión mejorada del producto.</p>
   <ul class="checklist">
     <li>Evidencias de uso recogidas por observación, más lo encontrado en los datos del propio producto.</li>

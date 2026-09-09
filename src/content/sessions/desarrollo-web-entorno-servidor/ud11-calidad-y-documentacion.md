@@ -7,7 +7,7 @@ lang: "es"
 summary: "Consolidar en una estrategia lo que se ha ido probando desde la UD4, y dejar la aplicación observable, documentada y revisada por otros."
 duration: "6 horas · 1 semana · 2 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
-deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+deliverable: "Pruebas y documentación técnica que permiten comprobar y utilizar el backend."
 date: "2026-09-09"
 outcomes:
   - "Explicar qué cubre y qué no cubre la suite de pruebas existente."
@@ -21,15 +21,13 @@ priorKnowledge:
   - "OpenAPI y diseño de API."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">La calidad se viene trabajando desde las primeras pruebas. Aquí se completa la estrategia, se diagnostican defectos y se revisa que documentación y versión real coincidan.</p>
 
 ## Semana 23 · Estrategia de pruebas y diagnóstico
 
 ## Sesión 45 · Estrategia de pruebas y diagnóstico
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 23: Cerrar una candidata con evidencias de calidad](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-23/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-23).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [verificar archivos y efectos externos](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-23/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -180,7 +178,7 @@ class ProyectoBoundaryTest {
 4. Ejecuta solo esta clase con `.\mvnw.cmd test "-Dtest=ProyectoBoundaryTest"`. Retira temporalmente `@NotBlank` de nombre para comprobar que los casos nulos o en blanco detectan la regresión; restáurala y deja los tests en verde.
 5. Para las coordenadas que añadiste en la sesión 41, prepara por separado latitud (-90 a 90) y longitud (-180 a 180). Comprueba cada límite aceptado y un valor justo fuera. No uses el límite de longitud como si fuera el de latitud. Añade estas entradas al test de tu DTO real, conservando válidos todos los otros campos.
 6. Reutiliza el test de clonación de la sesión 25 para verificar rollback. Prepara el proyecto original con sus tareas en `gestor_test`, llama al servicio inyectado por Spring y provoca el fallo controlado usado en aquel taller. El test que observa el rollback no debe envolver esa llamada en su propia transacción: comprueba desde una transacción posterior que no quedaron filas nuevas. Retira el fallo de producción y conserva el caso mediante el doble de prueba correspondiente.
-7. Clasifica en `docs/pruebas.pdf` las evidencias reales: DTO/validación, servicio/reglas, repositorio/SQL, controlador/HTTP y seguridad. Para cada regla pendiente escribe primero entrada, resultado esperado y capa responsable; después añade la prueba. Repite `verify` y compara qué regla ha quedado cubierta, además del porcentaje.
+7. Clasifica en el análisis de las pruebas las evidencias reales: DTO/validación, servicio/reglas, repositorio/SQL, controlador/HTTP y seguridad. Para cada regla pendiente escribe primero entrada, resultado esperado y capa responsable; después añade la prueba. Repite `verify` y compara qué regla ha quedado cubierta, además del porcentaje.
 
 #### Paso 3 · Ejecutar y analizar el informe JaCoCo
 
@@ -464,24 +462,16 @@ Diseña un filtro o conversor personalizado en Logback (`PatternLayoutEncoder` o
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 La corrección tiene evidencia reproducible y los logs no exponen credenciales ni datos innecesarios.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
-#### Entrega de la sesión 45 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-45.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
-
-
 ## Sesión 46 · Documentación y revisión de calidad
 
-**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 23: Cerrar una candidata con evidencias de calidad](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-23/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-23).
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [verificar archivos y efectos externos](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-23/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -703,19 +693,11 @@ Instala la extensión **SonarLint** en tu entorno de desarrollo (IntelliJ o VS C
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
+**Al terminar la sesión:**
+
 Otra persona puede arrancar la API, comprender sus permisos y reproducir un recorrido documentado.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-#### Entrega de la sesión 46 · Repositorio de GitHub
-
-**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
-
-Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-46.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
-
-Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
-
 
 
 ## Lo que debes recordar

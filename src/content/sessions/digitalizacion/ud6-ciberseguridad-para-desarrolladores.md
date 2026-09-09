@@ -15,7 +15,7 @@ outcomes:
   - "Corregir un fallo y verificar que la corrección no rompe la funcionalidad."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 date: "2026-09-09"
@@ -25,13 +25,13 @@ date: "2026-09-09"
 
 ## Cómo trabajar esta unidad
 
-Son 5 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 5 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Auditoría y correcciones de seguridad.** Guarda el trabajo en `digitalizacion/ud6/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Auditoría y correcciones de seguridad.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **5/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -71,11 +71,12 @@ Autenticarse es demostrar quién eres; estar autorizado es tener permiso para un
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El laboratorio arranca y la matriz indica qué debe ocurrir. No necesitas el backend de Servidor ni una cuenta real de usuario.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Cinco errores que debes reconocer
 
@@ -421,11 +422,12 @@ Pero HTTPS no convierte automáticamente una aplicación insegura en segura: una
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Se ha explicado y verificado una corrección. La tabla distingue autorización, entrada SQL, configuración y respuesta de error, además de los conceptos de las fichas.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Primero tu criterio, después la IA
 
@@ -451,13 +453,14 @@ Compararemos una revisión propia con otra asistida para descubrir qué aporta c
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Hay una comparación razonada y un hallazgo nuevo verificado o descartado. Se evalúa el criterio, no que el asistente produzca muchas vulnerabilidades.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
-## Sesión 4 · Corregir, verificar y entregar
+## Sesión 4 · Corregir y verificar los resultados
 
 **Punto de partida.** Actividad «Auditoría y correcciones de seguridad», sesión 4 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
@@ -467,7 +470,7 @@ Hay una comparación razonada y un hallazgo nuevo verificado o descartado. Se ev
 
 Corregir un fallo implica cambiar la causa y comprobar el comportamiento, incluido un caso válido que deba seguir funcionando. Una consulta parametrizada separa el dato del código SQL; un mensaje de error público puede ser genérico mientras el diagnóstico se conserva solo en el entorno apropiado.
 
-El laboratorio tiene cuatro objetivos acotados repartidos desde la sesión 2. Sus pruebas ayudan a comprobarlos, pero no demuestran que cualquier aplicación sea segura. La entrega debe describir qué se verificó y qué queda fuera, en vez de prometer seguridad absoluta.
+El laboratorio tiene cuatro objetivos acotados repartidos desde la sesión 2. Sus pruebas ayudan a comprobarlos, pero no demuestran que cualquier aplicación sea segura. El análisis debe describir qué se verificó y qué queda fuera, en vez de prometer seguridad absoluta.
 
 ### Se trabaja
 
@@ -481,11 +484,12 @@ El laboratorio tiene cuatro objetivos acotados repartidos desde la sesión 2. Su
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Cada corrección reclamada tiene una prueba y una explicación propia. El informe se construye a partir de esa tabla, sin otro documento duplicado.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · Auditoría cruzada en el aula y consolidación
 
@@ -503,7 +507,7 @@ Una observación útil indica paso seguido, resultado esperado y resultado obser
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Intercambia la carpeta del laboratorio con otra pareja, junto con el guia-seguridad.pdf y la tabla de hallazgos. Trabaja en una copia distinta de tu versión, siempre en local.
+1. Intercambia la carpeta del laboratorio con otra pareja, junto con la guía del laboratorio y la tabla de hallazgos. Trabaja en una copia distinta de tu versión, siempre en local.
 2. Arranca siguiendo solo sus instrucciones y ejecuta las pruebas. Registra el resultado y una incidencia reproducible si aparece; no cambies todavía el código ajeno.
 3. Elige un caso permitido y uno rechazado. Contrasta las respuestas con su matriz de permisos y pregunta por una decisión cuya evidencia no esté clara.
 4. Devuelve observaciones concretas. En tu propio trabajo corrige una incidencia o explica con evidencia por qué no procede, y repite las pruebas afectadas.
@@ -511,11 +515,12 @@ Una observación útil indica paso seguido, resultado esperado y resultado obser
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 La actividad de seguridad queda reproducible, con correcciones y pendientes identificados. No requiere reutilizar JWT ni tests del proyecto de Servidor.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 

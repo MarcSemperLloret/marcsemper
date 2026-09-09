@@ -7,7 +7,7 @@ lang: "es"
 summary: "Escribir el README que hace comprensible el repositorio para quien llega de fuera, publicar la primera versión con nombre, y auditar el rastro de trabajo del compañero contra la definición de terminado."
 duration: "3 horas · 1 sesión"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
-deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
+deliverable: "Versión del portfolio identificada, revisada y documentada."
 date: "2026-09-09"
 outcomes:
   - "Escribir un README dirigido a quien no conoce el proyecto ni a quien lo hizo."
@@ -21,8 +21,6 @@ priorKnowledge:
   - "El circuito completo y el pipeline propio de las unidades anteriores."
 ---
 
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
-
 <p class="lead">El primer proyecto se acaba hoy. Acabar no es dejar de tocarlo: es dejarlo en un estado que otra persona pueda entender, y ponerle un nombre a ese estado para poder volver a él.</p>
 
 <div class="rule">
@@ -32,8 +30,7 @@ priorKnowledge:
 
 ## Sesión 6 · Cerrar el primer proyecto
 
-**Punto de partida compartido.** Semana lectiva 6: sitúa este taller después de las sesiones 11–12 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-6). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** El portfolio ya pasa las comprobaciones del pipeline. Hoy cerrarás una versión identificada y revisarás si otra persona puede entenderla y utilizarla.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -253,12 +250,11 @@ Ahora tenéis issues abiertas por otra persona en vuestro propio proyecto. Es la
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 6.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-06.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-11.pdf` y `sesion-12.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <ul class="checklist">
     <li>README de seis apartados, entrado por pull request y revisado.</li>
     <li><code>v1.0.0</code> etiquetada y publicada como release, con notas escritas por vosotros.</li>

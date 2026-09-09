@@ -7,7 +7,7 @@ lang: "es"
 summary: "Reutilizar el repositorio de Servidor, ejecutar su CI, publicar el backend, comprobar el contrato con la colección y preparar PostgreSQL en pruebas y producción."
 duration: "18 horas · 6 sesiones de 3 h"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
-deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
+deliverable: "Backend publicado con persistencia, CI y contrato comprobados."
 date: "2026-09-09"
 outcomes: ["Configurar el CI de Java sobre el repositorio existente.", "Desplegar el artefacto y diagnosticar su arranque.", "Comprobar el contrato publicado con la colección de Servidor.", "Preparar PostgreSQL aislado para CI y persistente en producción.", "Identificar versión, configuración y evidencias del producto compartido."]
 requirements: ["Portfolio publicado con pipeline.", "Repositorio de Spring Boot creado en Servidor y su wrapper de Maven.", "Java 21 y colección de peticiones existente."]
@@ -15,8 +15,6 @@ priorKnowledge:
   - "El circuito completo: issue, rama, pull request, revisión, fusión y despliegue."
   - "De Servidor: controladores REST, DTO, validación y manejo de errores."
 ---
-
-**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
 
 <p class="lead">Vuestra API funciona en el portátil de quien la escribió. Este proyecto consiste en que funcione en una URL, con el mismo circuito que el portfolio, y en que el portfolio la use.</p>
 
@@ -43,8 +41,7 @@ Los hitos se coordinan por versión disponible: no se exige una funcionalidad an
 
 ## Sesión 7 · El CI del repositorio de Servidor
 
-**Punto de partida compartido.** Semana lectiva 7: sitúa este taller después de las sesiones 13–14 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-7). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** La API de Servidor ya tiene DTO, validaciones y respuestas de error. Hoy configurarás su compilación y pruebas automáticas utilizando el Maven Wrapper del proyecto.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -81,11 +78,11 @@ Primero se reproduce verify en local y después en CI. Un fallo local se registr
 
 #### Bloque A · El repositorio de la API
 
-1. Abre la carpeta del backend de Servidor. Ejecuta `git remote -v`, `git status` y `git log -5 --oneline`; comprueba que es el repositorio entregado desde la sesión 1, con su historial. No ejecutes git init ni crees otro remoto.
+1. Abre la carpeta del backend de Servidor. Ejecuta `git remote -v`, `git status` y `git log -5 --oneline`; comprueba que es el repositorio utilizado desde la sesión 1, con su historial. No ejecutes git init ni crees otro remoto.
 2. En main actualizada, crea una rama para la issue del CI. Ejecuta `.\mvnw.cmd -B verify` en PowerShell (`./mvnw -B verify` en Linux/macOS). Si falla, guarda el mensaje causal y corrige la configuración o enlaza la issue técnica; conserva el trabajo útil de la sesión.
 3. Abre pom.xml y anota Java 21, la versión del proyecto y la presencia del wrapper. Revisa que target y credenciales no se rastrean. `git status` permite ver qué subirás; el historial de Servidor se conserva completo.
 4. Comprueba las reglas configuradas en Intermodular 2 también en el backend. Si aún falta el check de Java, se añadirá después de su primera ejecución. La política de revisión debe ser la misma en ambos módulos.
-5. Continúa con el workflow del bloque B. El código que compilamos es el CRUD con DTO y errores disponible después de Servidor 14.
+5. Continúa con el workflow del bloque B. El código que compilamos es el CRUD con DTO y errores disponible después de Servidor 12.
 
 #### Bloque B · El CI que compila
 
@@ -176,9 +173,8 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 7.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-07.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-13.pdf` y `sesion-14.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
@@ -209,8 +205,7 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
 
 ## Sesión 8 · La API en una URL
 
-**Punto de partida compartido.** Semana lectiva 8: sitúa este taller después de las sesiones 15–16 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-8). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** El backend está organizado por capas y su CI ya funciona. Hoy publicarás esa versión en memoria y comprobarás su respuesta desde una URL pública.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -237,7 +232,7 @@ Este taller utiliza App Service con publicación Código y runtime Java SE. No e
 
 #### Entorno de aula
 
-Antes de crear recursos comprobad la oferta y los límites que muestra vuestra suscripción. El plan F1, cuando esté disponible para la combinación elegida, tiene cuotas y puede suspender la aplicación por inactividad. La primera respuesta puede tardar más que las siguientes. El docente fija la alternativa para el grupo si no está disponible, conservando el mismo repositorio y artefacto.
+Antes de crear recursos comprobad la oferta y los límites que muestra vuestra suscripción. El plan F1, cuando esté disponible para la combinación elegida, tiene cuotas y puede suspender la aplicación por inactividad. La primera respuesta puede tardar más que las siguientes. Utiliza el entorno de prácticas disponible conservando el mismo repositorio y artefacto.
 
 ### Se trabaja
 
@@ -276,10 +271,10 @@ Revisar y crear. Cuando termine, **Ir al recurso** y abrid la URL: veréis la p�
 1. En el recurso, menú lateral → **Centro de implementación** (*Deployment Center*).
 2. Origen: **GitHub**. Autorizad si lo pide.
 3. Organización, repositorio `api-loquesea`, rama `main`.
-4. Elige la identidad federada configurada por el docente y comprueba que el workflow declara los permisos y la conexión esperados; no habilites autenticación básica para ocultar un fallo de configuración.
+4. Elige la identidad federada del entorno de prácticas y comprueba que el workflow declara los permisos y la conexión esperados; no habilites autenticación básica para ocultar un fallo de configuración.
 5. **Guardar**.
 
-<p>Si el centro de implementación intenta escribir en main protegida, prepara el workflow en una rama y revísalo por PR. No desactives las reglas para generar el archivo. Comprueba la identidad de despliegue con el docente y guarda las credenciales en Secrets o en la conexión federada, nunca en YAML.</p>
+<p>Si el centro de implementación intenta escribir en main protegida, prepara el workflow en una rama y revísalo por PR. No desactives las reglas para generar el archivo. Comprueba la identidad de despliegue configurada y guarda las credenciales en Secrets o en la conexión federada, nunca en YAML.</p>
 
 Igual que hizo Static Web Apps en la sesión 1, Azure escribe un workflow en vuestro repositorio y guarda las credenciales como secreto. Traedlo y leedlo:
 
@@ -345,9 +340,8 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 8.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-08.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-15.pdf` y `sesion-16.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
@@ -378,8 +372,7 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 
 ## Sesión 9 · Comprobar el contrato publicado
 
-**Punto de partida compartido.** Semana lectiva 9: sitúa este taller después de las sesiones 17–18 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-9). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** Tienes una API publicada y una colección de peticiones. Hoy comprobarás que la versión pública conserva el contrato que funciona en local.
 
 ### Se explica
 
@@ -387,7 +380,7 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 
 Un **contrato de API** describe lo que otro programa puede pedir y lo que recibirá: método, ruta, campos y estados HTTP. Ya habéis construido esas respuestas en Servidor. Hoy comprobaremos que la versión publicada cumple el mismo contrato que la local, sin volver a implementar sus controladores.
 
-El consumidor puede ser Bruno, una prueba o un navegador. Para detectar un cambio incompatible no hace falta haber programado todavía una interfaz. El cliente completo con fetch y CORS se trabajará después de las sesiones 33–34 de Servidor, en Intermodular 17. Ahora utilizamos la colección que ya conoce el grupo.
+El consumidor puede ser Bruno, una prueba o un navegador. Para detectar un cambio incompatible no hace falta haber programado todavía una interfaz. El cliente completo con fetch y CORS se trabajará después de las sesiones 33–34 de Servidor, en Intermodular 18. Ahora utilizamos la colección que ya conoce el grupo.
 
 **Una base URL cambia el destino, no el contrato.** La ruta `/tareas` debe seguir llamándose igual en local y en producción. El prefijo `/api/v1` llegará en Servidor 32; no lo añadáis por copiar un tutorial. Un 404 puede indicar una ruta equivocada, aunque el programa haya arrancado correctamente.
 
@@ -406,7 +399,7 @@ La demostración consiste en enviar la misma petición a dos entornos, comparar 
 
 #### Bloque B · Escribir un caso comprobable
 
-1. En `docs/contrato.pdf` añade una tabla con método, ruta, entrada mínima, estado esperado y campos de respuesta.
+1. En la descripción del contrato de la API añade una tabla con método, ruta, entrada mínima, estado esperado y campos de respuesta.
 2. Selecciona tres casos ya implementados: lectura correcta, recurso inexistente y entrada inválida. Copia ejemplos de tu API y elimina datos sensibles.
 3. Ejecuta cada caso en ambos entornos. Si difieren, comprueba primero versión desplegada y configuración; después abre una issue con petición y respuesta que reproduzcan el fallo.
 4. La corrección de implementación se realiza sobre el código compartido de Servidor. Intermodular conserva la prueba que detectó el desajuste y la PR que lo corrige.
@@ -420,20 +413,59 @@ La demostración consiste en enviar la misma petición a dos entornos, comparar 
 
 #### Bloque D · Registrar la compatibilidad
 
-Anota los dos entornos usados y el SHA del backend desplegado en `docs/intermodular/sesion-09.pdf`. Enlaza `docs/contrato.pdf` y las peticiones existentes, sin copiarlas a otra colección. Comprueba que una persona que llegue al README pueda localizar producto, versión y forma de probarlo.
+Anota los dos entornos usados y el SHA del backend desplegado en las comprobaciones de la sesión. Enlaza la descripción del contrato de la API y las peticiones existentes, sin copiarlas a otra colección. Comprueba que una persona que llegue al README pueda localizar producto, versión y forma de probarlo.
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 9.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-09.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-17.pdf` y `sesion-18.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
+**Al terminar la sesión:** La API publicada está contrastada con la colección: rutas, estados y datos coinciden con el contrato, y las diferencias encontradas están identificadas. Explica por qué terminar un despliegue no demuestra por sí solo que el producto funciona.
 
-Explica una diferencia entre «el despliegue terminó» y «la versión publicada cumple el contrato». Entrega el repositorio y commit, con enlaces a la PR y las comprobaciones. En la próxima sesión el CI incorporará la configuración que necesita la persistencia.
+## Sesión 10 · Preparar la transición a persistencia
 
-## Sesión 10 · Preparar el CI de la versión persistente
+**Antes de empezar.** La API aún utiliza memoria. Hoy prepararás los casos y las tareas que permitirán comprobar su transición a PostgreSQL.
 
-**Punto de partida compartido.** Semana lectiva 10: sitúa este taller después de las sesiones 19–20 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-10). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+### Se explica
 
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
+
+La API ya está publicada y su contrato está comprobado. En Servidor todavía trabaja en memoria: los datos se pierden al reiniciar. Antes de incorporar PostgreSQL necesitamos una referencia del comportamiento actual y un plan para verificar que el cambio conserva las operaciones del producto.
+
+Una transición tiene un punto de partida, un cambio y una comprobación posterior. Preparar sus casos ahora permite detectar después si un fallo procede del contrato, de la configuración o del almacenamiento.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · trabajo guiado</p>
+
+#### Bloque A · Comprobar la versión actual
+
+Arranca la API publicada y repite alta, listado, detalle, modificación y borrado con la colección existente. Anota para cada operación el estado HTTP y el resultado esperado. Identifica el commit desplegado y comprueba que coincide con el código revisado.
+
+#### Bloque B · Observar el límite de la memoria
+
+Crea un dato ficticio en local, reinicia la aplicación y vuelve a consultarlo. Explica por qué desaparece. Escribe el resultado que esperarás cuando se incorpore persistencia: el dato debe seguir disponible tras un reinicio, sin volver a crearlo.
+
+#### Bloque C · Preparar los casos de transición
+
+Añade casos de identificador inexistente, datos inválidos y relación entre dos recursos del dominio. Separa las reglas que ya puedes ejecutar de las comprobaciones de persistencia pendientes. Conserva la colección actual como referencia del contrato; todavía no añadas configuración JPA a la aplicación.
+
+#### Bloque D · Organizar el cambio
+
+En el tablero prepara las tareas de configurar el entorno de pruebas, conectar la base de datos y verificar los datos tras reiniciar. Marca qué tarea depende de la implementación de Servidor. Añade criterios de aceptación observables y revisa con tu pareja que ninguna tarjeta dé por realizado un cambio futuro.
+
+#### Bloque E · Ensayar la revisión
+
+Tu pareja ejecuta dos casos de la colección sin pedirte instrucciones adicionales. Corrige los datos o pasos ambiguos y comprueba que las tareas pendientes indican cómo se reconocerá su finalización. Deja la versión publicada funcionando como referencia.
+
+### Cierre
+
+<p class="stage">15 minutos · comprobación del resultado</p>
+
+**Al terminar la sesión:** el contrato actual está comprobado, has observado la pérdida de datos al reiniciar y tienes preparados los casos y las tareas para verificar la futura persistencia. Debes poder distinguir lo que funciona hoy de lo que se comprobará al incorporar PostgreSQL.
+
+## Sesión 11 · Preparar el CI de la versión persistente
+
+**Antes de empezar.** En Servidor ya has conectado PostgreSQL y trabajado el acceso a los datos. Hoy prepararás una base de pruebas aislada para ejecutar esa versión en CI.
 
 ### Se explica
 
@@ -495,20 +527,17 @@ El ejemplo está indentado para pegarlo dentro del job. `create-drop` se permite
 
 #### Bloque D · Conservar las evidencias
 
-En `docs/intermodular/sesion-10.pdf` enlaza la ejecución correcta y el fallo controlado. Documenta por qué la contraseña del contenedor de pruebas es ficticia y dónde se configura la de producción. La siguiente sesión prepara la base pública y comprobará que sus datos sobreviven al reinicio.
+En las comprobaciones de la sesión enlaza la ejecución correcta y el fallo controlado. Documenta por qué la contraseña del contenedor de pruebas es ficticia y dónde se configura la de producción. La siguiente sesión prepara la base pública y comprobará que sus datos sobreviven al reinicio.
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 10.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-10.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-19.pdf` y `sesion-20.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
+**Al terminar la sesión:** El CI prepara una base aislada, ejecuta las pruebas existentes y permite localizar su resultado. Explica qué recursos crea el job y cómo distingues pruebas superadas de pruebas no ejecutadas.
 
-Entrega repositorio, commit y PR. Explica qué crea el job, qué elimina al terminar y qué evidencia distingue «los tests pasaron» de «no se ejecutó ningún test».
+## Sesión 12 · La base de datos en producción
 
-## Sesión 11 · La base de datos en producción
-
-**Punto de partida compartido.** Semana lectiva 11: sitúa este taller después de las sesiones 21–22 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-11). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
+**Antes de empezar.** La API ya trabaja con PostgreSQL y relaciones entre entidades; su entorno de pruebas está preparado en CI. Hoy conectarás la versión publicada a una base de datos persistente.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -533,7 +562,7 @@ Distinguimos desarrollo, prueba/CI y producción. Cada uno tiene su propia base 
 
 #### Comprobar la oferta antes de crear
 
-La oferta de Azure for Students tiene requisitos de elegibilidad y límites por servicio. La página oficial incluye una cantidad gratuita de PostgreSQL durante un periodo limitado para cuentas elegibles; no garantiza que toda cuenta del alumnado tenga activada esa oferta. Revisad suscripción, región, tamaño, almacenamiento y coste estimado con el docente. Si no encaja, utilizad el recurso de aula acordado: no es necesario contratar un plan para superar la sesión. [Condiciones y servicios de Azure for Students](https://azure.microsoft.com/en-us/free/students/).
+La oferta de Azure for Students tiene requisitos de elegibilidad y límites por servicio. La página oficial incluye una cantidad gratuita de PostgreSQL durante un periodo limitado para cuentas elegibles; no garantiza que toda cuenta del alumnado tenga activada esa oferta. Revisad suscripción, región, tamaño, almacenamiento y coste estimado. Si no encaja, utilizad el recurso de aula acordado: no es necesario contratar un plan para superar la sesión. [Condiciones y servicios de Azure for Students](https://azure.microsoft.com/en-us/free/students/).
 
 #### Configuración y esquema
 
@@ -564,7 +593,7 @@ En **portal.azure.com**, buscad `Azure Database for PostgreSQL` y elegid **Servi
   <p>Si el proceso no dice <strong>B1ms</strong>, paradlo. Es el tamaño de referencia de esta práctica; comprobad que está cubierto por vuestra oferta antes de crear el recurso, y un servidor de base de datos encendido gasta esté o no atendiendo peticiones.</p>
 </div>
 
-**La red.** En la pestaña de conectividad, acceso **público**, y permitid las direcciones de salida del App Service y la IP del aula que necesite acceso. Revisad con el docente la conectividad elegida; no asumáis que abrir el acceso a todos los servicios de Azure limita las conexiones a vuestra suscripción.
+**La red.** En la pestaña de conectividad, acceso **público**, y permitid las direcciones de salida del App Service y la IP del aula que necesite acceso. Revisad la conectividad elegida; no asumáis que abrir el acceso a todos los servicios de Azure limita las conexiones a vuestra suscripción.
 
 **La base de datos.** Cuando el servidor exista, cread dentro una base de datos con el nombre de vuestro proyecto. Un servidor puede contener varias; la aplicación se conecta a una.
 
@@ -597,7 +626,7 @@ pg_dump --host=localhost --port=5432 --username=postgres --schema-only --no-owne
 
 El comando pide la contraseña si la conexión lo necesita; no la escribas en el script. El archivo contiene estructura, no una copia de tus registros. Revisa nombres y restricciones en una PR y enlaza el commit que lo produjo.
 
-2. Prueba el script en una base vacía de ensayo. No lo ejecutes sobre la base pública si ya contiene tablas. Para la primera instalación pública, el docente revisa el destino vacío y se aplica el script mediante el cliente PostgreSQL conectado con TLS.
+2. Prueba el script en una base vacía de ensayo. No lo ejecutes sobre la base pública si ya contiene tablas. Para la primera instalación pública, comprueba que el destino esté vacío y aplica el script mediante el cliente PostgreSQL conectado con TLS.
 3. En las variables del App Service configura `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` y `SPRING_SQL_INIT_MODE=never`. Conserva URL, usuario y contraseña de su propio entorno. No copies create-drop de CI.
 4. Arranca el backend y comprueba que valida el esquema. Si falta una columna, revisa la versión de script y JAR; no cambies validate por update para ocultar la discrepancia.
 5. Carga datos ficticios mediante la colección. En las siguientes semanas los cambios de relaciones de Servidor 23–26 requieren scripts incrementales revisados y una prueba sobre copia de datos; no se vuelve a aplicar el esquema completo.
@@ -631,18 +660,17 @@ La comprobación demuestra que ese registro sobrevive al reinicio del backend. C
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Servidor creado, conexión por variables de entorno y datos que sobreviven a un reinicio.</span></div>
   <div><strong>Si lo tenéis</strong><span>El fichero de ejemplo en el repositorio, con los nombres de las variables y ningún valor real.</span></div>
-  <div><strong>Reto</strong><span>Comprobad que los tests de repositorio de Servidor 22 pasan en la base aislada configurada en Intermodular 10.</span></div>
+  <div><strong>Reto</strong><span>Comprobad que los tests de repositorio de Servidor 22 pasan en la base aislada configurada en Intermodular 11.</span></div>
 </div>
 
-<p>El servicio PostgreSQL del CI se configuró en Intermodular 10. Reutilizad ese job y verificad ahora que ejecuta los tests de repositorio de Servidor 22.</p>
+<p>El servicio PostgreSQL del CI se configuró en Intermodular 11. Reutilizad ese job y verificad ahora que ejecuta los tests de repositorio de Servidor 22.</p>
 
 ---
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación y entrega</p>
+<p class="stage">15 minutos · comprobación del resultado</p>
 
-**Entrega de Intermodular 11.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-11.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-21.pdf` y `sesion-22.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
@@ -665,157 +693,11 @@ La comprobación demuestra que ese registro sobrevive al reinicio del backend. C
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 12</p>
+  <p class="checkpoint-label">Antes de la sesión 13</p>
   <ul class="checklist">
     <li>Los datos de vuestra API sobreviven a un reinicio, comprobado.</li>
     <li>Ninguna credencial en ninguno de vuestros dos repositorios, revisado mirando el historial y no solo los ficheros de hoy.</li>
     <li>Traéis anotado qué pasaría si mañana cambiarais el nombre de un campo en la API.</li>
-  </ul>
-</div>
-
-## Sesión 12 · Dos piezas, una entrega
-
-**Punto de partida compartido.** Semana lectiva 12: sitúa este taller después de las sesiones 23–24 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-12). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
-
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
-  <ol>
-    <li>Cambiáis el nombre de un campo en la API y desplegáis. ¿Qué le pasa al portfolio?</li>
-    <li>¿En qué orden desplegaríais los dos si el cambio afecta a los dos?</li>
-    <li>¿Qué tendría que decir el README de la API que no dice el del portfolio?</li>
-  </ol>
-</div>
-
----
-
-### Se explica
-
-<p class="stage stage--brief">25 minutos · explicación y demostración</p>
-
-#### El contrato es lo que os une, y nadie lo vigila
-
-Entre vuestras dos piezas hay un acuerdo: qué rutas existen, qué reciben y qué devuelven. Ninguna herramienta comprueba que se cumpla. El portfolio no se entera de que la API ha cambiado hasta que un usuario abre la página y no ve nada.
-
-<figure class="diagram">
-  <figcaption>Lo que pasa cuando una pieza va por delante</figcaption>
-  <ol class="flow">
-    <li><span class="flow-role">Cambio</span>Renombráis un campo en la API porque el nombre nuevo es mejor.</li>
-    <li><span class="flow-role">Despliegue</span>El pipeline de la API está en verde y publica. Todo correcto por su lado.</li>
-    <li><span class="flow-role">Silencio</span>El portfolio sigue pidiendo el campo viejo. No falla ningún check: cada repositorio se compruebe a sí mismo.</li>
-    <li><span class="flow-role">Descubrimiento</span>Alguien abre la web y ve la lista vacía. Ese alguien no deberíais ser el tribunal en diciembre.</li>
-  </ol>
-</figure>
-
-De ahí sale una regla práctica que se usa en cualquier equipo con frontend y backend separados: **primero se despliega lo que añade, después lo que consume**. La API acepta el campo nuevo *y* el viejo durante un tiempo, el portfolio pasa a usar el nuevo, y solo entonces se retira el viejo. Se llama cambio compatible, y es la diferencia entre poder desplegar cuando queráis y tener que desplegar las dos cosas al mismo segundo.
-
-#### Dos repositorios, dos versiones, un producto
-
-Cada repositorio lleva su propio número de versión: no hay una versión conjunta. Lo que sí hay es la obligación de que **cada uno diga con quién habla**, y ahí es donde los dos README se cruzan: el del portfolio enlaza a la API que consume, el de la API enlaza al portfolio que la usa y a su documentación.
-
----
-
-### Se trabaja
-
-<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
-
-#### Bloque A · Provocar la ruptura
-
-1. Conserva una exportación de la colección con el contrato actual. Trabaja en una rama o un entorno de pruebas y renombra temporalmente un campo de respuesta; no publiques una ruptura deliberada en la URL compartida.
-2. Ejecuta la petición y su aserción sobre el campo original. Comprueba qué test detecta el cambio y qué check no lo detectaría. El consumidor de este trimestre es la colección de Intermodular 9; el cliente completo se integra en 17.
-3. Restaura el campo y ejecuta de nuevo. Registra el fallo y la corrección en la misma issue, indicando la versión de prueba.
-4. Escribe cómo coordinarías un cambio real: conservar compatibilidad mientras se actualiza el consumidor y retirar el contrato anterior solo después de comprobar sus usos. Servidor 32 explicará su implementación mediante versionado.
-
-#### Bloque B · El README de la API
-
-<p class="stage stage--solo">Individual, por el circuito</p>
-
-No es el mismo que el del portfolio, porque el lector es otro: alguien que quiere **usar** vuestra API o entender cómo está desplegada.
-
-| Apartado | Qué contiene |
-| -------- | ------------ |
-| Título y una frase | Qué gestiona esta API |
-| URL pública | La dirección base, y la ruta de estado si la hicisteis |
-| Endpoints | Tabla con método, ruta y para qué sirve. Solo eso: no es documentación completa |
-| Cómo se ejecuta en local | Los comandos exactos, del clonado al arranque |
-| Cómo se despliega | Qué lo dispara, adónde va y en qué plan |
-| Persistencia y limitaciones conocidas | Estado real de la versión: memoria en el primer despliegue o PostgreSQL cuando se incorpora en Servidor; documentad también las limitaciones del alojamiento |
-| Portfolio que la consume | Enlace |
-
-<div class="rule">
-  <p class="rule-label">Las limitaciones conocidas suman, no restan</p>
-  <p>El README describe la versión publicada. Si todavía guarda en memoria, se indica; al incorporar PostgreSQL se actualiza y se comprueba la persistencia. Mantener una limitación que ya no existe desinforma igual que ocultar una real. La entrega del primer trimestre conserva los datos al reiniciar el backend.</p>
-</div>
-
-#### Bloque C · Publicar las dos versiones
-
-1. Comprueba qué commit está publicado y qué criterios del primer trimestre ya supera. Si todavía se incorporarán relaciones o transacciones de Servidor 25–26, etiqueta una versión intermedia, por ejemplo `v0.1.0`, y describe lo pendiente.
-2. Enlaza esa release desde la ficha del portfolio, conservando su versión propia. No presupongas que el portfolio está en 1.0.1: consulta sus etiquetas y aplica el cambio de versión que corresponda.
-3. En `docs/entrega-t1.pdf` registra URL y SHA del backend, versión del portfolio y ejecución de CI. Este documento se actualizará en las sesiones 13–14 con la versión completa que también se defiende en Servidor 27–28.
-
-#### Bloque D · El ensayo de la demostración
-
-<p class="stage stage--guided">Por parejas, cronómetro en mano</p>
-
-Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres minutos: qué es, qué hace, cómo llega el código a producción y qué limitaciones tiene. Después al revés.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Lo que hay que haber previsto antes de enseñar nada</p>
-  <ul class="checklist">
-    <li>Abrir la API unos minutos antes, para que no la pillen dormida.</li>
-    <li>Tener datos de ejemplo cargados: una lista vacía no demuestra nada.</li>
-    <li>Explicar dónde guarda los datos la versión publicada y comprobarlo reiniciando el backend: la entrega del trimestre debe conservarlos en PostgreSQL.</li>
-    <li>Tener a mano las dos pestañas de Actions, por si os piden ver el pipeline.</li>
-  </ul>
-</div>
-
----
-
-### Cierre
-
-<p class="stage">15 minutos · comprobación y entrega</p>
-
-**Entrega de Intermodular 12.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-12.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-23.pdf` y `sesion-24.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
-  <ul class="checklist">
-    <li>Repositorio de la API, público, con su ruleset y su CI que compila y ejecuta tests.</li>
-    <li>API desplegada en App Service, respondiendo desde fuera de la red del centro.</li>
-    <li>Portfolio publicado leyendo y escribiendo datos contra esa API, con los tres estados.</li>
-    <li>CORS permitiendo exactamente vuestro origen, configurado por variable de entorno.</li>
-    <li>Los dos README, con las limitaciones conocidas escritas.</li>
-    <li>Dos releases publicadas, y las notas del portfolio diciendo con qué versión de la API se probó.</li>
-    <li>Al cerrar el primer trimestre, PostgreSQL conectado en producción, datos conservados tras reiniciar y el mismo commit identificado para las evaluaciones de Servidor e Intermodular.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>¿Por qué ningún check detecta que la API y el portfolio han dejado de entenderse?</li>
-    <li>¿En qué orden se despliega un cambio que afecta a las dos piezas?</li>
-    <li>¿Qué es un cambio compatible?</li>
-    <li>¿Por qué las limitaciones conocidas van escritas en el README?</li>
-    <li>Vuestra API lleva una hora sin usarse y tenéis que enseñarla en dos minutos. ¿Qué hacéis?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque cada repositorio se comprueba solo a sí mismo, y el acuerdo entre los dos no vive en ninguno.</p>
-  <p>2 · Primero lo que añade —la API—, después lo que consume —el portfolio—, y al final se retira lo viejo.</p>
-  <p>3 · Uno que se puede desplegar sin romper a quien todavía usa lo anterior.</p>
-  <p>4 · Porque demuestran que sabéis dónde está el límite de lo que habéis hecho, y evitan que lo descubra otro delante de vosotros.</p>
-  <p>5 · Abrirla ya, para que despierte antes de que la vea nadie.</p>
-</details>
-
-<div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 13</p>
-  <ul class="checklist">
-    <li>Las dos piezas publicadas, enlazadas entre sí desde sus README.</li>
-    <li>Una revisión vuestra en cada repositorio de vuestra pareja: el del portfolio y el de la API.</li>
-    <li>Traéis observaciones sobre el producto actual: en la sesión 13 se prioriza una mejora de ese mismo producto.</li>
   </ul>
 </div>
 

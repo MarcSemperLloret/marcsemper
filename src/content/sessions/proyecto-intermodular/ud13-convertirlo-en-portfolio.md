@@ -187,10 +187,10 @@ El mismo proyecto se cuenta con distinta longitud según dónde:
   <p>Es un proyecto de equipo, y presentarlo como propio en singular es una mentira que se descubre en la primera entrevista. Decid que fue en equipo y qué parte llevasteis. Eso no resta: haber trabajado con otras personas y saber decir qué hizo cada una es exactamente lo que se busca en un perfil junior.</p>
 </div>
 
-### Producto de la unidad
+### Trabajo esperado de la unidad
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la unidad</p>
+  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <p>Proyecto preparado para enseñar en portfolio, GitHub, LinkedIn y CV.</p>
   <ul class="checklist">
     <li>README con los nueve apartados, con la URL pública arriba del todo.</li>

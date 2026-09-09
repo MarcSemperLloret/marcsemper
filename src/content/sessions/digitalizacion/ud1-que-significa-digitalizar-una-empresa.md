@@ -16,7 +16,7 @@ outcomes:
   - "Justificar por qué una tecnología hace falta, o por qué no."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
-  - "Carpeta o documento de actividad compartido con el docente."
+  - "Materiales del caso y herramientas indicadas en la unidad."
 priorKnowledge:
   - "No se requieren conocimientos previos de estos contenidos. La guía explica cómo abrir y guardar el trabajo; no se necesita ningún otro módulo."
 ---
@@ -25,13 +25,13 @@ priorKnowledge:
 
 ## Cómo trabajar esta unidad
 
-Son 3 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+Son 3 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
-**Rediseño de Reparaciones Rápidas.** Guarda el trabajo en `digitalizacion/ud1/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+**Rediseño de Reparaciones Rápidas.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
 Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
@@ -290,7 +290,7 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Abre la [ficha de Reparaciones Rápidas](/teaching/transversales/casos.pdf) y crea un documento «Actividad UD1» en Word, LibreOffice o un editor en línea. Escribe los nombres del equipo y el objetivo: mejorar la gestión de reparaciones.
+1. Abre la [ficha de Reparaciones Rápidas](/teaching/transversales/casos.pdf). Identifica el objetivo del trabajo: mejorar la gestión de reparaciones.
 2. Lee la entrada, asignación y cierre de una reparación. Dibuja una caja por acción y une las cajas con flechas; escribe encima quién realiza cada acción. No añadas todavía aplicaciones nuevas.
 3. Marca tres dificultades que aparezcan en la ficha. Para cada una anota el hecho, a quién afecta y su consecuencia. Ejemplo: las fotos quedan en el móvil del técnico; administración no puede consultarlas al preparar la factura.
 4. Elige un problema y conviértelo en una necesidad sin nombrar marcas: «la información de una reparación debe estar disponible para quien la tramita». Distingue el dato del caso de una suposición vuestra.
@@ -298,11 +298,12 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Debe quedar un proceso actual comprensible y tres problemas respaldados por el caso. Explica por qué digitalizar un papel no garantiza resolverlos.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Rediseña una empresa
 
@@ -328,11 +329,12 @@ Por ejemplo, un formulario de recepción puede guardar una reparación en un reg
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 El documento contiene proceso actual, proceso futuro, arquitectura y una alternativa descartada. Cada tecnología tiene una necesidad concreta asociada.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Puesta en común, debate y defensa de propuestas
 
@@ -358,11 +360,12 @@ Una observación útil señala una parte concreta y propone cómo comprobarla. �
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobar y guardar el avance</p>
+<p class="stage">5 minutos · comprobar el resultado</p>
+
+**Al terminar la sesión:**
 
 Se evalúa el rediseño de la UD1, actualizado con feedback. La exposición explica la actividad; no requiere otra presentación ni un examen adicional.
 
-**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
