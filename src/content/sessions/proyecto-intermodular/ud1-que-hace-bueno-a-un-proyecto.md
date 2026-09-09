@@ -7,7 +7,7 @@ lang: "es"
 summary: "Salir de la primera sesión con tres candidatos de problema propios, fichados y contrastados, listos para decidir en la sesión 2."
 duration: "3 horas · 30 min de explicación + 2 h 20 de taller"
 modality: "Taller · el 80 % de la sesión es trabajo del alumnado"
-deliverable: "candidatos.md en el repositorio, con tres problemas fichados."
+deliverable: "candidatos.pdf en el repositorio, con tres problemas fichados."
 date: "2026-09-07"
 outcomes:
   - "Explicar qué evalúa este módulo y qué evalúa Desarrollo Web en Entorno Servidor sobre el mismo producto."
@@ -21,6 +21,8 @@ draft: true
 priorKnowledge:
   []
 ---
+
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
 
 <p class="lead">Objetivo: terminar la sesión con tres problemas propios sobre la mesa, no con una idea a la que ya os habéis enamorado.</p>
 
@@ -39,7 +41,7 @@ priorKnowledge:
     <li><strong>1:05 – 1:35 · Criba:</strong> cuatro preguntas que matan candidatos. De doce quedan cinco.</li>
     <li><strong>1:35 – 2:15 · Ficha:</strong> tres candidatos escritos en serio, con el suelo técnico comprobado.</li>
     <li><strong>2:15 – 2:40 · Contraste:</strong> otra pareja intenta tumbar vuestros tres. Vosotros los suyos.</li>
-    <li><strong>2:40 – 2:50 · Evidencia:</strong> commit de <code>candidatos.md</code> en el repositorio.</li>
+    <li><strong>2:40 – 2:50 · Evidencia:</strong> commit de <code>candidatos.pdf</code> en el repositorio.</li>
     <li><strong>2:50 – 3:00 · Cierre.</strong></li>
   </ol>
 </div>
@@ -288,7 +290,7 @@ Algo que existe fuera de vuestra cabeza y que otra persona puede consultar sin p
 
 <div class="checkpoint">
   <p class="checkpoint-label">Producto de la sesión</p>
-  <p><code>candidatos.md</code>, commiteado en el repositorio del equipo antes de salir del aula.</p>
+  <p><code>candidatos.pdf</code>, commiteado en el repositorio del equipo antes de salir del aula.</p>
   <ul class="checklist">
     <li>Los tres candidatos con la ficha completa, incluidas las casillas donde pone «no lo sé».</li>
     <li>La lista de los descartados, con la pregunta que los mató. Una línea cada uno.</li>
@@ -324,7 +326,7 @@ Algo que existe fuera de vuestra cabeza y que otra persona puede consultar sin p
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Antes de la sesión 2</p>
   <ul class="checklist">
-    <li>El fichero <code>candidatos.md</code> está en el repositorio y los dos miembros del equipo pueden abrirlo.</li>
+    <li>El fichero <code>candidatos.pdf</code> está en el repositorio y los dos miembros del equipo pueden abrirlo.</li>
     <li>Habéis hablado con al menos una persona que sufre uno de los tres problemas, y traéis anotado qué os dijo.</li>
     <li>Traéis una foto, una captura o una descripción de cómo lo resuelven hoy: la libreta, el Excel, el grupo de mensajería.</li>
     <li>Habéis leído las dos rúbricas de defensa publicadas en Aules.</li>

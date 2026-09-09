@@ -6,162 +6,84 @@ order: 2
 lang: "es"
 summary: "Cuando las aplicaciones tienen que hablar entre ellas. API, polling, webhook, eventos, colas y automatización: qué problema resuelve cada mecanismo y cuándo tiene sentido usarlo."
 duration: "3 horas · 3 sesiones"
-modality: "Parejas"
-deliverable: "Diseño de un flujo de integración y automatización para una empresa."
-date: "2026-08-28"
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Automatización diseñada y simulada. Una actividad acumulativa por unidad, con evidencias y aportación individual."
+date: "2026-09-09"
 outcomes:
   - "Explicar qué es una API y qué no es una API."
   - "Elegir entre polling y webhook con un argumento, no por costumbre."
   - "Identificar el evento que dispara una automatización."
   - "Decidir qué NO conviene automatizar."
 requirements:
-  - "Herramienta de diagramas, o papel y rotulador."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
 priorKnowledge:
-  - "El camino problema → necesidad → tecnología (UD1)."
+  - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 ---
+
+<p class="lead">Automatización diseñada y simulada. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
+
+## Cómo trabajar esta unidad
+
+Son 3 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Automatización diseñada y simulada.** Guarda el trabajo en `digitalizacion/ud2/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterio</th>
+      <th class="align-right">Puntos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Identificación adecuada de tareas automatizables</td>
+      <td class="align-right">2</td>
+    </tr>
+    <tr>
+      <td>Comprensión de eventos, APIs, polling y webhooks</td>
+      <td class="align-right">2</td>
+    </tr>
+    <tr>
+      <td>Coherencia del flujo diseñado</td>
+      <td class="align-right">3</td>
+    </tr>
+    <tr>
+      <td>Tratamiento razonable de posibles fallos</td>
+      <td class="align-right">2</td>
+    </tr>
+    <tr>
+      <td>Claridad de la propuesta</td>
+      <td class="align-right">1</td>
+    </tr>
+  </tbody>
+</table>
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · Cómo se comunican las aplicaciones
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La diferencia entre APIs, polling, webhooks, colas de mensajes y flujos de automatización.</li>
-    <li><strong>2. Haz:</strong> Identifica los eventos disparadores y compara las estrategias de sincronización síncrona vs asíncrona.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Automatización diseñada y simulada», sesión 1 de 3. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### ¿Qué vamos a aprender?
+### Se explica
 
-Una aplicación real rara vez funciona completamente sola.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Una tienda online puede necesitar comunicarse con:
+Una **API** permite que una aplicación solicite datos o acciones a otra siguiendo un acuerdo. La petición indica qué se necesita; la respuesta dice qué ocurrió y puede aportar datos. Un **evento** comunica que algo ya ha pasado: «reparación terminada». No son sinónimos: un evento puede provocar que otra aplicación llame a una API.
 
-* una plataforma de pago;
-* una empresa de transporte;
-* un servicio de correo;
-* una base de datos;
-* un sistema de facturación;
-* una aplicación móvil;
-* un servicio de inteligencia artificial.
+En Reparaciones Rápidas, terminar una reparación puede iniciar la preparación de su factura. Para conectar ambas tareas hay que saber qué datos se necesitan y qué aplicación los conoce. Hoy representaremos ese intercambio sobre papel o en un diagrama; no hace falta programar el backend.
 
-Por tanto, una parte importante del desarrollo moderno consiste en conseguir que **sistemas diferentes intercambien información y reaccionen automáticamente a determinados acontecimientos**.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-En esta actividad aprenderemos a distinguir:
-
-* integración;
-* API;
-* polling;
-* webhook;
-* evento;
-* automatización;
-* cola de mensajes;
-* herramientas low-code/no-code.
-
-No aprenderemos a programar cada una de estas tecnologías.
-
-El objetivo es entender:
-
-> **qué problema resuelve cada mecanismo y cuándo tiene sentido utilizarlo.**
-
----
-
-### Una aplicación no vive sola
-
-Imagina una tienda online.
-
-Cuando un cliente compra un producto pueden ocurrir muchas cosas:
-
-<figure class="diagram">
-  <figcaption>Lo que desencadena un solo pedido</figcaption>
-  <ol class="flow">
-    <li>Cliente realiza pedido</li>
-    <li>Se registra el pedido</li>
-    <li>Se realiza el pago</li>
-    <li>Se actualiza el stock</li>
-    <li>Se prepara el envío</li>
-    <li>Se genera una factura</li>
-    <li>Se envía un correo</li>
-  </ol>
-</figure>
-
-Sería posible que una persona hiciera manualmente todas estas tareas.
-
-Pero cuanto más crece una empresa:
-
-* más pedidos recibe;
-* más aplicaciones utiliza;
-* más información debe mover;
-* más errores puede cometer;
-* más tiempo pierde realizando tareas repetitivas.
-
-Por eso aparecen dos conceptos fundamentales:
-
-#### Integración
-
-Conseguir que **dos o más sistemas puedan intercambiar información**.
-
-#### Automatización
-
-Conseguir que **una tarea pueda realizarse sin intervención manual cada vez que ocurre**.
-
-Son conceptos relacionados, pero no son exactamente lo mismo.
-
----
-
-### ¿Qué significa integrar aplicaciones?
-
-Supongamos que tenemos:
-
-<p class="single-node">Tienda online</p>
-
-y una empresa de transporte:
-
-<p class="single-node">Empresa de transporte</p>
-
-Cuando alguien compra un producto, necesitamos enviar:
-
-* nombre;
-* dirección;
-* teléfono;
-* información del paquete.
-
-Una opción sería que un trabajador copiara manualmente los datos.
-
-<figure class="diagram">
-  <figcaption>Antes · el trasvase manual</figcaption>
-  <ol class="flow flow--before">
-    <li>Tienda</li>
-    <li>Una persona copia los datos</li>
-    <li>Web del transportista</li>
-  </ol>
-</figure>
-
-Funciona.
-
-Pero tiene varios problemas:
-
-* consume tiempo;
-* pueden producirse errores;
-* hay datos duplicados;
-* no escala bien.
-
-Una integración permitiría algo como:
-
-<figure class="diagram">
-  <figcaption>Después · los datos pasan solos</figcaption>
-  <ol class="flow flow--row">
-    <li>Tienda</li>
-    <li><strong>API</strong></li>
-    <li>Transportista</li>
-  </ol>
-</figure>
-
-Los datos pasan automáticamente de una aplicación a otra.
-
----
-
-### API: una puerta para comunicarse con una aplicación
+#### API: una puerta para comunicarse con una aplicación
 
 Ya conocéis las APIs desde el punto de vista de programación.
 
@@ -203,40 +125,7 @@ Solo necesitamos conocer:
 * qué datos debemos enviar;
 * qué respuesta obtendremos.
 
----
-
-### Pero aparece un problema
-
-Imaginemos ahora una empresa de reparaciones.
-
-Queremos avisar al cliente cuando su ordenador esté reparado.
-
-Tenemos dos posibilidades.
-
-#### Opción A
-
-Nuestra aplicación pregunta continuamente:
-
-> ¿Ya está reparado?
-
-<figure class="diagram">
-  <figcaption>Opción A · preguntar una y otra vez</figcaption>
-  <ol class="flow">
-    <li>¿Está reparado? <span class="tag tag--no">No</span></li>
-    <li>10 segundos después, ¿está reparado? <span class="tag tag--no">No</span></li>
-    <li>10 segundos después, ¿está reparado? <span class="tag tag--yes">Sí</span></li>
-  </ol>
-</figure>
-
-Esto se denomina:
-
-<p class="term">Polling</p>
-
-La aplicación pregunta periódicamente si ha ocurrido algo.
-
----
-
-### Polling
+#### Polling
 
 El funcionamiento puede representarse así:
 
@@ -277,9 +166,7 @@ Imaginemos que preguntamos cada minuto y el estado cambia una vez al día.
 
 Estamos realizando miles de preguntas innecesarias.
 
----
-
-### Otra posibilidad: webhook
+#### Otra posibilidad: webhook
 
 En lugar de preguntar continuamente:
 
@@ -331,17 +218,15 @@ Por ejemplo:
 
 El servicio de pago avisa automáticamente a nuestra aplicación.
 
----
-
-### Polling vs webhook
+#### Polling vs webhook
 
 Una forma sencilla de recordarlo:
 
-#### Polling
+##### Polling
 
 > Yo te pregunto periódicamente si ha ocurrido algo.
 
-#### Webhook
+##### Webhook
 
 > Tú me avisas cuando ocurra.
 
@@ -359,9 +244,7 @@ Ninguno es siempre mejor.
 
 Depende del problema.
 
----
-
-### Los eventos
+#### Los eventos
 
 Muchas aplicaciones modernas funcionan alrededor de acontecimientos.
 
@@ -431,204 +314,7 @@ A partir de ese evento podrían ejecutarse varias acciones:
 
 Una única acción puede desencadenar muchas otras.
 
----
-
-### Automatización
-
-Supongamos que cada vez que termina una reparación debemos:
-
-1. cambiar el estado a TERMINADA;
-2. avisar al cliente;
-3. generar una factura;
-4. registrar la fecha;
-5. solicitar una valoración dos días después.
-
-Hacerlo manualmente es posible.
-
-Pero son tareas:
-
-* repetitivas;
-* predecibles;
-* basadas en reglas.
-
-Por tanto son buenas candidatas para automatizarse.
-
-<figure class="diagram">
-  <figcaption>El flujo automatizado</figcaption>
-  <ol class="flow">
-    <li>Reparación terminada</li>
-    <li>Cambiar estado</li>
-    <li>Generar factura</li>
-    <li>Enviar notificación</li>
-    <li>Esperar 2 días</li>
-    <li>Solicitar valoración</li>
-  </ol>
-</figure>
-
----
-
-### ¿Todo debería automatizarse?
-
-No.
-
-Antes de automatizar una tarea debemos preguntarnos:
-
-##### ¿Se repite con frecuencia?
-
-##### ¿Sigue reglas claras?
-
-##### ¿Consume tiempo?
-
-##### ¿Es fácil cometer errores?
-
-##### ¿Qué ocurre si la automatización falla?
-
-Por ejemplo:
-
-#### Buena candidata
-
-> Enviar automáticamente un email cuando un pedido sale del almacén.
-
-#### Mala candidata
-
-> Decidir automáticamente si despedir a un trabajador.
-
-La segunda implica:
-
-* consecuencias importantes;
-* contexto;
-* posibles errores;
-* aspectos legales y éticos.
-
-Por tanto:
-
-> **automatizar algo porque técnicamente podemos hacerlo no significa que debamos hacerlo.**
-
----
-
-### ¿Qué pasa cuando intervienen muchos sistemas?
-
-Veamos un pedido online.
-
-<figure class="diagram">
-  <figcaption>El ecosistema de un pedido</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 584" role="img" aria-labelledby="eco-title eco-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="eco-title">Sistemas implicados en un pedido online</title>
-    <desc id="eco-desc">Un pedido entra por la tienda online, que se comunica con el pago, el stock y la facturación. Del pago sale la confirmación, el transporte, el seguimiento y el aviso al cliente. De la facturación sale la factura.</desc>
-    <defs>
-      <marker id="eco-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 56 L 360 86" marker-end="url(#eco-arrow)" />
-      <path d="M 360 136 L 360 172" />
-      <path d="M 125 172 L 595 172" />
-      <path d="M 125 172 L 125 194" marker-end="url(#eco-arrow)" />
-      <path d="M 360 172 L 360 194" marker-end="url(#eco-arrow)" />
-      <path d="M 595 172 L 595 194" marker-end="url(#eco-arrow)" />
-      <path d="M 125 244 L 125 274" marker-end="url(#eco-arrow)" />
-      <path d="M 125 324 L 125 354" marker-end="url(#eco-arrow)" />
-      <path d="M 125 404 L 125 434" marker-end="url(#eco-arrow)" />
-      <path d="M 125 484 L 125 514" marker-end="url(#eco-arrow)" />
-      <path d="M 595 244 L 595 274" marker-end="url(#eco-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="280" y="12" width="160" height="44" rx="3" />
-      <text x="360" y="34">Pedido</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="92" width="180" height="44" rx="3" />
-      <text x="360" y="114">Tienda online</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="40" y="200" width="170" height="44" rx="3" />
-      <text x="125" y="222">Pago</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="275" y="200" width="170" height="44" rx="3" />
-      <text x="360" y="222">Stock</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="510" y="200" width="170" height="44" rx="3" />
-      <text x="595" y="222">Facturación</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="40" y="280" width="170" height="44" rx="3" />
-      <text x="125" y="302">Confirmación</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="510" y="280" width="170" height="44" rx="3" />
-      <text x="595" y="302">Factura</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="40" y="360" width="170" height="44" rx="3" />
-      <text x="125" y="382">Transporte</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="40" y="440" width="170" height="44" rx="3" />
-      <text x="125" y="462">Seguimiento</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="40" y="520" width="170" height="44" rx="3" />
-      <text x="125" y="542">Cliente</text>
-    </g>
-  </svg>
-</figure>
-
-En este punto ya no tenemos una única aplicación.
-
-Tenemos un **ecosistema de aplicaciones**.
-
-Y pueden ocurrir problemas:
-
-* una API no responde;
-* un servicio tarda demasiado;
-* se pierde una conexión;
-* el mismo mensaje llega dos veces;
-* un sistema está temporalmente apagado.
-
-Por tanto, integrar sistemas no consiste únicamente en:
-
-> «hacer una petición HTTP».
-
-También tenemos que pensar:
-
-> **¿Qué ocurre cuando algo falla?**
-
----
-
-### Un problema real: el sistema de facturación está caído
-
-Supongamos:
-
-<figure class="diagram">
-  <figcaption>El flujo se rompe por la mitad</figcaption>
-  <ol class="flow">
-    <li>Pedido realizado</li>
-    <li>Pago correcto</li>
-    <li>Generar factura</li>
-    <li class="is-error">Error</li>
-  </ol>
-</figure>
-
-¿Qué hacemos?
-
-¿Perdemos la factura?
-
-¿Cancelamos el pedido?
-
-¿Lo intentamos otra vez?
-
-¿Guardamos la tarea para procesarla después?
-
-Una posibilidad es utilizar una:
-
-<p class="term">Cola de mensajes</p>
-
----
-
-### Cola de mensajes
+#### Cola de mensajes
 
 Imagina una cola en un supermercado.
 
@@ -693,79 +379,7 @@ se utilizan para resolver problemas relacionados con este tipo de comunicación.
 
 Lo importante es entender el problema que solucionan.
 
----
-
-### Una arquitectura cada vez más común
-
-Podemos pasar de:
-
-<figure class="diagram">
-  <figcaption>Una conexión directa</figcaption>
-  <ol class="flow flow--row">
-    <li>Aplicación A</li>
-    <li>Aplicación B</li>
-  </ol>
-</figure>
-
-a sistemas como:
-
-<figure class="diagram">
-  <figcaption>Varios sistemas reaccionan al mismo evento</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 366" role="img" aria-labelledby="evt-title evt-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="evt-title">Arquitectura dirigida por eventos</title>
-    <desc id="evt-desc">La creación de un pedido emite un evento al que reaccionan de forma independiente el pago, el stock y las notificaciones. El stock, a su vez, desencadena la factura.</desc>
-    <defs>
-      <marker id="evt-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 56 L 360 86" marker-end="url(#evt-arrow)" />
-      <path d="M 360 136 L 360 172" />
-      <path d="M 125 172 L 595 172" />
-      <path d="M 125 172 L 125 194" marker-end="url(#evt-arrow)" />
-      <path d="M 360 172 L 360 194" marker-end="url(#evt-arrow)" />
-      <path d="M 595 172 L 595 194" marker-end="url(#evt-arrow)" />
-      <path d="M 360 244 L 360 284" marker-end="url(#evt-arrow)" />
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="12" width="180" height="44" rx="3" />
-      <text x="360" y="34">Pedido creado</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="290" y="92" width="140" height="44" rx="3" />
-      <text x="360" y="114">Evento</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="40" y="200" width="170" height="44" rx="3" />
-      <text x="125" y="222">Pago</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="275" y="200" width="170" height="44" rx="3" />
-      <text x="360" y="222">Stock</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="510" y="200" width="170" height="44" rx="3" />
-      <text x="595" y="222">Notificación</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="275" y="290" width="170" height="44" rx="3" />
-      <text x="360" y="312">Factura</text>
-    </g>
-  </svg>
-</figure>
-
-A este tipo de diseños se les suele llamar **arquitecturas dirigidas por eventos**.
-
-No hace falta memorizar el término.
-
-Lo importante es entender la idea:
-
-> Una acción importante ocurre y diferentes sistemas reaccionan a ella.
-
----
-
-### Low-Code y No-Code
+#### Low-Code y No-Code
 
 No todas las integraciones tienen que programarse desde cero.
 
@@ -819,526 +433,88 @@ Cuando necesitamos:
 
 puede ser mejor desarrollar la solución mediante código.
 
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Sabes explicar qué hace una API sin usar la palabra «API».</li>
-    <li>Puedes dibujar polling y webhook de memoria.</li>
-    <li>Sabes para qué sirve una cola de mensajes.</li>
-    <li>Distingues automatizar de integrar.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre webhook y polling?</li>
-    <li>¿Por qué una API no es, por sí sola, una automatización?</li>
-    <li>Pon un ejemplo donde utilizarías una cola.</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · En polling preguntamos cada cierto tiempo si hay novedades; en webhook es el otro sistema el que nos avisa cuando ocurre el evento. Cambia quién lleva la iniciativa.</p>
-  <p>2 · Porque una API solo abre una puerta: alguien tiene que decidir cuándo se cruza y qué se hace después. La automatización es esa decisión, ejecutada sola.</p>
-  <p>3 · Cuando el sistema que recibe puede estar caído o saturado: la cola guarda el mensaje y lo entrega cuando vuelva, en lugar de perderlo.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Abre la ficha de Reparaciones Rápidas y crea el registro de la UD2. Copia únicamente el fragmento de vuestro proceso que empieza cuando un técnico termina una reparación.
+2. Escribe el evento en pasado y enumera sus datos mínimos: identificador de reparación, fecha de cierre y referencia del cliente. Explica por qué cada dato resulta necesario.
+3. Dibuja tres participantes: gestión de reparaciones, facturación y servicio de avisos. Asigna a cada uno una responsabilidad; evita que dos piezas mantengan estados contradictorios sin explicarlo.
+4. Simula un intercambio: una persona prepara una tarjeta con la petición de factura y otra responde «creada» con su identificador. Si falta un dato, devuelve «petición incompleta» e indica cuál.
+5. Registra la petición, la respuesta y una condición que impida continuar. Comprueba que otra pareja entiende quién solicita, quién responde y qué cambia al terminar.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Hay un intercambio completo con datos, respuesta y responsables. Distingue la orden «crear factura» del evento «factura creada».
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Diseña la automatización de una empresa
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo mapear eventos, condiciones y acciones en los procesos de negocio de Reparaciones Rápidas S.L.</li>
-    <li><strong>2. Haz:</strong> Diseña al menos dos flujos automáticos, elige entre polling/webhook y define la gestión de fallos.</li>
-    <li><strong>3. Comprueba:</strong> Verifica que has justificado qué tarea NO conviene automatizar y completa la checklist de entrega.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Automatización diseñada y simulada», sesión 2 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-#### Volvemos a Reparaciones Rápidas S.L.
+### Se explica
 
-La empresa que analizamos en la actividad anterior ya dispone ahora de:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-* página web;
-* aplicación para los trabajadores;
-* base de datos;
-* sistema de facturación;
-* servicio de correo;
-* almacenamiento de fotografías.
+Con **polling**, una aplicación pregunta periódicamente si hay novedades. Con un **webhook**, el sistema que conoce el cambio envía una notificación a una dirección acordada. El webhook puede reducir consultas vacías, pero también puede fallar o llegar repetido. Elegirlo no elimina la necesidad de comprobar el resultado.
 
-Pero todavía realiza muchas tareas manualmente.
+Una **cola** conserva mensajes pendientes para procesarlos después. Si facturación está temporalmente caída, puede guardar la solicitud sin detener toda la reparación. Reintentar exige evitar duplicados: la misma reparación no debe originar dos facturas por recibir dos veces su mensaje. Low-code ofrece piezas configurables; no evita definir estas reglas.
 
----
+### Se trabaja
 
-### Situación actual
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-Cuando llega una reparación:
+1. Retoma el intercambio anterior. Compara dos opciones para conocer el cierre de una reparación: consultar cada cierto tiempo o recibir un aviso. Escribe qué retraso admite el negocio y elige una opción.
+2. Añade al diagrama una zona de pendientes para las solicitudes que facturación no pueda atender. Explica quién vuelve a intentarlo y cómo se sabe que finalmente se resolvió.
+3. Define un identificador estable, por ejemplo `reparacion-42`, que acompañe al mensaje original y a sus reintentos. Escribe qué debe ocurrir si ya existe una factura asociada.
+4. Completa una tabla con situación, acción y resultado: funcionamiento normal, servicio caído, mensaje duplicado y dato incompleto. No trates todos los fallos como «reintentar siempre».
+5. Decide qué parte configurarías con low-code y cuál podría necesitar programación. Justifica con las reglas y las integraciones necesarias, no con el prestigio de una herramienta.
 
-1. el cliente registra la solicitud desde la web;
-2. un trabajador revisa manualmente las solicitudes;
-3. asigna un técnico;
-4. el técnico realiza la reparación;
-5. cuando termina, cambia el estado;
-6. un administrativo consulta cada cierto tiempo las reparaciones terminadas;
-7. prepara la factura;
-8. busca el correo del cliente;
-9. envía manualmente el aviso;
-10. dos días después intenta recordar enviar una encuesta.
+### Cierre
 
----
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-### Primera tarea — ¿Qué automatizarías?
+El flujo incluye gestión de fallos y duplicados. Debes poder explicar qué mensaje queda pendiente y qué hecho permite darlo por terminado.
 
-Identificad al menos **cinco tareas** que podrían automatizarse.
-
-Completad:
-
-| Tarea actual | ¿Automatizar? | Motivo |
-| --- | --- | --- |
-| Asignar técnico | | |
-| Cambiar estado | | |
-| Generar factura | | |
-| Avisar al cliente | | |
-| Solicitar valoración | | |
-
-Podéis añadir otras.
-
----
-
-### Segunda tarea — Identificar eventos
-
-Pensad qué acontecimientos importantes ocurren durante una reparación.
-
-Ejemplo:
-
-<p class="single-node">Reparación terminada</p>
-
-Puede ser un evento.
-
-Identificad al menos **cuatro eventos**.
-
-| Evento | ¿Qué debería ocurrir después? |
-| --- | --- |
-| Reparación creada | |
-| | |
-| | |
-| | |
-
----
-
-### Tercera tarea — ¿Polling o webhook?
-
-Vamos a resolver la primera situación juntos, con el razonamiento a la vista. Después iréis quedándoos solos.
-
-<p class="stage">Paso 1 · Te enseño uno</p>
-
-#### Situación A · saber cuándo se confirma un pago online
-
-La decisión no se toma por costumbre. Se toma respondiendo a tres preguntas, siempre las mismas.
-
-<dl class="worked">
-  <dt>¿Quién sabe primero que ha ocurrido?</dt>
-  <dd>La pasarela de pago. Nosotros no podemos saberlo antes que ella.</dd>
-  <dt>¿Cuánto puedo tardar en enterarme?</dt>
-  <dd>Casi nada: el cliente está esperando en la pantalla de confirmación.</dd>
-  <dt>¿Con qué frecuencia ocurre?</dt>
-  <dd>Rara vez comparado con lo que tardaríamos preguntando. Un pago concreto se confirma una sola vez.</dd>
-</dl>
-
-Con eso ya está decidido: **webhook**. La pasarela sabe cuándo ocurre, necesitamos enterarnos al instante, y preguntar cada pocos segundos por un evento que sucede una vez sería tirar miles de peticiones a la basura.
-
-Fijaos en que no hemos elegido webhook porque sea más moderno. Lo hemos elegido porque quien tiene la información es el otro sistema, y el coste de preguntar es absurdo comparado con el de ser avisado.
-
-<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
-
-Ahora vosotros, pero con las mismas tres preguntas delante. Respondedlas antes de decidir.
-
-#### Situación B · consultar cada 30 minutos el precio de una moneda
-
-<dl class="answer">
-  <dt>¿Quién sabe primero que ha cambiado?</dt>
-  <dd></dd>
-  <dt>¿Cuánto podemos tardar en enterarnos?</dt>
-  <dd></dd>
-  <dt>Decisión y motivo</dt>
-  <dd></dd>
-</dl>
-
-#### Situación C · saber inmediatamente que un cliente cancela una reserva
-
-<dl class="answer">
-  <dt>¿Quién sabe primero que ha ocurrido?</dt>
-  <dd></dd>
-  <dt>¿Cuánto podemos tardar en enterarnos?</dt>
-  <dd></dd>
-  <dt>Decisión y motivo</dt>
-  <dd></dd>
-</dl>
-
-<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
-
-Sin guion esta vez.
-
-#### Situación D · cada noche, cuántos pedidos se han hecho durante el día
-
-¿Polling, webhook o ninguna de las dos? Justificadlo.
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · no sé si la D es una de las dos</summary>
-  <p>Volved a la primera pregunta: ¿hay un evento del que enterarse? Un webhook avisa <em>cuando pasa algo</em>. Y el polling pregunta <em>si ya ha pasado algo</em>.</p>
-  <p>Aquí no estamos esperando a que ocurra nada: hemos decidido nosotros mirar a una hora fija. Eso tiene otro nombre, y lo habéis visto en esta misma sesión.</p>
-</details>
-
----
-
-### Cuarta tarea — Diseñar una automatización
-
-Diseñad el flujo que debería producirse cuando:
-
-> **un técnico marca una reparación como TERMINADA.**
-
-Vuestro flujo debe incluir al menos:
-
-* un evento;
-* tres acciones automáticas;
-* dos sistemas diferentes.
-
-Ejemplo de formato:
-
-<figure class="diagram">
-  <figcaption>Plantilla · completad vuestro flujo</figcaption>
-  <ol class="flow">
-    <li><span class="flow-role">Evento</span>Reparación terminada</li>
-    <li><span class="flow-role">Acción</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Acción</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Acción</span><span class="write-line"></span></li>
-  </ol>
-</figure>
-
-Podéis dibujarlo en diagrams.net, Canva, PowerPoint o papel.
-
----
-
-### Quinta tarea — Algo falla
-
-Ahora aparece un problema.
-
-El sistema de facturación deja de funcionar durante 30 minutos.
-
-Vuestro flujo era:
-
-<figure class="diagram">
-  <figcaption>El flujo afectado</figcaption>
-  <ol class="flow">
-    <li>Reparación terminada</li>
-    <li>Generar factura</li>
-    <li>Enviar aviso</li>
-  </ol>
-</figure>
-
-Responded:
-
-##### A. ¿Qué debería ocurrir con la reparación?
-
-<p class="write-line"></p>
-
-##### B. ¿Deberíamos perder la solicitud de factura?
-
-<p class="write-line"></p>
-
-##### C. ¿Podría tener sentido utilizar una cola?
-
-<p class="write-line"></p>
-
-##### D. ¿Cuándo debería volver a intentarse?
-
-<p class="write-line"></p>
-
-No buscamos una implementación técnica.
-
-Buscamos una **solución razonable**.
-
----
-
-### Sexta tarea — ¿Programar o utilizar Low-Code?
-
-La empresa necesita estas cuatro automatizaciones.
-
-Decidid si utilizaríais:
-
-* desarrollo tradicional;
-* una herramienta low-code/no-code;
-* cualquiera de las dos.
-
-#### Caso 1
-
-Cada vez que alguien rellena un formulario:
-
-> guardar información y enviar un correo.
-
-<dl class="answer">
-  <dt>Elección</dt>
-  <dd></dd>
-  <dt>Motivo</dt>
-  <dd></dd>
-</dl>
-
-#### Caso 2
-
-Sistema bancario que procesa 10.000 transacciones por segundo.
-
-<dl class="answer">
-  <dt>Elección</dt>
-  <dd></dd>
-  <dt>Motivo</dt>
-  <dd></dd>
-</dl>
-
-#### Caso 3
-
-Cuando llega una incidencia interna:
-
-> crear una tarea y avisar a un canal de Teams.
-
-<dl class="answer">
-  <dt>Elección</dt>
-  <dd></dd>
-  <dt>Motivo</dt>
-  <dd></dd>
-</dl>
-
-#### Caso 4
-
-Motor principal de una tienda online con miles de usuarios simultáneos.
-
-<dl class="answer">
-  <dt>Elección</dt>
-  <dd></dd>
-  <dt>Motivo</dt>
-  <dd></dd>
-</dl>
-
----
-
-### Producto final
-
-Cada pareja entregará **una única página o diapositiva** titulada:
-
-<p class="term">Automatización de Reparaciones Rápidas</p>
-
-Debe contener:
-
-#### 1. Evento inicial
-
-Por ejemplo:
-
-> Reparación terminada.
-
-#### 2. Flujo automatizado
-
-Representado visualmente.
-
-#### 3. Sistemas implicados
-
-Por ejemplo:
-
-* aplicación;
-* base de datos;
-* facturación;
-* correo.
-
-#### 4. Tipo de comunicación
-
-Indicad dónde tendría sentido utilizar:
-
-* API;
-* webhook;
-* evento;
-* cola.
-
-No es necesario utilizar todas.
-
-#### 5. Gestión de un fallo
-
-Explicad qué ocurriría si uno de los sistemas no estuviera disponible.
-
-#### 6. Una tarea que NO automatizaríais
-
-Y justificad por qué.
-
----
-
-### Presentación
-
-Cada pareja dispondrá de aproximadamente **2 minutos**.
-
-Debe responder únicamente:
-
-##### ¿Qué evento habéis elegido?
-
-##### ¿Qué habéis automatizado?
-
-##### ¿Qué ocurre si una parte del sistema falla?
-
----
-
-### Evaluación
-
-La actividad se calificará sobre **10 puntos**.
-
-<table>
-  <thead>
-    <tr>
-      <th>Criterio</th>
-      <th class="align-right">Puntos</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Identificación adecuada de tareas automatizables</td>
-      <td class="align-right">2</td>
-    </tr>
-    <tr>
-      <td>Comprensión de eventos, APIs, polling y webhooks</td>
-      <td class="align-right">2</td>
-    </tr>
-    <tr>
-      <td>Coherencia del flujo diseñado</td>
-      <td class="align-right">3</td>
-    </tr>
-    <tr>
-      <td>Tratamiento razonable de posibles fallos</td>
-      <td class="align-right">2</td>
-    </tr>
-    <tr>
-      <td>Claridad de la propuesta</td>
-      <td class="align-right">1</td>
-    </tr>
-  </tbody>
-</table>
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Al menos dos automatizaciones con evento, acción y beneficio.</li>
-    <li>Una decisión razonada entre polling y webhook.</li>
-    <li>Un caso de fallo y qué ocurre cuando falla.</li>
-    <li>Una tarea que habéis decidido NO automatizar, con su motivo.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué tres cosas describen una automatización?</li>
-    <li>¿Qué pasa con vuestra automatización si el sistema de destino está caído?</li>
-    <li>¿Cuándo elegiríais Low-Code en lugar de programar?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El evento que la dispara, la acción que ejecuta y el beneficio que produce.</p>
-  <p>2 · Depende de vuestro diseño: si no hay cola ni reintentos, el mensaje se pierde. Esa es la respuesta que hay que poder dar.</p>
-  <p>3 · Cuando la lógica es sencilla, conecta servicios que ya existen y el coste de mantenerla programada no compensa.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Pruebas de integración, gestión de fallos y consolidación
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué ocurre cuando un servicio externo falla: reintentos, idempotencia, colas de mensajes y alertas.</li>
-    <li><strong>2. Haz:</strong> Simula la caída de la pasarela de pagos o del servicio de mensajería y documenta la estrategia de recuperación.</li>
-    <li><strong>3. Entrega:</strong> Presenta el diagrama de integración definitivo con su matriz de eventos y tratamiento de errores.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Automatización diseñada y simulada», sesión 3 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Taller de resiliencia · ¿Qué ocurre cuando algo falla?
+### Se explica
 
-En sistemas integrados, los fallos no son una excepción: son la norma. Durante esta sesión trabajamos en parejas para someter el diseño a tres escenarios de estrés:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-1. **Destino no disponible:** el servidor de facturación devuelve un error 503 durante dos horas. ¿Se pierden las solicitudes o quedan encoladas?
-2. **Duplicación de eventos:** el webhook de la pasarela de pago envía dos veces la misma confirmación. ¿La automatización genera dos facturas o es **idempotente**?
-3. **Pérdida de conectividad:** ¿cómo se notifica al equipo técnico o al cliente de que una acción automática ha fallado tras agotar los reintentos?
+Una simulación recorre el diseño con entradas conocidas y compara lo ocurrido con lo esperado. Sirve para descubrir reglas que faltan antes de programar. Simular una caída en este taller significa retener una tarjeta de respuesta o marcar un servicio como no disponible en una tabla; no atacar ni apagar un servicio real.
 
-Cada pareja documenta su solución y ajusta el diagrama de arquitectura antes de la entrega final.
+Un caso de prueba necesita situación inicial, acción, resultado esperado y resultado observado. Si esos dos resultados difieren, corregimos el diseño o explicamos por qué la expectativa estaba equivocada.
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Crea una tabla con esas cuatro columnas. Prepara cuatro casos: cierre normal, facturación no disponible, mensaje repetido y reparación sin datos necesarios.
+2. Reparte los papeles de reparaciones y facturación entre dos personas. En el caso normal, pasa el mensaje y registra la respuesta y el estado final de la reparación.
+3. Repite con facturación marcada como caída. Guarda el mensaje en pendientes; cuando vuelva a estar disponible, procésalo y anota cómo cambia su estado.
+4. Envía dos veces el mismo identificador. Comprueba en el diseño si se crea una factura o dos. Si no hay regla que lo impida, añádela y repite la simulación.
+5. Intercambia los casos con otra pareja para que los siga sin explicaciones. Corrige las ambigüedades y entrega flujo, tabla de pruebas y justificación de la solución elegida.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Se evalúa la automatización diseñada y simulada, incluida su respuesta al fallo. No se exige una aplicación real ni pruebas de Servidor.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-No necesitas recordar el nombre de todas las plataformas de automatización.
-
-Las herramientas cambiarán.
-
-Lo importante es comprender estas ideas:
-
-<figure class="diagram">
-  <figcaption>El camino completo</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Sistemas aislados</li>
-    <li>Integración</li>
-    <li>Intercambio de datos</li>
-    <li>Eventos</li>
-    <li>Automatización</li>
-  </ol>
-</figure>
-
-Y especialmente:
-
-#### API
-
-> Una aplicación puede comunicarse con otra.
-
-#### Polling
-
-> Pregunto periódicamente si ha ocurrido algo.
-
-#### Webhook
-
-> Avísame cuando ocurra.
-
-#### Evento
-
-> Ha ocurrido algo relevante.
-
-#### Automatización
-
-> Cuando ocurre A, ejecutamos automáticamente B.
-
-#### Cola
-
-> Si un sistema no puede procesar algo ahora, podemos conservarlo para procesarlo después.
-
-Cuando trabajéis como desarrolladores, probablemente cambiarán las herramientas.
-
-Pero estos problemas seguirán existiendo.
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Integrar | Conseguir que dos sistemas intercambien información |
-| API | La puerta de una aplicación: qué se le puede pedir y cómo |
-| Polling | Preguntar cada cierto tiempo si ha pasado algo |
-| Webhook | Que el otro sistema nos avise cuando pasa algo |
-| Evento | El hecho concreto que dispara una reacción |
-| Cola de mensajes | Un intermediario que guarda el aviso hasta que se pueda atender |
-| Automatización | Evento, acción y beneficio: los tres a la vez |
-| Low-Code | Montar la lógica sin escribir casi código |
-| Reintento | Volver a intentarlo cuando el destino no estaba disponible |
-| Idempotencia | Que repetir la misma acción no duplique el resultado |
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

@@ -1,0 +1,93 @@
+[
+  {
+    "module": "digitalizacion",
+    "unit": 1,
+    "hours": 3,
+    "activity": "Rediseño de Reparaciones Rápidas",
+    "href": "/es/docencia/digitalizacion/ud1-que-significa-digitalizar-una-empresa/"
+  },
+  {
+    "module": "digitalizacion",
+    "unit": 2,
+    "hours": 3,
+    "activity": "Automatización diseñada y simulada",
+    "href": "/es/docencia/digitalizacion/ud2-integracion-y-automatizacion-de-sistemas/"
+  },
+  {
+    "module": "digitalizacion",
+    "unit": 3,
+    "hours": 5,
+    "activity": "Sitio de laboratorio y arquitectura",
+    "href": "/es/docencia/digitalizacion/ud3-cloud-y-arquitecturas-modernas/"
+  },
+  {
+    "module": "digitalizacion",
+    "unit": 4,
+    "hours": 4,
+    "activity": "Mejora del sitio asistida por IA",
+    "href": "/es/docencia/digitalizacion/ud4-desarrollo-asistido-por-ia/"
+  },
+  {
+    "module": "digitalizacion",
+    "unit": 5,
+    "hours": 4,
+    "activity": "Análisis de datos e informe de decisiones",
+    "href": "/es/docencia/digitalizacion/ud5-datos-analitica-y-decisiones/"
+  },
+  {
+    "module": "digitalizacion",
+    "unit": 6,
+    "hours": 5,
+    "activity": "Auditoría y correcciones de seguridad",
+    "href": "/es/docencia/digitalizacion/ud6-ciberseguridad-para-desarrolladores/"
+  },
+  {
+    "module": "digitalizacion",
+    "unit": 7,
+    "hours": 6,
+    "activity": "Plan de transformación de TecnoClima",
+    "href": "/es/docencia/digitalizacion/ud7-transformacion-digital-de-una-empresa/"
+  },
+  {
+    "module": "sostenibilidad",
+    "unit": 1,
+    "hours": 4,
+    "activity": "Diagnóstico ASG de PixelStore",
+    "href": "/es/docencia/sostenibilidad/ud1-que-significa-que-una-empresa-sea-sostenible/"
+  },
+  {
+    "module": "sostenibilidad",
+    "unit": 2,
+    "hours": 4,
+    "activity": "Política de renovación de equipos",
+    "href": "/es/docencia/sostenibilidad/ud2-la-huella-ambiental-de-la-tecnologia/"
+  },
+  {
+    "module": "sostenibilidad",
+    "unit": 3,
+    "hours": 6,
+    "activity": "Optimización y comparación de la web",
+    "href": "/es/docencia/sostenibilidad/ud3-desarrollo-web-y-software-sostenible/"
+  },
+  {
+    "module": "sostenibilidad",
+    "unit": 4,
+    "hours": 4,
+    "activity": "Auditoría y mejora de accesibilidad",
+    "href": "/es/docencia/sostenibilidad/ud4-accesibilidad-y-diseno-digital-inclusivo/"
+  },
+  {
+    "module": "sostenibilidad",
+    "unit": 5,
+    "hours": 4,
+    "activity": "Decisiones de cloud, datos e IA",
+    "href": "/es/docencia/sostenibilidad/ud5-cloud-datos-e-ia-sostenibles/"
+  },
+  {
+    "module": "sostenibilidad",
+    "unit": 6,
+    "hours": 8,
+    "activity": "Plan de sostenibilidad de PixelStore",
+    "href": "/es/docencia/sostenibilidad/ud6-auditoria-y-plan-de-sostenibilidad-digital/"
+  }
+]

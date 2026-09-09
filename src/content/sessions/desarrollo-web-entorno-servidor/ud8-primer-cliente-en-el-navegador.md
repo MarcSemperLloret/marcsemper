@@ -4,7 +4,7 @@ label: "UD8 · Conectar"
 section: "ud-08"
 order: 8
 lang: "es"
-summary: "Retomar el cliente publicado en Intermodular, comprender CORS y verificar su integración antes de añadir seguridad."
+summary: "Construir el primer cliente del backend, comprender CORS y verificar su integración antes de publicarlo en Intermodular."
 duration: "6 horas · 1 semana · 2 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
 deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
@@ -22,17 +22,22 @@ priorKnowledge:
   - "HTML básico y nociones mínimas de JavaScript."
 ---
 
-<p class="lead">El cliente del portfolio ya se ha conectado y publicado en Intermodular durante el primer trimestre. Estas dos sesiones revisan esa integración, diagnostican CORS y fijan una comprobación del navegador antes de incorporar autenticación.</p>
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
 
-## Semana 17 · Revisar el cliente real y diagnosticar CORS
+<p class="lead">El backend ya está publicado y probado con una colección HTTP. Ahora construirás su primer cliente web con HTML y JavaScript: una página que envía peticiones y muestra las respuestas. En Intermodular 17 publicarás este mismo cliente y comprobarás su conexión con la API de producción.</p>
 
-## Sesión 33 · Revisar el cliente real y diagnosticar CORS
+## Semana 17 · Construir el primer cliente y diagnosticar CORS
+
+## Sesión 33 · Construir el primer cliente y diagnosticar CORS
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 17: Integrar el cliente ya construido en Servidor](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-17/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-17).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Ya existe un cliente publicado desde Intermodular. Ahora se analiza la frontera navegador–API y por qué una petición funciona en un cliente HTTP pero falla en el navegador.
+El portfolio de Intermodular presenta tu producto, pero todavía no necesita consumir su API. Hoy crearás esa conexión desde una página mínima. CORS es el mecanismo por el que el servidor indica qué otros orígenes pueden leer sus respuestas; un origen combina protocolo, host y puerto.
 
 #### El navegador como entorno hostil y seguro
 
@@ -148,25 +153,17 @@ Para relajar esta restricción de forma segura cuando el frontend y el backend e
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Reproducid un fallo de origen sobre el cliente existente y seguid la petición y el preflight en la pestaña de red.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Ajustad los orígenes permitidos por entorno y comprobad carga, error y ausencia de datos.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Un navegador llama a tu API</p>
+1. Abre el repositorio del backend, arráncalo siguiendo su README y comprueba una consulta conocida con Postman o Bruno. Anota la dirección completa y conserva una respuesta de ejemplo.
+2. En la raíz de ese repositorio crea la carpeta `cliente`. En el siguiente paso guardarás allí la página que consumirá esa consulta; todavía no necesitas un cliente funcionando.
+3. Abre las herramientas de desarrollo del navegador y localiza la pestaña Red. Cuando sirvas la página, compararás su origen con el del backend para decidir qué origen permitir en Spring.
 
 #### Paso 2 · El primer cliente web (index.html)
 
-Vamos a construir un cliente web puro de 25 líneas sin frameworks ni herramientas de compilación complejas.
+Guarda el ejemplo en `cliente/index.html` dentro del repositorio del backend. Para servir esta carpeta por HTTP, abre una terminal en ella y ejecuta `npx http-server . -p 5500 -c-1`, con Node.js y npm preparados en Intermodular 3; acepta la instalación del paquete si se solicita. Deja esa terminal abierta y visita `http://localhost:5500/index.html`. Primero comprueba que carga el HTML; después prueba su botón. El backend debe estar encendido en otra terminal y el listado paginado devuelve sus elementos en `content`. Si aparece un error de CORS, conserva el mensaje: los siguientes pasos explican cómo resolverlo.
 
-Crea una carpeta llamada `cliente` en tu espacio de trabajo y añade el archivo `index.html`:
+Este es el contenido inicial de `cliente/index.html`; adapta la ruta y los campos a tu producto:
 
 ```html
 <!DOCTYPE html>
@@ -236,7 +233,7 @@ Arranca un servidor estático ligero en la carpeta `cliente`. Puedes usar cualqu
   <dd>El primer <code>await</code> espera a que lleguen las cabeceras y el estado. El segundo, el de <code>res.json()</code>, espera a que llegue y se interprete el cuerpo. Son dos esperas porque son dos momentos distintos: el navegador ya sabe el código de estado antes de haber descargado la respuesta entera.</dd>
 </dl>
 
-#### Paso 3 · Inspección forense en DevTools
+#### Paso 3 · Inspeccionar peticiones, respuestas y cookies en DevTools
 
 Con tu backend Spring Boot arrancado en el puerto 8080, abre `http://localhost:5500` en tu navegador y pulsa `F12`:
 
@@ -268,7 +265,7 @@ Con tu backend Spring Boot arrancado en el puerto 8080, abre `http://localhost:5
 
 #### Paso 5 · Visualizar las tareas al seleccionar un proyecto
 
-Amplía el cliente para consultar el subrecurso de tareas desarrollado en la UD7:
+Añade al elemento de cada proyecto un botón creado con `document.createElement('button')`; así podrás asociar su evento al id del objeto, sin construir JavaScript dentro de HTML. En el manejador, solicita el subrecurso de ese id, comprueba `response.ok`, lee su JSON y crea la sublista con `textContent`. Si CORS aún bloquea la lectura, conserva el código y completa primero su configuración en el paso 7; después repite la prueba.
 
 1. Modifica la generación de cada elemento de la lista para que incluya un botón *«Ver tareas»*.
 2. Al pulsarlo, lanza una segunda llamada a `/api/v1/proyectos/{id}/tareas` y renderiza las tareas en una sublista bajo el proyecto.
@@ -284,7 +281,7 @@ Amplía el cliente para consultar el subrecurso de tareas desarrollado en la UD7
 
 <p class="stage">CORS: por qué el navegador bloquea lo que Postman no</p>
 
-#### Paso 6 · El gran desconcierto: «¡En Postman funciona!»
+#### Paso 6 · Comparar la petición del cliente HTTP con la del navegador
 
 Cualquier desarrollador backend novel pasa por este momento de desesperación:
 1. Crea un endpoint en Spring Boot.
@@ -306,7 +303,7 @@ El programador mira la consola de Spring Boot: **no hay ningún error, ninguna t
 
 #### Paso 7 · Configurar CORS de forma acotada en Spring Boot
 
-El peor error que puede cometer un desarrollador novato ante un fallo de CORS es buscar en Google y copiar la primera solución que encuentra: poner `@CrossOrigin(origins = "*")` en todos sus controladores. Eso equivale a quitar la cerradura de la puerta blindada.
+Crea `config/WebConfig.java` solo si aún no existe una configuración MVC para CORS; si existe, modifica su método `addCorsMappings`. Introduce el origen exacto desde el que has servido el cliente y el prefijo `/api/v1/**`. Reinicia Java y repite la misma petición del navegador sin cambiar su código. CORS controla qué orígenes pueden leer respuestas en el navegador; los permisos sobre usuarios se incorporarán con Spring Security.
 
 La forma profesional de configurar CORS en Spring Boot es de forma **centralizada, explícita y restringida a los orígenes autorizados**.
 
@@ -403,12 +400,12 @@ Un `GET` sencillo no dispara *preflight*: el navegador lo considera una «petici
 | Funciona en tu cliente HTTP y falla en el navegador | Es CORS, por definición | Postman y Bruno no aplican la política de mismo origen: esa asimetría es el diagnóstico |
 | `Failed to fetch` sin más detalle | El servidor no llegó a responder | Comprueba que la aplicación está arrancada y que el puerto es el correcto: esto no es CORS |
 
-#### Paso 10 · Convertirte en el equipo de frontend
+#### Paso 10 · Consumir y comprobar la API desde el cliente del proyecto
 
 1. Añade `http://localhost:3000` a la lista de orígenes en `application.properties`.
 2. Reinicia y comprueba que los tres orígenes (`5500`, `127.0.0.1:5500` y `3000`) son aceptados.
-3. Añade temporalmente `http://localhost:9999` y observa cómo el navegador vuelve a bloquearlo. Copia el mensaje exacto en tu cuaderno: es el que te vas a encontrar en la UD12 con Angular.
-4. **Lee la cabecera `Location`:** haz que tu página, tras crear un proyecto, muestre la URL del recurso recién creado leyendo esa cabecera de la respuesta. Comprueba que llega vacía, quita `exposedHeaders("Location")` de la configuración para confirmar que era eso, y vuelve a ponerlo. Es un fallo que se busca durante horas si no lo has visto antes.
+3. Sirve temporalmente la página desde `http://localhost:9999` (por ejemplo, `python -m http.server 9999` desde `cliente`), **sin añadir ese origen a los permitidos**, y observa el bloqueo. Copia el mensaje exacto en tu cuaderno: es el que te vas a encontrar en la UD12 con Angular.
+4. **Lee la cabecera `Location`:** haz que tu página, tras crear un proyecto, muestre la URL del recurso recién creado leyendo esa cabecera de la respuesta. Comprueba que puedes leerla. Retira temporalmente `exposedHeaders("Location")`, reinicia y observa que JavaScript deja de acceder a ella aunque siga visible en Red. Restaura la configuración. Es un fallo que se busca durante horas si no lo has visto antes.
 5. **Diagnóstico a tres bandas:** por cada uno de estos tres fallos, di si el problema es del cliente, del servidor o del navegador, y cómo lo has sabido:
    * La página muestra la lista vacía y la consola no dice nada.
    * La consola dice `blocked by CORS policy` pero la pestaña Network muestra que el servidor respondió `200`.
@@ -422,10 +419,8 @@ Un `GET` sencillo no dispara *preflight*: el navegador lo considera una «petici
 
 #### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **diagnosticad el navegador y cors sobre el cliente existente**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Repite la misma consulta desde el cliente HTTP y desde el navegador, y distingue respuesta del servidor de bloqueo de lectura por CORS.
+2. Comprueba la petición OPTIONS cuando exista preflight y verifica que un origen permitido funciona y uno no autorizado no recibe permiso de lectura.
 
 #### Ampliación si has completado el trabajo
 
@@ -466,7 +461,7 @@ Investiga y responde con criterio técnico:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita una justificación de la configuración de CORS y políticas de orígenes, el formato de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-cors.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -489,35 +484,29 @@ Investiga y responde con criterio técnico:
 
 Podéis distinguir un fallo de red, de CORS y una respuesta de error de la API.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 33 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-33.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-33.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-33.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 34 · Integración del navegador antes de la seguridad
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 17: Integrar el cliente ya construido en Servidor](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-17/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-17).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-El contrato HTTP y el comportamiento del navegador deben estar claros antes de incorporar credenciales. El cliente mínimo sirve como prueba de integración.
+El navegador ya puede consultar la API con la configuración CORS elegida. Hoy completará escrituras y mostrará errores del servidor. fetch devuelve una respuesta también para estados 400 o 500; el cliente debe comprobar su estado antes de tratarla como éxito.
 
 #### El método de diagnóstico en tres capas
 
@@ -557,23 +546,15 @@ Hoy se utiliza el portfolio que ya está publicado. Tras una escritura se vuelve
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Revisad las operaciones de lectura y escritura del portfolio sobre la versión avanzada de la API.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Comprobad mensajes de validación, actualización de la vista y configuración de la URL base sin añadir un framework nuevo.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Integración mínima verificada</p>
+1. Abre el cliente existente, el controlador de altas y su DTO. Ejecuta un listado desde el navegador antes de cambiar el formulario.
+2. Anota los nombres y tipos de los campos que acepta el POST. Haz que el formulario construya ese contrato exacto.
+3. Prepara tres escenarios: alta válida, datos rechazados y servidor detenido. Son resultados diferentes que el usuario debe poder distinguir.
 
 #### Paso 2 · Formulario de alta con validación visual
 
-Vamos a completar nuestro cliente `index.html` integrando un formulario de creación de proyectos conectado a la API.
+Añade el HTML del formulario dentro de `body` y coloca su script después de esos elementos, o ejecútalo cuando el documento esté cargado. Conserva el listado existente. Comprueba que los ids usados por `getElementById` coinciden con los del HTML. En el evento `submit`, evita la recarga, construye un objeto con las claves del DTO, conviértelo con `JSON.stringify` y envía el POST. Solo después de una respuesta correcta actualiza la lista y limpia el formulario.
 
 Añadimos un formulario con campos para el nombre y la descripción, y contenedores dedicados para mostrar mensajes de error:
 
@@ -694,6 +675,8 @@ Para dominar el diagnóstico de integración, vamos a **provocar intencionadamen
 
 #### Paso 5 · Cerrar el ciclo completo desde el navegador
 
+Para editar, selecciona un registro del listado, carga sus valores en el formulario y conserva su id. Al guardar, utiliza PUT con todos los campos editables o PATCH con los modificados según tu contrato; comprueba la respuesta antes de recargar el listado. Para borrar, utiliza el id del elemento y, tras 204, actualiza la pantalla sin ejecutar `response.json()`. Prueba el ciclo crear → editar → consultar → borrar sobre un registro recién creado.
+
 1. En cada proyecto de la lista, añade un botón *«Eliminar»* que pida confirmación antes de lanzar un `DELETE`.
 2. Si la API responde `204 No Content`, quita el elemento de la pantalla. **No intentes leer el cuerpo**: un `204` no tiene, y hacerlo lanza un error de análisis que parece un fallo del servidor y no lo es.
 3. Encadena el ciclo entero sin recargar la página: crear un proyecto, verlo aparecer en la lista, añadirle una tarea y borrarlo. Cuatro verbos HTTP, una sola pantalla.
@@ -711,10 +694,8 @@ Para dominar el diagnóstico de integración, vamos a **provocar intencionadamen
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **comprobad el crud desde el navegador**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Completa alta, consulta, modificación y borrado desde el navegador y verifica los cambios en la API.
+2. Provoca validación y fallo de conexión por separado: el cliente debe explicar cada caso y no mostrar éxito ni perder innecesariamente lo escrito.
 
 #### Ampliación si has completado el trabajo
 
@@ -731,7 +712,7 @@ Analiza estas tres situaciones y determina con precisión técnica en qué capa 
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita una memoria o informe de integración técnica cliente-servidor, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>diagnostico-integracion.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -754,27 +735,18 @@ Analiza estas tres situaciones y determina con precisión técnica en qué capa 
 
 El CRUD completo funciona desde el navegador publicado y queda una comprobación repetible previa a autenticación.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 34 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-34.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-34.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-34.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 

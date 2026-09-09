@@ -6,8 +6,8 @@ order: 6
 lang: "es"
 summary: "Cerrar la evaluación defendiendo cómo se ha trabajado, con tres evidencias que no se pueden improvisar: el tablero, la pull request más discutida y una ejecución del pipeline que falló."
 duration: "3 horas · 1 sesión"
-modality: "Defensa · preparación, ensayo y evaluación"
-deliverable: "Defensa del proceso ante el grupo, con el tablero, una pull request y un fallo del pipeline explicados."
+modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
+deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
 date: "2026-09-09"
 outcomes:
   - "Reconstruir el rastro de trabajo propio y leerlo como lo leerá quien evalúa."
@@ -16,20 +16,25 @@ outcomes:
   - "Leer un fallo del pipeline y explicar qué lo provocó y cómo se resolvió."
   - "Reconocer las limitaciones del propio trabajo antes de que las señale otro."
 requirements:
-  - "Los dos proyectos publicados y sus repositorios accesibles."
+  - "El producto de Servidor publicado y su ficha de portfolio accesible."
   - "Los tres artefactos preparados: tablero, pull request y ejecución fallida."
 priorKnowledge:
   - "Todo el trimestre."
 ---
 
-<p class="lead">Hoy no se enseña una web. Se enseña cómo llegó esa web hasta donde está, que es lo único que este módulo ha evaluado desde septiembre.</p>
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
+<p class="lead">Hoy se presenta la misma versión que en Servidor 27–28. La demostración del producto se comparte; aquí se justifican su organización, revisión, pruebas en CI y puesta en producción.</p>
 
 <div class="rule">
   <p class="rule-label">Por qué se defiende el proceso y no el producto</p>
-  <p>Un producto se puede copiar, encargar o improvisar el último fin de semana. Un rastro de trabajo de catorce semanas, no: lleva fechas, y las fechas no se reescriben. Por eso la defensa de hoy va sobre tres cosas que solo existen si de verdad trabajasteis así.</p>
+  <p>Un producto se puede copiar, encargar o improvisar el último fin de semana. El rastro de catorce semanas se contrasta con issues, revisiones y ejecuciones: las fechas de Git por sí solas no demuestran el proceso ni la autoría. Por eso la defensa de hoy va sobre tres cosas que solo existen si de verdad trabajasteis así.</p>
 </div>
 
 ## Sesión 14 · La defensa del proceso
+
+**Punto de partida compartido.** Semana lectiva 14: sitúa este taller después de las sesiones 27–28 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-14). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -44,6 +49,8 @@ priorKnowledge:
 
 ### Se explica
 
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
+
 #### Los tres artefactos, y qué demuestra cada uno
 
 No son tres al azar. Cada uno responde a una pregunta que no se puede contestar de palabra.
@@ -57,7 +64,7 @@ No son tres al azar. Cada uno responde a una pregunta que no se puede contestar 
   </ol>
 </figure>
 
-Fijaos en el tercero, que es el que sorprende: **os pido enseñar un fallo**. No es una trampa. Un repositorio donde el CI nunca ha fallado significa una de dos cosas, y ninguna es buena: o el pipeline no comprueba nada, o todo se probó en local hasta que estuvo perfecto y el pipeline es decorativo. Un pipeline sano falla a menudo, y su dueño sabe por qué.
+Fijaos en el tercero, que es el que sorprende: **os pido enseñar un fallo**. No es una trampa. Probar en local antes de subir es una buena práctica. No se exige una frecuencia de fallos: sirve el fallo controlado en una rama de diagnóstico de las sesiones anteriores, acompañado de su corrección y la prueba de que bloqueaba la fusión.
 
 #### Qué se pregunta, y qué no
 
@@ -89,7 +96,7 @@ Las preguntas salen del trimestre, y las tenéis todas desde hoy:
 | 10 | Enseñadme un error de validación en pantalla. ¿De dónde sale ese texto? |
 | 11 | ¿Dónde vive vuestra base de datos y qué hacéis si alguien ve su contraseña? |
 | 12 | Si mañana cambiáis un campo de la API, ¿qué se rompe y quién avisa? |
-| 13 | ¿Por qué elegisteis ese problema y no los otros dos? |
+| 13 | ¿Qué mejora habéis priorizado para el mismo producto y de qué depende? |
 
 #### Cómo se puntúa
 
@@ -104,12 +111,14 @@ Las preguntas salen del trimestre, y las tenéis todas desde hoy:
 
 <div class="rule">
   <p class="rule-label">La trampa de hoy</p>
-  <p>Prepararse la demostración del producto y no el proceso. Vais a poder enseñar vuestro portfolio y vuestro CRUD funcionando, y va a estar bien, pero eso ocupa dos minutos y no da puntos aquí. Lo que se puntúa es lo que hay detrás, y para eso hay que haber mirado el propio repositorio antes de entrar.</p>
+  <p>Prepararse la demostración del producto y no el proceso. Vais a poder enseñar vuestro portfolio y vuestro CRUD funcionando, y va a estar bien, pero ese recorrido se comparte con Servidor y aporta contexto a los criterios de Intermodular. Lo que se puntúa es lo que hay detrás, y para eso hay que haber mirado el propio repositorio antes de entrar.</p>
 </div>
 
 ---
 
 ### Se trabaja
+
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
 #### Bloque A · Reconstruir vuestro propio rastro
 
@@ -181,30 +190,20 @@ Quien hace de tribunal anota **la pregunta que peor fue** y se la dice al otro. 
 
 #### Bloque D · La defensa
 
-<p class="stage stage--guided">Uno a uno, con el grupo delante</p>
+La defensa se coordina con Servidor 27–28 sobre el mismo commit. El docente distribuye los turnos entre las sesiones de cierre de ambos módulos; no se repite una exposición completa por asignatura ni se presupone que todas las defensas individuales caben en tres horas.
 
-Ocho minutos por persona, con los dos repositorios y las dos URL abiertas antes de empezar.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">El guion</p>
-  <ol>
-    <li><strong>El producto, rápido:</strong> el portfolio y el CRUD funcionando. Dos minutos como mucho, y no es lo que puntúa.</li>
-    <li><strong>El tablero:</strong> cómo troceasteis el trabajo y qué cuenta el ritmo.</li>
-    <li><strong>La pull request:</strong> qué se discutió y qué cambió por ello.</li>
-    <li><strong>El fallo:</strong> qué se rompió, cómo lo leísteis y cómo lo resolvisteis.</li>
-    <li><strong>Las limitaciones:</strong> qué no funciona todavía y por qué, dicho por vosotros.</li>
-    <li><strong>Preguntas.</strong></li>
-  </ol>
-</div>
-
-<div class="rule">
-  <p class="rule-label">Antes de empezar, despertad la API</p>
-  <p>Lo lleváis avisado desde la sesión 8: el plan gratuito duerme el servicio. Abrid vuestra URL unos minutos antes de que os toque. Que se caiga la demostración por un arranque en frío que sabíais que existía es el único fallo de hoy que no admite explicación.</p>
-</div>
-
----
+1. Abre `docs/entrega-t1.pdf` con URL, SHA, PR, CI y pruebas. Comprueba que la release final incluye persistencia, relaciones y reglas de Servidor 25–26; una release intermedia no sustituye esta comprobación.
+2. Demuestra un recorrido del CRUD, una entrada rechazada y persistencia tras reinicio. Servidor evalúa implementación, integridad y pruebas de esos casos.
+3. Sigue una issue del mismo recorrido hasta su rama, revisión, ejecución y despliegue. Intermodular evalúa la trazabilidad, la revisión y la entrega reproducible.
+4. Explica un fallo controlado del CI y su diagnóstico. No se puntúa haber roto producción ni acumular errores.
+5. Cada integrante identifica su contribución según la autoría/equipo acordado en Servidor. Quienes no estén defendiendo realizan una comprobación cruzada y registran observaciones.
+6. Actualiza la entrega con el resultado y las limitaciones. El documento, los enlaces y la versión son comunes; los criterios y las calificaciones de cada módulo se mantienen diferenciados.
 
 ### Cierre
+
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 14.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-14.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-27.pdf` y `sesion-28.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Producto de la evaluación</p>
@@ -213,7 +212,7 @@ Ocho minutos por persona, con los dos repositorios y las dos URL abiertas antes 
     <li>API desplegada, con su repositorio, su CI que compila y prueba, y su CRUD funcionando desde el portfolio.</li>
     <li>Releases publicadas en los dos repositorios, con READMEs que se entienden.</li>
     <li>Un rastro de catorce semanas: issues, ramas, pull requests, revisiones y fallos resueltos.</li>
-    <li>El problema del proyecto grande, elegido y fichado.</li>
+    <li>La evolución del mismo producto, priorizada y con sus dependencias.</li>
   </ul>
 </div>
 
@@ -229,7 +228,7 @@ Ocho minutos por persona, con los dos repositorios y las dos URL abiertas antes 
 
 <div class="rule">
   <p class="rule-label">Qué pasa en enero</p>
-  <p>Empieza el proyecto grande con el problema que elegisteis en la sesión 13, y el circuito deja de explicarse: se usa desde el primer día y se evalúa igual que hoy. Lo que sube es el listón del producto —base de datos, roles, integración externa— y lo que baja es la ayuda. Si esta defensa ha ido bien, la de marzo es la misma con un proyecto más grande detrás.</p>
+  <p>Continúa el mismo producto con la mejora priorizada en la sesión 13. La persistencia ya está publicada; cliente, permisos e integraciones se incorporan después de su explicación en Servidor. Cada sesión de Intermodular mantiene contexto, pasos y comprobaciones, y reutiliza el circuito del primer trimestre.</p>
 </div>
 
 ## Lo que debes recordar
@@ -239,7 +238,7 @@ Ocho minutos por persona, con los dos repositorios y las dos URL abiertas antes 
 | Idea | Por qué |
 | ---- | ------- |
 | **El proceso se defiende con evidencias, no con adjetivos** | «He trabajado mucho» no se puede comprobar; un tablero con fechas, sí |
-| **Un pipeline que nunca ha fallado es sospechoso** | O no comprueba nada, o no es obligatorio, o es decorativo |
+| **Un fallo controlado comprueba el bloqueo** | Probar en local es correcto; se demuestra la eficacia del check sin exigir fallos frecuentes |
 | **Las limitaciones se dicen antes** | Un límite reconocido es criterio; el mismo límite descubierto por otro es un fallo |
 | **Se responde señalando la pantalla** | Todo lo que se afirma hoy está escrito en algún sitio del repositorio |
 | **No se contesta con tecnología a una pregunta de proceso** | Son dos evaluaciones distintas, y confundirlas se nota enseguida |

@@ -4,11 +4,11 @@ label: "UD4 · Proyecto"
 section: "ud-04"
 order: 4
 lang: "es"
-summary: "Aprende a trabajar con un agente de programación construyendo tu propio portfolio. Contexto, instrucciones, skills, herramientas y MCP: dirigir la IA y verificar lo que produce."
+summary: "Aprende a dirigir un agente mediante una mejora del sitio ya trabajado en UD3: contexto, instrucciones, procedimientos de revisión, herramientas y verificación."
 duration: "4 horas · 4 sesiones"
-modality: "Individual o parejas"
-deliverable: "Vuestro portfolio publicado en GitHub, con instrucciones de proyecto, una skill de revisión y evidencias del trabajo con el agente."
-date: "2026-08-28"
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Mejora del sitio asistida por IA. Una actividad acumulativa por unidad, con evidencias y aportación individual."
+date: "2026-09-09"
 outcomes:
   - "Escribir una petición con objetivo, contexto, restricciones y criterios de aceptación."
   - "Configurar las instrucciones del repositorio para que el agente conozca vuestro proyecto."
@@ -16,151 +16,79 @@ outcomes:
   - "Explicar qué son las tools y MCP, y por qué no se da acceso a todo."
   - "Revisar plan, diff y tests antes de aceptar un cambio."
 requirements:
-  - "Visual Studio Code con GitHub Copilot activado (GitHub Student)."
-  - "Git y una cuenta de GitHub."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
 priorKnowledge:
-  - "Clonar un repositorio, hacer commits y leer un diff."
-  - "Publicar un sitio estático (UD3)."
+  - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 ---
+
+<p class="lead">Mejora del sitio asistida por IA. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
+
+## Cómo trabajar esta unidad
+
+Son 4 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Mejora del sitio asistida por IA.** Guarda el trabajo en `digitalizacion/ud4/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterio</th>
+      <th class="align-right">Puntos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Definición clara de la tarea y criterios de aceptación</td>
+      <td class="align-right">1,5</td>
+    </tr>
+    <tr>
+      <td>Calidad y aplicación de las instrucciones del proyecto en el agente utilizado</td>
+      <td class="align-right">2</td>
+    </tr>
+    <tr>
+      <td>Uso razonado del agente durante el desarrollo</td>
+      <td class="align-right">2</td>
+    </tr>
+    <tr>
+      <td>Procedimiento reutilizable de revisión, como skill o ficha aplicada</td>
+      <td class="align-right">1,5</td>
+    </tr>
+    <tr>
+      <td>Verificación del resultado: diff, comprobación en el navegador y tests si procede</td>
+      <td class="align-right"><strong>2</strong></td>
+    </tr>
+    <tr>
+      <td>Comprensión conceptual de MCP y permisos</td>
+      <td class="align-right">1</td>
+    </tr>
+  </tbody>
+</table>
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · Dirige bien a la IA
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La diferencia entre autocompletado y agentes autónomos, y cómo estructurar prompts profesionales con objetivo, contexto, restricciones y criterios de aceptación.</li>
-    <li><strong>2. Haz:</strong> Configura GitHub Copilot en VS Code y crea la estructura inicial de tu portfolio mediante peticiones dirigidas.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Mejora del sitio asistida por IA», sesión 1 de 4. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### ¿Qué vamos a aprender?
+### Se explica
 
-La Inteligencia Artificial está cambiando la forma de desarrollar software.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Hace unos años, un asistente de programación se limitaba principalmente a completar unas líneas de código.
+Un **modelo** genera una respuesta; un **agente** puede utilizar herramientas para leer archivos, proponer cambios o ejecutar comprobaciones. Que pueda actuar no significa que conozca tu objetivo. Necesita contexto y un criterio de aceptación: una condición observable que permita decir si la tarea está resuelta.
 
-Actualmente puede:
+«Mejora la web» deja abiertas muchas decisiones. «Añade un enlace de contacto visible, conserva las secciones y comprueba que abre el correo indicado» delimita la tarea. Usaremos el sitio de Digitalización UD3; quien ya tenga portfolio estudiará un cambio nuevo, sin reconstruirlo ni repetir su evaluación de Intermodular.
 
-* leer un proyecto;
-* localizar archivos;
-* explicar código;
-* modificar varios archivos;
-* ejecutar comandos;
-* crear tests;
-* detectar errores;
-* revisar cambios;
-* consultar documentación;
-* utilizar herramientas externas.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-Esto cambia también el papel del desarrollador.
-
-El objetivo ya no es simplemente:
-
-> **«conseguir que la IA escriba código».**
-
-El objetivo es aprender a:
-
-> **darle contexto, definir correctamente una tarea, controlar lo que hace y comprobar que el resultado es correcto.**
-
----
-
-### Activar GitHub Copilot Student
-
-Los estudiantes que cumplen los requisitos de GitHub Education pueden solicitar **Copilot Student**.
-
-Acceded a vuestra cuenta de GitHub y comprobad que disponéis del beneficio educativo.
-
-Una vez activado, utilizaremos Copilot desde Visual Studio Code.
-
----
-
-### De autocompletado a agente
-
-La forma de utilizar IA para programar ha evolucionado rápidamente.
-
-Podemos simplificarla en cuatro etapas.
-
-#### Nivel 1 — Autocompletado
-
-El sistema intenta continuar lo que estamos escribiendo.
-
-Por ejemplo:
-
-```javascript
-function calcularPrecioConIVA(precio) {
-```
-
-y propone:
-
-```javascript
-return precio * 1.21;
-```
-
-Esto ahorra tiempo, pero el desarrollador sigue realizando casi todo el trabajo.
-
-#### Nivel 2 — Chat
-
-Podemos preguntar:
-
-> ¿Qué hace esta función?
-
-o:
-
-> Encuentra el error de este código.
-
-El modelo recibe código y responde con texto o propuestas de modificación.
-
-#### Nivel 3 — Edición del proyecto
-
-El asistente puede trabajar con diferentes archivos del proyecto.
-
-Por ejemplo:
-
-> Añade un campo `telefono` a los clientes.
-
-Esto podría requerir modificar:
-
-<figure class="diagram">
-  <figcaption>Un cambio pequeño que toca muchas capas</figcaption>
-  <ol class="flow">
-    <li>Modelo</li>
-    <li>Base de datos</li>
-    <li>Servicio</li>
-    <li>API</li>
-    <li>Frontend</li>
-    <li>Tests</li>
-  </ol>
-</figure>
-
-Ya no estamos simplemente completando una línea.
-
-#### Nivel 4 — Agente
-
-Un agente puede recibir un objetivo y realizar diferentes acciones para intentar conseguirlo.
-
-Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>Objetivo: añadir paginación a productos</figcaption>
-  <ol class="flow">
-    <li>Analizar el repositorio</li>
-    <li>Localizar el código relacionado</li>
-    <li>Modificar archivos</li>
-    <li>Ejecutar los tests</li>
-    <li>Detectar un error</li>
-    <li>Corregirlo</li>
-    <li>Volver a ejecutar los tests</li>
-  </ol>
-</figure>
-
-Aquí aparece una idea fundamental:
-
-> **Un agente no solo genera texto. Puede actuar sobre nuestro entorno.**
-
----
-
-### Modelo y agente no son lo mismo
+#### Modelo y agente no son lo mismo
 
 Un modelo de lenguaje recibe información y genera una respuesta.
 
@@ -236,44 +164,17 @@ Por tanto:
 
 > **Agente ≈ modelo + contexto + herramientas + capacidad para realizar varios pasos.**
 
----
-
-### La IA no conoce automáticamente nuestro proyecto
-
-Imaginad que acabáis de entrar a trabajar en una empresa.
-
-El primer día alguien os dice:
-
-> Haz el sistema de login.
-
-Probablemente preguntaríais:
-
-* ¿qué tecnología utilizamos?
-* ¿qué arquitectura tiene el proyecto?
-* ¿cómo almacenamos los usuarios?
-* ¿qué librerías utilizamos?
-* ¿cómo hacemos los tests?
-* ¿qué convenciones sigue el equipo?
-
-Un agente tiene exactamente el mismo problema.
-
-Si no conoce el proyecto, tendrá que adivinar, inferir o utilizar soluciones genéricas.
-
-Y puede equivocarse.
-
----
-
-### Context engineering
+#### Context engineering
 
 Una de las habilidades más importantes al trabajar con IA es proporcionar el **contexto adecuado**.
 
 Comparad:
 
-#### Petición A
+##### Petición A
 
 > Haz el login.
 
-#### Petición B
+##### Petición B
 
 > Implementa autenticación mediante email y contraseña.
 >
@@ -310,187 +211,42 @@ No consiste únicamente en escribir un prompt largo.
 
 Consiste en conseguir que el agente tenga disponible **la información correcta en el momento adecuado**.
 
----
-
-### Cómo describir una tarea profesionalmente
-
-Una buena tarea debería contener al menos cuatro partes.
-
-#### Objetivo
-
-¿Qué queremos conseguir?
-
-> Añadir búsqueda de productos por nombre.
-
-#### Contexto
-
-¿Qué sistema tenemos?
-
-> La aplicación utiliza Express y PostgreSQL. Existe un endpoint `/products`.
-
-#### Restricciones
-
-¿Qué debe respetarse?
-
-> No cambies el formato actual de las respuestas de la API.
-
-#### Criterios de aceptación
-
-¿Cómo sabemos que la tarea está terminada?
-
-> Una búsqueda por `lap` debe encontrar `Laptop`.
->
-> Una búsqueda sin resultados debe devolver una lista vacía.
->
-> Deben existir tests.
-
-Podemos utilizar esta plantilla:
-
-<figure class="diagram">
-  <figcaption>Plantilla · describid vuestra tarea</figcaption>
-  <ol class="flow">
-    <li><span class="flow-role">Objetivo</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Contexto</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Restricciones</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Criterios de aceptación</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Forma de verificación</span><span class="write-line"></span></li>
-  </ol>
-</figure>
-
-Esta estructura no es útil únicamente para la IA.
-
-Es también una buena forma de escribir tareas para otros desarrolladores.
-
----
-
-### Primera actividad — El mismo problema con dos peticiones
-
-Durante toda la unidad trabajaremos sobre **vuestro propio portfolio**: una web
-personal que iréis construyendo con ayuda del agente y que quedará publicada en
-GitHub.
-
-Para empezar necesitáis muy poco: una página con un formulario de contacto.
-Podéis escribirla vosotros en cinco minutos o pedírsela al agente.
-
-Con esa página delante, pedid a Copilot:
-
-> Añade validación al formulario de contacto.
-
-Observad qué propone.
-
-No aceptéis todavía los cambios.
-
-Ahora cread una segunda petición utilizando objetivo, contexto, restricciones, criterios de aceptación y verificación.
-
-Comparad ambos resultados y responded:
-
-##### ¿Qué diferencias aparecen?
-
-<p class="write-line"></p>
-
-##### ¿Cuál de las dos respuestas necesita menos correcciones?
-
-<p class="write-line"></p>
-
-##### ¿Qué información adicional ha resultado útil?
-
-<p class="write-line"></p>
-
----
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · Copilot me responde cualquier cosa</summary>
-  <ol>
-    <li>¿Le habéis dicho el objetivo, o solo la acción? «Arregla esto» no es un objetivo.</li>
-    <li>¿Sabe en qué ficheros tiene que mirar? Si no se lo decís, se lo inventa.</li>
-    <li>¿Le habéis dado alguna restricción? Sin ellas hará lo más habitual, que rara vez es lo vuestro.</li>
-    <li>¿Le habéis dicho cómo sabréis que ha terminado bien? Sin criterio de aceptación, cualquier respuesta le vale.</li>
-    <li>Si la respuesta es genérica, vuestra petición también lo era. Reescribidla antes de volver a preguntar.</li>
-  </ol>
 </details>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Copilot activado y funcionando en VS Code.</li>
-    <li>Sabes distinguir autocompletado, chat y agente.</li>
-    <li>Sabes distinguir el modelo del agente.</li>
-    <li>Has escrito la misma tarea dos veces, mal y bien, y has comparado los resultados.</li>
-  </ul>
-</div>
+### Se trabaja
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre un modelo y un agente?</li>
-    <li>¿Qué cuatro cosas debe llevar una petición bien escrita?</li>
-    <li>¿Por qué la IA no conoce vuestro proyecto por defecto?</li>
-  </ol>
-</div>
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El modelo genera texto. El agente puede además actuar: leer ficheros, ejecutar comandos, modificar código.</p>
-  <p>2 · Objetivo, contexto, restricciones y criterios de aceptación.</p>
-  <p>3 · Porque solo ve lo que le entra en el contexto. Si no se lo damos, se lo inventa a partir de lo que suele ser habitual.</p>
-</details>
+1. Abre el sitio inicial y guarda su estado antes de editar. Utiliza el agente disponible en el aula con la guía de arranque; comprueba que puede leer esta carpeta y no otra.
+2. Escribe una petición vaga para añadir contacto y pide solo un plan. Guarda qué información supone el agente y qué decisiones deja abiertas; todavía no aceptes cambios.
+3. Redacta otra petición con objetivo, archivos permitidos, restricciones y dos criterios de aceptación. Por ejemplo: enlace visible y destino correcto, manteniendo el contenido anterior.
+4. Compara ambos planes. Señala una diferencia atribuible al contexto y escoge la propuesta que puedas verificar. Si propone una dependencia, pide qué necesidad concreta cubre.
+5. Aplica el cambio elegido, abre la página y prueba el enlace. Guarda petición, decisión, archivos cambiados y resultado en la actividad de UD4.
 
----
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Se puede comprobar qué pediste, por qué elegiste la propuesta y si cumple los criterios. No se puntúa el número de prompts ni de líneas generadas.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD4 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Haz que conozca tu proyecto
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo dotar de reglas persistentes al agente mediante instrucciones de proyecto (<code>.github/copilot-instructions.md</code>) y skills especializadas.</li>
-    <li><strong>2. Haz:</strong> Redacta las directrices de tu repositorio y crea una skill de revisión automática de código.</li>
-    <li><strong>3. Comprueba:</strong> Valida que el agente respeta las directrices del proyecto sin tener que repetírselas en cada prompt.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Mejora del sitio asistida por IA», sesión 2 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El problema de repetir siempre las mismas instrucciones
+### Se explica
 
-Imaginemos que trabajamos en una empresa y siempre tenemos que recordar al agente:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-* utiliza Java 21;
-* no uses field injection;
-* utiliza nombres en inglés;
-* añade tests;
-* sigue la arquitectura Controller → Service → Repository;
-* no cambies contratos públicos sin autorización.
+Las instrucciones del repositorio describen reglas que siguen siendo válidas entre tareas: estructura, estilo y forma de comprobar el sitio. El prompt describe el cambio de hoy. Una **skill** reúne un procedimiento reutilizable para un tipo de trabajo; no sustituye los criterios específicos de la tarea.
 
-Sería absurdo repetirlo en cada conversación.
+Una regla como «trabaja bien» no guía una decisión. «No añadas dependencias para un cambio de texto; verifica los enlaces modificados» sí puede contrastarse. No hace falta escribir muchos archivos: crearemos instrucciones breves y una lista de revisión que utilizaremos realmente.
 
-Por eso podemos guardar **instrucciones del proyecto**.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
----
-
-### Instrucciones del repositorio
-
-GitHub Copilot permite guardar instrucciones generales en:
-
-<p class="single-node single-node--mono">.github/copilot-instructions.md</p>
-
-Estas instrucciones se aplican al trabajar con el repositorio.
-
-También existen instrucciones específicas para determinadas rutas y archivos `AGENTS.md`.
-
-La idea es sencilla:
-
-<figure class="diagram">
-  <figcaption>El proyecto explica cómo se trabaja en él</figcaption>
-  <ol class="flow">
-    <li>Repositorio</li>
-    <li>Instrucciones permanentes</li>
-    <li>Agente</li>
-  </ol>
-</figure>
-
-El proyecto empieza a **explicar al agente cómo debe trabajar**.
-
----
-
-### Ejemplo de instrucciones
+#### Ejemplo de instrucciones
 
 Creamos <code>.github/copilot-instructions.md</code>:
 
@@ -536,9 +292,7 @@ Describen:
 
 > **cómo debe trabajar el agente en este proyecto.**
 
----
-
-### Prompt vs instrucciones
+#### Prompt vs instrucciones
 
 Es importante distinguirlos.
 
@@ -561,52 +315,7 @@ Las instrucciones describen reglas permanentes:
 
 > Utiliza la arquitectura existente. Añade tests. No añadas dependencias innecesarias.
 
----
-
-### Segunda actividad — Enseñar el proyecto al agente
-
-Cread en vuestro repositorio <code>.github/copilot-instructions.md</code>.
-
-Incluid como mínimo:
-
-* stack tecnológico;
-* arquitectura;
-* convenciones de código;
-* reglas de testing;
-* reglas de seguridad;
-* qué debe comprobar antes de terminar una tarea.
-
-Después pedid nuevamente a Copilot una pequeña modificación y responded:
-
-##### ¿Ha seguido las instrucciones?
-
-<p class="write-line"></p>
-
-##### ¿Qué instrucciones han sido útiles?
-
-<p class="write-line"></p>
-
-##### ¿Hay alguna que haya ignorado?
-
-<p class="write-line"></p>
-
----
-
-### Una instrucción no siempre debe estar cargada
-
-Imaginad que tenemos una guía de 100 líneas sobre cómo revisar seguridad.
-
-No necesitamos esa guía cuando simplemente estamos cambiando el color de un botón.
-
-Cargar constantemente información irrelevante también puede empeorar el contexto.
-
-Por eso existen las:
-
-<p class="term">Skills</p>
-
----
-
-### ¿Qué es una skill?
+#### ¿Qué es una skill?
 
 Una **skill** contiene instrucciones especializadas para realizar bien un determinado tipo de tarea.
 
@@ -627,9 +336,7 @@ La skill podría explicar:
 
 GitHub Copilot puede cargar una skill cuando detecta que es relevante para la tarea.
 
----
-
-### Instructions vs Skills
+#### Instructions vs Skills
 
 La diferencia puede entenderse fácilmente.
 
@@ -670,227 +377,42 @@ Las **instrucciones** son información útil casi siempre: «utilizamos Node.js�
 
 Una **skill** es información útil para una tarea especializada: el procedimiento para realizar una revisión de seguridad.
 
----
-
-### Crear nuestra primera skill
-
-Crearemos <code>.github/skills/code-review/SKILL.md</code>.
-
-Una skill sencilla podría tener:
-
-```markdown
----
-name: code-review
-description: Review code changes looking for bugs, maintainability problems and missing tests.
----
-
-# Code review procedure
-
-When reviewing code:
-
-1. Identify the files that changed.
-2. Look for obvious bugs.
-3. Check duplicated code.
-4. Check error handling.
-5. Check input validation.
-6. Check whether tests cover the new behaviour.
-7. Do not modify the code automatically.
-
-Return:
-
-- Problem
-- Severity: low / medium / high
-- File
-- Proposed solution
-```
-
-No queremos una skill enorme.
-
-Queremos comprender la idea de:
-
-> **encapsular una forma de trabajar que podamos reutilizar.**
-
----
-
-### Tercera actividad — Crear una skill
-
-Cread vuestra propia skill de <code>code-review</code>.
-
-Después modificad deliberadamente algo de vuestro portfolio. Por ejemplo:
-
-* eliminad una validación;
-* introducid código duplicado;
-* eliminad un test;
-* dejad un `console.log`;
-* cread un tratamiento deficiente de errores.
-
-Pedid a Copilot:
-
-> Revisa los cambios del proyecto.
-
-Comprobad:
-
-##### ¿Detecta el problema?
-
-<p class="write-line"></p>
-
-##### ¿Utiliza el procedimiento indicado?
-
-<p class="write-line"></p>
-
-##### ¿Propone una solución razonable?
-
-<p class="write-line"></p>
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Tu repositorio tiene un fichero de instrucciones de proyecto.</li>
-    <li>Las instrucciones dicen cómo se trabaja aquí, no qué hacer ahora.</li>
-    <li>Tienes creada al menos una skill.</li>
-    <li>Sabes cuándo algo es una instrucción y cuándo es una skill.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre un prompt y unas instrucciones de proyecto?</li>
-    <li>¿Cuándo conviene una skill en lugar de una instrucción?</li>
-    <li>¿Por qué no metemos todo en las instrucciones?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El prompt dice qué quiero ahora; las instrucciones dicen cómo trabajamos siempre en este proyecto.</p>
-  <p>2 · Cuando es un procedimiento especializado que solo hace falta a veces: una auditoría, una migración, un tipo de revisión.</p>
-  <p>3 · Porque todo lo que está cargado ocupa contexto y compite con el problema real. Lo que no se usa siempre, no debe estar siempre.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Revisa el cambio de la sesión anterior y anota dos decisiones que no quieras explicar de nuevo. Distingue una regla permanente de una instrucción exclusiva de aquel cambio.
+2. Crea `.github/copilot-instructions.md` si utilizas Copilot, o el archivo de instrucciones que reconozca el agente del aula. Escribe objetivo del sitio, archivos relevantes, límites y comprobación manual.
+3. Pide al agente que explique qué instrucciones ha encontrado. Verifica el contenido indicado; no des por leído un archivo solo porque exista.
+4. Crea una ficha de revisión con cuatro pasos: abrir cambio, comparar con objetivo, probar comportamiento y registrar resultado. Si el entorno admite skills, usa la plantilla enlazada en la guía; si no, aplica el mismo procedimiento desde el prompt.
+5. Prueba las instrucciones con una modificación pequeña de texto y comprueba si respeta los límites. Corrige una regla ambigua y conserva el ejemplo que motivó su revisión.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Las instrucciones y la ficha se han usado en una tarea real. Explica qué información pertenece al prompt y cuál debe permanecer en el repositorio.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD4 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Dale herramientas
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo funcionan las herramientas internas de ejecución y el protocolo MCP (Model Context Protocol) bajo el principio de mínimo privilegio.</li>
-    <li><strong>2. Haz:</strong> Configura herramientas para que el agente pueda inspeccionar ficheros, ejecutar tests y consultar documentación externa de forma controlada.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre seguridad e integración de herramientas.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Mejora del sitio asistida por IA», sesión 3 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Las herramientas: darle manos al agente
+### Se explica
 
-Hasta ahora el agente conoce información.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Pero también puede disponer de herramientas.
+Una herramienta permite que un agente realice una acción concreta, como leer documentación o consultar un repositorio. **MCP** es un protocolo para conectar herramientas y fuentes con aplicaciones de IA. No es un permiso universal ni significa que debamos programar una integración para cada actividad.
 
-Una herramienta permite ejecutar una acción.
+Antes de conceder acceso debemos conocer qué datos necesita la tarea y qué acciones requiere. Consultar una incidencia puede necesitar lectura; resolver una duda no necesita borrar archivos ni escribir en producción. Hoy diseñaremos y comprobaremos esos límites mediante un caso, sin conectar cuentas de otras personas.
 
-<figure class="diagram">
-  <figcaption>Herramientas dentro del propio proyecto</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 200" role="img" aria-labelledby="tools-title tools-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="tools-title">Herramientas internas de un agente</title>
-    <desc id="tools-desc">El agente puede leer archivos, ejecutar tests y buscar código dentro del proyecto.</desc>
-    <defs>
-      <marker id="tools-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 60 L 360 96" />
-      <path d="M 130 96 L 590 96" />
-      <path d="M 130 96 L 130 124" marker-end="url(#tools-arrow)" />
-      <path d="M 360 96 L 360 124" marker-end="url(#tools-arrow)" />
-      <path d="M 590 96 L 590 124" marker-end="url(#tools-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="280" y="12" width="160" height="48" rx="3" />
-      <text x="360" y="36">Agente</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="45" y="130" width="170" height="44" rx="3" />
-      <text x="130" y="152">Leer archivos</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="275" y="130" width="170" height="44" rx="3" />
-      <text x="360" y="152">Ejecutar tests</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="505" y="130" width="170" height="44" rx="3" />
-      <text x="590" y="152">Buscar código</text>
-    </g>
-  </svg>
-</figure>
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-O herramientas externas:
-
-<figure class="diagram">
-  <figcaption>Herramientas fuera del proyecto</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 200" role="img" aria-labelledby="ext-title ext-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="ext-title">Herramientas externas de un agente</title>
-    <desc id="ext-desc">El agente puede conectarse con GitHub, con una base de datos o con una API externa.</desc>
-    <defs>
-      <marker id="ext-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 60 L 360 96" />
-      <path d="M 130 96 L 590 96" />
-      <path d="M 130 96 L 130 124" marker-end="url(#ext-arrow)" />
-      <path d="M 360 96 L 360 124" marker-end="url(#ext-arrow)" />
-      <path d="M 590 96 L 590 124" marker-end="url(#ext-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="280" y="12" width="160" height="48" rx="3" />
-      <text x="360" y="36">Agente</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="45" y="130" width="170" height="44" rx="3" />
-      <text x="130" y="152">GitHub</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="275" y="130" width="170" height="44" rx="3" />
-      <text x="360" y="152">Base de datos</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="505" y="130" width="170" height="44" rx="3" />
-      <text x="590" y="152">API</text>
-    </g>
-  </svg>
-</figure>
-
-Esto cambia mucho lo que puede hacer.
-
----
-
-### Una analogía
-
-Imaginad dos técnicos.
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Técnico A</p>
-    <p class="compare-body">Conocimientos y documentación, pero no puede tocar ningún ordenador.</p>
-  </div>
-  <div>
-    <p class="compare-label">Técnico B</p>
-    <p class="compare-body">Lo mismo, más terminal, acceso al proyecto y herramientas de diagnóstico.</p>
-  </div>
-</div>
-
-El segundo puede realizar muchas más acciones.
-
-Con un agente ocurre algo parecido.
-
----
-
-### ¿Qué es MCP?
+#### ¿Qué es MCP?
 
 Aquí aparece:
 
@@ -953,815 +475,58 @@ La idea importante es:
 
 > **MCP permite ampliar las capacidades del agente conectándolo con herramientas y fuentes externas mediante una interfaz común.**
 
----
-
-### Una analogía para MCP
-
-Pensad en USB.
-
-Antes de los estándares, cada dispositivo podía necesitar un conector diferente.
-
-USB proporciona una interfaz común para muchos dispositivos.
-
-MCP intenta resolver un problema conceptualmente parecido en el mundo de los agentes:
-
-<figure class="diagram">
-  <figcaption>Un solo conector en lugar de muchos</figcaption>
-  <ol class="flow flow--row">
-    <li>Agente</li>
-    <li>Interfaz común</li>
-    <li>Muchas herramientas</li>
-  </ol>
-</figure>
-
-La analogía no es perfecta, pero ayuda a entender la idea.
-
----
-
-### MCP no significa «dar acceso a todo»
-
-Aquí aparece un problema importante.
-
-Si conectamos un agente a una base de datos: ¿puede únicamente leer? ¿Puede modificar? ¿Puede eliminar?
-
-Si le damos acceso a GitHub: ¿puede leer Issues? ¿Puede crear commits? ¿Puede borrar repositorios?
-
-Por tanto:
-
-> **dar una herramienta a un agente significa darle capacidad para actuar.**
-
-Siempre debemos pensar en:
-
-* permisos;
-* mínimo privilegio;
-* información sensible;
-* consecuencias de las acciones.
-
----
-
-### Cuarta actividad — Diseñar un MCP
-
-No vamos a desarrollar un servidor MCP.
-
-Queremos comprender su utilidad.
-
-Para cada situación indicad qué herramientas tendría sentido proporcionar al agente.
-
-##### Caso A — Agente de documentación
-
-Debe responder preguntas sobre el proyecto. ¿Qué necesitaría?
-
-<p class="write-line"></p>
-
-##### Caso B — Agente de soporte
-
-Debe consultar incidencias de GitHub. ¿Qué necesitaría?
-
-<p class="write-line"></p>
-
-##### Caso C — Agente de análisis de datos
-
-Debe responder preguntas sobre una base de datos empresarial. ¿Qué necesitaría?
-
-<p class="write-line"></p>
-
-##### Caso D — Agente programador
-
-Debe resolver un Issue y comprobar los tests. ¿Qué herramientas necesitaría?
-
-<p class="write-line"></p>
-
-Después indicad, para todos ellos:
-
-##### ¿Qué permisos NO le daríais?
-
-<p class="write-line"></p>
-
----
-
-### Custom agents
-
-También podemos crear agentes especializados.
-
-<figure class="diagram">
-  <figcaption>Agentes con responsabilidades distintas</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 200" role="img" aria-labelledby="custom-title custom-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="custom-title">Agentes especializados en un proyecto</title>
-    <desc id="custom-desc">Un mismo proyecto puede tener un agente que desarrolla, otro que revisa y otro que prueba, cada uno con permisos distintos.</desc>
-    <defs>
-      <marker id="custom-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 56 L 360 92" />
-      <path d="M 130 92 L 590 92" />
-      <path d="M 130 92 L 130 120" marker-end="url(#custom-arrow)" />
-      <path d="M 360 92 L 360 120" marker-end="url(#custom-arrow)" />
-      <path d="M 590 92 L 590 120" marker-end="url(#custom-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="280" y="12" width="160" height="44" rx="3" />
-      <text x="360" y="34">Proyecto</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="45" y="126" width="170" height="52" rx="3" />
-      <text x="130" y="146">Developer</text>
-      <text class="diagram-subtext" x="130" y="164">agent</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="275" y="126" width="170" height="52" rx="3" />
-      <text x="360" y="146">Reviewer</text>
-      <text class="diagram-subtext" x="360" y="164">agent</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="505" y="126" width="170" height="52" rx="3" />
-      <text x="590" y="146">Tester</text>
-      <text class="diagram-subtext" x="590" y="164">agent</text>
-    </g>
-  </svg>
-</figure>
-
-Cada agente puede tener instrucciones, herramientas, permisos y responsabilidades diferentes.
-
-Por ejemplo, el **Developer** puede leer código, modificarlo y ejecutar tests. El **Reviewer** puede leer código y revisar cambios, pero no modificar archivos.
-
-Esta separación puede reducir errores.
-
----
-
-### No necesitamos crear diez agentes
-
-Un error habitual consiste en pensar:
-
-> Más agentes = mejor sistema.
-
-No necesariamente.
-
-Cada elemento añade complejidad, configuración, contexto y posibles errores.
-
-Utilizaremos agentes especializados únicamente cuando resuelvan un problema concreto.
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
-  <ul class="checklist">
-    <li>Sabes qué es una tool y qué la diferencia de una respuesta de texto.</li>
-    <li>Puedes explicar MCP con tus palabras.</li>
-    <li>Has diseñado un MCP acotado, con lo que sí puede hacer y lo que no.</li>
-    <li>Sabes cuándo NO hace falta crear un agente propio.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué es MCP, en una frase?</li>
-    <li>¿Por qué un MCP no debería tener acceso a todo?</li>
-    <li>Un agente propone ejecutar un comando destructivo. ¿Qué hacéis?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Una forma estándar de conectar un agente con herramientas y datos externos, para no inventar una integración distinta cada vez.</p>
-  <p>2 · Mínimo privilegio: cada permiso que le dais es un permiso que puede usar mal, o que alguien puede aprovechar a través de él.</p>
-  <p>3 · No aceptarlo. Preguntar qué problema cree que resuelve y buscar la alternativa reversible.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Define la tarea «preparar una propuesta para corregir un enlace del sitio». Enumera las fuentes necesarias: archivo del enlace, destino esperado y criterio de comprobación.
+2. Dibuja usuario → agente → herramienta → recurso. Escribe qué dato entra y qué resultado sale de cada llamada. Separa lectura de escritura.
+3. Completa una tabla con herramienta, permiso mínimo, dato accesible y acción excluida. Resuelve primero lectura del repositorio; después compara con una herramienta capaz de modificarlo.
+4. Pide al agente un plan sin ejecutar cambios. Revisa si solicita capacidades innecesarias. Si el entorno permite consultar herramientas, inspecciona su descripción y contrástala con tu tabla.
+5. Simula una instrucción hallada dentro de un documento que pide ampliar el acceso. Explica por qué ese texto es contenido que se analiza y no una autorización del usuario. Guarda la decisión junto al esquema.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Se evalúa comprender herramientas y permisos. El diagrama y el caso razonado bastan para MCP; no se exige desplegar un servidor MCP ni crear varios agentes.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD4 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Nunca delegues la verificación
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La regla de oro del desarrollo asistido: nunca aceptar código sin revisar su diff, ejecutar tests y verificar que cumple los criterios.</li>
-    <li><strong>2. Haz:</strong> Audita los cambios generados por la IA en tu portfolio, detecta posibles alucinaciones y ejecuta la suite de verificación.</li>
-    <li><strong>3. Entrega:</strong> Publica tu portfolio en GitHub con sus instrucciones de proyecto, la skill de revisión y la memoria técnica.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Mejora del sitio asistida por IA», sesión 4 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El concepto más importante de toda la unidad
+### Se explica
 
-La IA puede equivocarse.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Puede:
+Un **diff** compara dos versiones y muestra líneas añadidas y eliminadas. Permite revisar qué cambió, pero no demuestra que funcione. Necesitamos dos comprobaciones: que el cambio corresponde a la tarea y que el comportamiento esperado se observa al ejecutarlo.
 
-* inventar una API;
-* utilizar una librería inexistente;
-* introducir un error;
-* eliminar comportamiento necesario;
-* escribir código inseguro;
-* crear tests que no comprueban realmente lo necesario.
+La revisión empieza por el criterio de aceptación. Si pedimos mejorar el contacto, una reescritura de todo el sitio necesita justificación y dificulta comprobar el resultado. Podemos rechazar una propuesta de la IA: lo que se evalúa es la decisión y su evidencia, no aceptar todo lo generado.
 
-Por tanto:
+### Se trabaja
 
-> **El código generado por IA debe tratarse como código escrito por otra persona que todavía no hemos revisado.**
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-Nunca como código automáticamente correcto.
+1. Elige una mejora pendiente del sitio de UD3 y escribe dos criterios observables. Recupera las instrucciones y la ficha de revisión de esta unidad.
+2. Pide un plan acotado y revisa los archivos que pretende tocar. Aplica el cambio por partes; conserva el punto inicial para poder comparar o volver atrás.
+3. Abre la comparación de cambios en el editor. Para cada archivo explica por qué se modificó. Retira o justifica cualquier cambio fuera del alcance antes de darlo por terminado.
+4. Abre la web, prueba los criterios y revisa un comportamiento anterior que deba mantenerse. Anota paso, resultado esperado y resultado observado; no basta con copiar «tests correctos» de la conversación.
+5. Entrega el sitio actualizado y el registro con tarea, instrucciones, procedimiento de revisión, decisión sobre permisos y pruebas. Cada integrante explica un cambio aceptado o rechazado.
 
----
+### Cierre
 
-### El flujo profesional
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-Evitemos esto:
+La actividad de IA termina sobre el mismo sitio y con una mejora verificable. Enlaza las evidencias existentes en lugar de volver a entregar un portfolio desde cero.
 
-<figure class="diagram">
-  <figcaption>Antes · el atajo que no comprueba nada</figcaption>
-  <ol class="flow flow--before">
-    <li>Pedir código</li>
-    <li>La IA genera</li>
-    <li>Parece funcionar</li>
-    <li>Fin</li>
-  </ol>
-</figure>
-
-Nuestro flujo será:
-
-<figure class="diagram">
-  <figcaption>Después · el flujo profesional</figcaption>
-  <ol class="flow">
-    <li>Entender el problema</li>
-    <li>Definir la tarea</li>
-    <li>Dar contexto</li>
-    <li>Pedir un plan</li>
-    <li>Revisar el plan</li>
-    <li>Implementar</li>
-    <li>Revisar el diff</li>
-    <li>Ejecutar los tests</li>
-    <li>Comprobar el resultado</li>
-    <li>Code review</li>
-    <li>Commit</li>
-  </ol>
-</figure>
-
----
-
-### Antes de modificar: planificar
-
-Para tareas que no sean triviales podemos pedir:
-
-> Antes de cambiar ningún archivo:
->
-> 1. analiza el proyecto;
-> 2. identifica los archivos implicados;
-> 3. propón un plan;
-> 4. indica posibles riesgos;
-> 5. espera antes de implementar.
-
-Esto permite detectar errores **antes de generar cien líneas incorrectas**.
-
----
-
-### Después de modificar: revisar el diff
-
-Git nos permite comprobar exactamente qué ha cambiado.
-
-Utilizad:
-
-```bash
-git diff
-```
-
-Nunca os limitéis a preguntar al agente:
-
-> ¿Está todo bien?
-
-El propio agente que escribió el código puede no detectar sus errores.
-
-Revisad vosotros los cambios.
-
----
-
-### La IA debe aportar evidencias
-
-En lugar de pedir «implementa esto», es preferible «implementa esto y añade tests que demuestren que funciona».
-
-El flujo se convierte en:
-
-<figure class="diagram">
-  <figcaption>Qué debe entregar el agente</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Código</li>
-    <li>Tests</li>
-    <li>Resultado</li>
-  </ol>
-</figure>
-
-El agente no solamente nos entrega una solución.
-
-También debe ayudar a proporcionar **evidencias de que la solución funciona**.
-
----
-
-### Seguridad al trabajar con IA
-
-#### Nunca compartáis secretos innecesariamente
-
-Por ejemplo: `password`, `API_KEY`, `token`, `.env` o cualquier credencial.
-
-#### Revisad comandos
-
-Un agente con acceso a terminal puede ejecutar comandos.
-
-Antes de autorizar una acción peligrosa, comprobad qué hace.
-
-#### Revisad dependencias
-
-Si propone:
-
-```bash
-npm install paquete-desconocido
-```
-
-preguntaos:
-
-* ¿es necesario?
-* ¿existe?
-* ¿es mantenido?
-* ¿podemos resolverlo sin añadir otra dependencia?
-
-#### Menos permisos es mejor
-
-Si una herramienta únicamente necesita leer, no necesita permisos de escritura.
-
-Este principio se denomina:
-
-<p class="term">Mínimo privilegio</p>
-
----
-
-### Actividad final — Construid vuestro portfolio con un agente
-
-Vais a crear **vuestro propio portfolio profesional** y a publicarlo en GitHub.
-
-No se os entrega ningún repositorio: el proyecto es vuestro desde la primera
-línea. Si hicisteis la web de la UD3, podéis partir de ella.
-
-Ojo con el objetivo, porque es fácil confundirlo. No se trata de conseguir el
-portfolio más vistoso, ni de generar el máximo de código con IA. Se trata de
-**dirigir al agente y demostrar que entendéis y verificáis lo que produce**.
-
-Un portfolio es un buen proyecto para esto por tres motivos: lo entendéis
-perfectamente, sois vosotros quienes decidís qué debe hacer, y os quedáis con
-algo que podéis enseñar en una entrevista.
-
-#### Parte A — Definir qué vais a construir
-
-Antes de escribir código, decidid qué debe contener vuestro portfolio. Por
-ejemplo: presentación, proyectos, tecnologías, formulario de contacto, versión
-en dos idiomas, modo oscuro.
-
-Escribid la tarea con la plantilla de la sección 7:
-
-<figure class="diagram">
-  <figcaption>Vuestra tarea</figcaption>
-  <ol class="flow">
-    <li><span class="flow-role">Objetivo</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Contexto</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Restricciones</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Criterios de aceptación</span><span class="write-line"></span></li>
-    <li><span class="flow-role">Forma de verificación</span><span class="write-line"></span></li>
-  </ol>
-</figure>
-
-Pedid después un plan al agente, **sin dejarle tocar todavía ningún archivo**:
-
-> Antes de crear nada, propón la estructura de archivos, las tecnologías y los
-> pasos que seguirías. Indica qué decisiones no tienes claras.
-
-Revisad ese plan antes de continuar. Si algo no os convence, corregidlo ahora:
-es mucho más barato que corregirlo con el proyecto a medio hacer.
-
-#### Parte B — Crear el repositorio
-
-Cread un repositorio nuevo en vuestra cuenta de GitHub y haced el primer commit
-con la estructura mínima acordada en el plan.
-
-A partir de aquí, cada avance importante debería ser un commit. Así podréis
-enseñar en la memoria qué hizo el agente y qué decidisteis vosotros.
-
-#### Parte C — Escribir las instrucciones del proyecto
-
-Cread <code>.github/copilot-instructions.md</code>.
-
-Debe incluir como mínimo stack, estructura, convenciones, accesibilidad,
-seguridad y qué debe comprobar el agente antes de dar una tarea por terminada.
-
-No copiéis el ejemplo de la sección 11 literalmente: aquel es de un proyecto
-Node con Express y PostgreSQL, y el vuestro probablemente no lo sea. Las
-instrucciones tienen que describir **vuestro** proyecto.
-
-#### Parte D — Implementación asistida
-
-Construid el portfolio con ayuda del agente. En cada tarea:
-
-1. revisad su plan antes de aceptarlo;
-2. revisad los archivos que ha modificado;
-3. abrid la página en el navegador;
-4. comprobad que se ve bien también en móvil.
-
-#### Parte E — Crear una skill
-
-Cread <code>.github/skills/code-review/SKILL.md</code>.
-
-La skill debe definir vuestro procedimiento de revisión. Para un portfolio web,
-como mínimo debería comprobar HTML semántico, accesibilidad, enlaces rotos,
-duplicación, imágenes sin texto alternativo y seguridad básica.
-
-#### Parte F — Revisar el trabajo de la IA
-
-Utilizad la skill para revisar vuestro propio repositorio.
-
-Clasificad cada posible problema como <span class="tag tag--low">Bajo</span> <span class="tag tag--mid">Medio</span> <span class="tag tag--high">Alto</span>.
-
-No es obligatorio aceptar todas las recomendaciones del agente.
-
-Para cada recomendación importante decidid si la aceptáis o la rechazáis, y explicad por qué.
-
-#### Parte G — Que el agente os explique vuestro propio proyecto
-
-Esta parte es la más interesante, y solo funciona ahora: cuando ya conocéis el
-proyecto mejor que nadie.
-
-Abrid una conversación nueva y pedid:
-
-> Analiza este repositorio. Explícame qué hace, su estructura, sus tecnologías
-> y cómo se ejecuta. Indica también qué aspectos no puedes determinar con
-> seguridad.
-
-Contrastad la respuesta con lo que realmente hicisteis y anotad:
-
-##### Una cosa que haya explicado correctamente.
-
-<p class="write-line"></p>
-
-##### Una cosa que haya interpretado incorrectamente o con demasiada seguridad.
-
-<p class="write-line"></p>
-
-Aquí es donde se ve por qué importan las instrucciones del proyecto: sobre un
-repositorio que no conoce, un agente deduce, y a veces deduce mal.
-
-#### Parte H — MCP
-
-No desarrollaremos todavía un servidor MCP.
-
-Dibujad qué conexión MCP podría resultar útil para este proyecto. Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>Ejemplo de conexión</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 348" role="img" aria-labelledby="pg-title pg-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="pg-title">Ejemplo de conexión MCP con GitHub</title>
-    <desc id="pg-desc">Copilot se conecta mediante MCP con GitHub, y a través de él puede acceder a las incidencias y a las pull requests.</desc>
-    <defs>
-      <marker id="pg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 56 L 360 86" marker-end="url(#pg-arrow)" />
-      <path d="M 360 136 L 360 166" marker-end="url(#pg-arrow)" />
-      <path d="M 360 216 L 360 248" />
-      <path d="M 225 248 L 495 248" />
-      <path d="M 225 248 L 225 276" marker-end="url(#pg-arrow)" />
-      <path d="M 495 248 L 495 276" marker-end="url(#pg-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="280" y="12" width="160" height="44" rx="3" />
-      <text x="360" y="34">Copilot</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="300" y="92" width="120" height="44" rx="3" />
-      <text x="360" y="114">MCP</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="280" y="172" width="160" height="44" rx="3" />
-      <text x="360" y="194">GitHub</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="140" y="282" width="170" height="44" rx="3" />
-      <text x="225" y="304">Issues</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="410" y="282" width="170" height="44" rx="3" />
-      <text x="495" y="304">Pull requests</text>
-    </g>
-  </svg>
-</figure>
-
-Indicad:
-
-##### Qué información podría consultar.
-
-<p class="write-line"></p>
-
-##### Qué acciones podría realizar.
-
-<p class="write-line"></p>
-
-##### Qué permisos le concederíais.
-
-<p class="write-line"></p>
-
-##### Qué permisos NO le concederíais.
-
-<p class="write-line"></p>
-
-#### Parte I — Git y publicación
-
-Antes de terminar:
-
-```bash
-git diff
-```
-
-Revisad todos los cambios. Después:
-
-```bash
-git status
-```
-
-y cread vuestro commit. Finalmente:
-
-```bash
-git push
-```
-
-Vuestro portfolio debe quedar visible en GitHub. Si queréis publicarlo también
-como página web, podéis activar GitHub Pages en el repositorio o desplegarlo en
-el servidor que montasteis en la UD3.
-
----
-
-### Producto final
-
-Entregaréis el repositorio de vuestro portfolio y una memoria breve.
-
-La memoria debe tener aproximadamente **2–3 páginas**, no una documentación enorme.
-
-Debe incluir:
-
-#### 1. Tarea
-
-Qué querías construir y cómo lo definiste.
-
-#### 2. Instrucciones
-
-Qué información habéis proporcionado al agente y por qué.
-
-#### 3. Skill
-
-Qué procedimiento habéis creado.
-
-#### 4. Evidencia
-
-Captura o fragmento donde se observe al agente proponiendo un plan, modificando código y revisando cambios, y cómo comprobasteis vosotros el resultado.
-
-#### 5. Error o limitación de la IA
-
-Debéis identificar al menos **una cosa que Copilot no haya hecho perfectamente**. Puede ser una mala decisión, código innecesario, una interpretación incorrecta, una recomendación que habéis rechazado o un error detectado mediante tests.
-
-#### 6. Verificación
-
-Explicad cómo habéis comprobado que el resultado funciona.
-
-#### 7. MCP
-
-Incluid vuestro pequeño diseño conceptual.
-
----
-
-### Evaluación
-
-<table>
-  <thead>
-    <tr>
-      <th>Criterio</th>
-      <th class="align-right">Puntos</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Definición clara de la tarea y criterios de aceptación</td>
-      <td class="align-right">1,5</td>
-    </tr>
-    <tr>
-      <td>Calidad de <code>copilot-instructions.md</code></td>
-      <td class="align-right">2</td>
-    </tr>
-    <tr>
-      <td>Uso razonado del agente durante el desarrollo</td>
-      <td class="align-right">2</td>
-    </tr>
-    <tr>
-      <td>Skill de revisión</td>
-      <td class="align-right">1,5</td>
-    </tr>
-    <tr>
-      <td>Verificación del resultado: diff, comprobación en el navegador y tests si procede</td>
-      <td class="align-right"><strong>2</strong></td>
-    </tr>
-    <tr>
-      <td>Comprensión conceptual de MCP y permisos</td>
-      <td class="align-right">1</td>
-    </tr>
-  </tbody>
-</table>
-
-#### Lo que NO se evalúa
-
-No obtiene mejor nota quien genera más código con IA, utiliza más prompts, crea más agentes o utiliza más herramientas.
-
-#### Lo que SÍ se evalúa
-
-Obtiene mejor nota quien demuestra que sabe dirigir el trabajo de un agente:
-
-<figure class="diagram">
-  <figcaption>Lo que de verdad se evalúa</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Definir</li>
-    <li>Contextualizar</li>
-    <li>Dirigir</li>
-    <li>Revisar</li>
-    <li>Verificar</li>
-  </ol>
-</figure>
-
----
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · el agente ha tocado cosas que yo no pedí</summary>
-  <ol>
-    <li>No aceptéis el cambio entero. Mirad el diff fichero por fichero.</li>
-    <li>Revertid lo que no forme parte de la tarea, aunque parezca una mejora.</li>
-    <li>Si ha añadido una dependencia, preguntadle qué problema creía resolver con ella.</li>
-    <li>Volved a pedirlo acotando el alcance: qué ficheros puede tocar y cuáles no.</li>
-    <li>Si ha reformateado medio proyecto, el problema no es el agente: faltaba esa restricción en las instrucciones del repositorio.</li>
-  </ol>
-</details>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Portfolio publicado y accesible.</li>
-    <li>Instrucciones de proyecto en el repositorio.</li>
-    <li>Al menos una skill propia.</li>
-    <li>Evidencias del flujo: plan, diff revisado y comprobaciones.</li>
-    <li>Un cambio del agente que rechazasteis, y por qué.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Cuál es el único paso del flujo que no se delega nunca?</li>
-    <li>¿Qué miráis en un diff antes de aceptar?</li>
-    <li>El agente dice que ha terminado y todo funciona. ¿Os lo creéis?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · La verificación. El plan y el código se pueden delegar; la decisión de que eso entra en el proyecto, no.</p>
-  <p>2 · Que no haya cambios que no pedisteis, dependencias nuevas, ficheros tocados de más ni funcionalidad rota.</p>
-  <p>3 · No hasta comprobarlo. «Funciona» dicho por el agente es una afirmación, no una evidencia.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD4 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
-### El mapa que debéis recordar
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-Cuando trabajamos con IA para desarrollar software tenemos diferentes piezas:
-
-<figure class="diagram">
-  <figcaption>Todas las piezas y cómo encajan</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 680" role="img" aria-labelledby="ia-title ia-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="ia-title">Mapa del desarrollo asistido por IA</title>
-    <desc id="ia-desc">El proyecto aporta instrucciones al agente, que recibe además una tarea y su contexto. El agente se apoya en skills, herramientas y MCP para producir código, que pasa por tests, revisión y finalmente Git.</desc>
-    <defs>
-      <marker id="ia-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 54 L 360 82" marker-end="url(#ia-arrow)" />
-      <path d="M 360 130 L 360 152" marker-end="url(#ia-arrow)" />
-      <path d="M 130 185 L 144 185" marker-end="url(#ia-arrow)" />
-      <path d="M 260 185 L 274 185" marker-end="url(#ia-arrow)" />
-      <path d="M 360 212 L 360 240" />
-      <path d="M 130 240 L 590 240" />
-      <path d="M 130 240 L 130 262" marker-end="url(#ia-arrow)" />
-      <path d="M 360 240 L 360 262" marker-end="url(#ia-arrow)" />
-      <path d="M 590 240 L 590 262" marker-end="url(#ia-arrow)" />
-      <path d="M 130 310 L 130 352" />
-      <path d="M 360 310 L 360 352" />
-      <path d="M 590 310 L 590 352" />
-      <path d="M 130 352 L 590 352" />
-      <path d="M 360 352 L 360 382" marker-end="url(#ia-arrow)" />
-      <path d="M 360 430 L 360 458" marker-end="url(#ia-arrow)" />
-      <path d="M 360 506 L 360 534" marker-end="url(#ia-arrow)" />
-      <path d="M 360 582 L 360 610" marker-end="url(#ia-arrow)" />
-    </g>
-    <g class="diagram-node">
-      <rect x="280" y="12" width="160" height="42" rx="3" />
-      <text x="360" y="33">Proyecto</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="250" y="88" width="220" height="42" rx="3" />
-      <text x="360" y="109">Instrucciones</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="20" y="164" width="110" height="42" rx="3" />
-      <text x="75" y="185">Tarea</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="150" y="164" width="110" height="42" rx="3" />
-      <text x="205" y="185">Contexto</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="280" y="158" width="160" height="54" rx="3" />
-      <text x="360" y="185">Agente</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="45" y="268" width="170" height="42" rx="3" />
-      <text x="130" y="289">Skills</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="275" y="268" width="170" height="42" rx="3" />
-      <text x="360" y="289">Tools</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="505" y="268" width="170" height="42" rx="3" />
-      <text x="590" y="289">MCP</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="280" y="388" width="160" height="42" rx="3" />
-      <text x="360" y="409">Código</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="280" y="464" width="160" height="42" rx="3" />
-      <text x="360" y="485">Tests</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="260" y="540" width="200" height="42" rx="3" />
-      <text x="360" y="561">Code review</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="300" y="616" width="120" height="42" rx="3" />
-      <text x="360" y="637">Git</text>
-    </g>
-  </svg>
-</figure>
-
-Podemos resumir cada concepto así:
-
-| Concepto | Pregunta |
-| --- | --- |
-| **Prompt / tarea** | ¿Qué quiero hacer ahora? |
-| **Contexto** | ¿Qué necesita saber para hacerlo? |
-| **Instructions** | ¿Cómo se trabaja siempre en este proyecto? |
-| **Skill** | ¿Cómo se realiza bien este tipo de tarea? |
-| **Agent** | ¿Quién realiza la tarea y con qué autonomía? |
-| **Tool** | ¿Qué puede hacer fuera del modelo? |
-| **MCP** | ¿Cómo lo conectamos con sistemas externos? |
-| **Tests** | ¿Cómo demostramos que funciona? |
-| **Git** | ¿Cómo sabemos exactamente qué ha cambiado? |
-
----
-
-### La idea más importante
-
-La IA puede aumentar muchísimo la productividad de un desarrollador.
-
-Pero utilizarla profesionalmente no significa:
-
-> **«hacer menos caso al código».**
-
-Significa exactamente lo contrario:
-
-> **poder producir más, manteniendo la capacidad de entender, revisar y verificar lo producido.**
-
-El objetivo de esta unidad no es que la IA programe por vosotros.
-
-El objetivo es que aprendáis a **dirigir una herramienta que puede programar con vosotros**.
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Prompt | Qué quiero ahora |
-| Contexto | Qué necesita saber para hacerlo |
-| Instructions | Cómo trabajamos siempre en este proyecto |
-| Skill | Cómo hacemos una tarea especializada concreta |
-| Modelo | Lo que genera el texto |
-| Agente | El modelo que además puede actuar |
-| Tool | Una acción que el agente puede ejecutar |
-| MCP | La forma estándar de conectarlo con herramientas y datos |
-| Criterio de aceptación | Cómo sabremos que ha terminado bien |
-| Diff | Qué ha cambiado exactamente |
-| Verificación | Lo único que no se delega nunca |
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

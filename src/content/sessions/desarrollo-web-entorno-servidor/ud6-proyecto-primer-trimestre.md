@@ -20,17 +20,22 @@ priorKnowledge:
   - "Diseño REST, DTO, validación, capas y JPA."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">Estas dos sesiones cierran las 84 horas del primer trimestre. Se revisa y defiende el CRUD elegido y construido desde la primera sesión; no se inicia otro proyecto. La matriz de complejidad de la UD1 es el criterio de alcance y la versión publicada es común a Servidor e Intermodular.</p>
 
 ## Semana 14 · Cerrar la primera versión del proyecto elegido
 
 ## Sesión 27 · Cerrar la primera versión del proyecto elegido
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 14: La defensa del proceso](/es/docencia/proyecto-intermodular/ud6-defender-el-metodo/sesion-14/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-14).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Cerrar una versión consiste en contrastar el producto construido con su alcance. No se elige otro tema ni se empieza otra aplicación.
+El primer trimestre termina con el mismo proyecto que elegiste al comienzo. Hoy usarás una matriz de aceptación: cada requisito debe tener una comprobación que demuestre si se cumple. El taller se dedica a cerrar carencias de esa versión, sin iniciar otro CRUD.
 
 #### De requisitos informales a criterios de aceptación (Gherkin)
 
@@ -39,7 +44,7 @@ Para que una tarea esté «terminada» (*Definition of Done*), su comportamiento
 ```gherkin
 Escenario: Intento de asociar tarea a un proyecto inexistente
   Dado que no existe ningún proyecto con id 999 en PostgreSQL
-  Cuando el cliente envía una petición POST /tareas con cuerpo {"titulo": "Fix", "prioridad": "ALTA", "proyectoId": 999}
+  Cuando el cliente envía una petición POST /tareas con cuerpo {"titulo": "Fix", "prioridad": "alta", "proyectoId": 999}
   Entonces el servidor responde con código de estado HTTP 404 Not Found
   Y el cuerpo JSON contiene {"title": "Not Found", "status": 404, "detail": "No existe proyecto con id 999"}
   Y la consola SQL demuestra que no se ejecutó ninguna sentencia INSERT en la tabla tareas
@@ -95,19 +100,11 @@ Ahora tu aplicación ya hace algo real, está probada, compila y no se romperá 
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Auditad la matriz de requisitos del proyecto que lleváis desde la primera sesión y priorizad defectos pendientes.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Corregid los fallos, completad la colección y los tests y desplegad la versión candidata por el circuito de Intermodular.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Especificación y planificación</p>
+1. Abre la propuesta del README, las pruebas, la colección y la versión desplegada. Anota el commit que estás revisando.
+2. Relaciona cada criterio del trimestre con una ruta, test o consulta que lo demuestre. Marca cumple, falla o pendiente con una evidencia concreta.
+3. Ordena los fallos por impacto y elige primero los que impiden ejecutar el flujo principal, conservar datos o respetar reglas.
 
 #### Paso 2 · El coste del código sin contrato previo
 
@@ -231,17 +228,11 @@ El orden de trabajo del sprint organizado por dependencias técnicas:
 
 #### Paso 5 · Preparar la suite de pruebas y el esquema
 
-Contrasta la planificación con el backend que ya has construido y corrige lo que no coincida:
-
-1. Crea el archivo `src/main/resources/schema.sql` con las sentencias DDL correspondientes a tu diseño de base de datos.
-2. Abre tu cliente HTTP de cabecera (**Bruno** o **Postman**):
-   * Crea una nueva colección llamada `Gestor-Proyectos-Trimestre-1`.
-   * Configura la variable de entorno `baseUrl = http://localhost:8080`.
-   * Crea las peticiones correspondientes a los endpoints pactados en la tabla superior con sus rutas, métodos y ejemplos de JSON en el cuerpo.
-3. Anota en el `README.md` del repositorio el orden de las fases técnicas acordadas con tu equipo.
-4. Revisa con tu compañero que las rutas y nombres de campos en la colección coincidan exactamente con lo que espera el modelo.
-
-<p class="stage">Desarrollo del proyecto</p>
+1. Abre las entidades y el esquema de PostgreSQL. Compara nombres de tablas, tipos, claves y restricciones. Guarda el esquema revisado en `docs/esquema.sql` como documentación; no actives su ejecución automática sobre tablas existentes.
+2. En la colección del proyecto añade una carpeta «Aceptación trimestre 1» y conserva la variable `baseUrl`. Ordena los casos: crear padre → crear recursos relacionados → consultar → modificar → comprobar rechazos → borrar datos de prueba.
+3. En cada petición utiliza el id devuelto por el alta anterior. Añade una aserción de estado y otra sobre el dato importante; reutiliza los casos que ya funcionan.
+4. Ejecuta la carpeta completa y revisa las discrepancias entre colección, modelo y README. Corrige primero una discrepancia, repite su caso y después vuelve a ejecutar la carpeta.
+5. Registra qué requisitos están comprobados y cuál falta por resolver. Esta es la misma aplicación que se pondrá en producción con Intermodular.
 
 #### Paso 6 · Guía de diagnóstico rápido ante bloqueos típicos
 
@@ -256,7 +247,7 @@ Durante el sprint te toparás con errores reales de integración. Esta tabla res
 
 #### Paso 7 · El registro de incidencias técnicas
 
-En ingeniería de software no se esconden los problemas: se diagnostican y se resuelven con método. Si la tarea o evaluación requiere entregar una memoria escrita de incidencias técnicas resueltas, el formato oficial de entrega de texto es siempre un **documento en PDF** (`memoria-incidencias.pdf`), estructurado con este esquema:
+En ingeniería de software no se esconden los problemas: se diagnostican y se resuelven con método. Registra las incidencias técnicas resueltas en `docs/sesiones/sesion-27.pdf`, dentro del mismo repositorio, con este esquema:
 
 ```text
 1. Incidencia: LazyInitializationException al listar proyectos con tareas
@@ -276,7 +267,7 @@ Tener identificados y resueltos estos casos te servirá además como evidencia d
 
 #### Paso 8 · Ejecutar el sprint de desarrollo
 
-Sigue la planificación pactada en la sesión 27 y desarrolla el proyecto iteración a iteración:
+Elige el primer requisito pendiente de la matriz y reproduce su fallo. Localiza la capa responsable, realiza un cambio pequeño y repite esa comprobación; después ejecuta las pruebas relacionadas para detectar regresiones. Actualiza la fila con archivo, commit y resultado. Continúa con el siguiente pendiente hasta que el recorrido principal, las relaciones y las reglas puedan demostrarse en la versión publicada mediante Intermodular.
 
 1. Desarrolla `Proyecto` y `Tarea` con la relación `@ManyToOne(fetch = FetchType.LAZY)`.
 2. Implementa los repositorios con sus tests `@DataJpaTest`.
@@ -299,10 +290,8 @@ Sigue la planificación pactada en la sesión 27 y desarrolla el proyecto iterac
 
 #### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **cerrad la versión construida durante el trimestre**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta de nuevo cada comprobación que antes fallaba y registra qué cambio la ha corregido.
+2. Repite el recorrido completo del producto y confirma que el repositorio contiene instrucciones suficientes para arrancar esa versión con su base de datos.
 
 #### Ampliación si has completado el trabajo
 
@@ -367,35 +356,31 @@ Un compañero de equipo sube un cambio y el pipeline de GitHub Actions se pone e
 
 El mismo commit identifica la API evaluable y su despliegue; el CRUD, las relaciones y las operaciones complejas tienen evidencias.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 27 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-27.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-27.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-27.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 28 · Revisión y defensa del backend en producción
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 14: La defensa del proceso](/es/docencia/proyecto-intermodular/ud6-defender-el-metodo/sesion-14/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-14).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una defensa técnica conecta una decisión con su código y una prueba. La evaluación de Servidor se centra en el comportamiento del backend.
+Ya has revisado los criterios del primer trimestre. Hoy defenderás cómo funciona el backend y comprobarás que otra persona puede verificarlo. En Servidor explicarás código, reglas, persistencia y pruebas; en Intermodular se evalúa el flujo seguido para publicar esa versión.
+
+Esta demostración es común con Intermodular 14. El docente distribuye los turnos entre las sesiones de cierre de ambos módulos: cada persona demuestra el producto una vez y añade las evidencias de proceso al mismo guion. El bloque de cinco minutos descrito abajo corresponde a la parte técnica, no a una segunda defensa independiente.
 
 #### La revisión de código no es buscar erratas
 
@@ -448,23 +433,15 @@ Ejemplo de observación técnica bien formulada:
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Intercambiad proyectos y ejecutad los criterios de aceptación desde el cliente HTTP contra la URL publicada.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Corregid incidencias y defended individualmente un endpoint, una regla, una relación y una prueba del proyecto.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Code review, corrección y defensa</p>
+1. Abre el repositorio y la URL del backend. Identifica el mismo commit en las evidencias de la versión que vas a defender.
+2. Prepara datos de demostración y selecciona una operación completa, una regla rechazada y una consulta con relaciones.
+3. Localiza el controlador, servicio, repositorio y test de esa operación para poder recorrerlos sin buscar durante la explicación.
 
 #### Paso 2 · El protocolo de la defensa técnica individual (5 minutos cronometrados)
 
-La defensa ante el tribunal de aula no es una lectura de diapositivas: es una conversación técnica entre ingenieros donde debes defender tus decisiones con evidencias del repositorio.
+Prepara una secuencia breve en tu colección: consulta correcta, escritura válida, regla rechazada y una consulta que use relaciones. Abre también los métodos que las atienden. Ensaya con un compañero: uno ejecuta y explica; el otro comprueba que la respuesta y la versión corresponden al repositorio entregado. Si aparece un fallo, registra la petición exacta y corrige su causa antes de volver a ensayar. No memorices respuestas sobre una arquitectura distinta de la tuya.
 
 El tiempo se reparte con precisión militar:
 
@@ -484,7 +461,7 @@ El tiempo se reparte con precisión militar:
 
 #### Paso 3 · Auditoría cruzada y refactorización
 
-En esta sesión realizarás la revisión de código de otro equipo y corregirás tu propio repositorio:
+Clona la versión de otro equipo en otra carpeta y utiliza una base de desarrollo propia, configurada como indica su README. Ejecuta primero los tests y después la colección, con el backend encendido. Para cada observación escribe requisito, archivo o petición, resultado esperado y observado. Corrige después tu propio proyecto con esos mismos criterios, una observación cada vez, y actualiza el registro de la sesión en GitHub.
 
 1. Clona el repositorio de tus compañeros en una carpeta independiente.
 2. Ejecuta `./mvnw test` para verificar si su suite pasa en verde a la primera.
@@ -520,10 +497,8 @@ Las tres preguntas que caen casi siempre en esta primera defensa, y que conviene
 
 #### Paso 4 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **revisad y defended la api publicada**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Reproduce el caso permitido y el rechazado, y explica qué capa decide cada resultado y qué datos quedan almacenados.
+2. Haz que otra persona siga el README y registre cualquier paso que falte. Incorpora la corrección y deja el commit final de la revisión identificado.
 
 #### Ampliación si has completado el trabajo
 
@@ -562,27 +537,18 @@ Ensaya tu respuesta a estas tres preguntas típicas de tribunal de evaluación y
 
 Se entrega la misma versión en ambos módulos: aquí se evalúan código y funcionamiento; en Intermodular, workflow, CI, revisión y puesta en producción.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 28 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-28.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-28.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-28.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 

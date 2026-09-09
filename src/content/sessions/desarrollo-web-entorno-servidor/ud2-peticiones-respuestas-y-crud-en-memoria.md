@@ -25,34 +25,26 @@ priorKnowledge:
   - "Postman o Bruno a nivel básico: método, URL, cuerpo JSON y lectura de la respuesta."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">El CRUD elegido sigue en memoria. En estas cuatro sesiones completas y verificas sus entradas, escrituras y respuestas HTTP antes de consolidar el diseño REST.</p>
 
 ## Semana 3 · De la petición al objeto Java
 
 ## Sesión 5 · De la petición al objeto Java
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 3: Vuestro primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-3).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Spring enlaza parámetros de ruta, de consulta y cuerpos JSON con los argumentos del método. Cada dato tiene un lugar concreto en el contrato.
+El CRUD funciona, pero una petición puede fallar antes de entrar en tu método. Hoy seguirás cómo Spring selecciona la ruta y transforma las entradas. Deserializar significa convertir el JSON recibido en un objeto Java; el registro de ejecución permitirá identificar dónde se detiene ese proceso.
 
-#### La caja que dejamos cerrada
+#### Cómo llega la petición al controlador
 
-En la sesión 1 dibujamos el reparto de trabajo así:
-
-<figure class="diagram">
-  <figcaption>Lo que dijimos en la UD1</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Tomcat lee los bytes</li>
-    <li><strong>Spring hace algo</strong></li>
-    <li>Se ejecuta tu método</li>
-  </ol>
-</figure>
-
-Ese «Spring hace algo» era una caja cerrada, y hasta ahora estaba bien que lo fuera: no se puede entender todo el primer día. Pero ya has escrito dos docenas de endpoints, ya has visto fallar cuatro cosas distintas, y **la mitad de los errores que te quedan por encontrar viven exactamente ahí dentro**.
-
-Hoy la abrimos.
+En las primeras sesiones asociaste rutas con métodos mediante anotaciones y enviaste objetos JSON. Ahora vas a distinguir tres tareas que realiza Spring antes de invocar tu código: elegir el método, obtener sus parámetros y convertir el cuerpo. Esta distinción permite buscar cada fallo en el lugar adecuado.
 
 #### El recorrido completo
 
@@ -83,9 +75,9 @@ El paso 4 del recorrido es el que más magia parece. Spring mira **uno a uno** l
 
 | Lo que declaras | De dónde sale | Visto en |
 | :--- | :--- | :---: |
-| `@PathVariable` | Un trozo de la ruta | UD1 · s3 |
-| `@RequestParam` | La *query string* | UD1 · s3 |
-| `@RequestBody` | El cuerpo de la petición | UD1 · s5 |
+| `@PathVariable` | Un trozo de la ruta | UD1 · sesión 2 |
+| `@RequestParam` | La *query string* | UD1 · sesión 2 |
+| `@RequestBody` | El cuerpo de la petición | UD1 · sesión 3 |
 | `@RequestHeader` | Una cabecera | **Hoy** |
 | `HttpServletRequest` | La petición cruda entera | Hoy |
 
@@ -126,9 +118,9 @@ Hoy toca entenderlo, porque **es el origen de una clase entera de fallos**: los 
 
 <p class="term">Conversor de mensaje</p>
 
-La pieza del recorrido de ayer que traduce entre el cuerpo HTTP —bytes y texto— y los objetos Java. Funciona en las dos direcciones: al entrar, con `@RequestBody`; al salir, con lo que devuelve tu método.
+La pieza del recorrido HTTP que traduce entre el cuerpo HTTP —bytes y texto— y los objetos Java. Funciona en las dos direcciones: al entrar, con `@RequestBody`; al salir, con lo que devuelve tu método.
 
-Para JSON, ese conversor usa **Jackson**, que ya conoces. Lo que no conoces todavía es cómo decide.
+Para JSON, ese conversor utiliza **Jackson**, la biblioteca de conversión introducida en la sesión 3. En el modelo con constructor vacío y setters que estamos usando, el proceso es el siguiente; otros modelos, como los records, se construyen de otra forma.
 
 <figure class="diagram">
   <figcaption>Qué hace Jackson con cada clave del JSON</figcaption>
@@ -165,23 +157,15 @@ Un cuerpo que llega puede estar en tres situaciones muy distintas, y Spring las 
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Revisad las entradas de los endpoints de vuestro CRUD y diferenciad identificador, filtros y cuerpo.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Añadid un filtro sencillo en memoria y probad un cuerpo correcto, otro mal formado y la ausencia de un dato esperado.
+1. Abre el controlador del CRUD, el modelo y `src/main/resources/application.properties`. Reproduce un GET y un POST válidos de la sesión 4.
+2. Localiza la consola donde aparecen los mensajes del servidor. Allí leerás los registros, o logs, después de activar el nivel DEBUG en el siguiente paso.
+3. Prepara cuatro variaciones de una petición válida: ruta inexistente, método no admitido, parámetro de tipo incorrecto y cuerpo JSON mal formado. Conserva la petición original para compararlas.
 
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+#### Paso 2 · Activar los logs de Spring y localizar el método que atiende la petición
 
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">De HTTP a un método Java</p>
-
-#### Paso 2 · Enciende la luz
-
-Todo esto se puede **ver**, y verlo una vez vale más que leerlo tres.
+Añade la propiedad de DEBUG al archivo existente, sin borrar sus otras líneas, y reinicia. Crea una tarea mediante el POST y utiliza su id en el GET: el número `1` del ejemplo solo es válido si ese registro existe. Deja visible la terminal del servidor, envía una petición y localiza únicamente las líneas correspondientes a su ruta; los logs de arranque pertenecen a otro momento.
 
 En `src/main/resources/application.properties`:
 
@@ -215,9 +199,9 @@ DispatcherServlet        : Completed 200 OK
   <p>Déjalo encendido mientras desarrollas y apágalo cuando te moleste. Es una línea en un archivo.</p>
 </div>
 
-#### Paso 3 · Las cuatro formas de no encajar
+#### Paso 3 · Distinguir errores de ruta, método, parámetros y cuerpo
 
-Aquí está la idea más útil de la sesión. Ya has visto cuatro errores distintos y los has tratado como cuatro casualidades. No lo son: **cada uno lo produce una fase distinta del recorrido**, y por eso cada uno se arregla en un sitio distinto.
+La anotación `@PostMapping(consumes=..., produces=...)` sustituye a la anotación del POST existente. Conserva dentro del método la asignación de id y el guardado de la sesión 4: el bloque ilustra el acuerdo de formatos, no reinicia el CRUD. `consumes` restringe el cuerpo que aceptas y `produces` el formato que puedes devolver; cambia una sola cabecera de la petición en cada prueba.
 
 <figure class="diagram">
   <figcaption>Dónde muere una petición que no encaja</figcaption>
@@ -257,7 +241,7 @@ public Tarea crear(@RequestBody Tarea tarea) {
 
 Casi nunca hará falta escribirlos: Spring ya deduce lo razonable. Se escriben cuando un mismo recurso puede devolverse en varios formatos, o cuando quieres que el rechazo sea explícito y no una consecuencia.
 
-#### Paso 4 · Provoca los cuatro
+#### Paso 4 · Enviar una petición por cada tipo de error y comparar la respuesta
 
 Con el registro encendido y la consola a la vista. Para cada caso, **predice el código antes de enviar** y después mira **hasta qué línea del registro llegó**.
 
@@ -281,9 +265,9 @@ Al terminar, rellena esta tabla, que es el objetivo real de la sesión:
 
 La columna del medio es la interesante. En dos de los cuatro casos **sí** se encontró tu método y aun así la petición fue rechazada después. Sabe decir en cuáles y por qué.
 
-#### Paso 5 · Traza una petición entera
+#### Paso 5 · Seguir una petición completa en los logs
 
-Sobre tu proyecto:
+Dentro de `ProyectoController`, añade un método de diagnóstico con `@GetMapping("/{id}/incidencias")` si la clase ya tiene el prefijo `/proyectos`. Sus argumentos son `@PathVariable(name="id") int id`, `@RequestParam(name="estado", required=false) String estado` y `@RequestHeader(name="User-Agent") String cliente`. Importa las anotaciones, devuelve una frase con los tres valores y reinicia. Si esa ruta ya existe, utiliza temporalmente `/{id}/diagnostico` para no sustituir una operación del proyecto. Compara un envío con `estado` y otro sin él.
 
 1. Escribe un endpoint `GET /proyectos/{id}/incidencias` que reciba además un `@RequestParam` opcional `estado` y la cabecera `User-Agent`, y devuelva un texto con los tres valores.
 2. Llámalo desde Postman con todo puesto.
@@ -292,7 +276,7 @@ Sobre tu proyecto:
 
 <p class="stage">Cuerpo JSON y deserialización</p>
 
-#### Paso 6 · El endpoint espejo
+#### Paso 6 · Crear un endpoint de diagnóstico que devuelva el objeto recibido
 
 Para estudiar esto necesitamos ver qué objeto ha construido Jackson. Añade a tu controlador:
 
@@ -308,7 +292,7 @@ public Tarea espejo(@RequestBody Tarea tarea) {
 
 Devuelve lo que ha construido y además lo imprime, para que veas el objeto Java y el JSON de vuelta a la vez. No guarda nada: es un banco de pruebas.
 
-#### Paso 7 · Bombardea el espejo
+#### Paso 7 · Enviar variantes de JSON al endpoint de diagnóstico
 
 Envía estos nueve cuerpos, uno a uno, a `POST /tareas/espejo`. **Predice antes de enviar** el código de estado y los valores del objeto.
 
@@ -337,7 +321,7 @@ Los resultados que sorprenden son estos cuatro, y conviene mirarlos despacio:
   <dd><code>200</code>, y <code>completada</code> vale <code>true</code>. El texto <code>"true"</code> entre comillas <strong>no</strong> es un booleano JSON, y aun así Jackson lo acepta y lo convierte. Es tolerante por defecto, y esa tolerancia es una decisión que se puede cambiar.</dd>
 </dl>
 
-#### Paso 8 · Lee el error de verdad
+#### Paso 8 · Localizar la causa de deserialización en el mensaje de error
 
 Cuando salga un `400`, el cuerpo de la respuesta es escueto y casi inútil. El mensaje bueno está, como siempre, en la consola:
 
@@ -349,7 +333,7 @@ Unexpected character ('}' (code 125)): was expecting double-quote to start field
 
 Te dice **la excepción, el motivo y la posición exacta**. Acostúmbrate a leerla: en la UD3 vamos a convertir estos mensajes en respuestas útiles para el cliente, y no se puede transformar lo que no se sabe leer.
 
-#### Paso 9 · La tolerancia es una decisión, y se puede cambiar
+#### Paso 9 · Configurar el rechazo de campos JSON desconocidos
 
 Que las claves desconocidas se ignoren no es una ley de la naturaleza: es un ajuste que Spring Boot elige por ti. Puedes darle la vuelta:
 
@@ -377,9 +361,9 @@ Reinicia y vuelve a enviar el cuerpo número 6, el del `color`. Ahora responde `
   <p>Para este curso, déjalo estricto mientras desarrollas la UD2 y la UD3 y decide tú al llegar al proyecto. Lo que no vale es no haberlo decidido.</p>
 </div>
 
-#### Paso 10 · Cuerpos que no son planos
+#### Paso 10 · Recibir objetos anidados y listas en el JSON
 
-Hasta ahora todos los JSON eran una lista de valores simples. Pueden ser bastante más:
+Cada ampliación pertenece a `Tarea.java`: añade **un campo cada vez**, sus métodos de acceso y el import de su tipo. Para `List<String>` importa `java.util.List`; para `LocalDate`, `java.time.LocalDate`. Crea `Responsable.java` en `model` con `nombre` y `email`, constructor vacío y getters/setters antes de declarar `Responsable responsable` en Tarea. Después de cada ampliación, reinicia y envía su JSON al endpoint espejo. Esos objetos aún no son relaciones de base de datos.
 
 ##### Una lista dentro del objeto
 
@@ -425,7 +409,7 @@ Funciona con el formato ISO, que es año-mes-día con guiones. Prueba a enviar `
   <p>Dar formato a la fecha para que se lea bonita es trabajo del cliente, no tuyo.</p>
 </div>
 
-#### Paso 11 · El espejo de proyectos
+#### Paso 11 · Repetir el diagnóstico con otra entidad de tu dominio
 
 Sobre tu proyecto:
 
@@ -437,10 +421,8 @@ Sobre tu proyecto:
 
 #### Paso 12 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **seguid la conversión de cada entrada http a java**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Envía cada variación por separado y relaciona estado, mensaje de la consola y fase de procesamiento. Comprueba si llegó a ejecutarse el método del controlador.
+2. Compara un JSON válido completo, uno con una clave equivocada y otro mal formado. Documenta cuándo hay rechazo y cuándo se construye un objeto con valores por defecto.
 
 #### Ampliación si has completado el trabajo
 
@@ -556,35 +538,29 @@ Cuando lo tengas escrito, cópialo al proyecto y compruébalo.
 
 Podéis explicar de dónde procede cada argumento y conservar peticiones que reproducen los tres casos.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 5 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-05.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-05.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-05.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 6 · Escrituras y respuestas HTTP
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 3: Vuestro primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-3).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Crear, sustituir, modificar parcialmente y borrar expresan operaciones distintas. El estado y las cabeceras comunican qué hizo el servidor.
+Ya sabes cómo llegan los datos al controlador. Hoy precisarás qué significa repetir una escritura. Una operación idempotente deja el mismo estado final al repetirse; no exige que todas las respuestas sean idénticas. Usarás esa distinción para comparar PUT, PATCH y DELETE.
 
 #### Lo que ya haces y todavía no sabes justificar
 
@@ -637,21 +613,13 @@ Ahí está todo el asunto. Si la operación era un `PUT`, reintentar **es seguro
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Revisad POST, PUT, PATCH y DELETE sobre vuestro dominio. Implementad una modificación parcial con significado y elegid respuestas coherentes.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Comprobad qué ocurre al repetir una escritura o borrar dos veces el mismo identificador; registrad las decisiones del contrato.
+1. Abre los métodos de escritura del controlador y sus peticiones en Postman o Bruno. Crea un registro con todos sus campos informados.
+2. Localiza el PUT que sustituye el objeto. Antes de editar, guarda un GET de detalle que permita comprobar el contenido después de cada escritura.
+3. Anota qué campos debe conservar un PATCH si no los envías y qué política tendrá tu API al borrar un id inexistente.
 
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Crear, modificar y eliminar recursos</p>
-
-#### Paso 2 · `PUT` no es «modificar»
+#### Paso 2 · Comprobar que PUT sustituye la representación completa
 
 Aquí está el error conceptual más extendido del tema. `PUT` no significa «actualiza esto». Significa:
 
@@ -673,6 +641,8 @@ Mira la tarea después con un `GET /tareas/1`. La prioridad ha desaparecido. Y h
 Casi nadie quiere eso. Lo que casi todo el mundo quiere es cambiar un campo y dejar el resto en paz. Para eso existe el otro método.
 
 #### Paso 3 · `PATCH` · cambiar solo lo que envías
+
+Añade el método PATCH al controlador y el import `org.springframework.web.bind.annotation.PatchMapping`. El bloque conserva una búsqueda por id y cambia solo los campos cuyo valor recibido no sea nulo. Compruébalo con una tarea que tenga título y prioridad: envía solo el título y vuelve a consultar para verificar que conserva la prioridad. No utilices aún este procedimiento para distinguir `false` de un booleano omitido: se resuelve con un DTO específico en la sesión 11.
 
 <div class="compare-pair">
   <div>
@@ -724,7 +694,7 @@ public Tarea modificar(
   <p>Las dos se resuelven con una clase distinta para la entrada, con tipos que admitan nulo. Eso es un DTO, y es la UD3.</p>
 </div>
 
-#### Paso 4 · `DELETE` y la trampa de la segunda vez
+#### Paso 4 · Repetir DELETE y distinguir estado de los datos y respuesta
 
 ```java
 @DeleteMapping("/{id}")
@@ -745,7 +715,7 @@ Es la idempotencia en acción: el resultado que pedías —que esa tarea no exis
   <p>Lo importante es que sea una decisión escrita y no un accidente. La tomarás en el trabajo siguiente, cuando aprendas a fijar el código de estado.</p>
 </details>
 
-#### Paso 5 · La tabla de repeticiones
+#### Paso 5 · Registrar el estado final después de repetir cada escritura
 
 Esta es la comprobación que demuestra que has entendido la sesión. Sobre tu API, ejecuta cada operación **dos veces seguidas** y anota el estado del servidor después de cada una.
 
@@ -763,7 +733,7 @@ Una de las filas debería incomodarte: **la del `POST`**. Después de dos ejecuc
 
 #### Paso 6 · Las escrituras de proyectos
 
-Sobre el `ProyectoController`:
+En el controlador de tu segunda entidad, implementa primero PUT copiando el recorrido buscar → comprobar existencia → asignar **todos** los campos editables. Después crea PATCH con asignaciones condicionadas para los campos opcionales y, por último, DELETE sobre el id. Prueba cada operación antes de añadir la siguiente. En las tablas registra también el GET posterior: repetir una respuesta correcta no demuestra por sí solo que se hayan guardado los datos esperados.
 
 1. Implementa `PUT /proyectos/{id}` con semántica de sustitución completa.
 2. Implementa `PATCH /proyectos/{id}` que solo cambie los campos enviados.
@@ -773,10 +743,8 @@ Sobre el `ProyectoController`:
 
 #### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **implementad y repetid las escrituras**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Envía dos veces el mismo PUT y consulta el recurso después de cada envío. El estado final debe ser el mismo.
+2. Envía un PATCH que cambie un único campo y verifica que conserva los demás. Repite un DELETE y explica por qué el recurso sigue ausente aunque pueda cambiar el código de respuesta.
 
 #### Ampliación si has completado el trabajo
 
@@ -820,37 +788,31 @@ La número 4 es la difícil, y merece un párrafo aparte explicando tu decisión
 
 El cliente distingue una creación, una modificación, un borrado y un recurso inexistente por la respuesta recibida.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 6 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-06.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-06.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-06.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 4 · Colección ejecutable y entornos
 
 ## Sesión 7 · Colección ejecutable y entornos
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 4: Enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-4).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una colección con variables evita depender de identificadores copiados a mano. El mismo recorrido puede apuntar a local o a la URL desplegada.
+Tus operaciones ya tienen un comportamiento definido. Ahora controlarás también su respuesta HTTP y las convertirás en una comprobación repetible. ResponseEntity permite elegir estado, cabeceras y cuerpo; una colección agrupa peticiones y un entorno guarda valores como la dirección del servidor.
 
 #### Llevas tres unidades mintiendo
 
@@ -906,23 +868,15 @@ Un juego de valores para esas variables. El entorno «local» dice que `baseUrl`
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Extraed la URL base y encadenad peticiones guardando el identificador creado. Añadid comprobaciones de estados y campos.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Preparad los entornos local y producción; ejecutad producción cuando esté disponible desde Intermodular.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Construir respuestas HTTP</p>
+1. Abre los controladores y las peticiones que has utilizado hasta ahora. Ejecuta una secuencia de alta, consulta y borrado para conocer la respuesta actual.
+2. Anota por operación el estado que quieres devolver. Todavía no crees los scripts de la colección: primero ajustarás esas respuestas en los controladores.
+3. Localiza la carpeta donde guardarás la colección exportada o los archivos de Bruno. Debe estar dentro del repositorio para que otra persona pueda repetirla.
 
 #### Paso 2 · `ResponseEntity` · la respuesta entera, en tus manos
 
-Hasta ahora devolvías el objeto y Spring construía la respuesta a su criterio: `200`, cabeceras deducidas, cuerpo serializado.
+Importa `org.springframework.http.ResponseEntity` y sustituye el GET de detalle anterior. Cambian tanto el tipo de retorno del método como **todas sus ramas**: el caso encontrado devuelve `ok(...)` y el ausente `notFound().build()`. No dejes un `return null` de la versión anterior. Comprueba ambos casos antes de aplicar el mismo patrón a PUT y PATCH.
 
 Cuando devuelves un `ResponseEntity`, decides tú las tres cosas.
 
@@ -1042,7 +996,7 @@ Fíjate en `ResponseEntity<Void>`: el tipo declara que esta respuesta **nunca** 
 
 #### Paso 6 · La alternativa ligera · `@ResponseStatus`
 
-Cuando un método **siempre** responde el mismo código, no hace falta envolver nada:
+Este bloque muestra una alternativa de anotación, no otra forma de crear registros que deba quedar publicada. Léelo comparándolo con el POST que ya funciona. Si lo ejecutas para observar `@ResponseStatus`, conserva la asignación de ids y elimina después `/rapida`: el contrato del proyecto debe mantener un único procedimiento de alta comprobado.
 
 ```java
 @PostMapping("/rapida")
@@ -1127,7 +1081,7 @@ Cambia ahora el valor de la variable a `http://localhost:8081`, cambia el puerto
 
 #### Paso 11 · Encadena peticiones
 
-Aquí está el salto de calidad. Ahora mismo, para consultar la tarea que acabas de crear, miras el id a ojo y lo escribes en la petición siguiente. Eso hace que la colección **no se pueda ejecutar sola**.
+Selecciona la petición **POST de creación**, abre Scripts → Post-response y coloca allí el código que guarda el id; no va en el cuerpo JSON ni en Pre-request. Envía el POST y comprueba la variable `tareaId` en las variables de la colección. Después cambia las URLs de detalle, edición y borrado a `{{tareaId}}`. Ejecuta primero el alta: una consulta no puede utilizar una variable que aún no has creado.
 
 La solución es guardar el id de la respuesta en una variable. En Postman, en la petición de creación, pestaña **Scripts** (o *Tests*, según la versión):
 
@@ -1151,7 +1105,7 @@ A partir de ahí, en las peticiones siguientes:
 
 #### Paso 12 · Comprobaciones automáticas
 
-Guardar peticiones está bien; que ellas mismas digan si el resultado es correcto está mucho mejor. En la misma pestaña de scripts:
+Añade las aserciones de creación a la misma sección Post-response del POST, después de guardar el id. En las demás peticiones ajusta la aserción al resultado de **esa** petición: el GET espera 200, el DELETE 204 y el GET posterior al borrado 404. No copies la comprobación de JSON al DELETE, porque su cuerpo está vacío. Guarda cada petición antes de ejecutar la colección.
 
 ```javascript
 pm.test("Responde 201", function () {
@@ -1231,10 +1185,8 @@ Escribe después una frase por avería: **¿cuánto habrías tardado en darte cu
 
 #### Paso 17 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **acordad las respuestas y automatizad la colección**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta la colección completa desde un estado conocido. Debe crear su propio registro, recoger su id y usarlo en las peticiones siguientes, sin ids copiados manualmente.
+2. Comprueba 201 y Location al crear, 404 al consultar un recurso ausente y 204 sin cuerpo al borrar. Cambia únicamente la variable de dirección para repetir el recorrido en otro entorno disponible.
 
 #### Ampliación si has completado el trabajo
 
@@ -1301,35 +1253,29 @@ La condición 5 es la difícil y es la más importante: una colección que ensuc
 
 Una ejecución limpia crea, consulta, modifica y borra sus propios datos sin depender de pruebas anteriores.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 7 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-07.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-07.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-07.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 8 · Contrato en memoria listo para evolucionar
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 4: Enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-4).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Un contrato verificable permite cambiar la implementación sin perder comportamiento. La demostración convierte un fallo reproducible en una comprobación.
+Llegas con un CRUD en memoria y una colección que comprueba su contrato. El contrato es lo que el cliente puede esperar de cada petición. Hoy revisarás las entidades de tu proyecto con los mismos criterios y corregirás diferencias antes de cambiar su diseño en la UD3.
 
 #### La diferencia que importa
 
@@ -1355,28 +1301,15 @@ Si falla una petición, se distingue el contrato de su implementación: una ruta
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Auditad el CRUD y corregid rutas, cuerpos o estados que no coincidan con lo acordado.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Aplicad el mismo patrón a una segunda entidad del proyecto y dejad la colección y el README preparados para la revisión.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<div class="rule">
-  <p class="rule-label">Cómo es esta sesión</p>
-  <p>Sesión de integración: recibes <strong>una especificación y unos criterios de aceptación</strong>, no un ejemplo resuelto. Todo lo necesario se ha explicado entre la UD1 y la sesión 7; lo que se evalúa hoy es que sepas combinarlo y demostrar que funciona.</p>
-</div>
-
-<p class="stage">Backend en memoria verificable</p>
+1. Abre la colección de la sesión 7 y ejecútala contra tu aplicación recién arrancada. Guarda qué comprobaciones pasan y cuáles fallan.
+2. Abre el README y los controladores de todas tus entidades. Contrasta las rutas documentadas con las que existen en el código.
+3. Prepara una tabla con requisito, petición que lo comprueba y resultado. Usa el dominio que elegiste, no una nueva aplicación de ejemplo.
 
 #### Paso 2 · Revisar la versión en memoria: ejemplo de criterios de aceptación
 
-La aplicación gestiona **proyectos** y **tareas**, y cada tarea pertenece a un proyecto.
+Trabaja sobre las entidades existentes. Primero comprueba el modelo contra la tabla y añade únicamente los campos que falten. Si falta `proyectoId` en Tarea, declara el atributo y sus accesos, permite enviarlo al crear y devuelve su valor al consultar; de momento es una referencia numérica, no una relación JPA. Después recorre la tabla de operaciones, asociando cada fila a un método y a una petición guardada. Corrige una fila y repítela antes de seguir.
 
 ##### Modelo
 
@@ -1426,7 +1359,7 @@ Las dos últimas filas son las únicas que no has hecho nunca. Piensa antes de e
 
 #### Paso 3 · La prueba de aceptación
 
-Amplía la colección de la sesión 7 hasta cubrir la especificación entera. Debe cumplir esto:
+Prepara un escenario que cree sus propios datos: alta de proyecto → guardar id del proyecto → alta de tarea con ese id → consultas y modificaciones → borrar tarea → borrar proyecto. Guarda los ids en variables distintas. Ejecuta la secuencia dos veces sin reiniciar para detectar si depende de datos residuales; después reinicia y ejecútala otra vez para comprobar que sabe prepararse desde memoria vacía.
 
 El quinto criterio es el que separa una colección de una lista de peticiones. Si la segunda ejecución falla, es que el escenario deja datos, o que da por hecho un estado inicial que ya no se cumple.
 
@@ -1437,7 +1370,7 @@ En tu repositorio del módulo:
 1. **El proyecto completo**, arrancable con `mvnw spring-boot:run`.
 2. **La colección exportada**, en una carpeta `pruebas/`.
 3. Un **`README.md`** que quepa en una pantalla y responda a tres cosas: cómo se arranca, qué endpoints hay y cómo se ejecuta la colección.
-4. Un **`DECISIONES.md`** con estas cuatro, cada una en dos o tres frases:
+4. Un **`DECISIONES.pdf`** con estas cuatro, cada una en dos o tres frases:
    * Qué responde tu `DELETE` sobre algo inexistente, y por qué elegiste eso.
    * Qué hace tu API si el `id` del cuerpo no coincide con el de la ruta.
    * Qué devuelve `GET /proyectos/{id}/tareas` cuando el proyecto existe y no tiene tareas, y por qué no es un `404`.
@@ -1459,7 +1392,7 @@ Pásate esta lista tú mismo. Es la misma con la que se corrige.
 | Los códigos son correctos | La colección está en verde |
 | Es repetible | La ejecutas dos veces seguidas |
 | Se entiende sin ti | Se lo das a un compañero y no te pregunta nada |
-| Las decisiones están escritas | `DECISIONES.md` responde a las cuatro |
+| Las decisiones están escritas | `DECISIONES.pdf` responde a las cuatro |
 
 La quinta es la de verdad. **Dáselo a alguien y no le expliques nada.** Cada pregunta que te haga es una línea que le falta a tu README.
 
@@ -1494,10 +1427,8 @@ Fíjate en la tercera fila: tu API acepta tareas que pertenecen a proyectos que 
 
 #### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **auditad la versión en memoria del proyecto**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Reproduce el ciclo CRUD de la entidad principal y de las relacionadas previstas hasta ahora. Cada operación debe coincidir con su contrato documentado.
+2. Reinicia, recrea los datos mediante la colección y ejecútala de nuevo. Deja registrado que perder datos al reiniciar sigue siendo una limitación conocida de esta versión.
 
 ### Cierre
 
@@ -1505,27 +1436,18 @@ Fíjate en la tercera fila: tu API acepta tareas que pertenecen a proyectos que 
 
 Otra persona reproduce las operaciones principales y un fallo previsto usando únicamente el repositorio y sus instrucciones.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 8 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-08.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-08.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-08.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 

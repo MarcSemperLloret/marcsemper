@@ -1,0 +1,154 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import activities from '@/data/transversal-activities.json';
+---
+<BaseLayout lang="es" title="Digitalización y Sostenibilidad · Guía de talleres y evaluación" description="Materiales de arranque, trabajo guiado y evaluación por actividades para dos módulos independientes.">
+  <article class="guide">
+    <nav aria-label="Módulos"><a href="/es/docencia/digitalizacion/">Digitalización</a> · <a href="/es/docencia/sostenibilidad/">Sostenibilidad</a></nav>
+    <h1>Preparar el taller y demostrar lo aprendido</h1>
+    <p>Ambos módulos tienen 30 sesiones de una hora. Cada sesión dedica 10 minutos a explicación, 45 a trabajo guiado y 5 a comprobar y guardar el avance. En periodos de 55 minutos, el trabajo se ajusta a 40. Esta guía se consulta cuando hace falta una herramienta; no añade una unidad ni una entrega.</p>
+    <p>No necesitas el CRUD de Servidor, el workflow de Intermodular ni haber cursado el otro módulo transversal. Si ya conoces una herramienta, utilízala para realizar la actividad de hoy y demostrar su objetivo. Puedes reutilizar un soporte, pero no presentar como nueva una evidencia ya evaluada sin aportar el análisis o comprobación que se pide aquí.</p>
+    <nav aria-label="Contenido de la guía"><ul>
+      <li><a href="#archivos">Carpetas, entrega y primera terminal</a></li><li><a href="#github">Guardar código en GitHub</a></li><li><a href="#cloud">Sitio, Ubuntu, Nginx y HTTPS</a></li><li><a href="#ia">IA, instrucciones y revisión</a></li><li><a href="#datos">Notebook y datos</a></li><li><a href="#seguridad">Laboratorio de seguridad</a></li><li><a href="#pixelstore">PixelStore: medir y mejorar</a></li><li><a href="#evaluacion">Actividades y evaluación</a></li>
+    </ul></nav>
+
+    <h2 id="archivos">Carpetas, entrega y primera terminal</h2>
+    <ol><li>Crea una carpeta para cada módulo y dentro una carpeta por unidad: por ejemplo, <code>sostenibilidad/ud1</code>. Crea un documento llamado <code>actividad</code> con nombres del equipo, objetivo y una sección por sesión.</li>
+      <li>Guarda en cada sección resultado, evidencia, comprobación y pendiente. Una evidencia puede ser una tabla, un cálculo, una decisión justificada, una prueba o un archivo. No todas las actividades necesitan código. Redacta en Word, LibreOffice o un documento en línea y exporta la entrega a PDF; conserva también el documento editable para las revisiones.</li>
+      <li>Comparte el enlace o archivo por el canal del aula. Comprueba que el docente puede abrirlo. Si trabajas en un repositorio, identifica la versión; no es obligatorio usar PR ni CI en estos módulos.</li>
+      <li>Para un ZIP, utiliza «Extraer todo» y abre la carpeta extraída. No edites dentro del ZIP. En VS Code, Archivo → Abrir carpeta muestra sus archivos a la izquierda.</li>
+      <li>Terminal → Nueva terminal abre una consola. <code>pwd</code> muestra la carpeta actual en PowerShell y Bash; <code>dir</code> en Windows o <code>ls</code> en Linux/macOS muestra sus archivos. Antes de ejecutar un programa, comprueba que su archivo está ahí. Una ruta con espacios se escribe entre comillas.</li>
+      <li>Python ejecuta los programas de los laboratorios: comprueba <code>python --version</code>, o <code>py --version</code> en Windows. Si falta, utiliza el equipo preparado por el centro o la instalación de Python 3 del aula. Tras instalar, vuelve a abrir la terminal. Los paquetes y extensiones deben estar preparados antes de la práctica que los utiliza.</li>
+    </ol>
+    <p>Los casos de empresa y sus datos están en la <a href="/teaching/transversales/casos.pdf">ficha de casos en PDF</a>. Son situaciones didácticas. Escribe explícitamente cuándo una cifra es un dato del caso, una medida tuya o una estimación.</p>
+
+    <h2 id="github">Guardar código en GitHub por primera vez</h2>
+    <p>Git conserva versiones; GitHub aloja un repositorio y permite compartirlo. Para los primeros archivos podemos utilizar la interfaz web, sin depender del taller de Git de otra asignatura.</p>
+    <ol><li>Inicia sesión con la cuenta disponible en el aula. Pulsa New repository, pon un nombre de laboratorio y añade un README. En el taller cloud usa un repositorio público con datos ficticios para que la VM pueda descargarlo sin credenciales.</li><li>Dentro del repositorio, Add file → Upload files. Arrastra los archivos extraídos, no el ZIP ni una carpeta que los oculte a otro nivel. Confirma la subida con un mensaje que describa lo guardado.</li><li>Abre el repositorio y comprueba <code>index.html</code>, estilos e imagen. El historial identifica esa versión. Copia el enlace del commit desde el historial cuando se pida una versión concreta.</li><li>Para actualizar un archivo, abre su edición web o sube su nueva versión, revisa los cambios y confirma. Descargar otra vez con Code → Download ZIP permite obtener la versión guardada. Conserva tus archivos locales al comparar.</li></ol>
+    <p>Si utilizas Git local, comprueba primero <code>git --version</code>. Desde la carpeta padre, <code>git clone URL carpeta</code> descarga una copia y <code>cd carpeta</code> entra en ella. Sustituye URL por el enlace HTTPS que muestra Code; no escribas literalmente «URL». La entrega valora las decisiones de la actividad, no cuántos commits hayas hecho.</p>
+
+    <h2 id="cloud">Cloud: del sitio inicial al entorno de laboratorio</h2>
+    <p><a href="/teaching/transversales/guia-sitio.pdf">Leer la guía del sitio inicial en PDF</a>.</p>
+    <p><a href="/teaching/downloads/digitalizacion-sitio.zip">Descargar sitio inicial</a>. Contiene HTML, CSS, una imagen SVG y su guía en PDF. No necesita Node, base de datos ni Spring. En Digitalización UD4 se modifica este mismo sitio.</p>
+    <h3>Elegir y abrir el entorno</h3>
+    <p>El docente prepara una VM Ubuntu por pareja o un entorno equivalente con permisos, IP y nombre de laboratorio. Puede estar en una suscripción del centro: no se exige comprar una cuenta ni disponer personalmente de Azure for Students. Si se utiliza una cuenta propia admitida, se comprueban antes disponibilidad y costes. Los fallos de acceso se resuelven con un entorno asignado; no se sustituyen evidencias técnicas por capturas ajenas.</p>
+    <ol><li>En Azure, busca Virtual machines y crea una VM dentro del grupo de recursos de esta práctica. Selecciona Ubuntu Server LTS y un tamaño pequeño suficiente aprobado para el aula. Revisa región, disco y coste estimado antes de crear; los valores disponibles dependen de la suscripción.</li><li>Elige autenticación con clave SSH y anota el usuario, por ejemplo <code>azureuser</code>. Descarga y conserva la clave privada fuera del repositorio. No es un archivo para entregar.</li><li>En la red permite SSH desde la dirección de acceso del aula; HTTP y después HTTPS se abrirán para el sitio público. Cuando termine la creación, copia la IP pública desde el recurso.</li><li>En tu terminal local sustituye la ruta, usuario e IP del siguiente comando. Si es la primera conexión, contrasta la identidad del servidor con los datos del entorno antes de aceptar. Una vez dentro, <code>whoami</code> y <code>hostname</code> identifican la máquina remota.</li></ol>
+    <pre><code>{`ssh -i "RUTA_A_TU_CLAVE.pem" azureuser@IP_PUBLICA
+whoami
+hostname
+sudo apt update`}</code></pre>
+    <p>Si SSH no conecta: revisa VM encendida, IP pública, usuario, ruta de clave y regla del puerto 22. Una clave con permisos inadecuados requiere corregir sus permisos en tu sistema con ayuda del entorno del aula, no pegarla en el chat. La <a href="https://learn.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-portal">guía oficial de Azure</a> muestra el procedimiento de creación y conexión.</p>
+    <h3>Publicar con Nginx</h3>
+    <p>Ejecuta estos comandos dentro de Ubuntu. <code>systemctl</code> muestra el estado del servicio; pulsa <code>q</code> para salir de esa vista. <code>curl -I</code> solicita las cabeceras de la respuesta.</p>
+    <pre><code>{`sudo apt install nginx git
+sudo systemctl status nginx
+curl -I http://localhost
+sudo ufw status`}</code></pre>
+    <p>Permite TCP/80 en la regla de entrada de la VM. Si UFW ya está activo, permite también <code>sudo ufw allow 'Nginx Full'</code>. No actives un firewall remoto sin conservar antes el acceso SSH. Comprueba la bienvenida de Nginx por la IP pública.</p>
+    <p>Solo en la VM de laboratorio, sustituye el enlace del repositorio público y descarga el sitio. Si la carpeta ya existe, comprueba qué contiene y reutiliza su actualización; no vuelvas a clonar encima ni borres otra práctica.</p>
+    <pre><code>{`sudo git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git /var/www/mi-sitio
+ls /var/www/mi-sitio
+sudo nano /etc/nginx/sites-available/mi-sitio`}</code></pre>
+    <p>Pega la plantilla. <code>root</code> debe señalar la carpeta que contiene directamente <code>index.html</code>. Guarda en nano con Ctrl+O, confirma con Enter y sal con Ctrl+X.</p>
+    <pre><code>{`server {
+    listen 80;
+    server_name _;
+    root /var/www/mi-sitio;
+    index index.html;
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}`}</code></pre>
+    <p>Activa este sitio y desactiva únicamente el enlace de bienvenida de Nginx de esta VM recién creada. El archivo de bienvenida se conserva en <code>sites-available</code>. Si trabajas en un servidor compartido, el docente asigna una configuración propia y no se modifica su sitio por defecto.</p>
+    <pre><code>{`sudo ln -s /etc/nginx/sites-available/mi-sitio /etc/nginx/sites-enabled/mi-sitio
+sudo unlink /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl reload nginx`}</code></pre>
+    <p>Ejecuta la recarga solo si <code>nginx -t</code> informa una configuración correcta. Si dice que el enlace ya existe, compruébalo; no lo crees de nuevo. Visita la IP y verifica el nombre de la empresa. Un 403 puede indicar carpeta equivocada o permisos de lectura; un 404 identifica un recurso no encontrado.</p>
+    <h3>Nombre y HTTPS</h3>
+    <ol><li>Usa el nombre asignado por el centro. Como alternativa, en un proveedor de DNS dinámico del aula crea un subdominio y establece su IP pública. En DuckDNS, por ejemplo, se registra el nombre disponible y se actualiza su dirección desde el panel. El token de administración se conserva privado.</li><li>Desde la terminal local ejecuta <code>nslookup TU_NOMBRE</code>. La dirección debe coincidir con la VM. Si no, comprueba el registro y espera la actualización según el proveedor.</li><li>En el archivo de Nginx cambia <code>server_name _;</code> por <code>server_name TU_NOMBRE;</code>. Sustituye el marcador por tu nombre real, sin escribir <code>http://</code>. Comprueba, recarga y visita primero la URL HTTP.</li><li>Permite TCP/443 además de 80. En Ubuntu instala Certbot y su integración con Nginx. Ejecuta el comando de abajo con el nombre real; sigue la validación y configura redirección a HTTPS. El puerto 80 debe ser alcanzable para el desafío HTTP de este procedimiento.</li></ol>
+    <pre><code>{`sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d TU_NOMBRE
+sudo certbot renew --dry-run`}</code></pre>
+    <p>Certbot necesita un nombre público que resuelva correctamente y una ruta de validación accesible. Si el entorno está limitado a una red privada, utiliza el entorno público preparado por el docente para comprobar este criterio; la simulación local permite avanzar, pero no demuestra publicación HTTPS. Consulta las <a href="https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal">instrucciones de Certbot</a> para el sistema elegido.</p>
+    <h3>Actualizar y cerrar el laboratorio</h3>
+    <p>Después de subir el cambio a GitHub, en Ubuntu ejecuta:</p>
+    <pre><code>{`cd /var/www/mi-sitio
+sudo git pull --ff-only
+git rev-parse HEAD`}</code></pre>
+    <p>Si Git rechaza la propiedad de la carpeta, consulta la versión con <code>sudo git rev-parse HEAD</code> dentro de esa carpeta. El sitio de esta práctica es de solo lectura para Nginx. No es un flujo propuesto para aplicaciones con datos de usuarios o escritura en producción.</p>
+    <p>Comprueba la frase nueva desde la URL pública. Conserva un inventario de VM, disco, IP y nombre, y acuerda hasta cuándo deben estar disponibles para evaluar. Revisa los recursos asociados y el coste antes de retirarlos: cerrar SSH no apaga la VM y detenerla no elimina todos los recursos asociados.</p>
+
+    <h2 id="ia">IA, instrucciones y revisión</h2>
+    <ol><li>Abre solo la carpeta del laboratorio y el asistente del aula. En Copilot, inicia sesión en VS Code con la cuenta habilitada y abre su panel Chat. La práctica requiere acceso real a un agente en UD4: el docente puede proporcionar puestos o turnos con ese acceso.</li><li>Pide primero que identifique archivos y proponga un plan sin editar. Contrasta su descripción con la carpeta abierta.</li><li>Escribe objetivo, contexto, restricciones y criterios de aceptación. Acepta cambios pequeños y revisa qué archivos solicita modificar.</li><li>Compara antes/después: en VS Code, selecciona el archivo inicial para comparar y después compara con la versión nueva; si hay Git, Control de código fuente muestra las modificaciones. Las líneas añadidas o eliminadas deben relacionarse con la tarea.</li><li>Prueba el resultado en el navegador o con las comprobaciones del laboratorio. Guarda petición, decisión y resultado; no entregues una conversación completa sin explicar qué demuestra.</li></ol>
+    <p>En Copilot, las instrucciones generales del repositorio se guardan en <code>.github/copilot-instructions.md</code>. Comprueba que la función del agente que utilizas las lee; otros entornos pueden utilizar otra ruta. Véase la <a href="https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot">documentación oficial</a>. Un ejemplo breve:</p>
+    <pre><code>{`Este sitio estático presenta una empresa ficticia.
+Conserva sus secciones y no añadas dependencias sin justificar su necesidad.
+Antes de editar, explica los archivos que cambiarás.
+Después, comprueba enlaces, imágenes y la tarea solicitada en el navegador.
+Informa de las pruebas que no hayas podido ejecutar.`}</code></pre>
+    <p>Plantilla de procedimiento reutilizable: si tu entorno admite skills, guárdala en la ruta reconocida, por ejemplo <code>.github/skills/revisar-sitio/SKILL.md</code>; si no, utiliza el contenido como ficha o prompt de revisión.</p>
+    <pre><code>{`---
+name: revisar-sitio
+description: Revisar un cambio acotado de un sitio estático y sus evidencias.
+---
+1. Lee la tarea y sus criterios de aceptación.
+2. Examina solo los archivos modificados y señala cambios fuera de alcance.
+3. Comprueba el comportamiento solicitado y otro que deba conservarse.
+4. Registra evidencia, resultado y límites; no afirmes pruebas no ejecutadas.`}</code></pre>
+    <p>En Sostenibilidad puedes aplicar la revisión sin cursar Digitalización. Ficha alternativa para contrastar propuestas: «eliminar todas las imágenes reduce transferencia» debe rechazarse si destruye información útil; «convertir una imagen sobredimensionada» debe probarse midiendo y comparando calidad; «quitar un script porque pesa» requiere investigar su función. Si no hay acceso al asistente, se analizan estas recomendaciones preparadas y se registra como revisión de la ficha, sin atribuir una interacción inexistente a una IA.</p>
+
+    <h2 id="datos">Notebook y datos</h2>
+    <p><a href="/teaching/transversales/guia-datos.pdf">Leer la guía del cuaderno en PDF</a>.</p>
+    <p><a href="/teaching/downloads/digitalizacion-datos.zip">Descargar notebook, requisitos y guía PDF</a>. La guía PDF explica entorno, instalación, selección de kernel, ejecución de celdas y comprobación final. El Excel original se descarga desde UCI la primera vez y después se reutiliza. El docente puede entregar ese mismo archivo en la ruta indicada para trabajar sin conexión.</p>
+    <p>Si el puesto no permite instalar, abre el mismo notebook en el entorno Jupyter preparado por el centro, con pandas, openpyxl y matplotlib disponibles. Verifica la celda de carga antes de analizar. La salida esperada del original es 541.909 filas y 8 columnas; el cuaderno conserva decisiones de calidad y datos originales. Fuente: <a href="https://archive.ics.uci.edu/dataset/352/online-retail">Online Retail, UCI</a>.</p>
+
+    <h2 id="seguridad">Laboratorio de seguridad</h2>
+    <p><a href="/teaching/transversales/guia-seguridad.pdf">Leer la guía y los retos en PDF</a>.</p>
+    <p><a href="/teaching/downloads/digitalizacion-seguridad.zip">Descargar laboratorio local</a>. Incluye aplicación, siete pruebas y una guía PDF con matriz de permisos y pistas. La versión inicial tiene cuatro fallos deliberados: acceso a un pedido ajeno, SQL construido con entrada, configuración expuesta y detalle de error público. Tres pruebas pasan y cuatro fallan inicialmente; las siete deben pasar tras las correcciones de estos casos.</p>
+    <p>Extrae, abre su carpeta y ejecuta <code>python app.py</code>; visita <code>http://127.0.0.1:8090</code>. En otra terminal ejecuta <code>python -m unittest -v</code>. Todo utiliza datos ficticios y biblioteca estándar. La identidad está simulada para estudiar autorización; no se presenta como login seguro. La práctica se ejecuta solo localmente y no se publica junto al sitio de cloud.</p>
+
+    <h2 id="pixelstore">PixelStore: abrir, medir y revisar</h2>
+    <h3>Obtener la copia correcta</h3>
+    <p>Para UD3 abre el <a href="https://github.com/MarcSemperLloret/webssos">repositorio PixelStore</a>, selecciona <code>main</code> y usa Code → Download ZIP. Extrae y renombra la carpeta como <code>pixelstore</code>. También puedes usar Git:</p>
+    <pre><code>{`git clone https://github.com/MarcSemperLloret/webssos.git pixelstore
+cd pixelstore
+python -m http.server 8080 --bind 127.0.0.1`}</code></pre>
+    <p>Abre <code>http://127.0.0.1:8080</code>, deja la terminal abierta y comprueba que carga el catálogo. El doble clic usa <code>file://</code> y no reproduce correctamente esta práctica que carga datos. Si el puerto está ocupado, detén el servidor anterior o usa otro y anótalo.</p>
+    <p>Para UD4 selecciona <code>barreras</code> antes de descargar el ZIP y utiliza otra carpeta, o ejecuta desde una carpeta padre:</p>
+    <pre><code>{`git clone -b barreras https://github.com/MarcSemperLloret/webssos.git pixelstore-a11y
+cd pixelstore-a11y
+python -m http.server 8081 --bind 127.0.0.1`}</code></pre>
+    <p>Abre <code>http://127.0.0.1:8081</code>. Conserva la carpeta y mediciones anteriores de UD3: cambiar de rama sobre un trabajo sin guardar no es el procedimiento de este taller.</p>
+    <h3>Medir antes y después</h3>
+    <ol><li>En Chrome/Chromium abre DevTools con F12 o Inspeccionar y selecciona Network/Red. Mantén la ventana abierta durante la prueba.</li><li>Selecciona un perfil acordado, por ejemplo escritorio sin limitación de red para esta comparación, y marca Disable cache/Desactivar caché. Limpia la lista, recarga y espera a que termine el catálogo. Registra si hay recursos fallidos.</li><li>Anota el total transferido y peticiones; ordena por tamaño y conserva los cinco recursos mayores. Distingue tamaño transferido de tamaño descomprimido y usa la misma columna después.</li><li>Abre Lighthouse, selecciona el mismo perfil en ambas versiones y ejecuta el análisis. Guarda su configuración y resultado como evidencia separada de Red. No ejecutes otras tareas intensivas durante la comparación.</li><li>Si los resultados varían mucho, repite en condiciones equivalentes y registra esa variación. La prueba demuestra el recorrido y entorno medidos, no todos los posibles usuarios ni emisiones.</li></ol>
+    <h3>Imagen: un cambio comprobable</h3>
+    <p>Localiza el archivo que aparece en Red y su referencia en HTML, CSS o datos del catálogo. Con una herramienta de imagen del aula, como <a href="https://squoosh.app/">Squoosh</a>, abre el archivo, ajusta dimensiones al uso previsto y exporta WebP u otro formato admitido. Compara visualmente antes de guardar. Cambia la referencia en el proyecto, recarga y verifica respuesta 200, bytes y calidad. Conserva el original fuera de la carpeta servida. No se exige un servicio de pago ni generar imágenes con IA.</p>
+    <h3>Accesibilidad: una primera corrección</h3>
+    <p>En una copia de trabajo, un control que ejecuta una acción debe usar un elemento apropiado. Si encuentras un <code>div</code> que actúa como botón, conserva sus clases y acción al cambiarlo por <code>button type="button"</code>. Revisa posibles selectores JavaScript que dependan de la etiqueta. Comprueba Tab, Enter y Espacio, aspecto y resultado de la acción.</p>
+    <pre><code>{`button:focus-visible {
+  outline: 3px solid #17606a;
+  outline-offset: 3px;
+}`}</code></pre>
+    <p>El color del foco debe distinguirse del fondo concreto de la página. Para un formulario, relaciona <code>label for="correo"</code> con <code>input id="correo"</code> y comprueba la asociación. En el inspector consulta el panel Accessibility/Accesibilidad del elemento: nombre, rol y estado. Un cambio puede no verse y sí afectar a tecnologías de apoyo; no quites ARIA solo porque el ratón siga funcionando igual. La <a href="https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/">guía W3C</a> explica esta distinción.</p>
+    <p>Para la comprobación automática, ejecuta Lighthouse y la extensión axe DevTools habilitada en el aula: abre su panel, inicia el análisis, selecciona un aviso y localiza el elemento. Si la extensión no está disponible, registra Lighthouse más las pruebas manuales y declara ese alcance. Ni un resultado automático ni una corrección aislada acreditan conformidad completa.</p>
+
+    <h2 id="evaluacion">Evaluación mediante actividades</h2>
+    <p>Cada unidad tiene una actividad sobre 10 con su rúbrica específica. Cada sesión añade evidencias al mismo trabajo. La ponderación es proporcional a las horas de la unidad: nota del módulo = suma de (nota de actividad × horas de la unidad) / 30. No se añade examen. La exposición y las preguntas comprueban las decisiones de la actividad.</p>
+    <div class="table-scroll"><table><caption>Actividades y peso en cada módulo</caption><thead><tr><th scope="col">Módulo</th><th scope="col">Actividad</th><th scope="col">Horas</th><th scope="col">Peso exacto</th></tr></thead><tbody>{activities.map(a => <tr><td>{a.module === 'digitalizacion' ? 'Digitalización' : 'Sostenibilidad'}</td><td><a href={a.href}>UD{a.unit} · {a.activity}</a></td><td>{a.hours}</td><td>{a.hours}/30</td></tr>)}</tbody></table></div>
+    <p>Ejemplo: en una unidad de cuatro horas, una actividad con 8 aporta 8 × 4/30 a la nota final. Los pesos suman 30/30 dentro de cada módulo. El plan final integra las evidencias anteriores y se valora por su coherencia y viabilidad; no vuelve a puntuar la misma implementación como una actividad nueva.</p>
+    <h3>Cómo demostrar un criterio</h3>
+    <div class="table-scroll"><table><caption>Niveles para interpretar los criterios de cada rúbrica</caption><thead><tr><th scope="col">Grado de logro</th><th scope="col">Evidencia observable</th><th scope="col">Parte de los puntos del criterio</th></tr></thead><tbody>
+      <tr><td>No acreditado</td><td>No hay evidencia o no corresponde a la tarea.</td><td>0 %</td></tr><tr><td>En desarrollo</td><td>Hay trabajo pertinente, pero falta una parte esencial de su explicación o comprobación.</td><td>50 %</td></tr><tr><td>Logrado</td><td>El resultado es correcto y comprobable; quedan imprecisiones menores en su justificación.</td><td>75 %</td></tr><tr><td>Completo</td><td>Resultado correcto, explicación coherente, comprobación suficiente y límites pertinentes para ese criterio.</td><td>100 %</td></tr>
+    </tbody></table></div>
+    <p>Por ejemplo, para una comparación antes/después: sin referencia no se acredita la comparación; dos medidas con condiciones distintas dejan el criterio en desarrollo; medidas comparables permiten lograrlo; interpretar su cambio y límites completa el criterio. Estos niveles se aplican a la dimensión que describe cada fila de la rúbrica, no exigen añadir pruebas o texto ajenos a ella.</p>
+    <h3>Trabajo compartido y mejora</h3>
+    <ol><li>Cada integrante registra al menos una decisión propia y explica su evidencia durante el taller o la revisión. No se evalúa a una sola persona al azar como representante de todas.</li><li>La rúbrica describe la calidad del producto común. La atribución individual se comprueba con las aportaciones y explicaciones; un criterio sin evidencia individual suficiente queda pendiente de comprobación, sin inferirlo del número de commits.</li><li>Tras el feedback, actualiza la misma actividad y añade criterio pendiente, cambio realizado y comprobación. Conserva ambas versiones o un registro de diferencias.</li><li>El docente comunica los plazos y los criterios que requieren una nueva comprobación. La recuperación utiliza la actividad corregida y la explicación de los cambios, dentro de las condiciones de evaluación del centro.</li><li>La disponibilidad de una cuenta no es un criterio. El aula garantiza herramientas o turnos para demostrar el objetivo. Una incidencia técnica se registra y se completa en el entorno alternativo; no se atribuye como ejecutada una práctica que no se ha podido realizar.</li></ol>
+  </article>
+</BaseLayout>
+<style>
+  .guide {max-width: 980px; margin: 0 auto; padding: 3rem 1.25rem 5rem; line-height: 1.7;}
+  h1 {font-size: clamp(2rem,4vw,3.2rem); line-height: 1.15;} h2 {margin-top: 3rem; font-size: 1.6rem; scroll-margin-top: 6rem;} h3 {margin-top: 1.8rem;}
+  p,li {max-width: 88ch;} li {margin: .65rem 0;} a {text-decoration: underline; text-underline-offset: .2em;} pre {overflow-x:auto; padding:1rem; background:#8881; border:1px solid #8885; border-radius:.3rem; line-height:1.5;}
+  .table-scroll {overflow-x:auto;} table {width:100%;border-collapse:collapse;min-width:550px;} th,td {padding:.7rem;text-align:left;vertical-align:top;border-bottom:1px solid #8885;} caption {text-align:left;font-weight:600;margin-bottom:.7rem;} thead {background:#8881;}
+</style>

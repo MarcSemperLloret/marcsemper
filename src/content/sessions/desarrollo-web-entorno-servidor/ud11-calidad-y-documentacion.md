@@ -21,17 +21,22 @@ priorKnowledge:
   - "OpenAPI y diseño de API."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">La calidad se viene trabajando desde las primeras pruebas. Aquí se completa la estrategia, se diagnostican defectos y se revisa que documentación y versión real coincidan.</p>
 
 ## Semana 23 · Estrategia de pruebas y diagnóstico
 
 ## Sesión 45 · Estrategia de pruebas y diagnóstico
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 23: Cerrar una candidata con evidencias de calidad](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-23/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-23).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Los tests de servicio, repositorio y HTTP cubren fronteras diferentes. Los logs ayudan a localizar el fallo que todavía no tiene una prueba.
+El producto funciona, pero necesitas saber qué protegen sus pruebas y cómo investigar un fallo. Cobertura indica qué código se ejecutó, no si está bien comprobado. Un identificador de correlación permite reconocer en los logs los mensajes de una misma petición.
 
 #### La falacia de la cobertura: Cantidad frente a Calidad
 
@@ -105,23 +110,17 @@ private static final Logger log = LoggerFactory.getLogger(MiServicio.class);
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Auditad las pruebas acumuladas desde el primer trimestre y priorizad huecos en reglas, permisos y persistencia.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Reproducid un defecto con logs o depurador, corregidlo y añadid una prueba de regresión.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Estrategia de pruebas y cobertura</p>
+1. Ejecuta los tests actuales y abre el servicio con reglas más relevantes. Enumera casos de negocio que quedarían sin detectar si el código estuviera mal.
+2. Localiza `pom.xml`, la configuración de logs y los tests. El informe de JaCoCo se generará a partir de la ejecución indicada en el taller.
+3. Prepara dos peticiones distinguibles y un fallo de desarrollo. Los usarás para comprobar que el identificador permite seguir cada recorrido.
 
 #### Paso 2 · Auditoría de cobertura con JaCoCo y tests parametrizados
 
-Añadimos el plugin oficial de cobertura en el bloque `<plugins>` de nuestro proyecto:
+Vamos a ampliar las pruebas que ya existen. JaCoCo mide qué código se ejecuta; no decide si las aserciones comprueban el comportamiento correcto.
+
+1. Añade este plugin dentro de `build/plugins` en `pom.xml`, junto al plugin de Spring Boot, y sincroniza Maven:
 
 ```xml
 <plugin>
@@ -129,131 +128,59 @@ Añadimos el plugin oficial de cobertura en el bloque `<plugins>` de nuestro pro
     <artifactId>jacoco-maven-plugin</artifactId>
     <version>0.8.11</version>
     <executions>
+        <execution><goals><goal>prepare-agent</goal></goals></execution>
         <execution>
-            <goals>
-                <goal>prepare-agent</goal>
-            </goals>
-        </execution>
-        <execution>
-            <id>report</id>
-            <phase>verify</phase>
-            <goals>
-                <goal>report</goal>
-            </goals>
+            <id>report</id><phase>verify</phase>
+            <goals><goal>report</goal></goals>
         </execution>
     </executions>
 </plugin>
 ```
 
-Antes de escribir nuevos tests, clasificamos las pruebas construidas durante el curso:
-
-| Módulo / Capa | Tipo de prueba | Anotaciones utilizadas | Qué cubre actualmente | Hueco o caso límite detectado |
-| :--- | :--- | :--- | :--- | :--- |
-| **Servicio de Proyectos** | Unitaria con Mockito | `@ExtendWith(MockitoExtension.class)` | Creación y búsqueda básica. | No prueba nombres duplicados ni fechas de inicio posteriores a fin. |
-| **Repositorio JPA** | Corte de persistencia | `@DataJpaTest` | Consultas derivadas `findBy...` | No prueba integridad referencial al borrar proyectos con tareas activas. |
-| **Controlador Web** | Corte HTTP y Seguridad | `@WebMvcTest` + `@WithMockUser` | Rutas 401, 403 y 201. | No prueba envío de payloads gigantes ni caracteres extraños en JSON. |
-| **Servicio de Clima** | Unitaria de Adaptador | JUnit 5 puro | Mapeo de códigos a texto. | No prueba comportamiento ante coordenadas polares o valores nulos. |
-
-Utilizamos `@ParameterizedTest` para probar múltiples valores frontera sin duplicar código:
+2. Ejecuta `.\mvnw.cmd verify` en PowerShell (`./mvnw verify` en Linux/macOS). Si falla un test previo, corrígelo antes de analizar cobertura. Abre `target/site/jacoco/index.html` y localiza una clase de tu servicio y una regla aún sin comprobar.
+3. Crea `src/test/java/com/ejemplo/gestor/ProyectoBoundaryTest.java` para probar el `ProyectoRequest(nombre, descripcion)` usado en la sesión 31. Si tu DTO ya tiene más componentes, conserva el mismo caso y rellena los restantes con datos válidos. No cambies el DTO del producto para encajar el test.
 
 ```java
 package com.ejemplo.gestor;
 
 import com.ejemplo.gestor.dto.ProyectoRequest;
-import com.ejemplo.gestor.service.ProyectoService;
-import org.junit.jupiter.api.DisplayName;
+import jakarta.validation.Validation;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.params.provider.ValueSource;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProyectoBoundaryTest {
-
-    private final ProyectoService proyectoService = new ProyectoService(/* mocks */);
-
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"   ", "\t", "\n"})
-    @DisplayName("El alta de proyecto debe fallar ante nombres vacíos o solo con espacios en blanco")
-    void crearProyecto_conNombreInvalido_lanzaIllegalArgumentException(String nombreInvalido) {
-        var request = new ProyectoRequest(
-            nombreInvalido,
-            "Cliente A",
-            LocalDate.now(),
-            LocalDate.now().plusMonths(1),
-            39.47, -0.38
-        );
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            proyectoService.crearProyecto(request);
-        });
+    void nombreVacioIncumpleLaValidacion(String nombre) {
+        try (var factory = Validation.buildDefaultValidatorFactory()) {
+            var errores = factory.getValidator().validate(
+                new ProyectoRequest(nombre, "Descripción válida"));
+            assertTrue(errores.stream().anyMatch(error ->
+                error.getPropertyPath().toString().equals("nombre")));
+        }
     }
 
     @ParameterizedTest
-    @ValueSource(doubles = {-91.0, 91.0, -180.5, 200.0})
-    @DisplayName("Las coordenadas geográficas deben estar acotadas entre -90/90 y -180/180")
-    void crearProyecto_conLatitudFueraDeRango_lanzaExcepcion(double latitudInvalida) {
-        var request = new ProyectoRequest(
-            "Planta Solar",
-            "Cliente B",
-            LocalDate.now(),
-            LocalDate.now().plusMonths(1),
-            latitudInvalida, 0.0
-        );
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            proyectoService.validarCoordenadas(request);
-        });
+    @ValueSource(strings = {"Portal", "Gestor de préstamos", "Reservas de aula"})
+    void nombreValidoNoProduceErrores(String nombre) {
+        try (var factory = Validation.buildDefaultValidatorFactory()) {
+            var errores = factory.getValidator().validate(
+                new ProyectoRequest(nombre, "Descripción válida"));
+            assertTrue(errores.isEmpty());
+        }
     }
 }
 ```
 
-Verificamos que si se produce un fallo durante la creación de un proyecto con tareas iniciales, ninguna fila queda persistida a medias en la base de datos:
+`@ParameterizedTest` ejecuta el método una vez por dato. Validator comprueba las anotaciones del DTO directamente: no arranca HTTP ni llama al servicio. No esperes que una llamada Java normal al servicio active automáticamente `@Valid` del controlador.
 
-```java
-package com.ejemplo.gestor;
-
-import com.ejemplo.gestor.model.Proyecto;
-import com.ejemplo.gestor.repository.ProyectoRepository;
-import com.ejemplo.gestor.repository.TareaRepository;
-import com.ejemplo.gestor.service.ProyectoService;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@SpringBootTest
-class ProyectoTransaccionalTest {
-
-    @Autowired
-    private ProyectoService proyectoService;
-
-    @Autowired
-    private ProyectoRepository proyectoRepository;
-
-    @Autowired
-    private TareaRepository tareaRepository;
-
-    @Test
-    void crearProyectoConTareas_siFallaUnaTarea_haceRollbackCompleto() {
-        long proyectosAntes = proyectoRepository.count();
-        long tareasAntes = tareaRepository.count();
-
-        // Se simula la creación donde la tercera tarea contiene un fallo forzado
-        assertThrows(RuntimeException.class, () -> {
-            proyectoService.crearProyectoConLoteTareasDefectuoso();
-        });
-
-        // Verificamos la atomicidad ACID: la base de datos vuelve a su estado exacto inicial
-        assertEquals(proyectosAntes, proyectoRepository.count(), "El proyecto no debe haberse guardado");
-        assertEquals(tareasAntes, tareaRepository.count(), "Ninguna tarea del lote debe persistir");
-    }
-}
-```
+4. Ejecuta solo esta clase con `.\mvnw.cmd test "-Dtest=ProyectoBoundaryTest"`. Retira temporalmente `@NotBlank` de nombre para comprobar que los casos nulos o en blanco detectan la regresión; restáurala y deja los tests en verde.
+5. Para las coordenadas que añadiste en la sesión 41, prepara por separado latitud (-90 a 90) y longitud (-180 a 180). Comprueba cada límite aceptado y un valor justo fuera. No uses el límite de longitud como si fuera el de latitud. Añade estas entradas al test de tu DTO real, conservando válidos todos los otros campos.
+6. Reutiliza el test de clonación de la sesión 25 para verificar rollback. Prepara el proyecto original con sus tareas en `gestor_test`, llama al servicio inyectado por Spring y provoca el fallo controlado usado en aquel taller. El test que observa el rollback no debe envolver esa llamada en su propia transacción: comprueba desde una transacción posterior que no quedaron filas nuevas. Retira el fallo de producción y conserva el caso mediante el doble de prueba correspondiente.
+7. Clasifica en `docs/pruebas.pdf` las evidencias reales: DTO/validación, servicio/reglas, repositorio/SQL, controlador/HTTP y seguridad. Para cada regla pendiente escribe primero entrada, resultado esperado y capa responsable; después añade la prueba. Repite `verify` y compara qué regla ha quedado cubierta, además del porcentaje.
 
 #### Paso 3 · Ejecutar y analizar el informe JaCoCo
 
@@ -290,7 +217,7 @@ Cuando alguien dice «no sé qué más probar», casi siempre es porque solo ha 
 
 Cuando varios de estos casos comparten la misma lógica, `@ParameterizedTest` con `@ValueSource` o `@CsvSource` te ahorra escribir el mismo test cinco veces cambiando un número.
 
-#### Paso 5 · Auditar y blindar el servicio de Tareas
+#### Paso 5 · Añadir pruebas para las reglas y casos límite del servicio
 
 1. **Haz primero el inventario, antes de escribir ningún test.** Una tabla con una fila por regla de negocio de tu aplicación y tres columnas: qué la comprueba hoy, qué caso límite le falta, y qué pasaría en producción si fallase. Sin ese inventario, escribirás tests de lo que ya está probado, que es lo que hace subir la cobertura sin mejorar nada.
 2. Revisa en el informe JaCoCo qué métodos o ramas de `TareaService` tienen menos del 70 % de cobertura de **ramas** —no de líneas—, y crúzalo con tu inventario.
@@ -317,6 +244,8 @@ Para no volverse loco buscando qué línea corresponde a qué petición, utiliza
 * Se añade la cabecera `X-Correlation-ID: req-7f3a1b` en la respuesta HTTP para que el cliente pueda reportar ese código ante cualquier incidencia.
 
 #### Paso 7 · Configuración de observabilidad con MDC
+
+Crea `config/CorrelationIdFilter.java` y comprueba sus imports antes de configurar Logback. El filtro asigna el identificador al entrar y limpia el MDC en `finally`, incluso si se produce una excepción. Añade el archivo `logback-spring.xml` en resources sin duplicar otra configuración de logs activa. Después incorpora los mensajes a los métodos existentes del servicio; no reemplaces el servicio por un ejemplo que omite sus reglas. Haz dos peticiones y comprueba que sus identificadores son diferentes y no se mezclan.
 
 ```java
 package com.ejemplo.gestor.config;
@@ -454,7 +383,7 @@ public class ProyectoService {
 }
 ```
 
-#### Paso 8 · Depuración forense de un fallo en Bruno
+#### Paso 8 · Relacionar una petición fallida con sus mensajes de log
 
 1. **Lanza una petición en Bruno:**
    * Haz un `POST /api/v1/proyectos` intentando crear un proyecto con un nombre que ya existe.
@@ -472,25 +401,12 @@ public class ProyectoService {
 
 #### Paso 9 · Integrar el Correlation ID en las respuestas RFC 7807
 
-Modifica tu manejador global de excepciones `GlobalExceptionHandler`:
-1. Al capturar cualquier error (400, 404, 500), inyecta el `MDC.get("correlationId")` en el objeto de error Problem Details:
-   ```json
-   {
-     "status": 409,
-     "title": "Conflicto",
-     "detail": "El proyecto ya existe",
-     "instance": "/api/v1/proyectos",
-     "correlationId": "a1b2c3d4"
-   }
-   ```
-2. De este modo, si un usuario recibe una pantalla de error en el frontend, solo tiene que enviar ese `correlationId` al equipo de soporte para que los ingenieros localicen el incidente inmediatamente en los logs del servidor.
+Abre el manejador creado en la UD3, aunque en otros ejemplos se llame GlobalExceptionHandler: no crees un segundo manejador. En el auxiliar que construye ProblemDetail añade `problem.setProperty("correlationId", MDC.get("correlationId"))`, utilizando el nombre real de tu variable e importando `org.slf4j.MDC`. Reproduce un 409 y comprueba que el id del cuerpo coincide con el de la cabecera y los logs. Si el fallo ocurre en un filtro de seguridad, deberá utilizar su propio manejador de respuesta.
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **cubrid riesgos y diagnosticad defectos con pruebas y logs**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Añade pruebas para los casos ausentes y verifica que fallan al introducir temporalmente el defecto que deberían detectar; restaura después el código correcto.
+2. Reproduce las dos peticiones y localiza cada una por su identificador. El mensaje público debe permitir relacionar el fallo sin revelar trazas internas ni datos sensibles.
 
 #### Ampliación si has completado el trabajo
 
@@ -507,7 +423,7 @@ Configura una regla de verificación en `jacoco-maven-plugin`:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un documento de auditoría de pruebas y análisis de casos límite, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>estrategia-pruebas.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -550,35 +466,29 @@ Diseña un filtro o conversor personalizado en Logback (`PatternLayoutEncoder` o
 
 La corrección tiene evidencia reproducible y los logs no exponen credenciales ni datos innecesarios.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 45 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-45.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-45.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-45.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 46 · Documentación y revisión de calidad
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 23: Cerrar una candidata con evidencias de calidad](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-23/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-23).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-La documentación debe permitir ejecutar y consumir la versión actual. Una revisión útil contrasta requisitos, contrato y código.
+Ya has revisado pruebas y diagnóstico. Hoy comprobarás que la documentación representa la API real. Una revisión de código contrasta implementación y criterios de calidad; necesita peticiones reproducibles y observaciones concretas, no solo preferencias de estilo.
 
 #### La documentación viva frente a los documentos muertos
 
@@ -637,23 +547,15 @@ Utiliza esta lista de comprobación para auditar la aplicación:
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Actualizad OpenAPI, configuración y README y revisad un caso de uso de otro proyecto.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Aplicad las correcciones y ejecutad la suite y la colección desde un arranque limpio.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">OpenAPI, documentación y code review</p>
+1. Abre Swagger UI, la colección, el README y los DTO actuales. Selecciona una ruta pública y otra protegida.
+2. Anota qué necesita un compañero para arrancar, autenticarse y ejecutar ambas. Comprueba si esos pasos están escritos y si las variables tienen ejemplos sin secretos.
+3. Selecciona una operación con validación y conflicto para revisar también los casos que no terminan con éxito.
 
 #### Paso 2 · Enriquecimiento de OpenAPI y Swagger UI
 
-Configuramos el bean de OpenAPI para que Swagger UI incluya el botón **Authorize** permitiendo probar endpoints protegidos con tokens Bearer:
+Actualiza el único OpenApiConfig de la sesión 31. Añade el esquema HTTP bearer y referencia exactamente el mismo nombre en SecurityRequirement. En los controladores añade las anotaciones sobre los métodos existentes, conservando sus argumentos y cuerpo. El ejemplo de subida abreviado ilustra esas anotaciones: no se copia `...` como firma Java. Arranca y verifica primero `/v3/api-docs`, después el botón Authorize y finalmente una petición protegida.
 
 ```java
 package com.ejemplo.gestor.config;
@@ -703,7 +605,8 @@ public class OpenApiConfig {
     })
     @PostMapping(value = "/tareas/{id}/adjuntos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('DESARROLLADOR', 'JEFE_PROYECTO', 'ADMINISTRADOR')")
-    public ResponseEntity<Void> subirAdjunto( ... )
+    // Coloca estas anotaciones sobre tu método subirAdjunto existente.
+    // Conserva su firma, sus parámetros multipart y todo su cuerpo.
 ```
 
 #### Paso 3 · Inspección de Swagger UI y sesión de Code Review
@@ -738,6 +641,8 @@ public class OpenApiConfig {
 
 #### Paso 5 · Auditar y ser auditado
 
+Utiliza un clon y una configuración de desarrollo separados. Para cada dimensión de la rúbrica registra la comprobación realizada y su resultado; si no encuentras un defecto, indica la evidencia favorable en lugar de inventar un hallazgo. Cuando haya fallo, incluye petición, esperado, observado y ubicación. La persona autora corrige el caso, repite la comprobación y deja ambos resultados enlazados en el registro de sesión.
+
 1. **Recibe:** intercambia repositorios con otro equipo. Clona el suyo desde cero y arráncalo siguiendo solo su documentación, sin preguntarles nada. Cronometra cuánto tardas.
 2. **Audita:** recorre las cinco dimensiones de la rúbrica y anota **al menos un hallazgo en cada una**, con la etiqueta de gravedad y la razón. Un informe con quince comentarios de estilo y ninguno de seguridad es un informe que no ha hecho su trabajo.
 3. **Busca específicamente estas cinco cosas**, que son las que más se repiten a estas alturas del curso:
@@ -758,10 +663,8 @@ public class OpenApiConfig {
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **revisad código y documentación de la versión real**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta desde la documentación los casos válidos y rechazados y contrasta estados, campos, ejemplos y requisitos de acceso.
+2. Intercambia la revisión con otra persona, corrige discrepancias reproducibles y registra qué cambió en código o documentación y cómo se verificó.
 
 #### Ampliación si has completado el trabajo
 
@@ -779,7 +682,7 @@ Instala la extensión **SonarLint** en tu entorno de desarrollo (IntelliJ o VS C
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita una memoria de auditoría técnica y revisión por pares de la aplicación, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-revision-pares.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -802,27 +705,18 @@ Instala la extensión **SonarLint** en tu entorno de desarrollo (IntelliJ o VS C
 
 Otra persona puede arrancar la API, comprender sus permisos y reproducir un recorrido documentado.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 46 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-46.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-46.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-46.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 

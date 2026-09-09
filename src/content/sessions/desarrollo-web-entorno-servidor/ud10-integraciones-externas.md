@@ -22,17 +22,22 @@ priorKnowledge:
   - "Autenticación y configuración externa."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">El backend se conecta con servicios externos e incorpora ficheros y comunicación. Cada integración debe responder a un caso de uso del producto y contemplar fallos.</p>
 
 ## Semana 21 · Consumir un servicio externo
 
 ## Sesión 41 · Consumir un servicio externo
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 21: Comprobar una dependencia externa y su degradación](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-21/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-21).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Un servicio externo tiene su propio contrato y puede cambiar al margen de vuestro dominio. El cliente HTTP y sus DTO delimitan esa dependencia.
+Hasta ahora tu backend respondía a otros programas. Hoy también actuará como cliente de un servicio externo. RestClient envía peticiones HTTP desde Java; un DTO externo representa la respuesta del proveedor y un adaptador la convierte al formato propio de tu producto.
 
 #### El backend deja de ser una isla solitaria
 
@@ -117,19 +122,11 @@ Si devuelves este JSON a tu cliente web o lo guardas tal cual en tu base de dato
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Elegid una integración útil para vuestro producto e implementad el cliente y el mapeo de su respuesta.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Separad la configuración externa y probad una respuesta conocida antes de incorporarla al caso de uso.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Consumir una API externa</p>
+1. Abre una operación del servicio donde tenga sentido consultar información externa. El ejemplo meteorológico sirve de referencia; justifica su uso o el servicio equivalente en tu dominio.
+2. Localiza la configuración de la URL del proveedor y crea el paquete de integración separado de los controladores públicos.
+3. Consulta primero la respuesta externa de ejemplo y anota sus campos y unidades. Decide cuáles necesita realmente tu aplicación.
 
 #### Paso 2 · La API externa de pruebas: Open-Meteo
 
@@ -141,7 +138,7 @@ Para aprender integración utilizaremos la API pública de **Open-Meteo** ([open
 
 #### Paso 3 · Configuración y primer cliente con RestClient
 
-Antes de programar nada, mira con tus ojos lo que vas a consumir. En tu cliente HTTP, lanza directamente:
+Primero ejecuta la URL externa en el cliente HTTP y guarda una respuesta de ejemplo: es tu referencia para los nombres y tipos. Crea después `config/RestClientConfig.java`, `integration/ClimaExternoClient.java` y `controller/ProyectoClimaController.java`, cada bloque en su archivo. Arranca al completar sus dependencias y llama a la ruta de diagnóstico. Esa ruta muestra el transporte; todavía debes conectar la existencia y las coordenadas del proyecto en los pasos siguientes.
 
 ```text
 GET https://api.open-meteo.com/v1/forecast?latitude=39.47&longitude=-0.38&current_weather=true
@@ -286,7 +283,7 @@ public class ProyectoClimaController {
   <dd>No es decorativa. Muchos proveedores rechazan o limitan peticiones anónimas, y algunos (GitHub, sin ir más lejos) devuelven <code>403</code> si no la envías. Identificar tu cliente es una cortesía que además evita bloqueos.</dd>
 </dl>
 
-#### Paso 4 · Inspección forense de la petición saliente en Bruno
+#### Paso 4 · Comprobar parámetros y respuesta de la integración HTTP
 
 1. **Arranca la aplicación Spring Boot.**
 2. **Abre Bruno y lanza:**
@@ -331,7 +328,7 @@ En lugar de pasar las coordenadas por parámetros de query en cada llamada:
 
 #### Paso 7 · De DTOs externos al modelo de dominio
 
-Creamos registros que representan exactamente la estructura que envía Open-Meteo. Usamos `@JsonIgnoreProperties(ignoreUnknown = true)` para que Jackson ignore de forma segura cualquier campo que no nos interese:
+Crea cada record externo en su propio archivo bajo `integration/dto`; la anotación JsonProperty relaciona una clave del proveedor con un componente Java de nombre distinto. Crea luego el DTO público en `dto`, el adaptador y el servicio que lo utiliza. En el controlador existente sustituye la llamada que devuelve JSON crudo por la llamada al nuevo servicio y cambia el tipo de respuesta. Comprueba que nombres, unidades y valores del DTO proceden del ejemplo externo guardado, no de constantes del guion.
 
 ```java
 package com.ejemplo.gestor.integration.dto;
@@ -380,10 +377,10 @@ Este es el contrato que le pertenece a **nuestra aplicación**: nombres limpios,
 package com.ejemplo.gestor.dto;
 
 public record ClimaProyectoResponse(
-    double temperaturaCelsius,
-    double velocidadVientoKmH,
+    Double temperaturaCelsius,
+    Double velocidadVientoKmH,
     String descripcionClima,
-    boolean esFavorableParaTrabajoExterior
+    Boolean esFavorableParaTrabajoExterior
 ) {}
 ```
 
@@ -514,7 +511,7 @@ Acabas de ver, en tu propia aplicación, cómo un campo que a ti no te importa �
 
 #### Paso 10 · Integrar el clima en la respuesta completa del proyecto
 
-Modifica `ProyectoResponse` (el DTO que devuelve `GET /api/v1/proyectos/{id}`):
+Antes de ampliar ProyectoResponse, decide dónde se incluye el clima: aquí se consulta en el detalle, no durante cada conversión genérica del mapper. Añade el componente y actualiza sus constructores en código y tests. Carga primero el proyecto y sus coordenadas; si faltan, devuelve una respuesta prevista por tu contrato, no una llamada con valores inventados. Consulta después el proveedor y construye el DTO final. Comprueba que listar cien proyectos no provoca cien llamadas meteorológicas por reutilizar ese mapper.
 
 1. Añade un campo opcional `ClimaProyectoResponse clima`.
 2. En `ProyectoService.obtenerPorId(id)`, llama a `climaService.consultarClima(proyecto.getLatitud(), proyecto.getLongitud())` e incrusta el clima en la respuesta.
@@ -530,10 +527,8 @@ Modifica `ProyectoResponse` (el DTO que devuelve `GET /api/v1/proyectos/{id}`):
 
 #### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **integrad el cliente http y sus dto externos**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta la consulta a través de tu backend y comprueba que el DTO público usa nombres y unidades propios, sin reenviar toda la respuesta del proveedor.
+2. Cambia un parámetro permitido y verifica que llega correctamente al proveedor. Los errores y reglas del contrato público siguen siendo responsabilidad de tu API.
 
 #### Ampliación si has completado el trabajo
 
@@ -590,35 +585,29 @@ Una de las enormes ventajas de la Capa Anticorrupción es que el mapeador puede 
 
 El dominio no depende directamente del formato externo y las credenciales no aparecen en el repositorio.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 41 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-41.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-41.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-41.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 42 · Timeouts y fallos parciales
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 21: Comprobar una dependencia externa y su degradación](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-21/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-21).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una llamada saliente puede tardar, fallar o devolver datos inesperados. El caso de uso debe decidir qué resultado ofrecer en cada situación.
+La integración responde cuando el proveedor funciona. Hoy definirás qué pasa cuando tarda demasiado o falla. Un timeout limita la espera; una caché reutiliza temporalmente un resultado y necesita una política de caducidad. La respuesta debe indicar cuándo faltan datos o se usan datos anteriores.
 
 #### La falacia de la red fiable y el colapso de hilos
 
@@ -660,23 +649,17 @@ Debemos configurar dos límites independientes en la factoría de conexiones HTT
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Definid límites de espera y tratamiento de errores para la integración de vuestro backend.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Simulad caída, respuesta inválida y respuesta lenta; comprobad que el error se traduce al contrato de vuestra API.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Errores, timeouts y servicios no disponibles</p>
+1. Abre el cliente externo, su configuración y el servicio que lo llama. Ejecuta primero el caso correcto y observa su duración.
+2. Define cuánto puede esperar tu operación y qué parte puede seguir funcionando sin el dato externo. Anota qué respuesta esperará el cliente.
+3. Prepara en desarrollo una URL inaccesible o una simulación controlada del proveedor; evita depender de una caída real para probar.
 
 #### Paso 2 · Configuración de timeouts y degradación elegante
 
-Configuramos `SimpleClientHttpRequestFactory` con límites estrictos parametrizados en `application.properties`:
+En `ClimaProyectoResponse` cambia `double` por `Double` para temperatura y viento, y `boolean` por `Boolean` para la valoración. Estos tipos admiten `null`: significa que no hay medición, mientras que cero grados sí sería una medición. En el cliente comprueba primero si temperatura es null y muestra el aviso. Si añadiste `recomendacion` en la sesión 41, conserva ese componente y pasa también un texto de indisponibilidad al construir el resultado degradado.
+
+Sustituye únicamente la construcción del bean RestClient por la versión con requestFactory y conserva su nombre, para que los servicios reciban el mismo cliente configurado. En ClimaService actualiza el método y **sus llamadas** en ProyectoService o el controlador; declarar `consultarClimaSeguro` no cambia los sitios que todavía llamen al método antiguo. Prueba primero el caso correcto y después el fallo controlado. Un resultado sin información meteorológica debe distinguirse explícitamente de una temperatura real de cero grados.
 
 ```java
 package com.ejemplo.gestor.config;
@@ -753,7 +736,8 @@ public class ClimaService {
                 .retrieve()
                 .body(OpenMeteoResponse.class);
 
-            return climaAdapter.adaptar(external);
+            ClimaProyectoResponse resultado = climaAdapter.adaptar(external);
+            return resultado != null ? resultado : generarClimaDegradado("El proveedor no ha enviado una medición");
 
         } catch (ResourceAccessException ex) {
             // Se agotó el Connect Timeout, Read Timeout o falló la resolución DNS
@@ -775,10 +759,10 @@ public class ClimaService {
     private ClimaProyectoResponse generarClimaDegradado(String aviso) {
         // Devolvemos un valor seguro por defecto sin lanzar 500 al cliente
         return new ClimaProyectoResponse(
-            0.0,
-            0.0,
+            null,
+            null,
             aviso,
-            true // No bloqueamos el trabajo por falta de clima
+            null // No hay medición: no se puede afirmar si es favorable
         );
     }
 }
@@ -815,7 +799,7 @@ Vamos a verificar empíricamente que la degradación funciona:
 | `@Cacheable` no hace nada aunque esté habilitado | Llamada interna | Si el método se invoca desde otro método de la misma clase, el proxy no interviene |
 | El clima se queda congelado durante horas | La caché no expira | Una caché sin `ttl` no caduca nunca: para datos que cambian, configura el tiempo de vida |
 
-Antes de configurar nada, comprueba qué pasa sin red y sin límite de espera:
+Con los timeouts configurados, comprueba el fallo del proveedor de forma controlada:
 
 1. Comenta temporalmente la `requestFactory` del bean.
 2. Apunta el `base-url` a un host que no responde, por ejemplo `http://10.255.255.1`.
@@ -827,32 +811,61 @@ Ese es el argumento completo de la sesión: **un timeout no sirve para responder
 
 #### Paso 5 · Cachear respuestas climáticas para ahorrar peticiones
 
-El tiempo meteorológico no cambia cada medio segundo: consultar la API en cada petición a `/proyectos/{id}` desperdicia ancho de banda y aumenta la latencia innecesariamente.
+Una caché guarda temporalmente el resultado de una consulta para reutilizarlo. Aquí la clave son las coordenadas y el valor es el clima obtenido. Necesitamos tanto las anotaciones de Spring como un proveedor que aplique la caducidad.
 
-1. Activa la caché en tu proyecto con `@EnableCaching` en tu clase principal o en `CacheConfig`.
-2. Decora el método `consultarClimaSeguro` con `@Cacheable("clima")`:
-   ```java
-   @Cacheable(value = "clima", key = "#latitud + '_' + #longitud")
-   public ClimaProyectoResponse consultarClimaSeguro(double latitud, double longitud) { ... }
-   ```
-3. Lanza dos peticiones consecutivas al mismo proyecto:
-   * Primera petición: tarda ~200 ms (llama a Internet).
-   * Segunda petición: responde en 1 ms (se recupera de la memoria caché de Spring).
-4. **Decide y justifica el tiempo de vida.** Una caché sin caducidad devuelve el tiempo de ayer indefinidamente. Configura un `ttl` y escribe en tu cuaderno por qué ese y no otro: para datos meteorológicos, entre diez y treinta minutos es defendible; treinta segundos no ahorra nada y un día es directamente mentir al usuario.
-5. **Comprueba que la clave es correcta:** pide el clima de dos proyectos con coordenadas distintas y confirma que devuelven temperaturas distintas. Si devuelven la misma, tu `key` no incluye las coordenadas y estás sirviendo el tiempo de Valencia a un proyecto de Madrid. Es el fallo más silencioso de esta sesión, porque la aplicación funciona perfectamente y los datos son falsos.
-6. **Documenta las tres decisiones de resiliencia** que has tomado hoy, con su número: cuánto esperas para conectar, cuánto para leer y cuánto dura la caché. Las tres van a la memoria técnica de la UD12 y las tres te las van a preguntar en la defensa.
+1. Añade estas dependencias dentro de `dependencies` en `pom.xml` y sincroniza Maven. Spring Boot gestiona sus versiones.
 
-<dl class="worked">
-  <dt>Cómo saber que lo has terminado</dt>
-  <dd>Con el proveedor caído, tu API responde en el tiempo del timeout, con código correcto y un aviso legible, nunca un <code>500</code>; dos proyectos distintos reciben climas distintos; y sabes decir de memoria tus tres números y por qué son esos.</dd>
-</dl>
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.github.ben-manes.caffeine</groupId>
+    <artifactId>caffeine</artifactId>
+</dependency>
+```
+
+2. Crea `config/CacheConfig.java` para activar el soporte. Decláralo una sola vez.
+
+```java
+package com.ejemplo.gestor.config;
+
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@EnableCaching
+public class CacheConfig {}
+```
+
+3. Añade a `application.properties` una caché llamada `clima`, con un máximo de 500 entradas y caducidad de diez minutos desde cada escritura.
+
+```properties
+spring.cache.type=caffeine
+spring.cache.cache-names=clima
+spring.cache.caffeine.spec=maximumSize=500,expireAfterWrite=10m
+```
+
+4. En `ClimaService.java`, importa `org.springframework.cache.annotation.Cacheable` y coloca esta anotación justo encima de **tu método existente** `consultarClimaSeguro`. Conserva todo su cuerpo.
+
+```java
+@Cacheable(value = "clima", key = "#p0 + '_' + #p1",
+    unless = "#result == null || #result.temperaturaCelsius() == null")
+```
+
+`#p0` y `#p1` son los dos argumentos. `unless` evita guardar una respuesta sin medición. El controlador u otro servicio debe llamar a este bean; llamar al método desde otro método de la misma instancia no atraviesa el mecanismo de caché de Spring.
+
+5. Añade un log justo antes de `openMeteoRestClient.get()` y realiza dos peticiones con las mismas coordenadas. Ambas responden, pero el log de consulta externa debe aparecer una vez. Mide tus tiempos; no tienen por qué coincidir con los de otro ordenador.
+6. Repite con otras coordenadas y comprueba que se consulta al proveedor de nuevo. Dos ubicaciones pueden tener la misma temperatura: la prueba de la clave es el número de consultas y sus parámetros, no que las temperaturas sean distintas.
+7. Para probar caducidad sin esperar diez minutos, cambia temporalmente `10m` por `5s`, reinicia y repite la misma petición antes y después de cinco segundos. Restaura `10m`. Con el proveedor simulado como caído, comprueba que la respuesta degradada no impide reintentar la consulta siguiente.
+
+Registra el timeout de conexión, el de lectura y el tiempo de caché elegidos, junto a estas comprobaciones. La caché no elimina la necesidad de manejar fallos del proveedor.
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **reproducid y controlad fallos de red**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Provoca el fallo y verifica que la operación termina dentro del límite configurado y devuelve el resultado alternativo documentado.
+2. Repite consultas para comprobar cuándo se utiliza la caché, cuándo caduca y cómo se distingue un dato no disponible de un dato válido.
 
 #### Ampliación si has completado el trabajo
 
@@ -869,7 +882,7 @@ Investiga la librería **Resilience4j**:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe técnico sobre resiliencia, políticas de timeout y contingencia ante caída de proveedores externos, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-resiliencia.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -892,37 +905,31 @@ Investiga la librería **Resilience4j**:
 
 El servicio no queda esperando indefinidamente y las pruebas reproducen los fallos externos.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 42 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-42.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-42.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-42.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 22 · Ficheros y comunicación externa
 
 ## Sesión 43 · Ficheros y comunicación externa
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 22: Verificar archivos y efectos externos](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-22/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-22).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Un adjunto necesita límites y permisos; un correo o webhook produce un efecto fuera del proceso. Ambos deben vincularse a un caso de uso del producto.
+Tu aplicación ya consulta un proveedor y controla sus fallos. Hoy recibirá archivos y emitirá avisos externos. Multipart permite enviar un archivo junto con otros datos; un webhook es una petición hacia una URL receptora. Separarás el éxito del guardado del resultado del aviso.
 
 #### El transporte binario: multipart/form-data
 
@@ -1004,21 +1011,40 @@ Para resolver este problema con elegancia, Spring proporciona un bus de eventos 
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Implementad subida y descarga de ficheros con restricciones de tipo, tamaño y acceso.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Añadid correo, servicio de notificación o webhook según vuestro dominio y comprobad destinatario y contenido en un entorno de prueba.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Subida y descarga de ficheros</p>
+1. Abre la entidad que recibirá adjuntos, su servicio y las reglas de permisos. Prepara archivos ficticios pequeños, uno de tipo permitido y otro rechazado.
+2. Localiza la configuración del directorio de almacenamiento y la URL receptora de pruebas. Usa un receptor de desarrollo para los avisos.
+3. Anota qué información del adjunto guardarás en la base de datos y cómo comprobarás quién puede descargarlo.
 
 #### Paso 2 · Subida y descarga segura de adjuntos
+
+Después de crear Adjunto, crea `repository/AdjuntoRepository.java`. Es el repositorio que utilizarán los controladores y el servicio integrado de la siguiente sesión:
+
+```java
+package com.ejemplo.gestor.repository;
+
+import com.ejemplo.gestor.model.Adjunto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface AdjuntoRepository extends JpaRepository<Adjunto, Long> {
+    List<Adjunto> findByTareaId(Long tareaId);
+}
+```
+
+Si el manejador global captura Exception, añade también un método específico para ResponseStatusException: de lo contrario convertiría sus 404 o 409 en 500. Importa `org.springframework.web.server.ResponseStatusException` y conserva los demás métodos del manejador.
+
+```java
+@ExceptionHandler(ResponseStatusException.class)
+public ProblemDetail estadoConocido(ResponseStatusException ex) {
+    return ProblemDetail.forStatusAndDetail(ex.getStatusCode(), ex.getReason());
+}
+```
+
+Para el archivo vacío o de tipo rechazado, utiliza una excepción propia de validación o el IllegalArgumentException del ejemplo y tradúcela expresamente a 400; no cambies todos los errores inesperados a 400.
+
+Configura primero los límites multipart y el directorio local. Crea la entidad Adjunto conservando su relación obligatoria con Tarea, su repositorio y AlmacenamientoService. Después incorpora las operaciones al servicio del dominio y conecta el controlador; los datos de la petición deben validarse antes de escribir el archivo. Reutiliza las comprobaciones de propiedad de la UD9 en subida y descarga. El nombre de almacenamiento lo genera el servidor; el nombre original se utiliza solo como metadato visible.
 
 ```properties
 # Límite máximo por fichero individual (5 MB)
@@ -1269,26 +1295,30 @@ public class AdjuntoController {
 
 #### Paso 4 · Listar los adjuntos de una tarea
 
-Implementa el endpoint de consulta de adjuntos:
-1. Crea `GET /api/v1/tareas/{id}/adjuntos`.
-2. Devuelve una lista de `AdjuntoResponse`:
-   ```java
-   public record AdjuntoResponse(
-       Long id,
-       String nombreOriginal,
-       long tamanoBytes,
-       String contentType,
-       String urlDescarga
-   ) {}
-   ```
-3. Donde `urlDescarga` sea `/api/v1/adjuntos/{adjunto.id}/descargar`.
-4. Verifica con Bruno que el cliente web puede consultar la lista de adjuntos y descargar cada uno mediante su URL correspondiente.
+Crea `dto/AdjuntoResponse.java`. En AdjuntoRepository declara una consulta por id de tarea, carga primero la tarea y comprueba el permiso para verla. Transforma cada adjunto a ese DTO y construye la URL de descarga con el id **del adjunto**, no con el id de la tarea. Añade el GET al controlador existente y compruébalo con una tarea sin adjuntos y otra con dos. Usa cada URL recibida y verifica que descarga el archivo correspondiente.
 
 <p class="stage">Correo, servicio externo o webhook</p>
 
 #### Paso 5 · Webhooks asíncronos con Eventos de Dominio
 
-Configuramos el ejecutor de tareas asíncronas con un pool de hilos dimensionado:
+**Preparar el receptor de prueba.** Crea `tools/webhook-prueba.py` con este contenido y ejecútalo en otra terminal con `python tools/webhook-prueba.py`. Deja el proceso abierto; el listener Java llamará a `http://localhost:9090/post`. Usa exclusivamente datos ficticios.
+
+```python
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+class Receptor(BaseHTTPRequestHandler):
+    def do_POST(self):
+        contenido = self.rfile.read(int(self.headers.get("Content-Length", "0")))
+        print(contenido.decode("utf-8"), flush=True)
+        self.send_response(204)
+        self.end_headers()
+
+HTTPServer(("127.0.0.1", 9090), Receptor).serve_forever()
+```
+
+Primero crea una tarea de prioridad alta y observa el POST en esa terminal. Después detén solo el receptor con Ctrl+C y repite: la tarea debe conservarse y el fallo del aviso aparecer en los logs. Vuelve a iniciarlo al terminar. El listener mostrado registra el fallo, pero no implementa una cola de reintentos.
+
+Crea en orden AsyncConfig, el record del evento y el listener. Después añade ApplicationEventPublisher al constructor existente de TareaService, conservando sus otros colaboradores. Dentro del método transaccional de alta, guarda primero, toma el id devuelto y publica el evento con los datos necesarios; no copies un método abreviado que omita el guardado. Usa una prioridad aceptada por tu validador para activar el ejemplo de aviso. Configura la URL de un receptor local de pruebas antes de activar el envío.
 
 ```java
 package com.ejemplo.gestor.config;
@@ -1331,55 +1361,17 @@ public record TareaCriticaCreadaEvent(
 ) {}
 ```
 
-El servicio solo se preocupa de guardar el dato y publicar el evento. Cero código de correos o webhooks:
+En TareaService añade ApplicationEventPublisher como campo y parámetro del constructor existente; importa `org.springframework.context.ApplicationEventPublisher` y el evento anterior. Conserva los repositorios y las reglas actuales. En el método transaccional de alta, **después de guardar** y antes del return, inserta este bloque. Aquí `tarea` es la entidad devuelta por save y `usuarioAutenticado` es el username recibido del principal del controlador; pásalo como argumento si tu método todavía no lo recibía.
 
 ```java
-package com.ejemplo.gestor.service;
-
-import com.ejemplo.gestor.dto.TareaRequest;
-import com.ejemplo.gestor.dto.TareaResponse;
-import com.ejemplo.gestor.event.TareaCriticaCreadaEvent;
-import com.ejemplo.gestor.model.Prioridad;
-import com.ejemplo.gestor.model.Tarea;
-import com.ejemplo.gestor.repository.TareaRepository;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-@Service
-public class TareaService {
-
-    private final TareaRepository tareaRepository;
-    private final ApplicationEventPublisher eventPublisher;
-
-    public TareaService(TareaRepository tareaRepository, ApplicationEventPublisher eventPublisher) {
-        this.tareaRepository = tareaRepository;
-        this.eventPublisher = eventPublisher;
-    }
-
-    @Transactional
-    public TareaResponse crearTarea(TareaRequest request, String usuarioAutenticado) {
-        Tarea tarea = new Tarea();
-        tarea.setTitulo(request.titulo());
-        tarea.setPrioridad(request.prioridad());
-        // ... persistencia en PostgreSQL
-        tarea = tareaRepository.save(tarea);
-
-        // Si la tarea es crítica, publicamos el evento
-        if (tarea.getPrioridad() == Prioridad.CRITICA) {
-            eventPublisher.publishEvent(new TareaCriticaCreadaEvent(
-                tarea.getId(),
-                tarea.getTitulo(),
-                tarea.getPrioridad().name(),
-                tarea.getProyecto().getNombre(),
-                usuarioAutenticado
-            ));
-        }
-
-        return new TareaResponse(tarea.getId(), tarea.getTitulo(), tarea.getPrioridad().name());
-    }
+if ("alta".equals(tarea.getPrioridad())) {
+    eventPublisher.publishEvent(new TareaCriticaCreadaEvent(
+        tarea.getId(), tarea.getTitulo(), tarea.getPrioridad(),
+        tarea.getProyecto().getNombre(), usuarioAutenticado));
 }
 ```
+
+La prioridad sigue siendo String con valores baja, media y alta. No crees un enum CRITICA solo para copiar el aviso. El nombre del evento identifica el caso que hemos decidido notificar.
 
 El listener se ejecuta en segundo plano solo tras el commit de la base de datos:
 
@@ -1403,10 +1395,11 @@ public class NotificacionWebhookListener {
     private static final Logger log = LoggerFactory.getLogger(NotificacionWebhookListener.class);
     private final RestClient webhookRestClient;
 
-    public NotificacionWebhookListener(RestClient.Builder restClientBuilder) {
+    public NotificacionWebhookListener(RestClient.Builder restClientBuilder,
+            @org.springframework.beans.factory.annotation.Value("${app.webhook.base-url:http://localhost:9090}") String baseUrl) {
         // En un entorno real se apunta a una URL configurable de Slack/Discord o Webhook de terceros
         this.webhookRestClient = restClientBuilder
-            .baseUrl("https://httpbin.org") // Servicio de pruebas que refleja peticiones
+            .baseUrl(baseUrl)
             .build();
     }
 
@@ -1435,7 +1428,7 @@ public class NotificacionWebhookListener {
 
         } catch (Exception ex) {
             // El fallo externo se registra en auditoría sin afectar al usuario
-            log.error("[{}] Error al enviar webhook para tarea #{}: {}. Se registrará para reintento.",
+            log.error("[{}] Error al enviar webhook para tarea #{}: {}. Revisar el envío fallido. Este ejemplo no programa reintentos.",
                 Thread.currentThread().getName(), evento.tareaId(), ex.getMessage());
         }
     }
@@ -1497,10 +1490,8 @@ Añade un segundo listener que simule el envío de un correo de alerta:
 
 #### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **añadid adjuntos y notificaciones al caso de uso**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Sube, lista y descarga un archivo autorizado; compara su contenido y prueba tamaño, tipo e identidad no permitidos.
+2. Simula un fallo del receptor externo y verifica la política prevista: el dato confirmado no debe desaparecer porque un aviso posterior haya fallado. Registra ese fallo de forma comprobable.
 
 #### Ampliación si has completado el trabajo
 
@@ -1557,270 +1548,203 @@ Investiga el patrón **Transactional Outbox**:
 
 Un archivo no permitido se rechaza y una persona sin permisos no descarga un adjunto ajeno.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 43 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-43.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-43.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-43.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 44 · Integración completa comprobada
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 22: Verificar archivos y efectos externos](/es/docencia/proyecto-intermodular/ud10-comprobar-las-integraciones/sesion-22/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-22).
+
+
 ### Se explica
 
-<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-La integración se evalúa dentro del flujo del usuario, incluyendo lo que ocurre cuando una dependencia falla.
+El backend ya sabe gestionar tareas, guardar adjuntos, consultar el clima y publicar un aviso tras crear una tarea importante. Hoy conectaremos esas piezas sobre vuestro producto. El alta de tarea conserva su endpoint y reglas; la operación integrada añade a esa tarea un adjunto y devuelve también el clima de su proyecto.
 
-#### La prueba del mundo real: Todo el sistema en marcha
+**Seguir un dato de extremo a extremo.** El cliente envía el id de tarea y un archivo. Seguridad comprueba la identidad y el rol antes del controlador. El servicio carga la tarea, consulta el clima, guarda el archivo y registra sus metadatos. La respuesta incluye ids reales y una URL que debe permitir descargar el mismo contenido. En la demostración seguiremos ese recorrido en Red, en los logs, en la tabla adjuntos y en la carpeta de almacenamiento.
 
-A lo largo del curso has aprendido piezas individuales:
-* Controladores REST y DTOs con validación (UD3).
-* Arquitectura por capas desacoplada (UD4).
-* Persistencia relacional con Spring Data JPA y PostgreSQL (UD5).
-* Pruebas de integración con MockMvc y documentación OpenAPI (UD7).
-* Autenticación y autorización granular con Spring Security y JWT (UD9).
-* Clientes HTTP salientes con Capa Anticorrupción y eventos asíncronos (UD10).
+**Un fallo no siempre tiene el mismo efecto.** Si falta permiso o la tarea no existe, rechazamos la operación. Si el proveedor meteorológico falla, podemos seguir guardando el adjunto y devolver un aviso sin inventar una medición. Esta decisión pertenece al caso de uso: el clima es información complementaria.
 
-El objetivo de esta sesión es **integrar todas estas capacidades en un único flujo de negocio de extremo a extremo**:
+**Qué cubre la transacción.** PostgreSQL puede deshacer sus filas, pero no borra automáticamente un fichero escrito en disco ni retira una notificación ya enviada. Por eso la sesión 43 envía eventos después del commit y hoy añadiremos limpieza de archivos en caso de rollback. Explicaremos dónde se registra esa limpieza y comprobaremos que se ejecuta; también reconoceremos su límite ante una caída completa del proceso.
 
-<figure class="diagram">
-  <figcaption>El flujo integral de la Miniintegración</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>1. Cliente autenticado (Bearer JWT) envía Multipart</li>
-    <li>2. Spring Security autoriza el rol (hasRole)</li>
-    <li>3. Almacenamiento guarda PDF con UUID en disco</li>
-    <li>4. ClimaService consulta Open-Meteo (con timeout y fallback)</li>
-    <li>5. PostgreSQL guarda Incidencia + Adjunto (Transacción ACID)</li>
-    <li>6. Commit dispara Webhook asíncrono en background</li>
-    <li>7. Respuesta 201 Created limpia entregada al usuario</li>
-  </ol>
-</figure>
-
-#### El caso de uso: Registro de Incidencias de Obra
-
-Un operario de campo registra una incidencia urgente sobre un proyecto:
-1. Envía los datos de la incidencia (título, descripción, severidad) junto a un archivo adjunto (fotografía o informe técnico en PDF).
-2. El servidor valida la identidad y el rol mediante JWT.
-3. El fichero se sanitiza con UUID y se almacena en el directorio seguro.
-4. El servidor obtiene las coordenadas del proyecto y consulta el clima local en tiempo real para enriquecer el registro. Si la API de clima falla, se aplica degradación elegante.
-5. Se persiste la incidencia en base de datos.
-6. Se publica el evento que notifica a los responsables vía webhook en segundo plano.
+**Qué se comprueba.** Un 201 aislado no basta: el enlace debe descargar el archivo, la fila debe apuntar a la tarea y una respuesta rechazada no debe dejar efectos inesperados. Separar esas observaciones permite localizar el fallo sin cambiar varias capas a la vez.
 
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Encadenad la operación de negocio, la llamada externa y el adjunto o notificación que corresponda.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Añadid pruebas del recorrido completo y sus fallos; revisad configuración y logs en el despliegue.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Miniintegración</p>
+1. Abre la colección del producto y prepara un usuario, un recurso y los archivos ficticios del recorrido. Identifica todos los servicios que deben estar arrancados.
+2. Dibuja la secuencia cliente, backend, base de datos, almacenamiento y proveedor. Marca dónde puede fallar y qué resultado debería conservarse.
+3. Guarda el estado inicial de los datos de prueba para distinguir un alta nueva de restos de ejecuciones anteriores.
 
 #### Paso 2 · Ensamblado del flujo completo
+
+Vamos a integrar **una tarea que ya existe** con un adjunto y el clima de su proyecto. En este ejemplo, «incidencia» es la tarea del gestor: no necesitas crear una entidad Incidencia ni otro repositorio. El alta de la tarea sigue usando el CRUD y sus reglas actuales. Este recorrido reutiliza las piezas de las sesiones 41–43 y permite comprobar cada una por separado.
+
+1. Crea una tarea de prueba mediante su endpoint habitual, dentro de un proyecto con coordenadas válidas. Guarda su id. Comprueba el GET de esa tarea, el servicio de clima y el POST de adjuntos de la sesión 43 antes de combinarlos.
+2. Crea `dto/RegistroIntegradoResponse.java`. El id principal es el de la tarea; `adjuntoId` identifica la fila que acabamos de guardar. No construyas una URL de descarga con un id todavía null.
 
 ```java
 package com.ejemplo.gestor.dto;
 
-import java.time.LocalDateTime;
-
-public record IncidenciaCompletaResponse(
-    Long id,
+public record RegistroIntegradoResponse(
+    Long tareaId,
     String titulo,
-    String severidad,
-    String proyectoNombre,
-    String nombreFicheroAdjunto,
-    String urlDescargaAdjunto,
-    ClimaProyectoResponse condicionesMeteorologicas,
-    LocalDateTime fechaRegistro
+    Long adjuntoId,
+    String urlDescarga,
+    ClimaProyectoResponse clima
 ) {}
 ```
+
+3. En `AlmacenamientoService.java` añade el método siguiente junto a `guardarFichero` y `cargarComoRecurso`. Reutiliza sus imports de Path, Files e IOException. Se usará únicamente con el nombre generado por nuestro servicio si falla la transacción.
+
+```java
+public void eliminarFichero(String nombreAlmacenado) {
+    Path ruta = rutaAlmacenamiento.resolve(nombreAlmacenado).normalize();
+    if (!ruta.getParent().equals(rutaAlmacenamiento)) {
+        throw new SecurityException("El archivo debe estar en la carpeta de adjuntos");
+    }
+    try {
+        Files.deleteIfExists(ruta);
+    } catch (IOException ex) {
+        throw new IllegalStateException("No se pudo retirar el archivo " + nombreAlmacenado, ex);
+    }
+}
+```
+
+Una transacción de PostgreSQL no deshace una escritura en disco. Por eso registraremos una acción que retira el fichero si PostgreSQL termina con rollback. Este mecanismo cubre el fallo normal de la transacción; no convierte disco y base de datos en un único almacenamiento atómico ante un apagado del equipo.
+
+4. Crea `service/RegistroIntegradoService.java`. El método carga la tarea, obtiene las coordenadas de su proyecto, consulta el clima con degradación, guarda el archivo y persiste el Adjunto **asociado a esa tarea**. `saveAndFlush` fuerza la escritura de la fila antes de construir la respuesta.
 
 ```java
 package com.ejemplo.gestor.service;
 
-import com.ejemplo.gestor.dto.ClimaProyectoResponse;
-import com.ejemplo.gestor.dto.IncidenciaCompletaResponse;
-import com.ejemplo.gestor.event.TareaCriticaCreadaEvent;
+import com.ejemplo.gestor.dto.RegistroIntegradoResponse;
 import com.ejemplo.gestor.integration.ClimaService;
 import com.ejemplo.gestor.model.Adjunto;
-import com.ejemplo.gestor.model.Incidencia;
-import com.ejemplo.gestor.model.Proyecto;
-import com.ejemplo.gestor.repository.IncidenciaRepository;
-import com.ejemplo.gestor.repository.ProyectoRepository;
-import org.springframework.context.ApplicationEventPublisher;
+import com.ejemplo.gestor.repository.AdjuntoRepository;
+import com.ejemplo.gestor.repository.TareaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class IncidenciaService {
-
-    private final IncidenciaRepository incidenciaRepository;
-    private final ProyectoRepository proyectoRepository;
-    private final AlmacenamientoService almacenamientoService;
+public class RegistroIntegradoService {
+    private static final Logger log = LoggerFactory.getLogger(RegistroIntegradoService.class);
+    private final TareaRepository tareas;
+    private final AdjuntoRepository adjuntos;
+    private final AlmacenamientoService almacenamiento;
     private final ClimaService climaService;
-    private final ApplicationEventPublisher eventPublisher;
 
-    public IncidenciaService(IncidenciaRepository incidenciaRepository,
-                             ProyectoRepository proyectoRepository,
-                             AlmacenamientoService almacenamientoService,
-                             ClimaService climaService,
-                             ApplicationEventPublisher eventPublisher) {
-        this.incidenciaRepository = incidenciaRepository;
-        this.proyectoRepository = proyectoRepository;
-        this.almacenamientoService = almacenamientoService;
+    public RegistroIntegradoService(TareaRepository tareas, AdjuntoRepository adjuntos,
+            AlmacenamientoService almacenamiento, ClimaService climaService) {
+        this.tareas = tareas;
+        this.adjuntos = adjuntos;
+        this.almacenamiento = almacenamiento;
         this.climaService = climaService;
-        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
-    public IncidenciaCompletaResponse registrarIncidencia(
-            Long proyectoId,
-            String titulo,
-            String severidad,
-            MultipartFile fichero,
-            String username) {
+    public RegistroIntegradoResponse registrar(Long tareaId, MultipartFile archivo) {
+        var tarea = tareas.findById(tareaId).orElseThrow(() ->
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Tarea no encontrada"));
+        var proyecto = tarea.getProyecto();
+        if (!proyecto.isActivo()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El proyecto está inactivo");
+        }
+        var clima = climaService.consultarClimaSeguro(proyecto.getLatitud(), proyecto.getLongitud());
+        String nombre = almacenamiento.guardarFichero(archivo);
 
-        Proyecto proyecto = proyectoRepository.findById(proyectoId)
-            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado"));
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCompletion(int status) {
+                if (status == STATUS_ROLLED_BACK) {
+                    try {
+                        almacenamiento.eliminarFichero(nombre);
+                    } catch (RuntimeException ex) {
+                        log.error("Revisar archivo pendiente de limpieza: {}", nombre, ex);
+                    }
+                }
+            }
+        });
 
-        // 1. Guardar fichero binario con UUID seguro
-        String nombreAlmacenado = almacenamientoService.guardarFichero(fichero);
-
-        // 2. Consultar servicio externo con degradación garantizada (nunca lanza 500)
-        ClimaProyectoResponse clima = climaService.consultarClimaSeguro(
-            proyecto.getLatitud(), proyecto.getLongitud()
-        );
-
-        // 3. Persistir entidad en PostgreSQL
-        Incidencia incidencia = new Incidencia();
-        incidencia.setTitulo(titulo);
-        incidencia.setSeveridad(severidad);
-        incidencia.setProyecto(proyecto);
-        incidencia.setFechaRegistro(LocalDateTime.now());
-
-        Adjunto adjunto = new Adjunto(
-            fichero.getOriginalFilename(),
-            nombreAlmacenado,
-            fichero.getContentType(),
-            fichero.getSize(),
-            null
-        );
-        incidencia.setAdjunto(adjunto);
-
-        incidencia = incidenciaRepository.save(incidencia);
-
-        // 4. Publicar evento para notificaciones asíncronas
-        eventPublisher.publishEvent(new TareaCriticaCreadaEvent(
-            incidencia.getId(),
-            incidencia.getTitulo(),
-            incidencia.getSeveridad(),
-            proyecto.getNombre(),
-            username
-        ));
-
-        // 5. Retornar respuesta integral
-        return new IncidenciaCompletaResponse(
-            incidencia.getId(),
-            incidencia.getTitulo(),
-            incidencia.getSeveridad(),
-            proyecto.getNombre(),
-            adjunto.getNombreOriginal(),
-            "/api/v1/adjuntos/" + adjunto.getId() + "/descargar",
-            clima,
-            incidencia.getFechaRegistro()
-        );
+        var adjunto = adjuntos.saveAndFlush(new Adjunto(
+            archivo.getOriginalFilename(), nombre, archivo.getContentType(), archivo.getSize(), tarea));
+        return new RegistroIntegradoResponse(tarea.getId(), tarea.getTitulo(), adjunto.getId(),
+            "/api/v1/adjuntos/" + adjunto.getId() + "/descargar", clima);
     }
 }
 ```
+
+La consulta externa tiene los timeouts de la sesión 42. Aquí se realiza antes de escribir el archivo; identifica en los logs el tiempo que añade al caso de uso. Las reglas de creación de tareas siguen en su servicio original, por lo que no se pierde ninguna validación del CRUD al integrar el adjunto.
+
+5. Crea `controller/RegistroIntegradoController.java`. En el ejemplo pueden registrar adjuntos integrados los jefes de proyecto y administradores; adapta esa regla a la matriz de tu producto e incluye propiedad si corresponde. Mantén el control de descarga de la sesión 43.
 
 ```java
 package com.ejemplo.gestor.controller;
 
-import com.ejemplo.gestor.dto.IncidenciaCompletaResponse;
-import com.ejemplo.gestor.service.IncidenciaService;
-import org.springframework.http.HttpStatus;
+import com.ejemplo.gestor.dto.RegistroIntegradoResponse;
+import com.ejemplo.gestor.service.RegistroIntegradoService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.net.URI;
 
 @RestController
-@RequestMapping("/api/v1/proyectos")
-public class IncidenciaController {
+@RequestMapping("/api/v1/tareas")
+public class RegistroIntegradoController {
+    private final RegistroIntegradoService servicio;
 
-    private final IncidenciaService incidenciaService;
-
-    public IncidenciaController(IncidenciaService incidenciaService) {
-        this.incidenciaService = incidenciaService;
+    public RegistroIntegradoController(RegistroIntegradoService servicio) {
+        this.servicio = servicio;
     }
 
-    @PostMapping(value = "/{id}/incidencias", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('DESARROLLADOR', 'JEFE_PROYECTO', 'ADMINISTRADOR')")
-    public ResponseEntity<IncidenciaCompletaResponse> registrarIncidencia(
-            @PathVariable Long id,
-            @RequestParam("titulo") String titulo,
-            @RequestParam("severidad") String severidad,
-            @RequestParam("fichero") MultipartFile fichero,
-            @AuthenticationPrincipal UserDetails usuarioAutenticado) {
-
-        IncidenciaCompletaResponse response = incidenciaService.registrarIncidencia(
-            id, titulo, severidad, fichero, usuarioAutenticado.getUsername()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    @PostMapping(value = "/{id}/registro-integrado", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('JEFE_PROYECTO', 'ADMINISTRADOR')")
+    public ResponseEntity<RegistroIntegradoResponse> registrar(
+            @PathVariable Long id, @RequestParam("archivo") MultipartFile archivo) {
+        var respuesta = servicio.registrar(id, archivo);
+        return ResponseEntity.created(URI.create(respuesta.urlDescarga())).body(respuesta);
     }
 }
 ```
 
+6. En Bruno crea `POST /api/v1/tareas/{{tareaId}}/registro-integrado`, usa el token de una cuenta permitida y selecciona Multipart. Añade `archivo` de tipo File. Deja que Bruno construya Content-Type y su boundary. Espera 201, un `adjuntoId` real y la URL en Location.
+7. Descarga desde esa URL usando la misma identidad y compara el archivo recibido. En PostgreSQL comprueba `adjuntos.tarea_id`: debe ser el id preparado al principio, nunca null.
+8. Si el alta original de la tarea tenía prioridad alta, comprueba el aviso de la sesión 43. Asociar un archivo no vuelve a publicar «tarea creada»: evita emitir notificaciones duplicadas por dos operaciones distintas.
+
 #### Paso 3 · Batería de escenarios en Bruno
 
-Ejecuta la suite de verificación de integración:
+Prepara una tarea y un archivo pequeño de prueba. Cada llamada correcta crea un adjunto diferente; conserva sus ids para limpiar después.
 
-1. **Escenario 1: El camino feliz (Todo funciona):**
-   * Auth: Bearer Token con rol `DESARROLLADOR`.
-   * Body: Multipart con campos de texto y archivo `informe.pdf`.
-   * **Resultado:** Código **`201 Created`**.
-   * La respuesta contiene el ID generado, el enlace de descarga `/api/v1/adjuntos/1/descargar`, el clima actual (`"temperaturaCelsius": 21.5`) y en la consola se observa el webhook disparado en segundo plano por el hilo `notif-thread-1`.
-2. **Escenario 2: Caída del servicio meteorológico (Degradación elegante):**
-   * Desconecta tu conexión a Internet o apunta la URL de Open-Meteo a una IP inalcanzable.
-   * Lanza la misma petición de alta.
-   * **Resultado:** Código **`201 Created`**. La incidencia se guarda, el PDF se almacena y la respuesta incluye `"descripcionClima": "Servicio meteorológico no disponible temporalmente"`. **El backend no se cae.**
-3. **Escenario 3: Acceso no autorizado:**
-   * Lanza la petición sin cabecera `Authorization`.
-   * **Resultado:** Código **`401 Unauthorized`**. Cero ficheros guardados en disco.
-4. **Escenario 4: Fichero inválido:**
-   * Intenta adjuntar un archivo ejecutable `virus.exe`.
-   * **Resultado:** Código **`400 Bad Request`**. La transacción se aborta limpiamente.
+1. Con token de jefe de proyecto o administrador, envía `POST /api/v1/tareas/{{tareaId}}/registro-integrado`, Multipart y campo `archivo`. Espera 201, descarga desde Location y comprueba la relación de base de datos.
+2. Simula la caída del proveedor con la URL local de prueba de la sesión 42. Reinicia para vaciar la caché. Repite: espera 201 con aviso y temperatura null. Restaura la URL y comprueba la recuperación.
+3. Repite sin token (401) y con un rol no permitido (403). Comprueba que ninguno crea fila ni archivo.
+4. Repite con tarea inexistente (404) y proyecto inactivo (409). No deben aparecer adjuntos nuevos.
+5. Repite con un archivo vacío o un tipo rechazado. El manejador debe traducir la validación conocida a 400; comprueba el directorio y las filas, además del estado HTTP.
+
+Utiliza una copia de prueba y datos ficticios; no necesitas desconectar toda la red para simular un proveedor caído.
 
 #### Paso 4 · Si algo no sale como dice el guion
 
@@ -1835,26 +1759,16 @@ Ejecuta la suite de verificación de integración:
 
 #### Paso 5 · Cerrar la integración de extremo a extremo
 
-El objetivo de la sesión es que un caso de uso completo atraviese **todas** las piezas del curso a la vez: validación, persistencia, seguridad, fichero y servicio externo.
-
-1. Ejecuta el alta completa de una incidencia con fotografía adjunta y comprueba que la respuesta `201 Created` incluye el identificador del adjunto y el bloque de clima.
-2. **Repite el alta con la red cortada** (desactiva el wifi o apunta el `base-url` a un host inexistente). Debe seguir devolviendo `201`, con el aviso de degradación en el campo del clima y el fichero correctamente guardado. Si devuelve `500`, la resiliencia de la sesión 42 no está aplicada en este camino.
-3. Comprueba en disco que el fichero existe con su nombre UUID, y en la base de datos que la fila del adjunto apunta a él. Los dos o ninguno: un fichero huérfano en disco o una fila apuntando a nada son los dos fallos clásicos de esta sesión.
-4. Actualiza tu página web de la UD8: añade una sección de incidencias de un proyecto, pinta en verde las condiciones favorables y en naranja las desfavorables o degradadas, y añade el botón de descarga del adjunto.
-5. Documenta el endpoint en OpenAPI. Un `multipart` necesita su `@RequestBody` anotado con el tipo de contenido correcto, o Swagger no ofrecerá el selector de archivo y nadie podrá probarlo desde ahí.
-6. Mide y anota tres números que vas a necesitar en la memoria de la UD12: cuánto tarda el alta con la red disponible, cuánto tarda con la red caída (debería ser el timeout que configuraste, ni un segundo más) y cuánto ocupa en disco un adjunto típico.
-
-<dl class="worked">
-  <dt>Cómo saber que lo has terminado</dt>
-  <dd>El alta funciona con red y sin red, devolviendo <code>201</code> en los dos casos; fichero y fila siempre van juntos; el tiempo con la red caída coincide con tu timeout; y la operación se puede ejecutar entera desde Swagger.</dd>
-</dl>
+1. Añade al cliente un formulario de adjunto sobre una tarea existente. Envía FormData con `archivo` y token; no fijes manualmente la cabecera Content-Type.
+2. Muestra el enlace de descarga y el clima. Si la temperatura es null, presenta el aviso de indisponibilidad y no lo interpretes como cero grados ni como condiciones favorables.
+3. Provoca en el entorno de pruebas un fallo de persistencia después de guardar el archivo. Comprueba el rollback de la fila y la retirada del archivo por afterCompletion. Restaura la condición normal y repite el alta correcta.
+4. Documenta el endpoint y sus permisos en OpenAPI, usando el patrón multipart de la sesión 43. Ejecútalo también desde Swagger.
+5. Guarda en el registro de la sesión el recorrido crear tarea → registrar adjunto → descargar, con sus ids y resultados. Anota la latencia con proveedor disponible y caído, distinguiendo timeout y tiempo total de la petición. No prometas que ambos tiempos son exactamente iguales.
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **ejecutad el caso de uso con sus integraciones**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta el recorrido correcto y comprueba datos persistidos, permisos, adjuntos y respuesta pública.
+2. Repite con una validación fallida, otro usuario y el proveedor caído. Comprueba tanto lo que se devuelve como los efectos que sí o no deben haberse producido.
 
 #### Ampliación si has completado el trabajo
 
@@ -1878,7 +1792,7 @@ Implementa un aspecto `@Aspect` o un interceptor en `RestClient` (`ClientHttpReq
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita una memoria técnica justificando la arquitectura integral y la resiliencia del sistema frente a fallos de terceros, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>memoria-integracion.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -1901,27 +1815,18 @@ Implementa un aspecto `@Aspect` o un interceptor en `RestClient` (`ClientHttpReq
 
 El caso de uso funciona desde el cliente y sus limitaciones y respuestas ante fallos están documentadas.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 44 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-44.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-44.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-44.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 
@@ -1938,7 +1843,7 @@ Para diseñar e implementar cualquier integración externa profesional, aplica s
     <li><strong>Nunca reutilices contratos ajenos</strong>: aplica el patrón <strong>Capa Anticorrupción (ACL)</strong> aislando los DTOs del proveedor de tu modelo de dominio.</li>
     <li>Protege la deserialización con <code>@JsonIgnoreProperties(ignoreUnknown = true)</code> para que cambios ajenos no rompan tu aplicación.</li>
     <li><strong>Asume las falacias de la red</strong>: toda llamada saliente debe tener <strong>Timeouts estrictos</strong> (Connect Timeout 2 s o menos, Read Timeout 3 s o menos).</li>
-    <li>Aplica el principio de <strong>Degradación Elegante (<em>Graceful Degradation</em>)</strong>: el fallo de una API externa nunca debe provocar un <code>500 Internal Server Error</code> en tu backend.</li>
+    <li>Aplica el principio de <strong>Degradación Elegante (<em>Graceful Degradation</em>)</strong>: el fallo de una API externa opcional debe producir la respuesta degradada prevista por el contrato; un fallo de programación sigue requiriendo diagnóstico.</li>
     <li>Optimiza el consumo con <strong><code>@Cacheable</code></strong> para ahorrar peticiones, evitar costes y reducir latencias de cientos de milisegundos a 1 ms.</li>
     <li><strong>Sanitiza todo archivo entrante</strong>: almacena los binarios con <strong>UUIDs aleatorios</strong> fuera del classpath y guarda el nombre original solo en base de datos.</li>
     <li>Protege el servidor contra denegación de servicio acotando los tamaños máximos de subida (<code>max-file-size</code> y <code>max-request-size</code>).</li>

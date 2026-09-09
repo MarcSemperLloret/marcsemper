@@ -6,8 +6,8 @@ order: 7
 lang: "es"
 summary: "De una empresa tradicional a una empresa digital. Analiza sus procesos, diseña una solución viable y justifica cómo cloud, datos, automatización, IA y seguridad pueden aportar valor."
 duration: "6 horas · 6 sesiones"
-modality: "Grupos de 2–3 personas"
-deliverable: "Propuesta de transformación digital en 5 diapositivas y exposición breve."
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Plan de transformación de TecnoClima. Una actividad acumulativa por unidad, con evidencias y aportación individual."
 outcomes:
   - "Identificar los problemas reales de una empresa antes de proponer tecnología."
   - "Dibujar el proceso actual y el proceso rediseñado, y explicar qué cambia entre los dos."
@@ -15,41 +15,56 @@ outcomes:
   - "Priorizar con un presupuesto limitado y decir qué NO haríais."
   - "Definir cómo se medirá si la transformación ha funcionado."
 requirements:
-  - "Herramienta de presentaciones o de diagramas."
-  - "El resto del módulo: lo de aquí se apoya en las seis unidades anteriores."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
 priorKnowledge:
-  - "Qué es una API, un webhook y una automatización (UD2)."
-  - "Qué aporta el cloud y qué no (UD3)."
-  - "Qué puede y qué no puede hacer un agente de IA (UD4)."
-  - "Cómo se pasa de un dato a una decisión (UD5)."
-  - "Mínimo privilegio y riesgos básicos (UD6)."
-date: "2026-08-29"
+  - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
+date: "2026-09-09"
 ---
+
+<p class="lead">Plan de transformación de TecnoClima. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
+
+## Cómo trabajar esta unidad
+
+Son 6 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Plan de transformación de TecnoClima.** Guarda el trabajo en `digitalizacion/ud7/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+| Criterio                                        | Puntos |
+| ----------------------------------------------- | -----: |
+| Comprensión de los problemas actuales           |    1,5 |
+| Calidad del proceso TO-BE                       |    1,5 |
+| Coherencia de la arquitectura                   |    1,5 |
+| **Justificación de las tecnologías utilizadas** |  **2** |
+| Uso razonado de datos, IA y automatización      |      1 |
+| Priorización y viabilidad                       |      1 |
+| KPI y evaluación del impacto                    |      1 |
+| Claridad de la exposición                       |    0,5 |
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · Entender la empresa antes de proponer nada
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo realizar un diagnóstico integral del estado actual (AS-IS) de una empresa tradicional.</li>
-    <li><strong>2. Haz:</strong> Analiza los procesos, cuellos de botella e ineficiencias de ClimaNorte S.L. y dibuja su flujo actual.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de transformación de TecnoClima», sesión 1 de 6. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El reto
+### Se explica
 
-Imaginad que una pequeña empresa os contrata porque quiere modernizarse.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-La dirección os dice:
+Una transformación digital cambia cómo trabaja una empresa y cómo comprueba sus resultados. Antes de proponer herramientas, hay que entender sus personas, datos y restricciones. El **proceso actual**, o AS-IS, describe lo que sucede; no debe mezclarse con lo que nos gustaría que sucediera.
 
-> Sabemos que existen la inteligencia artificial, el cloud, la automatización, los datos… pero no sabemos qué necesitamos realmente.
+TecnoClima tiene 18 trabajadores y unas 150 intervenciones semanales. Sus datos se reparten entre mensajes, hojas y teléfonos. Ese contexto permite formular problemas; no demuestra por sí solo que necesite una aplicación propia o IA. Empezaremos por el recorrido de una intervención.
 
-Vuestro trabajo no consiste en intentar utilizar todas las tecnologías que conocéis. Consiste en responder:
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-> **¿Qué problemas tiene esta empresa y qué cambios digitales aportarían realmente valor?**
-
-### ¿Qué significa transformación digital?
+#### ¿Qué significa transformación digital?
 
 Transformación digital no significa comprar ordenadores nuevos, ni utilizar inteligencia artificial, ni subir todo a la nube. Una empresa puede utilizar tecnología y seguir trabajando prácticamente igual que hace veinte años.
 
@@ -57,243 +72,46 @@ La transformación digital ocurre cuando utilizamos tecnología para cambiar pro
 
 La tecnología es un medio. El objetivo es **mejorar cómo funciona la organización**.
 
-### Un ejemplo sencillo
-
-Imaginad un taller que trabaja así:
-
-<figure class="diagram">
-  <figcaption>Antes · el proceso actual</figcaption>
-  <ol class="flow flow--before">
-    <li>Cliente llama</li>
-    <li>Empleado apunta la cita en papel</li>
-    <li>Mecánico revisa el vehículo</li>
-    <li>Llama al cliente</li>
-    <li>Factura manual</li>
-    <li>Documentos archivados</li>
-  </ol>
-</figure>
-
-Podríamos simplemente sustituir el papel por un Excel. Eso sería **digitalización**.
-
-Pero podemos cambiar el proceso entero:
-
-<figure class="diagram">
-  <figcaption>Después · el proceso rediseñado</figcaption>
-  <ol class="flow flow--after">
-    <li>Cliente</li>
-    <li>Reserva online</li>
-    <li>Sistema de gestión</li>
-    <li>Asignación de cita</li>
-    <li>Técnico actualiza estado</li>
-    <li>Aviso automático</li>
-    <li>Factura</li>
-    <li>Datos para análisis</li>
-  </ol>
-</figure>
-
-Eso se acerca mucho más a:
-
-<p class="term">Transformación digital</p>
-
-Porque la tecnología cambia la manera de trabajar.
-
-### La regla del proyecto
-
-Durante todo el proyecto utilizaremos siempre este orden:
-
-<figure class="diagram">
-  <figcaption>El orden correcto</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Problema</li>
-    <li>Proceso</li>
-    <li>Necesidad</li>
-    <li>Tecnología</li>
-    <li>Cambio</li>
-    <li>Resultado</li>
-  </ol>
-</figure>
-
-Y nunca este otro:
-
-<figure class="diagram">
-  <figcaption>El orden que produce proyectos inútiles</figcaption>
-  <ol class="flow flow--row flow--chain flow--before">
-    <li>Inteligencia artificial</li>
-    <li>¿Dónde puedo meterla?</li>
-  </ol>
-</figure>
-
----
-
-### La empresa · TecnoClima Servicios
-
-TecnoClima es una PYME con 18 trabajadores dedicada a instalar y mantener equipos de climatización en viviendas, comercios y oficinas.
-
-Tiene 4 administrativos, 11 técnicos, 2 comerciales y 1 gerente, y realiza aproximadamente **150 intervenciones cada semana**.
-
-#### Cómo funciona actualmente
-
-**Solicitud.** Los clientes contactan por teléfono, email o WhatsApp. Un administrativo apunta la incidencia. Algunas quedan en Excel y otras en mensajes.
-
-**Asignación.** Cada mañana el responsable revisa las incidencias y decide manualmente qué técnico realizará cada trabajo. El técnico recibe la dirección, el teléfono y la descripción del problema, muchas veces por WhatsApp.
-
-**Trabajo del técnico.** El técnico visita al cliente y puede tomar fotografías, notas o mediciones. Muchas veces esa información se queda en su teléfono.
-
-**Finalización.** Al terminar avisa a administración, explica qué ha realizado, administración prepara la documentación, se genera la factura y se contacta con el cliente.
-
-**Información.** La empresa tiene años de información sobre equipos, averías, clientes, reparaciones, piezas y tiempos de intervención. Pero está repartida entre Excel, correos, WhatsApp, facturas, papeles y teléfonos. Prácticamente no se analiza.
-
-#### Lo que dice el gerente
-
-> Perdemos mucho tiempo organizando los trabajos.
-
-> Los clientes llaman constantemente para preguntar cuándo llegará el técnico.
-
-> A veces introducimos la misma información varias veces.
-
-> Tenemos muchísimos datos pero no sabemos utilizarlos.
-
-> No sabemos exactamente qué averías aparecen más.
-
-> No sabemos si podríamos anticipar determinadas necesidades.
-
-> Nos gustaría utilizar inteligencia artificial porque parece que todas las empresas la están utilizando.
-
-Vuestro trabajo empieza aquí.
-
----
-
-### Fase 1 · Entender antes de proponer
-
-Antes de utilizar ninguna tecnología, identificad los principales problemas y clasificadlos por prioridad alta, media o baja.
-
-| Problema              | Consecuencia | Prioridad |
-| --------------------- | ------------ | --------- |
-| Información repartida |              |           |
-| Tareas manuales       |              |           |
-|                       |              |           |
-|                       |              |           |
-|                       |              |           |
-
-No todos los problemas son igual de importantes:
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Problema A</p>
-    <p class="compare-body">Cambiar manualmente 150 veces por semana el estado de una intervención.</p>
-  </div>
-  <div>
-    <p class="compare-label">Problema B</p>
-    <p class="compare-body">La web tiene un diseño antiguo.</p>
-  </div>
-</div>
-
-Los dos son problemas. Solo uno cuesta horas de trabajo cada semana.
-
-### Fase 2 · Dibujar el proceso actual
-
-Representad cómo funciona actualmente una intervención. Lo llamaremos:
-
-<p class="term">AS-IS</p>
-
-Es decir, cómo funciona ahora. Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>AS-IS · una intervención hoy</figcaption>
-  <ol class="flow">
-    <li>Cliente</li>
-    <li>Llamada</li>
-    <li>Administración</li>
-    <li>Excel</li>
-    <li>Responsable</li>
-    <li>WhatsApp</li>
-    <li>Técnico</li>
-  </ol>
-</figure>
-
-No hace falta representar todos los detalles. Queremos entender una sola cosa:
-
-> ¿Dónde están las ineficiencias?
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · no sé por dónde empezar el AS-IS</summary>
-  <ol>
-    <li>Coged una única intervención, de principio a fin, y seguidla como si fuerais el papel donde está escrita.</li>
-    <li>Anotad cada vez que la información cambia de soporte: de la voz al papel, del papel a Excel, de Excel a WhatsApp. Cada salto es un candidato a problema.</li>
-    <li>Anotad cada vez que una persona espera a otra.</li>
-    <li>Anotad cada vez que alguien escribe algo que ya estaba escrito en otro sitio.</li>
-    <li>Si os salen más de diez pasos, estáis entrando en demasiado detalle.</li>
-  </ol>
 </details>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Tabla de problemas con consecuencia y prioridad, al menos cinco filas.</li>
-    <li>Los tres problemas que consideráis prioritarios, señalados.</li>
-    <li>Diagrama AS-IS de una intervención completa.</li>
-    <li>Al menos dos ineficiencias marcadas sobre ese diagrama.</li>
-  </ul>
-</div>
+### Se trabaja
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre digitalizar y transformar?</li>
-    <li>¿En qué orden se decide? Nombrad los seis pasos.</li>
-    <li>De los problemas de TecnoClima, ¿cuál cuesta más horas a la semana?</li>
-  </ol>
-</div>
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Digitalizar es cambiar el soporte —el papel por un Excel— manteniendo el proceso. Transformar es cambiar el proceso, y la tecnología es solo el medio.</p>
-  <p>2 · Problema, proceso, necesidad, tecnología, cambio, resultado.</p>
-  <p>3 · No hay una única respuesta correcta, pero debéis poder defenderla con números: 150 intervenciones semanales multiplican cualquier tarea manual del flujo.</p>
-</details>
+1. Abre la ficha de TecnoClima del paquete de casos y crea el documento de UD7. Esta es una propuesta empresarial; no se pide programar una aplicación nueva.
+2. Dibuja solicitud, asignación, visita, cierre y facturación. Indica persona responsable y lugar donde se guarda la información en cada paso.
+3. Marca tres problemas respaldados por la ficha. Separa hechos, consecuencias plausibles y datos que faltan. Elige uno como prioridad inicial y justifica a quién afecta.
+4. Escribe cinco preguntas para la dirección que puedan cambiar vuestra propuesta: acceso, conectividad, volumen, formación o restricciones económicas.
+5. Intercambia el proceso con otra pareja y comprueba si puede seguir una intervención completa. Corrige omisiones y guarda las preguntas pendientes sin inventar respuestas.
 
----
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Hay un diagnóstico y proceso actual de TecnoClima. Puedes explicar qué información necesitas antes de elegir una tecnología.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Diseñar la solución
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo rediseñar procesos de negocio (TO-BE) y estructurar una arquitectura conceptual conectada.</li>
-    <li><strong>2. Haz:</strong> Dibuja el nuevo flujo de trabajo y la arquitectura conceptual (Web, Backend, Datos, Automatización, IA).</li>
-    <li><strong>3. Comprueba:</strong> Verifica que no incluyes componentes superfluos y que cada elemento tiene una función definida.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de transformación de TecnoClima», sesión 2 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Fase 3 · Diseñar el nuevo proceso
+### Se explica
 
-Ahora diseñad:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-<p class="term">TO-BE</p>
+El **proceso futuro**, o TO-BE, debe responder a los problemas priorizados. Cambiar todos los pasos a la vez puede aumentar el riesgo de implantación. Una solución coherente indica dónde se registra un dato, quién lo actualiza y quién lo consulta.
 
-Es decir, cómo debería funcionar después de la transformación. Por ejemplo:
+La arquitectura conceptual conecta responsabilidades. Un técnico podría actualizar una intervención desde una interfaz web y administración utilizar ese registro para facturar. La elección entre contratar, configurar o desarrollar debe justificarse; no se presupone que programar desde cero sea mejor.
 
-<figure class="diagram">
-  <figcaption>TO-BE · una intervención rediseñada</figcaption>
-  <ol class="flow">
-    <li>Cliente</li>
-    <li>Portal web</li>
-    <li>Sistema de incidencias</li>
-    <li>Asignación</li>
-    <li>Técnico</li>
-    <li>Actualización</li>
-    <li>Notificación</li>
-    <li>Facturación</li>
-  </ol>
-</figure>
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-Todavía no necesitamos decidir las tecnologías. Primero diseñamos **cómo queremos trabajar**.
-
-### ¿Qué podemos utilizar?
+#### ¿Qué podemos utilizar?
 
 Durante el curso hemos visto varias posibilidades. Estas son las piezas disponibles, y ninguna es obligatoria.
 
-#### Integración y automatización
+##### Integración y automatización
 
 Podemos conseguir que, cuando ocurre A, automáticamente ocurra B:
 
@@ -306,13 +124,13 @@ Podemos conseguir que, cuando ocurre A, automáticamente ocurra B:
   </ol>
 </figure>
 
-#### Cloud
+##### Cloud
 
 Podemos tener aplicaciones y datos disponibles mediante infraestructura cloud, lo que facilita el acceso remoto, el despliegue, la escalabilidad y la disponibilidad.
 
 Pero cloud no es automáticamente mejor para todo.
 
-#### Datos
+##### Datos
 
 Podemos pasar de simplemente guardar información a recorrer el camino completo:
 
@@ -326,288 +144,82 @@ Podemos pasar de simplemente guardar información a recorrer el camino completo:
   </ol>
 </figure>
 
-#### Inteligencia artificial
+##### Inteligencia artificial
 
 Podría ayudarnos a resumir informes, clasificar incidencias, buscar información, detectar patrones, asistir a los trabajadores o analizar datos.
 
 Pero antes debemos preguntar: ¿existe realmente un problema que justifique utilizar IA?
 
-#### Ciberseguridad
+##### Ciberseguridad
 
 Una empresa digital también tiene nuevos riesgos. Debemos pensar quién accede, a qué información, qué permisos necesita, cómo protegemos los datos y qué ocurre si un sistema falla.
 
----
+</details>
 
-### Fase 4 · Diseñar la arquitectura
+### Se trabaja
 
-Cread vuestra arquitectura conceptual. No necesitamos conocer productos concretos: necesitamos saber qué piezas existen y cómo se conectan.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-<figure class="diagram">
-  <figcaption>Un ejemplo de arquitectura conceptual</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 420" role="img" aria-labelledby="arch-title arch-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="arch-title">Arquitectura conceptual de la empresa transformada</title>
-    <desc id="arch-desc">El cliente entra por una web que habla con un backend. El backend se apoya en tres bloques: datos, automatización e inteligencia artificial. Los datos alimentan la analítica, que conduce a una decisión; la automatización genera avisos y flujos; la inteligencia artificial actúa como apoyo.</desc>
-    <defs>
-      <marker id="arch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 46 L 360 74" marker-end="url(#arch-arrow)" />
-      <path d="M 360 122 L 360 150" marker-end="url(#arch-arrow)" />
-      <path d="M 360 198 L 360 214 L 110 214 L 110 238" marker-end="url(#arch-arrow)" />
-      <path d="M 360 198 L 360 238" marker-end="url(#arch-arrow)" />
-      <path d="M 360 198 L 360 214 L 610 214 L 610 238" marker-end="url(#arch-arrow)" />
-      <path d="M 110 286 L 110 326" marker-end="url(#arch-arrow)" />
-      <path d="M 360 286 L 360 326" marker-end="url(#arch-arrow)" />
-      <path d="M 610 286 L 610 326" marker-end="url(#arch-arrow)" />
-      <path d="M 110 374 L 110 390 L 360 390" marker-end="url(#arch-arrow)" />
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="10" width="180" height="36" rx="3" />
-      <text x="360" y="33">Cliente</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="86" width="180" height="36" rx="3" />
-      <text x="360" y="109">Web</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="270" y="162" width="180" height="36" rx="3" />
-      <text x="360" y="185">Backend</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="30" y="238" width="160" height="48" rx="3" />
-      <text x="110" y="267">Datos</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="280" y="238" width="160" height="48" rx="3" />
-      <text x="360" y="267">Automatización</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="530" y="238" width="160" height="48" rx="3" />
-      <text x="610" y="267">IA</text>
-    </g>
-    <g class="diagram-node diagram-node--data diagram-node--small">
-      <rect x="30" y="326" width="160" height="48" rx="3" />
-      <text x="110" y="355">Analítica</text>
-    </g>
-    <g class="diagram-node diagram-node--small">
-      <rect x="280" y="326" width="160" height="48" rx="3" />
-      <text x="360" y="355">Avisos y flujos</text>
-    </g>
-    <g class="diagram-node diagram-node--small">
-      <rect x="530" y="326" width="160" height="48" rx="3" />
-      <text x="610" y="355">Apoyo</text>
-    </g>
-    <text class="diagram-label diagram-label--accent" x="440" y="405">y de ahí, una decisión</text>
-  </svg>
-</figure>
+1. Duplica el diagrama actual en una sección TO-BE y modifica solo los pasos relacionados con la prioridad elegida. Conserva el original para comparar.
+2. Para cada cambio escribe problema resuelto, responsable y dato afectado. Comprueba qué ocurre si el técnico no tiene conexión durante la visita.
+3. Dibuja interfaz, registro de intervenciones, facturación y avisos como piezas separadas. Etiqueta cada flecha con información concreta y evita copiar todo en todas partes.
+4. Compara dos alternativas para la pieza principal: servicio existente o desarrollo propio. Anota ventajas, mantenimiento y una condición que os haría cambiar la elección.
+5. Sigue un caso normal y una incidencia sobre el diagrama. Si falta una responsabilidad o se pierde un dato, corrige el flujo antes de incorporar más tecnología.
 
-Añadid únicamente los elementos que necesitéis. Una arquitectura con tres cajas bien justificadas vale más que una con doce.
+### Cierre
 
----
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+El proceso futuro y la arquitectura resuelven problemas del diagnóstico. No se valora añadir más componentes.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Plan de integración, datos y seguridad
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo justificar cada tecnología con la cadena necesidad → solución → tecnología → beneficio y evaluar sus riesgos de ciberseguridad.</li>
-    <li><strong>2. Haz:</strong> Completa la matriz de tecnologías elegidas y descartadas, define el control de accesos (mínimo privilegio) y los flujos de datos.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de transformación de TecnoClima», sesión 3 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Para cada tecnología debe existir una razón
+### Se explica
 
-No vale «usaremos cloud porque es moderno». Hay que poder recorrer una cadena de cuatro pasos. Hacemos la primera juntos, con el razonamiento a la vista.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-<p class="stage">Paso 1 · Te enseño uno</p>
+Datos, integración, IA y seguridad son decisiones relacionadas. Si proponemos avisos automáticos, necesitamos saber qué evento los inicia, qué dato utilizan y quién puede recibirlos. Si proponemos IA, hay que definir la tarea, cómo revisar sus resultados y qué alternativa más sencilla existe.
 
-<figure class="diagram">
-  <figcaption>La cadena que justifica una decisión</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Los técnicos necesitan las incidencias desde cualquier sitio</li>
-    <li>Aplicación accesible por Internet</li>
-    <li>Infraestructura cloud</li>
-    <li>Información disponible desde cualquier lugar</li>
-  </ol>
-</figure>
+Un diseño completo contempla el fallo: una factura no debe desaparecer porque un servicio no responda. También limita acceso: el técnico necesita los datos de su intervención, no necesariamente toda la información de todos los clientes.
 
-<dl class="worked">
-  <dt>¿De dónde sale la necesidad?</dt>
-  <dd>De un hecho de la empresa, no de una idea nuestra: los once técnicos están fuera de la oficina todo el día.</dd>
-  <dt>¿Por qué esa solución y no otra?</dt>
-  <dd>Podrían llevar la información en papel, o seguir con WhatsApp. Pero entonces la actualización del estado no llega a administración hasta que el técnico vuelve, que es justo el problema que queremos quitar.</dd>
-  <dt>¿Por qué cloud y no un servidor en la oficina?</dt>
-  <dd>Un servidor propio también serviría. Cloud gana aquí porque la empresa tiene 18 personas y nadie a quien encargar el mantenimiento, no porque sea más moderno.</dd>
-  <dt>¿Cómo sabremos que ha servido?</dt>
-  <dd>Si el tiempo entre que el técnico termina y administración lo sabe deja de medirse en horas.</dd>
-</dl>
+### Se trabaja
 
-Fijaos en la tercera pregunta. Ahí es donde suspende la mayoría de las propuestas: no en elegir mal, sino en no haber considerado la alternativa sencilla.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
+1. Selecciona un intercambio de tu arquitectura. Escribe evento, datos mínimos, emisor, receptor y confirmación; reutiliza el método de UD2 adaptándolo al caso de TecnoClima.
+2. Diseña su respuesta a indisponibilidad y mensaje duplicado. Simula ambos casos con una tabla, sin construir infraestructura real.
+3. Elige dos preguntas de negocio y define qué dato necesitaría cada una. Si ese dato no existe en el caso, propone cómo recogerlo y declara que el resultado aún no se conoce.
+4. Decide una tarea para la que usarías o descartarías IA. Explica alternativa, criterio de calidad, revisión humana y datos que no deberían exponerse.
+5. Completa la matriz de permisos y anota un riesgo de información, otro de disponibilidad y su medida de prevención. Contrasta que las medidas aparecen también en el diagrama.
 
-Completad estas dos filas con la pista al lado. Contestad antes las cuatro preguntas de arriba.
+### Cierre
 
-| Necesidad                                | Solución | Tecnología | Beneficio | Pista |
-| ---------------------------------------- | -------- | ---------- | --------- | ----- |
-| Clientes preguntan constantemente estado |          |            |           | ¿Quién sabe primero que el estado ha cambiado? |
-| Información repartida                    |          |            |           | ¿El problema es dónde está guardada, o que está en seis sitios a la vez? |
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
+La propuesta conecta tecnologías con datos, permisos y fallos concretos. Se reutiliza un método aprendido, no las respuestas de otra actividad.
 
-Ahora sin pistas, y añadid las necesidades que hayáis detectado vosotros.
-
-| Necesidad                     | Solución | Tecnología | Beneficio |
-| ----------------------------- | -------- | ---------- | --------- |
-| Muchas tareas repetitivas     |          |            |           |
-| Datos sin analizar            |          |            |           |
-|                               |          |            |           |
-|                               |          |            |           |
-
-### Fase 5 · Datos
-
-Una transformación digital genera datos. Pensad qué información produciría vuestro nuevo sistema: cliente, tipo de equipo, avería, fecha, técnico, duración, piezas, ubicación, resultado.
-
-Ahora la pregunta importante: ¿para qué podría utilizar la empresa estos datos?
-
-Proponed **dos análisis** y **una decisión** que podría tomarse. Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>Del dato a la decisión</figcaption>
-  <ol class="flow">
-    <li>Dato · tiempo de reparación</li>
-    <li>Análisis · tiempo medio por tipo de avería</li>
-    <li>Decisión · mejorar la planificación de técnicos</li>
-  </ol>
-</figure>
-
-### Fase 6 · Inteligencia artificial
-
-La dirección quiere IA. Vuestra responsabilidad es decidir si tiene sentido.
-
-Proponed **una aplicación de IA que sí utilizaríais**, y responded: ¿qué problema resuelve? ¿Qué datos necesita? ¿Qué resultado produce? ¿Cómo comprobaríamos que funciona bien?
-
-Y ahora la parte más importante: proponed **una aplicación de IA que NO utilizaríais**. Por ejemplo, IA para decidir automáticamente el precio de todas las reparaciones. Podríais rechazarla porque no disponéis todavía de datos adecuados, porque tendría demasiado impacto, o porque una regla sencilla sería suficiente.
-
-Se valora **saber decir que no**.
-
-### Fase 7 · Automatización
-
-Identificad al menos dos procesos repetitivos. Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>Una cadena automatizable</figcaption>
-  <ol class="flow">
-    <li>Técnico termina el trabajo</li>
-    <li>Actualizar estado</li>
-    <li>Generar documentación</li>
-    <li>Avisar al cliente</li>
-  </ol>
-</figure>
-
-De cada uno indicad el evento inicial, la acción automática y el beneficio.
-
-### Fase 8 · Seguridad
-
-Vuestra empresa ahora depende mucho más de sistemas digitales. Responded: ¿qué información es sensible? ¿Quién debería acceder? ¿Qué riesgos aparecen? ¿Qué medidas básicas aplicaríais?
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Sí</p>
-    <p class="compare-body">El técnico puede ver sus intervenciones.</p>
-  </div>
-  <div>
-    <p class="compare-label">No</p>
-    <p class="compare-body">El técnico puede descargar toda la base de clientes.</p>
-  </div>
-</div>
-
-Es el mismo principio de la unidad anterior:
-
-<p class="term">mínimo privilegio</p>
-
-### Fase 9 · No todo debe transformarse
-
-Este punto es especialmente importante. Elegid **una tarea que mantendríais principalmente humana** —por ejemplo, decidir cómo resolver una reparación especialmente compleja— y explicad por qué no la automatizaríais.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Diagrama TO-BE completo.</li>
-    <li>Arquitectura conceptual, con solo las piezas que sabéis justificar.</li>
-    <li>Tabla de decisiones tecnológicas rellenada.</li>
-    <li>Una aplicación de IA que sí, una que no, y el motivo de las dos.</li>
-    <li>Dos automatizaciones con evento, acción y beneficio.</li>
-    <li>Una tarea que se queda humana, con su razón.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué cuatro cosas tiene que tener la justificación de una tecnología?</li>
-    <li>¿Por qué se valora rechazar una aplicación de IA?</li>
-    <li>Vuestra arquitectura tiene una caja que no sabéis defender. ¿Qué hacéis con ella?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Necesidad, solución, tecnología y beneficio. Si falta alguna, la decisión no está justificada.</p>
-  <p>2 · Porque demuestra que evaluáis si la tecnología resuelve un problema real, en lugar de añadirla porque está de moda. Un proyecto que lo incluye todo no ha decidido nada.</p>
-  <p>3 · Quitarla. Una caja que no sabéis defender es una caja que os van a preguntar en la exposición.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Priorizar, roadmap y propuesta económica
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo priorizar acciones bajo restricciones reales de presupuesto (20.000 € y 6 meses) y cómo definir KPIs medibles.</li>
-    <li><strong>2. Haz:</strong> Construye la matriz de impacto/dificultad, planifica el roadmap en 4 fases y selecciona las métricas de éxito.</li>
-    <li><strong>3. Comprueba:</strong> Valida que el plan es financieramente viable y que los KPIs miden resultados de negocio, no vanidad técnica.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de transformación de TecnoClima», sesión 4 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Priorizar con un presupuesto real
+### Se explica
 
-Una empresa normalmente no puede transformar todo de golpe. Imaginad que solo dispone de:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-<p class="term">20.000 € y seis meses</p>
+Un **roadmap** ordena actuaciones según dependencias, esfuerzo y beneficio. Un **KPI** es un indicador que permite comprobar un objetivo. «Mejorar la atención» necesita una medida, como llamadas de consulta por intervención, con valor inicial y forma de recogerla.
 
-Clasificad vuestras propuestas:
+Un presupuesto estimado debe identificar sus supuestos. Si no tenemos una oferta, no presentaremos una cifra como precio real. Separaremos costes iniciales, recurrentes y tiempo de formación, y construiremos una primera fase pequeña que pueda evaluarse.
 
-| Acción | Impacto         | Dificultad      | Prioridad |
-| ------ | --------------- | --------------- | --------- |
-|        | Alto/Medio/Bajo | Alta/Media/Baja |           |
-|        |                 |                 |           |
-|        |                 |                 |           |
-|        |                 |                 |           |
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-Después elegid **las tres primeras acciones**.
-
-### Pensar en fases
-
-No queremos transformarlo todo el día 1. Podemos hacer algo así:
-
-<figure class="diagram">
-  <figcaption>Un roadmap posible</figcaption>
-  <ol class="flow">
-    <li>Fase 1 · Centralizar la información</li>
-    <li>Fase 2 · Automatizar procesos</li>
-    <li>Fase 3 · Analizar datos</li>
-    <li>Fase 4 · Incorporar IA donde aporte valor</li>
-  </ol>
-</figure>
-
-El orden puede ser diferente. Lo que no puede faltar es la justificación de vuestro roadmap.
-
-### ¿Cómo sabemos si funciona?
+#### ¿Cómo sabemos si funciona?
 
 Decir «hemos digitalizado la empresa» no significa que la empresa haya mejorado. Necesitamos medir, y para eso utilizamos:
 
@@ -636,218 +248,88 @@ Definid tres indicadores concretos. Por ejemplo:
 |     |              |          |
 |     |              |          |
 
----
+</details>
 
-### Formato de entrega
+### Se trabaja
 
-Una presentación de **exactamente cinco diapositivas**:
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-#### Diapositiva 1 · Portada y contexto
+1. Lista las actuaciones propuestas y marca qué necesita estar terminado antes de cada una. No programes formación después de exigir usar la herramienta.
+2. Ordena tres fases: primera mejora útil, ampliación y revisión. Para cada fase indica resultado, responsable y condición para continuar.
+3. Usa el escenario didáctico de la ficha: presupuesto inicial de 6.000 euros y un máximo de 40 horas internas el primer mes. Son restricciones del ejercicio, no precios del mercado. Explica qué aplazas para respetarlas.
+4. Desglosa las estimaciones y señala su origen o supuesto. Si necesitas una cotización, déjala como información pendiente en vez de inventarla.
+5. Define dos indicadores con unidad, fuente, frecuencia y responsable. Si falta el valor inicial, incluye medirlo como primera acción y no anuncies un ahorro demostrado.
 
-Nombre del grupo, empresa elegida, sector y los dos problemas más graves que habéis detectado.
+### Cierre
 
-#### Diapositiva 2 · El proceso
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-El diagrama del proceso rediseñado (TO-BE), con las intervenciones digitales marcadas.
+El plan tiene fases, restricciones e indicadores comprobables. La priorización explica qué se hará primero y qué no cabe todavía.
 
-#### Diapositiva 3 · Arquitectura técnica
-
-Cómo utilizaríais integración y automatización, cloud, datos, IA y seguridad. No es obligatorio utilizar todas si alguna no aporta valor.
-
-#### Diapositiva 4 · Plan de transformación
-
-Tres acciones prioritarias, orden de implantación, dificultad e impacto esperado.
-
-#### Diapositiva 5 · Cómo mediremos el resultado
-
-Tres KPI, un riesgo importante, una tecnología que habéis decidido NO utilizar y por qué.
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · Presentación y defensa de los proyectos
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo comunicar propuestas tecnológicas de alto impacto ante comités de dirección y responder a objeciones técnicas.</li>
-    <li><strong>2. Haz:</strong> Expón la presentación de 5 diapositivas (5 minutos por grupo) y defiende las decisiones y tecnologías descartadas.</li>
-    <li><strong>3. Comprueba:</strong> Participa en la coevaluación y completa la checklist de entrega del proyecto final.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de transformación de TecnoClima», sesión 5 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Exposición
+### Se explica
 
-Cada grupo tendrá **5 minutos**. No debéis explicar toda vuestra presentación: debéis defender cinco respuestas.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-* ¿Cuál es el principal problema?
-* ¿Cuál es vuestra primera acción?
-* ¿Dónde aporta realmente valor la IA?
-* ¿Qué habéis decidido no hacer?
-* ¿Cómo sabréis si la transformación funciona?
+Una defensa empresarial permite decidir si merece la pena iniciar la propuesta. Debe mostrar problema, solución, viabilidad y comprobación del resultado. La audiencia necesita entender una decisión importante y sus límites, no escuchar todas las siglas del curso.
 
-Durante la exposición se os preguntará, sencillamente:
+El feedback debe poder convertirse en una revisión. Una duda sobre conectividad o presupuesto puede cambiar una fase del plan. Reconocerla no invalida el trabajo: demuestra qué necesita comprobarse antes de implantarlo.
 
-> ¿Por qué?
+### Se trabaja
 
-¿Por qué cloud? ¿Por qué IA? ¿Por qué automatizar esto? ¿Por qué esa prioridad? ¿Por qué no una solución más sencilla? La capacidad para justificar las decisiones forma parte de la evaluación.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-### Evaluación
+1. Organiza cinco diapositivas o secciones: problema, proceso futuro, arquitectura, fases/coste e indicadores/límites. Enlaza el documento de trabajo para consultar detalles.
+2. Ensaya en cinco minutos con otra pareja. Cada integrante explica una decisión de la que se responsabiliza; repartid la explicación por argumentos, no por leer párrafos.
+3. La pareja revisora plantea una duda de viabilidad y otra de evidencia. Anota la pregunta y la parte del plan afectada antes de responder.
+4. Realiza el turno asignado por el docente. Si no caben todas las exposiciones colectivas, continúa con mesas de revisión en paralelo; todo el grupo debe producir feedback y conservar tiempo de trabajo.
+5. Registra dos observaciones y decide qué comprobarás en la siguiente sesión. Entrega el enlace a la propuesta presentada, conservando esta versión para comparar la revisión.
 
-| Criterio                                        | Puntos |
-| ----------------------------------------------- | -----: |
-| Comprensión de los problemas actuales           |    1,5 |
-| Calidad del proceso TO-BE                       |    1,5 |
-| Coherencia de la arquitectura                   |    1,5 |
-| **Justificación de las tecnologías utilizadas** |  **2** |
-| Uso razonado de datos, IA y automatización      |      1 |
-| Priorización y viabilidad                       |      1 |
-| KPI y evaluación del impacto                    |      1 |
-| Claridad de la exposición                       |    0,5 |
+### Cierre
 
-No obtiene mejor nota el grupo que propone IA más Big Data más Blockchain más IoT más microservicios más Kubernetes. Obtiene mejor nota el grupo que puede responder, de cada pieza:
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-> **¿Qué problema resuelve?**
+La exposición está vinculada al plan y cada persona aporta una justificación. El feedback se utilizará para mejorar la misma actividad.
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Cinco diapositivas, ni una más.</li>
-    <li>La 2 se entiende sin que nadie la explique.</li>
-    <li>La 5 incluye la tecnología descartada y el motivo.</li>
-    <li>Tenéis preparada una respuesta a «¿por qué?» para cada decisión de la 3.</li>
-  </ul>
-</div>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 6 · Evaluación, retrospectiva y consolidación
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo conectar los aprendizajes de las 7 unidades del módulo en una visión profesional integrada de la digitalización.</li>
-    <li><strong>2. Haz:</strong> Analiza las calificaciones y el feedback del tribunal, identifica fortalezas y áreas de mejora, y revisa el mapa conceptual completo.</li>
-    <li><strong>3. Entrega:</strong> Entrega el portfolio/dossier final consolidado del módulo de Digitalización.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de transformación de TecnoClima», sesión 6 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Retrospectiva y consolidación del módulo
+### Se explica
 
-En esta última sesión cerramos el ciclo formativo con una sesión de reflexión y puesta en común:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-1. **Revisión de feedback:** cada grupo analiza las valoraciones recibidas en la rúbrica y las preguntas formuladas por la clase.
-2. **Lecciones aprendidas:** ¿qué tecnología parecía imprescindible al principio del curso y resultó no serlo? ¿Dónde aporta verdadero valor la IA y dónde es un riesgo?
-3. **Síntesis del itinerario:** repasamos el mapa conceptual global que conecta proceso, integración, cloud, desarrollo asistido, analítica de datos y ciberseguridad.
+Una **retrospectiva** revisa decisiones y resultados para mejorar la forma de trabajar. No consiste en decir si nos gustó la actividad. Necesita un hecho, una interpretación y una acción concreta que pueda comprobarse en el siguiente trabajo.
 
----
+El cierre del módulo reúne las actividades realizadas y corrige sus pendientes. El plan de TecnoClima demuestra integración de criterios; no sustituye automáticamente las evidencias de datos, seguridad o sostenimiento de una decisión técnica producidas antes.
+
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Abre las observaciones de la defensa y clasifícalas en corregir, investigar o mantener con justificación. Selecciona primero las que afectan a la coherencia del plan.
+2. Aplica las revisiones y registra observación, cambio y evidencia. Si falta información externa, formula la comprobación que harías antes de ejecutar la propuesta.
+3. Contrasta el plan con la rúbrica de UD7. Localiza un párrafo, tabla o diagrama que permita valorar cada criterio; corrige las afirmaciones sin respaldo.
+4. Actualiza el índice con enlaces a las siete actividades del módulo y su versión final. No copies sus contenidos en un dossier nuevo.
+5. Cada integrante escribe un hecho que le hizo cambiar una decisión y una mejora para su siguiente trabajo. Entrega el plan revisado y el índice; usa el feedback docente para identificar criterios pendientes.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+El módulo se evalúa mediante sus actividades. El cierre conserva evidencias y revisiones sin añadir un examen ni repetir informes completos.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD7 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 6»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
-### La transformación digital no termina con la tecnología
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-Podemos tener técnicamente una solución excelente y que fracase, porque también existen personas, costes, formación, resistencia al cambio, procesos, seguridad y mantenimiento.
-
-<figure class="diagram">
-  <figcaption>Cómo fracasa un proyecto técnicamente correcto</figcaption>
-  <ol class="flow flow--before">
-    <li>Nueva aplicación</li>
-    <li>Nadie sabe usarla</li>
-    <li>Los empleados siguen utilizando Excel</li>
-  </ol>
-</figure>
-
-No hemos transformado realmente la organización.
-
-### El mapa final del módulo
-
-Durante el curso hemos estudiado piezas distintas, pero ninguna tiene sentido de manera aislada.
-
-<figure class="diagram">
-  <figcaption>Cómo encajan las siete unidades</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 400" role="img" aria-labelledby="map-title map-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="map-title">Mapa del módulo</title>
-    <desc id="map-desc">La empresa define el proceso. Del proceso salen tres piezas: automatización, datos y cloud. Las tres convergen en la inteligencia artificial, que pasa por la seguridad y termina en el valor entregado.</desc>
-    <defs>
-      <marker id="map-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 46 L 360 74" marker-end="url(#map-arrow)" />
-      <path d="M 360 122 L 360 138 L 110 138 L 110 162" marker-end="url(#map-arrow)" />
-      <path d="M 360 122 L 360 162" marker-end="url(#map-arrow)" />
-      <path d="M 360 122 L 360 138 L 610 138 L 610 162" marker-end="url(#map-arrow)" />
-      <path d="M 110 210 L 110 234 L 360 234 L 360 254" marker-end="url(#map-arrow)" />
-      <path d="M 360 210 L 360 254" marker-end="url(#map-arrow)" />
-      <path d="M 610 210 L 610 234 L 360 234 L 360 254" marker-end="url(#map-arrow)" />
-      <path d="M 360 302 L 360 330" marker-end="url(#map-arrow)" />
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="10" width="180" height="36" rx="3" />
-      <text x="360" y="33">Empresa</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="270" y="86" width="180" height="36" rx="3" />
-      <text x="360" y="109">Proceso</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="30" y="162" width="160" height="48" rx="3" />
-      <text x="110" y="191">Automatización</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="280" y="162" width="160" height="48" rx="3" />
-      <text x="360" y="191">Datos</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="530" y="162" width="160" height="48" rx="3" />
-      <text x="610" y="191">Cloud</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="280" y="254" width="160" height="48" rx="3" />
-      <text x="360" y="283">IA</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="280" y="330" width="160" height="48" rx="3" />
-      <text x="360" y="359">Seguridad → valor</text>
-    </g>
-  </svg>
-</figure>
-
-### El método
-
-Cuando alguien os diga «queremos digitalizar nuestra empresa», no empecéis respondiendo «necesitáis inteligencia artificial». Preguntad primero, y en este orden:
-
-<figure class="diagram">
-  <figcaption>Las nueve preguntas</figcaption>
-  <ol class="flow">
-    <li>¿Qué problema tenéis?</li>
-    <li>¿Cómo trabajáis ahora?</li>
-    <li>¿Qué queremos mejorar?</li>
-    <li>¿Qué información tenemos?</li>
-    <li>¿Qué podemos automatizar?</li>
-    <li>¿Qué tecnología necesitamos?</li>
-    <li>¿Qué riesgos aparecen?</li>
-    <li>¿Cuánto cuesta?</li>
-    <li>¿Cómo mediremos si funciona?</li>
-  </ol>
-</figure>
-
-Eso es pensar en:
-
-<p class="term">transformación digital</p>
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Digitalización | Cambiar el soporte, manteniendo el proceso |
-| Transformación digital | Cambiar el proceso, usando la tecnología como medio |
-| AS-IS | Cómo funciona la empresa hoy |
-| TO-BE | Cómo debería funcionar después |
-| Arquitectura conceptual | Qué piezas hay y cómo se conectan, sin productos concretos |
-| Roadmap | En qué orden se implanta, y por qué en ese orden |
-| KPI | El número que dirá si ha funcionado |
-| Mínimo privilegio | Cada persona ve solo lo que necesita |
-| Saber decir que no | Rechazar una tecnología con argumentos |
-
-La tecnología cambiará. La capacidad para analizar un problema y decidir cómo utilizarla seguirá siendo útil.
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

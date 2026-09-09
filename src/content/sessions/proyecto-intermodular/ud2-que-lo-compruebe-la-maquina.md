@@ -6,8 +6,8 @@ order: 2
 lang: "es"
 summary: "Construir el portfolio de verdad haciendo entrar cada sección por pull request, y escribir un pipeline propio que valide HTML, formato, enlaces y accesibilidad, y que impida fusionar cuando algo de eso falla."
 duration: "9 horas · 3 sesiones de 3 h"
-modality: "Taller · el 80 % de la sesión es trabajo del alumnado"
-deliverable: "Portfolio con contenido real y un workflow propio de cuatro comprobaciones, todas ellas obligatorias para fusionar."
+modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
+deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
 date: "2026-09-09"
 outcomes:
   - "Escribir un workflow de GitHub Actions desde cero y explicar qué lo dispara."
@@ -24,6 +24,8 @@ priorKnowledge:
   - "HTML y CSS del módulo de Lenguaje de Marcas."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">Hasta ahora vuestro único check dice que los ficheros se subieron. No dice que la página esté bien escrita, ni que sus enlaces lleven a algún sitio, ni que se pueda usar con un lector de pantalla. En estas tres sesiones el portfolio se llena de contenido de verdad y, a la vez, se le pone debajo una red que avisa antes de que lo vea nadie.</p>
 
 <div class="rule">
@@ -38,6 +40,9 @@ priorKnowledge:
 
 ## Sesión 3 · Vuestro primer workflow
 
+**Punto de partida compartido.** Semana lectiva 3: sitúa este taller después de las sesiones 5–6 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-3). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
+
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
@@ -50,6 +55,8 @@ priorKnowledge:
 ---
 
 ### Se explica
+
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
 #### El check que tenéis no comprueba nada
 
@@ -83,7 +90,7 @@ De ahí salen las dos reglas que evitan el 90 % de los fallos de esta sesión:
 | El runner no tiene vuestro código | El primer paso siempre es descargarlo, y eso es lo que hace <code>actions/checkout</code> |
 | El runner no tiene vuestras herramientas | Todo lo que uséis se instala dentro del workflow. Que funcione en vuestro portátil no significa nada |
 
-Y de ahí sale también la propiedad que hace útil todo esto: como la máquina empieza limpia, **si pasa allí, pasa en cualquier sitio**. Se acabó el «en mi ordenador funciona».
+Y de ahí sale también la propiedad que hace útil todo esto: como la máquina empieza limpia, **si pasa allí, es reproducible en ese entorno documentado; otros entornos deben comprobarse**. Se acabó el «en mi ordenador funciona».
 
 #### Anatomía de un workflow
 
@@ -109,7 +116,13 @@ Cuatro palabras y ya sabéis leer cualquiera:
 
 ### Se trabaja
 
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+
 #### Bloque A · Escribir el workflow
+
+Antes de editar, prepara las herramientas de esta práctica. **Node.js** permite ejecutar herramientas JavaScript fuera del navegador; **npm** gestiona sus paquetes y **npx** ejecuta una herramienta del paquete indicado. Aquí se usan para revisar el HTML, no para implementar el backend. Comprueba `node --version` y `npm --version` en la terminal. Usa Node 22 como el workflow del ejemplo; si faltan, instala la versión preparada para el aula y abre una terminal nueva. En PowerShell, si la política impide ejecutar npm.ps1 o npx.ps1, utiliza `npm.cmd` y `npx.cmd`.
+
+Trabaja en la raíz del repositorio del portfolio: allí crearás .htmlvalidate.json y .github/workflows/ci.yml. Los bloques de jobs de las sesiones siguientes se añaden bajo jobs en ese mismo archivo, no como workflows completos separados. Conserva el workflow de despliegue generado por Azure.
 
 <p class="stage stage--solo">Individual, y por el circuito de siempre</p>
 
@@ -241,6 +254,10 @@ Se acabó la página de tres líneas. Coged del tablero la issue de la cabecera 
 
 ### Cierre
 
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 3.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-03.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-05.pdf` y `sesion-06.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
+
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
@@ -272,6 +289,9 @@ Se acabó la página de tres líneas. Coged del tablero la issue de la cabecera 
 
 ## Sesión 4 · Enlaces rotos y formato
 
+**Punto de partida compartido.** Semana lectiva 4: sitúa este taller después de las sesiones 7–8 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-4). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
+
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
@@ -284,6 +304,8 @@ Se acabó la página de tres líneas. Coged del tablero la issue de la cabecera 
 ---
 
 ### Se explica
+
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
 #### Los dos fallos que delatan un portfolio junior
 
@@ -330,6 +352,8 @@ Un pipeline al que se le van desactivando reglas cada vez que molesta acaba sien
 ---
 
 ### Se trabaja
+
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
 #### Bloque A · El job de enlaces
 
@@ -428,6 +452,10 @@ Añadid también los enlaces externos que traíais: GitHub, LinkedIn si lo tené
 
 ### Cierre
 
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 4.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-04.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-07.pdf` y `sesion-08.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
+
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
@@ -459,6 +487,9 @@ Añadid también los enlaces externos que traíais: GitHub, LinkedIn si lo tené
 
 ## Sesión 5 · El presupuesto de calidad
 
+**Punto de partida compartido.** Semana lectiva 5: sitúa este taller después de las sesiones 9–10 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-5). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
+
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
@@ -471,6 +502,8 @@ Añadid también los enlaces externos que traíais: GitHub, LinkedIn si lo tené
 ---
 
 ### Se explica
+
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
 #### De «funciona» a «cuánto de bien»
 
@@ -517,6 +550,8 @@ Ninguno de los cinco es una cuestión de gusto, y los cinco los detecta la máqu
 ---
 
 ### Se trabaja
+
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
 #### Bloque A · Medir antes de tocar nada
 
@@ -624,6 +659,10 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
 
 ### Cierre
 
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 5.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-05.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-09.pdf` y `sesion-10.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
+
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
@@ -671,7 +710,7 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
 
 | Idea | Por qué |
 | ---- | ------- |
-| **El runner empieza vacío** | Por eso hay que descargar el código e instalar las herramientas dentro. Y por eso, si pasa allí, pasa en cualquier sitio |
+| **El runner empieza en un entorno limpio para el job** | Por eso hay que descargar el código e instalar las herramientas dentro. Y por eso, si pasa allí, es reproducible en ese entorno documentado; otros entornos deben comprobarse |
 | **Un job, un check, un motivo** | Se ve de un vistazo qué ha fallado, y todos los fallos aparecen en la misma vuelta |
 | **Lo que no bloquea, acaba ignorado** | Una comprobación que solo informa desaparece en cuanto hay prisa |
 | **Las excepciones se escriben** | Un pipeline al que se le desactivan reglas cuando molestan deja de proteger nada |

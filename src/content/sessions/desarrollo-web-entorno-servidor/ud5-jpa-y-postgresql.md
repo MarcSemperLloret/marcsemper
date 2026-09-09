@@ -26,17 +26,22 @@ priorKnowledge:
   - "Tests unitarios con JUnit."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">El proyecto deja la memoria y pasa a PostgreSQL. Las ocho sesiones mantienen relaciones, transacciones, consultas y rendimiento. La persistencia se entrega también en producción dentro del primer trimestre, coordinando configuración y despliegue con Intermodular.</p>
 
 ## Semana 10 · Preparar PostgreSQL y la persistencia
 
 ## Sesión 19 · Preparar PostgreSQL y la persistencia
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 10: Preparar el CI de la versión persistente](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-10/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-10).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-La base de datos conserva el estado fuera del proceso Java. JPA conecta objetos y tablas; la configuración distingue el entorno local del desplegado.
+El almacenamiento actual desaparece al reiniciar. PostgreSQL es un servidor de bases de datos que conserva la información fuera del proceso Java. JPA define cómo relacionar objetos con tablas; Hibernate implementa ese trabajo y Spring Data simplificará los repositorios. Hoy prepararás la conexión, antes de guardar tu primera entidad.
 
 #### El día en que reiniciar duele
 
@@ -154,21 +159,13 @@ Para que un método de tu repositorio pueda enviar una sentencia SQL y recibir r
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Preparad PostgreSQL, el esquema inicial y la conexión de Spring mediante configuración externa.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Documentad las variables necesarias y coordinad en Intermodular su configuración para el despliegue de esta misma API.
+1. Arranca el proyecto y reproduce la pérdida de un registro tras reiniciar. Abre la implementación del repositorio en memoria y `application.properties`.
+2. Comprueba qué PostgreSQL usarás: instalación del aula o contenedor del procedimiento de esta sesión. Necesitarás dirección, puerto, base de datos, usuario y contraseña de desarrollo.
+3. Abre `pom.xml` y prepara las dependencias que se indican más abajo. Registra los nombres de las variables de configuración, sin subir sus contraseñas al repositorio.
 
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Persistencia y ORM</p>
-
-#### Paso 2 · La ley de las abstracciones con fugas
+#### Paso 2 · Relacionar el código de persistencia con el SQL que ejecuta
 
 Aquí aparece la gran mentira que muchos cursos y tutoriales transmiten: *«Como tenemos un ORM, ya no necesitas saber SQL»*.
 
@@ -184,7 +181,7 @@ El ORM te quita el trabajo aburrido de teclear `rs.getString("titulo")`, pero **
 
 #### Paso 3 · El mapa de traducción: de Java a PostgreSQL
 
-Antes de tocar una sola línea de código o instalar librerías, vamos a diseñar la correspondencia exacta entre nuestro modelo `Tarea` de la UD4 y la tabla que vivirá en PostgreSQL.
+Abre tu modelo actual y completa la tabla antes de modificarlo. El esquema muestra `Long` como tipo de los identificadores que utilizaremos con PostgreSQL; si aún tienes `int` o `Integer`, la migración se realiza en la sesión 20 en modelo, DTO, servicio, controlador y pruebas. En este paso solo diseñas la correspondencia. Guarda el borrador SQL en `docs/diseno/schema-inicial.sql`: aún no debe ejecutarse automáticamente al arrancar Spring.
 
 Miremos nuestra clase Java de partida:
 
@@ -207,7 +204,7 @@ Para cada atributo debemos tomar tres decisiones:
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `Long` | `id` | `BIGINT` | `PRIMARY KEY GENERATED ALWAYS AS IDENTITY` |
 | `titulo` | `String` | `titulo` | `VARCHAR(120)` | `NOT NULL` (no se admiten tareas sin nombre) |
-| `prioridad` | `String` | `prioridad` | `VARCHAR(20)` | `NOT NULL CHECK (prioridad IN ('BAJA', 'MEDIA', 'ALTA'))` |
+| `prioridad` | `String` | `prioridad` | `VARCHAR(20)` | `NOT NULL CHECK (prioridad IN ('baja', 'media', 'alta'))` |
 | `completada` | `boolean` | `completada` | `BOOLEAN` | `NOT NULL DEFAULT FALSE` |
 | `proyectoId` | `Long` | `proyecto_id` | `BIGINT` | `REFERENCES proyectos(id)` (clave foránea) |
 
@@ -236,7 +233,7 @@ Diseña la tabla para almacenar los miembros del equipo:
 
 #### Paso 5 · Levantar la base de datos PostgreSQL
 
-Necesitamos un servidor PostgreSQL en marcha. Tienes dos formas estándar de disponer de él:
+Elige una sola forma de ejecutar PostgreSQL. Si utilizas Docker, abre primero Docker Desktop y comprueba `docker version` en una terminal; Docker ejecuta el servicio en un contenedor y tu programa Java se conecta a él por el puerto publicado. Crea `docker-compose.yml` en la raíz del repositorio con el bloque indicado y ejecuta `docker compose up -d` desde esa carpeta; `docker compose ps` debe mostrar el servicio activo. En los siguientes arranques reutiliza ese contenedor y su volumen. Si utilizas PostgreSQL instalado en el aula, prepara la base de datos desde su cliente SQL y no ejecutes además Docker sobre el mismo puerto.
 
 Es la opción más limpia porque no instala servicios permanentes en tu sistema operativo, no ensucia el registro y garantiza que todo el equipo trabaja con la misma versión exacta:
 
@@ -305,9 +302,9 @@ Abre el archivo `pom.xml` de tu proyecto Spring Boot y añade las dos dependenci
   <dd>Incluye de forma transitiva Hibernate Core, Jakarta Persistence API, el pool de conexiones HikariCP y toda la infraestructura de Spring Data. No necesitas gestionar versiones individuales: el gestor de dependencias de Spring Boot garantiza que todas las piezas sean compatibles entre sí.</dd>
 </dl>
 
-#### Paso 7 · Configuración profesional en application.properties
+#### Paso 7 · Configurar conexión y credenciales externas en application.properties
 
-Abre `src/main/resources/application.properties`. Vamos a configurar el acceso a datos aplicando principios de seguridad y observabilidad:
+Con la base de datos encendida, añade las propiedades al archivo existente conservando nombre y puerto de la aplicación. `spring.datasource.url` indica dirección, puerto y **nombre de base de datos**, no una ruta de archivo. Usa exactamente el usuario y contraseña con los que acabas de conectarte. Para configuración externa en PowerShell, asigna por ejemplo `$env:DB_PASSWORD="tu valor local"` en la terminal que arrancará Java; en Linux/macOS utiliza `export DB_PASSWORD='tu valor local'`. Un archivo `.env` no lo lee Spring Boot automáticamente: documenta qué herramienta lo carga si decides usarlo.
 
 ```properties
 # ------------------------------------------------------------------------------
@@ -442,10 +439,8 @@ Comprueba que devuelve una fila con el nombre de tu base de datos y la versión 
 
 #### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **configurad postgresql para el mismo backend**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Arranca el backend y verifica en los logs que se conecta a la base de datos elegida. Confirma la misma conexión desde el cliente SQL.
+2. Provoca por separado un puerto incorrecto y unas credenciales incorrectas en tu entorno local; identifica sus mensajes y restaura la configuración válida antes de entregar.
 
 #### Ampliación si has completado el trabajo
 
@@ -511,35 +506,29 @@ Muchos programadores novatos razonan así: *«Si mi servidor va a recibir 500 pe
 
 La aplicación conecta a la base de datos sin credenciales en el repositorio y se identifica qué configuración cambia entre entornos.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 19 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-19.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-19.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-19.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 20 · Primera entidad persistente
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 10: Preparar el CI de la versión persistente](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-10/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-10).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una entidad tiene identidad persistente y un repositorio JPA ofrece operaciones de acceso. Sustituir el almacén no debe cambiar los DTO públicos.
+La aplicación ya se conecta a PostgreSQL. Hoy mapearás una clase a una tabla y sustituirás el repositorio en memoria. En JPA, una entidad es una clase persistente con identidad; JpaRepository proporciona operaciones comunes para guardarla y consultarla.
 
 #### Cobrando la promesa de la UD4
 
@@ -575,23 +564,15 @@ La comprobación decisiva no es ver una fila mientras la aplicación está arran
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Mapead la entidad principal y reemplazad su repositorio en memoria por persistencia real.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Cread y consultad recursos con la colección existente; reiniciad la aplicación y repetid la lectura.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Primera entidad y JpaRepository</p>
+1. Arranca PostgreSQL y el backend con la configuración de la sesión 19. Abre el modelo y el repositorio de la entidad principal.
+2. Localiza el servicio que utiliza la interfaz del repositorio. Mantén sus DTO y rutas: el cambio debe afectar al almacenamiento.
+3. Prepara una creación con datos reconocibles y anota cómo consultarás después su id desde HTTP y SQL.
 
 #### Paso 2 · Mapear la primera entidad: Tarea
 
-Para que JPA sepa cómo trasladar instancias de nuestra clase a filas de la base de datos, debemos marcarla como una **entidad**.
+Actualiza la entidad que ya existe; el bloque enseña los campos básicos de JPA, pero conserva también los campos del dominio y sus accesos. Antes de arrancar, cambia el tipo de los ids a `Long` en los DTO, argumentos del servicio y controlador, mappers y tests. Los ejemplos numéricos de Java pasan a `1L`; en JSON siguen siendo números. La referencia numérica `proyectoId` se conserva hasta transformarla en relación en la sesión 23. Comprueba las referencias del IDE para no dejar un constructor o una comparación con tipos anteriores.
 
 Abre `src/main/java/com/ejemplo/gestor/model/Tarea.java` y anótala:
 
@@ -621,6 +602,12 @@ public class Tarea {
 
     @Column(name = "completada", nullable = false)
     private boolean completada;
+
+    @Column(name = "proyecto_id", nullable = false)
+    private Long proyectoId;
+
+    public Long getProyectoId() { return proyectoId; }
+    public void setProyectoId(Long proyectoId) { this.proyectoId = proyectoId; }
 
     // Constructor sin argumentos obligatorio para JPA
     public Tarea() {
@@ -690,7 +677,7 @@ Detengámonos en cada decisión técnica:
   <dd>Un tipo primitivo no admite <code>null</code>: un <code>long</code> por defecto vale <code>0</code>. Si el id valiera <code>0</code> al nacer, Hibernate dudaría de si estás intentando actualizar un registro existente con id 0 o si es un registro nuevo. Al usar el objeto <code>Long</code>, una tarea nueva tiene <code>id = null</code>, lo que señala de forma inequívoca que aún no existe en PostgreSQL.</dd>
 </dl>
 
-#### Paso 3 · La magia sin misterio de JpaRepository
+#### Paso 3 · Crear la interfaz JpaRepository y utilizar sus operaciones
 
 Ahora sustituimos nuestra interfaz manual de la UD4 por la interfaz estándar de Spring Data.
 
@@ -733,9 +720,21 @@ Los nombres de métodos que diseñamos en la sesión 16 no fueron casualidad: **
 
 #### Paso 4 · Borrar la memoria y conectar el servicio
 
-Ha llegado el momento más satisfactorio de la unidad:
+**Migrar también un test de la interfaz antigua.** Mockito ya viene con `spring-boot-starter-test`: `mock` crea un colaborador de prueba y `when` define su respuesta. En el test del servicio sustituye `new TareaRepositorioFalso()` por lo siguiente, importando `mock`, `when` y `verify` de `org.mockito.Mockito` y `java.util.Optional`:
 
-1. **Borra el archivo** `TareaRepositorioEnMemoria.java` (o quítale la anotación `@Repository`). Ya no lo necesitamos.
+```java
+TareaRepository repositorio = mock(TareaRepository.class);
+Tarea existente = new Tarea(7L, "Revisar entrega", "alta", false);
+when(repositorio.findById(7L)).thenReturn(Optional.of(existente));
+```
+
+Pasa `repositorio` al constructor del servicio junto a los demás colaboradores que ya utilizaba tu test. Ejecuta `obtener(7L)`, conserva la aserción sobre su resultado y añade `verify(repositorio).findById(7L)`. En el caso ausente configura `Optional.empty()` y conserva la aserción de excepción. Migra de esta forma los dobles antiguos antes de retirarlos; no implementes manualmente los métodos de JpaRepository.
+
+1. Conserva en Git la versión de memoria y retira sus implementaciones del código compilado cuando la interfaz pase a extender JpaRepository. Quitar solo `@Repository` no resuelve los métodos de interfaz que ya no coincidan.
+2. Mantén las dependencias del constructor del servicio y adapta sus llamadas: `deleteById` ahora devuelve `void`; usa `existsById` u `obtener` para decidir la ausencia. Después de modificar una entidad fuera de una transacción, devuelve `repositorio.save(entidad)` para persistirla.
+3. Revisa los dobles de prueba que implementaban la interfaz pequeña: ahora necesitarían los métodos heredados de JPA. Sustitúyelos por mocks de Mockito, como se explica a continuación, conservando las reglas y aserciones de los tests. Ejecuta `test` antes de comprobar las peticiones.
+
+1. **Borra el archivo** `TareaRepositorioEnMemoria.java` (su versión anterior seguirá disponible en Git). Ya no lo necesitamos.
 2. Abre `TareaService.java`. Tu servicio ya declaraba:
 
 ```java
@@ -747,16 +746,17 @@ public class TareaService {
     public TareaService(TareaRepository repositorio) {
         this.repositorio = repositorio;
     }
-    // ...
+    // Conserva aquí los demás colaboradores y métodos de tu servicio.
+}
 ```
 
 Como `repositorio` es de tipo `TareaRepository`, Spring inyectará automáticamente el bean generado por Spring Data JPA en lugar del antiguo repositorio en memoria.
 
-Si tu servicio o tus controladores usaban `int` para los identificadores, actualízalos a `Long` para que coincidan con el tipo de la clave primaria. El resto de métodos (`listar()`, `obtener(id)`, `crear(tarea)`, `eliminar(id)`) **no tocan ni una coma**. La regla de negocio de que una tarea nace sin completar sigue en su sitio, protegida y aislada.
+Si tu servicio o tus controladores usaban `int` para los identificadores, actualízalos a `Long` para que coincidan con el tipo de la clave primaria. Revisa los métodos `listar()`, `obtener(id)`, `crear(tarea)` y `eliminar(id)`: deben conservar sus reglas, pero adaptar los tipos, el retorno de `deleteById` y la persistencia de los cambios. La regla de negocio de que una tarea nace sin completar sigue en su sitio, protegida y aislada.
 
 #### Paso 5 · La gran comprobación: el dato sobrevive al reinicio
 
-Vamos a demostrar empíricamente que la persistencia es real.
+Crea primero el proyecto padre mediante su endpoint y guarda su id. En la tarea utiliza ese id como `proyectoId` y una prioridad aceptada por tu validador (`alta`, `media` o `baja`); no retires la validación de la UD3 para hacer funcionar un ejemplo. Si estás migrando las dos entidades, completa también el paso 6 antes de comprobar una regla que consulte proyectos. Anota el id real de la tarea, detén únicamente Java y vuelve a consultar ese id después del arranque. No presupongas que vale 1 ni elimines el volumen de PostgreSQL durante esta prueba.
 
 Ejecuta tu aplicación Spring Boot. Como en la sesión 19 configuramos `ddl-auto=update` y `show-sql=true`, mira la consola en los primeros segundos de arranque. Verás a Hibernate ejecutar:
 
@@ -780,7 +780,7 @@ Content-Type: application/json
 
 {
   "titulo": "Aprender persistencia con JPA y PostgreSQL",
-  "prioridad": "ALTA"
+  "prioridad": "alta"
 }
 ```
 
@@ -802,7 +802,7 @@ Y la respuesta HTTP devolverá el JSON con `id: 1` asignado por PostgreSQL:
 {
   "id": 1,
   "titulo": "Aprender persistencia con JPA y PostgreSQL",
-  "prioridad": "ALTA",
+  "prioridad": "alta",
   "completada": false
 }
 ```
@@ -826,7 +826,7 @@ Mira la respuesta:
   {
     "id": 1,
     "titulo": "Aprender persistencia con JPA y PostgreSQL",
-    "prioridad": "ALTA",
+    "prioridad": "alta",
     "completada": false
   }
 ]
@@ -864,10 +864,8 @@ Aplica de forma autónoma el mismo procedimiento para migrar la entidad `Proyect
 
 #### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **sustituid el repositorio en memoria por jpa**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Crea un registro, detén solo el backend, vuelve a arrancarlo y consulta el mismo id: debe conservarse.
+2. Consulta la tabla desde el cliente SQL y relaciona fila, objeto y DTO. Comprueba que el servicio ya utiliza el repositorio persistente y no una lista paralela.
 
 #### Ampliación si has completado el trabajo
 
@@ -909,37 +907,31 @@ Spring Data comprueba el valor del atributo `@Id`:
 
 Los datos sobreviven al reinicio y el cliente recibe el mismo contrato.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 20 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-20.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-20.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-20.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 11 · CRUD persistente y consultas del dominio
 
 ## Sesión 21 · CRUD persistente y consultas del dominio
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 11: La base de datos en producción](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-11/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-11).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Actualizar y borrar requieren comprobar existencia e integridad. Las consultas del repositorio deben expresar las necesidades reales del producto.
+Ya guardas una entidad y sus datos sobreviven al reinicio. Hoy completarás las escrituras y búsquedas sobre PostgreSQL. Una consulta derivada es un método de repositorio cuyo nombre describe el filtro que Spring Data transforma en una consulta.
 
 #### De un objeto en memoria a una fila con identidad
 
@@ -976,7 +968,7 @@ Para no cometer errores sutiles con JPA, debes ser capaz de situar cualquier obj
 
 El objeto acaba de ser instanciado con `new Tarea(...)`. Vive en la memoria ordinaria de Java:
 ```java
-Tarea nueva = new Tarea("Configurar HTTPS", "ALTA");
+Tarea nueva = new Tarea("Configurar HTTPS", "alta");
 // nueva.getId() es null. PostgreSQL no sabe que esta tarea existe.
 ```
 
@@ -993,7 +985,7 @@ La entidad estaba gestionada y se ha solicitado su borrado (`delete()`). Al conf
 #### Modificar en JPA no es hacer un UPDATE a ciegas
 
 En una aplicación primitiva con JDBC, modificar un registro consistía en concatenar una sentencia SQL de actualización:
-`UPDATE tareas SET titulo = 'Nuevo', prioridad = 'BAJA' WHERE id = 5;`
+`UPDATE tareas SET titulo = 'Nuevo', prioridad = 'baja' WHERE id = 5;`
 
 Si la tarea con id 5 no existía, PostgreSQL respondía que se habían actualizado cero filas, pero la aplicación no se enteraba a menos que comprobaras el contador de retorno.
 
@@ -1028,7 +1020,7 @@ En las primeras unidades de este curso, cuando un endpoint necesitaba tareas de 
 // ANTIPATRÓN: cargar el mundo en memoria para quedarse con tres elementos
 public List<Tarea> buscarUrgentes() {
     return repositorio.findAll().stream()
-            .filter(t -> "ALTA".equals(t.getPrioridad()))
+            .filter(t -> "alta".equals(t.getPrioridad()))
             .toList();
 }
 ```
@@ -1067,19 +1059,11 @@ Al ver ese método, Spring Data descompone el nombre:
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Completad modificación y borrado persistentes y trasladad a consultas los filtros que ya teníais en memoria.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Añadid consultas derivadas útiles y casos de identificador inexistente o valor duplicado.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Crear y recuperar entidades</p>
+1. Arranca la base de datos y reproduce una creación y consulta persistentes. Abre repository, service y controller de esa entidad.
+2. Prepara varios registros con valores diferentes para los campos que filtrarás. Anota sus ids reales devueltos por el servidor.
+3. Localiza PUT, PATCH y DELETE y marca qué operaciones todavía dependen de listas o suposiciones de la versión en memoria.
 
 #### Paso 2 · La regla de oro: usa siempre lo que devuelve save()
 
@@ -1103,7 +1087,7 @@ return guardada;
 
 #### Paso 3 · Altas en el Service y Controller
 
-Vamos a conectar el circuito de creación de tareas respetando el aislamiento entre capas que construimos en las unidades 3 y 4.
+En el servicio existente, actualiza los métodos de creación y consulta sin borrar las comprobaciones del proyecto padre. Importa `org.springframework.transaction.annotation.Transactional`. La anotación delimita una operación con la base de datos; profundizaremos en sus garantías en la sesión 25. Después adapta los métodos HTTP existentes, conservando `@Valid`, los DTO y Location. El orden para comprobarlos es crear proyecto → crear tarea referenciada → consultar tarea por el id devuelto.
 
 Abre `TareaService.java`. Observa cómo aplica las reglas de negocio y delega en el repositorio:
 
@@ -1202,7 +1186,7 @@ Content-Type: application/json
 
 {
   "titulo": "Auditar índices en PostgreSQL",
-  "prioridad": "ALTA"
+  "prioridad": "alta"
 }
 ```
 
@@ -1214,7 +1198,7 @@ Content-Type: application/json
 
 {
   "titulo": "Escribir tests de repositorio",
-  "prioridad": "MEDIA"
+  "prioridad": "media"
 }
 ```
 
@@ -1241,7 +1225,8 @@ SELECT * FROM tareas;
 Y ahora consulta la secuencia que PostgreSQL creó automáticamente para la columna `id`:
 
 ```sql
-SELECT sequence_name, last_value FROM information_schema.sequences;
+SELECT sequencename, last_value FROM pg_sequences
+WHERE schemaname = 'public';
 ```
 
 Verás una secuencia llamada `tareas_id_seq` cuyo último valor generado es `2`. Las secuencias de PostgreSQL son independientes de las transacciones: garantizan identificadores únicos incluso si decenas de peticiones escriben a la vez.
@@ -1361,7 +1346,7 @@ DETAIL: Key (id)=(1) is still referenced from table "tareas".
 
 #### Paso 8 · Conectar PUT, PATCH y DELETE
 
-Abre `TareaController.java` y añade los tres endpoints correspondientes:
+Reemplaza los métodos PUT y DELETE existentes por las versiones persistentes; no publiques dos veces la misma combinación de método y ruta. El endpoint `/completar` es un ejemplo de cambio de estado: conserva también el PATCH de tu contrato si ya permite otras modificaciones. Dentro del servicio, busca primero la entidad gestionada, modifica sus campos y guarda o termina la transacción según el procedimiento elegido. Comprueba una escritura válida y otra sobre un id ausente.
 
 ```java
 @PutMapping("/{id}")
@@ -1402,11 +1387,11 @@ Content-Type: application/json
 
 {
   "titulo": "Auditar índices en PostgreSQL (Actualizado)",
-  "prioridad": "BAJA"
+  "prioridad": "baja"
 }
 ```
 
-* Respuesta: `200 OK` con el JSON actualizado y `prioridad: "BAJA"`.
+* Respuesta: `200 OK` con el JSON actualizado y `prioridad: "baja"`.
 * Consola SQL de Hibernate:
 ```sql
 Hibernate:
@@ -1505,7 +1490,7 @@ Fíjate en la potencia de la herramienta: no solo rechaza el error antes de que 
 
 #### Paso 13 · Añadir consultas derivadas a TareaRepository
 
-Abre `TareaRepository.java` y declara los métodos de consulta que nuestra API necesita:
+Añade las **declaraciones de métodos** dentro de `TareaRepository`, conservando `extends JpaRepository<Tarea, Long>`. Cada palabra después de `By` debe corresponder a un atributo Java del modelo, no al nombre SQL de la columna. Importa `java.util.List` cuando el retorno lo necesite. Reinicia para que Spring valide los nombres; después conecta una consulta al servicio y compruébala antes de añadir las demás.
 
 ```java
 package com.ejemplo.gestor.repository;
@@ -1519,7 +1504,7 @@ import java.util.List;
 @Repository
 public interface TareaRepository extends JpaRepository<Tarea, Long> {
 
-    // Buscar por prioridad exacta (ej: "ALTA", "MEDIA", "BAJA")
+    // Buscar por prioridad exacta (ej: "alta", "media", "baja")
     List<Tarea> findByPrioridad(String prioridad);
 
     // Buscar por estado de compleción
@@ -1588,7 +1573,7 @@ public List<TareaResponse> listar(
 
 Arranca la aplicación y prueba cada consulta desde tu cliente HTTP o navegador:
 
-Ejecuta `GET http://localhost:8080/tareas?prioridad=ALTA`.
+Ejecuta `GET http://localhost:8080/tareas?prioridad=alta`.
 
 Observa la consola de Spring Boot:
 ```sql
@@ -1663,10 +1648,8 @@ Aplica las consultas derivadas a la entidad `Proyecto`:
 
 #### Paso 18 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **completad escrituras y consultas persistentes**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Repite el ciclo de alta, modificación parcial, sustitución y borrado y contrasta los cambios con las filas de PostgreSQL.
+2. Ejecuta cada filtro con coincidencias y sin ellas; comprueba datos y SQL generado. Un listado vacío es una respuesta válida, no un fallo del servidor.
 
 #### Ampliación si has completado el trabajo
 
@@ -1718,7 +1701,7 @@ Analiza estas dos situaciones críticas de producción:
 
 Dos usuarios, Ana y Carlos, cargan en su navegador la tarea 2 al mismo tiempo:
 * Ana cambia el título a `"Revisión urgente"` y pulsa guardar (10:00:01).
-* Carlos, que tenía la pantalla abierta sin el cambio de Ana, cambia la prioridad a `"BAJA"` y pulsa guardar (10:00:02).
+* Carlos, que tenía la pantalla abierta sin el cambio de Ana, cambia la prioridad a `"baja"` y pulsa guardar (10:00:02).
 * El guardado de Carlos sobrescribe el título de Ana y lo borra sin que nadie se entere.
 
 Investiga cómo resuelve JPA este problema mediante **bloqueo optimista** (*Optimistic Locking*):
@@ -1748,7 +1731,7 @@ En PostgreSQL puedes definir una clave foránea con la cláusula `ON DELETE CASC
 
 Analiza estas dos cuestiones fundamentales de ingeniería de bases de datos:
 
-Si tu tabla de tareas acumula 500.000 filas y ejecutas constantemente `findByPrioridad("ALTA")`, PostgreSQL tiene que realizar un escaneo secuencial de toda la tabla (*Sequential Scan*), leyendo cada una de las 500.000 filas del disco.
+Si tu tabla de tareas acumula 500.000 filas y ejecutas constantemente `findByPrioridad("alta")`, PostgreSQL tiene que realizar un escaneo secuencial de toda la tabla (*Sequential Scan*), leyendo cada una de las 500.000 filas del disco.
 * Escribe la sentencia SQL nativa para crear un índice sobre la columna `prioridad` en PostgreSQL:
   ```sql
   CREATE INDEX idx_tareas_prioridad ON tareas(prioridad);
@@ -1785,35 +1768,29 @@ Cuando ejecutamos `findByTituloContainingIgnoreCase("login")`, Hibernate genera 
 
 El CRUD completo opera en PostgreSQL y sus errores siguen el contrato acordado.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 21 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-21.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-21.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-21.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 22 · Probar los repositorios
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 11: La base de datos en producción](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-11/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-11).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una prueba de repositorio comprueba mapeo, consulta y restricciones. Los datos de prueba deben poder prepararse y repetirse.
+Las búsquedas y escrituras ya funcionan manualmente. Hoy las comprobarás con tests de repositorio. @DataJpaTest prepara la parte de persistencia para la prueba; los datos y el motor utilizados deben estar controlados para que el resultado sea repetible.
 
 #### Por qué los mocks no sirven en el repositorio
 
@@ -1824,7 +1801,7 @@ Pero en la capa de acceso a datos, la situación es exactamente la contraria. **
 Si escribes un test de repositorio usando un mock:
 ```java
 // UN TEST INÚTIL: estás probando tu propio mock, no la base de datos
-when(repositorio.findByPrioridad("ALTA")).thenReturn(List.of(tarea1));
+when(repositorio.findByPrioridad("alta")).thenReturn(List.of(tarea1));
 ```
 No estás demostrando nada. Los errores reales de un repositorio nunca son de lógica Java:
 * Una errata en un nombre de método que genera un SQL con una columna incorrecta.
@@ -1836,7 +1813,7 @@ Para que un test de repositorio tenga valor profesional, **debe ejecutarse contr
 
 #### Pruebas de rebanada (Slice Testing) con @DataJpaTest
 
-Arrancar la aplicación completa con `@SpringBootTest` para probar una consulta SQL es una pésima idea: levanta el servidor web Tomcat, los controladores, los filtros de seguridad y los servicios, tardando entre 5 y 10 segundos por clase de prueba.
+`@SpringBootTest` carga el contexto completo de la aplicación. Por defecto utiliza un entorno web simulado; solo levanta un servidor real con RANDOM_PORT o DEFINED_PORT. Para aislar una consulta usaremos `@DataJpaTest`, que carga los componentes de persistencia necesarios.
 
 Spring Boot ofrece una solución elegante: **las pruebas de rebanada** (*Slice Tests*).
 
@@ -1858,30 +1835,30 @@ El resultado es un test que arranca en una fracción de segundo y prueba exclusi
   <code>@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)</code>.</p>
 </div>
 
-#### La trampa mortal: la caché de primer nivel
+#### Comprobar lo guardado y volver a cargarlo
 
-Observa este test. Parece perfectamente legítimo, pero es una trampa:
+Observa este test inicial: comprueba el número de resultados, pero aún no verifica los valores recargados de la base de datos:
 
 ```java
 @Test
 void buscarPorPrioridad_trampa() {
     // 1. Guardar
-    Tarea t = new Tarea("Revisar índices", "ALTA");
+    Tarea t = new Tarea("Revisar índices", "alta");
     repositorio.save(t);
 
     // 2. Buscar
-    List<Tarea> resultado = repositorio.findByPrioridad("ALTA");
+    List<Tarea> resultado = repositorio.findByPrioridad("alta");
 
     // 3. Afirmar
     assertThat(resultado).hasSize(1);
 }
 ```
 
-¿Por qué es una trampa? Porque al llamar a `save(t)`, Hibernate metió el objeto `t` en su **contexto de persistencia (la caché de primer nivel)**.
+Al guardar una entidad, Hibernate la mantiene en su **contexto de persistencia**, también llamado caché de primer nivel.
 
-Cuando en la línea siguiente llamas a `findByPrioridad("ALTA")`, en muchas ocasiones Hibernate ni siquiera envía la consulta SQL al servidor PostgreSQL: resuelve la llamada contra su mapa en memoria RAM. Tu test saldrá en verde aunque la tabla no tenga la columna o la consulta SQL generada sea una aberración.
+`findByPrioridad` sí ejecuta una consulta SQL. Sin embargo, Hibernate puede reutilizar las instancias ya gestionadas al materializar sus resultados. Para comprobar también que los campos se han guardado y se reconstruyen correctamente, forzaremos la escritura y vaciaremos el contexto antes de consultar.
 
-Para que el test sea honesto, debemos utilizar **`TestEntityManager`**:
+Usaremos **`TestEntityManager`** para controlar ese recorrido:
 
 <figure class="diagram">
   <figcaption>El ciclo honesto de un test de repositorio</figcaption>
@@ -1901,28 +1878,46 @@ Para que el test sea honesto, debemos utilizar **`TestEntityManager`**:
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Escribid pruebas con DataJpaTest para consultas y restricciones de vuestro modelo.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Preparad datos de ejemplo reproducibles y ejecutad las pruebas en el pipeline con la configuración que corresponda.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Tests de repositorio con @DataJpaTest</p>
+1. Abre los repositorios y enumera las consultas propias que has añadido en la sesión 21. Conserva un ejemplo que deba coincidir y otro que no.
+2. Localiza `src/test/java` y revisa la configuración de la base de datos de pruebas indicada en esta sesión. Utiliza un entorno de prueba separado de producción.
+3. Prepara los registros desde el propio test. No dependas de ids ni filas creadas manualmente durante el taller anterior.
 
 #### Paso 2 · Escribir TareaRepositoryTest
 
-Crea el archivo `src/test/java/com/ejemplo/gestor/repository/TareaRepositoryTest.java`:
+Antes de crear la clase, prepara el entorno de pruebas:
+
+1. En la conexión de PostgreSQL de **desarrollo** crea una base diferente, `gestor_test`. En pgAdmin abre Query Tool sobre `postgres` y ejecuta solo la sentencia siguiente; si la base ya existe, omite la creación.
+
+```sql
+CREATE DATABASE gestor_test;
+```
+
+2. Crea `src/test/resources/application-test.properties`. Sustituye `tu_usuario_local` por el usuario de tu PostgreSQL y configura TEST_DB_PASSWORD en la terminal o en la ejecución de tests del IDE.
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/gestor_test
+spring.datasource.username=tu_usuario_local
+spring.datasource.password=${TEST_DB_PASSWORD}
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.sql.init.mode=never
+spring.jpa.show-sql=true
+```
+
+`create-drop` crea las tablas al iniciar el contexto de pruebas y las elimina al cerrarlo: **esta URL debe apuntar exclusivamente a gestor_test**. El perfil no debe activarse en el backend de desarrollo ni en producción. Si tu contenedor publica otro puerto, cambia solo ese puerto.
+
+3. Añade `import org.springframework.test.context.ActiveProfiles;` y `@ActiveProfiles("test")` encima de cada clase de pruebas JPA. Conserva `@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)` para usar PostgreSQL.
+4. En los ejemplos siguientes crea primero un Proyecto válido con los campos obligatorios de tu modelo, persístelo mediante `em.persist(proyecto)` y asigna `tarea.setProyectoId(proyecto.getId())` antes de cada `em.persist(tarea)`. Desde la sesión 23, cuando la relación sea un objeto, utiliza `tarea.setProyecto(proyecto)` en su lugar. Los tests preparan sus propios datos; no dependen de ids de peticiones anteriores.
+
+Prepara primero una base de datos exclusiva para pruebas y el perfil `test` del bloque siguiente; no ejecutes esta clase contra la base de desarrollo llena de registros, porque una consulta contaría también esas filas. Crea después `TareaRepositoryTest.java` bajo `src/test/java` y aplica `@ActiveProfiles("test")`. Cada test prepara sus propias entidades, fuerza las escrituras, vacía el contexto de persistencia y consulta. Si tu modelo requiere proyecto, crea y persiste ese proyecto antes de la tarea y asígnale su id; no retires la relación para simplificar el test.
 
 ```java
 package com.ejemplo.gestor.repository;
 
 import com.ejemplo.gestor.model.Tarea;
+import com.ejemplo.gestor.model.Proyecto;
+import org.springframework.test.context.ActiveProfiles;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1935,6 +1930,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TareaRepositoryTest {
 
@@ -1944,36 +1940,44 @@ class TareaRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
+    private void persistirTarea(Tarea tarea) {
+        Proyecto proyecto = new Proyecto("Proyecto " + tarea.getTitulo(), "Datos del test");
+        proyecto.setActivo(true);
+        em.persist(proyecto);
+        tarea.setProyectoId(proyecto.getId());
+        em.persist(tarea);
+    }
+
     @Test
     @DisplayName("findByPrioridad devuelve solo las tareas que coinciden exactamente")
     void findByPrioridad_cuandoHayCoincidencias_devuelveSoloCoincidentes() {
         // Preparar (Arrange): persistir dos tareas en PostgreSQL
-        Tarea urgente = new Tarea("Corregir fuga de memoria", "ALTA");
-        Tarea normal = new Tarea("Actualizar README", "MEDIA");
+        Tarea urgente = new Tarea("Corregir fuga de memoria", "alta");
+        Tarea normal = new Tarea("Actualizar README", "media");
 
-        em.persist(urgente);
-        em.persist(normal);
+        persistirTarea(urgente);
+        persistirTarea(normal);
         em.flush();
         em.clear(); // Vaciar memoria para obligar a consultar a PostgreSQL
 
         // Actuar (Act): ejecutar la consulta derivada
-        List<Tarea> resultado = repositorio.findByPrioridad("ALTA");
+        List<Tarea> resultado = repositorio.findByPrioridad("alta");
 
         // Comprobar (Assert)
         assertThat(resultado).hasSize(1);
         assertThat(resultado.get(0).getTitulo()).isEqualTo("Corregir fuga de memoria");
-        assertThat(resultado.get(0).getPrioridad()).isEqualTo("ALTA");
+        assertThat(resultado.get(0).getPrioridad()).isEqualTo("alta");
     }
 
     @Test
     @DisplayName("findByPrioridad devuelve lista vacía si ninguna coincide")
     void findByPrioridad_cuandoNoHayCoincidencias_devuelveListaVacia() {
-        Tarea normal = new Tarea("Actualizar README", "MEDIA");
-        em.persist(normal);
+        Tarea normal = new Tarea("Actualizar README", "media");
+        persistirTarea(normal);
         em.flush();
         em.clear();
 
-        List<Tarea> resultado = repositorio.findByPrioridad("BAJA");
+        List<Tarea> resultado = repositorio.findByPrioridad("baja");
 
         assertThat(resultado).isEmpty();
     }
@@ -1981,11 +1985,11 @@ class TareaRepositoryTest {
     @Test
     @DisplayName("findByTituloContainingIgnoreCase ignora mayúsculas y encuentra fragmentos")
     void findByTitulo_ignoraMayusculasYMinusculas() {
-        Tarea t1 = new Tarea("Aprender PostgreSQL y Spring", "ALTA");
-        Tarea t2 = new Tarea("Escribir documentación", "BAJA");
+        Tarea t1 = new Tarea("Aprender PostgreSQL y Spring", "alta");
+        Tarea t2 = new Tarea("Escribir documentación", "baja");
 
-        em.persist(t1);
-        em.persist(t2);
+        persistirTarea(t1);
+        persistirTarea(t2);
         em.flush();
         em.clear();
 
@@ -1998,13 +2002,13 @@ class TareaRepositoryTest {
     @Test
     @DisplayName("countByCompletadaFalse cuenta únicamente las pendientes")
     void countByCompletadaFalse_cuentaSoloPendientes() {
-        Tarea pendiente1 = new Tarea("Tarea 1", "ALTA");
-        Tarea pendiente2 = new Tarea("Tarea 2", "MEDIA");
-        Tarea terminada = new Tarea(null, "Tarea 3", "BAJA", true);
+        Tarea pendiente1 = new Tarea("Tarea 1", "alta");
+        Tarea pendiente2 = new Tarea("Tarea 2", "media");
+        Tarea terminada = new Tarea(null, "Tarea 3", "baja", true);
 
-        em.persist(pendiente1);
-        em.persist(pendiente2);
-        em.persist(terminada);
+        persistirTarea(pendiente1);
+        persistirTarea(pendiente2);
+        persistirTarea(terminada);
         em.flush();
         em.clear();
 
@@ -2048,7 +2052,7 @@ Fíjate en las consultas SQL:
 
 #### Paso 4 · Tests para ProyectoRepository
 
-Escribe la clase `ProyectoRepositoryTest` cubriendo las consultas derivadas que implementamos en la sesión 21:
+Copia la estructura de anotaciones y configuración de `TareaRepositoryTest` a `ProyectoRepositoryTest`, cambiando repositorio y entidades. Escribe cada escenario con sus propios datos. Para probar una restricción, incluye **persistir y hacer flush** dentro de la operación cuya excepción compruebas: con ids IDENTITY, el INSERT y el error pueden producirse al persistir. Distingue `null` de texto vacío: `nullable=false` solo rechaza el primero.
 
 1. Crea `src/test/java/com/ejemplo/gestor/repository/ProyectoRepositoryTest.java` con `@DataJpaTest` y `@AutoConfigureTestDatabase(replace = NONE)`.
 2. Escribe un test para `findByActivoTrue()`:
@@ -2064,10 +2068,8 @@ Escribe la clase `ProyectoRepositoryTest` cubriendo las consultas derivadas que 
 
 #### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **probad el repositorio y sus restricciones**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta los tests dos veces y comprueba que producen el mismo resultado sin depender del orden de ejecución.
+2. Incluye una consulta con coincidencias, otra sin ellas y una operación de escritura. Explica qué demuestra cada aserción y qué base de datos se ha utilizado.
 
 #### Ampliación si has completado el trabajo
 
@@ -2082,7 +2084,7 @@ Imagina que quieres comprobar que la base de datos rechaza una tarea sin título
 ```java
 @Test
 void tareaSinTitulo_debeFallar_malEscrito() {
-    Tarea sinTitulo = new Tarea(null, "ALTA");
+    Tarea sinTitulo = new Tarea(null, "alta");
     em.persist(sinTitulo);
     // Omitimos em.flush();
 }
@@ -2113,37 +2115,31 @@ void tareaSinTitulo_debeFallar_malEscrito() {
 
 La misma consulta devuelve el resultado esperado en ejecuciones repetidas y una restricción incumplida se detecta.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 22 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-22.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-22.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-22.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 12 · Relaciones uno a muchos
 
 ## Sesión 23 · Relaciones uno a muchos
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 12: Dos piezas, una entrega](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-12/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-12).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-La clave foránea expresa una relación real del dominio. El lado propietario y los DTO determinan cómo se guarda y cómo se presenta.
+Tus entidades persisten por separado. Hoy representarás una relación uno a muchos: por ejemplo, un proyecto contiene varias tareas y cada tarea pertenece a un proyecto. Una clave foránea guarda esa referencia en la tabla; los DTO decidirán cómo se muestra por HTTP.
 
 #### De un identificador numérico a un grafo de entidades
 
@@ -2216,23 +2212,15 @@ private List<Tarea> tareas = new ArrayList<>();
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Implementad la relación principal ManyToOne y la navegación OneToMany que necesitéis.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Cread recursos asociados y rechazad referencias inexistentes; evitad recursión al serializar relaciones bidireccionales.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">ManyToOne y OneToMany</p>
+1. Abre las dos entidades, sus repositorios y sus DTO. Elige en tu dominio una relación equivalente y dibuja qué lado contiene la referencia al otro.
+2. Crea dos registros principales y varios relacionados con las peticiones existentes. Anota sus ids para comprobar asignaciones y cambios.
+3. Localiza dónde se comprueba que existe el recurso al que vas a asociar otro. Esa decisión pertenece al servicio, no al mapper.
 
 #### Paso 2 · El lado propietario: @ManyToOne y @JoinColumn
 
-En una base de datos relacional, la clave foránea siempre se almacena en la tabla del lado «muchos» (`tareas` tiene la columna `proyecto_id` apuntando a `proyectos.id`).
+En `Tarea.java`, sustituye el atributo persistente `Long proyectoId` por la referencia `Proyecto proyecto` anotada; no dejes dos atributos escribiendo la misma columna `proyecto_id`. Conserva `proyectoId` en el DTO de entrada, porque el cliente sigue enviando un número. En los métodos del servicio carga el proyecto por ese id y asigna la referencia a la tarea. Ajusta los mappers y las pruebas antes de arrancar: donde antes se leía el número del modelo, ahora se obtiene desde `tarea.getProyecto().getId()`.
 
 En JPA, la entidad que mapea la clave foránea física se denomina **lado propietario** (*Owning Side*):
 
@@ -2394,7 +2382,7 @@ Content-Type: application/json
 
 {
   "titulo": "Configurar @ManyToOne en entidades",
-  "prioridad": "ALTA",
+  "prioridad": "alta",
   "proyectoId": 1
 }
 ```
@@ -2417,7 +2405,7 @@ Content-Type: application/json
 
 {
   "titulo": "Tarea fantasma",
-  "prioridad": "BAJA",
+  "prioridad": "baja",
   "proyectoId": 999
 }
 ```
@@ -2444,7 +2432,7 @@ Hibernate:
 
 #### Paso 6 · Asignar un responsable a la tarea
 
-Añade una segunda relación `@ManyToOne` para modelar qué usuario es el responsable de realizar una tarea:
+Antes de declarar `Usuario responsable`, comprueba que existe `model/Usuario.java` con id, nombre y sus accesos, y que `UsuarioRepository` extiende `JpaRepository<Usuario, Long>`. Si faltan, créalos con el mismo procedimiento de entidad y repositorio de la sesión 20 y prepara dos usuarios de desarrollo. Amplía el constructor de `TareaService` para recibir ese repositorio; cuando llegue `responsableId`, busca el usuario y rechaza el id inexistente. Un responsable ausente queda a null. Actualiza todas las construcciones del DTO de salida al añadir sus nuevos componentes.
 
 1. Modifica `Tarea.java`:
    * Añade el atributo:
@@ -2462,13 +2450,13 @@ Añade una segunda relación `@ManyToOne` para modelar qué usuario es el respon
 
 <p class="stage">Relaciones bidireccionales</p>
 
-#### Paso 7 · La desincronización en memoria: la trampa de los dos punteros
+#### Paso 7 · Mantener coherentes ambos lados de una relación bidireccional
 
 Como en Java tenemos dos referencias independientes en memoria RAM, es facilísimo romper la coherencia de nuestro propio grafo de objetos:
 
 ```java
 // CÓDIGO PELIGROSO: desincroniza la memoria
-Tarea tarea = new Tarea("Nueva funcionalidad", "ALTA");
+Tarea tarea = new Tarea("Nueva funcionalidad", "alta");
 tarea.setProyecto(proyecto);
 // ¡Olvidamos añadirla a la lista: proyecto.getTareas().add(tarea)!
 ```
@@ -2515,7 +2503,7 @@ public class Proyecto {
   <dd>Propaga las operaciones del padre a los hijos: si persistes un proyecto nuevo que ya contiene tres tareas añadidas con <code>agregarTarea</code>, Hibernate guardará automáticamente el proyecto y las tres tareas en la misma transacción.</dd>
 </dl>
 
-#### Paso 8 · El monstruo de la recursión infinita: Jackson y StackOverflowError
+#### Paso 8 · Evitar referencias circulares al convertir relaciones a JSON
 
 Si devuelves entidades `@Entity` directamente en un `@RestController`, las relaciones bidireccionales provocarán una catástrofe garantizada:
 
@@ -2567,7 +2555,7 @@ Observa la clave del diseño: `TareaResumenResponse` **no incluye ninguna refere
 
 #### Paso 10 · Mapear y exponer en el Service y Controller
 
-Actualiza `ProyectoMapper.java`:
+Añade `aDetalle` al mapper existente, importa los DTO utilizados y conserva sus demás conversiones. Añade después `obtenerConDetalle` a `ProyectoService`, que inicializa la colección dentro de la transacción, y por último el endpoint del controlador. Comprueba un proyecto con dos tareas y otro sin tareas: ambos deben devolver detalle válido. Esta inicialización explícita permite convertir después sin mantener abierta la conexión durante la respuesta; en la sesión 26 revisarás cuántas consultas ha costado.
 
 ```java
 public static ProyectoDetalleResponse aDetalle(Proyecto proyecto) {
@@ -2632,13 +2620,13 @@ Respuesta limpia `200 OK` sin recursión ni errores:
     {
       "id": 1,
       "titulo": "Configurar @ManyToOne en entidades",
-      "prioridad": "ALTA",
+      "prioridad": "alta",
       "completada": false
     },
     {
       "id": 2,
       "titulo": "Escribir tests con @DataJpaTest",
-      "prioridad": "MEDIA",
+      "prioridad": "media",
       "completada": true
     }
   ]
@@ -2705,10 +2693,8 @@ Implementa en `ProyectoService` y `ProyectoController` un caso de uso para crear
 
 #### Paso 13 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **persistid y consultad las relaciones uno a muchos**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Asocia y consulta registros por HTTP y comprueba la clave foránea en SQL. Prueba también un id relacionado inexistente y verifica que se rechaza sin guardar una asociación inválida.
+2. Consulta el detalle de ambos lados y comprueba que el JSON termina y no repite objetos indefinidamente. Revisa expresamente qué ocurre al desasociar o borrar.
 
 #### Ampliación si has completado el trabajo
 
@@ -2762,7 +2748,7 @@ public int hashCode() {
 }
 ```
 
-* Imagina que creas una tarea nueva: `Tarea t = new Tarea("Login", "ALTA");`. Su `id` es `null`.
+* Imagina que creas una tarea nueva: `Tarea t = new Tarea("Login", "alta");`. Su `id` es `null`.
 * Metes esa tarea en un `Set<Tarea> pendientes = new HashSet<>(); pendientes.add(t);`.
 * Persistes la tarea en la base de datos: `em.persist(t); em.flush();`. Ahora PostgreSQL le ha asignado `id = 1L`.
 * ¿Qué ocurre si ejecutas `pendientes.contains(t)` si el `hashCode()` dependía del `id`? El objeto sigue estando en el conjunto, pero **Java ya no lo encuentra** porque su código hash cambió de valor mientras estaba dentro de la tabla hash.
@@ -2788,35 +2774,29 @@ public int hashCode() {
 
 La base de datos conserva la relación, la API devuelve una representación acotada y el borrado respeta la integridad.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 23 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-23.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-23.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-23.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 24 · Relaciones muchos a muchos
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 12: Dos piezas, una entrega](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-12/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-12).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una tabla de unión permite compartir elementos sin duplicarlos. Asociar o desasociar no equivale a borrar el catálogo relacionado.
+Ya manejas una relación uno a muchos. Hoy una entidad podrá relacionarse con varias de otra clase y viceversa, como tareas y etiquetas. Una tabla intermedia guarda cada asociación; quitar una asociación no debe eliminar la entidad compartida.
 
 #### La tabla puente en el modelo relacional
 
@@ -2862,23 +2842,15 @@ Si tu tabla puente necesita columnas como `creado_en`, `prioridad_etiqueta` o `a
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Implementad una relación muchos a muchos con sentido en vuestro producto y sus operaciones de asociación.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Probad asociaciones repetidas, desasociación y borrado de uno de los extremos.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">ManyToMany</p>
+1. Abre el modelo y elige una relación muchos a muchos real de tu dominio. Dibuja dos registros que compartan un elemento relacionado.
+2. Localiza los paquetes de entidades, repositorios, servicios y DTO. Implementarás la asociación en todas esas capas manteniendo los contratos anteriores.
+3. Prepara un caso de asociación nueva, otro de asociación repetida y otro de desasociación. Anota las filas que esperas en la tabla intermedia.
 
 #### Paso 2 · El mapeo en JPA: @ManyToMany y @JoinTable
 
-En JPA modelamos esta relación utilizando la anotación `@ManyToMany`.
+Crea `model/Etiqueta.java` antes de modificar Tarea y genera sus accesos para id, nombre y color. Si conservas la lista de textos `etiquetas` del experimento de la sesión 5, migra esos valores a entidades y sustituye ese campo: no declares a la vez `List<String>` y `Set<Etiqueta>` con el mismo nombre. Añade después la colección y los métodos de asociación a Tarea. Importa `Set`, `HashSet` y las anotaciones JPA utilizadas. Una asociación vincula dos entidades ya existentes; no crea una etiqueta por escribir su nombre en el DTO.
 
 Creamos la entidad maestra para las etiquetas:
 
@@ -2950,7 +2922,7 @@ public void quitarEtiqueta(Etiqueta etiqueta) {
   <dd>Especifica la columna de la tabla puente que apunta a la otra entidad (<code>etiqueta_id</code> hacia <code>etiquetas.id</code>).</dd>
 </dl>
 
-#### Paso 3 · Por qué usamos Set y NUNCA List en ManyToMany
+#### Paso 3 · Usar Set para representar asociaciones sin duplicados
 
 Este es otro de los errores más costosos de rendimiento en aplicaciones Spring Boot con JPA:
 
@@ -2977,7 +2949,7 @@ Una sola sentencia atómica y eficiente.
   <p>Además, inicializa siempre la colección directamente en la declaración del atributo (<code>= new HashSet&lt;&gt;()</code>) para evitar excepciones <code>NullPointerException</code> al acceder a entidades recién instanciadas.</p>
 </div>
 
-#### Paso 4 · El peligro mortal: CascadeType.REMOVE en ManyToMany
+#### Paso 4 · Evitar borrar entidades compartidas con CascadeType.REMOVE
 
 En el trabajo anterior aprendimos que un `Proyecto` puede tener `cascade = CascadeType.ALL` sobre sus tareas porque si el proyecto se destruye, sus tareas pierden sentido.
 
@@ -2996,7 +2968,49 @@ private Set<Etiqueta> etiquetas;
 
 #### Paso 5 · Crear EtiquetaRepository y Servicio
 
-Crea `EtiquetaRepository.java`:
+Para poder obtener los ids usados en las asociaciones, añade primero el alta de etiquetas. Crea `controller/EtiquetaController.java` con este archivo completo. Los records de entrada y salida están dentro de la clase. En Etiqueta genera `getId()`, `getNombre()`, `getColorHex()` y `getTareas()` si todavía faltan; este último devuelve la colección usada por los métodos de asociación.
+
+```java
+package com.ejemplo.gestor.controller;
+
+import com.ejemplo.gestor.model.Etiqueta;
+import com.ejemplo.gestor.repository.EtiquetaRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import java.net.URI;
+
+@RestController
+@RequestMapping("/etiquetas")
+public class EtiquetaController {
+    private final EtiquetaRepository repositorio;
+    public EtiquetaController(EtiquetaRepository repositorio) {
+        this.repositorio = repositorio;
+    }
+    public record Entrada(@NotBlank @Size(max = 40) String nombre,
+        @NotBlank @Pattern(regexp = "#[0-9a-fA-F]{6}") String colorHex) {}
+    public record Salida(Long id, String nombre, String colorHex) {}
+
+    @PostMapping
+    public ResponseEntity<Salida> crear(@Valid @RequestBody Entrada entrada) {
+        if (repositorio.existsByNombreIgnoreCase(entrada.nombre())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe esa etiqueta");
+        }
+        var etiqueta = repositorio.save(new Etiqueta(entrada.nombre(), entrada.colorHex()));
+        return ResponseEntity.created(URI.create("/etiquetas/" + etiqueta.getId()))
+            .body(new Salida(etiqueta.getId(), etiqueta.getNombre(), etiqueta.getColorHex()));
+    }
+}
+```
+
+Antes de conservar esta versión, extrae la comprobación y el save a `EtiquetaService`, siguiendo el patrón que ya aplicaste en la UD4: constructor con EtiquetaRepository y método `crear(nombre, colorHex)` que devuelve la etiqueta guardada. Inyecta ese servicio en el controlador y deja en él validación de entrada, Location y DTO. Ejecuta primero `POST /etiquetas` con `{"nombre":"Backend","colorHex":"#336699"}`; guarda su id. Repite el nombre y comprueba 409. Si tu manejador global captura Exception, añade un manejador específico de ResponseStatusException que respete su estado antes de realizar esa prueba.
+
+Crea `EtiquetaRepository` y añádelo al constructor existente de `TareaService`, conservando sus otros colaboradores. Antes de probar asociaciones necesitas crear etiquetas: prepara también su DTO de entrada, servicio de alta y POST de controlador, siguiendo el recorrido nombre/color → entidad → `save` → DTO con id. Comprueba ese POST por separado y guarda dos ids. Después añade los métodos de asociación del bloque y utiliza esos ids, no números inventados.
 
 ```java
 package com.ejemplo.gestor.repository;
@@ -3018,13 +3032,13 @@ En `TareaService.java`, implementamos el caso de uso para etiquetar una tarea:
 
 ```java
 @Transactional
-public Tarea asignarEtiqueta(Long tareaId, Long etiquetaId) {
+public TareaResponse asignarEtiqueta(Long tareaId, Long etiquetaId) {
     Tarea tarea = obtener(tareaId);
     Etiqueta etiqueta = etiquetaRepo.findById(etiquetaId)
             .orElseThrow(() -> new RecursoNoEncontradoException("etiqueta", etiquetaId));
 
     tarea.agregarEtiqueta(etiqueta);
-    return tarea; // El dirty checking guardará la fila en tareas_etiquetas
+    return TareaMapper.aRespuesta(tarea); // Convertimos antes de cerrar la transacción
 }
 
 @Transactional
@@ -3040,7 +3054,17 @@ public Tarea desasignarEtiqueta(Long tareaId, Long etiquetaId) {
 
 #### Paso 6 · Exponer en DTOs y Controladores
 
-Actualizamos `TareaResponse` para incluir el listado de nombres de etiquetas:
+En `TareaMapper.aRespuesta`, actualiza el constructor a los siete componentes del record mostrado debajo. Importa Collectors de `java.util.stream` y usa este cuerpo, conservando los otros métodos del mapper:
+
+```java
+return new TareaResponse(tarea.getId(), tarea.getTitulo(), tarea.getPrioridad(),
+    tarea.isCompletada(), tarea.getProyecto().getId(), tarea.getProyecto().getNombre(),
+    tarea.getEtiquetas().stream().map(Etiqueta::getNombre).collect(Collectors.toSet()));
+```
+
+Importa también tu entidad Etiqueta. `asignarEtiqueta` devuelve ahora TareaResponse para hacer esta conversión dentro de la transacción; importa DTO y mapper en el servicio. Cambia el controlador para devolver directamente ese resultado, como muestra el bloque siguiente.
+
+Añade el componente `etiquetas` al DTO **conservando los demás campos** y actualiza todos los lugares que llaman a su constructor. En el mapper transforma `Set<Etiqueta>` en nombres; no devuelvas la colección de entidades JPA. Carga la relación antes de salir de la transacción o convierte allí a una respuesta independiente de JPA. Agrega después los endpoints al controlador. Al desasociar, comprueba tanto la ausencia del vínculo como la conservación de la etiqueta compartida.
 
 ```java
 public record TareaResponse(
@@ -3061,8 +3085,7 @@ Añadimos en `TareaController.java` los endpoints de asociación:
 public TareaResponse agregarEtiqueta(
         @PathVariable Long id,
         @PathVariable Long etiquetaId) {
-    Tarea actualizada = servicio.asignarEtiqueta(id, etiquetaId);
-    return TareaMapper.aRespuesta(actualizada);
+    return servicio.asignarEtiqueta(id, etiquetaId);
 }
 
 @DeleteMapping("/{id}/etiquetas/{etiquetaId}")
@@ -3147,10 +3170,8 @@ Implementa la búsqueda de tareas asociadas a una etiqueta concreta:
 
 #### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **implementad las asociaciones muchos a muchos**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Asocia el mismo elemento a dos registros y comprueba las filas intermedias. Repetir una asociación no debe crear un vínculo duplicado.
+2. Desasocia o elimina uno de los registros y verifica que el elemento compartido sigue existiendo y asociado al otro.
 
 #### Ampliación si has completado el trabajo
 
@@ -3187,37 +3208,31 @@ Imagina que una etiqueta no solo se asocia a una tarea, sino que debemos guardar
 
 Borrar un recurso principal no elimina los elementos compartidos por otros; la tabla de unión queda coherente.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 24 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-24.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-24.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-24.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 13 · Transacciones y reglas de integridad
 
 ## Sesión 25 · Transacciones y reglas de integridad
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 13: Priorizar la evolución del mismo producto](/es/docencia/proyecto-intermodular/ud5-elegir-el-problema-grande/sesion-13/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-13).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una operación de negocio puede modificar varias filas y debe completarse entera o deshacerse. La transacción protege ese resultado.
+Ya hay operaciones que cambian varias filas relacionadas. Una transacción agrupa cambios para que se confirmen juntos o se deshagan si la operación falla. Rollback es esa vuelta al estado anterior; hoy lo provocarás y comprobarás con datos.
 
 #### El peligro del estado corrompido
 
@@ -3284,19 +3299,11 @@ public class ProyectoService {
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Implementad una operación multioperación propia del dominio, equivalente en complejidad a clonar un agregado con sus elementos.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Provocad un fallo intermedio, comprobad el rollback y añadid la prueba que lo demuestra.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Transacciones e integridad</p>
+1. Elige la operación de varios cambios que describiste para tu proyecto: préstamo de varios ejemplares, pedido con líneas o equivalente. Abre el método del servicio que la coordinará.
+2. Anota las filas que crea o modifica y prepara datos de prueba para que un paso intermedio pueda fallar de manera controlada.
+3. Consulta y guarda el estado inicial en tu entorno local. Necesitarás compararlo después; no realices el experimento sobre datos de producción.
 
 #### Paso 2 · Cómo funciona @Transactional por dentro
 
@@ -3321,7 +3328,7 @@ Petición HTTP → Controlador → [ PROXY DE SPRING ] → Tu TareaService
 
 #### Paso 3 · Implementar el caso multioperación «Clonar Proyecto»
 
-Vamos a crear un caso de uso completo en `ProyectoService`: clonar un proyecto existente duplicando todas sus tareas asociadas con una nueva identidad:
+Añade la operación al servicio del proyecto existente y conserva su constructor. El caso parte de un proyecto con tareas ya guardadas: carga ese origen dentro de la transacción, crea **otras instancias** sin id y copia solo los datos de negocio. Usa el método de relación para asociarlas al proyecto nuevo. La comprobación artificial de fallo es local y temporal; no debe quedar como una regla que se active por el título en producción.
 
 ```java
 @Transactional(rollbackFor = Exception.class)
@@ -3403,7 +3410,7 @@ Arranca la aplicación y ejecuta las dos pruebas siguientes:
 
    {
      "titulo": "Tarea con FALLO_TEST para provocar rollback",
-     "prioridad": "ALTA",
+     "prioridad": "alta",
      "proyectoId": 1
    }
    ```
@@ -3427,7 +3434,7 @@ Arranca la aplicación y ejecuta las dos pruebas siguientes:
 
 #### Paso 6 · Transferencia atómica de tareas entre proyectos
 
-Implementa en `ProyectoService` un caso de uso para transferir todas las tareas de un proyecto a otro:
+Prepara dos proyectos distintos y tareas solo en el origen. Comprueba primero existencia, diferencia entre ids y política del destino; después actualiza el lado propietario de cada tarea dentro de una única transacción. Si `orphanRemoval=true`, no uses para trasladar la tarea el método que la elimina de su propietario: podría programar su borrado. Define la transferencia expresamente, verifica claves foráneas al terminar y provoca un fallo intermedio para comprobar que vuelven al origen.
 
 1. Método: `transferirTareas(Long origenId, Long destinoId)` anotado con `@Transactional(rollbackFor = Exception.class)`.
 2. Reglas de negocio a comprobar:
@@ -3440,10 +3447,8 @@ Implementa en `ProyectoService` un caso de uso para transferir todas las tareas 
 
 #### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **comprobad la atomicidad de una operación de negocio**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta el caso válido y verifica todos los cambios. Después provoca el fallo previsto y comprueba que no quedan cambios parciales.
+2. Retira el fallo artificial, repite y explica dónde está el límite de la transacción y qué excepción activa el rollback en tu implementación.
 
 #### Ampliación si has completado el trabajo
 
@@ -3481,35 +3486,29 @@ En `@Transactional` puedes configurar el parámetro `isolation`:
 
 No quedan cambios parciales al fallar y la operación correcta cumple todas las reglas del dominio.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 25 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-25.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-25.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-25.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 26 · Consultas, N+1 y versión persistente desplegada
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 13: Priorizar la evolución del mismo producto](/es/docencia/proyecto-intermodular/ud5-elegir-el-problema-grande/sesion-13/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-13).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-El número de consultas puede crecer con cada elemento del listado. Los logs SQL permiten comprobarlo y elegir una carga adecuada sin romper la paginación.
+La persistencia ya mantiene la integridad. Hoy revisarás cuántas consultas necesita una respuesta. N+1 describe una consulta inicial seguida de otras por cada elemento; paginar limita cuántos resultados devuelves. Trabajarás con datos suficientes para observar ambos problemas.
 
 #### La trampa silenciosa: el problema N+1 al microscopio
 
@@ -3579,23 +3578,15 @@ En producción, la aplicación y la base de datos están en servidores o contene
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Medid una consulta con relaciones, detectad N+1 y corregid la carga con una estrategia justificada.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Ejecutad las pruebas y la colección; haced pasar esta versión persistente por el despliegue trabajado en Intermodular.
+1. Abre los listados con relaciones, sus consultas de repositorio y los DTO. Activa la visualización de SQL solo en desarrollo.
+2. Prepara varios registros con relaciones y anota cuántas consultas produce un listado antes de optimizarlo.
+3. Localiza la configuración externa utilizada en Intermodular para el backend y PostgreSQL. El código persistente revisado será la versión que recorra ese workflow.
 
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+#### Paso 2 · Cargar las relaciones necesarias mediante JPQL y JOIN FETCH
 
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Consultas, rendimiento y N+1</p>
-
-#### Paso 2 · La solución de ingeniería: JPQL con JOIN FETCH
-
-La solución consiste en ordenarle a Hibernate: *«Cuando traigas las tareas, haz un JOIN con proyectos y rellena el objeto proyecto en la misma sentencia SQL»*.
+Añade la consulta a `TareaRepository` e importa `Query` de Spring Data JPA. No basta con declarar un método que nadie llama: cambia el listado del servicio para utilizarlo y ejecuta **la misma petición** y los mismos datos antes y después. Cuenta las consultas SQL correspondientes solo a ese envío. Elige JOIN FETCH si el proyecto es obligatorio y LEFT JOIN FETCH si quieres conservar tareas sin relación.
 
 Para lograrlo, utilizamos la cláusula **`JOIN FETCH`** en una consulta JPQL personalizada con la anotación `@Query`:
 
@@ -3657,40 +3648,39 @@ List<Tarea> findAll();
 
 `@EntityGraph` instruye a Hibernate a realizar automáticamente un `LEFT OUTER JOIN` trayendo el atributo especificado sin necesidad de alterar la signatura del método ni escribir la sentencia JPQL.
 
-#### Paso 4 · Paginación profesional con Pageable y Page
+#### Paso 4 · Limitar y describir los resultados con Pageable y Page
 
-Cargar listas completas con `List<T>` es el segundo gran pecado de rendimiento en un backend. Si una tabla acumula 50.000 tareas, `findAllConProyecto()` construirá 50.000 objetos en memoria, colapsando el *heap* de Java con un `OutOfMemoryError`.
+Una página incluye los elementos y sus totales. Primero añade estos imports a `TareaService`: `Page`, `Pageable` y tu `TareaResponse` y `TareaMapper`. Añade el método siguiente al servicio existente, conservando su constructor y sus otros métodos. Aquí `repositorio` es el campo TareaRepository que ya inyectas.
 
-La solución en producción es la **paginación en base de datos**:
-
-En `TareaRepository`:
 ```java
-// Spring Data genera automáticamente LIMIT y OFFSET en PostgreSQL
-Page<Tarea> findByCompletada(boolean completada, Pageable pageable);
+@Transactional(readOnly = true)
+public Page<TareaResponse> listarPaginadas(Pageable pageable) {
+    return repositorio.findAll(pageable).map(TareaMapper::aRespuesta);
+}
 ```
+
+La conversión ocurre dentro de la transacción, donde pueden leerse las relaciones que necesita el DTO. No devuelvas entidades al controlador para convertirlas después de cerrar esa transacción.
+
+En `TareaController` añade los imports `Page`, `PageRequest`, `Sort` de `org.springframework.data.domain`, `HttpStatus` de `org.springframework.http` y `ResponseStatusException` de `org.springframework.web.server`. Añade esta ruta, sin reemplazar el resto del controlador:
 
 ```java
 @GetMapping("/paginadas")
 public Page<TareaResponse> listarPaginadas(
         @RequestParam(defaultValue = "0") int pagina,
         @RequestParam(defaultValue = "10") int tamano) {
-
-    // Creamos la petición de página ordenada por id descendente
-    Pageable pageable = PageRequest.of(pagina, tamano, Sort.by("id").descending());
-
-    Page<Tarea> resultado = servicio.listarPaginadas(pageable);
-
-    // Page.map transforma cada elemento sin perder los metadatos de paginación
-    return resultado.map(TareaMapper::aRespuesta);
+    if (pagina < 0 || tamano < 1 || tamano > 100) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            "La página debe ser >= 0 y el tamaño entre 1 y 100");
+    }
+    return servicio.listarPaginadas(
+        PageRequest.of(pagina, tamano, Sort.by("id").ascending()));
 }
 ```
 
-Al pedir `GET /tareas/paginadas?pagina=0&tamano=10`, Hibernate ejecuta en PostgreSQL:
-```sql
-SELECT ... FROM tareas LIMIT 10 OFFSET 0;
-SELECT count(*) FROM tareas; -- Para calcular el total de páginas
-```
-Solo viajan 10 filas por la red. La memoria de la aplicación permanece ligera y estable.
+1. Prepara al menos tres tareas y pide `/tareas/paginadas?pagina=0&tamano=2`. Debe devolver dos elementos dentro de `content` y el total real en `totalElements`.
+2. Pide la página 1: debe contener los siguientes ids, sin repetir los de la primera. La numeración empieza en cero.
+3. Pide una página sin elementos: espera 200, `content` vacío y los mismos totales. Prueba después tamaño 0 y página -1: espera 400.
+4. Activa los logs SQL y localiza el límite y desplazamiento. Spring Data puede omitir el recuento si deduce el total del contenido; cuando lo necesita ejecuta también COUNT. Guarda peticiones y resultados en tu colección.
 
 #### Paso 5 · Diagnóstico y optimización en vivo
 
@@ -3723,10 +3713,8 @@ En la sesión 23 creamos `GET /proyectos/{id}/detalle` que cargaba el proyecto y
 
 #### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **medid las consultas y verificad la versión desplegada**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Compara el resultado y el número de consultas antes y después de optimizar. Los datos deben ser equivalentes; comprueba también los límites y el orden de las páginas.
+2. Verifica la misma versión persistente en el entorno publicado mediante el flujo de Intermodular. Registra URL y commit, y comprueba con datos de prueba que un reinicio del backend conserva la información.
 
 #### Ampliación si has completado el trabajo
 
@@ -3775,27 +3763,18 @@ List<Tarea> findTodo();
 
 Los logs muestran el comportamiento de las consultas y los datos creados en la URL pública sobreviven a un reinicio del backend.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 26 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-26.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-26.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-26.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 

@@ -25,17 +25,22 @@ priorKnowledge:
   - "Integración con un cliente y CORS básico."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">El mismo producto incorpora identidad, usuarios persistentes y permisos. La matriz de autorización nace de su dominio e incluye tanto roles como acceso a recursos propios y ajenos.</p>
 
 ## Semana 18 · Identidad, sesión y permisos del producto
 
 ## Sesión 35 · Identidad, sesión y permisos del producto
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 18: Planificar permisos y preparar el entorno de seguridad](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-18/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-18).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-HTTP trata cada petición de forma independiente. Autenticar identifica al usuario; autorizar decide qué operaciones puede realizar sobre cada recurso.
+Hasta ahora las operaciones no distinguen quién las solicita. Autenticar es comprobar identidad; autorizar es decidir qué puede hacer esa identidad. Una sesión conserva información del usuario en el servidor y una cookie permite al navegador enviar su identificador. Hoy experimentarás con ese mecanismo y definirás permisos.
 
 #### La amnesia congénita del protocolo HTTP
 
@@ -141,23 +146,15 @@ Definimos los 4 roles del sistema. Son los nombres que usará el resto del curso
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Definid los actores de vuestro producto y una matriz de operaciones, roles y propiedad de los datos.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Observad cookies y sesión en una demostración y convertid la matriz en casos de acceso permitido y rechazado.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Peticiones independientes, cookies y sesión</p>
+1. Abre el cliente integrado y el backend. Reproduce una operación que actualmente puede ejecutar cualquiera.
+2. Enumera perfiles de tu producto y acciones sobre cada recurso. Añade si importa quién es su propietario; esa será la matriz de permisos.
+3. Localiza el controlador de diagnóstico y la pestaña de cookies del navegador. Los ejemplos con HttpSession sirven para entender el mecanismo, no para sustituir después Spring Security por un login casero.
 
 #### Paso 2 · Experimentar con HttpSession en Spring Boot
 
-Vamos a crear un endpoint de prueba para observar el comportamiento nativo de sesiones de Spring Boot y Tomcat:
+Crea `controller/SesionDemoController.java` como experimento separado de tus endpoints de negocio. Abre la URL directamente en el navegador y registra el contador antes de llamar desde otro origen. Después aplica las propiedades de cookie y repite. El POST de cierre se envía con el cliente HTTP o mediante fetch; escribir su URL en la barra envía GET. Este controlador explica HttpSession, no autentica a nadie: se retira del producto cuando incorpores el acceso real.
 
 ```java
 package com.ejemplo.gestor.controller;
@@ -218,7 +215,7 @@ server.servlet.session.timeout=30m
   <p>En desarrollo local mantenemos <code>server.servlet.session.cookie.secure=false</code> porque trabajamos sobre <code>http://localhost</code>. En producción con certificados TLS/HTTPS, debe ser siempre <code>true</code>.</p>
 </div>
 
-#### Paso 3 · Inspección forense en DevTools
+#### Paso 3 · Inspeccionar peticiones, respuestas y cookies en DevTools
 
 Arranca tu aplicación y realiza este experimento en tu navegador abriendo `http://localhost:8080/api/v1/sesion-demo/visita`:
 
@@ -272,7 +269,7 @@ Vuelve a tu página `cliente/index.html` de la UD8:
 
 #### Paso 6 · De la matriz al modelo conceptual en Java
 
-Para representar roles en Spring Boot de forma limpia, creamos un enumerado estándar:
+Reutiliza la entidad Usuario que ya represente a los responsables; conserva id, nombre, relaciones y accesos usados por el proyecto. Añade username, hash de contraseña, rol y activo como evolución del modelo, no reemplazando la clase por un esquema incompleto. El enum Rol va en `model/Rol.java`. Los registros anteriores necesitan una migración antes de imponer nuevas columnas obligatorias: realiza el experimento en la base de desarrollo y prepara sus credenciales con el procedimiento de la sesión 36.
 
 ```java
 package com.ejemplo.gestor.model;
@@ -354,10 +351,8 @@ Diseña la regla de negocio para el control de acceso a nivel de fila (*Row-Leve
 
 #### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **definid la identidad y la matriz de permisos**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Observa cuándo se crea y envía la cookie de sesión y qué ocurre al iniciar otro contexto de navegador sin esa cookie.
+2. Revisa la matriz con otra persona: debe decidir para cada acción si requiere identidad, rol y propiedad, sin dejar casos ambiguos.
 
 #### Ampliación si has completado el trabajo
 
@@ -398,7 +393,7 @@ Elabora una matriz formal de control de accesos completa para el sistema:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita la entrega de la matriz de permisos y especificación de seguridad, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>matriz-permisos.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -421,35 +416,29 @@ Elabora una matriz formal de control de accesos completa para el sistema:
 
 La matriz incluye usuario anónimo, usuario autenticado, recurso propio y recurso ajeno.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 35 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-35.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-35.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-35.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 36 · Contraseñas y Spring Security
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 18: Planificar permisos y preparar el entorno de seguridad](/es/docencia/proyecto-intermodular/ud8-integrar-cliente-y-seguridad/sesion-18/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-18).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Las contraseñas se verifican mediante hashing adaptativo. Spring Security aplica la política antes de llegar a los endpoints.
+Ya has definido quién debería acceder a cada operación. Spring Security aplicará controles de acceso antes del controlador. Un hash de contraseña permite comprobarla sin guardar su texto; BCrypt incorpora sal y un coste de cálculo. Hoy conectarás esas piezas con reglas de acceso explícitas.
 
 #### Cifrado reversible frente a Hash unidireccional
 
@@ -560,35 +549,25 @@ La configuración moderna se realiza mediante un `@Bean` que construye un **`Sec
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Configurad la cadena de seguridad y el codificador de contraseñas en vuestro backend.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Proteged una operación y comprobad el acceso anónimo, credenciales incorrectas y credenciales válidas.
+1. Abre la matriz de permisos, `pom.xml` y la configuración actual. Guarda una petición pública y otra que deberá quedar protegida.
+2. Localiza el modelo de usuario o prepara el indicado en el ejercicio, diferenciándolo de una entidad de negocio que solo represente a una persona.
+3. Prepara contraseñas ficticias de prueba y anota las rutas públicas de registro o acceso previstas. No utilices contraseñas personales en ejemplos o commits.
 
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+#### Paso 2 · Comprobar por qué no se guardan contraseñas en texto plano
 
-#### Paso 1 · Preparar el punto de partida
+Una filtración de una tabla con contraseñas en texto plano permitiría leerlas directamente. Guardar un hash evita esa lectura, pero un atacante todavía puede probar contraseñas candidatas y comparar resultados. BCrypt incorpora una sal aleatoria y un coste de cálculo para dificultar esas pruebas.
 
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+1. Prepara el documento que exportarás como `docs/seguridad.pdf` y dibuja dos recorridos: registro (contraseña → hash → base de datos) y acceso (contraseña recibida + hash guardado → comparación).
+2. Marca qué dato se guarda y qué dato se descarta. El hash también es sensible y no se incluye en las respuestas públicas ni en logs.
+3. En el siguiente paso ejecutarás una prueba con contraseñas ficticias: dos hashes diferentes pueden verificar la misma contraseña. Esa observación explica por qué no se compara `encode(entrada).equals(hashGuardado)`.
 
-<p class="stage">Contraseñas y hashing</p>
-
-#### Paso 2 · La mayor negligencia de un desarrollador backend
-
-En 2012, una famosa red social profesional sufrió una filtración de su base de datos. Los atacantes extrajeron millones de filas. Para sorpresa y escándalo del mundo tecnológico, las contraseñas estaban almacenadas con el algoritmo **SHA-1 sin sal (*salt*)**.
-
-En menos de 24 horas, los investigadores y atacantes habían recuperado el **90 % de las contraseñas originales** utilizando tablas precalculadas.
-
-<div class="rule">
-  <p class="rule-label">La ley inquebrantable del almacenamiento de contraseñas</p>
-  <p><strong>Las contraseñas NUNCA se almacenan en texto plano y NUNCA se cifran de forma reversible.</strong></p>
-  <p>Si cifras una contraseña con una clave simétrica (AES), quien robe la base de datos y encuentre la clave maestra recuperará todas las contraseñas de tus usuarios. Una contraseña debe transformarse mediante una <strong>función hash criptográfica irreversible y lenta</strong>.</p>
-</div>
+Al terminar debes poder explicar qué aporta la sal, qué aporta el coste y por qué sigue siendo necesaria una contraseña difícil de adivinar.
 
 #### Paso 3 · Integrar BCrypt con Spring Security
 
-En Spring Boot definimos el codificador de contraseñas oficial como un `@Bean` reutilizable:
+Antes de copiar estas clases añade una sola vez `spring-boot-starter-security` a `pom.xml` y sincroniza Maven: de ahí proceden PasswordEncoder y BCryptPasswordEncoder. Crea `config/SecurityBeansConfig.java` y después el test bajo `src/test/java`. El test instancia el encoder directamente y no necesita arrancar el backend; ejecútalo antes de configurar HTTP. Al reiniciar la aplicación después de añadir seguridad cambiará el acceso a sus rutas: observarás ese comportamiento en el paso 6.
 
 ```java
 package com.ejemplo.gestor.config;
@@ -679,14 +658,14 @@ Cada incremento duplica exactamente el coste para el atacante. El coste 12 ofrec
 
 #### Paso 5 · Servicio de registro de usuario con hash seguro
 
-Implementa el método de creación de usuario en tu servicio de negocio:
+Reutiliza `UsuarioRepository` y crea o amplía `UsuarioService`, recibiendo el repositorio y PasswordEncoder por constructor. El DTO público de registro contiene username y contraseña, **no un rol que el visitante pueda elegir**. Valida la entrada, rechaza username duplicado, codifica la contraseña y asigna desde el servidor el rol inicial menos privilegiado. Devuelve un DTO sin contraseña ni hash. Comprueba la fila guardada con una cuenta ficticia y reserva la asignación de roles elevados para una operación administrativa protegida.
 
 1. Inyecta `PasswordEncoder` en `UsuarioService`.
-2. Al recibir `RegistroUsuarioRequest(username, passwordPlana, rol)`:
+2. Al recibir `RegistroUsuarioRequest(username, password)`:
    * Valida que la contraseña tenga al menos 8 caracteres y complejidad mínima.
    * Codifica la contraseña antes de asignarla a la entidad:
      `usuario.setPassword(passwordEncoder.encode(request.password()));`
-   * Guarda el usuario en PostgreSQL mediante `UsuarioRepository`.
+   * Asigna `usuario.setRol(Rol.ROLE_DESARROLLADOR)` desde el servidor y guarda el usuario mediante `UsuarioRepository`.
 3. Abre pgAdmin o tu cliente de PostgreSQL y haz un `SELECT * FROM usuarios;`.
 4. Comprueba visualmente que la columna `password` almacena una cadena que empieza por `$2a$12$...` y jamás la clave en texto claro.
 
@@ -694,7 +673,7 @@ Implementa el método de creación de usuario en tu servicio de negocio:
 
 #### Paso 6 · Configurar SecurityConfig con rutas públicas y privadas
 
-Vamos a configurar nuestra primera cadena de seguridad formal. No escribas todavía ninguna clase: el primer paso es **ver el cerrojo funcionando solo**, porque entender qué hace Spring sin que se lo pidas es lo que explica todo lo que viene después.
+La dependencia ya se añadió en el paso 3: comprueba su presencia sin duplicarla. Observa primero la respuesta sin SecurityConfig y después crea esa clase en `config` con una sola cadena. Conserva el bean PasswordEncoder en SecurityBeansConfig; no declares otro con el mismo nombre. Para las pruebas de esta sesión utiliza la identidad temporal indicada y verifica rutas públicas y protegidas por separado. En la sesión 37 la fuente de identidades pasará a PostgreSQL.
 
 1. Abre tu `pom.xml` y añade el `starter` de seguridad dentro de `<dependencies>`, junto a los que ya tienes:
    ```xml
@@ -812,7 +791,7 @@ Los cuatro tropiezos de esta sesión, en orden de frecuencia:
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
-| Sigue apareciendo `Using generated security password` al arrancar | Tu `SecurityConfig` no se está cargando | ¿Está la clase dentro del paquete `com.ejemplo.gestor` o de un subpaquete suyo? Spring solo escanea a partir de donde vive `GestorApplication` |
+| Sigue apareciendo `Using generated security password` al arrancar | Sigue activa la identidad automática de desarrollo | Comprueba las propiedades de usuario y, desde la sesión 37, que se detecta tu UserDetailsService dentro de donde vive `GestorApplication` |
 | `GET /swagger-ui.html` devuelve `401` | La ruta real no es la que has escrito en `requestMatchers` | Mira en la terminal a qué ruta redirige Springdoc; suele hacer falta `/swagger-ui/**` **y** `/v3/api-docs/**` |
 | Con usuario y contraseña correctos sigues recibiendo `401` | El cliente no está enviando la cabecera | Comprueba en la pestaña de cabeceras enviadas que aparece `Authorization: Basic …`; si no está, la pestaña **Auth** no se aplicó a esa petición |
 | La aplicación no arranca: `Cannot configure an AuthenticationProvider` o una regla inalcanzable | Una regla más general tapa a otra más concreta | Reordena: `anyRequest()` siempre al final |
@@ -834,10 +813,8 @@ Todavía no puedes distinguir un `DESARROLLADOR` de un `ADMINISTRADOR` —eso ll
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **configurad credenciales y cadena de seguridad**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Comprueba con PasswordEncoder que una contraseña correcta coincide con su hash y otra no. Verifica que nunca se devuelve el hash en el DTO público.
+2. Prueba ruta pública, ruta protegida sin identidad y acceso permitido. Contrasta el resultado con la matriz y no resuelvas un rechazo abriendo todas las rutas.
 
 #### Ampliación si has completado el trabajo
 
@@ -854,7 +831,7 @@ Spring Security proporciona el método:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe de auditoría criptográfica y políticas de contraseñas, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-hashing.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -901,37 +878,31 @@ Investiga la interfaz `AuthenticationEntryPoint`:
 
 No se almacenan ni devuelven contraseñas en claro y los rechazos se distinguen de los errores de negocio.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 36 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-36.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-36.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-36.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 19 · Usuarios persistentes y roles
 
 ## Sesión 37 · Usuarios persistentes y roles
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 19: Comprobar roles y propiedad en el proceso de revisión](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-19/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-19).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-La identidad debe proceder de datos persistentes y los roles deben corresponder a responsabilidades del dominio.
+La configuración de seguridad ya distingue accesos, pero necesita cargar usuarios reales de tu base de datos. UserDetailsService es el punto donde Spring Security obtiene identidad, hash y permisos. Hoy conectarás esa consulta con el usuario persistente.
 
 #### Cómo busca identidades Spring Security: UserDetailsService
 
@@ -982,23 +953,15 @@ El perfil público utiliza un DTO que excluye el hash. Los roles proceden de dat
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Integrád los usuarios de la base de datos con la autenticación y asignad los roles de vuestra matriz.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Preparad usuarios de prueba con permisos distintos y comprobad que una petición no puede autoconcederse privilegios.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Usuarios en base de datos</p>
+1. Abre la entidad de usuario, su repositorio, el PasswordEncoder y SecurityConfig. Revisa los nombres exactos de roles que espera tu configuración.
+2. Prepara usuarios ficticios con hashes generados por el encoder de tu aplicación. Comprueba que el entorno de pruebas apunta a la base de datos correcta.
+3. Localiza dónde se cargaban hasta ahora los usuarios de prueba para sustituirlo por la consulta persistente, sin mantener dos fuentes contradictorias.
 
 #### Paso 2 · De la entidad JPA al CustomUserDetailsService
 
-Completamos la entidad `Usuario` que diseñamos en la sesión 35:
+Modifica Usuario conservando sus campos y relaciones del trimestre anterior; añade los métodos de UserDetails sin borrar sus getters y setters de negocio. Añade `findByUsername` a su repositorio existente. Crea después `service/CustomUserDetailsService.java` y comprueba que es la única implementación activa de UserDetailsService. Prepara hashes con el test proporcionado e inserta o actualiza únicamente los usuarios ficticios de la práctica. No borres toda la tabla para evitar duplicados: podría estar referenciada por tareas y proyectos.
 
 ```java
 package com.ejemplo.gestor.model;
@@ -1155,7 +1118,7 @@ spring.jpa.defer-datasource-initialization=true
 
 #### Paso 3 · Autenticación real contra PostgreSQL
 
-Elimina del archivo `application.properties` las tres propiedades fijas `spring.security.user.name`, `.password` y `.roles` de la sesión 36: mientras sigan ahí, Spring Boot registra ese usuario en memoria y no sabrás si estás autenticándote contra PostgreSQL o contra el archivo de texto.
+Elimina del archivo `application.properties` las tres propiedades fijas `spring.security.user.name`, `.password` y `.roles` de la sesión 36: así la configuración refleja el mecanismo actual. Al declarar tu propio UserDetailsService, la identidad automática de Boot deja de aplicarse; quitar estas propiedades evita confusión.
 
 Reinicia Spring Boot y prueba en Bruno:
 1. **Login exitoso con usuario de base de datos:**
@@ -1177,7 +1140,7 @@ Reinicia Spring Boot y prueba en Bruno:
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
 | Al arrancar: `relation "usuarios" does not exist` | `data.sql` corre antes que Hibernate | Falta `spring.jpa.defer-datasource-initialization=true` |
-| Al reiniciar: `duplicate key value violates unique constraint` | `data.sql` se ejecuta en cada arranque | Añade `DELETE FROM usuarios;` como primera línea del archivo |
+| Al reiniciar: `duplicate key value violates unique constraint` | `data.sql` se ejecuta en cada arranque | Prepara solo las cuentas que falten con INSERT … ON CONFLICT (username) DO NOTHING; conserva los usuarios existentes |
 | `401` con el usuario y la contraseña correctos | El hash de `data.sql` no corresponde a esa contraseña | Cuenta los caracteres: deben ser 60. Regenéralo con el test del paso 4 |
 | `Encoded password does not look like BCrypt` en el log | La columna guarda la contraseña en claro | Estás insertando `'Password123!'` en vez de su hash |
 | `401` siempre, y en los logs no aparece ningún `SELECT ... FROM usuarios` | Tu `CustomUserDetailsService` no se está usando | ¿Tiene `@Service`? ¿Hay algún otro bean `UserDetailsService` (por ejemplo, el de `application.properties`) todavía activo? |
@@ -1185,7 +1148,7 @@ Reinicia Spring Boot y prueba en Bruno:
 
 #### Paso 5 · Endpoint de perfil del usuario autenticado (/me)
 
-Implementa un endpoint que permita al usuario conocer sus propios datos a partir de su sesión activa:
+Crea `UsuarioResponse` con id, username y rol si todavía no existe. En `UsuarioController`, establece explícitamente el prefijo de clase `/api/v1/usuarios` y añade el método `/me`: la URL completa será `/api/v1/usuarios/me`. Importa AuthenticationPrincipal y el tipo Usuario. El método no recibe un id del cliente: construye el DTO a partir de la identidad autenticada. Compruébalo con dos cuentas y observa que cambia la respuesta al cambiar las credenciales.
 
 1. Crea en `UsuarioController` el método:
    ```java
@@ -1211,10 +1174,8 @@ Implementa un endpoint que permita al usuario conocer sus propios datos a partir
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **autenticad usuarios de postgresql**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Autentica un usuario guardado, rechaza una contraseña incorrecta y comprueba que una cuenta inexistente tampoco accede.
+2. Consulta `/me`: debe representar al usuario autenticado sin exponer su contraseña ni su hash. Reinicia y confirma que las cuentas siguen disponibles.
 
 #### Ampliación si has completado el trabajo
 
@@ -1251,35 +1212,29 @@ Investiga cómo Spring Security mitiga este vector mediante **contraseñas simul
 
 Los usuarios sobreviven al reinicio y las operaciones responden de acuerdo con su rol.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 37 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-37.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-37.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-37.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 38 · Permisos sobre cada recurso
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 19: Comprobar roles y propiedad en el proceso de revisión](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-19/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-19).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Un rol general no basta para proteger datos ajenos. El servidor comprueba también propiedad o relación con el recurso solicitado.
+El usuario ya se autentica contra PostgreSQL. Hoy aplicarás permisos sobre recursos concretos. RBAC significa permisos basados en roles; una comprobación de propiedad añade la relación entre el usuario y el registro solicitado. Conocer un id no concede acceso a ese recurso.
 
 #### Roles globales frente a Permisos atómicos
 
@@ -1353,23 +1308,27 @@ La anotación `@WithMockUser`:
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Aplicad la matriz a listados, detalles y escrituras y evitad que cambiar un identificador permita acceder a otro usuario.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Escribid pruebas con dos usuarios y un administrador para los casos permitidos y denegados.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Roles y permisos</p>
+1. Abre la matriz de permisos, los métodos del servicio y SecurityConfig. Prepara dos usuarios del mismo rol y un recurso que pertenezca solo a uno.
+2. Añade una cuenta con otro rol para contrastar permisos de función. Guarda peticiones separadas por identidad para evitar reutilizar credenciales sin darte cuenta.
+3. Localiza las pruebas de controlador y la dependencia de test de seguridad que se añade en el taller.
 
 #### Paso 2 · Implementar la Matriz RBAC en la aplicación
 
-Añadimos la anotación `@EnableMethodSecurity` en nuestra clase de configuración:
+Si ManejadorDeErrores conserva un método para Exception, añade otro para denegaciones de Spring Security, importando `org.springframework.security.access.AccessDeniedException`. Así un permiso rechazado dentro del controlador mantiene el estado 403.
+
+```java
+@ExceptionHandler(AccessDeniedException.class)
+public ProblemDetail permisoDenegado(AccessDeniedException ex) {
+    return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN,
+        "No tienes permiso para realizar esta operación");
+}
+```
+
+Las peticiones rechazadas antes del controlador se responden desde la cadena de seguridad; las configuraremos allí al integrar JWT.
+
+Añade `@EnableMethodSecurity` a la SecurityConfig existente e incorpora las reglas conservando las rutas públicas ya acordadas. En los controladores añade `@PreAuthorize` sobre los métodos existentes, sin sustituir sus cuerpos por los puntos suspensivos del esquema. Crea después `TareaSecurityService` en un paquete bajo el principal; su nombre de bean debe coincidir con la expresión. En TareaController, que ya tiene el prefijo `/api/v1/tareas`, la anotación de modificación utiliza `/{id}`, no `/tareas/{id}`.
 
 ```java
 package com.ejemplo.gestor.config;
@@ -1457,7 +1416,7 @@ Podemos condicionar la edición de una tarea a que el usuario sea el autor de la
 
 ```java
     // El usuario solo puede editar la tarea si es Administrador O si él mismo es el asignado
-    @PutMapping("/tareas/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR') or @tareaSecurityService.esAsignado(#id, authentication.name)")
     public ResponseEntity<TareaResponse> actualizarTarea(
             @PathVariable Long id,
@@ -1531,7 +1490,7 @@ Hasta ahora la matriz de la sesión 35 era un documento. Aquí se convierte en c
 
 #### Paso 6 · Batería de tests de seguridad para ProyectoController
 
-Vamos a crear la suite de pruebas que valida los límites de acceso:
+Añade `spring-security-test` con scope test una sola vez. Crea la clase de pruebas, importa SecurityConfig y declara mocks para **todos** los colaboradores de su controlador. Copia los métodos de test dentro de esa clase. `@WithMockUser` prepara la identidad; no crea una fila de usuario en PostgreSQL. Cuando pruebes reglas de propiedad, prepara además la respuesta del colaborador que comprueba esa propiedad y verifica que un usuario distinto obtiene el rechazo esperado.
 
 `@WithMockUser` no viene con el `starter` de test. Añade a tu `pom.xml`:
 
@@ -1668,10 +1627,8 @@ Aplica el mismo patrón para proteger la creación y modificación de tareas:
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **proteged recursos y comprobad los rechazos**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Prueba una acción como propietario y como otro usuario del mismo rol. Comprueba tanto lectura como modificación y que los rechazos no alteran datos.
+2. Ejecuta los tests de identidad ausente, rol insuficiente y acceso permitido; sus expectativas deben reflejar tu matriz y la política de errores documentada.
 
 #### Ampliación si has completado el trabajo
 
@@ -1688,7 +1645,7 @@ Implementa un `AccessDeniedHandler` personalizado:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe técnico sobre la jerarquía de roles y auditoría de accesos denegados, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-roles-seguridad.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -1735,37 +1692,31 @@ En el trabajo anterior definimos que un desarrollador solo puede editar las tare
 
 Los tests demuestran que un usuario no lee ni modifica recursos ajenos fuera de la política del producto.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 38 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-38.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-38.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-38.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 20 · Sesión y token: integrar JWT
 
 ## Sesión 39 · Sesión y token: integrar JWT
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 20: Publicar el acceso con JWT sin perder permisos](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-20/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-20).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una sesión y un token organizan de forma diferente la continuidad de la identidad. Un JWT debe verificarse y caducar; su contenido no sustituye la autorización.
+Los permisos ya funcionan con usuarios conocidos. Hoy compararás la sesión con un token firmado. JWT es un formato de token con datos y firma; la firma permite detectar alteraciones, pero no oculta su contenido. Integrarás emisión y validación manteniendo las mismas reglas de autorización.
 
 #### El gran debate arquitectónico: ¿Sesión o Token?
 
@@ -1811,23 +1762,15 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbCI6IlJPTEVfQURNSU5JU1RSQURPUiIsImV
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Comparad ambas estrategias e implementad la emisión y validación de JWT previstas para el proyecto.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Probad firma incorrecta, token ausente y token caducado; documentad cómo lo utiliza el cliente.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Sesión frente a token: JWT</p>
+1. Abre la configuración de seguridad, el acceso del cliente y los tests de permisos. Anota cómo se transporta actualmente la identidad.
+2. Localiza `pom.xml` y la configuración externa para la clave y la caducidad del token. Utiliza valores de desarrollo fuera del repositorio y una cuenta ficticia.
+3. Guarda el recorrido de autenticación actual para compararlo con el del token. Señala qué rutas emitirán tokens y cuáles exigirán validarlos.
 
 #### Paso 2 · Generación y validación de JWT en Spring Boot
 
-Para trabajar con JWT en Java utilizamos la librería estándar de la industria `jjwt`:
+Trabaja en este orden: dependencias JJWT en `pom.xml`, configuración de la clave externa, `security/JwtService.java`, `security/JwtAuthenticationFilter.java` y modificación de la cadena existente. No pegues varias SecurityConfig de sesiones distintas: al final debe haber una sola configuración efectiva para estas rutas. El filtro obtiene la identidad del token y carga el usuario persistente; conserva las reglas de rol y propiedad. Antes de probarlo necesitas el endpoint de login del paso 3, que produce el token con una autenticación real.
 
 ```xml
 <dependency>
@@ -1870,7 +1813,7 @@ import java.util.Map;
 public class JwtService {
 
     // Clave secreta de al menos 256 bits (32 caracteres) externalizada
-    @Value("${app.security.jwt.secret:clave-secreta-super-larga-y-segura-de-al-menos-256-bits-2026!}")
+    @Value("${app.security.jwt.secret}")
     private String jwtSecret;
 
     @Value("${app.security.jwt.expiration-minutes:60}")
@@ -1899,7 +1842,10 @@ public class JwtService {
 
     public boolean esTokenValido(String token, UserDetails userDetails) {
         final String username = extraerUsername(token);
-        return (username.equals(userDetails.getUsername()) && !estaExpirado(token));
+        return username.equals(userDetails.getUsername())
+            && userDetails.isEnabled() && userDetails.isAccountNonLocked()
+            && userDetails.isAccountNonExpired() && userDetails.isCredentialsNonExpired()
+            && !estaExpirado(token);
     }
 
     private boolean estaExpirado(String token) {
@@ -1959,7 +1905,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        final String jwt = authHeader.substring(7); // Extraemos la cadena tras "Bearer "
+        final String jwt = authHeader.substring(7).trim(); // Extraemos la cadena tras "Bearer "
 
         // 2. Un token caducado o manipulado hace que jjwt lance una excepción.
         //    Si la dejásemos salir del filtro, el cliente recibiría un 500:
@@ -1968,13 +1914,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String username;
         try {
             username = jwtService.extraerUsername(jwt);
-        } catch (JwtException ex) {
+        } catch (JwtException | IllegalArgumentException ex) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // 3. Si el token tiene usuario y no está autenticado previamente en el contexto
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            try {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             if (jwtService.esTokenValido(jwt, userDetails)) {
@@ -1985,6 +1932,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // 4. Establecemos la identidad verificada en el contexto de la petición
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+            } catch (org.springframework.security.core.userdetails.UsernameNotFoundException
+                     | JwtException | IllegalArgumentException ex) {
+                SecurityContextHolder.clearContext();
             }
         }
 
@@ -2011,52 +1962,149 @@ En `SecurityConfig`, registramos el filtro antes del filtro de usuario/contrase�
     }
 ```
 
-#### Paso 3 · Inspección de token en jwt.io y Bruno
+#### Paso 3 · Implementar el login y comprobar el token
 
-1. **Crear endpoint de login:** Un endpoint `POST /api/v1/auth/login` que recibe `username` y `password`, valida contra `AuthenticationManager` y responde:
-   ```json
-   {
-     "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIs...",
-     "tipo": "Bearer",
-     "expiraEnMinutos": 60
-   }
-   ```
-2. **Inspeccionar en jwt.io:**
-   * Copia el token devuelto y pégalo en la herramienta web [jwt.io](https://jwt.io).
-   * Comprueba cómo el panel derecho decodifica en tiempo real el Header y el Payload mostrando tu `sub: "admin"`.
-3. **Consumir endpoint protegido con Bearer Token:**
-   * Abre la petición `GET /api/v1/proyectos`.
-   * En su pestaña **Auth**, selecciona **Bearer Token** y pega el JWT.
-   * Envía la petición y comprueba que responde `200 OK`.
-4. **Prueba de manipulación de firma:**
-   * Modifica una sola letra en el centro del token y vuelve a enviar.
-   * **Resultado:** Código `401 Unauthorized`. Spring Security detecta que la firma no coincide y rechaza la petición.
-5. **Prueba de token caducado:**
-   * Baja temporalmente `app.security.jwt.expiration-minutes` a `1`, reinicia, pide un token nuevo y espera poco más de un minuto antes de usarlo.
-   * **Resultado:** Código `401 Unauthorized`, no `500`. Es exactamente lo que compra el `catch (JwtException ex)` del filtro: sin él, la excepción de jjwt saldría del filtro y el cliente vería un error del servidor en lugar de «tu sesión ha caducado».
-   * Devuelve la propiedad a `60` cuando termines.
+**Configuración al ejecutar pruebas.** La clave también es necesaria para los tests que arrancan el contexto completo. Ejecuta Maven desde una terminal con JWT_SECRET configurada, o proporciona una clave ficticia exclusiva del perfil test. Mantén las credenciales reales fuera del repositorio. Si aparece «Could not resolve placeholder», revisa primero qué entorno está usando ese proceso.
+
+Primero construiremos el acceso que falta entre la contraseña y el token. Un **AuthenticationManager** comprueba las credenciales usando el UserDetailsService y el PasswordEncoder de las sesiones anteriores. JwtService firma el token solo después de esa comprobación.
+
+1. Añade a `application.properties` las dos propiedades siguientes. La primera lee una variable del entorno; la clave no se escribe en el fichero ni se sube a GitHub.
+
+```properties
+app.security.jwt.secret=${JWT_SECRET}
+app.security.jwt.expiration-minutes=60
+```
+
+En una terminal PowerShell genera una clave aleatoria para desarrollo y arranca el backend desde **esa misma terminal**. El IDE no hereda variables de una terminal que ya estaba abierta: si arrancas desde el IDE, configura allí JWT_SECRET con un valor de desarrollo propio.
+
+```powershell
+$jwtBytes = New-Object byte[] 32
+$jwtRandom = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$jwtRandom.GetBytes($jwtBytes)
+$env:JWT_SECRET = [Convert]::ToBase64String($jwtBytes)
+$jwtRandom.Dispose()
+.\mvnw.cmd spring-boot:run
+```
+
+El JwtService del paso anterior usa los bytes UTF-8 de esta cadena aleatoria como clave. Mantén el mismo valor durante las pruebas; cambiarlo invalida las firmas de los tokens anteriores.
+
+2. Crea `config/AuthenticationConfig.java`. Este bean permite que el controlador de acceso utilice la configuración de autenticación ya existente. El segundo bean evita registrar el filtro JWT dos veces: debe ejecutarse dentro de la cadena de seguridad, en la posición del paso anterior.
+
+```java
+package com.ejemplo.gestor.config;
+
+import com.ejemplo.gestor.security.JwtAuthenticationFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
+@Configuration
+public class AuthenticationConfig {
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public FilterRegistrationBean<JwtAuthenticationFilter> jwtSoloEnSecurity(
+            JwtAuthenticationFilter filtro) {
+        var registro = new FilterRegistrationBean<>(filtro);
+        registro.setEnabled(false);
+        return registro;
+    }
+}
+```
+
+3. Crea `controller/AuthController.java` con este contenido. Los dos records pequeños se declaran dentro del controlador para que puedas copiar el archivo completo; si ya tienes DTO de acceso, reutilízalos en lugar de mantener dos contratos.
+
+```java
+package com.ejemplo.gestor.controller;
+
+import com.ejemplo.gestor.security.JwtService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/v1/auth")
+public class AuthController {
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final long minutos;
+
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService,
+            @Value("${app.security.jwt.expiration-minutes:60}") long minutos) {
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.minutos = minutos;
+    }
+
+    public record LoginRequest(@NotBlank String username, @NotBlank String password) {}
+    public record LoginResponse(String token, String tipo, long expiraEnMinutos) {}
+
+    @PostMapping("/login")
+    public LoginResponse login(@Valid @RequestBody LoginRequest entrada) {
+        var autenticacion = authenticationManager.authenticate(
+            UsernamePasswordAuthenticationToken.unauthenticated(
+                entrada.username(), entrada.password()));
+        var usuario = (UserDetails) autenticacion.getPrincipal();
+        return new LoginResponse(jwtService.generarToken(usuario, Map.of()), "Bearer", minutos);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ProblemDetail> accesoRechazado(AuthenticationException ex) {
+        var problema = ProblemDetail.forStatusAndDetail(
+            HttpStatus.UNAUTHORIZED, "No se ha podido iniciar sesión con esas credenciales");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(problema);
+    }
+}
+```
+
+4. En la **misma cadena** SecurityFilterChain del paso 2, conserva los permisos de la sesión 38 y configura la respuesta de acceso rechazado antes de `http.build()`. La ruta `/api/v1/auth/login` debe estar en `permitAll()`. Importa `org.springframework.http.HttpStatus`.
+
+```java
+http.exceptionHandling(errores -> errores
+    .authenticationEntryPoint((peticion, respuesta, error) ->
+        respuesta.sendError(HttpStatus.UNAUTHORIZED.value()))
+    .accessDeniedHandler((peticion, respuesta, error) ->
+        respuesta.sendError(HttpStatus.FORBIDDEN.value())));
+```
+
+Esta configuración distingue la falta de identidad (401) de una identidad sin permisos (403). Consérvala al integrar CORS en la sesión 40.
+
+5. En Bruno prepara `POST /api/v1/auth/login`, sin autenticación, con body JSON `{"username":"tu-usuario-de-prueba","password":"su-contraseña-ficticia"}`. Utiliza una cuenta persistida y activa de la sesión 37. Espera 200 y los campos `token`, `tipo` y `expiraEnMinutos`. Repite con contraseña incorrecta (401) y campo vacío (400). Ninguna respuesta debe incluir el hash.
+6. Guarda el token válido como variable **local** de la colección. En una petición protegida añade `Authorization: Bearer {{token}}`. Comprueba acceso permitido y después repite como usuario con rol insuficiente. Un token válido no concede permisos adicionales.
+7. Para observar el contenido del token de prueba, abre la consola del navegador y ejecuta el bloque siguiente. Solo decodifica: la validación de la firma corresponde al servidor. No publiques el token en la documentación.
+
+```javascript
+const tokenDePrueba = prompt('Token de la cuenta ficticia de desarrollo');
+const parte = tokenDePrueba.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+const bytes = Uint8Array.from(atob(parte.padEnd(Math.ceil(parte.length / 4) * 4, '=')), c => c.charCodeAt(0));
+JSON.parse(new TextDecoder().decode(bytes));
+```
+
+Localiza `sub` (identidad), `iat` (emisión) y `exp` (caducidad). Modifica un carácter del token y envíalo de nuevo al backend: debe rechazarse con 401. Guarda en el registro de la sesión los estados observados, sin credenciales ni tokens.
 
 #### Paso 4 · Guardar y usar el token en el cliente de la UD8
 
-Conecta el cliente web `cliente/index.html`:
-1. Añade un formulario de login con usuario y contraseña.
-2. Al pulsar entrar, lanza `POST /api/v1/auth/login`.
-3. Al recibir el token, guárdalo en memoria o en `sessionStorage.setItem('jwt', data.token)`.
-4. En las peticiones posteriores de listar o crear proyectos, inyecta la cabecera:
-   ```javascript
-   headers: {
-     'Content-Type': 'application/json',
-     'Authorization': 'Bearer ' + sessionStorage.getItem('jwt')
-   }
-   ```
-5. Comprueba que el navegador puede crear y listar recursos sin usar cookies de sesión.
+Añade el formulario de acceso al cliente y, en su evento submit, envía username y contraseña al login. Comprueba el estado antes de leer el token y guarda solo una respuesta correcta. Centraliza las peticiones protegidas en una función que añada Authorization cuando exista token; no envíes `Bearer null`. Al recibir 401, muestra que debe iniciar sesión otra vez; un 403 indica que la identidad no tiene permiso. El botón de salida elimina el token del cliente, pero no invalida por sí mismo una copia que conserve otro cliente.
 
 #### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **integrad y verificad los tokens**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Obtén un token válido y úsalo en una ruta protegida. Prueba después uno alterado, otro caducado y la ausencia de token; ninguno debe dar acceso.
+2. Repite los casos de roles y propiedad. Cambiar el mecanismo de autenticación no debe ampliar los permisos de ningún usuario.
 
 #### Ampliación si has completado el trabajo
 
@@ -2074,7 +2122,7 @@ Investiga las tres estrategias de la industria para mitigar este problema:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe comparativo entre arquitectura de sesión y arquitectura de tokens, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-jwt-sesion.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -2097,35 +2145,29 @@ Investiga las tres estrategias de la industria para mitigar este problema:
 
 La API rechaza tokens inválidos y conserva las comprobaciones de permisos sobre cada recurso.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 39 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-39.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-39.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-39.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 40 · CSRF, CORS con credenciales y cierre seguro
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 20: Publicar el acceso con JWT sin perder permisos](/es/docencia/proyecto-intermodular/ud9-verificar-y-publicar-los-permisos/sesion-20/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-20).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-La protección CSRF depende de cómo viajan las credenciales. CORS y autorización resuelven problemas diferentes y deben configurarse de forma coherente.
+La identidad y los permisos ya están integrados. Hoy revisarás su comportamiento real en el navegador. CSRF es una petición no deseada que aprovecha credenciales enviadas automáticamente; CORS regula lectura entre orígenes. Son problemas distintos y dependen de cómo transportes las credenciales.
 
 #### Anatomía de un ataque CSRF (Cross-Site Request Forgery)
 
@@ -2172,19 +2214,11 @@ Referencia: [protección CSRF de Spring Security](https://docs.spring.io/spring-
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Revisad almacenamiento y transporte de credenciales, política CSRF y orígenes del cliente.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Conectad el navegador al backend protegido y ejecutad la matriz de accesos desde el cliente HTTP y las pruebas.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">CSRF, CORS con credenciales y errores frecuentes</p>
+1. Abre la configuración final de seguridad y el código del cliente. Identifica si la autenticación usa cookie de sesión, cookie con token o Authorization explícita.
+2. Ejecuta acceso, operación autorizada y cierre de sesión o retirada del token. Observa cabeceras, cookies y peticiones OPTIONS en Red.
+3. Prepara un caso sin identidad, uno sin permiso y otro de origen no permitido. Añade el caso de protección CSRF que corresponda al mecanismo elegido.
 
 #### Paso 2 · Tabla de diagnóstico de los 4 errores clásicos de Spring Security
 
@@ -2199,7 +2233,7 @@ Durante la integración entre cliente web y backend protegido se presentan siemp
 
 #### Paso 3 · Configuración final unificada de seguridad y CORS
 
-En Spring Security la configuración de CORS debe integrarse dentro de la propia `SecurityFilterChain` para que los filtros de seguridad no bloqueen las peticiones previas `OPTIONS`:
+Integra el bloque en la SecurityConfig existente, conservando los beans del encoder y AuthenticationManager que necesita el login. Revisa el orden: CORS, política de sesión, rutas públicas, rutas protegidas y filtro JWT. Copia a allowedOrigins el origen real del cliente. Retira la configuración CORS duplicada de WebConfig si la sustituyes por CorsConfigurationSource; mantén una única definición que puedas explicar y probar.
 
 ```java
 package com.ejemplo.gestor.config;
@@ -2248,6 +2282,18 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
 
+            .exceptionHandling(errores -> errores
+                .authenticationEntryPoint((peticion, respuesta, error) -> {
+                    respuesta.setStatus(401);
+                    respuesta.setContentType("application/problem+json");
+                    respuesta.getWriter().write("{\"title\":\"Unauthorized\",\"status\":401,\"detail\":\"Inicia sesión\"}");
+                })
+                .accessDeniedHandler((peticion, respuesta, error) -> {
+                    respuesta.setStatus(403);
+                    respuesta.setContentType("application/problem+json");
+                    respuesta.getWriter().write("{\"title\":\"Forbidden\",\"status\":403,\"detail\":\"Permiso insuficiente\"}");
+                }))
+
             // 5. Inyectamos nuestro filtro de JWT antes del filtro de usuario/contraseña
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -2274,7 +2320,7 @@ public class SecurityConfig {
 
 #### Paso 4 · El flujo de integración completo de cliente a servidor
 
-Realiza la prueba final de integración entre tu cliente web de la UD8 y la API blindada de la UD9:
+Prepara dos cuentas con permisos distintos y abre Red antes del primer envío. Ejecuta lectura pública, escritura sin token, login, escritura permitida y escritura denegada a la otra cuenta. En cada caso comprueba primero si hubo respuesta HTTP o bloqueo CORS y después el estado. Si pruebas expiración, configura una duración corta en desarrollo, emite un token nuevo y espera a que venza; cambiar la configuración no modifica los tokens ya emitidos.
 
 1. **Abre `cliente/index.html` en `http://localhost:5500`:**
    * La lista de proyectos públicos se carga de inmediato sin pedir credenciales (`200 OK`).
@@ -2324,10 +2370,8 @@ Recorre esta lista sobre tu propio proyecto. Cada punto que no puedas marcar es 
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **comprobad csrf, cors y permisos de extremo a extremo**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Distingue cada fallo por su petición y respuesta, y comprueba que corregir CORS no elimina controles de identidad o permisos.
+2. Repite el flujo completo desde el navegador y documenta cómo se envían las credenciales y qué protección CSRF requiere esa decisión.
 
 #### Ampliación si has completado el trabajo
 
@@ -2342,7 +2386,7 @@ Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno 
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe de auditoría de seguridad perimetral, CORS y prevención de ataques CSRF, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>auditoria-seguridad.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -2365,27 +2409,18 @@ Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno 
 
 El cliente autorizado funciona y quedan probados los rechazos por identidad, permisos y configuración web.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 40 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-40.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-40.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-40.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 

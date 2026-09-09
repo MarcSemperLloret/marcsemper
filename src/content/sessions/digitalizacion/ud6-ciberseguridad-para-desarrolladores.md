@@ -6,209 +6,95 @@ order: 6
 lang: "es"
 summary: "¿Publicarías esta aplicación? Aprende a detectar, explicar y corregir vulnerabilidades comunes con criterio propio y con la IA como apoyo de revisión."
 duration: "5 horas · 5 sesiones"
-modality: "Individual o parejas"
-deliverable: "Auditoría de seguridad y corrección de una pequeña aplicación web."
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Auditoría y correcciones de seguridad. Una actividad acumulativa por unidad, con evidencias y aportación individual."
 outcomes:
   - "Reconocer los cinco errores de seguridad que más aparecen en una aplicación web."
   - "Explicar por qué algo es una vulnerabilidad, con evidencia y no de memoria."
   - "Auditar un proyecto con ayuda de la IA sin delegarle la decisión final."
   - "Corregir un fallo y verificar que la corrección no rompe la funcionalidad."
 requirements:
-  - "Visual Studio Code con GitHub Copilot activado."
-  - "Git y una cuenta de GitHub."
-  - "El proyecto que entrega el profesor al empezar la sesión 3."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
 priorKnowledge:
-  - "Clonar un repositorio y leer un diff."
-  - "Dirigir a un agente con contexto y criterios de aceptación (UD4)."
-  - "Publicar una aplicación con firewall y HTTPS (UD3)."
-date: "2026-08-29"
+  - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
+date: "2026-09-09"
 ---
 
-<p><strong>Herramientas:</strong> Visual Studio Code, GitHub Copilot y Git.</p>
+<p class="lead">Auditoría y correcciones de seguridad. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
+
+## Cómo trabajar esta unidad
+
+Son 5 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Auditoría y correcciones de seguridad.** Guarda el trabajo en `digitalizacion/ud6/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **5/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+| Criterio                                            | Puntos |
+| --------------------------------------------------- | -----: |
+| Identificación y comprensión de activos y permisos  |      1 |
+| Detección de vulnerabilidades                       |      2 |
+| **Comprensión de por qué son vulnerabilidades**     |  **2** |
+| Calidad de las correcciones                         |      2 |
+| Uso crítico de IA durante la auditoría              |    1,5 |
+| Verificación de los cambios                         |      1 |
+| Claridad del informe                                |    0,5 |
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · ¿Publicarías esta aplicación?
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué significa pensar en seguridad en el ciclo de vida del software (Security by Design) y por qué los tests habituales no bastan.</li>
-    <li><strong>2. Haz:</strong> Inspecciona una aplicación aparentemente funcional y hazte la pregunta clave: <em>¿Qué podría salir mal aquí?</em></li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Auditoría y correcciones de seguridad», sesión 1 de 5. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El reto
+### Se explica
 
-Imaginad que acabáis de entrar a trabajar como desarrolladores.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Un compañero os entrega una aplicación y os dice:
+Un **activo** es algo que debemos proteger, como pedidos o datos de usuarios. Una **amenaza** es una posible causa de daño; una **vulnerabilidad**, una debilidad que lo permite. El riesgo combina qué podría ocurrir y sus consecuencias. Antes de buscar líneas sospechosas necesitamos saber qué debería permitir la aplicación.
 
-> La funcionalidad está terminada. Solo falta subirla a producción.
+Autenticarse es demostrar quién eres; estar autorizado es tener permiso para una acción o un recurso. Un usuario identificado no debe consultar automáticamente los pedidos de todos. El laboratorio de esta unidad es independiente de Spring y contiene únicamente datos ficticios.
 
-La aplicación:
+### Se trabaja
 
-* arranca;
-* permite iniciar sesión;
-* consulta la base de datos;
-* tiene una API;
-* parece funcionar correctamente.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-Entonces:
+1. Descarga el [laboratorio de seguridad](/teaching/downloads/digitalizacion-seguridad.zip), extráelo y abre su guia-seguridad.pdf. Lee cómo arrancar `app.py`; funciona solo en la dirección local de tu equipo y no se publica en la nube.
+2. Ejecuta `python app.py` y abre la dirección indicada. Lee los usuarios ficticios y los casos de prueba. La identidad simplificada del laboratorio sirve para estudiar permisos; no es un sistema de login de producción.
+3. Crea una tabla con activos, persona que los utiliza y posible consecuencia de una exposición. Incluye pedidos, contactos y configuración de la aplicación.
+4. Completa la matriz anónimo/cliente/administrador para consultar pedido, consultar configuración y buscar productos. Separa «puede acceder» de «puede acceder a este recurso».
+5. Ejecuta un caso permitido siguiendo el guia-seguridad.pdf y registra petición y respuesta. Conserva la matriz como comportamiento esperado para las siguientes sesiones.
 
-> ¿Está lista para producción?
+### Cierre
 
-No necesariamente. Un programa puede recorrer todo el camino habitual
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-<figure class="diagram">
-  <figcaption>Lo que solemos comprobar</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Compilar</li>
-    <li>Funcionar</li>
-    <li>Pasar tests</li>
-  </ol>
-</figure>
+El laboratorio arranca y la matriz indica qué debe ocurrir. No necesitas el backend de Servidor ni una cuenta real de usuario.
 
-y aun así ser:
-
-<p class="term">Inseguro</p>
-
-En esta unidad aprenderemos a detectar los errores de seguridad que un desarrollador debería reconocer antes de publicar una aplicación.
-
----
-
-### La seguridad no se añade al final
-
-Un enfoque incorrecto sería dejarla para el último paso:
-
-<figure class="diagram">
-  <figcaption>Antes · la seguridad como añadido</figcaption>
-  <ol class="flow flow--before">
-    <li>Diseñar</li>
-    <li>Programar</li>
-    <li>Publicar</li>
-    <li>Añadir seguridad</li>
-  </ol>
-</figure>
-
-La seguridad debería formar parte del desarrollo desde el principio:
-
-<figure class="diagram">
-  <figcaption>Después · la seguridad atraviesa todo el proceso</figcaption>
-  <ol class="flow flow--after">
-    <li>Diseño</li>
-    <li>Desarrollo</li>
-    <li>Testing</li>
-    <li>Despliegue</li>
-    <li>Mantenimiento</li>
-  </ol>
-</figure>
-
-Esta idea suele denominarse:
-
-<p class="term">Secure by Design</p>
-
-La aplicación debe diseñarse preguntándose desde el primer día:
-
-> ¿Qué podría salir mal?
-
----
-
-### Pensar como desarrollador... y un poco como atacante
-
-Cuando programamos solemos pensar:
-
-> ¿Cómo conseguirá el usuario hacer lo que queremos?
-
-<figure class="diagram">
-  <figcaption>El camino previsto</figcaption>
-  <ol class="flow">
-    <li>Usuario introduce contraseña</li>
-    <li>Login</li>
-    <li>Accede a su perfil</li>
-  </ol>
-</figure>
-
-Pero también debemos preguntarnos:
-
-> ¿Qué ocurre si intenta hacer algo que NO queremos?
-
-<figure class="diagram">
-  <figcaption>El camino no previsto</figcaption>
-  <ol class="flow">
-    <li>Usuario cambia <code>/users/15</code> por <code>/users/16</code></li>
-    <li>¿Puede ver otro usuario?</li>
-  </ol>
-</figure>
-
-Esta segunda forma de pensar es fundamental para desarrollar software seguro.
-
----
-
-### Tres preguntas antes de escribir código
-
-Cuando desarrolléis una funcionalidad, preguntad:
-
-#### ¿Qué quiero proteger?
-
-Por ejemplo: contraseñas, datos personales, pedidos, cuentas, archivos o dinero.
-
-Esto se denomina:
-
-<p class="term">Activo</p>
-
-#### ¿Quién puede intentar acceder?
-
-Por ejemplo: un usuario normal, un administrador, un usuario no autenticado o un servicio externo.
-
-#### ¿Qué podría intentar hacer?
-
-Por ejemplo: ver información ajena, modificar datos, hacerse administrador, ejecutar código u obtener contraseñas.
-
-No necesitamos realizar un análisis de amenazas complejo. Con estas tres preguntas ya podemos detectar muchos problemas.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Sabes explicar por qué «funciona» y «está lista para producción» no son lo mismo.</li>
-    <li>Puedes nombrar tres activos de cualquier aplicación que uses a diario.</li>
-    <li>Has formulado al menos una forma de abusar de una funcionalidad normal.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué significa <em>Secure by Design</em>?</li>
-    <li>Pon un ejemplo de activo que no sea una contraseña.</li>
-    <li>Un test verde, ¿demuestra que algo es seguro?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que la seguridad se decide durante el diseño y el desarrollo, no como un paso añadido antes de publicar.</p>
-  <p>2 · Por ejemplo, un pedido, un historial médico, un fichero subido por el usuario o el saldo de una cuenta.</p>
-  <p>3 · No. Un test comprueba que el programa hace lo que esperamos, no que impida lo que no esperamos.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Cinco errores que debes reconocer
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Las 5 familias críticas de vulnerabilidades web: control de acceso (autenticación vs autorización), inyección SQL, almacenamiento de contraseñas, secretos en repositorio y dependencias vulnerables.</li>
-    <li><strong>2. Haz:</strong> Analiza ejemplos de código inseguro, localiza el fallo y redacta la justificación técnica de por qué es vulnerable.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 2.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Auditoría y correcciones de seguridad», sesión 2 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Toda la teoría de esta unidad cabe en cinco familias de errores. No hay que memorizarlas: hay que ser capaz de reconocerlas cuando aparezcan en un proyecto real.
+### Se explica
 
-### 1 · Control de acceso
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-#### Autenticación y autorización no son lo mismo
+Los fallos se reconocen por una consecuencia comprobable, no por una palabra marcada por un asistente. Una entrada concatenada a SQL puede cambiar el sentido de la consulta; un identificador de pedido sin comprobación de propietario puede exponer datos ajenos. Un secreto incluido en código y una respuesta de error demasiado detallada crean otros riesgos distintos.
+
+La revisión de contraseñas, dependencias y configuración completa el panorama: las contraseñas reales requieren mecanismos de almacenamiento adecuados y las dependencias deben conocerse y mantenerse. El laboratorio no pretende implementar un sistema de autenticación completo; utilizaremos fichas para distinguir estos conceptos.
+
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
+
+#### 1 · Control de acceso
+
+##### Autenticación y autorización no son lo mismo
 
 Esta diferencia es extremadamente importante.
 
@@ -239,7 +125,7 @@ La **autorización** responde:
 
 Podemos estar perfectamente autenticados y no estar autorizados para realizar una determinada acción.
 
-#### Un error muy frecuente
+##### Un error muy frecuente
 
 El usuario 15 consulta sus datos:
 
@@ -266,7 +152,7 @@ La aplicación debería comprobar siempre:
 
 No basta con que exista una sesión válida.
 
-#### Principio de mínimo privilegio
+##### Principio de mínimo privilegio
 
 Un usuario o aplicación debería tener **solo los permisos que necesita para realizar su trabajo**.
 
@@ -281,11 +167,9 @@ Una base de datos utilizada únicamente para leer informes quizá no necesita pe
 
 Menos permisos significa menos daño posible si algo sale mal.
 
----
+#### 2 · Entradas e inyección
 
-### 2 · Entradas e inyección
-
-#### Nunca confíes completamente en los datos que llegan
+##### Nunca confíes completamente en los datos que llegan
 
 Supongamos:
 
@@ -297,7 +181,7 @@ El usuario controla ese valor. Puede enviar `Marc`, pero también cualquier otra
 
 Por tanto, cualquier entrada externa debe considerarse potencialmente no confiable. Puede llegar desde formularios, la URL, cookies, una API, un fichero, las cabeceras u otra aplicación.
 
-#### Inyección
+##### Inyección
 
 Observad:
 
@@ -312,7 +196,7 @@ Parece funcionar. Pero estamos construyendo una consulta mezclando código SQL c
 
 <p class="term">SQL Injection</p>
 
-#### La solución general
+##### La solución general
 
 No debemos construir consultas concatenando directamente datos externos. Utilizamos consultas parametrizadas, *prepared statements* o un ORM correctamente utilizado.
 
@@ -327,7 +211,7 @@ No debemos construir consultas concatenando directamente datos externos. Utiliza
   </div>
 </div>
 
-#### Otro tipo de inyección: XSS
+##### Otro tipo de inyección: XSS
 
 Imaginad que un usuario escribe un comentario y lo mostramos en nuestra web. Si en lugar de texto introduce contenido que el navegador interpreta como código, y lo insertamos sin las protecciones adecuadas, podemos provocar:
 
@@ -337,11 +221,9 @@ La idea importante vuelve a ser la misma: **los datos externos no son automátic
 
 Los frameworks modernos proporcionan muchas protecciones. No debemos desactivarlas sin entender las consecuencias.
 
----
+#### 3 · Contraseñas y secretos
 
-### 3 · Contraseñas y secretos
-
-#### Las contraseñas
+##### Las contraseñas
 
 Observad esta tabla:
 
@@ -356,7 +238,7 @@ Observad esta tabla:
 
 Una contraseña no debería almacenarse en texto plano.
 
-#### Hash de contraseñas
+##### Hash de contraseñas
 
 Normalmente almacenamos un resultado derivado mediante una función apropiada para contraseñas.
 
@@ -380,7 +262,7 @@ Normalmente almacenamos un resultado derivado mediante una función apropiada pa
 
 Para passwords se utilizan algoritmos específicamente diseñados para ello: Argon2, bcrypt, scrypt o PBKDF2. No inventamos nuestro propio sistema criptográfico.
 
-#### ¿Cifrar y hacer hash es lo mismo?
+##### ¿Cifrar y hacer hash es lo mismo?
 
 No.
 
@@ -395,7 +277,7 @@ No.
   </div>
 </div>
 
-#### Secretos
+##### Secretos
 
 Nunca deberíamos encontrar esto en el repositorio:
 
@@ -412,7 +294,7 @@ Una posibilidad habitual para guardarlos son:
 
 Por ejemplo `DB_PASSWORD`, `API_KEY` o `JWT_SECRET`. La aplicación obtiene el valor del entorno y el secreto no queda almacenado en el código.
 
-#### Y cuidado con `.env`
+##### Y cuidado con `.env`
 
 Un fichero `.env` puede contener secretos, por lo que normalmente debe aparecer en `.gitignore`.
 
@@ -430,11 +312,9 @@ El error clásico es este:
 
 El secreto puede quedar en el historial del repositorio aunque después lo borréis del código.
 
----
+#### 4 · Dependencias y configuración
 
-### 4 · Dependencias y configuración
-
-#### El problema de las dependencias
+##### El problema de las dependencias
 
 Nuestro programa puede tener 500 líneas propias y depender de 50.000 o 500.000 líneas escritas por terceros:
 
@@ -448,7 +328,7 @@ Nuestro programa puede tener 500 líneas propias y depender de 50.000 o 500.000 
 
 Cada dependencia añade código, mantenimiento, posibles vulnerabilidades y riesgo de cadena de suministro.
 
-#### Cadena de suministro de software
+##### Cadena de suministro de software
 
 Nuestra aplicación no está formada únicamente por nuestro código:
 
@@ -468,7 +348,7 @@ Si cualquiera de estas piezas está comprometida, nuestro software también pued
 
 Herramientas como Dependabot pueden avisarnos de dependencias vulnerables, versiones antiguas y actualizaciones disponibles. La seguridad no depende solo de revisar código a mano: también podemos usar **automatización**.
 
-#### Configuración insegura
+##### Configuración insegura
 
 Una aplicación puede tener código correcto y estar mal configurada. Por ejemplo:
 
@@ -490,11 +370,9 @@ Recordad lo aprendido en Azure:
   </ol>
 </figure>
 
----
+#### 5 · Errores y logs
 
-### 5 · Errores y logs
-
-#### Los errores también pueden revelar información
+##### Los errores también pueden revelar información
 
 Imaginad que nuestra aplicación responde esto a un usuario cualquiera:
 
@@ -506,7 +384,7 @@ Path: /home/app/backend/database.js
 
 Acabamos de regalar el motor de base de datos, una dirección interna y la estructura del proyecto. Un usuario debería recibir algo parecido a «Se ha producido un error», y los detalles quedar registrados internamente.
 
-#### Logging
+##### Logging
 
 Ocultar los errores al usuario no significa no registrarlos. Necesitamos saber qué ocurrió, cuándo, dónde y qué usuario estaba implicado.
 
@@ -523,634 +401,124 @@ Ocultar los errores al usuario no significa no registrarlos. Necesitamos saber q
 
 Pero tampoco debemos guardar alegremente contraseñas, tokens, números de tarjeta o secretos.
 
-#### HTTPS
+##### HTTPS
 
 Ya lo utilizamos en Azure. `HTTP` no proporciona por sí mismo protección TLS; con `HTTPS` obtenemos confidencialidad, integridad y autenticación del servidor mediante certificado.
 
 Pero HTTPS no convierte automáticamente una aplicación insegura en segura: una web con SQL Injection sigue siendo vulnerable aunque utilice HTTPS.
 
----
-
-### Lo que quiero que detectéis
-
-Para un desarrollador junior, esta es la lista que debe dispararse sola al leer código ajeno:
-
-| Área | La pregunta que debéis haceros |
-| ---- | ------------------------------ |
-| Control de acceso | ¿Puede un usuario acceder a datos ajenos? |
-| Autenticación | ¿Se gestionan correctamente las cuentas? |
-| Entradas | ¿Se validan? |
-| Inyección | ¿Mezclamos datos con código? |
-| Secretos | ¿Hay tokens o passwords en el código? |
-| Contraseñas | ¿Se almacenan correctamente? |
-| Dependencias | ¿Son necesarias y están mantenidas? |
-| Configuración | ¿Exponemos más de lo necesario? |
-| Errores y logs | ¿Mostramos o guardamos información sensible? |
-
-Si salís de esta unidad detectando estas cosas, ya habremos conseguido bastante.
-
-<details class="aside aside--extra">
-  <summary>Ampliación · OWASP y el Top 10</summary>
-  <p>Existe una organización llamada <strong>OWASP</strong> (Open Worldwide Application Security Project) que publica recursos abiertos para mejorar la seguridad de las aplicaciones. El más conocido es el <strong>OWASP Top 10</strong>, una lista de categorías de riesgo especialmente importantes en aplicaciones web.</p>
-  <p>La edición 2025 incluye:</p>
-  <ol>
-    <li>Broken Access Control.</li>
-    <li>Security Misconfiguration.</li>
-    <li>Software Supply Chain Failures.</li>
-    <li>Cryptographic Failures.</li>
-    <li>Injection.</li>
-    <li>Insecure Design.</li>
-    <li>Authentication Failures.</li>
-    <li>Software or Data Integrity Failures.</li>
-    <li>Security Logging and Alerting Failures.</li>
-    <li>Mishandling of Exceptional Conditions.</li>
-  </ol>
-  <p>No hay que memorizar el orden. Lo importante es entender qué tipos de errores debemos aprender a reconocer.</p>
 </details>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Sabes nombrar las cinco familias de errores sin mirar la página.</li>
-    <li>Puedes explicar con tus palabras qué es una inyección.</li>
-    <li>Distingues autenticación de autorización con un ejemplo propio.</li>
-  </ul>
-</div>
+### Se trabaja
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué no basta con estar autenticado para acceder a <code>/api/users/16</code>?</li>
-    <li>¿Cifrar una contraseña y hacerle hash es lo mismo?</li>
-    <li>Tu web usa HTTPS y concatena SQL. ¿Es segura?</li>
-  </ol>
-</div>
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque la autenticación solo dice quién eres. Falta comprobar si ese quién tiene permiso sobre ese recurso concreto.</p>
-  <p>2 · No. El cifrado es reversible con una clave; el hash de contraseña no pretende recuperar el original, solo verificarlo.</p>
-  <p>3 · No. HTTPS protege el transporte, no la aplicación. La inyección sigue estando ahí.</p>
-</details>
+1. Abre `app.py` y localiza las funciones `get_order`, `search_products`, `public_config` y `error_response` mediante la búsqueda del editor. Anota qué hace cada una antes de juzgarla.
+2. Sigue el caso resuelto de pedido ajeno del guia-seguridad.pdf. Compara el resultado con tu matriz: saber que el pedido existe no concede permiso para leerlo.
+3. Ejecuta `python -m unittest -v`. Las pruebas de seguridad fallan en la versión inicial de forma deliberada. Lee una aserción y tradúcela a una regla del negocio.
+4. Revisa la ficha de contraseñas, secretos, dependencias y logs. Clasifica cada ejemplo según dato expuesto, posible daño y medida de prevención; no copies un algoritmo de cifrado como solución universal.
+5. Corrige el primer fallo de propietario siguiendo las pistas del guia-seguridad.pdf y ejecuta su prueba. Guarda la evidencia inicial y la posterior; no declares corregidas las otras familias porque una prueba pase.
 
----
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Se ha explicado y verificado una corrección. La tabla distingue autorización, entrada SQL, configuración y respuesta de error, además de los conceptos de las fichas.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Primero tu criterio, después la IA
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo dirigir a un asistente de IA para auditar código sin delegar la decisión y cómo filtrar falsos positivos.</li>
-    <li><strong>2. Haz:</strong> Realiza una primera revisión visual manual y posteriormente ejecuta prompts específicos de auditoría con Copilot en el proyecto entregado.</li>
-    <li><strong>3. Comprueba:</strong> Elabora la tabla de hallazgos verificando archivo, línea, evidencia y severidad de cada problema.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Auditoría y correcciones de seguridad», sesión 3 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### La IA como ayudante de revisión
+### Se explica
 
-Podemos pedir a Copilot que revise el proyecto buscando vulnerabilidades, y nos ayudará muchísimo: detecta SQL Injection, secretos, malas validaciones, problemas de autenticación, dependencias y código inseguro.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Pero hay un problema.
+La IA puede ayudar a buscar fallos, pero una sugerencia no es todavía un hallazgo verificado. Un **falso positivo** señala un problema que no se confirma. La revisión necesita archivo, comportamiento, evidencia y consecuencia; de otro modo solo acumula sospechas.
 
-<p class="term">Copilot también puede equivocarse</p>
+Compararemos una revisión propia con otra asistida para descubrir qué aporta cada una. Pedir «hazlo seguro» mezcla diagnóstico y cambios difíciles de controlar. Primero solicitaremos observaciones sin modificar archivos; después decidiremos qué corregir.
 
-Puede no detectar un fallo, generar un falso positivo, recomendar una solución innecesaria o introducir otra vulnerabilidad al intentar arreglarla.
+### Se trabaja
 
-Por tanto:
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-> **La IA es nuestro ayudante de revisión, no nuestro responsable de seguridad.**
+1. Retoma el laboratorio y anota tus sospechas antes de consultar al agente. Utiliza la matriz de permisos y las pruebas, no una lista de términos encontrados.
+2. Pide una revisión acotada de las cuatro funciones con archivo, problema, evidencia, riesgo y propuesta. Indica que no modifique nada y que distinga una sospecha de un fallo reproducido.
+3. Compara las dos listas en cuatro grupos: coinciden, solo humano, solo IA y no confirmado. Deja vacío un grupo si no hay casos; no inventes un falso positivo para rellenar la tabla.
+4. Reproduce una observación del agente con la prueba correspondiente. Si no se confirma, escribe qué falta para decidir. Si se confirma, explica la regla que debería cumplir.
+5. Empieza una corrección pendiente de SQL o configuración. Limita el cambio a la función relevante y vuelve a ejecutar las pruebas para comprobar su efecto.
 
-### Cómo pedir una revisión de seguridad
+### Cierre
 
-Evitemos la pregunta abierta:
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-> ¿Es seguro mi código?
+Hay una comparación razonada y un hallazgo nuevo verificado o descartado. Se evalúa el criterio, no que el asistente produzca muchas vulnerabilidades.
 
-Porque la respuesta puede ser «Sí, parece razonablemente seguro», y eso no aporta nada.
-
-<div class="prompt">
-  <p class="prompt-label">Prompt estructurado</p>
-  <p class="flow-role">Tarea</p>
-  <p>Realiza una revisión de seguridad de este proyecto. No modifiques ningún archivo todavía.</p>
-  <p class="flow-role">Alcance</p>
-  <p>Revisa especialmente control de acceso, autenticación, validación de entradas, inyección, gestión de secretos, passwords, dependencias, configuración, y errores y logging.</p>
-  <p class="flow-role">Formato de salida</p>
-  <ol>
-    <li>Archivo y línea.</li>
-    <li>Descripción del problema.</li>
-    <li>Posible consecuencia.</li>
-    <li>Severidad.</li>
-    <li>Propuesta de solución.</li>
-  </ol>
-  <p class="flow-role">Restricción</p>
-  <p>Si no tienes evidencia suficiente para afirmar que algo es vulnerable, indícalo en lugar de suponerlo.</p>
-</div>
-
-Eso produce una revisión mucho más útil.
-
-### Convertirlo en una Skill
-
-Recordad la unidad anterior. Podemos guardar este procedimiento para no volver a escribirlo:
-
-```text
-.github/
-└── skills/
-    └── security-review/
-        └── SKILL.md
-```
-
-```markdown
----
-name: security-review
-description: Review a web application for common security problems.
----
-
-# Security review
-
-Review:
-
-1. Access control
-2. Authentication
-3. Input validation
-4. Injection
-5. Secrets
-6. Password storage
-7. Dependencies
-8. Configuration
-9. Error handling and logs
-
-For every finding return:
-
-- Finding
-- Severity
-- File
-- Evidence
-- Possible impact
-- Recommended fix
-
-Do not modify code.
-
-Do not report a vulnerability without explaining the evidence.
-```
-
-Ahora tenemos un procedimiento reutilizable.
-
----
-
-### La actividad · ¿Publicarías esta aplicación?
-
-El profesor proporcionará un pequeño proyecto web. La aplicación funciona, pero contiene varios problemas de seguridad introducidos deliberadamente.
-
-Vuestra misión será **decidir si está preparada para producción**.
-
-La regla de la actividad es importante: no empezaremos preguntando «Copilot, encuentra todos los errores». Primero haremos nosotros una inspección, porque necesitamos desarrollar
-
-<p class="term">criterio propio</p>
-
-y después compararemos nuestro análisis con el de la IA.
-
-### Fase 1 · Identificar qué debemos proteger
-
-Antes de revisar código, completad los activos: ¿qué información o recursos importantes contiene la aplicación? Por ejemplo, usuarios, contraseñas, pedidos o datos personales.
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-<p class="write-line"></p>
-
-Después, los tipos de usuario que existen —anónimo, usuario, administrador— e indicad qué debería poder hacer cada uno.
-
-| Acción             | Anónimo | Usuario | Admin |
-| ------------------ | ------: | ------: | ----: |
-| Ver productos      |         |         |       |
-| Ver su perfil      |         |         |       |
-| Ver otros perfiles |         |         |       |
-| Borrar usuarios    |         |         |       |
-|                    |         |         |       |
-
-Esta tabla será importante para encontrar problemas de autorización.
-
-### Fase 2 · Revisión humana rápida
-
-Buscad en el proyecto, en este orden, y anotad cualquier cosa que os parezca sospechosa:
-
-* secretos;
-* contraseñas;
-* consultas SQL;
-* endpoints protegidos;
-* entradas del usuario;
-* gestión de errores;
-* configuración;
-* dependencias.
-
-No hace falta encontrarlo todo.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · no encuentro nada sospechoso</summary>
-  <p>Probad en este orden, que es donde suelen aparecer los problemas:</p>
-  <ol>
-    <li>Buscad en todo el proyecto las cadenas <code>password</code>, <code>secret</code>, <code>token</code> y <code>key</code>.</li>
-    <li>Abrid el fichero de configuración y el de conexión a la base de datos.</li>
-    <li>Buscad <code>SELECT</code> y mirad si la consulta se construye concatenando o con plantillas.</li>
-    <li>Listad las rutas de la API y preguntad, una a una, quién puede llamarlas.</li>
-    <li>Coged una ruta con <code>:id</code> y probad a cambiar el id por el de otro usuario.</li>
-    <li>Mirad si <code>.env</code> aparece en <code>.gitignore</code>… y si aparece en el historial de Git.</li>
-  </ol>
-</details>
-
-### Fase 3 · Revisión con Copilot
-
-Ahora utilizad vuestra skill `security-review` o el prompt anterior. Pedid al agente que revise el proyecto, pero **no le permitáis todavía modificar archivos**.
-
-Generad una tabla con los hallazgos:
-
-| Problema | Severidad | Archivo | Evidencia |
-| -------- | --------- | ------- | --------- |
-|          |           |         |           |
-
-### Comparar humano contra IA
-
-Clasificad los hallazgos en cuatro grupos:
-
-| Grupo | Hallazgos |
-| ----- | --------- |
-| Detectado por vosotros y por la IA | |
-| Solo detectado por vosotros | |
-| Solo detectado por la IA | |
-| Posible falso positivo de la IA | |
-
-Esta comparación es parte de la actividad, y de la nota.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
-  <ul class="checklist">
-    <li>Tienes la lista de activos y la tabla de permisos por tipo de usuario.</li>
-    <li>Tienes tu propia lista de sospechas, escrita antes de preguntar a la IA.</li>
-    <li>Tienes la tabla de hallazgos de Copilot, sin haber modificado ningún archivo.</li>
-    <li>Tienes los cuatro grupos de la comparación rellenados.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué revisamos nosotros antes de preguntar a la IA?</li>
-    <li>¿Qué es un falso positivo y por qué es peligroso aceptarlo?</li>
-    <li>¿Qué debe darte la IA por cada hallazgo, además del nombre del problema?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Para desarrollar criterio propio. Si empezamos por la IA, solo aprendemos a leer su respuesta, no a detectar problemas.</p>
-  <p>2 · Un problema que la IA afirma y no existe. Es peligroso porque nos hace tocar código correcto, y cada cambio innecesario puede romper algo o introducir un fallo nuevo.</p>
-  <p>3 · Archivo y línea, evidencia, consecuencia posible, severidad y propuesta de solución.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Corregir, verificar y entregar
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> El ciclo profesional de remediación: investigar el fallo, pedir una propuesta guiada a la IA, revisar el diff y verificar que la funcionalidad no se rompe.</li>
-    <li><strong>2. Haz:</strong> Corrige al menos 4 vulnerabilidades en el código, añade tests de validación y redacta el informe de auditoría.</li>
-    <li><strong>3. Comprueba:</strong> Completa la checklist de entrega y responde con argumentos a la pregunta <em>¿Publicarías esta aplicación?</em></li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Auditoría y correcciones de seguridad», sesión 4 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Fase 4 · Investigar cada problema
+### Se explica
 
-No aceptéis automáticamente que algo es vulnerable. Para cada hallazgo importante preguntad:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-* ¿Dónde está exactamente el problema?
-* ¿Qué entrada controla el usuario?
-* ¿Qué permiso falta?
-* ¿Qué información podría quedar expuesta?
-* ¿Qué debería hacer el código?
+Corregir un fallo implica cambiar la causa y comprobar el comportamiento, incluido un caso válido que deba seguir funcionando. Una consulta parametrizada separa el dato del código SQL; un mensaje de error público puede ser genérico mientras el diagnóstico se conserva solo en el entorno apropiado.
 
-La explicación debe poder entenderse sin volver a preguntar a Copilot.
+El laboratorio tiene cuatro objetivos acotados repartidos desde la sesión 2. Sus pruebas ayudan a comprobarlos, pero no demuestran que cualquier aplicación sea segura. La entrega debe describir qué se verificó y qué queda fuera, en vez de prometer seguridad absoluta.
 
-### Fase 5 · Corregir
+### Se trabaja
 
-Elegid al menos:
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-<p class="term">cuatro problemas</p>
+1. Abre la tabla de hallazgos y marca cuáles ya tienen corrección verificada. Prioriza los pendientes que afectan a permisos, búsqueda, configuración y errores.
+2. Corrige una función cada vez con las pistas de `guia-seguridad.pdf`. Antes de ejecutar, explica qué entrada o permiso cambia y qué respuesta esperas.
+3. Ejecuta su prueba y después la suite completa. Si una operación válida deja de funcionar, revisa el alcance del cambio antes de continuar con otro fallo.
+4. Revisa el diff o compara con la copia inicial. Comprueba que no se han añadido secretos reales, dependencias innecesarias ni cambios ajenos a los retos.
+5. Completa por cada fallo la cadena problema → evidencia → corrección → prueba → límite. Guarda el laboratorio corregido y deja claramente identificados los pendientes para la revisión cruzada.
 
-Pedid a Copilot que proponga una corrección, pero seguid este procedimiento:
+### Cierre
 
-<figure class="diagram">
-  <figcaption>Cómo corregir</figcaption>
-  <ol class="flow">
-    <li>Problema</li>
-    <li>Explicar</li>
-    <li>Proponer solución</li>
-    <li>Revisar</li>
-    <li>Modificar</li>
-    <li>Test</li>
-    <li>Revisar diff</li>
-  </ol>
-</figure>
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-Y no este otro:
+Cada corrección reclamada tiene una prueba y una explicación propia. El informe se construye a partir de esa tabla, sin otro documento duplicado.
 
-<figure class="diagram">
-  <figcaption>Cómo no corregir</figcaption>
-  <ol class="flow flow--before">
-    <li>«Arregla todo»</li>
-    <li>Accept all</li>
-  </ol>
-</figure>
-
-Los tres ejemplos que vienen ahora van de más a menos apoyo: el primero lo resolvemos nosotros entero, el segundo lo hacéis con guion, y el tercero es vuestro.
-
-<p class="stage">Paso 1 · Te enseño uno</p>
-
-#### Ejemplo · secreto en código
-
-Encontramos:
-
-```javascript
-const JWT_SECRET = "supersecreto123";
-```
-
-No basta con escribir «hay una vulnerabilidad». Debemos explicar las tres cosas:
-
-* **Problema:** el secreto está almacenado en el código fuente.
-* **Riesgo:** puede acabar en GitHub, en copias del proyecto, en logs o en los equipos de otros desarrolladores.
-* **Solución:** moverlo a una variable de entorno y asegurarnos de que no aparece en Git.
-
-<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
-
-#### Ejemplo · autorización
-
-Tenemos la ruta `GET /users/:id` y cualquier usuario autenticado puede cambiar `/users/15` por `/users/16`.
-
-La pregunta no es qué línea tocar, sino qué comprobación falta:
-
-<figure class="diagram">
-  <figcaption>La comprobación que hay que añadir</figcaption>
-  <ol class="flow">
-    <li>Usuario autenticado</li>
-    <li>Solicita recurso</li>
-    <li>¿Es propietario, o tiene permiso?</li>
-    <li>Respuesta</li>
-  </ol>
-</figure>
-
-<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
-
-#### Ejemplo · SQL Injection
-
-Si encontráis algo parecido a:
-
-```javascript
-db.query(
-    "SELECT * FROM users WHERE name = '" +
-    name +
-    "'"
-);
-```
-
-escribid vosotros las tres partes, antes de preguntar nada a Copilot:
-
-<dl class="answer">
-  <dt>Problema</dt>
-  <dd></dd>
-  <dt>Riesgo</dt>
-  <dd></dd>
-  <dt>Solución</dt>
-  <dd></dd>
-</dl>
-
-Y escribid vosotros la petición que le haríais al agente. Después comprobad dos cosas en su respuesta: que separa código y datos, y que mantiene la funcionalidad.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · no sé cómo pedirlo</summary>
-  <p>Una petición que funciona bien aquí:</p>
-  <blockquote><p>Explica exactamente por qué esta construcción es peligrosa y reescríbela utilizando consultas parametrizadas.</p></blockquote>
-  <p>Fijaos en lo que pide: primero la explicación, después el cambio. Si pedís solo el cambio, os quedáis sin la parte que se evalúa.</p>
-</details>
-
-### Fase 6 · Dependencias
-
-Pedid a Copilot que identifique las dependencias principales del proyecto y explique brevemente qué función cumple cada una. Después preguntad si alguna parece innecesaria.
-
-También podéis utilizar las herramientas del gestor de paquetes cuando proceda:
-
-```bash
-npm audit
-```
-
-Comparad las tres fuentes: herramienta automática, IA y revisión humana.
-
-### Fase 7 · Errores
-
-Provocad deliberadamente un error: un recurso inexistente, un dato incorrecto o una operación inválida. Observad qué recibe el usuario y qué aparece en los logs, y preguntad:
-
-> ¿Estamos revelando información que el usuario no necesita?
-
-### Fase 8 · Revisar el diff
-
-Antes de considerar terminada la auditoría:
-
-```bash
-git diff
-```
-
-Revisad todos los cambios y preguntad:
-
-* ¿La solución de seguridad ha roto alguna funcionalidad?
-* ¿Se ha añadido alguna dependencia?
-* ¿Copilot ha modificado código que no debía?
-* ¿Los cambios son realmente necesarios?
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · he corregido y ahora algo no funciona</summary>
-  <ol>
-    <li>Mirad primero el diff: el fallo casi siempre está en un cambio que no pedisteis.</li>
-    <li>Si la corrección tocó varios ficheros a la vez, deshacedla y aplicadla de uno en uno.</li>
-    <li>Si falla el login, comprobad que el hash se aplica también al comparar, no solo al registrar.</li>
-    <li>Si falla una consulta parametrizada, revisad el orden de los parámetros y que no queden comillas de la versión anterior.</li>
-    <li>Si la aplicación no arranca, comprobad que la variable de entorno que sustituye al secreto existe realmente en vuestro entorno.</li>
-  </ol>
-</details>
-
-### ¿Está ya segura?
-
-No podemos afirmar «esta aplicación es 100 % segura». La seguridad absoluta no existe.
-
-Podemos afirmar algo más riguroso:
-
-> Hemos revisado determinados riesgos y corregido los problemas encontrados dentro del alcance de nuestra auditoría.
-
-Esa diferencia es importante, y se evalúa.
-
----
-
-### Producto final
-
-Entregaréis dos cosas: el **repositorio corregido**, con los cambios realizados, y un **informe de seguridad** de tres páginas como máximo. Nada de una memoria de veinte páginas.
-
-#### Página 1 · Riesgos encontrados
-
-| Hallazgo | Severidad | Evidencia | Categoría |
-| -------- | --------- | --------- | --------- |
-| Secret hardcoded | Alta | `config.js` | Gestión de secretos |
-
-#### Página 2 · Correcciones
-
-Para cada problema importante:
-
-<figure class="diagram">
-  <figcaption>Qué contar de cada corrección</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Antes</li>
-    <li>Problema</li>
-    <li>Solución</li>
-    <li>Cómo lo hemos verificado</li>
-  </ol>
-</figure>
-
-#### Página 3 · La IA como revisor
-
-Debéis incluir un problema que la IA haya detectado correctamente, uno que vosotros detectarais antes que ella, una recomendación suya que hayáis rechazado o modificado, y una limitación que todavía tenga vuestra auditoría.
-
-#### Y la pregunta final
-
-> Si mañana tuvierais que publicar esta aplicación para usuarios reales, ¿la publicaríais?
-
-Solo hay tres respuestas posibles —**sí**, **sí, pero...** y **no**— y las tres pueden ser correctas. Lo que se evalúa es la justificación técnica.
-
----
-
-### Evaluación
-
-| Criterio                                            | Puntos |
-| --------------------------------------------------- | -----: |
-| Identificación y comprensión de activos y permisos  |      1 |
-| Detección de vulnerabilidades                       |      2 |
-| **Comprensión de por qué son vulnerabilidades**     |  **2** |
-| Calidad de las correcciones                         |      2 |
-| Uso crítico de IA durante la auditoría              |    1,5 |
-| Verificación de los cambios                         |      1 |
-| Claridad del informe                                |    0,5 |
-
-No obtiene mejor nota quien encuentra treinta supuestas vulnerabilidades generadas por Copilot, porque muchas pueden ser falsas. Lo que se evalúa es la cadena completa:
-
-<figure class="diagram">
-  <figcaption>Lo que sí puntúa</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Problema real</li>
-    <li>Evidencia</li>
-    <li>Riesgo</li>
-    <li>Corrección</li>
-    <li>Verificación</li>
-  </ol>
-</figure>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Repositorio con al menos cuatro problemas corregidos y verificados.</li>
-    <li>Informe de tres páginas con la tabla de hallazgos.</li>
-    <li>Página 3 completa, incluyendo la recomendación de la IA que rechazasteis.</li>
-    <li>Respuesta razonada a «¿la publicarías?».</li>
-  </ul>
-</div>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · Auditoría cruzada en el aula y consolidación
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo realizar una revisión por pares (peer review) de seguridad y evaluar la solidez de las correcciones de otros compañeros.</li>
-    <li><strong>2. Haz:</strong> Intercambia el repositorio remediado con otra pareja e intenta encontrar vulnerabilidades residuales o fallos introducidos en la corrección.</li>
-    <li><strong>3. Entrega:</strong> Entrega el informe final definitivo con las observaciones recibidas en la auditoría cruzada.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Auditoría y correcciones de seguridad», sesión 5 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Dinámica de aula · Bug bounty defensivo
+### Se explica
 
-En esta sesión ponemos a prueba la robustez de las aplicaciones:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-1. **Intercambio de proyectos:** cada pareja clona el repositorio corregido de otro grupo.
-2. **Búsqueda de fallos residuales:** durante 25 minutos, inspeccionáis el código del compañero buscando:
-   - ¿Se corrigió el problema de raíz o solo se ocultó el síntoma?
-   - ¿La corrección rompió alguna funcionalidad existente?
-   - ¿Quedaron secretos residuales en el historial de Git?
-3. **Puesta en común y retrospectiva:** cada equipo expone un acierto de remediación y un falso positivo que rechazó justificadamente.
+Una revisión cruzada comprueba si otra persona puede reproducir el resultado con las instrucciones entregadas. No consiste en atacar el trabajo de un compañero ni en premiar a quien encuentre más fallos. El objetivo es descubrir instrucciones incompletas, resultados no reproducibles o límites no declarados.
 
----
+Una observación útil indica paso seguido, resultado esperado y resultado observado. «No funciona» no permite corregir; «la búsqueda normal falla después del cambio de SQL» identifica un comportamiento que debe conservarse.
+
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Intercambia la carpeta del laboratorio con otra pareja, junto con el guia-seguridad.pdf y la tabla de hallazgos. Trabaja en una copia distinta de tu versión, siempre en local.
+2. Arranca siguiendo solo sus instrucciones y ejecuta las pruebas. Registra el resultado y una incidencia reproducible si aparece; no cambies todavía el código ajeno.
+3. Elige un caso permitido y uno rechazado. Contrasta las respuestas con su matriz de permisos y pregunta por una decisión cuya evidencia no esté clara.
+4. Devuelve observaciones concretas. En tu propio trabajo corrige una incidencia o explica con evidencia por qué no procede, y repite las pruebas afectadas.
+5. Entrega versión final, matriz, hallazgos y resultados. Cada integrante explica una corrección y una limitación. La decisión «publicaría/no publicaría» se refiere a los criterios del laboratorio y no autoriza a publicar su versión vulnerable.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+La actividad de seguridad queda reproducible, con correcciones y pendientes identificados. No requiere reutilizar JWT ni tests del proyecto de Servidor.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
-### El vocabulario de la unidad
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-| Concepto | Significa |
-| -------- | --------- |
-| Activo | Lo que hay que proteger |
-| Autenticación | Quién eres |
-| Autorización | Qué puedes hacer |
-| Mínimo privilegio | Solo los permisos necesarios |
-| Inyección | Mezclar datos del usuario con código |
-| Hash de password | Verificar sin poder recuperar |
-| Secreto | Credencial que nunca va en el repositorio |
-| Cadena de suministro | Todo el código de terceros que acaba dentro |
-| Falso positivo | Un fallo que la IA cree ver y no existe |
-| Evidencia | El archivo y la línea que demuestran el problema |
-
-### La alarma mental
-
-No necesitáis memorizar todas las vulnerabilidades existentes. Necesitáis que salte una alarma cuando veáis:
-
-* una credencial en el código;
-* SQL concatenado;
-* un permiso no comprobado;
-* una password en texto plano;
-* una entrada no validada;
-* una dependencia extraña;
-* debug activado en producción;
-* un puerto innecesario;
-* un error con información interna;
-* código de IA aceptado sin revisar.
-
-La pregunta que debería aparecer automáticamente es:
-
-> **¿Qué podría salir mal aquí?**
-
-### El flujo profesional
-
-<figure class="diagram">
-  <figcaption>El ciclo completo que queremos aprender</figcaption>
-  <ol class="flow">
-    <li>Desarrollar</li>
-    <li>Revisar</li>
-    <li>Pensar en abusos</li>
-    <li>Analizar con IA</li>
-    <li>Comprobar hallazgos</li>
-    <li>Corregir</li>
-    <li>Testear</li>
-    <li>Revisar diff</li>
-    <li>Desplegar</li>
-  </ol>
-</figure>
-
-La IA puede acelerar muchas partes del proceso. Pero **la responsabilidad sobre el código que llega a producción sigue siendo del desarrollador**.
-
-<details class="aside aside--extra">
-  <summary>Checklist que podéis reutilizar trabajando</summary>
-  <p><strong>Acceso.</strong> ¿Quién puede ejecutar esto? ¿Compruebo permisos en el servidor?</p>
-  <p><strong>Entrada.</strong> ¿Qué datos controla el usuario? ¿Los valido?</p>
-  <p><strong>Base de datos.</strong> ¿Utilizo consultas parametrizadas?</p>
-  <p><strong>Contraseñas.</strong> ¿Se almacenan mediante mecanismos apropiados?</p>
-  <p><strong>Secretos.</strong> ¿Hay tokens o passwords en el repositorio?</p>
-  <p><strong>Dependencias.</strong> ¿Necesito realmente todas? ¿Presentan vulnerabilidades conocidas?</p>
-  <p><strong>Configuración.</strong> ¿Tengo debug activado? ¿Expongo puertos o servicios innecesarios?</p>
-  <p><strong>Errores.</strong> ¿Estoy mostrando información interna?</p>
-  <p><strong>Logs.</strong> ¿Puedo saber qué ha ocurrido? ¿Estoy registrando información sensible?</p>
-  <p><strong>HTTPS.</strong> ¿Las comunicaciones deben utilizar TLS?</p>
-  <p><strong>IA.</strong> ¿He revisado el código que ha generado?</p>
-</details>
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

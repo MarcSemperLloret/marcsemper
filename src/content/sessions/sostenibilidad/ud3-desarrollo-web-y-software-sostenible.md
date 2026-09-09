@@ -6,8 +6,8 @@ order: 3
 lang: "es"
 summary: "Una web no necesita consumir más recursos de los necesarios para dar un buen servicio. Aprendemos a medir una página, detectar el desperdicio, optimizarla y demostrar con datos si de verdad la hemos mejorado."
 duration: "6 horas · 6 sesiones"
-modality: "Parejas"
-deliverable: "Una página web optimizada y la comparación técnica antes/después que lo demuestra."
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Optimización y comparación de la web. Una actividad acumulativa por unidad, con evidencias y aportación individual."
 outcomes:
   - "Explicar por qué una página web consume recursos físicos."
   - "Medir el peso y las peticiones de una web, y saber leer esa medición."
@@ -18,90 +18,55 @@ outcomes:
   - "Usar la IA para buscar optimizaciones, y rechazar las que no convengan."
   - "Comparar una web antes y después con datos comparables."
 requirements:
-  - "Chrome o Chromium, con DevTools y Lighthouse."
-  - "Conexión a Internet: la web carga tipografías de Google y un mapa externo."
-  - "Visual Studio Code y Git."
-  - "GitHub Copilot u otro asistente de IA."
-  - "PixelStore, el proyecto de partida. Se clona en la sesión 2."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
 priorKnowledge:
-  - "El ciclo de vida y la idea de no gastar recursos de más (UD2)."
-  - "Que PixelStore es la empresa del módulo (UD1)."
-  - "Leer un diff y revisar lo que propone un agente (Digitalización, UD4)."
-  - "Qué es un indicador y por qué hace falta una medida de partida (UD1)."
-date: "2026-08-29"
+  - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
+date: "2026-09-09"
 ---
 
-<div class="checkpoint">
-  <p class="checkpoint-label">La misión · seis pasos hasta una web demostrablemente mejor</p>
-  <ol>
-    <li>Entender qué consume una web.</li>
-    <li>Medir el estado inicial y guardarlo.</li>
-    <li>Optimizar imágenes y multimedia.</li>
-    <li>Revisar código, terceros, caché y datos.</li>
-    <li>Aplicar los cambios sobre el proyecto.</li>
-    <li>Volver a medir y comprobar que nada se ha roto.</li>
-  </ol>
-</div>
+<p class="lead">Optimización y comparación de la web. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
+
+## Cómo trabajar esta unidad
+
+Son 6 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Optimización y comparación de la web.** Guarda el trabajo en `sostenibilidad/ud3/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+| Criterio                                   | Puntos |
+| ------------------------------------------ | -----: |
+| Auditoría inicial correcta                 |    1,5 |
+| Identificación y priorización de problemas |    1,5 |
+| **Calidad técnica de las optimizaciones**  |  **3** |
+| **Comparación cuantitativa antes/después** |  **2** |
+| Mantenimiento de funcionalidad y calidad   |      1 |
+| Uso crítico de IA                          |    0,5 |
+| Claridad de la entrega                     |    0,5 |
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · Una web también consume recursos
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo el diseño y desarrollo de una web determinan su consumo de datos, energía y recursos en clientes y servidores.</li>
-    <li><strong>2. Haz:</strong> Inspecciona las peticiones de red y peso total de una página en las herramientas de desarrollo del navegador.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Optimización y comparación de la web», sesión 1 de 6. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### ¿Qué vamos a aprender?
+### Se explica
 
-Cuando visitamos una web parece que solo pasa una cosa: escribimos una dirección y aparece la página. Lo que ocurre en realidad es esto:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-<figure class="diagram">
-  <figcaption>Lo que pasa entre la dirección y la pantalla</figcaption>
-  <ol class="flow">
-    <li>Navegador</li>
-    <li>Internet</li>
-    <li>Servidor</li>
-    <li>Archivos</li>
-    <li>Internet</li>
-    <li>Navegador</li>
-    <li>Procesamiento</li>
-    <li>Pantalla</li>
-  </ol>
-</figure>
+Una web consume recursos al enviar archivos, ejecutar código y utilizar dispositivos y servidores. El tamaño transferido es una magnitud observable; la huella ambiental completa exige considerar más factores. Mejorar rendimiento puede ayudar, pero una página rápida no es automáticamente sostenible.
 
-Para mostrar una página pueden transferirse HTML, CSS, JavaScript, imágenes, vídeos, fuentes, datos, publicidad y scripts de terceros. Y todo eso necesita almacenamiento, redes, servidores, procesamiento, dispositivos y electricidad.
+PixelStore es un proyecto de laboratorio que ya funciona. Nuestro objetivo es conservar su utilidad reduciendo recursos innecesarios. Una imagen excesivamente grande puede ser candidata; eliminar el catálogo para que la página pese menos destruye el servicio que debemos mantener.
 
-#### Una idea importante
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-Imaginad dos páginas que ofrecen exactamente el mismo servicio:
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Web A</p>
-    <p class="compare-body">12 MB transferidos.</p>
-  </div>
-  <div>
-    <p class="compare-label">Web B</p>
-    <p class="compare-body">1,5 MB transferidos.</p>
-  </div>
-</div>
-
-Si el usuario puede hacer exactamente lo mismo en las dos, ¿hacían falta los otros 10,5 MB? Probablemente no. Esa es la idea central de la unidad:
-
-<p class="term">No transferir, almacenar ni procesar lo que no necesitamos</p>
-
-#### Pero cuidado
-
-Eso **no** significa que la web más pequeña sea siempre la mejor. Una web también tiene que ser útil, usable, atractiva, accesible, segura y mantenible.
-
-El objetivo es **hacer lo mismo con razonablemente menos recursos, sin degradar el servicio**. Una web que pesa poco porque le hemos quitado la mitad del contenido no está optimizada: está rota.
-
----
-
-### ¿Dónde se desperdician recursos?
+#### ¿Dónde se desperdician recursos?
 
 | Desperdicio | Cómo se ve |
 | ----------- | ---------- |
@@ -113,24 +78,7 @@ El objetivo es **hacer lo mismo con razonablemente menos recursos, sin degradar 
 | Fuentes de más | Cinco familias por cuatro pesos, cuando se usan dos |
 | Datos innecesarios | La API devuelve 10.000 productos y el usuario ve 20 |
 
-### Primera tarea · ¿Dónde mirarías?
-
-Para cada situación, decid qué optimizaríais primero.
-
-| Situación                                                  | Posible mejora |
-| ---------------------------------------------------------- | -------------- |
-| *Ejemplo · Vídeo que se carga al abrir la página*          | Mostrar una miniatura y cargarlo solo cuando el usuario lo reproduzca |
-| Imagen de 8 MB usada como miniatura                        |                |
-| 15 fuentes diferentes                                      |                |
-| Vídeo 4K que arranca solo                                  |                |
-| La API devuelve 20.000 registros                           |                |
-| Librería de 500 KB para mostrar una fecha                  |                |
-| Mapa externo que se carga aunque nadie lo abra             |                |
-| Imágenes fuera de pantalla que se cargan de inmediato      |                |
-
----
-
-### Rendimiento y sostenibilidad
+#### Rendimiento y sostenibilidad
 
 Muchas optimizaciones que reducen recursos mejoran a la vez la velocidad, la experiencia de usuario, el tiempo de carga, el consumo de datos móviles del usuario y el coste de infraestructura.
 
@@ -146,62 +94,42 @@ Muchas optimizaciones que reducen recursos mejoran a la vez la velocidad, la exp
 
 Por eso **rendimiento y sostenibilidad suelen apuntar en la misma dirección**. Pero no son lo mismo, y conviene no confundirlos: una web puede ser rapidísima porque tiene un servidor enorme detrás.
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Entiendes que una web usa recursos físicos y sabes nombrar cuáles.</li>
-    <li>Identificas al menos cinco desperdicios habituales.</li>
-    <li>Sabes que reducir recursos no puede empeorar la funcionalidad.</li>
-    <li>Sabes en qué se parecen y en qué no rendimiento y sostenibilidad.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Una página que pesa 10 MB, ¿es necesariamente mala?</li>
-    <li>¿Qué problema tiene enviar una imagen de 6000 px para mostrarla a 300 px?</li>
-    <li>¿Por qué hay que vigilar también los servicios de terceros?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · No necesariamente. Depende del contenido y del servicio que da. 10 MB de vídeo pedido por el usuario no es lo mismo que 10 MB de fuentes que nadie usa.</p>
-  <p>2 · Que transferimos muchos más datos de los que el usuario puede aprovechar: la pantalla no puede mostrar esa información.</p>
-  <p>3 · Porque añaden peticiones, transferencias, procesamiento y dependencias que no controlamos nosotros.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Abre la ficha de PixelStore y crea el registro de UD3. Escribe qué funciones debe conservar la tienda: catálogo, imágenes útiles, enlaces, formulario y el recorrido disponible en esta versión.
+2. Dibuja una visita con navegador, red y servidor. Enumera archivos que podrían descargarse: HTML, CSS, JavaScript, imágenes, fuentes y recursos externos.
+3. Usa la página de ejemplo de la guía o la vista proporcionada en el aula para localizar tres posibles desperdicios. Todavía son hipótesis; escribe qué medirías para confirmarlas.
+4. Clasifica una propuesta en reducir tamaño, evitar descarga o evitar procesamiento. Explica una consecuencia negativa posible, como perder legibilidad o funcionalidad.
+5. Prepara la tabla de medición con recurso, tamaño, peticiones, condición de prueba y observación. Reserva columnas antes/después sin rellenarlas con las cifras de ejemplo.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+El objetivo conserva el servicio y las hipótesis se podrán contrastar. No necesitas conocimientos de agentes de Digitalización para realizar la práctica.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Primero medir, después optimizar
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> El modelo de medición del impacto digital: Page Weight, transfer size, estimación de carbono (SWD) y Lighthouse.</li>
-    <li><strong>2. Haz:</strong> Audita la web de ejemplo estableciendo una línea base objetiva antes de tocar una sola línea de código.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre metodologías de medición.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Optimización y comparación de la web», sesión 2 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### No podemos mejorar lo que no conocemos
+### Se explica
 
-Imaginad que decimos «he hecho la web más sostenible». La pregunta correcta es **¿cómo lo sabes?**
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Por eso el proceso es siempre este, y en este orden:
+Una medida de partida permite comparar un cambio. Si medimos una vez con caché y otra sin ella, quizá comparemos condiciones distintas en vez de versiones. **DevTools** es el conjunto de herramientas del navegador; su pestaña Red muestra peticiones, respuestas y transferencia.
 
-<figure class="diagram">
-  <figcaption>El ciclo de la unidad</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Medir</li>
-    <li>Modificar</li>
-    <li>Volver a medir</li>
-    <li>Comparar</li>
-  </ol>
-</figure>
+**Lighthouse** ejecuta comprobaciones y produce indicadores bajo unas condiciones determinadas. Su puntuación no equivale a porcentaje de sostenibilidad. Hoy guardaremos versión, configuración y resultados para repetir el procedimiento después de optimizar.
 
-### Chrome DevTools
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
+
+#### Chrome DevTools
 
 Abrid la web y pulsad **F12**, o entrad por Herramientas de desarrollador. Nos interesa sobre todo el panel **Network**.
 
@@ -219,7 +147,7 @@ Cada vez que se carga una página el navegador pide recursos, y ahí vemos el no
 
 También veremos el número de peticiones. Que sean 180 en lugar de 20 no significa automáticamente que la web esté mal, pero obliga a preguntar si todas hacen falta.
 
-### Lighthouse
+#### Lighthouse
 
 Lighthouse es una herramienta automatizada integrada en Chrome que audita rendimiento, accesibilidad, buenas prácticas y SEO.
 
@@ -227,104 +155,42 @@ No usaremos su puntuación como una verdad. Es una **herramienta de diagnóstico
 
 Un *Performance* de 92 no significa que la web sea «un 92 % sostenible». Y un 100 tampoco significa que no quede nada por mejorar: significa que esa herramienta, con esos criterios, no ha encontrado nada. Lo que importa es lo que hay detrás del número.
 
-<details class="aside aside--help">
-  <summary>Estoy atascado · no sé leer el panel Network</summary>
-  <ol>
-    <li>Recargad con el panel ya abierto. Si lo abrís después, no habrá capturado nada.</li>
-    <li>Marcad <em>Disable cache</em> para la medición inicial, o la segunda carga os dará cifras mucho menores que no son comparables.</li>
-    <li>Mirad la barra de abajo: ahí están el número de peticiones y el total transferido. Esas dos son vuestras métricas principales.</li>
-    <li>Ordenad por la columna de tamaño, de mayor a menor. Los tres primeros suelen explicar la mitad del peso.</li>
-    <li>Usad los filtros por tipo —Img, JS, CSS, Font— para sacar el subtotal de cada categoría.</li>
-    <li>Anotad también en qué condiciones medisteis. Si luego medís con otra red u otro perfil, la comparación no vale.</li>
-  </ol>
 </details>
 
-### Segunda tarea · Auditoría inicial
+### Se trabaja
 
-Trabajaremos sobre **PixelStore**, una tienda de periféricos que funciona perfectamente y transfiere mucho más de lo que necesita.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-```bash
-git clone https://github.com/MarcSemperLloret/webssos.git pixelstore
-cd pixelstore
-python -m http.server 8080
-```
+1. Sigue la [guía de PixelStore](/es/docencia/talleres-transversales/#pixelstore): descarga o clona la versión `main`, abre su carpeta y arráncala con el servidor local indicado. Visita la URL HTTP, no el archivo mediante doble clic.
+2. Comprueba que el catálogo aparece. Si falta, revisa la consola y las respuestas de Red antes de medir. No tomes como referencia una página que no terminó de cargar.
+3. Abre Red, activa la condición de caché indicada en la guía y recarga. Anota transferencia total, número de peticiones y los cinco recursos mayores. Guarda una captura con las condiciones.
+4. Ejecuta Lighthouse con el perfil acordado. Registra sus valores como resultados de esa herramienta, separados de los bytes observados en Red.
+5. Elige tres problemas de mayor prioridad y escribe una hipótesis de mejora para cada uno. Guarda la tabla inicial y la versión del proyecto antes de tocar archivos.
 
-Abridla en <http://localhost:8080>. No vale abrir el `index.html` con doble clic: el catálogo se carga con `fetch` y eso no funciona sobre `file://`.
+### Cierre
 
-**Todavía no modificamos nada.** Primero se anota el punto de partida.
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-| Indicador                     | Antes |
-| ----------------------------- | ----: |
-| *Ejemplo · Transferencia total* | 6,8 MB por visita |
-| Transferencia total           |       |
-| Número de peticiones          |       |
-| Tamaño total de imágenes      |       |
-| JavaScript transferido        |       |
-| CSS transferido               |       |
-| Lighthouse Performance        |       |
+La medición es reproducible y la página funciona. Cada hipótesis menciona un recurso observado, no una recomendación genérica del asistente.
 
-Después, los cinco recursos más pesados:
-
-| Recurso | Tamaño | ¿Parece necesario? |
-| ------- | -----: | ------------------ |
-| *Ejemplo · hero.jpg* | 4,2 MB | Sí, pero está sobredimensionada para el espacio visible |
-|         |        |                    |
-|         |        |                    |
-|         |        |                    |
-|         |        |                    |
-|         |        |                    |
-
-### Tercera tarea · Formular una hipótesis
-
-Antes de tocar nada: ¿dónde creéis que está el mayor margen? Elegid **tres problemas** y justificad por qué empezaríais por ahí.
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-<p class="write-line"></p>
-
-Esto no es un trámite. Al final de la unidad compararéis vuestra hipótesis con lo que de verdad ocurrió, y acertar o fallar dice bastante sobre lo que habéis aprendido.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Tenéis la tabla de métricas iniciales, completa y guardada.</li>
-    <li>Habéis anotado en qué condiciones medisteis.</li>
-    <li>Tenéis los cinco recursos más pesados identificados.</li>
-    <li>Tenéis escrita vuestra hipótesis de los tres problemas principales.</li>
-    <li>No habéis modificado todavía ni una línea.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué se mide antes de optimizar?</li>
-    <li>¿Qué significa exactamente un Lighthouse Performance de 92?</li>
-    <li>¿Por qué hay que anotar las condiciones de la medición?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque sin punto de partida no se puede demostrar ninguna mejora. Sin el «antes», el «después» no dice nada.</p>
-  <p>2 · Que esa herramienta, con esos criterios y en esas condiciones, puntúa así el rendimiento. No es un porcentaje de sostenibilidad ni una nota del producto.</p>
-  <p>3 · Porque una medición con caché, con otra red o con otro perfil no es comparable. Comparar dos cosas medidas distinto no demuestra nada.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Imágenes: casi siempre, el primer objetivo
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Optimización de recursos multimedia: formatos modernos (WebP/AVIF), dimensionado responsivo (<code>srcset</code>), lazy loading y compresión.</li>
-    <li><strong>2. Haz:</strong> Convierte y optimiza las imágenes de la web reduciendo su peso drásticamente sin perder calidad visual apreciable.</li>
-    <li><strong>3. Comprueba:</strong> Valida el ahorro de bytes en la pestaña Network del navegador.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Optimización y comparación de la web», sesión 3 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Una imagen puede ser enorme
+### Se explica
+
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
+
+Una imagen puede transferir muchos más píxeles de los que se muestran. Reducir dimensiones o cambiar formato puede disminuir bytes, pero hay que comprobar legibilidad y calidad. La primera imagen visible y una imagen situada al final de la página tampoco tienen la misma prioridad de carga.
+
+El experimento cambia una cosa cada vez: elegimos una imagen medida, aplicamos una mejora y volvemos a observarla. Así podemos relacionar el resultado con la modificación y conservar una versión adecuada si una compresión mayor deteriora el producto.
+
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
+
+#### Una imagen puede ser enorme
 
 Una foto de 6000 × 4000 que pesa 8,5 MB y que en la web aparece a 600 × 400. Estamos enviando información que el usuario no puede llegar a ver.
 
@@ -343,11 +209,11 @@ Sobre una imagen podemos actuar en tres frentes.
 
 **Calidad.** Una imagen al 100 % de calidad puede pesar muchísimo más que la misma al 80 %, con una diferencia visual que casi nadie percibe. El objetivo no es destrozar la imagen para que pese 3 KB: es **encontrar un equilibrio razonable**.
 
-#### Responsive images
+##### Responsive images
 
 Un móvil no necesita la misma resolución que una pantalla grande. HTML permite ofrecer varias versiones y dejar que el navegador elija, con `srcset`.
 
-#### Lazy loading
+##### Lazy loading
 
 Una página con 30 imágenes de las que al abrirla se ven 4. ¿Hace falta descargar las otras 26 ya? Casi nunca:
 
@@ -355,177 +221,42 @@ Una página con 30 imágenes de las que al abrirla se ven 4. ¿Hace falta descar
 <img src="producto.webp" loading="lazy" alt="Zapatilla de running azul">
 ```
 
----
-
-### Cuarta tarea · Optimizar las imágenes
-
-De cada imagen hay que comprobar cuatro cosas: resolución, tamaño, formato y si necesita cargarse de inmediato. La primera la hacemos juntos.
-
-<p class="stage">Paso 1 · Te enseño uno</p>
-
-#### La imagen de cabecera
-
-<dl class="worked">
-  <dt>¿A qué tamaño se muestra?</dt>
-  <dd>Ocupa el ancho del contenedor: como mucho 1200 px. El archivo son 4000 px. Sobran 2800 px de ancho que ningún usuario verá.</dd>
-  <dt>¿Qué formato tiene y cuál le convendría?</dt>
-  <dd>Es un JPEG. Al ser una fotografía, WebP o AVIF darán un archivo bastante menor con calidad equivalente.</dd>
-  <dt>¿Qué calidad necesita?</dt>
-  <dd>Está guardada al 100 %. Es una imagen decorativa detrás de un texto: al 80 % nadie notará la diferencia.</dd>
-  <dt>¿Debe cargarse de inmediato?</dt>
-  <dd>Sí. Es lo primero que se ve, así que aquí <code>lazy</code> sería contraproducente: retrasaría justo lo que el usuario está esperando.</dd>
-  <dt>Resultado</dt>
-  <dd>4,8 MB → unos 180 KB, sin tocar el diseño.</dd>
-</dl>
-
-Fijaos en la última pregunta. `loading="lazy"` no es bueno por sí solo: en la imagen de cabecera empeora la experiencia. Optimizar es decidir, no aplicar recetas.
-
-<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
-
-Ahora las miniaturas del catálogo, con las mismas cuatro preguntas.
-
-<dl class="answer">
-  <dt>¿A qué tamaño se muestran?</dt>
-  <dd></dd>
-  <dt>Formato actual y formato propuesto</dt>
-  <dd></dd>
-  <dt>¿Cuáles se ven al abrir la página?</dt>
-  <dd></dd>
-  <dt>Decisión</dt>
-  <dd></dd>
-</dl>
-
-<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
-
-El resto de las imágenes del proyecto. Anotad cada una:
-
-| Imagen | Antes | Después | Reducción |
-| ------ | ----: | ------: | --------: |
-| *Ejemplo · hero.jpg* | 4,2 MB | 620 KB | 85 % |
-|        |       |         |           |
-|        |       |         |           |
-|        |       |         |           |
-
-No buscamos la reducción más grande posible: la imagen tiene que **seguir viéndose bien**. Si alguien nota que la web ha empeorado, la optimización ha fallado aunque la cifra sea espectacular.
-
-Y una observación que conviene tener presente: si una imagen baja de 5 MB a 400 KB, esos 4,6 MB se ahorran en **cada visita**. Una decisión pequeña de desarrollo escala con el número de usuarios, para bien y para mal.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
-  <ul class="checklist">
-    <li>Sabéis qué resolución real necesita cada imagen.</li>
-    <li>Habéis elegido formato con un criterio, no por costumbre.</li>
-    <li>Habéis decidido qué se carga de inmediato y qué no, y por qué.</li>
-    <li>La página se sigue viendo igual de bien.</li>
-    <li>Tenéis anotado el antes y el después de cada imagen.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué no se pone <code>loading="lazy"</code> en la imagen de cabecera?</li>
-    <li>¿Qué formato elegiríais para un logotipo, y por qué?</li>
-    <li>¿Qué significa <code>srcset</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque es lo primero que ve el usuario. Retrasar su carga empeora justo la parte que estaba esperando.</p>
-  <p>2 · SVG: es vectorial, así que se ve nítido a cualquier tamaño y suele pesar muy poco.</p>
-  <p>3 · Ofrecer varias versiones de la misma imagen para que el navegador descargue la que corresponde al dispositivo.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Selecciona una imagen entre los recursos más pesados. Localiza su archivo en el proyecto y la referencia que lo utiliza, mediante la búsqueda del editor. Conserva una copia inicial fuera de la carpeta servida.
+2. Compara dimensiones del archivo con su tamaño visible. Abre la herramienta de conversión indicada en la guía y exporta una versión con resolución suficiente; conserva el original de trabajo.
+3. Actualiza la referencia al archivo exportado. Recarga y comprueba en Red que responde correctamente y que ya no se solicita la versión anterior por esa referencia.
+4. Compara bytes y aspecto en móvil y escritorio. Si se ve borrosa, aumenta calidad o resolución y repite la medida. Registra una versión aceptada y una alternativa descartada si realmente la probaste.
+5. Repite el procedimiento en otra imagen y razona si puede cargarse de forma diferida. No apliques `loading="lazy"` automáticamente a la imagen principal visible al abrir la página.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+La reducción está medida y las imágenes conservan su función. Puedes localizar el cambio en el archivo y explicar por qué elegiste esa calidad.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Código, terceros, caché y datos
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Estrategias de optimización de código: minificación, tree-shaking, reducción de scripts de terceros, políticas de caché HTTP y reducción de consultas.</li>
-    <li><strong>2. Haz:</strong> Audita los scripts externos, configura cabeceras de caché y elimina dependencias y CSS/JS no utilizados.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 4.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Optimización y comparación de la web», sesión 4 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Todo lo que queda por revisar comparte una idea: **se transfiere o se ejecuta algo que nadie necesitaba**. Vamos a recorrerlo de fuera hacia dentro, del navegador al servidor.
+### Se explica
 
-### Más código no es mejor aplicación
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Necesitamos mostrar una fecha y para ello añadimos una librería enorme. La pregunta es si hacía falta.
+Las dependencias y los recursos externos añaden transferencias y ejecución. Que un archivo parezca grande no demuestra que sobre: puede sostener una función de la tienda. Revisaremos usos concretos antes de retirarlo.
 
-Cada dependencia añade código, tamaño, mantenimiento, vulnerabilidades y actualizaciones. Eso ya apareció en Ciberseguridad. Aquí se añade otra cosa: **también aumenta los recursos necesarios para ejecutar la aplicación**.
+La **caché** permite reutilizar respuestas; la **compresión** reduce tamaño durante el transporte. Su configuración pertenece al servidor y hoy se estudia mediante ejemplos, no se exige implantarla en el servidor local sencillo. La misma idea de evitar trabajo innecesario sirve para datos: pedir solo lo que se necesita, sin programar una API nueva en esta actividad.
 
-No se trata de pensar que JavaScript es malo: permite construir aplicaciones extraordinarias. La pregunta es si estamos cargando y ejecutando más de lo necesario. Los sospechosos habituales son el código que no se usa, las bibliotecas innecesarias, las funcionalidades que se cargan aunque nadie las abra, los scripts duplicados y el código de terceros.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-#### Terceros
-
-Una página puede cargar analytics, un chat, un mapa, un vídeo, publicidad, widgets sociales y tracking. De cada uno hay que preguntar tres cosas: ¿lo necesitamos?, ¿tiene que cargarse de inmediato?, ¿podría cargarse cuando el usuario lo pida?
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Opción A</p>
-    <p class="compare-body">Se abre la web y se carga el mapa externo de inmediato, lo mire quien lo mire.</p>
-  </div>
-  <div>
-    <p class="compare-label">Opción B</p>
-    <p class="compare-body">Se muestra un botón «Ver mapa». Solo se carga si alguien lo pulsa.</p>
-  </div>
-</div>
-
-Si la mayoría de los usuarios nunca abren el mapa, la segunda opción evita trabajo que no servía para nada.
-
-#### Fuentes
-
-Una fuente también hay que descargarla. Es fácil acabar cargando cinco pesos de Roboto y tres de Montserrat cuando la web usa Regular y Bold. Los otros seis archivos son transferencia pura sin contrapartida.
-
-#### CSS
-
-Reglas duplicadas, frameworks enormes, estilos que ya no se usan. No hace falta obsesionarse con cada byte, pero sí evitar grandes cantidades de código que no pinta nada.
-
-### Quinta tarea · Revisar código y dependencias
-
-Revisad las cuatro categorías y rellenad la tabla: ¿hay alguna biblioteca o fichero especialmente grande? ¿Hay frameworks o estilos que apenas se usan? ¿Cuántas fuentes se descargan? ¿Qué servicios externos aparecen?
-
-| Recurso | ¿Necesario?  | Acción |
-| ------- | ------------ | ------ |
-| *Ejemplo · librería de iconos completa* | Dudoso | Sustituirla por los tres SVG que realmente se usan |
-|         | Sí/No/Dudoso |        |
-|         |              |        |
-|         |              |        |
-|         |              |        |
-
-### Sexta tarea · Vuestro criterio contra el de la IA
-
-Ahora sí, Copilot. Pero primero habéis hecho la revisión vosotros, igual que en la auditoría de seguridad.
-
-<div class="prompt">
-  <p class="prompt-label">Prompt estructurado</p>
-  <p class="flow-role">Tarea</p>
-  <p>Analiza este proyecto buscando oportunidades para reducir transferencia de datos, JavaScript innecesario, dependencias, recursos multimedia, fuentes y peticiones de terceros. No modifiques nada.</p>
-  <p class="flow-role">Formato de salida</p>
-  <ol>
-    <li>Archivo.</li>
-    <li>Problema.</li>
-    <li>Mejora propuesta.</li>
-    <li>Beneficio esperado.</li>
-    <li>Riesgo de aplicar el cambio.</li>
-  </ol>
-  <p class="flow-role">Restricción</p>
-  <p>Si una propuesta puede afectar a la funcionalidad, al diseño o a la accesibilidad, dilo explícitamente en lugar de omitirlo.</p>
-</div>
-
-Clasificad cada propuesta como **aceptar**, **rechazar** o **investigar**, y elegid al menos una que **no** aplicaríais, explicando por qué. Esa es la que más cuenta: rechazar bien una optimización demuestra más criterio que aceptarlas todas.
-
-<div class="rule">
-  <p class="rule-label">Hasta dónde llega esta práctica</p>
-  <p>Lo que viene ahora —caché y compresión— <strong>se estudia conceptualmente, no se implementa</strong>. El servidor con el que trabajáis, <code>python -m http.server</code>, sirve ficheros y poco más: no configura <code>Cache-Control</code>, no comprime con gzip ni Brotli y no tiene CDN detrás.</p>
-  <p>Configurar eso de verdad es trabajo de servidor —Nginx, Apache o un servicio gestionado— y no es lo que optimizamos aquí. En la entrega solo se evalúa lo que depende del código y de los recursos del proyecto. Saber qué problema resuelve la caché y cuál crea sí entra; haberla configurado, no.</p>
-</div>
-
-### ¿Hay que descargar siempre lo mismo?
+#### ¿Hay que descargar siempre lo mismo?
 
 Un usuario entra hoy y descarga el logotipo. Cambia de página. ¿Hace falta volver a descargar exactamente el mismo archivo? No necesariamente. Para eso está la:
 
@@ -548,7 +279,7 @@ Esto reduce peticiones, transferencia y latencia. Pero trae su propio problema: 
 
 No entraremos en configuración avanzada. Basta con entender **qué problema resuelve la caché y qué problema crea**.
 
-### Compresión
+#### Compresión
 
 Los recursos de texto —HTML, CSS, JavaScript, JSON— pueden comprimirse durante la transferencia con tecnologías como gzip o Brotli.
 
@@ -566,7 +297,7 @@ Pero no todo se comprime otra vez: un AVIF ya viene fuertemente comprimido, y vo
 
 > **La optimización también tiene coste.** No hacemos trabajo que no produce un beneficio razonable.
 
-### Datos: el mismo principio, en el backend
+#### Datos: el mismo principio, en el backend
 
 Un endpoint que devuelve 50.000 productos cuando la interfaz muestra 20:
 
@@ -588,375 +319,88 @@ SELECT *
 
 Vuelve a aparecer el principio de la unidad: **procesar y transferir solo lo necesario**.
 
-### Séptima tarea · Más allá del frontend
-
-| Situación                                               | Posible mejora |
-| ------------------------------------------------------- | -------------- |
-| *Ejemplo · La API devuelve todos los campos del usuario* | Seleccionar y enviar solo los campos que necesita esta vista |
-| La API devuelve 50.000 filas                            |                |
-| La web pide los mismos datos cada segundo               |                |
-| El navegador descarga siempre los mismos recursos       |                |
-| El JSON trae campos que nunca se usan                   |                |
-| El servidor envía HTML, CSS y JS sin comprimir          |                |
-| Se descargan 40 imágenes que están fuera de pantalla    |                |
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
-  <ul class="checklist">
-    <li>Habéis identificado JavaScript reducible y CSS que sobra.</li>
-    <li>Sabéis cuántas fuentes se descargan y cuántas se usan de verdad.</li>
-    <li>Tenéis la lista de terceros y qué aporta cada uno.</li>
-    <li>Sabéis explicar qué resuelve la caché y qué problema introduce.</li>
-    <li>Habéis localizado al menos un caso de datos que se transfieren de más.</li>
-    <li>Tenéis las propuestas de la IA clasificadas, y una rechazada con su motivo.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Un mapa al final de la página, ¿cuándo debería cargarse?</li>
-    <li>¿Qué coste tiene una dependencia, aparte de sus kilobytes?</li>
-    <li>Habéis cambiado el CSS y algunos usuarios siguen viendo el diseño viejo. ¿Qué ha pasado?</li>
-    <li>¿Qué gana el servidor al paginar, además del ancho de banda?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Cuando el usuario lo pida. Si la mayoría no lo abre, cargarlo siempre es trabajo desperdiciado en todas esas visitas.</p>
-  <p>2 · Mantenimiento, actualizaciones, superficie de vulnerabilidad y tiempo de ejecución. Los kilobytes suelen ser lo de menos.</p>
-  <p>3 · Su navegador tiene cacheada la versión anterior y la considera válida. Es el precio de la caché mal gestionada.</p>
-  <p>4 · Trabajo. Consultar y serializar 20 registros en lugar de 50.000 ahorra base de datos, memoria y tiempo de proceso.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Selecciona un script o recurso externo de la medición. Localiza dónde se incluye y qué función visible aporta. Si no lo sabes, investiga antes de borrarlo.
+2. Prueba una mejora acotada sobre un recurso del cliente: retirar una inclusión confirmada como innecesaria o posponer un elemento que no se necesita al inicio. Guarda el punto anterior.
+3. Repite el recorrido que utiliza ese recurso y revisa consola y Red. Si se rompe una función, restaura el cambio y registra por qué la propuesta no era adecuada.
+4. Compara dos recomendaciones, una propia y otra del asistente o de la ficha preparada. Clasifícalas en aceptar, rechazar o investigar con un motivo observable. La guía de revisión explica el procedimiento sin remitir a Digitalización.
+5. Resuelve los ejemplos de caché, compresión y datos del material de consulta: indica qué recurso ahorrarían y quién tendría que configurar la solución. Separa estas propuestas de los cambios que sí has implementado.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+La evidencia distingue una optimización real del cliente de una propuesta para el servidor. No se exige Nginx, paginación de Spring ni CI.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · Optimizar nuestra web
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> El ciclo integral de refactorización sostenible en un proyecto real.</li>
-    <li><strong>2. Haz:</strong> Aplica las optimizaciones de imágenes, código y red en la web del proyecto y registra cada cambio en Git.</li>
-    <li><strong>3. Comprueba:</strong> Verifica que la experiencia de usuario y la funcionalidad permanecen intactas.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Optimización y comparación de la web», sesión 5 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Ya tenemos suficiente información. Volvemos al proyecto con un objetivo: **reducir recursos sin empeorar el servicio**.
+### Se explica
 
-### Planificar antes de tocar
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-| Problema | Cambio | Resultado esperado |
-| -------- | ------ | ------------------ |
-| *Ejemplo · Imágenes de catálogo sobredimensionadas* | Generar tamaños responsive y usar `srcset` | Reducir la transferencia sin perder calidad visible |
-|          |        |                    |
-|          |        |                    |
-|          |        |                    |
-|          |        |                    |
+Optimizar requiere priorizar cambios por su efecto probable, coste y riesgo. Varias modificaciones sin comprobar pueden ocultar cuál produjo una mejora o rompió una función. Por eso el registro conserva una fila por cambio y sus resultados.
 
-Priorizad lo de **alto impacto y bajo esfuerzo**. Una imagen de cabecera de 5 MB tiene impacto alto y dificultad baja, así que debería estar entre las primeras acciones. Una reescritura del framework tiene impacto dudoso y esfuerzo enorme.
+Un asistente puede sugerir una optimización, pero la persona que trabaja decide si procede. Comparar archivos antes/después y ejecutar el recorrido afectado permite revisar la propuesta aunque no se haya cursado el módulo de IA. La guía incluye cómo realizar esa comparación.
 
-### Aplicar al menos cinco optimizaciones
+### Se trabaja
 
-Y que toquen varias categorías, no cinco imágenes:
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-| Categoría | Ejemplos |
-| --------- | -------- |
-| Multimedia | Comprimir, cambiar formato, reducir resolución, lazy loading |
-| Código | Eliminar una dependencia, reducir JavaScript, quitar CSS muerto |
-| Recursos | Reducir fuentes, retirar un tercero, cargar bajo demanda |
-| Datos | Reducir la respuesta, paginar, evitar consultas repetidas |
+1. Revisa las hipótesis iniciales y las mejoras ya probadas. Ordena los pendientes por evidencia de consumo y facilidad de comprobación.
+2. Completa las cinco optimizaciones acotadas de la actividad, contando las ya realizadas en las sesiones 3 y 4. Distribúyelas entre recursos cuando las mediciones lo justifiquen; no inventes cambios para rellenar categorías.
+3. Para cada modificación guarda motivo, archivo, medida y resultado funcional. Si utilizas IA, pide una propuesta limitada a ese recurso antes de aceptar la edición.
+4. Compara con la versión inicial mediante el editor o Git, siguiendo la guía. Revisa que no se han borrado secciones ni añadido dependencias ajenas al objetivo.
+5. Recorre la tienda en móvil y escritorio. Corrige enlaces rotos, imágenes ausentes o errores de consola antes de pasar a la comparación final; registra cualquier objetivo pendiente con su causa.
 
-### Trabajar con la IA, no delegarle
+### Cierre
 
-Podéis pedir ayuda a Copilot para hacer los cambios, con el mismo procedimiento de Digitalización:
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-<figure class="diagram">
-  <figcaption>Cómo se aplica un cambio</figcaption>
-  <ol class="flow">
-    <li>Problema</li>
-    <li>Propuesta de la IA</li>
-    <li>Revisar</li>
-    <li>Modificar</li>
-    <li>Medir</li>
-  </ol>
-</figure>
+Existe un registro de cambios medidos y comprobados. Una propuesta rechazada con fundamento también informa del criterio, pero no se presenta como una optimización aplicada.
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">No</p>
-    <p class="compare-body">«Copilot, optimiza toda la web.»</p>
-  </div>
-  <div>
-    <p class="compare-label">Sí</p>
-    <p class="compare-body">«La imagen hero pesa 4,8 MB y se muestra a un máximo de 1200 px. Propón una estrategia para reducir transferencia manteniendo una calidad visual razonable. No modifiques nada todavía.»</p>
-  </div>
-</div>
-
-### Git como red de seguridad
-
-Antes de empezar y después de cada bloque de cambios:
-
-```bash
-git status
-git diff
-```
-
-Tenéis que poder responder en todo momento a una pregunta: **¿qué hemos modificado exactamente?** Si no lo sabéis, tampoco podréis explicar a qué se debe la mejora.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
-  <ul class="checklist">
-    <li>Tenéis el plan escrito antes de los cambios, con el resultado esperado.</li>
-    <li>Al menos cinco optimizaciones aplicadas, en varias categorías.</li>
-    <li>Cada cambio está en el historial de Git y sabéis explicarlo.</li>
-    <li>La web sigue abriendo y funcionando.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué se prioriza por impacto y esfuerzo, y no por facilidad?</li>
-    <li>¿Qué diferencia una petición útil a la IA de una inútil?</li>
-    <li>¿Para qué sirve <code>git diff</code> aquí?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque el tiempo es limitado. Empezar por lo fácil suele significar acabar sin tocar lo que de verdad pesaba.</p>
-  <p>2 · La útil da el dato concreto, la restricción y el criterio de calidad. La inútil delega la decisión entera.</p>
-  <p>3 · Para saber exactamente qué cambió, atribuir la mejora al cambio correcto y encontrar el culpable si algo se rompe.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 6 · ¿Realmente hemos mejorado?
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo verificar científicamente el impacto de las optimizaciones comparando métricas antes y después.</li>
-    <li><strong>2. Haz:</strong> Re-ejecuta las auditorías, calcula la reducción porcentual de transferencia y emisiones estimadas, y redacta la memoria.</li>
-    <li><strong>3. Entrega:</strong> Entrega la web optimizada y el informe comparativo de sostenibilidad digital.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Optimización y comparación de la web», sesión 6 de 6. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Repetid la medición inicial **exactamente igual**: mismas herramientas, mismas condiciones, misma configuración de caché.
+### Se explica
 
-| Indicador              | Antes | Después | Cambio |
-| ---------------------- | ----: | ------: | -----: |
-| *Ejemplo · Transferencia total* | 6,8 MB | 2,1 MB | −69 % |
-| Transferencia total    |       |         |        |
-| Número de peticiones   |       |         |        |
-| Imágenes               |       |         |        |
-| JavaScript             |       |         |        |
-| CSS                    |       |         |        |
-| Lighthouse Performance |       |         |        |
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Para la reducción porcentual, de 9,4 MB a 2,3 MB:
+Una comparación antes/después necesita el mismo procedimiento y una interpretación. La reducción relativa se calcula como `(antes − después) / antes × 100`. Si pasamos de 10 MB a 7 MB, hemos reducido un 30 % esa transferencia; eso no equivale a medir una reducción del 30 % de la huella de carbono.
 
-<p class="single-node single-node--mono">(9,4 − 2,3) / 9,4 × 100 = 75,5 %</p>
+La utilidad se conserva como condición de la mejora. La tabla de recursos y la prueba funcional deben leerse juntas. Las estimaciones ambientales adicionales requieren explicar su modelo y supuestos, y no forman parte de las medidas obligatorias de esta actividad.
 
-No hay que memorizar la fórmula. Podéis usar calculadora, hoja de cálculo o la IA.
+### Se trabaja
 
-### Una reducción enorme también puede ser un fracaso
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-Imaginad que quitamos todas las imágenes. La transferencia baja un 90 %. ¿Es mejor la web? Probablemente hemos destruido el diseño, la información y la utilidad.
+1. Repite la medición inicial con la misma condición de caché, perfil y recorrido. Anota la versión final y guarda resultados de Red y Lighthouse por separado.
+2. Completa antes/después de transferencia, peticiones y tamaños por categoría. Calcula la variación de las magnitudes comparables; no trates puntos de Lighthouse como porcentaje de sostenibilidad.
+3. Repite las funciones que definiste en la primera sesión. Pide a otra pareja que compruebe una acción sin explicarle cómo ha cambiado el código.
+4. Resume en una página diagnóstico, cambios, comparación y una decisión descartada. Enlaza las mediciones completas y el registro de modificaciones.
+5. Entrega el proyecto y el informe de la actividad. Cada integrante explica un cambio y su comprobación. Describe lo demostrado como reducción de recursos observados y declara los límites de las pruebas.
 
-Por eso, además de medir, hay que comprobar: ¿la web sigue funcionando?, ¿mantiene su calidad visual?, ¿sigue siendo usable?, ¿hemos eliminado alguna funcionalidad importante?
+### Cierre
 
-### Octava tarea · Auditoría visual
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-Revisad en móvil y en escritorio: enlaces, imágenes, formularios, funcionalidades, consola y errores.
+La mejora está respaldada por medidas comparables y mantiene el producto. No se exige estimar emisiones ni producir otro informe por cada sesión.
 
-No podemos declarar una optimización exitosa si hemos roto la aplicación. Una web rota pesa muy poco.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · he optimizado y algo se ve mal</summary>
-  <ol>
-    <li>Mirad primero la consola del navegador. Un 404 de un recurso que renombrasteis explica la mitad de los casos.</li>
-    <li>Mirad <code>git diff</code>: casi siempre el problema está en un cambio que hicisteis de paso, no en el que perseguíais.</li>
-    <li>Si es una imagen borrosa, os habéis pasado bajando resolución o calidad. Volved atrás un escalón, no al original.</li>
-    <li>Si algo aparece tarde o a saltos, revisad a qué le pusisteis <code>lazy</code>: no va en lo que se ve al abrir.</li>
-    <li>Si dejó de funcionar un botón, mirad qué dependencia quitasteis. Que no aparezca en el HTML no significa que no se use.</li>
-    <li>Si no lo encontráis, deshaced el último cambio y volved a aplicarlos de uno en uno midiendo entre medias.</li>
-  </ol>
-</details>
-
-### Novena tarea · Revisar los cambios con IA
-
-Ahora la IA revisa **solo lo que habéis tocado**:
-
-<div class="prompt">
-  <p class="prompt-label">Prompt estructurado</p>
-  <p class="flow-role">Tarea</p>
-  <p>Revisa exclusivamente los cambios realizados en este repositorio. No modifiques el código.</p>
-  <p class="flow-role">Busca</p>
-  <ol>
-    <li>Posibles regresiones.</li>
-    <li>Recursos que siguen siendo innecesarios.</li>
-    <li>Optimizaciones dudosas o arriesgadas.</li>
-    <li>Funcionalidades que podrían haberse roto.</li>
-  </ol>
-</div>
-
-Clasificad otra vez: aceptar, rechazar o investigar.
-
-### Sobre el CO₂ por visita
-
-Existen herramientas que estiman gramos de CO₂ por página. Pueden servir como aproximación, pero ese valor depende de muchos supuestos sobre electricidad, redes, dispositivos, centros de datos y comportamiento del usuario.
-
-> **No presentéis una estimación como si fuera una medición.**
-
-En esta unidad damos prioridad a lo que podemos observar directamente: bytes transferidos, número de peticiones, tamaños por categoría y rendimiento. Si además queréis dar una estimación de CO₂, decid con qué herramienta y con qué supuestos. Eso es exactamente lo contrario del greenwashing de la primera unidad.
-
-Y decidlo también en la entrega, porque es lo que hace defendible vuestro trabajo:
-
-> **Estamos demostrando una reducción del uso de determinados recursos —transferencia, peticiones y procesamiento—, no calculando la huella de carbono de la web.** Para eso haría falta un modelo adicional y sus supuestos.
-
----
-
-### Producto final
-
-Entregaréis el **repositorio** con la versión optimizada y **una única página o diapositiva** con cuatro bloques.
-
-#### A · Diagnóstico inicial
-
-Los tres principales problemas que encontrasteis.
-
-#### B · Cambios realizados
-
-| Cambio | Motivo |
-| ------ | ------ |
-| *Ejemplo · Convertir las imágenes del catálogo a WebP* | Reducir bytes transferidos manteniendo una calidad visual equivalente |
-|        |        |
-|        |        |
-|        |        |
-|        |        |
-|        |        |
-
-#### C · Antes y después
-
-| Métrica       | Antes | Después |
-| ------------- | ----: | ------: |
-| *Ejemplo · Transferencia* | 6,8 MB | 2,1 MB |
-| Transferencia |       |         |
-| Peticiones    |       |         |
-| Imágenes      |       |         |
-| JavaScript    |       |         |
-| Rendimiento   |       |         |
-
-#### D · Una decisión que NO tomasteis
-
-Por ejemplo: «Copilot recomendó eliminar X, pero decidimos mantenerlo porque…». Este bloque no es relleno: es donde se ve si entendisteis la unidad.
-
-### Presentación
-
-Unos **3 minutos** por pareja, para responder a cuatro preguntas:
-
-* ¿Cuál era el mayor desperdicio?
-* ¿Qué cambio produjo la mayor mejora? ¿Coincide con vuestra hipótesis de la sesión 2?
-* ¿Qué habéis decidido mantener aunque consuma recursos?
-* ¿Cómo demostráis que la versión nueva es mejor?
-
-### Evaluación
-
-| Criterio                                   | Puntos |
-| ------------------------------------------ | -----: |
-| Auditoría inicial correcta                 |    1,5 |
-| Identificación y priorización de problemas |    1,5 |
-| **Calidad técnica de las optimizaciones**  |  **3** |
-| **Comparación cuantitativa antes/después** |  **2** |
-| Mantenimiento de funcionalidad y calidad   |      1 |
-| Uso crítico de IA                          |    0,5 |
-| Claridad de la entrega                     |    0,5 |
-
-Durante la exposición se preguntará **individualmente** a cualquiera de los dos miembros por una decisión del trabajo.
-
-No obtiene mejor nota quien consigue la página más pequeña, ni quien saca un Lighthouse de 100. La obtiene quien logra **una mejora importante y demostrable sin degradar el producto**.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Las mediciones están guardadas en vuestro repositorio de evidencias.</li>
-    <li>Guardasteis las métricas iniciales y volvisteis a medir en condiciones comparables.</li>
-    <li>Habéis optimizado varias categorías, no solo imágenes.</li>
-    <li>La página sigue funcionando en móvil y en escritorio, sin errores en consola.</li>
-    <li>Podéis explicar por qué hicisteis cada cambio.</li>
-    <li>No afirmáis impactos que no podéis medir.</li>
-    <li>Habéis revisado críticamente las recomendaciones de la IA.</li>
-    <li>Podéis demostrar el resultado con datos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Una web que pesa menos, ¿es necesariamente mejor?</li>
-    <li>¿Por qué hay que medir antes de optimizar?</li>
-    <li>¿Qué suele convenir revisar primero en una web muy pesada?</li>
-    <li>¿Para qué sirve la caché?</li>
-    <li>¿Por qué hay que vigilar los scripts de terceros?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · No. Hay que mantener funcionalidad, usabilidad, accesibilidad y calidad. Una web rota pesa poquísimo.</p>
-  <p>2 · Porque sin situación inicial no se puede demostrar la mejora.</p>
-  <p>3 · Las imágenes y el resto de contenido multimedia suelen ser el mayor bloque, pero eso hay que confirmarlo midiendo, no suponiéndolo.</p>
-  <p>4 · Para reutilizar recursos en lugar de descargarlos otra vez mientras siguen siendo válidos.</p>
-  <p>5 · Porque añaden transferencia, procesamiento, dependencias y cuestiones de privacidad que no controlamos.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 6»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
-### El método
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-Cuando una página va lenta o consume demasiado, no se empieza cambiando cosas a ver qué pasa:
-
-<figure class="diagram">
-  <figcaption>El ciclo completo</figcaption>
-  <ol class="flow">
-    <li>Medir</li>
-    <li>Identificar</li>
-    <li>Priorizar</li>
-    <li>Optimizar</li>
-    <li>Volver a medir</li>
-    <li>Comprobar que nada se ha roto</li>
-  </ol>
-</figure>
-
-Y se aplican dos reglas a la vez, no una:
-
-> **No transferir, almacenar ni procesar lo que no necesitamos.**
-
-> **No sacrificar una funcionalidad útil solo para bajar una métrica.**
-
-El objetivo es el **uso razonable de recursos para dar un buen servicio**. Ni derrochar ni empobrecer el producto.
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Transferencia de datos | Cuánta información viaja por la red en cada visita |
-| Petición | Cada recurso que el navegador pide al servidor |
-| DevTools | Las herramientas del navegador para analizar una web |
-| Network | El panel donde se ven las peticiones y lo que pesa cada una |
-| Lighthouse | La auditoría automática de Chrome: diagnóstico, no veredicto |
-| Lazy loading | Retrasar la carga de un recurso hasta que haga falta |
-| Responsive images | Servir la versión de la imagen que corresponde al dispositivo |
-| WebP / AVIF | Formatos modernos que dan archivos bastante menores |
-| Caché | Guardar un recurso para reutilizarlo sin volver a pedirlo |
-| Compresión | Reducir el tamaño de lo que se transfiere |
-| Dependencia | Software externo del que pasa a depender el nuestro |
-| Tercero | Un servicio de otra organización cargado en nuestra web |
-| Paginación | Servir los datos por trozos, en vez de todos de golpe |
-| Regresión | Algo que funcionaba y hemos roto al cambiar otra cosa |
-| Optimización | Un cambio que reduce recursos sin degradar el servicio |
-| Software sostenible | Software diseñado y operado contando también con los recursos que consume |
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

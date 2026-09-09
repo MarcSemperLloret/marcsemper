@@ -22,17 +22,22 @@ priorKnowledge:
   - "Interfaces y clases en Java."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">Refactorizas la aplicación que ya funciona. Conservas el contrato mientras separas responsabilidades y añades pruebas de las reglas del dominio.</p>
 
 ## Semana 8 · Separar controller, service y repository
 
 ## Sesión 15 · Separar controller, service y repository
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 8: La API en una URL](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-8/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-8).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Cada capa tiene una responsabilidad: traducir HTTP, ejecutar reglas y acceder a datos. Se extrae un caso de uso del controlador sin cambiar su contrato.
+El controlador ya valida y responde correctamente, pero concentra demasiadas responsabilidades. Hoy separarás almacenamiento, reglas y HTTP en repository, service y controller. Refactorizar significa cambiar la organización interna conservando el comportamiento observable.
 
 #### Las tres preguntas que delatan el problema
 
@@ -79,7 +84,7 @@ La solución no es un truco de Spring: es una idea vieja y sencilla. Separar por
 
 Fíjate en la columna de la derecha, que es la que de verdad importa: **el service no sabrá que existe HTTP**. Por eso se podrá probar sin arrancar un servidor, y por eso el CSV y la tarea programada podrán reutilizarlo.
 
-Hoy no escribimos nada de eso. Hoy lo diagnosticamos, porque una refactorización que no sabes justificar es un capricho.
+Primero identificaremos esas responsabilidades en vuestro controlador; después las separaremos en repositorio, servicio y controlador, comprobando que las peticiones siguen dando el mismo resultado.
 
 #### Las tres capas, sin misticismo
 
@@ -110,21 +115,13 @@ La consecuencia más útil, y la que hay que retener: **el service no sabe que e
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Refactorizad el recurso principal en capas y mantened el almacenamiento en memoria.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Haced la misma separación en la segunda entidad, comprobando cada movimiento con vuestra colección.
+1. Ejecuta la colección del contrato y conserva su resultado como referencia. Abre el controlador principal.
+2. Marca qué líneas leen o escriben la lista, cuáles aplican reglas y cuáles construyen respuestas HTTP. Esa clasificación indicará qué mover a cada clase.
+3. Prepara los paquetes `repository` y `service` bajo tu paquete base. No cambies a la vez las rutas ni el formato de los DTO.
 
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">El controller monstruoso</p>
-
-#### Paso 2 · La unidad más rara del curso
+#### Paso 2 · Separar responsabilidades conservando el contrato HTTP
 
 Esta unidad **no añade ni una funcionalidad**. Al terminar, tu API responderá exactamente lo mismo que hoy: mismas rutas, mismos códigos, mismo JSON. Tu colección de Postman seguirá en verde sin tocar una sola petición.
 
@@ -136,7 +133,7 @@ Y aun así es de las más importantes, porque lo que cambia es **quién puede se
   <p>Por eso esta unidad llega después de la UD3 y no antes. Refactorizar sin una forma de comprobar que nada se ha roto es reescribir a ciegas, y tú ya tienes esa forma: la colección.</p>
 </div>
 
-#### Paso 3 · Mide antes de opinar
+#### Paso 3 · Medir las responsabilidades y dependencias del controlador
 
 «Este código es un desastre» no es un diagnóstico: es una impresión. Vamos a sustituirla por números y por hechos.
 
@@ -183,7 +180,7 @@ Pon tu `TareaController` y tu `ProyectoController` uno al lado del otro. Vas a e
   <p>Y el que quede sin corregir no dará error: seguirá funcionando como funcionaba, que es exactamente lo que hace que nadie lo encuentre.</p>
 </div>
 
-#### Paso 4 · El mapa de tu controlador
+#### Paso 4 · Clasificar las líneas del controlador por responsabilidad
 
 Coge tu `TareaController` y produce esta tabla. Una fila por método:
 
@@ -204,7 +201,7 @@ Marca cada casilla donde ese método haga algo de esa categoría. Después respo
 
 #### Paso 5 · El inventario de problemas
 
-Escribe un archivo `PROBLEMAS.md` con cuatro apartados. Sé concreto: nada de «está desordenado».
+Redacta un documento con cuatro apartados y expórtalo como `PROBLEMAS.pdf`. Sé concreto: nada de «está desordenado».
 
 Lista, con número de línea, los sitios donde una misma clase hace cosas de categorías distintas. Formato: *«líneas 34-41: el método `crear` decide una regla de negocio y además construye una URL»*.
 
@@ -224,7 +221,7 @@ Este archivo es la justificación de la unidad entera. En la sesión 18 lo repas
 
 #### Paso 6 · Extrae el repositorio
 
-Empezamos por abajo, porque es la capa que menos depende de las demás.
+Crea `repository/TareaRepository.java` con el bloque completo. Mueve allí la lista y el contador que antes estaban en el controlador, y conserva sus operaciones bajo los métodos de acceso mostrados. Todavía no borres el código del controlador: primero prepara el servicio del paso siguiente y después cambia sus llamadas. La aplicación tendrá una sola lista efectiva cuando completes la extracción, no una copia independiente en cada capa.
 
 ```java
 package com.ejemplo.gestor.repository;
@@ -289,7 +286,7 @@ Es también lo que devuelve `JpaRepository.findById` en la UD5, así que empezam
 
 #### Paso 7 · Extrae el servicio
 
-Aquí van las reglas y la coordinación.
+Crea `service/TareaService.java` e importa el repositorio, el modelo y la excepción. El bloque define el recorrido obtener → aplicar regla → guardar; conserva las reglas ya desarrolladas para tu dominio. Para trasladar PUT y PATCH, mueve sus asignaciones al servicio y deja la conversión de DTO en el controlador. No elimines una operación del contrato porque el bloque de ejemplo solo muestre parte de ellas.
 
 ```java
 package com.ejemplo.gestor.service;
@@ -349,7 +346,9 @@ public class TareaService {
   <p>Quien la traduce a un <code>404</code> es el manejador de la sesión 13, que sí es capa web. El service dice qué ha pasado; el controller decide cómo se cuenta eso por HTTP.</p>
 </div>
 
-#### Paso 8 · Adelgaza el controlador
+#### Paso 8 · Dejar en el controlador la entrada y la respuesta HTTP
+
+Modifica la clase `TareaController` existente. Añade el campo `servicio`, cambia un endpoint para utilizarlo y prueba esa petición antes de seguir con los demás. El ejemplo muestra listado, detalle, alta y borrado; adapta también PUT, PATCH y filtros a los métodos del servicio. Solo cuando todas las operaciones utilicen el servicio elimina del controlador la lista, el contador y las búsquedas privadas. Conserva paquete, imports, validación, Location y estados del contrato.
 
 ```java
 @RestController
@@ -398,7 +397,7 @@ Cada método hace ahora tres cosas y solo tres: **traducir lo que entra, llamar 
   <p>La regla práctica: <strong>los DTO no cruzan hacia dentro.</strong> Al service entran y salen objetos del modelo.</p>
 </div>
 
-#### Paso 9 · nada ha cambiado
+#### Paso 9 · Ejecutar la colección para comprobar que se conserva el contrato
 
 Este es el momento de la sesión.
 
@@ -413,7 +412,7 @@ Has movido de sitio casi todo el código de tu API y quien la consume no se ha e
   <p>No cambies la colección. La colección describe lo que tu API prometía y sigue siendo correcta: <strong>lo que está mal es la refactorización</strong>. Ese rojo es exactamente el aviso para el que la escribiste.</p>
 </div>
 
-#### Paso 10 · Lo que chirría, y es a propósito
+#### Paso 10 · Identificar los colaboradores creados directamente con new
 
 Mira estas dos líneas:
 
@@ -445,10 +444,8 @@ Déjalas así hoy. Mañana desaparecen, y entenderás qué se gana porque habrá
 
 #### Paso 12 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **extraed las capas conservando el comportamiento**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta la misma colección después de cada extracción. Sus resultados deben mantenerse sin modificar las peticiones para ocultar un fallo.
+2. Sigue una creación en el código: controller recibe, service decide y repository almacena. Comprueba que otra entidad de tu proyecto sigue la misma distribución.
 
 #### Ampliación si has completado el trabajo
 
@@ -467,7 +464,7 @@ Un compañero te describe su API así, sin enseñarte nada:
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>La tabla de categorías por método completa y las tres preguntas respondidas.</span></div>
-  <div><strong>Si lo tienes</strong><span><code>PROBLEMAS.md</code> con los cuatro apartados, concretos y con números de línea.</span></div>
+  <div><strong>Si lo tienes</strong><span><code>PROBLEMAS.pdf</code> con los cuatro apartados, concretos y con números de línea.</span></div>
   <div><strong>Reto</strong><span>El diagnóstico a ciegas con los cuatro problemas priorizados y el peor identificado.</span></div>
 </div>
 
@@ -511,35 +508,29 @@ La pregunta 4 no la vamos a resolver hoy, pero tienes que saber verla venir.
 
 El contrato público no cambia y podéis seguir una petición a través de las tres capas.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 15 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-15.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-15.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-15.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 16 · Inyección de dependencias
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 8: La API en una URL](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-8/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-8).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Spring construye y conecta los componentes. Inyectar por constructor hace explícitas las dependencias y permite sustituirlas al probar.
+Ya tienes capas, pero las clases todavía pueden construir directamente a sus colaboradoras. La inyección de dependencias consiste en recibir esos objetos; Spring los crea y conecta. Una interfaz permite expresar qué necesita el servicio sin atarlo al almacenamiento en memoria.
 
 #### El problema de decidir tú quién es tu colaborador
 
@@ -628,21 +619,15 @@ Hay un cuarto motivo, y es el mejor: **un constructor con seis parámetros se ve
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Eliminad construcciones manuales de servicios y repositorios donde deban intervenir los componentes de Spring.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Dibujad las dependencias reales de vuestro proyecto y corregid ciclos o responsabilidades mezcladas.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Inyección de dependencias</p>
+1. Abre controller, service y repository de la sesión 15. Localiza los `new` que crean colaboradores entre capas; no confundas esos objetos con nuevos registros o DTO.
+2. Dibuja quién necesita a quién: el controlador necesita el servicio y el servicio necesita el repositorio. Ese será el orden de los constructores.
+3. Identifica las operaciones del repositorio que pasarán a su interfaz. Conserva su implementación en memoria y la colección del contrato.
 
 #### Paso 2 · Marca y pide por constructor
+
+Los tres bloques modifican **tres archivos existentes**: repositorio, servicio y controlador. Añade la anotación de cada clase, sustituye el campo inicializado con `new` por un campo `final` sin inicializador y asigna ese campo en el constructor mostrado. Conserva todos los métodos de negocio y HTTP. Con un único constructor, Spring lo utiliza para conectar las clases. Reinicia al completar los tres cambios y comprueba una creación y una consulta.
 
 ```java
 package com.ejemplo.gestor.repository;
@@ -715,7 +700,7 @@ Verás la línea **una sola vez**, al arrancar, y no una por petición. Haz cinc
 
 #### Paso 3 · Saca el repositorio a una interfaz
 
-Esto es lo que de verdad compras hoy.
+Renombra primero la clase actual a `TareaRepositorioEnMemoria` con la herramienta de refactorización del IDE; cambia también su archivo y constructor si lo tiene. Después crea una **interfaz nueva** llamada `TareaRepository`, declara sus métodos y haz que la clase renombrada la implemente. Corrige el import del servicio para que dependa de la interfaz y deja `@Repository` solo en la implementación. El ejemplo alternativo de repositorio con registro es una demostración: no lo actives a la vez hasta comprender cómo se elige un candidato.
 
 ```java
 package com.ejemplo.gestor.repository;
@@ -800,7 +785,7 @@ La primera fila enlaza directamente con la UD1: si tu clase no cuelga del paquet
   <p>Y hace bien en negarse. Una dependencia circular casi siempre significa que <strong>las responsabilidades están mal repartidas</strong>: hay un tercer concepto que no has nombrado, o una de las dos clases está haciendo algo que no le toca.</p>
 </div>
 
-#### Paso 5 · Quita todos los `new`
+#### Paso 5 · Sustituir la creación manual de colaboradores por inyección
 
 1. Marca con su estereotipo todas tus clases de service y repository.
 2. Pásalas todas a inyección por constructor.
@@ -810,10 +795,8 @@ La primera fila enlaza directamente con la UD1: si tu clase no cuelga del paquet
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **inyectad las dependencias por constructor**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Arranca la aplicación y comprueba que Spring puede construir las capas sin dependencias ausentes, ambiguas o circulares.
+2. Ejecuta el CRUD completo y revisa que el servicio depende de la interfaz. Crear objetos de dominio con `new` sigue siendo correcto; lo que cambia es la construcción de colaboradores gestionados por Spring.
 
 #### Ampliación si has completado el trabajo
 
@@ -853,37 +836,31 @@ Deja los tres arreglados antes de terminar.
 
 La aplicación arranca, la colección pasa y cada dependencia del servicio se ve en su constructor.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 16 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-16.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-16.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-16.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 9 · Reglas de negocio probadas
 
 ## Sesión 17 · Reglas de negocio probadas
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 9: Comprobar el contrato publicado](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-9/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-9).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Las reglas del dominio viven en el servicio y deben poder comprobarse sin enviar una petición real. JUnit permite reproducir casos válidos y rechazos.
+Las capas ya se conectan por constructor. Hoy comprobarás las reglas de negocio sin arrancar el servidor web. Un test automatizado prepara datos, ejecuta una operación y comprueba su resultado; un repositorio falso permite controlar el estado del almacenamiento durante esa prueba.
 
 #### Tres cosas que no son la misma
 
@@ -964,23 +941,15 @@ Los dos hacen falta: la colección comprueba **el contrato HTTP**, y los tests c
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Llevad al servicio las reglas de existencia, unicidad y transición que correspondan a vuestro CRUD.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Escribid pruebas de éxito y rechazo para una regla relevante y ejecutadlas con Maven; incorporadlas al CI existente.
+1. Abre el servicio y la interfaz del repositorio. Escribe qué reglas dependen de los datos existentes, como una transición prohibida o un nombre duplicado.
+2. Localiza `src/test/java` y la dependencia de pruebas del `pom.xml`. La clase de test irá bajo el paquete correspondiente al servicio.
+3. Para cada regla, prepara un caso permitido y otro prohibido e indica qué dato debe quedar guardado después.
 
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+#### Paso 2 · Implementar en el servicio la regla pendiente del dominio
 
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Reglas de negocio en el service</p>
-
-#### Paso 2 · La regla que llevaba dos unidades esperando
-
-En la sesión 13 la encontraste, viste por qué una anotación no podía con ella y la dejaste apuntada. Hoy tiene sitio:
+Amplía el constructor existente de `TareaService` para recibir también `ProyectoRepository`; conserva el resto de sus métodos. En `crear`, comprueba el proyecto antes de guardar la tarea. Crea `ReglaDeNegocioException.java` en `error` y añade su método `@ExceptionHandler` al manejador que ya existe. Prueba primero un proyecto válido y después uno inexistente o inactivo: el rechazo debe impedir la inserción.
 
 ```java
 @Service
@@ -1052,7 +1021,7 @@ Es la discusión que dejaste abierta en la sesión 13, y ahora toca cerrarla. La
   </div>
 </div>
 
-También se defiende un `400`, argumentando que el cliente ha enviado un dato incorrecto. **Elige una, escríbela en `DECISIONES.md` y aplícala igual en toda la API.** Lo que no vale es que una regla parecida responda `409` en un recurso y `400` en otro.
+También se defiende un `400`, argumentando que el cliente ha enviado un dato incorrecto. **Elige una, escríbela en `DECISIONES.pdf` y aplícala igual en toda la API.** Lo que no vale es que una regla parecida responda `409` en un recurso y `400` en otro.
 
 #### Paso 3 · El service que solo coordina
 
@@ -1123,7 +1092,7 @@ Y llevan a una pregunta que conviene hacerse pronto: si alguien envía un `PATCH
 
 <p class="stage">Primeros tests del service con JUnit</p>
 
-#### Paso 6 · Ya tienes las herramientas instaladas
+#### Paso 6 · Localizar JUnit y preparar la clase de test
 
 Mira el `pom.xml`: `spring-boot-starter-test` está desde el primer día, porque lo puso `start.spring.io`. Trae JUnit 5 y todo lo necesario.
 
@@ -1135,9 +1104,9 @@ Y mira `src/test/java`: existe desde la UD1, con una clase generada dentro. Es l
   <p>Mismo paquete, mismo nombre más <code>Test</code>. Así se encuentran sin buscarlos y Maven los ejecuta sin configurar nada.</p>
 </div>
 
-#### Paso 7 · El repositorio falso
+#### Paso 7 · Implementar un repositorio de prueba con estado controlado
 
-Para probar el service hace falta darle un repositorio. Podrías darle el de memoria, pero entonces estarías probando dos clases a la vez y, si falla, no sabrías cuál.
+Crea los dobles en `src/test/java/com/ejemplo/gestor/service`, no en `src/main/java`, y no les pongas anotaciones de Spring. Implementa todos los métodos de las interfaces de la sesión 16. El falso de proyectos del bloque permite preparar los proyectos que verá el servicio. Prepara también el falso de tareas antes de escribir el test que lo utiliza, copiando la lógica de almacenamiento en memoria y manteniendo sus ids controlados.
 
 <p class="term">Doble de prueba</p>
 
@@ -1201,6 +1170,8 @@ Vive en `src/test/java`, así que no se publica con la aplicación.
 </details>
 
 #### Paso 8 · Tu primer test
+
+Crea `TareaServiceTest.java` en el mismo paquete de pruebas que los falsos. En cada test construye repositorios nuevos y pasa ambos al constructor del servicio: así un test no hereda datos de otro. En el caso permitido, crea previamente un proyecto activo con el id que pondrás en la tarea; en el rechazado no lo prepares. Ejecuta primero un solo método desde el IDE y después la clase completa. Revisa los imports estáticos de JUnit si no reconoce las aserciones.
 
 ```java
 package com.ejemplo.gestor.service;
@@ -1311,10 +1282,8 @@ El nombre te dice qué regla se ha roto, y el mensaje qué valor esperaba. Sin a
 
 #### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **implementad y probad las reglas del servicio**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta los tests con el wrapper de Maven usando el objetivo `test`. Deben poder probar el servicio sin escuchar en el puerto 8080.
+2. Comprueba que un caso rechazado conserva el estado previo y que el permitido lo cambia correctamente. Ejecuta además la colección para comprobar que las capas siguen conectadas.
 
 #### Ampliación si has completado el trabajo
 
@@ -1387,41 +1356,35 @@ Y una reflexión final, para escribir:
 
 Una regresión deliberada hace fallar una prueba y, al corregirla, vuelve a pasar.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 17 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-17.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-17.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-17.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 18 · Consolidar las capas del mismo proyecto
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 9: Comprobar el contrato publicado](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-9/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-9).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una refactorización termina cuando mantiene el comportamiento y mejora la separación de responsabilidades. La revisión sigue un caso de uso completo.
+Ya dispones de capas, inyección y pruebas de reglas. Hoy revisarás que toda la API aplica esa separación antes de sustituir la memoria por PostgreSQL. La colección verifica el contrato HTTP y los tests del servicio verifican las decisiones internas: necesitas ambas comprobaciones.
 
 #### Terminar es tachar
 
 Una refactorización a medias es peor que no haberla empezado: deja dos formas de hacer lo mismo conviviendo, y quien llegue después no sabrá cuál es la buena.
 
-Abre `PROBLEMAS.md`. Para cada línea, una de tres:
+Abre `PROBLEMAS.pdf`. Para cada línea, una de tres:
 
 <figure class="diagram">
   <figcaption>Qué hacer con cada problema apuntado</figcaption>
@@ -1446,24 +1409,11 @@ Las pruebas de servicio completan la colección HTTP: permiten provocar un confl
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Revisad todos los endpoints, eliminad lógica de negocio del controlador y duplicaciones entre servicios.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Completad los tests de los servicios y contrastad el código con la colección que consume Intermodular.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<div class="rule">
-  <p class="rule-label">Cómo es esta sesión</p>
-  <p>Sesión de cierre. No hay contenido nuevo: hay <strong>una lista de criterios y tu propio inventario de problemas</strong>. La refactorización la diriges tú.</p>
-</div>
-
-<p class="stage">Refactorización completa</p>
+1. Abre el árbol de paquetes, los tests del servicio y la colección. Ejecuta ambos recorridos antes de corregir la arquitectura.
+2. Elige una regla y localiza su única implementación. Anota si se repite en otro controlador o depende indebidamente de HTTP.
+3. Selecciona otra entidad de tu dominio y comprueba qué capas o tests le faltan para alcanzar la misma estructura.
 
 #### Paso 2 · Especificación · el estado final
 
@@ -1504,7 +1454,7 @@ com.ejemplo.gestor
 
 #### Paso 3 · La doble comprobación
 
-Esta unidad se cierra con dos pruebas que dicen cosas distintas:
+Ejecuta primero los tests del servicio con el backend detenido; su resultado debe depender de los objetos preparados por los tests. Después arranca el backend y ejecuta la colección HTTP con sus propios datos. Si falla un test, revisa regla y doble de prueba; si los tests pasan y falla HTTP, sigue la petición por controlador, mapper y servicio. Registra ambos resultados, porque comprueban límites distintos.
 
 <div class="compare-pair">
   <div>
@@ -1527,23 +1477,23 @@ Las dos tienen que estar en verde. Y hay una tercera comprobación, la más hone
     <li>Publicar un campo nuevo en la respuesta de proyectos.</li>
     <li>Añadir un filtro por prioridad al listado de tareas.</li>
   </ol>
-  <p>Apunta <strong>cuántos archivos has tenido que abrir y cuánto has tardado</strong>. Compáralo con la estimación que hiciste en el apartado 4 de <code>PROBLEMAS.md</code>, cuando todo estaba en el controlador. Esa diferencia es el resultado de la unidad.</p>
+  <p>Apunta <strong>cuántos archivos has tenido que abrir y cuánto has tardado</strong>. Compáralo con la estimación que hiciste en el apartado 4 de <code>PROBLEMAS.pdf</code>, cuando todo estaba en el controlador. Esa diferencia es el resultado de la unidad.</p>
 </div>
 
 #### Paso 4 · Preparar la evidencia de esta versión
 
 1. **El proyecto** con la estructura de la especificación.
-2. **`PROBLEMAS.md`** revisado, con cada línea tachada o justificada.
+2. **`PROBLEMAS.pdf`** revisado, con cada línea tachada o justificada.
 3. **Los tests**, con al menos uno por regla de negocio, en verde con `./mvnw test`.
 4. **La colección**, en verde y sin ninguna petición modificada desde la UD3.
-5. **`DECISIONES.md`** ampliado con tres:
+5. **`DECISIONES.pdf`** ampliado con tres:
    * Dónde vive el caso de uso de la ruta anidada y por qué.
    * Qué código de estado devuelve una regla de negocio incumplida en tu API, y por qué ese.
    * Qué regla te costó más colocar y qué duda tuviste.
 
 #### Paso 5 · Autoevaluación · pásale el código a otro
 
-La comprobación final de esta unidad no la puede hacer quien escribió el código.
+Intercambia el enlace a una versión concreta del repositorio. Clónala en otra carpeta, abre su README y prepara su configuración antes de ejecutar los comandos. Responde a las preguntas de la revisión señalando clase y método, no solo el nombre de una capa. Devuelve los pasos que faltaban en el README y una petición que reproduzca cada defecto encontrado; aplica después las correcciones equivalentes a tu proyecto.
 
 1. Intercambia el proyecto con un compañero.
 2. Sin preguntarle nada, y solo mirando los nombres de las clases y de los métodos, que responda por escrito:
@@ -1575,7 +1525,7 @@ Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, 
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Los diez criterios cumplidos y las dos comprobaciones en verde.</span></div>
-  <div><strong>Si lo tienes</strong><span><code>PROBLEMAS.md</code> tachado línea a línea y la prueba del cambio pequeño cronometrada.</span></div>
+  <div><strong>Si lo tienes</strong><span><code>PROBLEMAS.pdf</code> tachado línea a línea y la prueba del cambio pequeño cronometrada.</span></div>
   <div><strong>Reto</strong><span>La revisión cruzada con un compañero, con las respuestas equivocadas convertidas en correcciones.</span></div>
 </div>
 
@@ -1589,10 +1539,8 @@ Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, 
 
 #### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **revisad toda la aplicación en capas**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Los tests del servicio y la colección deben pasar después de la revisión sin cambiar el contrato acordado.
+2. Pide a otra persona que localice almacenamiento, regla y respuesta de una operación. Registra cualquier dependencia entre capas que aún debas corregir.
 
 ### Cierre
 
@@ -1600,27 +1548,18 @@ Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, 
 
 La versión en capas supera las comprobaciones anteriores y podéis justificar dónde está cada regla.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 18 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-18.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-18.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-18.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 
@@ -1728,7 +1667,7 @@ Si además puedes coger un controlador ajeno lleno de lógica y decir, método a
     <li>Los repositorios son interfaces con su implementación en memoria detrás.</li>
     <li>Cada regla de negocio tiene su test, y <code>./mvnw test</code> pasa en verde.</li>
     <li>La colección pasa en verde sin ninguna petición modificada desde la UD3.</li>
-    <li><code>PROBLEMAS.md</code> está tachado línea a línea.</li>
+    <li><code>PROBLEMAS.pdf</code> está tachado línea a línea.</li>
   </ul>
 </div>
 

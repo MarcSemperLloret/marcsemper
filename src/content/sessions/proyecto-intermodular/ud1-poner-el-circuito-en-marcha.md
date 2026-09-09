@@ -4,10 +4,10 @@ label: "UD1 · Arrancar"
 section: "ud-01"
 order: 1
 lang: "es"
-summary: "Terminar la primera semana con un repositorio público, una web fea desplegada en Azure y un cambio que ha entrado a producción pasando por una issue, una rama y una pull request revisada."
-duration: "6 horas · 2 sesiones de 3 h"
-modality: "Taller · el 80 % de la sesión es trabajo del alumnado"
-deliverable: "Repositorio público con la web publicada en una URL de Azure, tablero con issues y dos pull requests fusionadas con revisión."
+summary: "Preparar una URL de presentación y el circuito de issues, ramas, revisión y despliegue, conservando el repositorio de backend creado en Servidor."
+duration: "6 horas · 2 semanas · 2 sesiones de 3 h"
+modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
+deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
 date: "2026-09-09"
 outcomes:
   - "Explicar qué evalúa este módulo y qué evalúa Desarrollo Web en Entorno Servidor sobre el mismo código."
@@ -24,7 +24,9 @@ priorKnowledge:
   - "HTML mínimo: un documento que abre en el navegador."
 ---
 
-<p class="lead">Objetivo de la semana: que exista una URL pública con vuestro nombre y que el único camino para cambiar lo que hay en ella pase por una pull request revisada por otra persona.</p>
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
+<p class="lead">Objetivo de la unidad: que exista una URL pública con vuestro nombre y que el único camino para cambiar lo que hay en ella pase por una pull request revisada por otra persona.</p>
 
 <div class="rule">
   <p class="rule-label">Lo que se evalúa aquí no es vuestra web</p>
@@ -32,11 +34,14 @@ priorKnowledge:
 </div>
 
 <div class="rule">
-  <p class="rule-label">La primera evaluación, en dos proyectos</p>
-  <p>Primero un portfolio de cliente, solo HTML y CSS, para aprender el circuito con algo barato de romper. Después un CRUD sencillo que se integra en ese mismo portfolio y que obliga a que el circuito soporte algo con lógica dentro. En diciembre no se defiende la web: se defiende el tablero, una pull request y un fallo del pipeline.</p>
+  <p class="rule-label">Un producto de negocio y su presentación</p>
+  <p>El CRUD elegido en Servidor se mantiene durante los dos trimestres. El portfolio es su presentación y un soporte sencillo para aprender el workflow; no sustituye ese producto. El backend conserva desde el primer día su repositorio e historial. En diciembre se demuestra una versión común: funcionamiento en Servidor y proceso de revisión, CI y despliegue en Intermodular.</p>
 </div>
 
 ## Sesión 1 · Del repositorio vacío a una URL pública
+
+**Punto de partida compartido.** Semana lectiva 1: sitúa este taller después de las sesiones 1–2 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-1). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -51,9 +56,11 @@ priorKnowledge:
 
 ### Se explica
 
-#### Este módulo evalúa el método, no el producto
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-Estáis dando tecnología en cuatro módulos a la vez. Aquí no se enseña ninguna: se enseña el circuito por el que pasa el trabajo en cualquier equipo que cobre por esto.
+#### Cómo se evalúa el mismo producto en ambos módulos
+
+Los dos módulos se imparten al mismo grupo. Servidor explica e implementa el backend; aquí se aprende a organizar, revisar, comprobar y publicar ese trabajo. Cada herramienta de workflow se introduce antes de utilizarla.
 
 La consecuencia práctica es que el mismo código puede recibir dos notas muy distintas.
 
@@ -65,16 +72,16 @@ La consecuencia práctica es que el mismo código puede recibir dos notas muy di
 | Que la funcionalidad haga lo que dice | Que el despliegue sea automático y repetible |
 | La calidad del código | Que el historial demuestre trabajo repartido en el tiempo |
 
-Se puede tener una web preciosa y suspender aquí. Se puede tener una web horrorosa y sacar un diez. Si eso no pudiera pasar, os estaríamos evaluando dos veces lo mismo.
+Se puede tener una web preciosa y suspender aquí. Se puede tener una presentación sencilla y sacar un diez. Si eso no pudiera pasar, os estaríamos evaluando dos veces lo mismo.
 
 <div class="rule">
   <p class="rule-label">La consecuencia incómoda</p>
-  <p>Un tablero montado entero el domingo anterior a la entrega se ve. Las issues, los commits y las pull requests llevan fecha y hora, y esa fecha no se puede maquillar después. La forma barata de aprobar este módulo es trabajar una hora a la semana; la cara es intentar simularlo el último fin de semana.</p>
+  <p>Un tablero montado entero el domingo anterior a la entrega se ve. Las issues, los commits y las pull requests llevan fecha y hora, y esas fechas deben contrastarse con revisiones y ejecuciones, porque un historial de Git puede reescribirse. La evidencia debe reflejar el trabajo realizado durante las sesiones y la aportación de cada integrante. No se puntúa acumular commits.</p>
 </div>
 
 #### El circuito
 
-Todo lo que hagáis de aquí a diciembre pasa por estos siete pasos, siempre en el mismo orden. Hoy se montan las tuberías; la semana que viene se recorren enteras.
+Todo lo que hagáis de aquí a diciembre pasa por estos siete pasos, con comprobaciones automáticas y revisión antes de fusionar. Hoy se prepara el circuito; la semana que viene se recorre entero.
 
 <figure class="diagram">
   <figcaption>El circuito, de la tarea a la URL</figcaption>
@@ -122,6 +129,8 @@ Esa vista previa es la pieza que hace que la revisión de la semana que viene se
 
 ### Se trabaja
 
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+
 #### Bloque A · La cuenta de Azure
 
 <p class="stage stage--solo">Individual, y lo primero de todo</p>
@@ -129,7 +138,7 @@ Esa vista previa es la pieza que hace que la revisión de la semana que viene se
 Se hace antes que nada porque es el único paso que depende de que un tercero os diga que sí.
 
 1. Entrad en **azure.microsoft.com/es-es/free/students**.
-2. Pulsad **Empezar gratis** e iniciad sesión con **el correo del centro**, no con vuestro correo personal. La verificación académica se hace por el dominio del correo.
+2. Pulsad **Empezar gratis** e iniciad sesión con **el correo del centro**, siguiendo los requisitos de elegibilidad de la oferta. Tener ese correo no garantiza por sí solo que la suscripción sea admitida.
 3. Aceptad los términos. **No se pide tarjeta de crédito.** Si en algún momento os la pide, os habéis salido de la oferta de estudiantes: volved atrás y empezad de nuevo desde el enlace anterior.
 4. Cuando termine, entrad en **portal.azure.com** y comprobad que en **Suscripciones** aparece una llamada *Azure for Students*.
 
@@ -140,11 +149,11 @@ Se hace antes que nada porque es el único paso que depende de que un tercero os
 
 <details class="aside aside--help">
   <summary>Si la verificación falla</summary>
-  <p>Tres causas, en orden de frecuencia. <strong>Una:</strong> habéis usado el correo personal. Repetid con el del centro. <strong>Dos:</strong> sois menores de 18 y la oferta pide una comprobación adicional; avisadme y lo gestionamos, pero no os quedéis parados. <strong>Tres:</strong> el dominio no está reconocido todavía; es cuestión de días y no depende de vosotros.</p>
+  <p>Tres causas, en orden de frecuencia. <strong>Una:</strong> habéis usado el correo personal. Repetid con el del centro. <strong>Dos:</strong> no cumplís los requisitos de edad o de centro de la oferta; avisad al docente y utilizad el entorno alternativo acordado, pero no os quedéis parados. <strong>Tres:</strong> el dominio no está reconocido todavía; es cuestión de días y no depende de vosotros.</p>
   <p>En cualquiera de los tres casos <strong>no se pierde la sesión</strong>: seguid con el bloque B, y en el bloque C usad el plan alternativo con GitHub Pages que está al final de ese bloque. El circuito es el mismo; solo cambia quién sirve los ficheros. Cuando la cuenta esté lista, se migra sin rehacer nada.</p>
 </details>
 
-#### Bloque B · El repositorio y la página fea
+#### Bloque B · El repositorio y la página básica
 
 <p class="stage stage--solo">Individual. Este repositorio es vuestro y os lo lleváis</p>
 
@@ -254,7 +263,7 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
 
 **6 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a vuestro repositorio en GitHub, pestaña **Actions**. Hay un workflow ejecutándose con un punto amarillo: es Azure desplegando. Entrad, abrid el job y ved los pasos en directo.
 
-**7 · Abrir la URL.** Cuando el punto se ponga verde, volved al portal de Azure: en la vista general del recurso está la **URL** (algo como `nombre-aleatorio.azurestaticapps.net`). Abridla. Ahí está vuestra página fea.
+**7 · Abrir la URL.** Cuando el punto se ponga verde, volved al portal de Azure: en la vista general del recurso está la **URL** (algo como `nombre-aleatorio.azurestaticapps.net`). Abridla. Ahí está vuestra página básica.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación del bloque C</p>
@@ -378,6 +387,10 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 
 ### Cierre
 
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 1.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-01.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-01.pdf` y `sesion-02.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
+
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
@@ -415,6 +428,9 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 
 ## Sesión 2 · Issues, tablero y la primera pull request
 
+**Punto de partida compartido.** Semana lectiva 2: sitúa este taller después de las sesiones 3–4 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-2). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
+
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
@@ -427,6 +443,8 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 ---
 
 ### Se explica
+
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
 #### Una issue no es un recordatorio
 
@@ -494,6 +512,8 @@ Cuando `main` está protegida pasan tres cosas a la vez. La primera, que ningún
 
 ### Se trabaja
 
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+
 #### Bloque A · El tablero y seis issues
 
 <p class="stage stage--solo">Individual, con las seis frases que traíais de casa</p>
@@ -536,11 +556,13 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
 
 #### Bloque B · Cerrar la rama principal
 
+Aplica el procedimiento al portfolio y también al repositorio de backend que ya entregas en Servidor. No copies código entre ellos. En el backend todavía no existe el check de Maven: exige PR desde ahora y añade «Compilar y probar» después de su primera ejecución en Intermodular 7. Hasta entonces conserva la comprobación local de Servidor en la descripción de la PR. Si la revisión usa cero aprobaciones obligatorias, el control es docente; si requiere una aprobación, el revisor debe tener el permiso que exige GitHub.
+
 <p class="stage stage--guided">A la vez, y al final se comprueba rompiéndolo</p>
 
 <div class="rule">
-  <p class="rule-label">Vuestro repositorio no lleva colaboradores</p>
-  <p>El portfolio es vuestro y nadie más va a tener permiso de escritura sobre él. Vuestra pareja puede revisar sin ningún acceso especial, porque el repositorio es público y cualquiera con una cuenta de GitHub puede entrar en una pull request, comentar sobre las líneas y dejar su revisión. Lo único que necesitaría permiso de escritura es que esa aprobación <em>bloqueara</em> la fusión, y no es lo que queremos: nadie debe quedarse parado en su propio portfolio porque otra persona haya faltado a clase.</p>
+  <p class="rule-label">Revisión y permisos del repositorio</p>
+  <p>El portfolio conserva la autoría acordada; los permisos de revisión se configuran según la política del grupo. Vuestra pareja puede revisar sin ningún acceso especial, porque el repositorio es público y cualquiera con una cuenta de GitHub puede entrar en una pull request, comentar sobre las líneas y dejar su revisión. Con Required approvals en 0, GitHub exige PR y checks, pero no bloquea por ausencia de aprobación: la revisión se comprueba mediante su evidencia docente. Para exigirla técnicamente, el docente configura un revisor con permiso de escritura y al menos una aprobación, con sustitución prevista si falta. Conservad la política acordada para la autoría/equipo de Servidor.</p>
 </div>
 
 **1 · Crear la regla.** **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
@@ -714,6 +736,10 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 ---
 
 ### Cierre
+
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 2.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-02.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-03.pdf` y `sesion-04.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Producto de la unidad</p>

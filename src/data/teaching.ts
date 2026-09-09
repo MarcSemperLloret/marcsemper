@@ -242,7 +242,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Integraciones externas",
       "Testing, calidad y documentación"
     ],
-    resources: [],
+    resources: [{"label": "Shared sequence and assessment", "labelEs": "Secuencia y evaluación conjunta con Servidor", "href": "/es/docencia/coordinacion-servidor-intermodular/", "kind": "link", "descriptionEs": "26 semanas, dependencias concretas y una entrega común con criterios diferenciados."}],
     sections: [
       {
         id: "ud-01",
@@ -328,8 +328,8 @@ export const teachingCourses: TeachingCourse[] = [
         verbEs: "CONECTAR",
         title: "The project client: browser and CORS",
         titleEs: "El cliente del proyecto: navegador y CORS",
-        description: "Revisit the client already published in Intermodular, diagnose browser and CORS behaviour, and verify integration before adding authentication.",
-        descriptionEs: "Retomar el cliente ya publicado en Intermodular, diagnosticar el navegador y CORS y verificar la integración antes de añadir autenticación.",
+        description: "Build the first browser client, diagnose CORS, and verify the integration before publishing it in Intermodular and adding authentication.",
+        descriptionEs: "Construir el primer cliente de navegador, diagnosticar CORS y verificar la integración antes de publicarla en Intermodular y añadir autenticación.",
         resources: []
       },
       {
@@ -385,14 +385,14 @@ export const teachingCourses: TeachingCourse[] = [
     level: "Second year of Web Application Development",
     levelEs: "2.º de Desarrollo de Aplicaciones Web",
     term: "2026/2027",
-    hours: "~78 hours",
-    hoursEs: "~78 horas",
+    hours: "78 hours · 26 sessions",
+    hoursEs: "78 horas · 26 sesiones",
     status: "current",
     updatedAt: "2026-09-09",
-    summary: "A portfolio and the same student-chosen CRUD developed in Server-side Web Development: issues, branches, reviewed pull requests, CI and backend deployment during the first term.",
-    summaryEs: "Un portfolio y el mismo CRUD elegido y desarrollado en Servidor: issues, ramas, pull requests revisadas, CI y puesta en producción del backend durante el primer trimestre.",
-    overview: "The working method is assessed on the same CRUD chosen and built throughout the first term in Server-side Web Development. Intermodular focuses on checkable issues, branches, reviewed pull requests, CI that can block a merge, and reproducible deployment. The backend is published during the first term, first in memory and then with PostgreSQL as persistence is introduced in Server-side. Both modules use the same repository and version with separate assessment: backend implementation and behaviour in Server-side; workflow, CI and production delivery here. The portfolio provides the client, and dated repository evidence records the process throughout the term.",
-    overviewEs: "El método de trabajo se evalúa sobre el mismo CRUD elegido y construido durante todo el primer trimestre en Servidor. Intermodular se centra en issues comprobables, ramas, pull requests revisadas, CI capaz de bloquear una fusión y despliegue reproducible. El backend se publica en el primer trimestre, primero en memoria y después con PostgreSQL cuando Servidor incorpora persistencia. Ambos módulos utilizan el mismo repositorio y versión con evaluaciones distintas: implementación y funcionamiento del backend en Servidor; workflow, CI y entrega en producción aquí. El portfolio aporta el cliente y las evidencias fechadas del repositorio recogen el proceso durante todo el trimestre.",
+    summary: "One product shared with Server-side: reviewed changes, CI, deployment and a coordinated assessment across two terms.",
+    summaryEs: "El mismo producto de Servidor durante dos trimestres: cambios revisados, CI, despliegue y evaluación coordinada sobre una entrega común.",
+    overview: "26 three-hour workshops, one per week after the two Server-side sessions: 14 in the first term and 12 in the second. The student-chosen product and backend repository are retained throughout. The first term publishes the persistent backend; the second coordinates its client, security, integrations and final delivery after those topics are taught in Server-side. The product demonstration and evidence are shared, with distinct implementation and process criteria. Each workshop has 25 minutes of explanation, 140 of guided work and 15 of closing.",
+    overviewEs: "26 talleres de tres horas, uno por semana después de las dos sesiones de Servidor: 14 en el primer trimestre y 12 en el segundo. Se mantienen el producto elegido, su autoría/equipo y el repositorio del backend. El primero termina con el backend persistente publicado; el segundo coordina cliente, seguridad, integraciones y entrega final después de su explicación en Servidor. La demostración y las evidencias se comparten, con criterios diferenciados de implementación y proceso. Cada taller dedica 25 minutos a explicación, 140 a trabajo guiado y 15 a cierre.",
     outcomes: [
       "Turn work into issues with checkable acceptance criteria.",
       "Publish a static site on Azure with continuous deployment from GitHub.",
@@ -400,7 +400,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Protect the main branch and show that the circuit cannot be bypassed.",
       "Write a verification pipeline that can block a merge.",
       "Review someone else's work against stated criteria instead of approving on trust.",
-      "Integrate a CRUD into the portfolio without stepping outside the circuit.",
+      "Coordinate the existing product client and API after their implementation in Server-side.",
       "Defend the working method with dated evidence: board, pull requests and pipeline failures."
     ],
     outcomesEs: [
@@ -410,7 +410,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Proteger la rama principal y demostrar que el circuito no se puede saltar.",
       "Escribir un pipeline de comprobación capaz de bloquear una fusión.",
       "Revisar el trabajo de otra persona con criterios explícitos en vez de aprobar por confianza.",
-      "Integrar un CRUD en el portfolio sin salirse del circuito.",
+      "Coordinar el cliente y la API del mismo producto después de su implementación en Servidor.",
       "Defender el método de trabajo con evidencias fechadas: tablero, pull requests y fallos del pipeline."
     ],
     milestones: [
@@ -419,7 +419,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Portfolio through pull requests",
       "Verification pipeline",
       "CRUD integrated",
-      "Process defence"
+      "Shared final delivery"
     ],
     milestonesEs: [
       "Repositorio y URL pública",
@@ -427,7 +427,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Portfolio por pull requests",
       "Pipeline de comprobación",
       "CRUD integrado",
-      "Defensa del proceso"
+      "Entrega y defensa conjunta"
     ],
     topics: [
       "Working method",
@@ -445,105 +445,181 @@ export const teachingCourses: TeachingCourse[] = [
       "Revisión de código",
       "Portfolio profesional"
     ],
-    resources: [],
+    resources: [{"label": "Shared sequence and assessment", "labelEs": "Secuencia y evaluación conjunta con Servidor", "href": "/es/docencia/coordinacion-servidor-intermodular/", "kind": "link", "descriptionEs": "26 semanas, dependencias concretas y una entrega común con criterios diferenciados."}],
     sections: [
       {
-        id: "ud-01",
-        number: "UD1",
-        verb: "START",
-        verbEs: "ARRANCAR",
-        title: "Start the working circuit",
-        titleEs: "Poner el circuito en marcha",
-        description: "Publish a deliberately ugly site on Azure from day one, and close the main branch so that every change has to travel through an issue, a branch and a reviewed pull request.",
-        descriptionEs: "Publicar en Azure una web deliberadamente fea desde el primer día, y cerrar la rama principal para que todo cambio pase por una issue, una rama y una pull request revisada.",
-        phase: "1 · WORKING METHOD",
-        phaseEs: "1 · MÉTODO DE TRABAJO",
-        resources: []
+            "id": "ud-01",
+            "number": "UD1",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Poner el circuito en marcha",
+            "titleEs": "Poner el circuito en marcha",
+            "description": "Preparar una URL de presentación y el circuito de issues, ramas, revisión y despliegue, conservando el repositorio de backend creado en Servidor.",
+            "descriptionEs": "Preparar una URL de presentación y el circuito de issues, ramas, revisión y despliegue, conservando el repositorio de backend creado en Servidor.",
+            "phase": "1 · FIRST TERM",
+            "phaseEs": "1 · PRIMER TRIMESTRE",
+            "resources": []
       },
       {
-        id: "ud-02",
-        number: "UD2",
-        verb: "CHECK",
-        verbEs: "COMPROBAR",
-        title: "Let the machine check it",
-        titleEs: "Que lo compruebe la máquina",
-        description: "Build the real portfolio through pull requests while writing a pipeline that validates HTML, formatting, links and accessibility, and that refuses the merge when any of them fails.",
-        descriptionEs: "Construir el portfolio de verdad entrando por pull request, y escribir un pipeline que valide HTML, formato, enlaces y accesibilidad, y que impida fusionar cuando algo falla.",
-        phase: "1 · WORKING METHOD",
-        phaseEs: "1 · MÉTODO DE TRABAJO",
-        resources: []
+            "id": "ud-02",
+            "number": "UD2",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Que lo compruebe la máquina",
+            "titleEs": "Que lo compruebe la máquina",
+            "description": "Construir el portfolio de verdad haciendo entrar cada sección por pull request, y escribir un pipeline propio que valide HTML, formato, enlaces y accesibilidad, y que impida fusionar cuando algo de eso falla.",
+            "descriptionEs": "Construir el portfolio de verdad haciendo entrar cada sección por pull request, y escribir un pipeline propio que valide HTML, formato, enlaces y accesibilidad, y que impida fusionar cuando algo de eso falla.",
+            "phase": "1 · FIRST TERM",
+            "phaseEs": "1 · PRIMER TRIMESTRE",
+            "resources": []
       },
       {
-        id: "ud-03",
-        number: "UD3",
-        verb: "PUBLISH",
-        verbEs: "PUBLICAR",
-        title: "Close and publish the version",
-        titleEs: "Cerrar y publicar la versión",
-        description: "Write the README that makes the repository legible to a stranger, publish the first named version, and audit a classmate's six weeks of work against the definition of done.",
-        descriptionEs: "Escribir el README que hace comprensible el repositorio para quien llega de fuera, publicar la primera versión con nombre, y auditar seis semanas de trabajo ajeno contra la definición de terminado.",
-        phase: "1 · WORKING METHOD",
-        phaseEs: "1 · MÉTODO DE TRABAJO",
-        resources: []
+            "id": "ud-03",
+            "number": "UD3",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Cerrar y publicar la versión",
+            "titleEs": "Cerrar y publicar la versión",
+            "description": "Escribir el README que hace comprensible el repositorio para quien llega de fuera, publicar la primera versión con nombre, y auditar el rastro de trabajo del compañero contra la definición de terminado.",
+            "descriptionEs": "Escribir el README que hace comprensible el repositorio para quien llega de fuera, publicar la primera versión con nombre, y auditar el rastro de trabajo del compañero contra la definición de terminado.",
+            "phase": "1 · FIRST TERM",
+            "phaseEs": "1 · PRIMER TRIMESTRE",
+            "resources": []
       },
       {
-        id: "ud-04",
-        number: "UD4",
-        verb: "CONNECT",
-        verbEs: "CONECTAR",
-        title: "Put the backend into production",
-        titleEs: "Poner el backend en producción",
-        description: "Bring the API being built in the server module into the same circuit: a repository of its own, a CI that compiles and runs the tests, deployment to Azure App Service, and the portfolio consuming it from the browser.",
-        descriptionEs: "Llevar al circuito la API que se construye en Servidor: repositorio propio, un CI que compila y ejecuta los tests, despliegue en Azure App Service, y el portfolio consumiéndola desde el navegador.",
-        phase: "2 · TWO PIECES IN PRODUCTION",
-        phaseEs: "2 · DOS PIEZAS EN PRODUCCIÓN",
-        resources: []
+            "id": "ud-04",
+            "number": "UD4",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Poner el backend en producción",
+            "titleEs": "Poner el backend en producción",
+            "description": "Reutilizar el repositorio de Servidor, ejecutar su CI, publicar el backend, comprobar el contrato con la colección y preparar PostgreSQL en pruebas y producción.",
+            "descriptionEs": "Reutilizar el repositorio de Servidor, ejecutar su CI, publicar el backend, comprobar el contrato con la colección y preparar PostgreSQL en pruebas y producción.",
+            "phase": "1 · FIRST TERM",
+            "phaseEs": "1 · PRIMER TRIMESTRE",
+            "resources": []
       },
       {
-        id: "ud-05",
-        number: "UD5",
-        verb: "CHOOSE",
-        verbEs: "ELEGIR",
-        title: "Choose the big problem",
-        titleEs: "Elegir el problema grande",
-        description: "Generate candidate problems from contexts the student can actually reach, discard them with checkable criteria, and leave with one chosen and a person to talk to.",
-        descriptionEs: "Generar candidatos de problema desde contextos con acceso real, descartarlos con criterios comprobables, y salir con uno elegido y una persona con la que hablar.",
-        phase: "3 · CLOSING AND WHAT COMES NEXT",
-        phaseEs: "3 · CIERRE Y SIGUIENTE PROYECTO",
-        resources: []
+            "id": "ud-05",
+            "number": "UD5",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Priorizar la evolución del producto",
+            "titleEs": "Priorizar la evolución del producto",
+            "description": "Priorizar una mejora del mismo producto a partir de necesidades observadas, sin cambiar de tema ni de repositorio.",
+            "descriptionEs": "Priorizar una mejora del mismo producto a partir de necesidades observadas, sin cambiar de tema ni de repositorio.",
+            "phase": "1 · FIRST TERM",
+            "phaseEs": "1 · PRIMER TRIMESTRE",
+            "resources": []
       },
       {
-        id: "ud-06",
-        number: "UD6",
-        verb: "DEFEND",
-        verbEs: "DEFENDER",
-        title: "Defend the method",
-        titleEs: "Defender el método",
-        description: "Close the term by defending how the work was done, with three pieces of evidence that cannot be improvised: the board, the most discussed pull request and a pipeline run that failed.",
-        descriptionEs: "Cerrar la evaluación defendiendo cómo se ha trabajado, con tres evidencias que no se pueden improvisar: el tablero, la pull request más discutida y una ejecución del pipeline que falló.",
-        phase: "3 · CLOSING AND WHAT COMES NEXT",
-        phaseEs: "3 · CIERRE Y SIGUIENTE PROYECTO",
-        resources: []
+            "id": "ud-06",
+            "number": "UD6",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Defender el método",
+            "titleEs": "Defender el método",
+            "description": "Cerrar la evaluación defendiendo cómo se ha trabajado, con tres evidencias que no se pueden improvisar: el tablero, la pull request más discutida y una ejecución del pipeline que falló.",
+            "descriptionEs": "Cerrar la evaluación defendiendo cómo se ha trabajado, con tres evidencias que no se pueden improvisar: el tablero, la pull request más discutida y una ejecución del pipeline que falló.",
+            "phase": "1 · FIRST TERM",
+            "phaseEs": "1 · PRIMER TRIMESTRE",
+            "resources": []
+      },
+      {
+            "id": "ud-07",
+            "number": "UD7",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Planificar y revisar el incremento",
+            "titleEs": "Planificar y revisar el incremento",
+            "description": "Planificar el incremento y sus dependencias y revisar y publicar un contrato compatible, sobre la misma versión del producto de Servidor.",
+            "descriptionEs": "Planificar el incremento y sus dependencias y revisar y publicar un contrato compatible, sobre la misma versión del producto de Servidor.",
+            "phase": "2 · SECOND TERM",
+            "phaseEs": "2 · SEGUNDO TRIMESTRE",
+            "resources": []
+      },
+      {
+            "id": "ud-08",
+            "number": "UD8",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Integrar cliente y seguridad",
+            "titleEs": "Integrar cliente y seguridad",
+            "description": "Integrar el cliente ya construido en Servidor y planificar permisos y preparar el entorno de seguridad, sobre la misma versión del producto de Servidor.",
+            "descriptionEs": "Integrar el cliente ya construido en Servidor y planificar permisos y preparar el entorno de seguridad, sobre la misma versión del producto de Servidor.",
+            "phase": "2 · SECOND TERM",
+            "phaseEs": "2 · SEGUNDO TRIMESTRE",
+            "resources": []
+      },
+      {
+            "id": "ud-09",
+            "number": "UD9",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Verificar y publicar los permisos",
+            "titleEs": "Verificar y publicar los permisos",
+            "description": "Comprobar roles y propiedad en el proceso de revisión y publicar el acceso con jwt sin perder permisos, sobre la misma versión del producto de Servidor.",
+            "descriptionEs": "Comprobar roles y propiedad en el proceso de revisión y publicar el acceso con jwt sin perder permisos, sobre la misma versión del producto de Servidor.",
+            "phase": "2 · SECOND TERM",
+            "phaseEs": "2 · SEGUNDO TRIMESTRE",
+            "resources": []
+      },
+      {
+            "id": "ud-10",
+            "number": "UD10",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Comprobar las integraciones",
+            "titleEs": "Comprobar las integraciones",
+            "description": "Comprobar una dependencia externa y su degradación y verificar archivos y efectos externos, sobre la misma versión del producto de Servidor.",
+            "descriptionEs": "Comprobar una dependencia externa y su degradación y verificar archivos y efectos externos, sobre la misma versión del producto de Servidor.",
+            "phase": "2 · SECOND TERM",
+            "phaseEs": "2 · SEGUNDO TRIMESTRE",
+            "resources": []
+      },
+      {
+            "id": "ud-11",
+            "number": "UD11",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Preparar la entrega y recuperación",
+            "titleEs": "Preparar la entrega y recuperación",
+            "description": "Cerrar una candidata con evidencias de calidad y preparar la actualización y su recuperación, sobre la misma versión del producto de Servidor.",
+            "descriptionEs": "Cerrar una candidata con evidencias de calidad y preparar la actualización y su recuperación, sobre la misma versión del producto de Servidor.",
+            "phase": "2 · SECOND TERM",
+            "phaseEs": "2 · SEGUNDO TRIMESTRE",
+            "resources": []
+      },
+      {
+            "id": "ud-12",
+            "number": "UD12",
+            "verb": "WORKSHOP",
+            "verbEs": "TALLER",
+            "title": "Publicar y defender el producto",
+            "titleEs": "Publicar y defender el producto",
+            "description": "Publicar el incremento y preparar el caso de portfolio y defender el producto y el proceso sobre la misma versión, sobre la misma versión del producto de Servidor.",
+            "descriptionEs": "Publicar el incremento y preparar el caso de portfolio y defender el producto y el proceso sobre la misma versión, sobre la misma versión del producto de Servidor.",
+            "phase": "2 · SECOND TERM",
+            "phaseEs": "2 · SEGUNDO TRIMESTRE",
+            "resources": []
       }
-    ]
+]
   },
   {
     slug: "digitalizacion",
     title: "Digitalización",
     titleEs: "Digitalización",
     term: "2026/2027",
-    hours: "~30 hours",
-    hoursEs: "~30 horas",
+    hours: "30 hours",
+    hoursEs: "30 horas",
     status: "current",
-    updatedAt: "2026-08-30",
+    updatedAt: "2026-09-09",
     summary:
       "How a developer works in a digital company: publishing to the cloud, directing AI agents, analysing real data, auditing security and designing a digital transformation.",
     summaryEs:
       "Cómo trabaja hoy un desarrollador en una empresa digital: publicar en cloud, dirigir agentes de IA, analizar datos reales, auditar la seguridad y diseñar una transformación digital.",
-    overview:
-      "A cross-curricular module that follows the real work of a developer inside a company that is digitalising: publishing an application to the cloud, connecting systems that do not talk to each other, directing and verifying a coding agent, turning a dataset into a decision, auditing an application before it goes live and, finally, designing the digital transformation of a whole company. Every unit ends in a real deliverable — a working URL, a repository, an analysis, an audit — rather than in an exam.",
-    overviewEs:
-      "Módulo transversal que recorre el trabajo real de un desarrollador dentro de una empresa que se digitaliza: publicar una aplicación en cloud, conectar sistemas que no se hablan entre sí, dirigir y verificar a un agente de programación, convertir un dataset en una decisión, auditar una aplicación antes de publicarla y, al final, diseñar la transformación digital de una empresa entera. Cada unidad termina en un producto real —una URL que funciona, un repositorio, un análisis, una auditoría— y no en un examen.",
+    overview: "Thirty one-hour workshops: ten minutes of contextual explanation, forty-five of guided activity and five to check progress. Self-contained starting materials support learners without Server or Intermodular prerequisites. Each unit has an assessed activity; weights follow unit hours, with individual evidence and revision of unmet criteria.",
+    overviewEs: "30 talleres de una hora: 10 minutos de explicación contextualizada, 45 de actividad guiada y 5 de cierre. Siete actividades acumulativas permiten analizar procesos, integración, cloud, IA, datos, seguridad y una transformación empresarial. Los materiales iniciales están incluidos y no se necesita el proyecto de Servidor o Intermodular. Se evalúan las actividades con rúbricas y peso proporcional a sus horas; cada integrante aporta evidencias y puede revisar los criterios pendientes.",
     outcomes: [
       "Publish a real website on the internet, with your own domain and HTTPS.",
       "Work with a coding agent the way a professional does: context, instructions, tools and verification.",
@@ -574,7 +650,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Datos y decisiones",
       "Seguridad de aplicaciones"
     ],
-    resources: [],
+    resources: [{ label: "Workshop setup and assessment", labelEs: "Guía de arranque, materiales y evaluación", href: "/es/docencia/talleres-transversales/", kind: "notes", description: "Starting materials and activity-based assessment.", descriptionEs: "Materiales iniciales, herramientas y criterios para trabajar sin depender de otros módulos." }],
     sections: [
       {
         id: "ud-01",
@@ -685,18 +761,16 @@ export const teachingCourses: TeachingCourse[] = [
     title: "Sostenibilidad",
     titleEs: "Sostenibilidad",
     term: "2026/2027",
-    hours: "~30 hours",
-    hoursEs: "~30 horas",
+    hours: "30 hours",
+    hoursEs: "30 horas",
     status: "current",
-    updatedAt: "2026-08-29",
+    updatedAt: "2026-09-09",
     summary:
       "Deciding with sustainability criteria inside a digital product: ESG impact, life cycle, a website that consumes less, accessibility, and infrastructure sized to the problem.",
     summaryEs:
       "Decidir con criterio de sostenibilidad dentro de un producto digital: impactos ASG, ciclo de vida, una web que consume menos, accesibilidad e infraestructura proporcional al problema.",
-    overview:
-      "A cross-curricular module on the environmental and social consequences of technology, and on the criteria used to reduce them. Every unit ends in a decision that has to be defended with evidence rather than with intentions: which impacts actually matter, whether a device should be replaced, what a page really costs to load, who cannot use the interface, how much infrastructure a problem deserves and, finally, designing the digital sustainability plan of a whole company. Regulation appears throughout, where it belongs — as a constraint on a technical decision rather than as a list to memorise.",
-    overviewEs:
-      "Módulo transversal sobre las consecuencias ambientales y sociales de la tecnología y sobre los criterios para reducirlas. Cada unidad termina en una decisión que hay que defender con evidencias y no con intenciones: qué impactos importan de verdad, si conviene sustituir un dispositivo, cuánto cuesta realmente cargar una página, quién no puede usar la interfaz, cuánta infraestructura merece un problema y, al final, diseñar el plan de sostenibilidad digital de una empresa entera. La normativa aparece a lo largo del módulo, donde le corresponde: como límite de una decisión técnica y no como una lista que memorizar.",
+    overview: "Thirty one-hour workshops: ten minutes of contextual explanation, forty-five of guided activity and five to check progress. Self-contained starting materials support learners without Server or Intermodular prerequisites. Each unit has an assessed activity; weights follow unit hours, with individual evidence and revision of unmet criteria.",
+    overviewEs: "30 talleres de una hora: 10 minutos de explicación contextualizada, 45 de actividad guiada y 5 de cierre. PixelStore sirve como caso independiente para analizar impactos ASG, equipos, recursos web, accesibilidad, infraestructura y un plan de sostenibilidad. No se presupone haber cursado Digitalización, Servidor o Intermodular. Se evalúan seis actividades con rúbricas y peso proporcional a sus horas; el plan final reutiliza las evidencias sin duplicar informes.",
     outcomes: [
       "Analyse the environmental, social and governance impacts of a company.",
       "Tell a real improvement from a claim with no evidence behind it.",
@@ -735,7 +809,7 @@ export const teachingCourses: TeachingCourse[] = [
       "Plan de sostenibilidad",
       "Normativa aplicable"
     ],
-    resources: [],
+    resources: [{ label: "Workshop setup and assessment", labelEs: "Guía de arranque, materiales y evaluación", href: "/es/docencia/talleres-transversales/", kind: "notes", description: "Starting materials and activity-based assessment.", descriptionEs: "Materiales iniciales, herramientas y criterios para trabajar sin depender de otros módulos." }],
     sections: [
       {
         id: "ud-01",

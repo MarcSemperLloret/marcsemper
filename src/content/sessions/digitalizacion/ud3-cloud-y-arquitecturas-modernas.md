@@ -6,9 +6,9 @@ order: 3
 lang: "es"
 summary: "Publica tu primera aplicación en Internet. De localhost a un dominio propio con HTTPS, pasando por una máquina virtual, Nginx, reglas de red, DNS y certificados."
 duration: "5 horas · 5 sesiones"
-modality: "Taller individual o en parejas · unos minutos de explicación y el resto se trabaja"
-deliverable: "Una página web accesible públicamente mediante HTTPS y una breve memoria técnica."
-date: "2026-08-28"
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Sitio de laboratorio y arquitectura. Una actividad acumulativa por unidad, con evidencias y aportación individual."
+date: "2026-09-09"
 outcomes:
   - "Publicar una web real, accesible desde cualquier dispositivo de Internet."
   - "Explicar la diferencia entre IaaS, PaaS y SaaS con un ejemplo propio."
@@ -16,1390 +16,25 @@ outcomes:
   - "Asociar un nombre DNS y servir la web por HTTPS."
   - "Dibujar y defender la arquitectura que habéis montado."
 requirements:
-  - "Cuenta de Azure for Students."
-  - "Git y una cuenta de GitHub."
-  - "Un cliente SSH: el terminal de Windows o el de VS Code sirven."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
 priorKnowledge:
-  - "Comandos básicos de terminal."
-  - "Qué es un cliente y qué es un servidor (UD2)."
+  - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
 ---
 
-<div class="checkpoint">
-  <p class="checkpoint-label">La misión · ocho pasos hasta tu web en Internet</p>
-  <ol>
-    <li>Web funcionando en local.</li>
-    <li>Proyecto guardado en GitHub.</li>
-    <li>Máquina virtual creada en Azure.</li>
-    <li>Nginx instalado y sirviendo.</li>
-    <li>Web accesible por IP pública.</li>
-    <li>Nombre DNS apuntando a esa IP.</li>
-    <li>HTTPS con certificado válido.</li>
-    <li>Web actualizada sin rehacer nada.</li>
-  </ol>
-</div>
+<p class="lead">Sitio de laboratorio y arquitectura. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
 
-<div class="rule">
-  <p class="rule-label">Cómo se reparte cada sesión</p>
-  <p>Unos minutos de explicación al principio y el resto del tiempo trabajando. Lo que se explica es lo justo para poder empezar; lo demás aparece donde hace falta, en el paso donde hace falta. La actividad ocupa las cinco sesiones: se explica entera hoy y a partir de la siguiente se entra directamente a trabajar donde se dejó.</p>
-</div>
+## Cómo trabajar esta unidad
 
-## Sesión 1 · Del portátil a una máquina en Azure
+Son 5 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>Se explica:</strong> qué vamos a montar y por qué el cloud se paga.</li>
-    <li><strong>Se trabaja:</strong> la web que vais a publicar, el repositorio, la máquina virtual y la primera conexión por SSH.</li>
-    <li><strong>Se comprueba:</strong> entráis en vuestro servidor y sabéis cuánto cuesta lo que habéis creado.</li>
-  </ol>
-</div>
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
 
-### Se explica
+## Actividad y criterios de evaluación
 
-### ¿Qué vamos a construir?
+**Sitio de laboratorio y arquitectura.** Guarda el trabajo en `digitalizacion/ud3/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
 
-Al terminar tendremos algo parecido a esto:
-
-<figure class="diagram">
-  <figcaption>La arquitectura completa que vamos a montar</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 540" role="img" aria-labelledby="build-title build-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="build-title">Arquitectura del despliegue</title>
-    <desc id="build-desc">Desde Internet, un nombre DNS apunta a una IP pública. Esa IP corresponde a una máquina virtual Ubuntu alojada en Azure, en la que Nginx sirve nuestra web.</desc>
-    <defs>
-      <marker id="build-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 56 L 360 86" marker-end="url(#build-arrow)" />
-      <path d="M 360 148 L 360 178" marker-end="url(#build-arrow)" />
-      <path d="M 360 228 L 360 258" marker-end="url(#build-arrow)" />
-      <path d="M 360 352 L 360 378" marker-end="url(#build-arrow)" />
-      <path d="M 360 428 L 360 454" marker-end="url(#build-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="280" y="12" width="160" height="44" rx="3" />
-      <text x="360" y="34">Internet</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="240" y="92" width="240" height="56" rx="3" />
-      <text x="360" y="112">Nombre DNS</text>
-      <text class="diagram-subtext" x="360" y="132">miweb.duckdns.org</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="184" width="180" height="44" rx="3" />
-      <text x="360" y="206">IP pública</text>
-    </g>
-    <g class="diagram-node diagram-node--container">
-      <rect x="180" y="264" width="360" height="260" rx="3" />
-      <text x="360" y="286">AZURE</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="230" y="308" width="260" height="44" rx="3" />
-      <text x="360" y="330">Máquina virtual · Ubuntu</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="230" y="384" width="260" height="44" rx="3" />
-      <text x="360" y="406">Nginx</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="230" y="460" width="260" height="44" rx="3" />
-      <text x="360" y="482">Nuestra web</text>
-    </g>
-  </svg>
-</figure>
-
-Además:
-
-<figure class="diagram">
-  <figcaption>Cómo llega el código al servidor</figcaption>
-  <ol class="flow flow--row">
-    <li>Nuestro PC</li>
-    <li>GitHub</li>
-    <li>Servidor Azure</li>
-  </ol>
-</figure>
-
-Y protegeremos la comunicación:
-
-<figure class="diagram">
-  <figcaption>De una conexión abierta a una cifrada</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>HTTP</li>
-    <li>HTTPS</li>
-    <li>TLS</li>
-  </ol>
-</figure>
-
----
-
----
-
-### Se trabaja
-
-Necesitamos algo que publicar.
-
-Crearemos una web sencilla.
-
-Puede ser:
-
-* portfolio;
-* página de una empresa ficticia;
-* presentación personal profesional;
-* página sobre un proyecto;
-* pequeña landing page.
-
-Podéis utilizar un asistente de IA para ayudaros a crearla.
-
-Pero hay una condición:
-
-> Tenéis que entender qué habéis generado.
-
-Como mínimo debe contener:
-
-* HTML;
-* CSS;
-* alguna imagen;
-* diseño razonablemente cuidado.
-
-No necesitamos backend en esta actividad.
-
----
-
-### Guardar el proyecto en GitHub
-
-Cuando trabajamos profesionalmente no solemos copiar proyectos mediante pendrive.
-
-Utilizamos sistemas de control de versiones.
-
-Subid vuestra web a un repositorio de GitHub.
-
-Nuestro flujo será:
-
-<figure class="diagram">
-  <figcaption>Del portátil a producción</figcaption>
-  <ol class="flow">
-    <li>Código local</li>
-    <li>Git</li>
-    <li>GitHub</li>
-    <li>Servidor de producción</li>
-  </ol>
-</figure>
-
-GitHub no será nuestro servidor web.
-
-Será el lugar desde el cual obtendremos el código.
-
----
-
-### Crear un servidor en Azure
-
-Vamos a crear una **máquina virtual Linux** en Azure.
-
-Una máquina virtual es un ordenador creado mediante software que dispone de:
-
-* CPU;
-* RAM;
-* disco;
-* sistema operativo;
-* interfaz de red.
-
-Pero no está debajo de nuestra mesa.
-
-Se ejecuta en infraestructura de Microsoft.
-
-Utilizaremos:
-
-> Ubuntu Server.
-
----
-
-### Una advertencia importante: el cloud cuesta dinero
-
-En un ordenador del aula podemos dejar una máquina encendida sin pensar demasiado en su coste directo.
-
-En cloud normalmente pagamos por los recursos utilizados.
-
-Por ejemplo:
-
-* tiempo de CPU;
-* memoria;
-* almacenamiento;
-* tráfico;
-* direcciones IP;
-* determinados servicios.
-
-Por tanto:
-
-> **No creéis recursos más grandes de lo necesario.**
-
-Elegiremos una VM pequeña suficiente para servir nuestra página.
-
-Cuando terminemos la actividad podremos detener o eliminar los recursos que ya no necesitemos.
-
-Esta también es una competencia profesional: **controlar costes cloud**.
-
----
-
-### Acceder al servidor mediante SSH
-
-Nuestro servidor no tendrá una pantalla física delante de nosotros.
-
-Lo administraremos remotamente mediante **SSH**.
-
-Conceptualmente:
-
-<figure class="diagram">
-  <figcaption>Una consola remota y cifrada</figcaption>
-  <ol class="flow">
-    <li>Nuestro ordenador</li>
-    <li>Conexión cifrada por SSH</li>
-    <li>Servidor Ubuntu</li>
-  </ol>
-</figure>
-
-SSH suele utilizar:
-
-<p class="single-node single-node--mono">TCP/22</p>
-
-Siempre que sea posible utilizaremos **autenticación mediante clave SSH** en lugar de una contraseña.
-
-Las claves SSH evitan depender de una contraseña que pueda adivinarse o reutilizarse. Pero la clave privada es una credencial: si alguien la roba o la ve escrita, debe considerarse comprometida (y por eso debe protegerse con permisos de archivo estrictos, idealmente cifrarse con passphrase y revocarse de inmediato del servidor si se expone).
-
----
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · no consigo entrar por SSH</summary>
-  <ol>
-    <li>¿La máquina está encendida en el portal de Azure? Una VM detenida no responde.</li>
-    <li>¿Estáis usando la IP pública, y no la privada?</li>
-    <li>¿El puerto 22 está permitido en el Network Security Group?</li>
-    <li>¿Apuntáis a la clave correcta con <code>-i</code>, y es la privada y no la <code>.pub</code>?</li>
-    <li>¿El usuario es el que creasteis al montar la VM? No es <code>root</code> ni vuestro usuario de Windows.</li>
-    <li>Si dice «permissions are too open», el problema son los permisos del fichero de la clave en vuestro ordenador, no el servidor.</li>
-  </ol>
-</details>
-
-### Preparar el servidor
-
-Una vez conectados:
-
-```bash
-sudo apt update
-sudo apt upgrade
-```
-
-¿Por qué hacemos esto?
-
-Porque un servidor que acabamos de crear puede tener paquetes pendientes de actualizar.
-
-Mantener el software actualizado es una de las medidas básicas de seguridad.
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Tu web funciona en local.</li>
-    <li>El proyecto está en un repositorio de GitHub.</li>
-    <li>Tienes una máquina virtual creada en Azure y anotada su IP pública.</li>
-    <li>Entras por SSH sin errores.</li>
-    <li>Sabes cuánto cuesta lo que has creado y cómo apagarlo.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>¿Qué es la IP pública de vuestra máquina y en qué se diferencia de la privada?</li>
-    <li>¿Por qué usamos clave SSH en lugar de contraseña?</li>
-    <li>Si os vais de fin de semana, ¿qué deberíais hacer con la VM?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · La pública es la dirección por la que Internet llega a la máquina; la privada solo existe dentro de la red virtual de Azure.</p>
-  <p>2 · Las claves SSH evitan depender de una contraseña que pueda adivinarse o reutilizarse, pero la clave privada es una credencial: si alguien la roba, debe considerarse comprometida y revocarse.</p>
-  <p>3 · Apagarla o liberarla. Una VM encendida consume crédito aunque nadie la use.</p>
-</details>
-
----
-
-## Sesión 2 · Nginx y abrir la puerta a Internet
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>Se explica:</strong> qué hace un servidor web y por qué hay dos cortafuegos y no uno.</li>
-    <li><strong>Se trabaja:</strong> instalad Nginx, abrid el puerto 80 en los dos sitios, clonad vuestro repositorio y decidle a Nginx dónde está.</li>
-    <li><strong>Se comprueba:</strong> vuestra web se ve escribiendo la IP pública en el navegador.</li>
-  </ol>
-</div>
-
-### Instalar Nginx
-
-Nuestro servidor existe.
-
-Pero todavía no sabe responder como servidor web.
-
-Instalaremos:
-
-```bash
-sudo apt install nginx
-```
-
-Nginx es un servidor web.
-
-Su función básica será:
-
-<figure class="diagram">
-  <figcaption>Qué hace un servidor web</figcaption>
-  <ol class="flow">
-    <li>Navegador</li>
-    <li>Petición HTTP</li>
-    <li>Nginx</li>
-    <li>Archivo HTML</li>
-    <li>Navegador</li>
-  </ol>
-</figure>
-
-Comprobad que está funcionando:
-
-```bash
-sudo systemctl status nginx
-```
-
----
-
-### Primer problema: Internet no puede entrar
-
-Tenemos Nginx instalado.
-
-Sin embargo, puede ocurrir que desde nuestro ordenador la dirección
-
-<p class="single-node single-node--mono">http://IP_PUBLICA</p>
-
-no funcione.
-
-¿Por qué?
-
-Porque tenemos diferentes capas de seguridad.
-
-<figure class="diagram">
-  <figcaption>Las capas que una petición debe atravesar</figcaption>
-  <ol class="flow">
-    <li>Internet</li>
-    <li>Firewall y reglas de red de Azure</li>
-    <li>Firewall de Linux</li>
-    <li>Nginx</li>
-  </ol>
-</figure>
-
-Para que HTTP funcione necesitamos permitir <code>TCP/80</code>, y posteriormente, para HTTPS, <code>TCP/443</code>.
-
----
-
-### Network Security Group de Azure
-
-Azure permite controlar qué tráfico puede llegar a nuestra máquina mediante reglas de red.
-
-Pensad en ellas como un portero:
-
-<figure class="diagram">
-  <figcaption>La decisión que toma una regla de red</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 270" role="img" aria-labelledby="nsg-title nsg-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="nsg-title">Cómo decide una regla de red</title>
-    <desc id="nsg-desc">Cuando llega una conexión, la regla comprueba si está permitida. Si lo está, entra. Si no lo está, queda bloqueada.</desc>
-    <defs>
-      <marker id="nsg-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 56 L 360 86" marker-end="url(#nsg-arrow)" />
-      <path d="M 360 140 L 360 176" />
-      <path d="M 185 176 L 535 176" />
-      <path d="M 185 176 L 185 198" marker-end="url(#nsg-arrow)" />
-      <path d="M 535 176 L 535 198" marker-end="url(#nsg-arrow)" />
-    </g>
-    <text class="diagram-label" x="185" y="166">Sí</text>
-    <text class="diagram-label" x="535" y="166">No</text>
-    <g class="diagram-node">
-      <rect x="270" y="12" width="180" height="44" rx="3" />
-      <text x="360" y="34">Llega conexión</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="250" y="92" width="220" height="48" rx="3" />
-      <text x="360" y="116">¿Está permitida?</text>
-    </g>
-    <g class="diagram-node diagram-node--ok">
-      <rect x="95" y="204" width="180" height="44" rx="3" />
-      <text x="185" y="226">Entra</text>
-    </g>
-    <g class="diagram-node diagram-node--danger">
-      <rect x="445" y="204" width="180" height="44" rx="3" />
-      <text x="535" y="226">Bloqueada</text>
-    </g>
-  </svg>
-</figure>
-
-Microsoft documenta precisamente que para publicar una aplicación web en una VM debe permitirse tráfico TCP al puerto 80 en el NSG.
-
-En esta actividad abriremos únicamente lo necesario:
-
-<table>
-  <thead>
-    <tr>
-      <th>Servicio</th>
-      <th class="align-right">Puerto</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>SSH</td>
-      <td class="align-right">22</td>
-    </tr>
-    <tr>
-      <td>HTTP</td>
-      <td class="align-right">80</td>
-    </tr>
-    <tr>
-      <td>HTTPS</td>
-      <td class="align-right">443</td>
-    </tr>
-  </tbody>
-</table>
-
-No debemos abrir puertos simplemente «por si acaso».
-
----
-
-### Firewall de Ubuntu
-
-También podemos tener un firewall dentro del propio servidor.
-
-Comprobad:
-
-```bash
-sudo ufw status
-```
-
-Y permitid el perfil necesario para Nginx:
-
-```bash
-sudo ufw allow 'Nginx Full'
-```
-
-Más adelante reflexionaremos sobre por qué podemos tener seguridad tanto **fuera de la VM** como **dentro de la VM**.
-
----
-
-### Primera comprobación
-
-Acceded a <code>http://IP_PUBLICA</code>.
-
-Si aparece la página de bienvenida de Nginx:
-
-> Tenemos nuestro primer servidor web público.
-
-Pero todavía no contiene nuestro proyecto.
-
----
-
-### Llevar nuestro código al servidor
-
-Instalad Git:
-
-```bash
-sudo apt install git
-```
-
-Clonad vuestro repositorio:
-
-```bash
-sudo git clone URL_REPOSITORIO /var/www/mi-sitio
-```
-
-Ahora tenemos:
-
-<figure class="diagram">
-  <figcaption>El código ya vive en el servidor</figcaption>
-  <ol class="flow flow--row">
-    <li>GitHub</li>
-    <li>git clone</li>
-    <li>/var/www/mi-sitio</li>
-  </ol>
-</figure>
-
----
-
-### Decir a Nginx dónde está nuestra web
-
-Crearemos:
-
-```bash
-sudo nano /etc/nginx/sites-available/mi-sitio
-```
-
-Configuración inicial:
-
-```nginx
-server {
-    listen 80;
-
-    server_name _;
-
-    root /var/www/mi-sitio;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-```
-
-Habilitamos el sitio:
-
-```bash
-sudo ln -s /etc/nginx/sites-available/mi-sitio \
-/etc/nginx/sites-enabled/mi-sitio
-```
-
-Comprobamos antes de reiniciar:
-
-```bash
-sudo nginx -t
-```
-
-Si todo es correcto:
-
-```bash
-sudo systemctl reload nginx
-```
-
----
-
-### ¿Por qué hacemos `nginx -t`?
-
-Imaginad que modificamos la configuración de un servidor utilizado por miles de personas.
-
-Tenemos un error: un punto y coma de menos, o una llave mal cerrada.
-
-Si reiniciamos directamente podemos dejar el servicio fuera de funcionamiento.
-
-Por eso primero:
-
-<figure class="diagram">
-  <figcaption>Comprobar antes de aplicar</figcaption>
-  <ol class="flow">
-    <li>Comprobamos la configuración</li>
-    <li><code>nginx -t</code></li>
-    <li>Si es válida</li>
-    <li><code>reload</code></li>
-  </ol>
-</figure>
-
-Es una buena práctica que aparece continuamente en administración de sistemas.
-
----
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · escribo la IP y no veo mi web</summary>
-  <p>Comprobadlo en este orden, de dentro hacia fuera. Casi siempre falla en el paso 3 o en el 4.</p>
-  <ol>
-    <li>¿Nginx está arrancado? <code>systemctl status nginx</code>.</li>
-    <li>¿La configuración es válida? <code>nginx -t</code>.</li>
-    <li>¿El puerto 80 está abierto en el Network Security Group de Azure?</li>
-    <li>¿UFW permite HTTP dentro de la máquina? Son dos cortafuegos distintos y hay que pasar los dos.</li>
-    <li>¿La IP que escribís es la pública de la VM, y no ha cambiado al reiniciarla?</li>
-    <li>¿Escribís <code>http://</code> y no <code>https://</code>? Todavía no hay certificado.</li>
-    <li>Si veis la página por defecto de Nginx, el servidor funciona: lo que falla es a qué directorio apunta.</li>
-  </ol>
-</details>
-
-### Ya tenemos nuestra web en Internet
-
-Acceded de nuevo a <code>http://IP_PUBLICA</code>.
-
-Ahora debería aparecer vuestro proyecto.
-
-Hemos conseguido:
-
-<figure class="diagram">
-  <figcaption>La cadena completa, de momento</figcaption>
-  <ol class="flow">
-    <li>Código</li>
-    <li>GitHub</li>
-    <li>Servidor cloud</li>
-    <li>Nginx</li>
-    <li>Internet</li>
-  </ol>
-</figure>
-
-Pero tenemos dos problemas.
-
-La dirección es algo parecido a <code>20.73.184.26</code>, y además aparece <code>http://</code>.
-
-Vamos a solucionar ambos.
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Nginx instalado y arrancado.</li>
-    <li>Puerto 80 abierto en el Network Security Group de Azure.</li>
-    <li>Puerto 80 permitido en el firewall de Ubuntu.</li>
-    <li>Tu web se ve escribiendo la IP pública en el navegador.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>¿Por qué hay dos cortafuegos y no uno?</li>
-    <li>¿Qué comprueba exactamente <code>nginx -t</code>?</li>
-    <li>Veis la página por defecto de Nginx en lugar de la vuestra. ¿Qué está pasando?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Uno es de la red de Azure, delante de la máquina; el otro es del sistema operativo, dentro. Un paquete tiene que pasar por los dos.</p>
-  <p>2 · Que el fichero de configuración es sintácticamente válido. No comprueba que la web funcione.</p>
-  <p>3 · Nginx está sirviendo, pero apunta a su directorio por defecto en lugar de al de vuestro proyecto.</p>
-</details>
-
----
-
-## Sesión 3 · Un nombre propio y HTTPS
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>Se explica:</strong> qué resuelve el DNS y qué añade un certificado que no añade el cifrado por sí solo.</li>
-    <li><strong>Se trabaja:</strong> vuestro subdominio apuntando a la IP, Nginx respondiendo a ese nombre y el certificado instalado.</li>
-    <li><strong>Se comprueba:</strong> vuestro dominio abre con candado y HTTP redirige a HTTPS.</li>
-  </ol>
-</div>
-
-### DNS: los humanos no queremos recordar IP
-
-Internet funciona utilizando direcciones IP.
-
-Pero sería incómodo tener que recordar <code>142.250.184.14</code> en lugar de <code>google.com</code>.
-
-DNS permite asociar nombres con direcciones.
-
-Simplificando:
-
-<figure class="diagram">
-  <figcaption>De un nombre a una dirección</figcaption>
-  <ol class="flow flow--row">
-    <li>miweb.duckdns.org</li>
-    <li>DNS</li>
-    <li>20.73.184.26</li>
-  </ol>
-</figure>
-
----
-
-### Crear nuestro nombre
-
-Utilizaremos DuckDNS para disponer de un subdominio gratuito.
-
-Elegid algo como:
-
-<p class="single-node single-node--mono">alumno-daw.duckdns.org</p>
-
-y asociadlo con la IP pública de vuestro servidor.
-
-Estamos realizando conceptualmente algo equivalente a:
-
-<figure class="diagram">
-  <figcaption>La asociación que acabamos de crear</figcaption>
-  <ol class="flow flow--row">
-    <li>Nombre DNS</li>
-    <li>Dirección IP</li>
-  </ol>
-</figure>
-
----
-
-### Configurar Nginx para nuestro nombre
-
-Modificad:
-
-```bash
-sudo nano /etc/nginx/sites-available/mi-sitio
-```
-
-y cambiad:
-
-```nginx
-server_name _;
-```
-
-por:
-
-```nginx
-server_name alumno-daw.duckdns.org;
-```
-
-Después:
-
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-Comprobad <code>http://alumno-daw.duckdns.org</code>.
-
----
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · mi nombre DNS no lleva a mi web</summary>
-  <ol>
-    <li>¿Habéis puesto la IP pública correcta en el proveedor del nombre?</li>
-    <li>Dad tiempo: un cambio de DNS puede tardar en propagarse.</li>
-    <li>Comprobad a qué IP resuelve de verdad, antes de tocar nada más.</li>
-    <li>¿La IP sigue funcionando por sí sola? Si tampoco, el problema no es el DNS.</li>
-    <li>¿Habéis puesto el nombre en <code>server_name</code> de Nginx y recargado el servicio?</li>
-  </ol>
-</details>
-
-### Todavía tenemos un problema
-
-Nuestro navegador muestra <code>HTTP</code>.
-
-Cuando utilizamos HTTP, la comunicación entre navegador y servidor no está protegida mediante TLS.
-
-Queremos <code>HTTPS</code>.
-
----
-
-### ¿Qué aporta HTTPS?
-
-HTTPS proporciona principalmente tres propiedades.
-
-#### Confidencialidad
-
-Un tercero no debería poder leer fácilmente la comunicación entre cliente y servidor.
-
-#### Integridad
-
-Permite detectar modificaciones de la información durante la comunicación.
-
-#### Autenticación
-
-El certificado ayuda al navegador a comprobar que está hablando con el servidor correspondiente al nombre solicitado.
-
----
-
-### Certificados digitales
-
-Para utilizar HTTPS necesitamos un certificado válido para nuestro nombre.
-
-Utilizaremos:
-
-> Let's Encrypt.
-
-Let's Encrypt es una autoridad certificadora que permite obtener certificados TLS de forma automatizada y gratuita.
-
-Para emitir el certificado debe comprobar que realmente controlamos <code>alumno-daw.duckdns.org</code>.
-
-Para ello puede realizar un desafío HTTP.
-
-Simplificando:
-
-<figure class="diagram">
-  <figcaption>Cómo se demuestra que el dominio es nuestro</figcaption>
-  <ol class="flow">
-    <li>Let's Encrypt pregunta: ¿controlas este dominio?</li>
-    <li>Nuestro servidor responde al desafío</li>
-    <li>Let's Encrypt lo comprueba</li>
-    <li>Emite el certificado</li>
-  </ol>
-</figure>
-
----
-
-### Instalar Certbot
-
-```bash
-sudo apt install certbot python3-certbot-nginx
-```
-
-Después:
-
-```bash
-sudo certbot --nginx
-```
-
-Certbot:
-
-* solicitará el certificado;
-* realizará la validación;
-* configurará Nginx;
-* podrá configurar la redirección a HTTPS.
-
-Para que la validación HTTP funcione, el nombre DNS debe resolver correctamente hacia nuestro servidor y el puerto 80 debe ser accesible.
-
----
-
-### Abrir HTTPS
-
-Recordad que disponer de un certificado no hace automáticamente accesible <code>TCP/443</code>.
-
-Debéis comprobar también las reglas de red de Azure.
-
-Después probad:
-
-<p class="single-node single-node--mono">https://alumno-daw.duckdns.org</p>
-
----
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · Certbot falla al emitir el certificado</summary>
-  <ol>
-    <li>Certbot necesita llegar a vuestro servidor por el nombre: comprobad primero que el nombre ya funciona por HTTP.</li>
-    <li>¿El puerto 80 sigue abierto? La validación lo usa, aunque el objetivo sea el 443.</li>
-    <li>¿El <code>server_name</code> de Nginx coincide exactamente con el nombre que le pasáis a Certbot?</li>
-    <li>¿Habéis abierto el 443 en Azure y en UFW? Si no, el certificado se emite y la web sigue sin cargar.</li>
-    <li>Si habéis reintentado muchas veces seguidas puede haber un límite temporal de emisión. Esperad antes de insistir.</li>
-  </ol>
-</details>
-
-### ¿Qué ha cambiado realmente?
-
-Antes:
-
-<figure class="diagram">
-  <figcaption>Antes · sin cifrar</figcaption>
-  <ol class="flow flow--before">
-    <li>Navegador</li>
-    <li>HTTP</li>
-    <li>Nginx</li>
-  </ol>
-</figure>
-
-Ahora:
-
-<figure class="diagram">
-  <figcaption>Después · protegido por TLS</figcaption>
-  <ol class="flow">
-    <li>Navegador</li>
-    <li>HTTPS</li>
-    <li>TLS cifra la comunicación</li>
-    <li>Nginx</li>
-  </ol>
-</figure>
-
----
-
-### Comprobar el certificado
-
-Desde el navegador:
-
-1. acceded al sitio;
-2. abrid la información del certificado;
-3. comprobad para qué nombre se ha emitido;
-4. observad quién lo ha emitido;
-5. comprobad su periodo de validez.
-
-No queremos únicamente «que salga el candado».
-
-Queremos entender **por qué el navegador confía en nuestra conexión**.
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
-  <ul class="checklist">
-    <li>Tienes un nombre DNS apuntando a tu IP pública.</li>
-    <li>Nginx responde a ese nombre, no solo a la IP.</li>
-    <li>Puerto 443 abierto en Azure y en el sistema.</li>
-    <li>La web carga por HTTPS con candado y sin avisos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>¿Qué traduce exactamente el DNS?</li>
-    <li>¿Qué demuestra un certificado y qué NO demuestra?</li>
-    <li>Tenéis HTTPS y una inyección SQL. ¿Es segura vuestra web?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Un nombre legible por personas a la dirección IP de la máquina que responde.</p>
-  <p>2 · Demuestra que estáis hablando con el servidor de ese nombre y que nadie puede leer el tráfico por el camino. No demuestra que la aplicación sea segura ni honesta.</p>
-  <p>3 · No. HTTPS protege el transporte, no la aplicación. Lo veremos en detalle en UD6.</p>
-</details>
-
----
-
-## Sesión 4 · Mantener y endurecer
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>Se explica:</strong> por qué actualizar no puede significar rehacerlo todo.</li>
-    <li><strong>Se trabaja:</strong> publicad una versión nueva sin tocar el servidor, y pasad la revisión de seguridad.</li>
-    <li><strong>Se comprueba:</strong> la versión nueva se ve en vuestro dominio y la revisión está completa.</li>
-  </ol>
-</div>
-
-### Actualizar nuestra web
-
-Ahora modificad algo visible en vuestro proyecto local. Por ejemplo, una versión 2.
-
-Haced:
-
-```bash
-git add .
-git commit
-git push
-```
-
-Y después en el servidor:
-
-```bash
-cd /var/www/mi-sitio
-sudo git pull
-```
-
-Comprobad que la nueva versión aparece públicamente.
-
-Nuestro proceso actual es:
-
-<figure class="diagram">
-  <figcaption>El despliegue, todavía manual</figcaption>
-  <ol class="flow">
-    <li>Desarrollador</li>
-    <li>GitHub</li>
-    <li><code>git pull</code></li>
-    <li>Servidor</li>
-    <li>Producción</li>
-  </ol>
-</figure>
-
-Más adelante, en una empresa, este proceso puede automatizarse mediante **CI/CD**.
-
-Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>El mismo camino, automatizado</figcaption>
-  <ol class="flow flow--row">
-    <li>git push</li>
-    <li>tests</li>
-    <li>build</li>
-    <li>deploy</li>
-  </ol>
-</figure>
-
-No lo implementaremos ahora.
-
-Lo importante es comprender qué problema resuelve.
-
----
-
-### Seguridad básica
-
-Antes de considerar terminado el servidor, revisad:
-
-##### ¿SSH está abierto innecesariamente a todo Internet?
-
-Siempre que sea posible, limitad su acceso.
-
-##### ¿Utilizamos clave SSH?
-
-Preferible a contraseñas débiles.
-
-##### ¿El sistema está actualizado?
-
-```bash
-sudo apt update
-sudo apt upgrade
-```
-
-##### ¿Tenemos abiertos únicamente los puertos necesarios?
-
-Normalmente <code>22</code>, <code>80</code> y <code>443</code>.
-
-##### ¿HTTPS funciona?
-
-Debe hacerlo.
-
-##### ¿HTTP redirige a HTTPS?
-
-Comprobadlo.
-
----
-
-### Ocultar información innecesaria
-
-Podemos evitar que Nginx publique su versión.
-
-Editad:
-
-```bash
-sudo nano /etc/nginx/nginx.conf
-```
-
-Dentro de `http`:
-
-```nginx
-server_tokens off;
-```
-
-Después:
-
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-Esto reduce información expuesta, pero recordad:
-
-> **No sustituye a mantener el software actualizado ni a configurar correctamente la seguridad.**
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
-  <ul class="checklist">
-    <li>Una versión nueva de vuestra web publicada sin volver a configurar nada del servidor.</li>
-    <li>Las seis preguntas de la revisión contestadas, y corregido lo que hiciera falta.</li>
-    <li>Nginx ya no publica su versión.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>¿Qué hace <code>git pull</code> en el servidor, y por qué no hay que volver a tocar Nginx?</li>
-    <li>¿Por qué actualizar el sistema es una medida de seguridad y no solo de mantenimiento?</li>
-    <li>Ocultar la versión de Nginx, ¿protege el servidor?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Trae los cambios del repositorio al directorio que Nginx ya está sirviendo. La configuración apunta al directorio, no a los ficheros que hay dentro.</p>
-  <p>2 · Porque la mayoría de los ataques aprovechan fallos ya conocidos y ya corregidos en versiones más nuevas. Un sistema sin actualizar es una lista pública de puertas abiertas.</p>
-  <p>3 · No. Se lo pone un poco más difícil a quien busca objetivos en masa, y nada más. Lo que protege es tener el software al día y solo lo necesario abierto.</p>
-</details>
-
----
-
-## Sesión 5 · Explicar la arquitectura
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>Se explica:</strong> los tres niveles de servicio cloud, ahora que ya habéis montado uno entero a mano.</li>
-    <li><strong>Se trabaja:</strong> el mapa de vuestra arquitectura, la memoria técnica y las preguntas de reflexión.</li>
-    <li><strong>Se entrega:</strong> la URL pública con HTTPS y la memoria.</li>
-  </ol>
-</div>
-
-### Se explica
-
-Habéis montado a mano un sistema operativo, un servidor web, unas reglas de red, un nombre y un certificado. Con eso delante, la clasificación que se usa en la industria para hablar de cloud se entiende en dos minutos.
-
-### Antes de empezar: ¿qué es realmente «la nube»?
-
-La nube no es algo mágico.
-
-Cuando utilizamos cloud seguimos utilizando:
-
-* procesadores;
-* memoria RAM;
-* discos;
-* redes;
-* servidores.
-
-La diferencia es que esos recursos están en los centros de datos de otra empresa y podemos crearlos y administrarlos a través de Internet.
-
-Empresas conocidas que ofrecen servicios cloud son:
-
-* Microsoft Azure;
-* Amazon Web Services;
-* Google Cloud.
-
----
-
-### IaaS, PaaS y SaaS
-
-Cloud ofrece distintos niveles de control.
-
-#### IaaS — Infrastructure as a Service
-
-El proveedor nos proporciona infraestructura.
-
-Por ejemplo:
-
-> Una máquina virtual.
-
-Nosotros nos ocupamos de:
-
-* sistema operativo;
-* servidor web;
-* actualizaciones;
-* aplicación;
-* configuración.
-
-Eso es precisamente lo que utilizaremos.
-
-<figure class="diagram">
-  <figcaption>IaaS · todo lo que queda bajo nuestra responsabilidad</figcaption>
-  <ol class="flow">
-    <li>Azure</li>
-    <li>Máquina virtual</li>
-    <li>Ubuntu</li>
-    <li>Nginx</li>
-    <li>Nuestra web</li>
-  </ol>
-</figure>
-
-#### PaaS — Platform as a Service
-
-El proveedor administra más componentes.
-
-Nosotros nos preocupamos principalmente de nuestra aplicación.
-
-Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>PaaS · la plataforma se ocupa del resto</figcaption>
-  <ol class="flow flow--row">
-    <li>Código</li>
-    <li>Azure App Service</li>
-    <li>Internet</li>
-  </ol>
-</figure>
-
-No necesitamos instalar manualmente Nginx ni administrar todo el servidor.
-
-#### SaaS — Software as a Service
-
-Utilizamos directamente una aplicación que administra otra empresa.
-
-Ejemplos:
-
-* Gmail;
-* Microsoft 365;
-* Canva;
-* GitHub.
-
-#### Una pregunta importante
-
-¿Por qué utilizaremos IaaS si PaaS podría ser más sencillo?
-
-Porque queremos comprender qué ocurre realmente cuando desplegamos una aplicación.
-
-Al administrar una VM veremos:
-
-* sistema operativo;
-* red;
-* puertos;
-* firewall;
-* servidor HTTP;
-* DNS;
-* certificados;
-* HTTPS.
-
-Después podremos valorar por qué existen servicios que automatizan todo esto.
-
----
-
----
-
-### Se trabaja
-
-### El mapa completo
-
-Al terminar habremos construido:
-
-<figure class="diagram">
-  <figcaption>Todo lo que hay entre el desarrollador y el usuario</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 764" role="img" aria-labelledby="map-title map-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="map-title">Mapa completo del despliegue</title>
-    <desc id="map-desc">El desarrollador publica en GitHub y accede por SSH a una máquina en Azure, protegida por reglas de red, donde Ubuntu ejecuta Nginx que sirve la web. La comunicación llega al usuario a través de TLS y DNS.</desc>
-    <defs>
-      <marker id="map-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 56 L 360 82" marker-end="url(#map-arrow)" />
-      <path d="M 360 132 L 360 158" marker-end="url(#map-arrow)" />
-      <path d="M 360 208 L 360 234" marker-end="url(#map-arrow)" />
-      <path d="M 360 326 L 360 346" marker-end="url(#map-arrow)" />
-      <path d="M 360 394 L 360 414" marker-end="url(#map-arrow)" />
-      <path d="M 360 462 L 360 482" marker-end="url(#map-arrow)" />
-      <path d="M 360 540 L 360 562" marker-end="url(#map-arrow)" />
-      <path d="M 360 608 L 360 630" marker-end="url(#map-arrow)" />
-      <path d="M 360 676 L 360 698" marker-end="url(#map-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="270" y="12" width="180" height="44" rx="3" />
-      <text x="360" y="34">Desarrollador</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="88" width="180" height="44" rx="3" />
-      <text x="360" y="110">GitHub</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="290" y="164" width="140" height="44" rx="3" />
-      <text x="360" y="186">SSH</text>
-    </g>
-    <g class="diagram-node diagram-node--container">
-      <rect x="170" y="240" width="380" height="300" rx="3" />
-      <text x="360" y="262">AZURE</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="215" y="284" width="290" height="42" rx="3" />
-      <text x="360" y="305">Reglas de red</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="215" y="352" width="290" height="42" rx="3" />
-      <text x="360" y="373">Máquina virtual Ubuntu</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="215" y="420" width="290" height="42" rx="3" />
-      <text x="360" y="441">Nginx</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="215" y="488" width="290" height="42" rx="3" />
-      <text x="360" y="509">Web</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="310" y="568" width="100" height="40" rx="3" />
-      <text x="360" y="588">TLS</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="310" y="636" width="100" height="40" rx="3" />
-      <text x="360" y="656">DNS</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="270" y="704" width="180" height="44" rx="3" />
-      <text x="360" y="726">Usuario</text>
-    </g>
-  </svg>
-</figure>
-
-Cada elemento resuelve un problema diferente.
-
----
-
-### Actividad final: explica tu arquitectura
-
-Incluid en vuestra memoria un dibujo de vuestra arquitectura.
-
-Después explicad con **una frase** la función de cada elemento:
-
-| Elemento | Función |
-| --- | --- |
-| Azure | |
-| Máquina virtual | |
-| Ubuntu | |
-| SSH | |
-| Nginx | |
-| GitHub | |
-| IP pública | |
-| DNS | |
-| Puerto 80 | |
-| Puerto 443 | |
-| Certificado TLS | |
-| HTTPS | |
-
-No copiéis definiciones de Internet.
-
-Explicadlo como si se lo estuvierais contando a otro alumno.
-
----
-
-### Preguntas de reflexión
-
-Responded brevemente.
-
-##### 1. ¿Por qué nuestra VM de Azure es un ejemplo de IaaS?
-
-<p class="write-line"></p>
-
-##### 2. ¿Qué diferencia existe entre tener una IP pública y disponer de un dominio?
-
-<p class="write-line"></p>
-
-##### 3. ¿Qué ocurriría si cerramos el puerto 80?
-
-<p class="write-line"></p>
-
-##### 4. ¿Qué ocurriría si cerramos el puerto 443?
-
-<p class="write-line"></p>
-
-##### 5. ¿Qué función tiene Nginx?
-
-<p class="write-line"></p>
-
-##### 6. ¿Por qué necesitamos DNS?
-
-<p class="write-line"></p>
-
-##### 7. ¿Por qué necesitamos un certificado para HTTPS?
-
-<p class="write-line"></p>
-
-##### 8. ¿Qué diferencia hay entre el firewall de Ubuntu y las reglas de red de Azure?
-
-<p class="write-line"></p>
-
-##### 9. ¿Por qué no es buena idea abrir todos los puertos?
-
-<p class="write-line"></p>
-
-##### 10. ¿Qué ventaja tendría automatizar `git pull` y el despliegue después de cada cambio validado?
-
-<p class="write-line"></p>
-
----
-
-### Producto final
-
-Debe existir realmente:
-
-**1. Repositorio GitHub** con vuestra web.
-
-**2. Máquina virtual** desplegada en Azure.
-
-**3. Web pública** accesible desde Internet.
-
-**4. Nombre DNS** similar a:
-
-<p class="single-node single-node--mono">https://nombre.duckdns.org</p>
-
-**5. HTTPS** con certificado válido.
-
-**6. Memoria breve.** No queremos una memoria de veinte páginas.
-
-Incluid:
-
-* arquitectura;
-* capturas que demuestren los hitos;
-* comandos importantes;
-* explicación de qué hace cada componente;
-* problemas encontrados y cómo los resolvisteis;
-* respuestas a las preguntas finales.
-
----
-
-### Evaluación
+Esta actividad se valora sobre 10 puntos y aporta **5/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
 <table>
   <thead>
@@ -1432,88 +67,160 @@ Incluid:
   </tbody>
 </table>
 
-#### Importante
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
-No basta con copiar comandos hasta que funcione.
+## Sesión 1 · Del portátil a una máquina en Azure
 
-La parte con mayor peso de la actividad es:
+**Punto de partida.** Actividad «Sitio de laboratorio y arquitectura», sesión 1 de 5. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-> **ser capaces de explicar qué habéis construido y por qué funciona.**
+### Se explica
 
----
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>URL pública con HTTPS, funcionando en el momento de la entrega.</li>
-    <li>Un cambio publicado después del despliegue inicial.</li>
-    <li>Diagrama de la arquitectura completa.</li>
-    <li>Memoria breve: qué habéis montado, qué falló y cómo lo resolvisteis.</li>
-  </ul>
-</div>
+La **nube** permite utilizar recursos de un proveedor por red. En IaaS administramos una máquina virtual y su sistema; en PaaS el proveedor gestiona más infraestructura y desplegamos la aplicación; en SaaS utilizamos un programa terminado. Hoy usaremos una máquina Ubuntu para observar esas responsabilidades, con un sitio estático proporcionado.
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>Recorred vuestra arquitectura en voz alta, del navegador al fichero.</li>
-    <li>¿Qué pasa si mañana caduca el certificado?</li>
-    <li>¿Qué parte de todo esto os ahorraría un PaaS, y qué perderíais?</li>
-  </ol>
-</div>
+Una máquina virtual es un ordenador definido por software. Su IP identifica una interfaz en la red; SSH permite abrir una terminal remota cifrada. Los comandos escritos en esa terminal actúan en Ubuntu, no en tu Windows. Identificar dónde estás evita modificar el equipo equivocado.
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Navegador → DNS → IP pública → NSG → firewall del sistema → Nginx → fichero. Si os saltáis un paso, ahí está vuestro punto ciego.</p>
-  <p>2 · Certbot lo renueva automáticamente, pero solo si el servicio de renovación sigue activo y el puerto sigue abierto.</p>
-  <p>3 · Os ahorraría el sistema operativo, el servidor web y el certificado. Perderíais control sobre la configuración y visibilidad de lo que ocurre por debajo.</p>
-</details>
+### Se trabaja
 
-<details class="aside aside--extra">
-  <summary>Si además cursáis Proyecto Intermodular</summary>
-  <p>Allí publicáis sin tocar ninguna de las cajas de este mapa: no hay sistema operativo que actualizar, ni servidor web que configurar, ni certificado que pedir. Poned los dos mapas uno al lado del otro y decid, caja por caja, quién se ocupa de ella en cada caso. Es la misma pregunta de arriba respondida con dos ejemplos vuestros en lugar de con una definición.</p>
-</details>
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
----
+1. Abre la [guía de arranque](/es/docencia/talleres-transversales/#cloud) y descarga el sitio inicial. Extrae el ZIP, abre `index.html` y cambia el nombre de la empresa. Guarda una copia en la carpeta de la UD3.
+2. Sigue el apartado GitHub de la guía para crear un repositorio y subir los archivos, con `index.html` en su raíz. Comprueba los archivos desde GitHub; si ya tenías un sitio, utiliza una copia de laboratorio y conserva su autoría.
+3. Utiliza el entorno Ubuntu asignado o crea la VM siguiendo la ficha de cloud. Registra proveedor, sistema, usuario e IP, junto con quién administra y revisa el coste. La cuenta personal no es requisito si el centro proporciona el entorno.
+4. Desde la terminal local ejecuta el comando SSH de la ficha, sustituyendo usuario, ruta de clave e IP por los de tu entorno. Comprueba con `whoami` y `hostname` que estás dentro de Ubuntu.
+5. Actualiza la lista de paquetes con `sudo apt update`. Guarda el resultado y dibuja portátil → conexión SSH → VM. Si la conexión falla, revisa IP, usuario, clave y acceso al puerto 22 en ese orden.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+El sitio inicial está disponible y puedes identificar el entorno remoto. Nunca incluyas la clave privada en la entrega. Registra una incidencia de acceso sin inventar un despliegue completado.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
+
+## Sesión 2 · Nginx y abrir la puerta a Internet
+
+**Punto de partida.** Actividad «Sitio de laboratorio y arquitectura», sesión 2 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+
+### Se explica
+
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
+
+Un **servidor web** recibe una petición HTTP y devuelve un recurso, como un archivo HTML. Nginx realizará esa función. Instalarlo no basta para acceder desde Internet: la red del proveedor y el sistema operativo deben permitir el tráfico al puerto correspondiente.
+
+La raíz del sitio es la carpeta donde Nginx busca los archivos. Si sirve su bienvenida en vez de tu página, no demuestra que tu código esté roto: puede estar seleccionando otro sitio. Comprobaremos primero el servicio, luego la conexión y después el contenido, para no cambiar varias cosas a la vez.
+
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Conecta por SSH y abre el bloque «Publicar con Nginx» de la guía. Ejecuta sus comandos de instalación y comprueba `systemctl status nginx`; pulsa `q` para salir de la vista del estado.
+2. Comprueba la respuesta local con `curl -I http://localhost`. Después permite HTTP en la regla de red del entorno. Si UFW está activo, aplica también la regla indicada en la guía.
+3. Copia el sitio desde su repositorio público a `/var/www/mi-sitio` siguiendo la guía. Comprueba con `ls` que `index.html` está directamente dentro de esa carpeta.
+4. Crea la configuración de Nginx con la plantilla proporcionada. Actívala, ejecuta `sudo nginx -t` y recarga solo si la comprobación es correcta. Si informa una línea errónea, corrígela antes de continuar.
+5. Abre la IP pública desde el navegador y busca el nombre de tu empresa. Guarda una captura y explica el recorrido petición → regla de red → Nginx → archivo. Distingue un fallo de conexión de una página equivocada.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+La IP sirve vuestro sitio y el mapa identifica sus dos niveles de control de red. Se evalúa la arquitectura y su comprobación, no un workflow de CI.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
+
+## Sesión 3 · Un nombre propio y HTTPS
+
+**Punto de partida.** Actividad «Sitio de laboratorio y arquitectura», sesión 3 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+
+### Se explica
+
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
+
+**DNS** relaciona un nombre con una dirección, de modo que el visitante no tenga que recordar la IP. Un registro A apunta un nombre a una IPv4. Cambiar DNS no copia la web: el contenido sigue en la máquina que la sirve.
+
+**HTTPS** utiliza TLS para proteger la comunicación y comprobar la identidad del servidor mediante su certificado. No corrige los errores del código ni garantiza que una empresa sea fiable. El nombre solicitado debe coincidir con el del certificado. Primero comprobaremos DNS y HTTP; después añadiremos HTTPS para poder localizar los fallos.
+
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Obtén el nombre de laboratorio proporcionado por el centro o configura el subdominio siguiendo la guía. Anota el nombre y la IP a la que debe apuntar; no compartas el token del proveedor DNS.
+2. Comprueba la resolución con `nslookup TU_NOMBRE`. Compara la dirección devuelta con la IP pública actual de la VM. Si difieren, revisa el registro antes de tocar Nginx.
+3. Sustituye `server_name` por ese nombre en la configuración del sitio. Comprueba y recarga Nginx; visita primero `http://TU_NOMBRE` y confirma que aparece tu página.
+4. Sigue los pasos de Certbot de la guía y permite el puerto 443. El entorno debe aceptar el desafío de validación; si no puede hacerlo, registra el paso exacto y utiliza el entorno docente preparado.
+5. Abre `https://TU_NOMBRE`, inspecciona el certificado y anota nombre, emisor y fecha de caducidad. Comprueba que imágenes y estilos cargan también y que HTTP redirige si activaste esa opción.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Nombre, resolución y certificado corresponden al mismo sitio. Explica qué protege HTTPS y qué no. La evidencia no incluye secretos DNS ni claves SSH.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
+
+## Sesión 4 · Mantener y endurecer
+
+**Punto de partida.** Actividad «Sitio de laboratorio y arquitectura», sesión 4 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+
+### Se explica
+
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
+
+Mantener una web implica actualizar sus archivos y comprobar que sigue funcionando. Un cambio pequeño permite relacionar lo observado con lo que se ha modificado. El historial identifica una versión, pero actualizar con Git no comprueba por sí solo que la web responda.
+
+El mantenimiento incluye paquetes del sistema, configuración y recursos contratados. Detener una VM puede dejar otros recursos asociados activos: por eso el cierre requiere revisar el inventario del entorno y su coste, no solo cerrar la terminal SSH.
+
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Abre el sitio en local y cambia una frase visible. Guarda, comprueba el HTML y sube la actualización a su repositorio siguiendo la guía. Anota la versión o commit que contiene el cambio.
+2. En Ubuntu entra en `/var/www/mi-sitio` y actualiza únicamente ese repositorio con el procedimiento de la guía. Confirma que el archivo incorpora la frase nueva.
+3. Visita la URL pública y recarga sin caché. Si ves una versión antigua, compara primero el archivo del servidor y después la respuesta del navegador.
+4. Revisa las reglas de acceso: la administración SSH debe estar limitada al acceso de aula previsto; HTTP y HTTPS sirven al público. Describe para qué existe cada puerto permitido.
+5. Completa el inventario del entorno y el procedimiento acordado de conservación o retirada. Guarda la URL, versión, resultado y pendientes; coordina la fecha de retirada para que la actividad pueda evaluarse.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+La actualización se puede relacionar con una versión concreta y se ha comprobado desde el navegador. No hace falta construir automatización de despliegue.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
+
+## Sesión 5 · Explicar la arquitectura
+
+**Punto de partida.** Actividad «Sitio de laboratorio y arquitectura», sesión 5 de 5. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+
+### Se explica
+
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
+
+Un diagrama de arquitectura es útil si permite seguir una petición y localizar responsabilidades. El navegador consulta DNS, conecta con la dirección obtenida y solicita contenido a Nginx. El certificado interviene en la conexión HTTPS; GitHub conserva el código, pero no es quien sirve esta web de laboratorio.
+
+Después de montar una VM podemos comparar su coste de administración con un servicio gestionado. Elegir IaaS para aprender no significa que sea siempre la mejor decisión empresarial. La elección debe considerar necesidad, mantenimiento, acceso y límites del servicio.
+
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Dibuja el recorrido completo usando los nombres reales de vuestro entorno. Separa la ruta del visitante de la ruta que seguisteis para actualizar el código.
+2. Para cada pieza añade una responsabilidad: resolver nombre, filtrar tráfico, servir archivo, cifrar conexión o conservar versión. Elimina las flechas cuyo significado no puedas explicar.
+3. Completa una tabla IaaS/PaaS/SaaS con qué administraríais en cada modelo y un uso posible para la empresa. No hace falta contratar otras opciones.
+4. Pide a otra pareja que explique qué comprobaría si el sitio responde por IP pero no por nombre. Utiliza su respuesta para detectar y corregir huecos del diagrama.
+5. Entrega sitio, URL y documento de arquitectura con comprobaciones. Cada integrante explica una pieza y una incidencia resuelta. Enlaza el registro de sesiones, sin redactar otra memoria del mismo despliegue.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+La actividad demuestra publicación y comprensión de la arquitectura. La alternativa elegida debe justificarse; una URL por sí sola no explica el trabajo.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD3 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-Un despliegue web que parecía simplemente «subir mi página a Internet» en realidad implica:
-
-<figure class="diagram">
-  <figcaption>Todo lo que hay detrás de publicar una página</figcaption>
-  <ol class="flow">
-    <li>Código</li>
-    <li>Control de versiones</li>
-    <li>Cloud</li>
-    <li>Máquina virtual</li>
-    <li>Sistema operativo</li>
-    <li>Servidor web</li>
-    <li>Red</li>
-    <li>Firewall</li>
-    <li>DNS</li>
-    <li>TLS / HTTPS</li>
-    <li>Usuario</li>
-  </ol>
-</figure>
-
-Cuando en una oferta de trabajo aparezcan conceptos como **Azure, AWS, VM, IaaS, Linux, Nginx, SSH, DNS, TLS o CI/CD**, ya no serán palabras abstractas.
-
-Habréis utilizado buena parte de ellos para publicar vuestra propia aplicación.
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| IaaS | Os dan la máquina; el sistema lo administráis vosotros |
-| PaaS | Os dan la plataforma; solo entregáis la aplicación |
-| SaaS | Os dan el programa terminado |
-| Máquina virtual | Un ordenador que no está en vuestra mesa |
-| SSH | La forma de entrar a ese ordenador desde el vuestro |
-| Nginx | El servidor web que entrega vuestros ficheros |
-| NSG | El cortafuegos de la red de Azure, delante de la máquina |
-| UFW | El cortafuegos del sistema, dentro de la máquina |
-| IP pública | La dirección por la que Internet llega a vuestro servidor |
-| DNS | La traducción de un nombre a esa dirección |
-| TLS | El cifrado del tráfico entre navegador y servidor |
-| Certificado | La prueba de que el servidor es quien dice ser |
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

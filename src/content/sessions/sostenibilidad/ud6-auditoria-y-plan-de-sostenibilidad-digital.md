@@ -6,8 +6,8 @@ order: 6
 lang: "es"
 summary: "Todo lo del curso, junto y aplicado a una empresa. Actuamos como un pequeño equipo de consultoría para responder a una pregunta: ¿qué debería hacer realmente una empresa digital para ser más sostenible?"
 duration: "8 horas · 8 sesiones"
-modality: "Grupos de 2–3 personas"
-deliverable: "Plan de sostenibilidad de una empresa digital y presentación ejecutiva."
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Plan de sostenibilidad de PixelStore. Una actividad acumulativa por unidad, con evidencias y aportación individual."
 outcomes:
   - "Auditar la sostenibilidad de una empresa tecnológica en sus tres dimensiones."
   - "Identificar sus grupos de interés y los conflictos entre ellos."
@@ -17,56 +17,56 @@ outcomes:
   - "Ordenar un roadmap por impacto y esfuerzo."
   - "Defender el plan ante preguntas incómodas, con evidencias."
 requirements:
-  - "Vuestro repositorio de evidencias, con lo medido en UD1 a UD5."
-  - "Herramienta de presentaciones y hoja de cálculo."
-  - "Acceso a Internet y a un asistente de IA."
-  - "El código de PixelStore, que ya conocéis de UD3 y UD4."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
 priorKnowledge:
-  - "ASG, stakeholders, materialidad e indicadores (UD1)."
-  - "Ciclo de vida y economía circular (UD2)."
-  - "Medir y optimizar una web (UD3)."
-  - "Auditar accesibilidad (UD4)."
-  - "Right-sizing, retención de datos y uso proporcional de IA (UD5)."
-date: "2026-08-30"
+  - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
+date: "2026-09-09"
 ---
 
-Durante el curso hemos estudiado por separado el impacto ambiental de la tecnología, el ciclo de vida, el software sostenible, la accesibilidad y el uso proporcionado de cloud, datos e inteligencia artificial.
+<p class="lead">Plan de sostenibilidad de PixelStore. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
 
-Ahora vamos a juntarlo todo. Trabajaréis como un pequeño equipo de consultoría para responder a una sola pregunta:
+## Cómo trabajar esta unidad
 
-> **¿Qué debería hacer realmente una empresa digital para ser más sostenible?**
+Son 8 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Plan de sostenibilidad de PixelStore.** Guarda el trabajo en `sostenibilidad/ud6/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **8/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+| Criterio                                     | Puntos |
+| -------------------------------------------- | -----: |
+| Identificación de stakeholders               |      1 |
+| Auditoría ASG                                |    1,5 |
+| **Análisis y justificación de materialidad** |  **2** |
+| Calidad de objetivos y acciones              |    1,5 |
+| **Indicadores y capacidad de medición**      |  **2** |
+| Priorización y roadmap                       |      1 |
+| Uso crítico de IA y fuentes                  |    0,5 |
+| Claridad de la presentación                  |    0,5 |
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · De hacer cosas sostenibles a tener un plan
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La estructura y ciclo de un Plan de Sostenibilidad Digital: diagnóstico ASG, materialidad, fijación de objetivos, plan de acción y reporte.</li>
-    <li><strong>2. Haz:</strong> Revisa el ciclo metodológico y comprende las fases que articulan la memoria técnica final.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de sostenibilidad de PixelStore», sesión 1 de 8. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El problema de las acciones sueltas
+### Se explica
 
-Una empresa puede reciclar, contratar energía renovable, optimizar su web, reparar ordenadores, mejorar la accesibilidad, reducir almacenamiento y comprar equipos eficientes. Todo eso puede ser positivo.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Pero si hacemos acciones aisladas sin saber qué impactos son de verdad importantes, podemos dedicar muchísimo esfuerzo a problemas secundarios.
+Un plan conecta acciones que antes estaban separadas. La cadena impacto → prioridad → objetivo → acción → indicador permite comprobar si una actuación responde a un problema importante y si funciona. Una intención sin responsable o medida todavía no es un plan ejecutable.
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Lo que anuncia</p>
-    <p class="compare-body">«Hemos eliminado todos los vasos de plástico de la oficina.»</p>
-  </div>
-  <div>
-    <p class="compare-label">Lo que no cuenta</p>
-    <p class="compare-body">Sustituye 2.000 portátiles cada dos años, tiene recursos cloud sin usar, su aplicación no es accesible y conserva datos personales indefinidamente.</p>
-  </div>
-</div>
+«Reducir el peso de la web» se concreta indicando versión inicial, magnitud, cambio, responsable y fecha de revisión. Tus mediciones de UD3 aportan evidencia; una cifra de ejemplo de los apuntes no sustituye el resultado de tu proyecto.
 
-Los vasos son un avance real. Y son también la respuesta a la pregunta equivocada.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-### De acciones a estrategia
+#### De acciones a estrategia
 
 Queremos pasar de una lista de acciones a esto:
 
@@ -89,295 +89,102 @@ Eso es un:
 
 Un conjunto organizado de objetivos, acciones e indicadores para gestionar los principales impactos ambientales, sociales y de gobernanza de una organización. No un documento de buenas intenciones: algo que responde a cinco preguntas concretas — qué problema tenemos, qué queremos mejorar, qué vamos a hacer, quién debe hacerlo y cómo sabremos si funciona.
 
-### Primera tarea · De intención a plan
-
-Cuatro afirmaciones que no son un plan. Hay que convertirlas. La primera la hacemos juntos.
-
-<p class="stage">Paso 1 · Te enseño uno</p>
-
-<dl class="worked">
-  <dt>La intención</dt>
-  <dd>«Reduciremos nuestro impacto ambiental.»</dd>
-  <dt>¿Qué impacto, exactamente?</dt>
-  <dd>Hay que elegir uno. Cogemos la web, porque es lo que controlamos y sabemos medir desde la UD3.</dd>
-  <dt>¿Cuál es la situación de partida?</dt>
-  <dd>6 MB transferidos de media por visita. Sin este número no hay nada que demostrar después.</dd>
-  <dt>¿Qué acción?</dt>
-  <dd>Optimización de imágenes y revisión de los recursos de terceros. Concreto: son las dos cosas que más pesan.</dd>
-  <dt>¿Cómo se comprueba, y para cuándo?</dt>
-  <dd>MB por visita medidos en las mismas condiciones, por debajo de 3 MB antes de junio, manteniendo funcionalidad y accesibilidad.</dd>
-  <dt>El resultado</dt>
-  <dd>«Reduciremos la transferencia media por visita de 6 MB a menos de 3 MB antes de junio, optimizando imágenes y recursos de terceros, sin degradar funcionalidad ni accesibilidad.»</dd>
-</dl>
-
-Fijaos en la última cláusula. Sin ella, el objetivo se cumple borrando las imágenes. **Un objetivo que se puede cumplir estropeando el producto está mal escrito**, y esa es la parte que casi todo el mundo se deja.
-
-<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
-
-<dl class="answer">
-  <dt>«Mejoraremos la accesibilidad.» · ¿Qué mediríais?</dt>
-  <dd></dd>
-  <dt>¿Qué acción concreta?</dt>
-  <dd></dd>
-  <dt>«Utilizaremos menos recursos cloud.» · ¿Qué mediríais?</dt>
-  <dd></dd>
-  <dt>¿Qué acción concreta?</dt>
-  <dd></dd>
-</dl>
-
-<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
-
-<dl class="answer">
-  <dt>«Reduciremos los residuos electrónicos.»</dt>
-  <dd></dd>
-  <dt>«Nuestra IA será más sostenible.» · ¿Qué significa exactamente, y cómo se comprueba?</dt>
-  <dd></dd>
-</dl>
-
-La última es la más difícil a propósito. «IA sostenible» no significa nada por sí solo: hay que decidir si se habla del modelo, del contexto que se le envía, de la frecuencia con que se llama o de para qué se usa.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Sabes explicar la diferencia entre una acción sostenible y un plan.</li>
-    <li>Sabes los cinco componentes: situación inicial, objetivo, acción, indicador y plazo.</li>
-    <li>Has convertido las cuatro intenciones en algo comprobable.</li>
-    <li>Sabes por qué un objetivo necesita una cláusula de «sin empeorar».</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué le falta a «reduciremos nuestro impacto ambiental»?</li>
-    <li>¿Por qué hace falta una situación de partida?</li>
-    <li>¿Por qué el ejemplo dice «sin degradar funcionalidad ni accesibilidad»?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Qué impacto, cuánto, con qué acción, medido cómo y para cuándo. Todo.</p>
-  <p>2 · Porque sin el «antes» no se puede demostrar ninguna mejora, solo afirmarla.</p>
-  <p>3 · Porque si no, el objetivo se cumple borrando contenido. Un objetivo que premia estropear el producto está mal escrito.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Crea el documento de UD6 y un índice con enlaces a las actividades de UD1 a UD5. Abre una evidencia real de cada una para comprobar que sigue disponible.
+2. Elige una intención del diagnóstico inicial de PixelStore y completa la cadena de planificación. Distingue un cambio ya realizado en el laboratorio de una acción propuesta para la empresa ficticia.
+3. Añade responsable, plazo de revisión y fuente del indicador. Si falta el valor inicial, incluye medirlo como primera acción.
+4. Comprueba cada flecha de la cadena: por qué esa acción debería cambiar ese indicador y cómo se relaciona con el impacto elegido.
+5. Pide a otra pareja que localice una afirmación sin evidencia o una acción sin responsable. Corrige la cadena y conserva este ejemplo como patrón para el plan.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+El primer objetivo conecta una necesidad con una acción y una comprobación. La UD6 reutiliza las evidencias; no exige rehacer las auditorías anteriores.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · La empresa · PixelStore
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo consolidar el caso empresarial de PixelStore integrando todos los datos recopilados en las 5 unidades previas.</li>
-    <li><strong>2. Haz:</strong> Mapea la cadena de valor completa, equipos, visitas web, proveedores e infraestructura tecnológica.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 2.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de sostenibilidad de PixelStore», sesión 2 de 8. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Ya conocéis PixelStore. La habéis analizado como empresa en la UD1, mirado su hardware en la UD2, optimizado su web en la UD3, quitado sus barreras en la UD4 y dimensionado su infraestructura en la UD5.
+### Se explica
 
-Hoy no empezáis de cero: **abrid vuestro repositorio de evidencias**. Todo lo que medisteis durante el módulo es el diagnóstico de este plan, y lo que no anotasteis entonces habrá que estimarlo ahora, que es bastante peor.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-### Lo que ya sabéis de ella
+Los grupos de interés pueden tener necesidades distintas. Una entrega rápida puede interesar al cliente y aumentar presión sobre almacén y transporte. El plan debe hacer visibles esos compromisos para no mejorar un indicador a costa de ocultar otro impacto.
 
-Vende productos tecnológicos por Internet. Tiene **45 trabajadores** y unas **300.000 visitas al mes**.
+El mapa de UD1 es el punto de partida. Ahora lo revisamos con lo aprendido sobre hardware, web, accesibilidad y datos. Actualizar significa justificar cambios de importancia o nuevas evidencias, no volver a copiar la definición de stakeholder.
 
-| Área | Lo que tiene |
-| ---- | ------------ |
-| Producto | Aplicación web, backend, base de datos, sistema de recomendaciones |
-| Infraestructura | Varios servidores cloud, almacenamiento de imágenes, backups, logs |
-| Herramientas | Analítica, servicios de IA, proveedor de pagos |
-| Operaciones | Atención al cliente, almacén, empresa de transporte |
-| Equipos | Ordenadores y móviles de empresa |
-| Terceros | Varios proveedores externos |
+### Se trabaja
 
-La dirección dice: «queremos convertir PixelStore en una empresa digital sostenible». Pero hoy no hay diagnóstico, ni objetivos, ni indicadores, ni política. Solo la frase.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-Vuestro trabajo es construir el plan que falta.
+1. Abre el mapa de UD1 y enlázalo en el plan. Añade una columna «qué sabemos ahora» y conserva la versión inicial para identificar las revisiones.
+2. Revisa clientes, plantilla, proveedores y dirección. Relaciona cada colectivo con una evidencia de las unidades posteriores que afecte a su necesidad.
+3. Elige dos intereses que puedan entrar en tensión. Describe qué ganaría y qué podría perder cada parte con una acción propuesta.
+4. Formula una consulta o medida que ayudaría a decidir sin inventar opiniones de personas reales. En el caso ficticio, deja identificadas las respuestas que faltan.
+5. Ajusta el mapa y explica dos cambios respecto al inicio. Si una prioridad se mantiene, justifica por qué la nueva evidencia no la modifica.
 
-### ¿A quién afecta PixelStore?
+### Cierre
 
-Una empresa no afecta solo a sus propietarios. Afecta a sus:
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-<p class="term">Stakeholders</p>
+El mapa actualizado utiliza resultados del módulo y hace visibles compromisos entre grupos. No se evalúa otra copia del mapa inicial.
 
-Clientes, trabajadores, proveedores, empresa de transporte, proveedor cloud, administraciones y la sociedad: personas y organizaciones que pueden afectar a PixelStore o verse afectadas por ella.
-
-Y afecta además a algo que no es un grupo de interés pero recibe las consecuencias igual:
-
-<p class="term">Los sistemas afectados</p>
-
-Las personas y el medio ambiente. La diferencia no es un tecnicismo: un stakeholder puede quejarse, negociar o marcharse. El medio ambiente no puede hacer ninguna de las tres cosas, y por eso su impacto hay que buscarlo activamente en lugar de esperar a que llegue una reclamación.
-
-### Segunda tarea · Mapa de stakeholders
-
-Identificad al menos **seis grupos**.
-
-| Stakeholder  | ¿Qué espera de PixelStore? | ¿Cómo puede afectarle PixelStore? |
-| ------------ | -------------------------- | --------------------------------- |
-| *Ejemplo · Proveedor cloud* | Requisitos previsibles y una relación estable | Su consumo, disponibilidad y seguridad condicionan el servicio de PixelStore |
-| Clientes     |                            |                                   |
-| Trabajadores |                            |                                   |
-|              |                            |                                   |
-|              |                            |                                   |
-|              |                            |                                   |
-|              |                            |                                   |
-
-### No todos quieren lo mismo
-
-Y aquí está lo interesante. El cliente quiere entrega rápida y precio bajo. El trabajador quiere una carga de trabajo razonable. La empresa quiere reducir costes. Y una entrega en dos horas necesita más transporte y más infraestructura.
-
-<p class="term">Trade-off</p>
-
-Mejorar un aspecto puede empeorar otro. Un plan honesto **reconoce los trade-offs en lugar de esconderlos**. Si vuestro plan no tiene ninguno, probablemente no habéis mirado lo suficiente.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Tenéis seis stakeholders con lo que esperan y cómo les afecta.</li>
-    <li>Habéis identificado al menos un trade-off real entre dos de ellos.</li>
-    <li>Sabéis qué tecnología y qué operaciones tiene PixelStore.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué es un stakeholder?</li>
-    <li>Poned un trade-off de PixelStore que afecte a dos grupos distintos.</li>
-    <li>¿Por qué tratamos al medio ambiente aparte de los grupos de interés?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Quien puede afectar o verse afectado por la actividad de la organización.</p>
-  <p>2 · Por ejemplo: entrega en dos horas mejora la experiencia del cliente y empeora el transporte y la carga del almacén.</p>
-  <p>3 · No es exactamente un grupo de interés: es un sistema afectado. Recibe las consecuencias igual, pero no puede reclamar, así que su impacto hay que ir a buscarlo.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Auditoría ASG
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Metodología de auditoría ASG: catalogación de evidencias empíricas en las dimensiones Ambiental, Social y Gobernanza.</li>
-    <li><strong>2. Haz:</strong> Completa la matriz de auditoría asignando hechos objetivos y niveles de madurez a cada aspecto clave.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de sostenibilidad de PixelStore», sesión 3 de 8. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Analizamos PixelStore desde las tres dimensiones de la UD1. Cada una tiene sus preguntas.
+### Se explica
 
-### Ambiental
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-| Área | Qué mirar |
-| ---- | --------- |
-| Hardware | Ordenadores, móviles, servidores, vida útil, residuos electrónicos |
-| Software | Peso de la web, procesamiento, transferencias |
-| Cloud | Máquinas, almacenamiento, backups, logs |
-| IA | Procesamiento, modelos utilizados, contexto enviado |
-| Logística | Transporte, embalajes |
+Auditar aquí significa ordenar evidencias y límites para saber de qué partimos. Una **medición** registra una magnitud observada; una **estimación** depende de supuestos; una **propuesta** describe algo que todavía no se ha realizado. Mezclarlas haría que el plan pareciera más demostrado de lo que está.
 
-### Social
+Las actividades del laboratorio no equivalen automáticamente a datos de toda la empresa. Una reducción de transferencia en vuestra copia de PixelStore es evidencia de esa prueba; extrapolarla a todas las visitas necesita supuestos adicionales.
 
-¿Puede usar la web todo el mundo? ¿Qué datos personales almacenamos y para qué? ¿Hay algún patrón de diseño que perjudique al usuario? ¿Cómo afectan las decisiones tecnológicas a los trabajadores? ¿Excluimos a alguien innecesariamente?
+### Se trabaja
 
-### Gobernanza
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-¿Protegemos bien los sistemas? ¿Sabemos qué datos conservamos y por qué? ¿De qué proveedores dependemos? ¿Quién responde de lo que decide la IA? ¿Podemos justificar lo que afirmamos sobre nuestra sostenibilidad?
+1. Crea una tabla ASG con hallazgo, fuente, tipo de evidencia, alcance y limitación. Añade al menos cuatro evidencias de las actividades anteriores, sin exigir que todas sean mediciones numéricas.
+2. Incorpora transferencia antes/después y una barrera de accesibilidad verificada. Enlaza el resultado exacto y la versión a la que corresponde.
+3. Añade una decisión de equipos y otra de retención o IA. Márcalas como análisis del caso cuando no se hayan ejecutado ni medido realmente.
+4. Busca una afirmación que generalice demasiado. Reescríbela indicando qué se observó y qué información faltaría para ampliarla a la empresa completa.
+5. Contrasta la tabla con otra pareja. Debe poder abrir la fuente y reconocer si respalda la afirmación. Corrige enlaces o formulaciones ambiguas.
 
-Esa última pregunta cierra el círculo con la UD1. Y conviene decirla con precisión: si no podéis justificarlo, **no podéis presentarlo como evidencia**. Se convierte en greenwashing cuando además induce a pensar que la empresa está mejor de lo que los datos permiten sostener — que es lo que ocurre casi siempre, porque nadie exagera hacia abajo.
+### Cierre
 
-### Tercera tarea · La auditoría
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-Identificad **al menos doce aspectos**, repartidos entre las tres dimensiones.
+La auditoría distingue medición, estimación y propuesta. No convierte supuestos de un caso didáctico en resultados empíricos.
 
-| Aspecto       | A / S / G | Posible impacto              |
-| ------------- | --------- | ---------------------------- |
-| *Ejemplo · Web pesada* | A | Mayor transferencia de datos |
-| Accesibilidad | S         | Usuarios excluidos           |
-|               |           |                              |
-|               |           |                              |
-|               |           |                              |
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · no sé qué buscar</summary>
-  <p>No hace falta inventar nada. Volved a las unidades y traed lo que ya encontrasteis.</p>
-  <ol>
-    <li><strong>UD2:</strong> ¿qué pasa con los dispositivos durante todo su ciclo de vida? Portátiles, móviles, servidores, y qué ocurre cuando se retiran.</li>
-    <li><strong>UD3:</strong> ¿la web usa más recursos de los necesarios? Ya lo medisteis. Los números están en vuestra entrega.</li>
-    <li><strong>UD4:</strong> ¿quién tiene dificultades para usarla? También lo documentasteis.</li>
-    <li><strong>UD5:</strong> ¿cloud, datos e IA están dimensionados? Máquinas ociosas, logs eternos, backups de seis años.</li>
-    <li>Y añadid lo que no vimos: transporte, embalajes, proveedores, condiciones de trabajo en el almacén.</li>
-  </ol>
-  <p>Si un problema ya apareció durante el curso, es un candidato legítimo: los mejores son los que traéis medidos. Este proyecto junta el curso, no lo sustituye.</p>
-</details>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
-  <ul class="checklist">
-    <li>Doce aspectos como mínimo, con las tres dimensiones representadas.</li>
-    <li>Cada uno con su impacto posible descrito, no solo nombrado.</li>
-    <li>Al menos cuatro salen de vuestro repositorio de evidencias, con su medición.</li>
-    <li>Al menos dos son de gobernanza, que es la que siempre se queda corta.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué dimensión ASG cubre la accesibilidad? ¿Y la retención de datos?</li>
-    <li>Nombrad un impacto ambiental de PixelStore que no sea la web.</li>
-    <li>¿Por qué la transparencia es un asunto de gobernanza?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Accesibilidad es social. La retención de datos toca gobernanza —quién decide y con qué norma— y también ambiental, porque ocupa infraestructura.</p>
-  <p>2 · El ciclo de vida de los portátiles y móviles, el transporte de los pedidos, los embalajes o los servidores que nadie usa.</p>
-  <p>3 · Porque afecta a si la empresa puede sostener lo que afirma. Sin evidencia, un anuncio de sostenibilidad es un riesgo, no un logro.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · Materialidad · no se puede arreglar todo
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> El principio de doble materialidad: evaluar el impacto hacia el entorno vs el riesgo y oportunidad financiera para la empresa.</li>
-    <li><strong>2. Haz:</strong> Construye la matriz de materialidad y prioriza los 5 asuntos críticos descartando aspectos no materiales.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre materialidad.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de sostenibilidad de PixelStore», sesión 4 de 8. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Tenéis doce o más impactos. Ahora viene la decisión más difícil del proyecto:
+### Se explica
 
-> **¿Cuáles importan más?**
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-<p class="term">Materialidad</p>
+Priorizar permite dedicar recursos limitados a los asuntos de mayor importancia. La matriz ayuda a visualizar el juicio, pero los números no sustituyen la justificación. El impacto sobre personas o recursos, su alcance y las obligaciones o restricciones conocidas deben influir en la decisión.
 
-Identificar los aspectos suficientemente importantes como para formar parte de las prioridades de la organización. Y como vimos en la UD1, se valora en **dos direcciones**, no en una:
+Elegir solo mejoras fáciles puede dejar fuera un bloqueo grave. También sería poco útil anunciar que se resolverán todos los problemas a la vez. Seleccionaremos cinco asuntos y conservaremos los motivos de inclusión y aplazamiento.
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Materialidad de impacto</p>
-    <p class="compare-body">De dentro hacia fuera. ¿Cuánto afecta este asunto a las personas o al medio ambiente?</p>
-  </div>
-  <div>
-    <p class="compare-label">Materialidad financiera</p>
-    <p class="compare-body">De fuera hacia dentro. ¿Cuánto riesgo o cuánta oportunidad supone para PixelStore?</p>
-  </div>
-</div>
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-A eso se le llama **doble materialidad**, y es la lógica de los estándares europeos que veréis en la sesión 6. Un asunto es material si pesa en cualquiera de las dos: no hace falta que pese en las dos a la vez, y decir en cuál pesa forma parte del análisis.
-
-### La matriz
+#### La matriz
 
 Puntuad cada aspecto de 1 (baja) a 3 (alta) en las dos direcciones, y anotad de qué riesgo u oportunidad concreta habláis:
 
@@ -392,92 +199,42 @@ La última columna es la que evita que esto se convierta en poner números. Si n
 
 No pretendemos hacer una evaluación profesional. Queremos aprender a **justificar prioridades**.
 
-### Cuarta tarea · Elegir cinco
-
-Evaluad vuestros aspectos y quedaos solo con cinco.
-
-| Prioridad | Aspecto | Justificación |
-| --------: | ------- | ------------- |
-| *Ejemplo · 1* | Accesibilidad | Impide comprar a parte de los usuarios y combina impacto social, riesgo legal y oportunidad comercial |
-|         1 |         |               |
-|         2 |         |               |
-|         3 |         |               |
-|         4 |         |               |
-|         5 |         |               |
-
-Y una regla que no admite excepciones: **no vale decir que todos son prioritarios**. Priorizar es decidir. Si todo tiene prioridad alta, no habéis priorizado nada, solo habéis puesto etiquetas.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
-  <ul class="checklist">
-    <li>Todos los aspectos puntuados en las dos dimensiones.</li>
-    <li>Exactamente cinco prioridades, ordenadas.</li>
-    <li>Cada una con una justificación que no repite la puntuación.</li>
-    <li>De cada prioridad sabéis decir si pesa por impacto, por riesgo, o por las dos.</li>
-    <li>Sabéis nombrar un aspecto importante que habéis dejado fuera, y por qué.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué dos direcciones se cruzan en la doble materialidad?</li>
-    <li>¿Por qué no vale que todo sea prioritario?</li>
-    <li>Un aspecto con impacto alto pero que a nadie le importa, ¿es material?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · De dentro hacia fuera, cuánto afecta la empresa al entorno y a las personas. De fuera hacia dentro, cuánto riesgo u oportunidad le supone a ella.</p>
-  <p>2 · Porque los recursos son limitados. Una lista donde todo es urgente es una lista sin decisiones.</p>
-  <p>3 · Puede serlo igualmente. Que nadie lo reclame no lo hace pequeño: solo lo hace más fácil de ignorar, que es distinto.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Parte de la tabla de auditoría y agrupa hallazgos que describan el mismo problema. Evita multiplicar su importancia contando varias capturas de una misma barrera.
+2. Valora impacto y relevancia en la escala acordada de 1 a 3. Escribe una frase de justificación en cada fila usando la evidencia y el contexto.
+3. Ordena los asuntos y selecciona cinco. Comprueba que has considerado ambiental, social y gobernanza aunque no reciban idéntico número de acciones.
+4. Añade un asunto aplazado y explica por qué. Identifica una condición que obligaría a adelantarlo, como un nuevo bloqueo o información sobre mayor alcance.
+5. Pide a otra pareja que cuestione la prioridad más alta. Revisa la puntuación si la razón no se sostiene y registra qué evidencia decidió el orden.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+La selección es trazable hasta los hallazgos y reconoce lo que se aplaza. No se obtiene mejor resultado por poner prioridad máxima a todo.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 5 · De los problemas a los objetivos
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo traducir problemas de sostenibilidad en objetivos estratégicos SMART (específicos, medibles, alcanzables, relevantes y temporales).</li>
-    <li><strong>2. Haz:</strong> Redacta los objetivos estratégicos para cada asunto material seleccionado con metas cuantitativas.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 5.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de sostenibilidad de PixelStore», sesión 5 de 8. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Tenéis cinco prioridades. Ahora hay que decidir qué queréis conseguir con cada una.
+### Se explica
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Ambiguo</p>
-    <p class="compare-body">«Mejorar nuestra web.»</p>
-  </div>
-  <div>
-    <p class="compare-label">Mejor</p>
-    <p class="compare-body">«Reducir la transferencia media de datos por visita.»</p>
-  </div>
-</div>
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Y mejor todavía: «Reducir la transferencia media de 5,5 MB a menos de 3 MB antes del final del curso, manteniendo funcionalidad y accesibilidad.»
+Un objetivo expresa un cambio deseado que pueda comprobarse. Necesita magnitud, alcance y plazo o condición de revisión. «Ser sostenibles» no indica cuándo se habrá logrado; «reducir la transferencia del recorrido medido conservando sus funciones» sí permite diseñar una prueba.
 
-Quizá encontréis la palabra **SMART**: específico, medible, alcanzable, relevante y temporal. No hay que memorizarla. La idea que importa cabe en una frase: **tiene que ser posible comprobar si se ha cumplido**.
+Los objetivos pueden generar incentivos equivocados. Medir solo tamaño podría animar a quitar contenido necesario; medir solo velocidad de atención podría perjudicar la calidad. Añadiremos una condición que evite mejorar el número degradando el servicio.
 
-### Quinta tarea · Cinco objetivos
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-| Prioridad | Objetivo |
-| --------- | -------- |
-| *Ejemplo · Accesibilidad* | Eliminar antes de junio las barreras críticas de teclado detectadas, sin aumentar el tiempo de carga |
-|           |          |
-|           |          |
-|           |          |
-|           |          |
-|           |          |
-
-Un ejemplo, siguiendo la UD2: si el problema es que los portátiles se sustituyen automáticamente cada tres años, el objetivo puede ser subir la vida media de los equipos adecuados de 3 a 4,5 años en los próximos dos ciclos de renovación.
-
-### Cuidado con lo que premia un objetivo
+#### Cuidado con lo que premia un objetivo
 
 «Usar todos los ordenadores durante 15 años» es medible, alcanzable y temporal. Y es una mala idea: genera problemas de seguridad, de productividad y de compatibilidad.
 
@@ -485,415 +242,126 @@ Un ejemplo, siguiendo la UD2: si el problema es que los portátiles se sustituye
 
 Cuando escribáis cada objetivo, preguntaos qué comportamiento absurdo permitiría si alguien solo quisiera cumplirlo.
 
-<details class="aside aside--help">
-  <summary>Estoy atascado · mi objetivo no se puede medir</summary>
-  <ol>
-    <li>¿Es un número o un adjetivo? «Mejor comunicación» no se mide. «Incidencias de accesibilidad abiertas» sí.</li>
-    <li>¿Existe hoy el dato? Si nadie lo recoge, vuestra primera acción es empezar a recogerlo. Eso ya es un objetivo válido.</li>
-    <li>¿Tenéis el valor de partida? Sin el «antes» no hay mejora que demostrar.</li>
-    <li>¿Mejoraría igual sin hacer nada? Entonces no mide vuestro plan, mide el paso del tiempo.</li>
-    <li>Si sigue sin salir, bajad de nivel: en lugar de medir el resultado, medid la acción. «Porcentaje de imágenes convertidas» es peor que «MB por visita», pero es medible hoy.</li>
-  </ol>
 </details>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
-  <ul class="checklist">
-    <li>Cinco objetivos, uno por prioridad.</li>
-    <li>Cada uno con valor de partida, meta y plazo.</li>
-    <li>Cada uno con su cláusula de «sin empeorar» donde haga falta.</li>
-    <li>Habéis comprobado qué comportamiento absurdo permitiría cada objetivo.</li>
-  </ul>
-</div>
+### Se trabaja
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre un objetivo y un indicador?</li>
-    <li>¿Qué es una baseline y por qué hace falta?</li>
-    <li>¿Por qué «15 años de vida útil» es un mal objetivo?</li>
-  </ol>
-</div>
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El objetivo dice qué queremos conseguir. El indicador es la medida que permite comprobar si vamos hacia allí.</p>
-  <p>2 · El valor inicial. Sin él no se puede demostrar ninguna mejora, solo declararla.</p>
-  <p>3 · Porque premia mantener equipos inseguros, lentos e incompatibles. Cumple el número y perjudica a la empresa y a quien los usa.</p>
-</details>
+1. Redacta un objetivo para cada uno de los cinco asuntos priorizados. Indica a qué parte de PixelStore afecta y cómo se relaciona con el hallazgo.
+2. Añade indicador, unidad y referencia inicial. Cuando el valor no exista, formula una primera fase de medición antes de comprometer una reducción porcentual.
+3. Define una meta didáctica o criterio de éxito y explica en qué te basas. No la presentes como resultado ya conseguido ni como compromiso real de la empresa.
+4. Escribe una condición de calidad para cada objetivo: conservar funciones, acceso, recuperación o adecuación del equipo. Comprueba si una solución tramposa podría mejorar el indicador incumpliéndola.
+5. Revisa los objetivos con otra pareja y corrige uno que permita interpretaciones distintas. Guarda la versión revisada junto al motivo del cambio.
 
----
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Los objetivos son verificables y no premian degradar el servicio. Cada meta declara su referencia y sus límites.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 5»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 6 · Acciones e indicadores
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Definición técnica de acciones operativas y diseño de indicadores KPI con línea base, meta, periodicidad y fuente de datos.</li>
-    <li><strong>2. Haz:</strong> Elabora el catálogo de acciones e indicadores para la optimización web, gestión circular de hardware, accesibilidad y cloud.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 6.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de sostenibilidad de PixelStore», sesión 6 de 8. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Ya tenéis problema y objetivo. Falta lo que se hace realmente.
+### Se explica
 
-| | Ejemplo · web pesada | Ejemplo · accesibilidad |
-| - | -------------------- | ----------------------- |
-| Prioridad | La web transfiere demasiado | La web tiene barreras |
-| Objetivo | Reducir la transferencia media un 40 % | Eliminar las barreras que impiden comprar |
-| Acciones | Optimizar imágenes, quitar scripts innecesarios, revisar terceros, lazy loading, revisar caché | Corregir HTML semántico, navegación por teclado, `label`, contraste, revisión periódica |
-| Indicador | MB transferidos por visita | Errores automáticos detectados, incidencias de teclado, criterios WCAG revisados |
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-### Sexta tarea · Construir el plan
+Una acción necesita responsable y una forma de comprobar su efecto. El indicador no es solo una cifra: incluye fuente, método, frecuencia y persona que lo revisa. Si nadie sabe cómo obtenerlo, difícilmente servirá para dirigir el plan.
 
-| Objetivo | Acción | Indicador | Responsable | Plazo |
-| -------- | ------ | --------- | ----------- | ----- |
-| *Ejemplo · Reducir la transferencia por visita un 40 %* | Optimizar imágenes y retirar scripts innecesarios | MB transferidos por visita | Equipo frontend | 8 semanas |
-|          |        |           |             |       |
-|          |        |           |             |       |
-|          |        |           |             |       |
-|          |        |           |             |       |
-|          |        |           |             |       |
+Los marcos y estándares pueden orientar qué documentar, pero citar uno no acredita cumplimiento ni certificación. Usaremos referencias para aclarar el criterio y conservaremos el alcance real de nuestras pruebas.
 
-**El responsable no es burocracia.** Una acción como «mejorar la accesibilidad» sin nadie detrás termina así:
+| Referencia | Qué organiza | Cómo utilizarla en este taller |
+| --- | --- | --- |
+| [GRI](https://www.globalreporting.org/standards/) | Información sobre impactos en economía, ambiente y personas | Identificar un tema y qué información ayudaría a explicarlo |
+| [ESRS](https://www.efrag.org/en/sustainability-reporting/esrs-workstreams) | Información europea de sostenibilidad dentro de su marco de reporte | Distinguir una estructura de información de una afirmación comercial sin evidencia |
+| [ISO 14001](https://www.iso.org/iso-14001-environmental-management.html) | Un sistema de gestión ambiental | Relacionar planificación, responsabilidades y revisión; no confundir gestión con un cálculo de huella |
 
-<figure class="diagram">
-  <figcaption>Lo que pasa sin responsable</figcaption>
-  <ol class="flow flow--row flow--chain flow--before">
-    <li>Todos son responsables</li>
-    <li>Nadie es responsable</li>
-  </ol>
-</figure>
+Para decidir obligaciones reales hay que comprobar la normativa vigente, el ámbito y las circunstancias de la organización. Aquí no se deduce una obligación o exención solo por una cifra de plantilla, ni se declara que el plan de aula equivale a una certificación.
 
-Y el plazo tampoco: «lo haremos algún día» no es un plan, es una intención con tabla.
+### Se trabaja
 
-Sobre las métricas, una regla: **medimos para decidir, no para decorar informes**. Una buena métrica responde a si estamos mejorando, si estamos empeorando y si la acción concreta está funcionando. Si no responde a ninguna de las tres, sobra.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-### Marcos y estándares
+1. Para cada objetivo completa acción, responsable propuesto, recursos necesarios y dependencia. Distingue ejecutar la acción de revisar si ha funcionado.
+2. Crea una ficha de indicador con nombre, unidad, fuente, cálculo, frecuencia y limitación. Resuelve primero el de transferencia utilizando vuestra tabla de UD3.
+3. Reproduce ese indicador con los datos disponibles y comprueba la operación. Para los indicadores sin datos, describe cómo se recogerían y marca el valor como pendiente.
+4. Selecciona una referencia del material de consulta que ayude a definir un criterio. Escribe qué aporta y qué no permite afirmar sobre vuestro trabajo.
+5. Pide a otra persona que siga una ficha de indicador. Si necesita preguntarte dónde están los datos o qué significa la unidad, completa las instrucciones.
 
-Las empresas no inventan cada indicador desde cero. Existen marcos para organizar y comunicar información de sostenibilidad:
+### Cierre
 
-| Marco | Qué es |
-| ----- | ------ |
-| GRI | Global Reporting Initiative, ampliamente usado para informes de sostenibilidad |
-| ESRS | Los estándares europeos de información sobre sostenibilidad |
-| ISO 14001 | Norma de sistemas de gestión ambiental. La edición vigente es la de 2026, que sustituyó a la de 2015 |
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-No hay que aprenderlos. Lo importante es saber que existen y que permiten **estructurar y comparar** información entre organizaciones.
+Al menos un indicador se reproduce con evidencia del módulo y los demás tienen método. El plan no declara certificaciones ni cumplimiento global no comprobado.
 
-<div class="rule">
-  <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
-  <p>GRI e ISO 14001 son voluntarios: una empresa los adopta si quiere. Los <strong>ESRS</strong> no siempre lo son. En la Unión Europea existe una obligación de informar sobre sostenibilidad que se aplica por tramos según el tamaño de la empresa, y que usa esos estándares como formato.</p>
-  <p>PixelStore, con 45 trabajadores, probablemente no esté obligada. Pero si vende a clientes grandes o a administraciones, esos sí lo están, y para informar necesitan datos de sus proveedores. Ahí es donde un plan de sostenibilidad deja de ser una buena intención y pasa a ser un requisito comercial.</p>
-  <p>Y esa es la respuesta práctica a por qué hacéis este trabajo: no para publicar un folleto, sino porque llegará el día en que alguien pida los números.</p>
-</div>
-
-### Séptima tarea · Un indicador real
-
-Elegid uno de vuestros cinco aspectos y buscad si existe un estándar, una guía o una métrica reconocida relacionada con él. Podéis usar la IA para localizarla, pero tenéis que **comprobar la fuente original**: si el asistente cita un estándar y no aparece al buscarlo, no existe.
-
-Un aviso práctico sobre dónde mirar. **GRI** publica sus estándares gratuitamente, y **EFRAG** hace lo mismo con los **ESRS**: en los dos casos podéis llegar al documento y citarlo. Con **ISO 14001** no: la web oficial de ISO os confirma que existe, en qué versión, para qué sirve y cuál es su alcance, pero el texto normativo completo requiere licencia de pago. Si elegís ISO, verificad ahí lo que sí es público y decid explícitamente hasta dónde habéis podido llegar. Eso también es parte del trabajo: **una fuente que no se puede consultar no se cita como si se hubiera leído**.
-
-<dl class="answer">
-  <dt>Fuente</dt>
-  <dd></dd>
-  <dt>Indicador o recomendación</dt>
-  <dd></dd>
-  <dt>¿Lo usaríais? ¿Por qué?</dt>
-  <dd></dd>
-</dl>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 6</p>
-  <ul class="checklist">
-    <li>Cada objetivo tiene al menos una acción concreta.</li>
-    <li>Cada objetivo tiene un indicador que se puede medir de verdad.</li>
-    <li>Cada acción tiene responsable y plazo.</li>
-    <li>Tenéis una fuente externa verificada, con su enlace.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué pasa si una acción no tiene responsable?</li>
-    <li>¿Para qué sirve un marco como GRI o ESRS?</li>
-    <li>La IA os cita un estándar. ¿Qué hacéis antes de ponerlo en el plan?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que nadie la ejecuta. Cuando todos son responsables, nadie lo es.</p>
-  <p>2 · Para no inventar cada indicador desde cero y para que la información sea comparable entre organizaciones.</p>
-  <p>3 · Buscar la fuente original y comprobar que existe y que dice lo que el asistente afirma.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 6»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 7 · Priorización y roadmap
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Priorización estratégica basada en la matriz impacto vs dificultad y planificación de hitos en un roadmap a 3 años.</li>
-    <li><strong>2. Haz:</strong> Clasifica las iniciativas en corto, medio y largo plazo con estimación de recursos y responsables.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 7.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de sostenibilidad de PixelStore», sesión 7 de 8. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Tenéis muchas acciones y una empresa no puede hacerlas todas mañana. Hay que ordenar, y se ordena cruzando dos cosas: **impacto esperado** y **esfuerzo**.
+### Se explica
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Optimizar imágenes</p>
-    <p class="compare-body">Impacto medio-alto, esfuerzo bajo. Un <em>quick win</em>: se hace primero.</p>
-  </div>
-  <div>
-    <p class="compare-label">Sustituir toda la infraestructura cloud</p>
-    <p class="compare-body">Impacto por demostrar, esfuerzo muy alto. Antes de eso hay que justificarlo muy bien.</p>
-  </div>
-</div>
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-### Octava tarea · El roadmap
+Un roadmap organiza acciones según dependencias y capacidad. Medir la referencia va antes de comprobar una mejora; formar a quienes aplican una política debe ocurrir antes de exigir su uso. Ordenar por fechas sin estas relaciones produce un calendario difícil de ejecutar.
 
-| Fase | Plazo | Qué va aquí |
-| ---- | ----- | ----------- |
-| 1 | 0–3 meses | Lo rápido o lo urgente: barreras críticas de accesibilidad, recursos cloud olvidados, optimizar imágenes |
-| 2 | 3–12 meses | Lo que necesita trabajo: política de hardware, política de retención de datos |
-| 3 | Más de 12 meses | Cambios estructurales: revisión de proveedores |
+La viabilidad exige reconocer recursos limitados. El caso permite proponer responsables y fases, pero no conocer todos los costes reales. Marcaremos estimaciones y datos pendientes para que la dirección pueda decidir qué confirmar.
 
-Y ahora una pregunta que suele descolocar: **vuestra prioridad número 1, ¿es realmente la primera acción que haríais?**
+### Se trabaja
 
-No tiene por qué. Un problema puede ser importantísimo y necesitar meses de preparación. Mientras tanto se hacen otras mejoras. Prioridad y orden de ejecución **no son lo mismo**, y saber explicar por qué difieren es una de las cosas que se evalúan.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 7</p>
-  <ul class="checklist">
-    <li>Todas las acciones clasificadas por impacto y esfuerzo.</li>
-    <li>Roadmap en tres fases, con las acciones repartidas.</li>
-    <li>Al menos un quick win en la fase 1.</li>
-    <li>Sabéis explicar por qué vuestra prioridad 1 va o no va la primera.</li>
-  </ul>
-</div>
+1. Lista las acciones y dibuja qué necesita cada una antes de empezar. Identifica medidas de referencia, acceso a datos, decisiones de dirección o colaboración del proveedor.
+2. Agrupa en tres fases: preparar y medir, aplicar mejoras prioritarias y revisar resultados. Justifica por qué una acción entra en cada fase.
+3. Asigna responsables propuestos y una carga estimada de trabajo. Si dos acciones dependen de la misma persona, comprueba que no exigen su dedicación simultánea.
+4. Añade un riesgo por fase, señal de alerta y ajuste posible. No sustituyas el plan por una lista de riesgos sin responsables.
+5. Comprueba el recorrido de una acción hasta su indicador final. Revisa prioridades o fechas si falta una dependencia y registra qué quedaría para una fase posterior.
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué es un quick win?</li>
-    <li>¿Puede la prioridad 1 no ser la primera acción? ¿Por qué?</li>
-    <li>¿Qué dos ejes se cruzan para ordenar el roadmap?</li>
-  </ol>
-</div>
+### Cierre
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Una acción de impacto alto y esfuerzo bajo. Se hace primero porque demuestra resultados pronto y cuesta poco.</p>
-  <p>2 · Sí. Puede necesitar presupuesto, contratos o preparación. Importancia y orden de ejecución son cosas distintas.</p>
-  <p>3 · Impacto esperado y esfuerzo.</p>
-</details>
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
----
+El roadmap puede seguirse de principio a fin y declara sus supuestos de recursos. Las fases están justificadas por dependencias y prioridades.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 7»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 8 · Informe y presentación
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Comunicación ejecutiva de sostenibilidad: síntesis del plan en informe ejecutivo de 6 diapositivas y presentación oral ante tribunal.</li>
-    <li><strong>2. Haz:</strong> Expón la propuesta ante el tribunal (5 minutos), defiende las decisiones y participa en la coevaluación.</li>
-    <li><strong>3. Entrega:</strong> Entrega el Plan de Sostenibilidad Digital definitivo y la presentación de diapositivas.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Plan de sostenibilidad de PixelStore», sesión 8 de 8. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-Reunimos todo. No queremos un documento de cuarenta páginas: queremos algo que la dirección entienda.
+### Se explica
 
-### Producto final
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-El **Plan de sostenibilidad de PixelStore**, en un máximo de **seis diapositivas**.
+El plan final debe permitir entender por qué se propone actuar y cómo se sabrá si la actuación sirve. Su valor está en la conexión entre evidencia y decisión, no en repetir toda la teoría. La presentación resume esa cadena y el documento conserva los detalles consultables.
 
-| # | Diapositiva | Qué lleva |
-| - | ----------- | --------- |
-| 1 | Diagnóstico | Qué es PixelStore, sus principales stakeholders y tres impactos ASG importantes |
-| 2 | Materialidad | Las cinco prioridades, en tabla, gráfico o matriz. Tiene que entenderse de un vistazo |
-| 3 | Objetivos | Un objetivo por prioridad, con su valor de partida y su meta |
-| 4 | Plan de acción | Acción, responsable y plazo |
-| 5 | Indicadores | Cómo comprobaréis si PixelStore mejora. Cinco KPI como máximo |
-| 6 | Roadmap y decisión | Las tres fases, y la respuesta a una pregunta |
+Una crítica útil cambia una decisión o confirma que se mantiene por una razón comprobable. La IA puede formular objeciones, pero no aporta automáticamente evidencia nueva. Comprobaremos sus afirmaciones antes de incorporarlas al plan.
 
-Esa pregunta es:
+### Se trabaja
 
-> **¿Cuál debería ser la primera decisión que tome PixelStore el lunes por la mañana?**
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-### La IA como crítico
+1. Revisa que el documento reúna diagnóstico, grupos afectados, cinco prioridades, objetivos, acciones, indicadores y fases. Enlaza las actividades anteriores en lugar de copiar sus informes.
+2. Pide una crítica acotada a otra pareja o al asistente: una incoherencia, un indicador débil y un supuesto no justificado. Contrasta cada observación con las fuentes de tu trabajo.
+3. Corrige al menos una debilidad confirmada o documenta por qué una objeción no procede. Conserva observación, decisión y cambio; no inventes una crítica aceptada para completar la entrega.
+4. Prepara una explicación breve de una cadena completa del plan. Cada integrante defiende una decisión; los turnos colectivos o las mesas de revisión se ajustan al tiempo disponible.
+5. Entrega plan e índice de las seis actividades con sus versiones finales. Señala pendientes, alcance de las mediciones y qué habría que confirmar antes de aplicar el plan a una empresa real.
 
-Podéis usar la IA durante todo el proyecto: identificar impactos, proponer indicadores, buscar estándares, mejorar la presentación, detectar incoherencias. Con una condición: **de cada recomendación importante tenéis que poder explicar por qué la aceptasteis**.
+### Cierre
 
-Y antes de terminar, dadle el plan entero:
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-<div class="prompt">
-  <p class="prompt-label">Prompt estructurado</p>
-  <p class="flow-role">Tarea</p>
-  <p>Actúa como revisor crítico de este plan de sostenibilidad. No lo reescribas.</p>
-  <p class="flow-role">Busca</p>
-  <ol>
-    <li>Afirmaciones sin evidencia.</li>
-    <li>Objetivos imposibles de medir.</li>
-    <li>Indicadores que no responden a su objetivo.</li>
-    <li>Acciones poco relacionadas con el problema que dicen resolver.</li>
-    <li>Prioridades incoherentes con el análisis de materialidad.</li>
-    <li>Posibles efectos secundarios de las acciones propuestas.</li>
-  </ol>
-</div>
+La evaluación se basa en actividades y evidencias, incluida la integración final. El cierre no añade un examen ni exige volver a elaborar las auditorías del curso.
 
-Clasificad las críticas como aceptar, rechazar o investigar.
-
-### Novena tarea · La crítica que cambió el plan
-
-Documentad **una crítica —de la IA o de otro grupo— que os haya hecho cambiar la propuesta**.
-
-<dl class="answer">
-  <dt>Antes</dt>
-  <dd></dd>
-  <dt>Qué problema señalaron</dt>
-  <dd></dd>
-  <dt>Después</dt>
-  <dd></dd>
-</dl>
-
-Este bloque puntúa. Un plan que nadie ha conseguido mejorar normalmente es un plan que nadie ha revisado de verdad.
-
-### Presentación
-
-**5 minutos** por grupo, hablando ante la dirección de PixelStore. Nada de teoría: cinco respuestas.
-
-* ¿Cuáles son los principales problemas?
-* ¿Qué haríais primero?
-* ¿Cuánto queréis mejorar?
-* ¿Cómo lo mediréis?
-* ¿Qué habéis decidido NO hacer?
-
-Y luego llegan las preguntas: ¿por qué esto es prioritario?, ¿qué evidencia tenéis?, ¿cómo sabremos si funciona?, ¿cuánto cuesta?, ¿quién será responsable?, ¿qué pasaría si no hacemos nada? Tenéis que poder defenderlo.
-
-### Evaluación
-
-| Criterio                                     | Puntos |
-| -------------------------------------------- | -----: |
-| Identificación de stakeholders               |      1 |
-| Auditoría ASG                                |    1,5 |
-| **Análisis y justificación de materialidad** |  **2** |
-| Calidad de objetivos y acciones              |    1,5 |
-| **Indicadores y capacidad de medición**      |  **2** |
-| Priorización y roadmap                       |      1 |
-| Uso crítico de IA y fuentes                  |    0,5 |
-| Claridad de la presentación                  |    0,5 |
-
-Durante la presentación se preguntará **individualmente** a cualquier miembro del grupo por una decisión del plan. Un plan que solo puede defender una persona del grupo no es un plan del grupo.
-
-No puntúa más quien propone más acciones, ni quien mete más ODS, ni quien anuncia que PixelStore será carbono neutral en 2030 sin explicar cómo. Puntúa quien construye una cadena que se sostiene entera:
-
-<figure class="diagram">
-  <figcaption>La cadena que se evalúa</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Impacto</li>
-    <li>Prioridad</li>
-    <li>Objetivo</li>
-    <li>Acción</li>
-    <li>Indicador</li>
-    <li>Evidencia</li>
-  </ol>
-</figure>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Grupos de interés identificados, con lo que esperan.</li>
-    <li>Impactos de las tres dimensiones, no solo ambientales.</li>
-    <li>Exactamente cinco aspectos materiales, justificados.</li>
-    <li>Cada prioridad tiene objetivo, acción, indicador, responsable y plazo.</li>
-    <li>Los indicadores se pueden medir hoy, con los datos que existen.</li>
-    <li>Las acciones están priorizadas y repartidas en fases.</li>
-    <li>Habéis usado al menos una fuente externa verificable.</li>
-    <li>Sabéis defender qué acciones descartasteis y por qué.</li>
-    <li>La IA no ha decidido el plan por vosotros.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre hacer una acción sostenible y tener un plan?</li>
-    <li>¿Para qué sirve la materialidad?</li>
-    <li>¿Qué diferencia hay entre un objetivo y un indicador?</li>
-    <li>¿Qué pasa si una acción no tiene responsable?</li>
-    <li>¿Por qué hay que volver a medir después de aplicar el plan?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El plan parte de un diagnóstico y ordena las acciones según prioridades, objetivos e indicadores. Una acción suelta puede ser correcta y estar resolviendo lo que menos importaba.</p>
-  <p>2 · Para decidir qué merece los recursos, que siempre son limitados.</p>
-  <p>3 · El objetivo dice a dónde queremos llegar; el indicador permite comprobar si nos acercamos.</p>
-  <p>4 · Que probablemente no la ejecute nadie.</p>
-  <p>5 · Porque solo midiendo otra vez se sabe si las acciones han producido la mejora esperada, o si hay que cambiarlas.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD6 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 8»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
-### El ciclo
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-La sostenibilidad empresarial no consiste en hacer muchas cosas que parezcan verdes:
-
-<figure class="diagram">
-  <figcaption>Y vuelve a empezar</figcaption>
-  <ol class="flow">
-    <li>Entender · ¿qué impacto tenemos?</li>
-    <li>Priorizar · ¿qué importa de verdad?</li>
-    <li>Decidir · ¿qué queremos cambiar?</li>
-    <li>Actuar · ¿qué vamos a hacer?</li>
-    <li>Medir · ¿cómo sabremos si funciona?</li>
-    <li>Revisar · ¿qué hay que cambiar ahora?</li>
-  </ol>
-</figure>
-
-### El mapa del módulo
-
-<figure class="diagram">
-  <figcaption>Cómo encajan las seis unidades</figcaption>
-  <ol class="flow">
-    <li>ASG · ¿qué tipos de impacto existen?</li>
-    <li>Ciclo de vida · ¿de dónde vienen los impactos de la tecnología?</li>
-    <li>Software sostenible · ¿podemos desarrollar usando menos?</li>
-    <li>Accesibilidad · ¿quién puede usar nuestro producto?</li>
-    <li>Cloud, datos e IA · ¿la tecnología es proporcional al problema?</li>
-    <li>Plan · ¿cómo se convierte todo esto en decisiones e indicadores?</li>
-  </ol>
-</figure>
-
-Y la frase que resume el módulo entero: **la sostenibilidad no se declara, se demuestra**.
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Plan de sostenibilidad | Objetivos, acciones e indicadores organizados para gestionar impactos ASG |
-| Diagnóstico | El análisis de dónde estamos antes de decidir nada |
-| Stakeholder | Quien afecta o se ve afectado por la actividad de la organización |
-| Materialidad | Elegir qué aspectos merecen los recursos, y poder justificarlo |
-| Objetivo | Lo que queremos conseguir, con meta y plazo |
-| Acción | La medida concreta que nos lleva al objetivo |
-| Indicador | La medida que dice si nos estamos acercando |
-| Baseline | El valor de partida, sin el cual no hay mejora que demostrar |
-| Meta | El valor al que queremos llegar |
-| Responsable | Quien impulsa y comprueba una acción |
-| Roadmap | En qué orden se hace, y por qué en ese orden |
-| SMART | Que un objetivo se pueda comprobar |
-| GRI | Marco muy usado para informes de sostenibilidad |
-| ESRS | Los estándares europeos de información sobre sostenibilidad |
-| ISO 14001 | Norma de sistemas de gestión ambiental; edición vigente, 2026 |
-| Trade-off | Cuando mejorar una cosa empeora otra, y hay que reconocerlo |
-| Quick win | Impacto alto, esfuerzo bajo. Por donde se empieza |
-| Mejora continua | Medir, actuar, revisar y volver a empezar |
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

@@ -6,57 +6,84 @@ order: 1
 lang: "es"
 summary: "De una empresa tradicional a una empresa digital. Recorremos el camino problema → necesidad → solución tecnológica, y no al revés."
 duration: "3 horas · 3 sesiones"
-modality: "Parejas"
-deliverable: "Una propuesta visual de transformación digital de una pequeña empresa."
-date: "2026-08-28"
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Rediseño de Reparaciones Rápidas. Una actividad acumulativa por unidad, con evidencias y aportación individual."
+date: "2026-09-09"
 outcomes:
   - "Distinguir digitalizar un dato de rediseñar un proceso."
   - "Recorrer el camino problema → necesidad → tecnología, y no al revés."
   - "Reconocer las tecnologías habituales de una empresa y para qué sirve cada una."
   - "Justificar por qué una tecnología hace falta, o por qué no."
 requirements:
-  - "Herramienta de diagramas, o papel y rotulador."
-  - "Herramienta de presentaciones."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
+priorKnowledge:
+  - "No se requieren conocimientos previos de estos contenidos. La guía explica cómo abrir y guardar el trabajo; no se necesita ningún otro módulo."
 ---
+
+<p class="lead">Rediseño de Reparaciones Rápidas. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
+
+## Cómo trabajar esta unidad
+
+Son 3 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Rediseño de Reparaciones Rápidas.** Guarda el trabajo en `digitalizacion/ud1/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterio</th>
+      <th class="align-right">Puntuación</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Identificación de los problemas reales</td>
+      <td class="align-right">2</td>
+    </tr>
+    <tr>
+      <td>Calidad del nuevo proceso propuesto</td>
+      <td class="align-right">2</td>
+    </tr>
+    <tr>
+      <td>Coherencia de la arquitectura</td>
+      <td class="align-right">2</td>
+    </tr>
+    <tr>
+      <td>Selección y justificación de tecnologías</td>
+      <td class="align-right">3</td>
+    </tr>
+    <tr>
+      <td>Claridad de la presentación</td>
+      <td class="align-right">1</td>
+    </tr>
+  </tbody>
+</table>
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · Qué cambia realmente al digitalizar
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La diferencia entre digitalizar información y rediseñar un proceso (transformación digital).</li>
-    <li><strong>2. Haz:</strong> Identifica el orden problema → proceso → necesidad → solución tecnológica en casos reales.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 1 de 3. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### ¿Qué vamos a aprender?
+### Se explica
 
-Cuando trabajes como desarrollador, normalmente no te pedirán simplemente:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-> «Haz una aplicación web».
+Una empresa digitaliza para resolver un problema de su trabajo. Un **proceso** es una secuencia de acciones con un inicio, un resultado y personas responsables. Pasar una ficha de papel a un PDF cambia su soporte; evitar que administración vuelva a copiar sus datos cambia el proceso. Antes de elegir herramientas necesitamos entender quién hace qué y dónde se atasca el trabajo.
 
-Lo habitual es que exista primero un **problema que resolver**:
+En Reparaciones Rápidas se reciben dispositivos, se asignan técnicos y se avisa al cliente. «Usar IA» no describe una necesidad. «Evitar que el técnico y administración escriban dos veces la misma reparación» sí permite comprobar una mejora. IT gestiona información; OT actúa sobre equipos o procesos físicos. No todos los problemas de esta empresa necesitan ambas.
 
-* los clientes llaman demasiado;
-* los trabajadores repiten tareas;
-* hay información en varios sitios;
-* se pierden documentos;
-* se introducen los mismos datos varias veces;
-* nadie sabe exactamente en qué estado está un pedido;
-* se hacen tareas manualmente que podrían automatizarse.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-La tecnología sirve para mejorar estos procesos.
-
-En esta actividad aprenderemos a pasar de:
-
-**problema → necesidad → solución tecnológica**
-
-y no al revés.
-
----
-
-### Digitalizar no es simplemente utilizar ordenadores
+#### Digitalizar no es simplemente utilizar ordenadores
 
 Imagina una pequeña empresa en la que las citas se apuntan en una libreta.
 
@@ -97,35 +124,11 @@ Ahora no solo hemos sustituido papel por una pantalla.
 
 A esto lo llamamos **transformación digital**.
 
----
-
-### Una idea importante: la tecnología no es el objetivo
-
-Una empresa no necesita inteligencia artificial, cloud, IoT o Big Data simplemente porque sean tecnologías modernas.
-
-Una tecnología tiene sentido cuando **resuelve un problema o aporta una mejora**.
-
-Por ejemplo:
-
-| Problema | Posible solución |
-| --- | --- |
-| Los clientes deben llamar para pedir cita | Aplicación web |
-| Los trabajadores introducen los mismos datos varias veces | Integración entre aplicaciones |
-| Hay que enviar 100 correos iguales cada día | Automatización |
-| Los datos están almacenados únicamente en un ordenador | Servicio cloud |
-| La empresa quiere conocer cuáles son sus productos más vendidos | Analítica de datos |
-
-Por tanto, durante esta actividad utilizaremos siempre esta regla:
-
-> **Primero entendemos el problema. Después elegimos la tecnología.**
-
----
-
-### Algunas tecnologías que encontrarás en las empresas
+#### Algunas tecnologías que encontrarás en las empresas
 
 No necesitas conocerlas en profundidad todavía. Solo necesitas entender qué función pueden tener.
 
-#### Aplicación web
+##### Aplicación web
 
 Permite que clientes o trabajadores interactúen con un sistema utilizando un navegador.
 
@@ -138,7 +141,7 @@ Ejemplos:
 
 ---
 
-#### API
+##### API
 
 Una API permite que **dos aplicaciones intercambien información**.
 
@@ -157,7 +160,7 @@ La tienda puede enviar automáticamente a la empresa de transporte los datos nec
 
 ---
 
-#### Base de datos
+##### Base de datos
 
 Permite almacenar información de forma organizada.
 
@@ -172,7 +175,7 @@ Por ejemplo:
 
 ---
 
-#### Cloud
+##### Cloud
 
 En lugar de ejecutar una aplicación únicamente en los ordenadores de la empresa, podemos utilizar infraestructura accesible a través de Internet.
 
@@ -187,7 +190,7 @@ Más adelante estudiaremos este concepto con mayor profundidad.
 
 ---
 
-#### Automatización
+##### Automatización
 
 Una automatización permite que ciertas tareas se ejecuten sin que una persona tenga que hacerlas manualmente cada vez.
 
@@ -205,7 +208,7 @@ Por ejemplo:
 
 ---
 
-#### Datos y analítica
+##### Datos y analítica
 
 Las aplicaciones generan datos.
 
@@ -218,7 +221,7 @@ Estos datos pueden utilizarse para responder preguntas:
 
 ---
 
-#### Inteligencia artificial
+##### Inteligencia artificial
 
 La IA puede utilizarse para tareas concretas como:
 
@@ -235,13 +238,11 @@ Pero:
 
 Utilizar IA donde una solución sencilla funciona mejor puede aumentar el coste y la complejidad sin aportar valor.
 
----
-
-### IT y OT
+#### IT y OT
 
 Hay dos conceptos que aparecen frecuentemente cuando hablamos de digitalización.
 
-#### IT — Information Technology
+##### IT — Information Technology
 
 Son los sistemas utilizados principalmente para gestionar información.
 
@@ -253,7 +254,7 @@ Por ejemplo:
 * correo electrónico;
 * software empresarial.
 
-#### OT — Operational Technology
+##### OT — Operational Technology
 
 Son tecnologías que interactúan con procesos físicos.
 
@@ -283,583 +284,88 @@ La aplicación y el servidor pertenecen principalmente al mundo **IT**.
 
 La digitalización está haciendo que ambos mundos estén cada vez más conectados.
 
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Sabes explicar con un ejemplo la diferencia entre digitalizar y transformar.</li>
-    <li>Puedes nombrar cuatro tecnologías de empresa y para qué sirve cada una.</li>
-    <li>Distingues un sistema IT de un sistema OT.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Sustituir una libreta por un Excel, ¿es transformación digital?</li>
-    <li>¿Qué va primero, la tecnología o el proceso?</li>
-    <li>Pon un ejemplo de sistema OT.</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · No. Se ha cambiado el soporte, pero el proceso sigue siendo el mismo. Es digitalización.</p>
-  <p>2 · El proceso. La tecnología se elige después, cuando ya sabemos qué necesidad tiene que cubrir.</p>
-  <p>3 · Una máquina de producción, un sensor de temperatura, un autómata de una línea de montaje: sistemas que actúan sobre el mundo físico.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Abre la [ficha de Reparaciones Rápidas](/teaching/transversales/casos.pdf) y crea un documento «Actividad UD1» en Word, LibreOffice o un editor en línea. Escribe los nombres del equipo y el objetivo: mejorar la gestión de reparaciones.
+2. Lee la entrada, asignación y cierre de una reparación. Dibuja una caja por acción y une las cajas con flechas; escribe encima quién realiza cada acción. No añadas todavía aplicaciones nuevas.
+3. Marca tres dificultades que aparezcan en la ficha. Para cada una anota el hecho, a quién afecta y su consecuencia. Ejemplo: las fotos quedan en el móvil del técnico; administración no puede consultarlas al preparar la factura.
+4. Elige un problema y conviértelo en una necesidad sin nombrar marcas: «la información de una reparación debe estar disponible para quien la tramita». Distingue el dato del caso de una suposición vuestra.
+5. Intercambia el dibujo con otra pareja. Pídele que siga una reparación desde la llegada hasta el aviso al cliente. Corrige una flecha o un responsable que no pueda explicar.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Debe quedar un proceso actual comprensible y tres problemas respaldados por el caso. Explica por qué digitalizar un papel no garantiza resolverlos.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Rediseña una empresa
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo diagnosticar las ineficiencias del flujo de trabajo de Reparaciones Rápidas S.L.</li>
-    <li><strong>2. Haz:</strong> Dibuja el proceso actual (AS-IS), rediseña el flujo (TO-BE) y selecciona las tecnologías necesarias.</li>
-    <li><strong>3. Comprueba:</strong> Verifica que has descartado al menos una tecnología y que tu arquitectura conceptual es clara.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 2 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El caso
+### Se explica
 
-#### Reparaciones Rápidas S.L.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Es una pequeña empresa dedicada a reparar ordenadores, móviles y tablets.
+El **proceso futuro** describe cómo queremos trabajar, no una lista de programas. Una tecnología solo está justificada si resuelve una necesidad y podemos explicar quién la utilizará. Una arquitectura conceptual muestra las piezas y los datos que pasan entre ellas, sin exigir código ni servidores reales.
 
-Actualmente trabaja de la siguiente forma.
+Por ejemplo, un formulario de recepción puede guardar una reparación en un registro compartido. El técnico actualiza su estado y administración consulta ese mismo registro. Hemos eliminado una copia de datos. Añadir una aplicación móvil propia puede resultar innecesario si una página accesible desde el navegador cubre la necesidad.
 
-##### Entrada de reparaciones
+### Se trabaja
 
-Los clientes llaman por teléfono o acuden presencialmente.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-Un trabajador apunta:
+1. Abre el proceso actual de la sesión anterior y conserva una copia con ese título. En otra sección dibuja el proceso futuro; así podrá compararse qué ha cambiado.
+2. Elige dos de los problemas documentados. Para cada uno escribe una necesidad, una acción nueva y una persona responsable. Comprueba que no has dejado sin dueño el aviso al cliente.
+3. Completa una tabla con necesidad, solución propuesta y motivo. Utiliza categorías como registro compartido, formulario o notificación antes de elegir un proveedor.
+4. Dibuja las piezas de la solución y escribe sobre cada flecha qué dato viaja: identificador de reparación, estado o contacto. Si una caja no tiene una función explicable, elimínala o aclárala.
+5. Añade una alternativa descartada, su ventaja y por qué no compensa en este caso. Prepara una comparación de antes/después basada en el problema, sin inventar cifras de ahorro.
 
-* nombre;
-* teléfono;
-* dispositivo;
-* avería.
+### Cierre
 
-Lo escribe en una hoja de papel.
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
----
+El documento contiene proceso actual, proceso futuro, arquitectura y una alternativa descartada. Cada tecnología tiene una necesidad concreta asociada.
 
-##### Organización
-
-Cada mañana, los técnicos revisan las reparaciones pendientes.
-
-El responsable les comunica verbalmente qué dispositivos deben reparar.
-
-Algunas veces también utiliza WhatsApp.
-
----
-
-##### Fotografías
-
-Los técnicos hacen fotografías de los dispositivos antes de comenzar la reparación.
-
-Las fotografías quedan guardadas en sus teléfonos móviles.
-
----
-
-##### Estado de la reparación
-
-Los clientes no pueden consultar el estado de su dispositivo.
-
-Normalmente llaman preguntando:
-
-> «¿Ya está arreglado mi ordenador?»
-
-Los trabajadores reciben muchas llamadas de este tipo.
-
----
-
-##### Finalización
-
-Cuando termina una reparación:
-
-1. el técnico avisa al responsable;
-2. el responsable busca el teléfono del cliente;
-3. llama o envía un mensaje;
-4. prepara manualmente la factura.
-
----
-
-##### Información histórica
-
-La empresa conserva muchos documentos, hojas de cálculo y mensajes.
-
-Sin embargo, le resulta difícil responder preguntas como:
-
-* ¿qué dispositivos se averían más?
-* ¿cuál es el tiempo medio de reparación?
-* ¿qué averías son más frecuentes?
-* ¿cuántas reparaciones realiza cada mes?
-
----
-
-### Primera tarea — Detectar problemas
-
-Antes de hablar de tecnología, identifica los problemas.
-
-Escribe **al menos cinco**.
-
-Ejemplo:
-
-**Problema:** las fotografías están repartidas entre los teléfonos personales de los técnicos.
-
-Ahora vosotros:
-
-<ol class="fill-in" aria-label="Espacio para escribir los problemas detectados">
-  <li><span class="visually-hidden">Problema 1</span></li>
-  <li><span class="visually-hidden">Problema 2</span></li>
-  <li><span class="visually-hidden">Problema 3</span></li>
-  <li><span class="visually-hidden">Problema 4</span></li>
-  <li><span class="visually-hidden">Problema 5</span></li>
-  <li><span class="visually-hidden">Problema 6</span></li>
-</ol>
-
----
-
-### Segunda tarea — Diseñar el nuevo proceso
-
-Pensad cómo podría funcionar la empresa después de digitalizar sus procesos.
-
-No penséis todavía en tecnologías concretas.
-
-Pensad primero en **cómo debería funcionar**.
-
-Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>Ejemplo de proceso propuesto</figcaption>
-  <ol class="flow">
-    <li>Cliente solicita reparación</li>
-    <li>Empresa recibe solicitud</li>
-    <li>Técnico recibe trabajo</li>
-    <li>Se realiza reparación</li>
-    <li>Cliente puede consultar estado</li>
-    <li>Cliente recibe aviso</li>
-  </ol>
-</figure>
-
-Diseñad vuestro propio proceso.
-
-Podéis utilizar:
-
-* papel;
-* PowerPoint;
-* diagrams.net;
-* Canva;
-* cualquier herramienta sencilla de diagramas.
-
-Debe entenderse el proceso simplemente mirándolo.
-
----
-
-### Tercera tarea — Elegir tecnologías
-
-Ahora sí podemos introducir tecnología.
-
-Completad la siguiente tabla:
-
-| Necesidad | Tecnología propuesta | ¿Qué problema resuelve? |
-| --- | --- | --- |
-| El cliente solicita una reparación | | |
-| Guardar información de la reparación | | |
-| Guardar fotografías | | |
-| Consultar el estado | | |
-| Avisar automáticamente al cliente | | |
-| Analizar las reparaciones realizadas | | |
-
-Podéis utilizar conceptos como:
-
-* aplicación web;
-* API;
-* base de datos;
-* cloud;
-* automatización;
-* analítica de datos;
-* inteligencia artificial.
-
-No es obligatorio utilizar todos.
-
----
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · no se me ocurre qué tecnología proponer</summary>
-  <p>La tecnología no se elige de una lista: sale del proceso que acabáis de dibujar.</p>
-  <ol>
-    <li>Volved a vuestra lista de problemas. Si no sale de ahí, no hace falta.</li>
-    <li>Mirad dónde la información cambia de manos: de una persona a otra, de un papel a una pantalla. Casi siempre hay algo que conectar.</li>
-    <li>Mirad qué se escribe dos veces. Eso suele ser integración, no una aplicación nueva.</li>
-    <li>Mirad qué espera a que alguien se acuerde. Eso suele ser una automatización.</li>
-    <li>Si una necesidad se resuelve con una hoja de cálculo compartida, proponed la hoja de cálculo. No se puntúa por cantidad de tecnología.</li>
-  </ol>
-</details>
-
-### Cuarta tarea — ¿Realmente necesitamos esa tecnología?
-
-Una empresa os propone utilizar:
-
-* inteligencia artificial;
-* Big Data;
-* IoT;
-* blockchain;
-* cloud;
-* automatización.
-
-Pero utilizar más tecnología **no significa tener una solución mejor**.
-
-Indicad cuáles utilizaríais.
-
-| Tecnología | ¿Sí o no? | ¿Por qué? |
-| --- | --- | --- |
-| Cloud | | |
-| Automatización | | |
-| Inteligencia artificial | | |
-| Big Data | | |
-| IoT | | |
-| Blockchain | | |
-
-No existe necesariamente una única respuesta correcta.
-
-Lo importante es la **justificación**.
-
-Por ejemplo:
-
-> **Big Data: NO.** Una pequeña empresa de reparaciones probablemente no genera un volumen de datos que justifique una infraestructura Big Data.
-
----
-
-### Quinta tarea — Arquitectura conceptual
-
-Ahora dibujad cómo se relacionarían los diferentes componentes.
-
-No necesitamos detalles técnicos.
-
-Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>Ejemplo de arquitectura conceptual</figcaption>
-  <svg
-    class="diagram-svg"
-    viewBox="0 0 720 616"
-    role="img"
-    aria-labelledby="arq-title arq-desc"
-    preserveAspectRatio="xMidYMid meet"
-  >
-    <title id="arq-title">Arquitectura conceptual de ejemplo</title>
-    <desc id="arq-desc">
-      El cliente entra por una aplicación web, que habla con un backend y con
-      una base de datos. De la base de datos salen dos ramas: los técnicos y la
-      analítica. La rama de los técnicos continúa con la reparación, las
-      notificaciones y el aviso final al cliente.
-    </desc>
-    <defs>
-      <marker
-        id="arq-arrow"
-        viewBox="0 0 10 10"
-        refX="9"
-        refY="5"
-        markerWidth="7"
-        markerHeight="7"
-        orient="auto-start-reverse"
-      >
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 58 L 360 82" marker-end="url(#arq-arrow)" />
-      <path d="M 360 132 L 360 156" marker-end="url(#arq-arrow)" />
-      <path d="M 360 206 L 360 230" marker-end="url(#arq-arrow)" />
-      <path d="M 360 280 L 360 302" />
-      <path d="M 175 302 L 545 302" />
-      <path d="M 175 302 L 175 326" marker-end="url(#arq-arrow)" />
-      <path d="M 545 302 L 545 326" marker-end="url(#arq-arrow)" />
-      <path d="M 175 376 L 175 400" marker-end="url(#arq-arrow)" />
-      <path d="M 175 450 L 175 474" marker-end="url(#arq-arrow)" />
-      <path d="M 175 524 L 175 548" marker-end="url(#arq-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="270" y="14" width="180" height="44" rx="3" />
-      <text x="360" y="36">Cliente</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="88" width="180" height="44" rx="3" />
-      <text x="360" y="110">Aplicación web</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="270" y="162" width="180" height="44" rx="3" />
-      <text x="360" y="184">Backend</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="270" y="236" width="180" height="44" rx="3" />
-      <text x="360" y="258">Base de datos</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="90" y="332" width="170" height="44" rx="3" />
-      <text x="175" y="354">Técnicos</text>
-    </g>
-    <g class="diagram-node diagram-node--data">
-      <rect x="460" y="332" width="170" height="44" rx="3" />
-      <text x="545" y="354">Analítica</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="90" y="406" width="170" height="44" rx="3" />
-      <text x="175" y="428">Reparación</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="90" y="480" width="170" height="44" rx="3" />
-      <text x="175" y="502">Notificaciones</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="90" y="554" width="170" height="44" rx="3" />
-      <text x="175" y="576">Cliente</text>
-    </g>
-  </svg>
-</figure>
-
-Vuestra arquitectura debe mostrar al menos:
-
-* usuario;
-* aplicación;
-* datos;
-* algún proceso automático.
-
-Podéis añadir otros componentes si los consideráis necesarios.
-
----
-
-### Pregunta importante
-
-Observad vuestra propuesta.
-
-Ahora eliminad mentalmente cada tecnología una por una.
-
-Preguntad:
-
-> **¿Qué problema aparece si quitamos esta tecnología?**
-
-Si no podéis responder, quizá esa tecnología no sea necesaria.
-
----
-
-### Producto final
-
-Cada pareja entregará **una única página o diapositiva**.
-
-Debe contener:
-
-#### A. Situación actual
-
-Un pequeño esquema del funcionamiento actual.
-
-##### AS-IS
-
-> Cómo funciona la empresa ahora.
-
----
-
-#### B. Principales problemas
-
-Entre **4 y 6 problemas**.
-
----
-
-#### C. Nuevo proceso
-
-##### TO-BE
-
-> Cómo proponéis que funcione después de la transformación.
-
----
-
-#### D. Arquitectura
-
-Un dibujo sencillo mostrando las principales tecnologías.
-
----
-
-#### E. Tecnologías elegidas
-
-Tabla:
-
-| Tecnología | Para qué se utiliza | Beneficio |
-| --- | --- | --- |
-| | | |
-| | | |
-| | | |
-
----
-
-#### F. Tecnologías descartadas
-
-Elegid al menos **dos tecnologías que NO utilizaríais**.
-
-Explicad por qué.
-
----
-
-### Presentación
-
-Cada pareja dispondrá de aproximadamente **2 minutos** para explicar su propuesta.
-
-No hay que explicar todos los detalles.
-
-Solamente responder a tres preguntas:
-
-##### 1. ¿Cuál era el principal problema?
-
-##### 2. ¿Qué cambio consideráis más importante?
-
-##### 3. ¿Qué tecnología habéis decidido no utilizar y por qué?
-
----
-
-### Evaluación
-
-La actividad se calificará sobre **10 puntos**.
-
-<table>
-  <thead>
-    <tr>
-      <th>Criterio</th>
-      <th class="align-right">Puntuación</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Identificación de los problemas reales</td>
-      <td class="align-right">2</td>
-    </tr>
-    <tr>
-      <td>Calidad del nuevo proceso propuesto</td>
-      <td class="align-right">2</td>
-    </tr>
-    <tr>
-      <td>Coherencia de la arquitectura</td>
-      <td class="align-right">2</td>
-    </tr>
-    <tr>
-      <td>Selección y justificación de tecnologías</td>
-      <td class="align-right">3</td>
-    </tr>
-    <tr>
-      <td>Claridad de la presentación</td>
-      <td class="align-right">1</td>
-    </tr>
-  </tbody>
-</table>
-
-#### Importante
-
-**No obtiene mejor nota quien utiliza más tecnologías.**
-
-Obtiene mejor nota quien:
-
-* entiende mejor el problema;
-* propone una solución sencilla y coherente;
-* sabe explicar por qué ha tomado cada decisión.
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Proceso actual y proceso rediseñado, los dos dibujados.</li>
-    <li>Cada tecnología propuesta tiene escrito el problema que resuelve.</li>
-    <li>Al menos una tecnología descartada, con su motivo.</li>
-    <li>Arquitectura conceptual que se entiende sin explicarla.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué preguntáis primero a una empresa que quiere digitalizarse?</li>
-    <li>¿Por qué se valora descartar una tecnología?</li>
-    <li>Vuestra propuesta tiene una caja que no sabéis defender. ¿Qué hacéis?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Qué problema tiene y cómo trabaja ahora. Nunca qué tecnología quiere.</p>
-  <p>2 · Porque demuestra que evaluáis si resuelve un problema real. Una propuesta que lo incluye todo no ha decidido nada.</p>
-  <p>3 · Quitarla. Es justo la que os van a preguntar.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Puesta en común, debate y defensa de propuestas
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo defender una propuesta técnica ante clientes y responder a objeciones de viabilidad y costes.</li>
-    <li><strong>2. Haz:</strong> Expón la arquitectura conceptual de tu equipo (3 minutos) y participa en el debate crítico de las soluciones de otros grupos.</li>
-    <li><strong>3. Entrega:</strong> Entrega la versión definitiva del rediseño tras incorporar las mejoras del debate.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 3 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Dinámica de aula · Tribunal de dirección
+### Se explica
 
-En esta sesión, cada pareja proyecta su diagrama conceptual y defiende su propuesta ante la clase:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-1. **Diagnóstico del problema:** qué cuello de botella de Reparaciones Rápidas S.L. se resuelve primero.
-2. **Justificación de tecnologías:** por qué se eligen esas piezas y qué coste o complejidad conllevan.
-3. **Tecnología descartada:** justificar por qué se rechazó al menos una tecnología tentadora pero innecesaria (por ejemplo, IA o app nativa).
+Defender una propuesta significa relacionar una decisión con sus motivos y límites. La persona que la escucha necesita reconocer el problema, comprender el cambio y saber qué habría que comprobar antes de aplicarlo. «Es más moderno» no permite tomar una decisión; «evita registrar el teléfono dos veces» sí describe un efecto verificable.
 
-El resto del aula actúa como el equipo directivo del cliente, formulando preguntas sobre mantenimiento, formación de los empleados y riesgos de implantación.
+Una observación útil señala una parte concreta y propone cómo comprobarla. «No se entiende» es demasiado general; «no aparece quién avisa si el cliente no responde» identifica una omisión que se puede corregir.
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Selecciona en el documento tres elementos: problema prioritario, cambio propuesto y alternativa descartada. Escribe una frase para explicar cada uno sin leer toda la entrega.
+2. Ensaya durante tres minutos con otra pareja. Mientras una persona explica, la otra anota una duda sobre responsables y otra sobre viabilidad. Después intercambiad los papeles.
+3. Responde con el diagrama delante. Si el caso no proporciona un dato, indica qué información pedirías; no improvises un presupuesto como si fuera real.
+4. Revisa la propuesta incorporando al menos una observación justificada. Guarda una nota «observación → decisión → cambio» para que se vea la mejora.
+5. Entrega el enlace al documento final con sus versiones o registro de cambios. Cada integrante añade una decisión propia que pueda explicar. Los turnos ante toda la clase se reparten dentro del tiempo disponible; todas las parejas realizan la revisión cruzada.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Se evalúa el rediseño de la UD1, actualizado con feedback. La exposición explica la actividad; no requiere otra presentación ni un examen adicional.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-Cuando trabajes como desarrollador, probablemente escucharás nombres de tecnologías constantemente:
-
-**Cloud, IA, APIs, Big Data, IoT, automatización...**
-
-Pero un buen desarrollador no empieza preguntándose:
-
-> «¿Dónde puedo utilizar inteligencia artificial?»
-
-Empieza preguntándose:
-
-> **«¿Qué problema estamos intentando resolver?»**
-
-Después:
-
-<figure class="diagram">
-  <figcaption>El orden del razonamiento</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Problema</li>
-    <li>Proceso</li>
-    <li>Necesidad</li>
-    <li>Tecnología</li>
-    <li>Datos</li>
-    <li>Resultado</li>
-  </ol>
-</figure>
-
-Ese razonamiento será útil independientemente de las tecnologías que aparezcan en el futuro.
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Digitalizar | Cambiar el soporte, manteniendo el proceso |
-| Transformación digital | Cambiar el proceso, con la tecnología como medio |
-| Proceso | La secuencia de pasos por la que pasa el trabajo |
-| Necesidad | Lo que hace falta para resolver un problema, todavía sin tecnología |
-| Aplicación web | El programa al que se accede desde el navegador |
-| API | La puerta por la que otro sistema habla con el nuestro |
-| Cloud | Infraestructura de otro, disponible por Internet |
-| Automatización | Que algo ocurra solo cuando pasa otra cosa |
-| IT | Los sistemas que gestionan información |
-| OT | Los sistemas que actúan sobre el mundo físico |
-| Arquitectura conceptual | Qué piezas hay y cómo se conectan, sin productos concretos |
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

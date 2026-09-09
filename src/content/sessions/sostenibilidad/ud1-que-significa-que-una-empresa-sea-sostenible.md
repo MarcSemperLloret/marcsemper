@@ -6,8 +6,8 @@ order: 1
 lang: "es"
 summary: "Entender la sostenibilidad más allá de «reciclar» o «ser verde». Analizamos los impactos ambientales, sociales y de gobernanza de una empresa y, sobre todo, aprendemos a distinguir una mejora real de una afirmación sin evidencias."
 duration: "4 horas · 4 sesiones"
-modality: "Parejas"
-deliverable: "Una evaluación visual de la sostenibilidad de una empresa tecnológica."
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Diagnóstico ASG de PixelStore. Una actividad acumulativa por unidad, con evidencias y aportación individual."
 outcomes:
   - "Explicar qué significa sostenibilidad en una empresa, y qué no."
   - "Distinguir las dimensiones ambiental, social y de gobernanza."
@@ -19,45 +19,54 @@ outcomes:
   - "Relacionar un reto global con un riesgo o una oportunidad para la empresa."
   - "Decir qué puede hacer al respecto un desarrollador, en su trabajo y fuera de él."
 requirements:
-  - "Herramienta de presentaciones, un documento o papel."
-  - "Acceso a Internet, si queréis consultar información adicional."
-  - "Ganas de preguntar y de desconfiar de las afirmaciones demasiado bonitas."
-  - "Un repositorio de grupo: será vuestro cuaderno de evidencias durante todo el módulo."
-date: "2026-08-29"
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
+priorKnowledge:
+  - "No se requieren conocimientos previos de estos contenidos. La guía explica cómo abrir y guardar el trabajo; no se necesita ningún otro módulo."
+date: "2026-09-09"
 ---
+
+<p class="lead">Diagnóstico ASG de PixelStore. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
+
+## Cómo trabajar esta unidad
+
+Son 4 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Diagnóstico ASG de PixelStore.** Guarda el trabajo en `sostenibilidad/ud1/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+| Criterio                                             | Puntos |
+| ---------------------------------------------------- | -----: |
+| Comprensión de las dimensiones ASG                   |      2 |
+| Identificación de impactos y stakeholders            |    1,5 |
+| **Priorización y materialidad**                      |  **2** |
+| Elección de indicadores adecuados                    |      2 |
+| **Análisis crítico y detección de afirmaciones débiles** | **2** |
+| Claridad del producto final                          |    0,5 |
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · ¿Qué significa realmente ser sostenible?
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué significa realmente la sostenibilidad empresarial y las tres dimensiones ASG (Ambiental, Social y Gobernanza).</li>
-    <li><strong>2. Haz:</strong> Analiza las 3 dimensiones e identifica por qué las acciones aisladas («reciclar», «ser verde») no bastan sin una visión holística.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Diagnóstico ASG de PixelStore», sesión 1 de 4. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### ¿Qué vamos a aprender?
+### Se explica
 
-Escuchamos constantemente frases como:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-> Nuestra empresa es sostenible.
+La sostenibilidad estudia cómo mantener una actividad atendiendo a sus consecuencias ambientales, sociales y de gobernanza, conocidas como **ASG**. Ambiental incluye recursos y emisiones; social, efectos sobre personas; gobernanza, reglas, responsabilidades y forma de tomar decisiones. Una misma actuación puede afectar a varias dimensiones.
 
-> Somos una empresa verde.
+En PixelStore, reducir papel puede disminuir un consumo, pero no describe el impacto de fabricar equipos, alojar su tienda o atender a sus trabajadores. Los **ODS** ayudan a situar objetivos de desarrollo; colocar su icono no demuestra una contribución. La primera tarea será relacionar hechos con impactos, sin adelantar una conclusión sobre toda la empresa.
 
-> Estamos comprometidos con el planeta.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-Pero ¿qué significa realmente? ¿Una empresa es sostenible porque recicla papel, porque utiliza ordenadores eficientes, porque contrata electricidad renovable, porque planta árboles o porque usa menos plástico?
-
-Todas esas acciones pueden ser positivas. Pero ninguna demuestra por sí sola que una empresa sea sostenible.
-
-La primera idea de esta unidad es esta:
-
-> **La sostenibilidad no consiste en hacer una acción «verde». Consiste en entender los impactos que generamos y reducir los más importantes.**
-
----
-
-### Sostenibilidad no significa solamente medio ambiente
+#### Sostenibilidad no significa solamente medio ambiente
 
 Cuando pensamos en sostenibilidad solemos imaginar contaminación, cambio climático, reciclaje, energía o residuos. Todo eso es importante.
 
@@ -71,7 +80,7 @@ Por eso analizamos tres grandes dimensiones:
 
 También las encontraréis con las siglas inglesas **ESG**.
 
-#### A · Ambiental
+##### A · Ambiental
 
 La dimensión **ambiental** analiza cómo afecta una organización al medio ambiente: consumo de electricidad, emisiones, consumo de agua, residuos, uso de materiales, transporte, fabricación de dispositivos y residuos electrónicos.
 
@@ -93,7 +102,7 @@ Por tanto:
 
 > **Lo digital también necesita infraestructura física.**
 
-#### S · Social
+##### S · Social
 
 La dimensión **social** analiza cómo afecta una organización a las personas: condiciones laborales, igualdad, privacidad, inclusión, seguridad, accesibilidad, brecha digital e impacto sobre clientes y comunidades.
 
@@ -103,7 +112,7 @@ Por tanto:
 
 > **Una aplicación técnicamente correcta puede no ser socialmente adecuada.**
 
-#### G · Gobernanza
+##### G · Gobernanza
 
 La **gobernanza** tiene que ver con cómo se comporta y se dirige una organización: transparencia, privacidad, seguridad, cumplimiento de normas, responsabilidad, gestión de riesgos, comportamiento ético y selección de proveedores.
 
@@ -122,45 +131,7 @@ Imaginad una empresa que usa electricidad renovable, pero que al mismo tiempo ve
 
 ¿Diríais que es una empresa sostenible? Probablemente no. La sostenibilidad hay que mirarla desde varias perspectivas a la vez.
 
-### El mapa ASG
-
-| Ambiental | Social | Gobernanza |
-| --------- | ------ | ---------- |
-| Energía | Personas | Transparencia |
-| Emisiones | Accesibilidad | Seguridad |
-| Agua | Privacidad | Responsabilidad |
-| Hardware | Inclusión | Normativa |
-| Residuos | Condiciones laborales | Proveedores |
-| Recursos | Brecha digital | Gestión de riesgos |
-
----
-
-### Primera tarea · ¿Ambiental, social o gobernanza?
-
-Clasificad las siguientes situaciones. Puede haber casos que pertenezcan a más de una dimensión.
-
-| Situación                                                            | A / S / G |
-| -------------------------------------------------------------------- | --------- |
-| *Ejemplo · Un centro de datos usa energía renovable*                 | A         |
-| Una empresa reduce el consumo eléctrico de sus servidores            |           |
-| Una web no puede utilizarse mediante teclado                         |           |
-| Una empresa vende datos personales sin informar                      |           |
-| Se sustituyen ordenadores cada año aunque todavía funcionan          |           |
-| La empresa publica información falsa sobre sus emisiones             |           |
-| Un centro de datos consume grandes cantidades de agua                |           |
-| Una aplicación discrimina sistemáticamente a determinados usuarios   |           |
-| La empresa mantiene software con vulnerabilidades críticas conocidas |           |
-| Se reparan los equipos en lugar de sustituirlos                      |           |
-| Una empresa exige ciertos estándares a sus proveedores               |           |
-
-Y después, la pregunta que de verdad importa: ¿hay algún caso que pertenezca a más de una categoría? ¿Por qué?
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-
----
-
-### ¿Y qué son los ODS?
+#### ¿Y qué son los ODS?
 
 En 2015 Naciones Unidas aprobó la **Agenda 2030**, que establece:
 
@@ -170,7 +141,7 @@ Abordan problemas como la pobreza, la salud, la educación, la igualdad, la ener
 
 No hace falta memorizar los diecisiete. Lo importante es entender que **los ODS son un marco para identificar grandes objetivos de sostenibilidad**.
 
-#### Algunos ODS relacionados con la tecnología
+##### Algunos ODS relacionados con la tecnología
 
 | ODS | Puede relacionarse con |
 | --- | ---------------------- |
@@ -180,7 +151,7 @@ No hace falta memorizar los diecisiete. Lo importante es entender que **los ODS 
 | 12 · Producción y consumo responsables | Hardware, reparación, reutilización, residuos electrónicos |
 | 13 · Acción por el clima | Emisiones, energía, eficiencia |
 
-#### Cuidado con los ODS
+##### Cuidado con los ODS
 
 Esto es lo que no debemos hacer:
 
@@ -196,80 +167,44 @@ Esto es lo que no debemos hacer:
 
 Relacionar una actividad con un ODS **no demuestra que estemos mejorando nada**. Necesitamos evidencia.
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Sabes explicar qué significa ASG.</li>
-    <li>Puedes poner un ejemplo tecnológico de cada dimensión.</li>
-    <li>Entiendes para qué sirven los ODS.</li>
-    <li>Sabes que relacionar una empresa con un ODS no demuestra que sea sostenible.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Una empresa reduce el uso de papel un 90 %. ¿Podemos afirmar por eso que es sostenible?</li>
-    <li>Pon un ejemplo de sostenibilidad social relacionado con desarrollo web.</li>
-    <li>¿Qué significan las siglas ASG?</li>
-    <li>¿Relacionar una empresa con el ODS 13 demuestra que está reduciendo sus emisiones?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · No. Es una mejora concreta, pero no dice nada de los demás impactos de la empresa.</p>
-  <p>2 · Por ejemplo, mejorar la accesibilidad de una aplicación web.</p>
-  <p>3 · Ambiental, Social y Gobernanza.</p>
-  <p>4 · No. Hacen falta datos que permitan demostrar la mejora.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Abre la [ficha de PixelStore](/teaching/transversales/casos.pdf) y crea una carpeta `sostenibilidad/ud1` con un documento de actividad. No necesitas Git ni el proyecto de Servidor para empezar; la guía de arranque explica cómo guardar y entregar archivos.
+2. Lee las áreas de la empresa y elige seis hechos: equipos, visitas, datos, personas, infraestructura y proveedores. Escribe una posible consecuencia de cada uno.
+3. Clasifica las consecuencias como ambientales, sociales o de gobernanza. Ejemplo: no saber quién puede acceder a datos de clientes es un problema de responsabilidades y protección de personas.
+4. Selecciona un hecho que afecte a dos dimensiones y explica ambas relaciones. No fuerces que todos los hechos pertenezcan a las tres.
+5. Relaciona un impacto con un ODS pertinente y escribe qué evidencia necesitarías para afirmar que se mejora. Compara con otra pareja si has escrito una intención o un resultado.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+El mapa inicial contiene hechos, consecuencias y clasificación razonada. Explica por qué reducir papel no basta para calificar toda la empresa como sostenible.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Del reto global a tu trabajo
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La conexión entre los retos globales (ODS, cambio climático), el marco normativo (ESRS/CSRD) y las decisiones técnicas cotidianas.</li>
-    <li><strong>2. Haz:</strong> Identifica el impacto de tus decisiones como programador (imágenes, almacenamiento, cloud) y mapea la cadena de suministro.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre doble materialidad y marco normativo.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Diagnóstico ASG de PixelStore», sesión 2 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Los retos que hay detrás
+### Se explica
 
-Cuando hablamos de sostenibilidad no hablamos de una preferencia estética. Hablamos de un puñado de problemas concretos que ya están cambiando cómo operan las empresas:
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-| Reto | Qué significa en la práctica |
-| ---- | ---------------------------- |
-| Cambio climático | Emisiones, energía y episodios extremos que interrumpen la actividad |
-| Recursos limitados | Materiales críticos para fabricar dispositivos, agua para refrigerar |
-| Residuos | Lo que ocurre con todo lo que se sustituye |
-| Desigualdad | Condiciones de trabajo a lo largo de la cadena de suministro |
-| Brecha digital | Quién se queda fuera cuando un servicio pasa a ser solo digital |
+Un reto global llega a una empresa a través de consecuencias concretas: disponibilidad de recursos, condiciones de trabajo, acceso a servicios o exigencias de clientes. Un **riesgo** es un efecto adverso posible; una **oportunidad** es una mejora que puede crear valor. Ninguno debe presentarse como un hecho ya ocurrido si no hay datos.
 
-Ninguno de esos retos es «de medio ambiente» a secas. Tres de los cinco son sociales, y todos acaban siendo también económicos.
+Por ejemplo, una interfaz difícil de usar puede impedir que parte de la clientela compre. Mejorarla puede ampliar el acceso y reducir incidencias. La relación debe explicar quién resulta afectado y cómo lo comprobaríamos, no limitarse a afirmar que «la tecnología ayuda».
 
-### Cómo llegan al sector digital
+Clientes, inversores y reguladores pueden pedir información con finalidades diferentes: elegir un proveedor, valorar riesgos o comprobar requisitos. La inversión socialmente responsable incorpora criterios ASG junto a los financieros. Una solicitud comercial de datos y una obligación normativa no son lo mismo; en ambos casos habrá que conocer el alcance y responder con información verificable. En UD6 distinguirás los marcos de reporte de los sistemas de gestión ambiental.
 
-Es tentador pensar que esto va de fábricas y camiones. Pero el sector digital participa en los cinco:
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-<figure class="diagram">
-  <figcaption>De un reto global a una decisión vuestra</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Reto global</li>
-    <li>Sector digital</li>
-    <li>Una empresa concreta</li>
-    <li>Una decisión técnica</li>
-  </ol>
-</figure>
-
-Los dispositivos que usáis se fabrican con materiales que hay que extraer. Los centros de datos consumen electricidad y a veces agua. Los equipos retirados son residuos. Y una web que no se puede usar sin ratón deja gente fuera.
-
-La cadena termina siempre en el mismo sitio: **alguien elige un formato de imagen, un tamaño de máquina o una etiqueta de formulario**. Ese alguien sois vosotros.
-
-### De reto a riesgo y a oportunidad
+#### De reto a riesgo y a oportunidad
 
 Aquí hay un giro que cambia la conversación. Hasta ahora hemos mirado **de dentro hacia fuera**: cómo afecta la empresa a las personas y al entorno. Pero también existe la dirección contraria.
 
@@ -299,143 +234,42 @@ Y no son la misma pregunta. Un ejemplo con algo que ya conocéis:
 
 Fijaos en que el impacto y el riesgo **no siempre van juntos**. Puede haber un impacto grande que a la empresa no le cueste nada, y un riesgo enorme por algo cuyo impacto real es pequeño. Un análisis honesto mira las dos direcciones y dice cuál está mirando.
 
-### Qué puede hacer un desarrollador
-
-No hace falta ser director de sostenibilidad para que vuestras decisiones cuenten. En vuestro trabajo:
-
-| Decisión cotidiana | Lo que cambia |
-| ------------------ | ------------- |
-| Cómo servís una imagen | Datos transferidos en cada visita, multiplicados por todas las visitas |
-| Si el botón es un `button` | Si media clase de usuarios puede comprar |
-| Cuánto tiempo guardáis un log | Almacenamiento, copias y riesgo si algo se filtra |
-| Qué tamaño de máquina pedís | Infraestructura reservada durante meses |
-| Si añadís una dependencia | Código, mantenimiento y superficie de riesgo |
-| Si esa tarea necesita IA | Procesamiento, y a veces datos personales |
-
-Y fuera del trabajo, la misma lógica aplicada a lo vuestro: cuánto dura vuestro móvil, qué hacéis con el portátil que sustituís, si reparáis antes de comprar, cuántos servicios tenéis contratados que no usáis.
-
-No es una lista para sentirse culpable. Es la comprobación de que **entendéis el mecanismo**: si sabéis por qué importa alargar la vida útil de los servidores de una empresa, sabéis por qué importa la del vuestro.
-
-### Nadie lo resuelve solo
-
-Una empresa no controla su propia cadena. PixelStore no fabrica los portátiles que compra, no gestiona el centro de datos donde vive su web y no conduce las furgonetas que reparten sus pedidos.
-
-Por eso el ODS 17 se llama precisamente **alianzas para lograr los objetivos**, y por eso buena parte de lo que puede hacer una empresa pasa por otros:
-
-* exigir criterios a sus proveedores, y comprobarlos;
-* elegir proveedor cloud también por lo que publica sobre su energía;
-* trabajar con un gestor autorizado de residuos electrónicos;
-* participar en acuerdos del sector;
-* responder a lo que le piden clientes y administraciones.
-
-Trabajar con otros no es un adorno del final de la lista: en tecnología, casi todo vuestro impacto ocurre en infraestructura y hardware que son de otro.
-
-### Por qué preguntan los inversores, los clientes y los reguladores
-
-Hace quince años esto era voluntario. Hoy a una empresa le preguntan por su sostenibilidad tres actores distintos, y por motivos distintos.
-
-| Quién pregunta | Qué quiere saber |
-| -------------- | ---------------- |
-| Inversores | Si hay riesgos que puedan afectar al valor de la empresa a medio plazo |
-| Clientes | Si pueden comprar o contratar sin heredar un problema, sobre todo si son administraciones |
-| Reguladores | Si la empresa cumple lo que se le exige, y si lo que afirma es cierto |
-
-Al primero se le llama **inversión socialmente responsable**: fondos y entidades que incorporan criterios ASG a sus decisiones, además de los financieros. No hace falta saber cómo funciona un fondo. Sí hace falta entender la consecuencia práctica: **la sostenibilidad de una empresa dejó de ser solo una cuestión de conciencia y pasó a ser también información que alguien evalúa**.
-
-Y como todos preguntan, hicieron falta marcos y formatos comunes para responder. Por un lado están los **estándares de reporte** —como **GRI** o los europeos **ESRS**—, cuya función es que las empresas publiquen indicadores estructurados y comparables. Por otro lado están las normas de **sistemas de gestión ambiental** —como **ISO 14001**—, que definen cómo una organización gestiona y mejora sus procesos ambientales internos, aunque no constituyen por sí mismas un estándar de reporte comparable.
-
-<div class="rule">
-  <p class="rule-label">Aquí ya no decide solo el criterio técnico · Marco normativo</p>
-  <p>Informar sobre sostenibilidad ya no es solo voluntario. En la Unión Europea, la directiva de reporte CSRD se apoya en los estándares <strong>ESRS</strong>. Con la aprobación del paquete <em>Omnibus I</em> (adoptado definitivamente en febrero de 2026), el umbral general se fijó en grandes empresas (más de 1.000 empleados y más de 450 M€ de facturación neta anual), con el objetivo explícito de reducir la carga burocrática y limitar el «efecto cascada» sobre pymes.</p>
-  <p>PixelStore, con 45 trabajadores, queda claramente fuera de la obligación legal directa. Sin embargo, sus grandes clientes corporativos o administraciones públicas pueden seguir solicitándole datos de su huella para sus propios informes y compras públicas responsables. Así es como los requerimientos de sostenibilidad llegan a una pyme: a través de las relaciones comerciales de la cadena de valor.</p>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Sabes nombrar cinco retos y decir cuáles no son ambientales.</li>
-    <li>Distingues la mirada de dentro hacia fuera de la de fuera hacia dentro.</li>
-    <li>Puedes poner tres decisiones tuyas de desarrollador que tengan impacto.</li>
-    <li>Sabes por qué buena parte del impacto de una empresa tecnológica está en manos de otros.</li>
-    <li>Sabes quién le pregunta a una empresa por su sostenibilidad, y por qué motivo cada uno.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre el impacto de un asunto y su riesgo para la empresa?</li>
-    <li>Poned una decisión que toméis programando y que tenga impacto ambiental.</li>
-    <li>¿Por qué a PixelStore le pueden acabar exigiendo datos que la ley no le exige?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El impacto es lo que la empresa provoca fuera. El riesgo es lo que ese asunto puede provocarle a ella. Pueden ser muy distintos de tamaño.</p>
-  <p>2 · Por ejemplo: el formato y el tamaño de una imagen, cuánto tiempo se guarda un log, o pedir una máquina más grande de la necesaria.</p>
-  <p>3 · Porque sus clientes grandes sí están obligados a informar, y para informar necesitan datos de sus proveedores. La obligación viaja por la cadena.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Retoma el mapa ASG y escoge tres impactos de PixelStore. Crea columnas para reto, efecto en la empresa, persona afectada y evidencia necesaria.
+2. Desarrolla una cadena completa. Ejemplo: dificultad de acceso → compras que no se completan → personas que usan teclado → prueba del recorrido de compra.
+3. Para cada cadena escribe un riesgo y una oportunidad, diferenciando hechos del caso de hipótesis que habrá que verificar.
+4. Identifica qué puede hacer desarrollo y qué requiere otra función: compras, dirección, proveedor o atención al cliente. Asigna un responsable posible sin inventar que ya existe esa política.
+5. Intercambia una cadena con otra pareja. Pídele que señale el salto de razonamiento más débil y reescríbelo con una comprobación concreta.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Hay tres relaciones entre reto y actividad empresarial. Cada una indica quién puede actuar y qué información permitiría juzgar el resultado.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Impactos, datos y greenwashing
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo definir indicadores cuantitativos rigurosos y cómo detectar greenwashing (afirmaciones sin evidencia contrastable).</li>
-    <li><strong>2. Haz:</strong> Diseña métricas con numerador, denominador y unidad, y audita las comunicaciones de sostenibilidad de PixelStore.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Diagnóstico ASG de PixelStore», sesión 3 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### Una empresa afecta a muchas personas
+### Se explica
 
-Imaginad una plataforma de comercio electrónico. Una sola decisión suya puede afectar a clientes, trabajadores, proveedores, propietarios, administraciones, comunidades y al medio ambiente.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Esas partes interesadas se denominan:
+Un **grupo de interés** es una persona o colectivo afectado por la empresa o capaz de influir en ella. La **materialidad** ayuda a priorizar los asuntos importantes según sus impactos y contexto; no significa elegir lo que resulta más fácil de mejorar.
 
-<p class="term">Stakeholders</p>
+Un **indicador** expresa qué observaremos y en qué unidad. «Consumimos menos» necesita una magnitud, una referencia y condiciones comparables. Una afirmación puede inducir a una imagen ambiental exagerada aunque contenga un dato cierto: reducir papel no demuestra que todos los impactos se hayan reducido. Revisaremos la relación entre afirmación y evidencia antes de hablar de greenwashing.
 
-o, en castellano, **grupos de interés**.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-#### Un ejemplo
-
-Una tienda online decide reducir su tiempo de entrega:
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Antes</p>
-    <p class="compare-body">48 horas.</p>
-  </div>
-  <div>
-    <p class="compare-label">Después</p>
-    <p class="compare-body">2 horas.</p>
-  </div>
-</div>
-
-Para el cliente parece claramente mejor. Pero para conseguirlo quizá hagan falta más vehículos, más desplazamientos, más almacenes, más consumo energético y más presión sobre los trabajadores.
-
-Una misma decisión puede **beneficiar a un grupo y perjudicar a otro**. Por eso la pregunta que hay que hacerse siempre es: ¿quién puede verse afectado?
-
-### Segunda tarea · Identificar stakeholders
-
-Pensad en una gran plataforma digital: una tienda online, una plataforma de streaming, una red social o una aplicación de reparto. Identificad al menos **seis stakeholders**.
-
-| Stakeholder | ¿Qué espera de la empresa? | ¿Cómo puede afectarle? |
-| ----------- | -------------------------- | ---------------------- |
-| *Ejemplo · Proveedor cloud* | Una relación estable y requisitos claros | Sus decisiones sobre energía, seguridad o disponibilidad condicionan el servicio |
-| Usuario     |                            |                        |
-| Trabajador  |                            |                        |
-|             |                            |                        |
-|             |                            |                        |
-|             |                            |                        |
-|             |                            |                        |
-
----
-
-### No todo tiene la misma importancia
+#### No todo tiene la misma importancia
 
 Imaginad una gran empresa tecnológica. Detectamos dos problemas ambientales:
 
@@ -486,28 +320,7 @@ Para una empresa que ofrece un servicio web a millones de personas podría queda
 
 Esto no significa que el papel sea irrelevante. Significa que **hay problemas con más impacto, y merecen más atención**.
 
-### Tercera tarea · ¿Qué es realmente importante?
-
-Imaginad una empresa SaaS con 500.000 usuarios. Clasificad cada aspecto como alta, media o baja, y escribid el motivo.
-
-| Aspecto                      | Importancia | ¿Por qué? |
-| ---------------------------- | ----------- | --------- |
-| *Ejemplo · Protección de datos* | Muy alta | Una filtración puede perjudicar a usuarios y provocar sanciones |
-| Consumo energético del cloud |             |           |
-| Accesibilidad                |             |           |
-| Uso de papel                 |             |           |
-| Protección de datos          |             |           |
-| Seguridad informática        |             |           |
-| Vida útil de los ordenadores |             |           |
-| Condiciones laborales        |             |           |
-| Consumo de agua              |             |           |
-| Proveedores cloud            |             |           |
-
-No hay necesariamente una única respuesta correcta. Lo que se evalúa es que **podáis defender vuestra decisión**.
-
----
-
-### Decir que mejoras no es suficiente
+#### Decir que mejoras no es suficiente
 
 Una empresa afirma:
 
@@ -519,7 +332,7 @@ La primera pregunta debería ser: ¿cuánto? Si la respuesta es «muchísimo», 
 
 Vamos a convertir tres afirmaciones en datos. La primera la hacemos juntos.
 
-<p class="stage">Paso 1 · Te enseño uno</p>
+
 
 <dl class="worked">
   <dt>Afirmación</dt>
@@ -534,7 +347,7 @@ Vamos a convertir tres afirmaciones en datos. La primera la hacemos juntos.
 
 Fijaos en el paso intermedio. La afirmación no se convierte en indicador de golpe: primero hay que decidir **qué se puede observar**. Ahí es donde se cae la mayoría de las promesas de sostenibilidad.
 
-<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
+
 
 Ahora esta:
 
@@ -551,423 +364,58 @@ Hay al menos tres cosas observables: la vida media de cada ordenador, el porcent
   <dd></dd>
 </dl>
 
-<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
-
-### Cuarta tarea · Convertir palabras en métricas
-
-Proponed al menos un indicador para cada afirmación.
-
-| Afirmación                                      | ¿Cómo podríamos medirla? |
-| ----------------------------------------------- | ------------------------ |
-| *Ejemplo · Nuestra web transfiere menos datos*  | MB transferidos por visita, medidos antes y después en las mismas condiciones |
-| Nuestra web utiliza menos recursos              |                          |
-| Nuestro cloud está mejor dimensionado           |                          |
-| Nuestra aplicación es más accesible             |                          |
-| Generamos menos residuos electrónicos           |                          |
-| Nuestro hardware dura más                       |                          |
-| Almacenamos menos información innecesaria       |                          |
-| Protegemos mejor los datos de nuestros usuarios |                          |
-
----
-
-### Greenwashing
-
-Llegamos al concepto más útil de esta unidad. Una empresa anuncia:
-
-> Somos una empresa 100 % verde.
-
-Suena bien. Pero: ¿qué significa exactamente «verde»? ¿Qué han medido? ¿En qué periodo? ¿Qué impactos incluyen? ¿Con qué lo comparan? ¿Quién ha comprobado los datos?
-
-Si no podemos responder a esas preguntas, la afirmación vale poco. A eso lo llamamos:
-
-<p class="term">Greenwashing</p>
-
-Podemos entenderlo como **presentar una actividad, un producto o una empresa como más sostenible de lo que las evidencias permiten demostrar**.
-
-#### No siempre consiste en mentir
-
-Imaginad esta frase:
-
-> Nuestros servidores funcionan con electricidad de origen renovable.
-
-Puede ser completamente cierta. Pero quizá no nos cuentan cómo se fabrica el hardware, qué consumo de agua hay detrás, qué ocurre con los equipos antiguos o qué impacto tienen sus proveedores.
-
-La frase puede ser cierta y, al mismo tiempo, **enseñar solo la parte favorable de la historia**. Esa es la forma más común de greenwashing, y la más difícil de detectar.
-
-#### Cinco preguntas muy útiles
-
-Cuando veáis una afirmación de sostenibilidad, preguntad:
-
-1. ¿Qué están afirmando exactamente?
-2. ¿Existe una cifra?
-3. ¿Cómo se ha medido?
-4. ¿Con qué se compara?
-5. ¿Qué información importante podría faltar?
-
-No hace falta ser experto en sostenibilidad para empezar a hacer buenas preguntas.
-
-#### Y cuidado: una cifra tampoco basta
-
-Una empresa afirma:
-
-> Hemos reducido nuestras emisiones un 70 %.
-
-Podría ser excelente. Pero necesitamos saber respecto a qué año, si se está midiendo exactamente lo mismo, qué emisiones se incluyen, si ha cambiado el tamaño de la empresa y si es una reducción real o una compensación.
-
-Sin contexto, **una cifra también puede engañar**.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
-  <ul class="checklist">
-    <li>Entiendes qué es un stakeholder y sabes nombrar seis de una plataforma real.</li>
-    <li>Sabes que no todos los impactos tienen la misma importancia.</li>
-    <li>Entiendes la idea básica de materialidad.</li>
-    <li>Sabes transformar una afirmación en un indicador observable.</li>
-    <li>Detectas una afirmación de sostenibilidad poco concreta.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué es un stakeholder?</li>
-    <li>¿Qué significa que un aspecto sea material?</li>
-    <li>«Nuestra aplicación es más sostenible.» ¿Qué falta?</li>
-    <li>Una afirmación incluye una cifra. ¿Eso garantiza que sea fiable?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Una persona, grupo u organización que puede afectar o verse afectada por la actividad de la empresa.</p>
-  <p>2 · Que es lo bastante importante como para merecer atención antes que otros.</p>
-  <p>3 · Saber qué ha mejorado, cómo se ha medido y respecto a qué se compara.</p>
-  <p>4 · No. También hay que saber cómo se ha calculado y qué información puede faltar.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Añade al mapa clientes, plantilla, proveedores y otros colectivos pertinentes. Para cada uno escribe una necesidad o impacto concreto del caso, no solo su nombre.
+2. Elige cinco asuntos y valora impacto y relevancia en una escala sencilla de 1 a 3. Explica el motivo de cada valoración; las cifras ordenan el juicio, no lo convierten en una medición objetiva.
+3. Selecciona los tres asuntos prioritarios y contrasta si has considerado personas afectadas, alcance y gravedad, además del interés de la empresa.
+4. Convierte una afirmación vaga en un indicador. Ejemplo: «equipos más duraderos» → años de uso por portátil, medidos desde alta hasta retirada, con motivo de la retirada.
+5. Revisa dos afirmaciones de la ficha como fundamentada, información insuficiente o conclusión débil. Anota exactamente qué evidencia respalda o falta en cada una.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+La prioridad tiene razones y el indicador tiene unidad y forma de obtenerse. Distingue ausencia de datos de una afirmación demostrada falsa.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · ¿Es PixelStore una empresa sostenible?
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo estructurar una evaluación integral y realista de sostenibilidad para una empresa tecnológica.</li>
-    <li><strong>2. Haz:</strong> Redacta y diseña el informe visual de 3 diapositivas de PixelStore (Diagnóstico ASG, Matriz de prioridades y Plan de mejora).</li>
-    <li><strong>3. Entrega:</strong> Entrega la evaluación visual y el cuaderno de evidencias del grupo.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Diagnóstico ASG de PixelStore», sesión 4 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El caso · PixelStore
+### Se explica
 
-Esta es la empresa con la que vais a trabajar **durante todo el módulo**. Conviene conocerla bien ahora, porque volveréis a ella cinco veces.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-PixelStore vende productos tecnológicos por Internet. Tiene:
+Un diagnóstico reúne los hechos disponibles, sus límites y las mejoras que merece la pena investigar. No necesitamos declarar a PixelStore «buena» o «mala»: necesitamos mostrar qué sabemos de sus impactos y qué no podemos sostener todavía.
 
-| Área | Lo que tiene |
-| ---- | ------------ |
-| Personas | 45 trabajadores: desarrollo, atención al cliente, almacén y administración |
-| Clientes | Unas 300.000 visitas al mes |
-| Producto | Aplicación web, backend, base de datos y un sistema de recomendaciones con IA |
-| Infraestructura | Servidores cloud, almacenamiento de imágenes, backups y logs |
-| Equipos | Portátiles y móviles de empresa, renovados por calendario |
-| Terceros | Proveedor cloud, pasarela de pagos, analítica y empresa de transporte |
+Una propuesta defendible sigue la cadena impacto → prioridad → acción → indicador. Si decidimos revisar la renovación de equipos, debemos explicar qué problema esperamos reducir, quién decidiría y cómo observaríamos el resultado. Las unidades siguientes permitirán comprobar partes de este diagnóstico inicial.
 
-La dirección quiere anunciar:
+### Se trabaja
 
-> PixelStore es una empresa tecnológica sostenible.
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-Vuestra misión hoy es comprobar si hay información suficiente para afirmarlo. En las unidades siguientes iréis comprobando, una a una, las piezas concretas: su hardware, su web, su accesibilidad y su infraestructura.
+1. Revisa las ocho afirmaciones de la ficha utilizando la clasificación iniciada en la sesión anterior. Reparte el análisis, pero contrasta conjuntamente los motivos y las evidencias.
+2. Consolida el mapa ASG y los cinco asuntos importantes. Mantén las justificaciones; no vuelvas a redactar toda la teoría del módulo.
+3. Propón una mejora para tres asuntos prioritarios. Añade indicador, dato que falta y responsable que debería participar.
+4. Resume el diagnóstico en una página, diapositiva o panel, enlazando las tablas de trabajo. Señala una afirmación débil y cómo tendría que reformularse para ser defendible.
+5. Explica una decisión a otra pareja y recoge una pregunta. Cada integrante responde sobre su contribución. Corrige la entrega y guarda esta versión inicial para compararla con el plan final de UD6.
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Vuestro repositorio de evidencias</p>
-  <p>Cread hoy un repositorio de grupo con una carpeta por unidad. Todo lo que midáis y decidáis durante el módulo va ahí.</p>
-  <p>No es burocracia: en la UD6 tendréis que construir el plan de sostenibilidad de PixelStore <strong>con las evidencias reales que hayáis reunido</strong>. Lo que no esté guardado, no existirá.</p>
-</div>
+### Cierre
 
-### Primera tarea · Analizar las afirmaciones
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-PixelStore ha preparado ocho afirmaciones. Para cada una decidid:
+Se entrega una sola actividad de diagnóstico ASG con su registro de trabajo. Las propuestas son hipótesis de mejora, no resultados ya medidos.
 
-| Etiqueta | Significa |
-| -------- | --------- |
-| A · Bien fundamentada | Hay información razonablemente concreta que la respalda |
-| B · Necesitamos más información | Podría ser cierta, pero no tenemos datos suficientes |
-| C · Afirmación débil | La conclusión va bastante más allá de la evidencia aportada |
-
-#### Afirmación 1
-
-> Somos una empresa comprometida con el medio ambiente porque hemos eliminado prácticamente todo el papel de nuestras oficinas.
-
-¿Es una acción positiva? ¿A qué dimensión ASG pertenece? ¿Demuestra por sí sola que PixelStore sea sostenible? ¿Qué otros impactos preguntaríais?
-
-#### Afirmación 2
-
-> Nuestra infraestructura está en cloud, por lo que prácticamente no generamos impacto ambiental.
-
-¿Os parece razonable? ¿Qué infraestructura física sigue existiendo? ¿Qué información pediríais?
-
-#### Afirmación 3
-
-> Renovamos los portátiles de toda la plantilla cada dos años para garantizar que trabajan con equipos eficientes.
-
-¿Qué ventajas puede tener? ¿Qué problemas puede generar? ¿Qué información necesitaríamos? ¿Qué alternativa estudiaríais?
-
-#### Afirmación 4
-
-> Nuestra nueva página web consume un 60 % menos.
-
-¿60 % menos de qué? ¿Respecto a qué versión? ¿Cómo podríamos medirlo? Proponed al menos dos indicadores.
-
-#### Afirmación 5
-
-> PixelStore contribuye al ODS 13 porque utiliza herramientas digitales.
-
-¿Utilizar tecnología digital demuestra que se contribuye al ODS 13? ¿Qué evidencia pediríais?
-
-#### Afirmación 6
-
-> Usamos inteligencia artificial para recomendar productos y ofrecer una mejor experiencia de compra.
-
-Esta merece analizarse por las tres dimensiones:
-
-| Dimensión | Preguntad |
-| --------- | --------- |
-| Ambiental | ¿Qué recursos puede consumir? |
-| Social | ¿Qué datos necesita? ¿Puede afectar de forma distinta a unos usuarios que a otros? |
-| Gobernanza | ¿Quién responde de sus decisiones? ¿Cómo se protege la información? |
-
-Y una última pregunta, que es la que casi nunca se hace:
-
-> **¿Hace falta realmente IA para resolver ese problema?**
-
-#### Afirmación 7
-
-> Nuestra aplicación es accesible porque puede utilizarse desde cualquier teléfono móvil.
-
-¿Eso demuestra que sea accesible? ¿Qué usuarios podrían seguir teniendo problemas? ¿Qué deberíamos comprobar?
-
-#### Afirmación 8
-
-> Conservamos todos los datos de nuestros usuarios porque podrían ser útiles en el futuro para análisis o inteligencia artificial.
-
-¿Qué ventajas puede tener? ¿Qué costes genera? ¿Qué riesgos aparecen? ¿Hace falta conservarlo todo?
-
----
-
-### Segunda tarea · El mapa ASG de PixelStore
-
-Identificad los principales aspectos de sostenibilidad. Podéis añadir los que faltan.
-
-| Aspecto                 | A / S / G | Importancia |
-| ----------------------- | --------- | ----------- |
-| *Ejemplo · Imágenes de producto* | A | Alta: se descargan en cada visita y multiplican la transferencia total |
-| Infraestructura cloud   |           |             |
-| Hardware                |           |             |
-| Inteligencia artificial |           |             |
-| Accesibilidad           |           |             |
-| Datos personales        |           |             |
-| Seguridad               |           |             |
-|                         |           |             |
-|                         |           |             |
-
-### Tercera tarea · Priorizar
-
-Aquí viene la parte importante. No vale decir «todo es muy importante». Elegid solamente **cinco aspectos** y ordenadlos.
-
-| Posición | Aspecto | ¿Por qué es importante? |
-| -------: | ------- | ----------------------- |
-| *Ejemplo · 1* | Protección de datos | Afecta a todos los clientes y un fallo tendría consecuencias graves |
-|        1 |         |                         |
-|        2 |         |                         |
-|        3 |         |                         |
-|        4 |         |                         |
-|        5 |         |                         |
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · todo me parece importante</summary>
-  <p>Preguntaos, para cada aspecto:</p>
-  <ol>
-    <li>¿A cuánta gente afecta?</li>
-    <li>¿Qué tamaño puede tener el impacto?</li>
-    <li>¿Puede provocar consecuencias graves?</li>
-    <li>¿Ocurre a menudo?</li>
-    <li>¿Es algo central para la actividad de PixelStore?</li>
-  </ol>
-  <p>El consumo de papel existe, seguro. Pero en una empresa SaaS probablemente haya que mirar antes la infraestructura cloud, la privacidad, la seguridad, la accesibilidad y el hardware.</p>
-</details>
-
-### Cuarta tarea · ¿Cómo lo mediríamos?
-
-Para cada uno de vuestros cinco aspectos, proponed al menos un indicador.
-
-| Aspecto | Indicador |
-| ------- | --------- |
-| *Ejemplo · Accesibilidad* | Número de errores de axe y barreras de teclado detectadas |
-|         |           |
-|         |           |
-|         |           |
-|         |           |
-|         |           |
-
-No queremos «mejoraremos mucho». Queremos algo que pueda observarse.
-
-### Quinta tarea · Proponer mejoras
-
-Para cada problema importante, proponed una acción. Por ejemplo: si los portátiles se sustituyen automáticamente cada dos años, la acción puede ser evaluar su estado y ampliar su vida útil mientras siga siendo técnicamente viable, y el indicador, la vida media de los equipos.
-
-| Problema | Acción propuesta | Indicador |
-| -------- | ---------------- | --------- |
-| *Ejemplo · Imágenes demasiado pesadas* | Redimensionarlas y convertirlas a WebP o AVIF | MB transferidos por visita |
-|          |                  |           |
-|          |                  |           |
-|          |                  |           |
-|          |                  |           |
-|          |                  |           |
-
-### Sexta tarea · Detectar greenwashing
-
-Elegid las **dos afirmaciones** de PixelStore que más dudas os generen. De cada una: qué afirma, qué información falta, qué dato pediríais y qué tendría que demostrar PixelStore para que resultara convincente.
-
----
-
-### Producto final
-
-Cada pareja entrega **una única página o diapositiva**, que debe entenderse sin una explicación larga. Cuatro bloques.
-
-#### A · Mapa ASG
-
-Un impacto importante de cada dimensión: ambiental, social y de gobernanza.
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-<p class="write-line"></p>
-
-#### B · Los cinco aspectos materiales
-
-Ordenados de mayor a menor importancia.
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-<p class="write-line"></p>
-<p class="write-line"></p>
-<p class="write-line"></p>
-
-#### C · Mejoras e indicadores
-
-| Aspecto | Acción | Indicador |
-| ------- | ------ | --------- |
-| *Ejemplo · Accesibilidad* | Corregir navegación por teclado y etiquetas | Barreras manuales y errores automáticos antes/después |
-|         |        |           |
-|         |        |           |
-|         |        |           |
-
-#### D · Greenwashing
-
-Dos afirmaciones de PixelStore y, en una línea cada una, qué información falta para poder aceptarlas.
-
-### Presentación
-
-Cada pareja dispone de unos **3 minutos**. No hay que explicar toda la actividad: hay que responder a cuatro preguntas.
-
-* ¿Cuál es el principal impacto de PixelStore?
-* ¿Qué aspecto habéis descartado como poco prioritario, y por qué?
-* ¿Qué afirmación de PixelStore os genera más dudas?
-* ¿Qué dato pediríais primero?
-
-### Evaluación
-
-| Criterio                                             | Puntos |
-| ---------------------------------------------------- | -----: |
-| Comprensión de las dimensiones ASG                   |      2 |
-| Identificación de impactos y stakeholders            |    1,5 |
-| **Priorización y materialidad**                      |  **2** |
-| Elección de indicadores adecuados                    |      2 |
-| **Análisis crítico y detección de afirmaciones débiles** | **2** |
-| Claridad del producto final                          |    0,5 |
-
-No obtiene mejor nota quien encuentra más problemas, quien relaciona PixelStore con más ODS o quien usa más vocabulario técnico. La obtiene quien identifica los impactos que de verdad importan, sabe explicar por qué, propone una forma razonable de medirlos y distingue una afirmación de una evidencia.
-
-Durante la exposición se preguntará **individualmente** a cualquiera de los dos miembros por una decisión concreta del trabajo. No es un examen: es la comprobación de que la pareja decidió junta y no se repartió el documento.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Habéis identificado impactos ambientales, sociales y de gobernanza.</li>
-    <li>Habéis priorizado únicamente cinco aspectos.</li>
-    <li>Cada aspecto importante tiene al menos un indicador.</li>
-    <li>Las acciones propuestas responden a problemas concretos.</li>
-    <li>Habéis cuestionado al menos dos afirmaciones de PixelStore.</li>
-    <li>Podéis explicar vuestra diapositiva sin leerla.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Una empresa que recicla puede seguir teniendo graves problemas de sostenibilidad?</li>
-    <li>¿Qué diferencia hay entre una afirmación y un indicador?</li>
-    <li>¿Por qué no debemos considerar todos los impactos igual de importantes?</li>
-    <li>Una empresa dice que ha reducido un 50 % su impacto. ¿Qué preguntaríais?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Sí. Reciclar puede ser positivo, pero hay que mirar los demás impactos ambientales, sociales y de gobernanza.</p>
-  <p>2 · Una afirmación dice que algo ocurre. Un indicador permite observar o medir si realmente ocurre.</p>
-  <p>3 · Porque su magnitud y sus consecuencias son distintas, y los recursos para atajarlos son limitados.</p>
-  <p>4 · Qué impacto ha reducido, cómo lo ha calculado, respecto a qué situación anterior y qué incluye la medición.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD1 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
-### El método
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-Cuando alguien os diga «nuestra empresa es sostenible», no respondáis «perfecto». Empezad preguntando:
-
-<figure class="diagram">
-  <figcaption>Las seis preguntas</figcaption>
-  <ol class="flow">
-    <li>¿Qué impactos genera?</li>
-    <li>¿A quién afectan?</li>
-    <li>¿Cuáles son realmente importantes?</li>
-    <li>¿Qué está haciendo para reducirlos?</li>
-    <li>¿Cómo lo está midiendo?</li>
-    <li>¿Qué evidencia tiene?</li>
-  </ol>
-</figure>
-
-Y el razonamiento completo, de la empresa a la mejora:
-
-<figure class="diagram">
-  <figcaption>De la empresa a la mejora</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Empresa</li>
-    <li>Impactos</li>
-    <li>Ambiental · Social · Gobernanza</li>
-    <li>Stakeholders</li>
-    <li>Priorizar</li>
-    <li>Medir</li>
-    <li>Mejorar</li>
-  </ol>
-</figure>
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Sostenibilidad | Gestionar los impactos de hoy contando con sus consecuencias futuras |
-| ASG / ESG | Ambiental, Social y Gobernanza |
-| Ambiental | Impactos sobre energía, recursos, emisiones, agua, residuos o ecosistemas |
-| Social | Impactos sobre trabajadores, usuarios, comunidades, accesibilidad e inclusión |
-| Gobernanza | Cómo se decide y cómo se gestionan responsabilidad, riesgos, seguridad y transparencia |
-| ODS | Los Objetivos de Desarrollo Sostenible de Naciones Unidas |
-| Stakeholder | Quien puede afectar o verse afectado por la actividad de una organización |
-| Materialidad | Identificar y priorizar los aspectos que de verdad importan |
-| Indicador | Una medida que permite comprobar cómo evoluciona un aspecto |
-| Greenwashing | Presentar algo como más sostenible de lo que la evidencia permite demostrar |
-| Evidencia | La información que respalda una afirmación |
-| Impacto | La consecuencia que una actividad produce sobre el entorno o las personas |
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

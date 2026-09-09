@@ -22,17 +22,22 @@ priorKnowledge:
   - "Angular, del módulo de desarrollo web en entorno cliente."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">Las seis sesiones finales completan y defienden la ampliación del mismo producto: especificación, arquitectura, desarrollo, seguridad, integraciones, cliente Angular, pruebas y documentación. El backend se sigue comprobando de forma independiente del cliente.</p>
 
 ## Semana 24 · Especificar la ampliación final
 
 ## Sesión 47 · Especificar la ampliación final
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 24: Preparar la actualización y su recuperación](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-24/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-24).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-La versión final continúa el mismo producto. La especificación concreta qué falta para completar sus casos de uso con seguridad e integraciones.
+El proyecto completo será la base de la ampliación final. Especificar significa acordar qué comportamiento nuevo se necesita antes de programarlo. Un criterio de aceptación describe una situación y un resultado observable; servirá para decidir si la ampliación está terminada.
 
 #### Los cuatro pilares de una especificación técnica
 
@@ -98,21 +103,13 @@ En un proyecto profesional, delegar el esquema en Hibernate es una **receta para
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Auditad alcance, actores y criterios de aceptación sobre el proyecto existente y definid la ampliación pendiente.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Actualizad modelo de datos y contrato sin descartar el código ya comprobado.
+1. Abre la propuesta inicial, la documentación actual y el modelo de datos. Distingue funciones ya realizadas de la ampliación que vas a añadir.
+2. Elige casos nuevos que utilicen las capacidades aprendidas y escribe actor, datos de entrada, reglas y resultado. Los ejemplos del gestor se adaptan a esa ampliación.
+3. Localiza los scripts y paquetes existentes. Planifica cambios compatibles con los datos del proyecto; no ejecutes un esquema inicial como si la base de datos estuviera vacía.
 
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Especificación y modelado</p>
-
-#### Paso 2 · Dejar de teclear: La disciplina de la especificación
+#### Paso 2 · Definir los criterios de aceptación antes de implementar
 
 Continúas el producto que llevas construyendo durante el curso. Los pasos de esta unidad te ayudan a especificar y completar su ampliación final; las decisiones de dominio y el código que las implementa siguen siendo tuyos.
 
@@ -191,14 +188,14 @@ Elabora el documento de especificación formal de tu proyecto backend:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita la memoria formal de análisis y especificación del proyecto, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>especificacion-proyecto.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <p class="stage">Arquitectura y modelo de datos</p>
 
-#### Paso 7 · Script de base de datos profesional y estructura modular
+#### Paso 7 · Planificar el cambio de esquema y la organización de paquetes
 
-Creamos el archivo `src/main/resources/schema.sql` con definición formal de tablas, claves e índices:
+El SQL del bloque es un **ejemplo de esquema de llegada**, no un script que debas ejecutar encima del esquema existente. Compara primero sus campos con tu ampliación y redacta un cambio incremental para tu base de desarrollo. Conserva los ids y datos previos y prepara valores para las nuevas columnas obligatorias antes de añadir la restricción. No actives inicialización automática de ese esquema completo en cada arranque. La aceptación consiste en ejecutar la nueva funcionalidad conservando los casos ya implementados.
 
 ```sql
 -- Limpieza ordenada respetando integridad referencial
@@ -244,7 +241,7 @@ CREATE TABLE proyectos (
 CREATE TABLE tareas (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     titulo VARCHAR(150) NOT NULL,
-    prioridad VARCHAR(20) NOT NULL DEFAULT 'MEDIA',
+    prioridad VARCHAR(20) NOT NULL DEFAULT 'media',
     estado VARCHAR(30) NOT NULL DEFAULT 'PENDIENTE',
     coste_estimado NUMERIC(10, 2) NOT NULL DEFAULT 0.00 CHECK (coste_estimado >= 0),
     proyecto_id BIGINT NOT NULL,
@@ -278,7 +275,7 @@ INSERT INTO proyectos (codigo, nombre, descripcion, estado, presupuesto_total, l
 -- Tareas asociadas
 INSERT INTO tareas (titulo, prioridad, estado, coste_estimado, proyecto_id, asignado_a) VALUES
 ('Tendido de cableado de alta tensión', 'CRITICA', 'EN_CURSO', 12000.00, 1, 3),
-('Cimentación de inversores solares', 'ALTA', 'FINALIZADA', 25000.00, 1, 3);
+('Cimentación de inversores solares', 'alta', 'FINALIZADA', 25000.00, 1, 3);
 ```
 
 ```properties
@@ -316,19 +313,7 @@ spring.jpa.properties.hibernate.format_sql=true
 
 #### Paso 9 · Estructurar la arquitectura modular de paquetes
 
-Organiza los paquetes de tu código fuente bajo la estrategia de **componentes de negocio** (*Package by Feature*):
-```text
-com.ejemplo.gestor/
-├── core/                  # Seguridad global, filtros MDC, gestión de excepciones RFC 7807
-│   ├── exception/
-│   ├── filter/
-│   └── security/
-├── proyecto/              # Dominio de proyectos (Controller, Service, Repository, Model, DTO)
-├── tarea/                 # Dominio de tareas
-├── incidencia/            # Dominio de incidencias y adjuntos
-└── integration/           # Clientes HTTP salientes (Open-Meteo, Webhooks)
-```
-Explica en tu cuaderno de diseño qué ventajas aporta esta estructura cuando varios desarrolladores trabajan en paralelo sobre ramas distintas de Git.
+Organiza los paquetes mediante la herramienta de refactorización del IDE, moviendo una entidad funcional cada vez y actualizando imports. No copies las clases a otro paquete dejando las antiguas: Spring podría registrar dos controladores o dos entidades. Mantén la clase principal por encima de todos los paquetes. Ejecuta los tests después de cada movimiento y comprueba que la colección conserva las mismas rutas.
 
 <div class="rule">
   <p class="rule-label">Por qué cambiamos de criterio justo ahora</p>
@@ -346,10 +331,8 @@ Además de mover paquetes, completa estas cuatro decisiones de modelo y anota la
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **especificad la ampliación del producto existente**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Revisa cada criterio con un ejemplo permitido y otro rechazado. Otra persona debe poder entender cómo comprobarlo.
+2. Ensaya cualquier cambio de esquema sobre una copia de desarrollo y confirma que conserva los registros existentes y aplica las nuevas restricciones.
 
 #### Ampliación si has completado el trabajo
 
@@ -404,35 +387,29 @@ En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **F
 
 Cada requisito pendiente se vincula a una operación del producto y una comprobación.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 47 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-47.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-47.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-47.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 48 · Implementar la ampliación por capas
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 24: Preparar la actualización y su recuperación](/es/docencia/proyecto-intermodular/ud11-preparar-la-entrega-y-recuperacion/sesion-24/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-24).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una ampliación atraviesa DTO, servicios, persistencia y pruebas. Planificar una primera operación completa permite validar pronto el diseño.
+La ampliación ya tiene criterios y cambios de datos definidos. Hoy implementarás un recorrido completo a través de las capas. Un corte vertical conecta entrada, regla, persistencia y respuesta de un caso de uso, de modo que se pueda probar antes de añadir los demás.
 
 #### El antipatrón de las capas horizontales
 
@@ -475,21 +452,15 @@ La operación termina cuando hay una petición válida comprobada, un rechazo re
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Implementad un recorrido vertical de la ampliación siguiendo la arquitectura y el modelo acordados.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Ejecutad los tests y el contrato anterior para detectar regresiones al integrar el cambio.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Inicio de implementación</p>
+1. Abre el primer criterio de aceptación de la sesión 47 y localiza los DTO, servicio y repositorio que afectará.
+2. Escribe la petición y respuesta esperadas antes de modificar clases. Reutiliza las capas existentes y añade solo las piezas que requiere el caso.
+3. Prepara los datos previos y una prueba HTTP del recorrido. El ejemplo de alta sirve como patrón si tu ampliación realiza otra operación.
 
 #### Paso 2 · El primer corte vertical: Alta de Proyectos
+
+Los bloques muestran las piezas de un recorrido, en orden de dependencia: DTO, entidad, repositorio, servicio y controlador. Localiza la pieza equivalente que ya exista y amplíala; crea un archivo nuevo solo cuando la ampliación lo requiera. Antes de copiar un constructor de DTO o un acceso del servicio, comprueba que existen sus componentes y campos. Conserva las reglas anteriores y conecta los campos nuevos de entrada a persistencia y salida. Prueba primero una sola alta y su consulta antes de añadir el resto de casos.
 
 ```java
 package com.ejemplo.gestor.proyecto.dto;
@@ -744,7 +715,7 @@ public class ProyectoController {
 
 #### Paso 3 · Prueba de Integración con MockMvc
 
-Verificamos el corte vertical con una prueba que recorre todas las capas sin levantar el navegador:
+Prepara una base de pruebas exclusiva y activa su perfil. `@WithMockUser(username="jefe1")` simula la identidad, pero el servicio busca además ese usuario en PostgreSQL: el test debe crearlo previamente con el mismo username y con los campos obligatorios. Prepara también cualquier entidad referenciada por la petición. Genera los datos desde el test y comprueba el id devuelto, sin asumir el 1. Después del caso permitido añade el de validación o regla rechazada y verifica que no crea registros.
 
 ```java
 package com.ejemplo.gestor.proyecto;
@@ -808,10 +779,8 @@ Construye el corte vertical simétrico de lectura:
 
 #### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **implementad la primera operación de la ampliación**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta el caso desde HTTP y comprueba tanto la respuesta como el dato persistido, con autenticación y validación aplicadas.
+2. Implementa y comprueba la consulta que permite observar su resultado. Ejecuta también las pruebas anteriores para detectar cambios involuntarios.
 
 #### Ampliación si has completado el trabajo
 
@@ -844,37 +813,31 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
 
 Una operación nueva funciona completa y las operaciones existentes siguen verificadas.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 48 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-48.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-48.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-48.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 25 · Completar núcleo, seguridad e integración
 
 ## Sesión 49 · Completar núcleo, seguridad e integración
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 25: Publicar el incremento y preparar el caso de portfolio](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-25/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-25).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-El núcleo funcional queda completo cuando las reglas, los permisos y las dependencias externas funcionan juntos.
+El primer recorrido de la ampliación funciona. Hoy completarás sus reglas, transacciones y permisos. Una máquina de estados describe estados permitidos y transiciones; resulta útil cuando una operación, como cerrar o aprobar, depende de la situación actual del recurso.
 
 #### La trampa de la dispersión frente al núcleo funcional
 
@@ -927,23 +890,32 @@ Comprobar roles (`ADMINISTRADOR`, `JEFE_PROYECTO`, `DESARROLLADOR`) es solo la p
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Terminad los casos de uso pendientes y aplicad la matriz de autorización a cada nuevo endpoint.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Probad éxitos, conflictos y fallos de la integración sobre datos reproducibles.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Desarrollo I: núcleo funcional</p>
+1. Abre los criterios pendientes, el servicio ampliado y la matriz de permisos. Dibuja los estados y cambios válidos del recurso si tu operación los necesita.
+2. Prepara datos para una transición válida, una prohibida y un intento de otro usuario. Anota el estado que debe conservar cada rechazo.
+3. Localiza las llamadas externas dentro del nuevo recorrido y reutiliza los límites de espera y tratamiento de fallos ya definidos.
 
 #### Paso 2 · Implementación del núcleo transaccional
 
-Necesitamos saber de forma instantánea cuánto presupuesto se ha consumido sin traernos todas las tareas a memoria:
+El controlador mostrado al final también llama a `listarTareasProyecto`. Añade este método al mismo TareaService, importando Page y Pageable de Spring Data. Mantén los cuatro componentes de TareaResponse que utiliza esta fase del proyecto:
+
+```java
+@Transactional(readOnly = true)
+public Page<TareaResponse> listarTareasProyecto(Long proyectoId, Pageable pageable) {
+    if (!proyectoRepository.existsById(proyectoId)) {
+        throw new org.springframework.web.server.ResponseStatusException(
+            org.springframework.http.HttpStatus.NOT_FOUND, "Proyecto no encontrado");
+    }
+    return tareaRepository.findByProyectoId(proyectoId, pageable)
+        .map(tarea -> new TareaResponse(tarea.getId(), tarea.getTitulo(),
+            tarea.getEstado().name(), tarea.getCosteEstimado()));
+}
+```
+
+Conserva los métodos de listado y DTO que tu producto necesite; si amplías un DTO anterior, añade sus componentes también al mapper en lugar de eliminarlos.
+
+Reutiliza el recurso ampliado en la sesión 48. Antes de añadir la consulta de suma, comprueba que presupuesto y coste están definidos como BigDecimal en entidad, DTO y base de datos. Implementa primero la consulta, después la regla en el servicio y por último el endpoint. El bloque de controlador es parcial: conserva o implementa el método de listado al que llama, con su Page y Pageable. Para cada rechazo consulta el estado posterior y verifica que no se ha consumido presupuesto ni creado una tarea.
 
 ```java
 package com.ejemplo.gestor.tarea.repository;
@@ -1126,24 +1098,13 @@ public class TareaController {
 
 #### Paso 5 · Máquina de estados para Tareas
 
-Implementa el endpoint de transición de estados de tarea:
-1. Diseña `PATCH /api/v1/tareas/{id}/estado`.
-2. Define las transiciones permitidas:
-   * `PENDIENTE` → `EN_CURSO`
-   * `EN_CURSO` → `BLOQUEADA` (requiere indicar motivo de bloqueo) o `FINALIZADA`
-   * `BLOQUEADA` → `EN_CURSO`
-3. Si el cliente intenta saltarse un estado (por ejemplo, pasar directamente de `PENDIENTE` a `FINALIZADA`), el servicio debe rechazar la mutación con `409 Conflict`.
-4. **Escribe la tabla de transiciones antes que el código.** Con 4 estados hay 16 combinaciones posibles; solo cuatro son legales. Escríbelas todas en una tabla y decide qué pasa con cada una: eso es lo que evita que la regla acabe siendo una escalera de `if` inconexos que nadie puede auditar.
-5. **Modélalo dentro del enum**, no en el servicio. Un método `puedeTransitarA(EstadoTarea destino)` en el propio `EstadoTarea` mantiene la regla junto al dato al que pertenece, y hace imposible olvidarla en un segundo sitio.
-6. Prueba las cuatro transiciones legales y **al menos tres ilegales**. Comprueba que las ilegales devuelven `409` con un `detail` que dice qué transición se intentó y cuáles eran posibles: un `409` sin explicación obliga al cliente a adivinar.
-7. Comprueba el caso que casi nadie prueba: transitar a **el mismo estado** en el que ya está. Decide si es un `409`, un `204` inocuo o una operación idempotente que responde `200`. Cualquiera se defiende; no haberlo pensado, no.
-8. Escribe el test de la regla antes de darla por terminada. Es una de las que la sesión 51 clasificará como riesgo crítico, porque afecta a la integridad de los datos.
+Escribe la tabla origen → destino permitido y úsala como referencia del código. Crea el DTO del cambio de estado con destino y, cuando proceda, motivo. En el servicio carga la tarea, comprueba permisos, valida la transición y solo entonces cambia sus campos. Conserva una excepción de dominio para el 409 y otra respuesta para una entrada mal formada. Prueba cada transición permitida y una prohibida desde su estado inicial correcto; no ejecutes toda la tabla sobre la misma tarea ya modificada.
 
 <p class="stage">Desarrollo II: seguridad e integración</p>
 
 #### Paso 6 · Bean de seguridad y llamadas salientes resilientes
 
-Creamos un bean gestionado por Spring que resuelve la propiedad del recurso consultando la base de datos:
+Amplía la comprobación de propiedad existente en la UD9 o renómbrala mediante refactorización; no mantengas dos servicios con políticas contradictorias. Añade las nuevas expresiones a los métodos existentes y comprueba un usuario propietario y otro del mismo rol. En la integración externa reutiliza el bean RestClient con timeouts y el servicio con caché ya configurados; un bloque de ejemplo no debe crear otro cliente sin esos límites.
 
 ```java
 package com.ejemplo.gestor.core.security;
@@ -1299,10 +1260,8 @@ Implementa la regla de propiedad para tareas:
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **completad reglas, permisos e integración**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Comprueba las reglas nuevas, sus cambios atómicos y los rechazos por estado o propiedad. No debe quedar una operación parcialmente aplicada.
+2. Simula el fallo externo previsto y verifica que seguridad, persistencia y respuesta pública mantienen la política acordada para esa ampliación.
 
 #### Ampliación si has completado el trabajo
 
@@ -1356,35 +1315,29 @@ Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un e
 
 El backend satisface los criterios del producto sin depender de que exista ya una pantalla para cada operación.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 49 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-49.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-49.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-49.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 50 · Conectar Angular al backend del proyecto
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 25: Publicar el incremento y preparar el caso de portfolio](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-25/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-25).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Angular consume el contrato que ya está probado. La integración requiere coordinar rutas, credenciales, estados de carga y mensajes de error.
+La ampliación del backend ya tiene reglas y permisos. Hoy la conectas al cliente Angular del proyecto. Angular se trabaja con los conocimientos del módulo de cliente; aquí observaremos el contrato HTTP, el envío de identidad y las respuestas de error del servidor.
 
 #### El salto de Bruno al Navegador: La barrera de CORS
 
@@ -1417,21 +1370,28 @@ La práctica conecta el cliente de Desarrollo Web en Entorno Cliente al mismo ba
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Conectad el cliente trabajado en Desarrollo Web en Entorno Cliente con los casos de uso del backend.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Recorred creación, consulta, modificación y borrado con usuarios de distintos permisos y corregid desajustes del contrato.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Integración con Angular</p>
+1. Abre el cliente Angular existente y el backend y arráncalos siguiendo sus README. Si la integración del cliente aún no está preparada en el otro módulo, deja identificada esa dependencia y utiliza la colección para comprobar mientras tanto el contrato del servidor.
+2. Localiza el servicio HTTP de Angular, sus tipos de datos y el interceptor de autenticación. Compara sus campos con los DTO públicos actuales.
+3. Anota el origen del cliente y la dirección del backend que usa la configuración. Abre Red antes de ejecutar la primera acción.
 
 #### Paso 2 · Configuración de CORS y sincronización de contratos
+
+Para activar el interceptor funcional del ejemplo en un cliente Angular standalone, abre `src/app/app.config.ts`, importa los siguientes símbolos y añade el proveedor a su array `providers` existente, conservando router y los otros proveedores. Si ya existe provideHttpClient, modifica esa llamada en lugar de duplicarla.
+
+```typescript
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './interceptors/auth.interceptor';
+```
+
+```typescript
+provideHttpClient(withInterceptors([authInterceptor]))
+```
+
+Reutiliza el AuthService del cliente Angular trabajado en Desarrollo Web en Entorno Cliente: `obtenerToken()` debe devolver el token actual o null. Si su método tiene otro nombre, adapta esa llamada. Intermodular reutiliza la integración resultante para publicarla. En Red comprueba que Authorization se añade únicamente a peticiones de tu API; si el cliente consume otras APIs, acota el interceptor al prefijo base de tu backend.
+
+Conserva la SecurityFilterChain final de la UD9 y modifica solo orígenes y cabeceras necesarias para Angular. En el cliente, crea o actualiza los tipos en `src/app/models` y el interceptor en `src/app/interceptors`; registra el interceptor en `provideHttpClient(withInterceptors([...]))` de su configuración de arranque, o en el mecanismo equivalente si utiliza módulos. Sin ese registro el archivo no se ejecuta. Comprueba en Red que realmente se envía Authorization antes de diagnosticar permisos del servidor.
 
 <div class="rule">
   <p class="rule-label">Qué se evalúa hoy y qué no</p>
@@ -1441,33 +1401,9 @@ Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. A
 
 Configuramos de forma granular los orígenes y cabeceras permitidas en `SecurityConfig`:
 
+Sustituye **solo el bean corsConfigurationSource** de SecurityConfig por este método. Conserva la cadena JWT, sus reglas, respuestas 401/403 y demás beans de la sesión 40. Los imports de CorsConfiguration, CorsConfigurationSource, UrlBasedCorsConfigurationSource y List ya estaban en aquella clase.
+
 ```java
-package com.ejemplo.gestor.core.security;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
-
-@Configuration
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            // Activamos CORS con nuestra configuración personalizada
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable()) // Deshabilitado para APIs REST stateless con JWT
-            // ... resto de reglas de autorización
-            ;
-        return http.build();
-    }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -1498,7 +1434,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
-}
 ```
 
 Creamos las interfaces en Angular espejando los DTOs de Java:
@@ -1611,7 +1546,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 #### Paso 5 · Cerrar el circuito completo desde el navegador
 
-El objetivo no es que Angular quede bonito, sino que **todas** las capacidades de tu backend se puedan ejercer desde un navegador con seguridad puesta.
+Conecta una operación del cliente cada vez: consulta de detalle, modificación, adjunto e integración externa. Para cada una compara su petición con la que ya funciona en la colección y corrige URL, campos o cabeceras antes de pasar a la siguiente. Un archivo multipart lo construye FormData: deja que el navegador añada Content-Type con su boundary. Tras una respuesta 204 no intentes analizar JSON. Conserva los mensajes de validación y permisos que devuelve el backend.
 
 1. Añade al detalle de proyecto un botón *«Consultar meteorología en obra»* que muestre la temperatura y la recomendación que devuelve tu API.
 2. Si el backend responde con el aviso de degradación de la UD10 (*«Servicio no disponible»*), muestra una alerta amarilla **sin romper la vista del proyecto**. Es la demostración visible de que la degradación elegante servía para algo.
@@ -1627,10 +1562,8 @@ El objetivo no es que Angular quede bonito, sino que **todas** las capacidades d
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **conectad angular al mismo backend**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta desde Angular el recorrido de la ampliación y contrasta URL, método, cuerpo, identidad y respuesta con la colección.
+2. Prueba un dato inválido y un usuario sin permiso: la interfaz debe mostrar el error correspondiente y el backend debe conservar el estado correcto.
 
 #### Ampliación si has completado el trabajo
 
@@ -1644,7 +1577,7 @@ La descarga de un archivo binario mediante un enlace `<a>` tradicional no permit
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita una memoria técnica justificando la integración entre cliente y servidor, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>memoria-integracion-cliente.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -1667,37 +1600,32 @@ La descarga de un archivo binario mediante un enlace `<a>` tradicional no permit
 
 El cliente Angular utiliza la misma API que sigue verificándose de manera independiente con la colección HTTP.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 50 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-50.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-50.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-50.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 26 · Verificar, documentar y preparar la versión
 
+
 ## Sesión 51 · Verificar, documentar y preparar la versión
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 26: Defender el producto y el proceso sobre la misma versión](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-26/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-26).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Una versión candidata reúne un resultado reproducible, documentación coherente y defectos conocidos explícitos.
+La ampliación ya se utiliza desde el cliente. Hoy prepararás una versión reproducible. Una suite de regresión vuelve a comprobar lo anterior para detectar qué ha dejado de funcionar; el README debe permitir repetir ese resultado desde una instalación limpia.
 
 #### Pruebas basadas en riesgos: Dónde poner el foco
 
@@ -1780,21 +1708,15 @@ En la carpeta `/bruno` se incluye la colección completa exportada para verifica
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Ejecutad pruebas y recorridos de integración, revisad código y corregid las incidencias prioritarias.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Actualizad documentación, preparad datos de demostración y publicad la versión mediante el workflow existente.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Testing y revisión</p>
+1. Abre los criterios de la ampliación y ejecuta los tests y la colección completa. Anota fallos con su petición o test reproducible.
+2. Revisa requisitos, variables, base de datos y comandos del README. Localiza scripts que dependan de rutas de tu ordenador o datos manuales.
+3. Prepara un entorno de desarrollo separado para comprobar el arranque desde el repositorio, manteniendo intacto el que usas para trabajar.
 
 #### Paso 2 · La suite de regresión final
+
+Prepara en cada test los usuarios y recursos que necesita, en un entorno de pruebas separado; el nombre utilizado por `@WithMockUser` debe coincidir con la fila cuando el servicio consulta al usuario. Reutiliza los métodos de prueba de las unidades anteriores y añade únicamente los riesgos de la ampliación. Para un 409 por tareas pendientes crea expresamente ese estado. Para un fallo interno utiliza un colaborador de prueba controlado, nunca una ruta pública de producción que provoque errores deliberados.
 
 | Riesgo técnico identificado | Prueba de mitigación implementada | Clase de test |
 | :--- | :--- | :--- |
@@ -1913,7 +1835,7 @@ Ejecuta el ciclo de vida completo de Maven en tu terminal:
 | JaCoCo no genera informe | El plugin no está enganchado a la fase | El `prepare-agent` debe ejecutarse antes de `test`, y `report` en `verify` |
 | Cobertura muy alta y aun así aparecen fallos a mano | Estás midiendo líneas, no ramas | Mira la columna *Branch*, no la de *Instructions* |
 
-#### Paso 5 · La prueba de caja negra, y lo que revele
+#### Paso 5 · Comprobar la API siguiendo solo su documentación pública
 
 Los tests automáticos comprueban lo que se te ocurrió comprobar. Esta pasada busca lo que no.
 
@@ -1989,14 +1911,7 @@ Si esto te suena, es porque es exactamente el ejercicio de la sesión 15, «El c
 
 #### Paso 7 · La prueba del desarrollador nuevo
 
-Simula que eres un nuevo integrante del equipo que acaba de clonar el proyecto:
-1. Abre una terminal limpia en una carpeta vacía.
-2. Sigue exclusivamente los pasos indicados en tu `README.md`.
-3. Comprueba que:
-   * La base de datos levanta sin errores de puerto.
-   * La aplicación arranca sin fallos de `ddl-auto=validate`.
-   * Puedes autenticarte en Swagger UI con las credenciales documentadas.
-   * La colección de Bruno pasa todas las peticiones con éxito.
+Crea un clon en una carpeta distinta y una base de datos local vacía destinada a esta comprobación. Sigue el README sin reutilizar variables, archivos o servicios ocultos del entorno habitual. Ejecuta migraciones o preparación de esquema, datos iniciales de prueba, arranque, autenticación y colección en ese orden. Si falta un paso, añádelo al README y vuelve a empezar por ese punto desde un estado conocido; no borres datos del entorno de trabajo para simular una instalación limpia.
 
 #### Paso 8 · Si algo no sale como dice el guion
 
@@ -2026,10 +1941,8 @@ Entra en `http://localhost:8080/swagger-ui.html` y haz la última pasada de cont
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **preparad una versión final reproducible**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Sigue el README desde ese entorno y ejecuta el recorrido principal y sus rechazos sin completar pasos de memoria.
+2. Después de cualquier refactorización repite las pruebas afectadas. Identifica la versión final y deja documentadas las limitaciones que sigan abiertas.
 
 #### Ampliación si has completado el trabajo
 
@@ -2085,35 +1998,31 @@ Diseña un archivo `docker-compose.yml` que levante tanto la base de datos Postg
 
 El commit desplegado se corresponde con la versión probada y otra persona puede reproducir el recorrido principal.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 51 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-51.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-51.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-51.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 52 · Defender el backend completo
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 26: Defender el producto y el proceso sobre la misma versión](/es/docencia/proyecto-intermodular/ud12-publicar-y-defender-el-producto/sesion-26/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-26).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Defender el producto consiste en demostrar sus decisiones con código y resultados. Cada integrante debe explicar qué ocurre y por qué.
+La versión final ya está preparada y documentada. Hoy defenderás las decisiones del backend con demostraciones sobre el mismo commit. La memoria técnica conecta requisito, implementación y evidencia para que la evaluación no dependa de una explicación de memoria.
+
+La defensa se coordina con Intermodular 26: se hace una sola demostración y cada módulo aplica sus criterios. El docente reparte los turnos entre las sesiones finales de ambos módulos. Enlaza `docs/memoria-tecnica.pdf` desde el documento común `docs/entrega-final.pdf`; no prepares otra memoria ni repitas el recorrido completo para Intermodular.
 
 #### La prueba definitiva: La Defensa Técnica
 
@@ -2161,19 +2070,11 @@ Distribuye tu exposición con rigor profesional siguiendo este minutaje:
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Demostrad el producto desplegado con un recorrido válido y otro rechazado por permisos o reglas de negocio.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Resolved una pregunta o pequeña modificación individual y mostrad las pruebas que sostienen vuestras decisiones.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Defensa técnica</p>
+1. Abre el repositorio, la aplicación y la documentación de la versión final. Comprueba que todos corresponden al commit que vas a presentar.
+2. Prepara un recorrido permitido, uno rechazado, una regla transaccional y una prueba automatizada. Localiza sus clases antes del ensayo.
+3. Elige también un fallo que hayas corregido y conserva la evidencia que explica causa, cambio y comprobación.
 
 #### Paso 2 · Preparación del guion y simulación de preguntas
 
@@ -2216,6 +2117,8 @@ Una demostración se cae por logística, no por código. Prepara esto **antes** 
 
 #### Paso 3 · Ensayo general cronometrado
 
+Prepara la versión que has entregado con su configuración de demostración y datos ficticios. Comprueba acceso, base de datos y proveedor antes de iniciar el cronómetro. Si utilizas PowerShell, sigue el log con `Get-Content logs/aplicacion.log -Tail 30 -Wait`; en Linux/macOS, con `tail -f`. Ensaya los bloques del guion con margen para preguntas. Si cambia algún dato o estado durante la demostración, reconstruye el escenario con la colección antes del siguiente ensayo.
+
 1. **Prepara el entorno:**
    * Arranca Docker con PostgreSQL limpio.
    * Levanta el backend con `./mvnw spring-boot:run`.
@@ -2237,7 +2140,7 @@ Una demostración se cae por logística, no por código. Prepara esto **antes** 
 
 #### Paso 5 · Redactar la Memoria Técnica de la Defensa
 
-Elabora la memoria técnica consolidada del proyecto. Cada apartado debe apoyarse en algo que existe en el repositorio, no en una descripción general:
+Redacta la memoria en tu documento editable y expórtala como `docs/memoria-tecnica.pdf` dentro del repositorio. Para cada apartado sigue requisito → decisión → archivo o método → prueba y resultado; enlaza los registros de sesiones cuando contengan la evidencia para no volver a copiarla. Añade el commit y la URL de la versión demostrada, más las limitaciones conocidas. La entrega sigue siendo el repositorio: la memoria lo explica y no sustituye su código ni sus pruebas.
 
 1. **Resumen ejecutivo:** qué resuelve el sistema y con qué tecnologías, en una página.
 2. **Modelo de datos:** diagrama entidad-relación y justificación del esquema SQL, tipo por tipo en los campos delicados (dinero, fechas, estados).
@@ -2254,15 +2157,13 @@ Elabora la memoria técnica consolidada del proyecto. Cada apartado debe apoyars
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>La memoria técnica final y el guion de defensa del proyecto backend se entregarán exclusivamente en <strong>documento en formato PDF</strong> (<code>memoria-defensa-tecnica.pdf</code>), sin archivos markdown como tarea de alumnos.</p>
+  <p>Guarda la memoria y el guion de defensa en <code>docs/memoria-tecnica.pdf</code> y enlázalos desde el README. Entrega el repositorio de GitHub y el commit final, con el código y las evidencias de ejecución.</p>
 </div>
 
 #### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **demostrad y defended el producto**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ensaya la demostración y explica el camino de una petición desde el cliente hasta el dato persistido, incluyendo identidad y reglas.
+2. Entrega la memoria y los enlaces dentro del repositorio; deben permitir revisar los mismos resultados aunque se termine la demostración en clase.
 
 #### Ampliación si has completado el trabajo
 
@@ -2296,27 +2197,18 @@ En lugar de pulsar las peticiones una a una en la interfaz gráfica durante la d
 
 Se evalúan individualmente comprensión, implementación y verificación del backend; Intermodular utiliza sus propias evidencias del flujo de trabajo.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 52 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-52.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-52.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-52.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 

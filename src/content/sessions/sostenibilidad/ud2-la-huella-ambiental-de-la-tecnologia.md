@@ -6,8 +6,8 @@ order: 2
 lang: "es"
 summary: "La tecnología parece inmaterial, pero detrás de una aplicación hay dispositivos, redes, centros de datos, electricidad, materiales y agua. Aprendemos a mirar el ciclo de vida completo y a decidir con criterio sobre compra, uso, reparación y sustitución."
 duration: "4 horas · 4 sesiones"
-modality: "Parejas"
-deliverable: "Análisis del ciclo de vida y propuesta de mejora de una pequeña infraestructura tecnológica."
+modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
+deliverable: "Política de renovación de equipos. Una actividad acumulativa por unidad, con evidencias y aportación individual."
 outcomes:
   - "Explicar por qué una actividad digital también tiene impacto ambiental."
   - "Identificar las etapas del ciclo de vida de un dispositivo."
@@ -18,178 +18,84 @@ outcomes:
   - "Proponer medidas para alargar la vida útil de los equipos."
   - "Decidir el destino de un equipo retirado aplicando la normativa que le corresponde."
 requirements:
-  - "Calculadora u hoja de cálculo."
-  - "Herramienta de presentaciones o un documento."
-  - "Disposición a justificar cada decisión, no solo a tomarla."
+  - "Guía de arranque y materiales de esta unidad, enlazados en la página."
+  - "Carpeta o documento de actividad compartido con el docente."
 priorKnowledge:
-  - "Las dimensiones ASG y la idea de materialidad (UD1)."
-  - "Qué es PixelStore y qué tiene (UD1)."
-  - "Qué es un indicador y para qué sirve (UD1)."
-date: "2026-08-29"
+  - "Las unidades anteriores de este módulo. No se requiere Servidor, Intermodular ni el otro módulo transversal."
+date: "2026-09-09"
 ---
+
+<p class="lead">Política de renovación de equipos. Cada sesión introduce los conceptos que necesita y continúa una misma actividad de la unidad. Conserva sus resultados para revisarlos y utilizarlos después.</p>
+
+## Cómo trabajar esta unidad
+
+Son 4 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Si el periodo del centro es de 55 minutos, se ajusta el trabajo a 40 minutos. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
+
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir una entrega ya evaluada.
+
+## Actividad y criterios de evaluación
+
+**Política de renovación de equipos.** Guarda el trabajo en `sostenibilidad/ud2/`, y redacta la actividad en Word, LibreOffice o un documento en línea; exporta la entrega a PDF. Cada sesión añade su avance, comprobación y pendiente; no se entrega un informe diferente por sesión. Cuando haya código, enlaza el repositorio y la versión o adjunta la carpeta identificada según el canal del aula. Nunca incluyas credenciales.
+
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+
+| Criterio                             | Puntos |
+| ------------------------------------ | -----: |
+| Comprensión del ciclo de vida        |      2 |
+| Aplicación de economía circular      |      2 |
+| Calidad de la política de renovación |      2 |
+| Priorización razonada                |    1,5 |
+| Selección de indicadores             |    1,5 |
+| **Justificación de la decisión final** |  **1** |
+
+En cada criterio, una evidencia ausente no permite acreditar el logro; una evidencia incompleta requiere revisión; una evidencia correcta permite comprobar el resultado; el logro completo añade una justificación coherente y reconoce sus límites. Los puntos se asignan según el grado de logro del criterio, no por cantidad de archivos, commits o texto. Consulta la guía para revisar y volver a presentar los criterios pendientes.
 
 ## Sesión 1 · Lo digital también es físico
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La dimensión física y material de la tecnología y el análisis de ciclo de vida del hardware (ACV).</li>
-    <li><strong>2. Haz:</strong> Mapea las fases del ciclo de vida de un portátil o servidor y desglosa dónde se concentra su huella de carbono embebida.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 1.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Política de renovación de equipos», sesión 1 de 4. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### ¿Qué vamos a aprender?
+### Se explica
 
-Cuando utilizamos una aplicación parece que todo ocurre de forma casi invisible. Abrimos una web, una aplicación, un servicio de streaming o una herramienta de IA, y recibimos una respuesta.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Es fácil quedarse con la sensación de que lo digital apenas usa recursos físicos. Pero detrás hay una cadena real:
+Lo digital utiliza recursos físicos: materiales, fábricas, transporte, electricidad y equipos. El **ciclo de vida** recorre extracción, fabricación, distribución, uso y final de vida. Mirar solo el consumo mientras encendemos un portátil deja fuera otras etapas.
 
-<figure class="diagram">
-  <figcaption>Lo que se pone en marcha al abrir una aplicación</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Usuario</li>
-    <li>Dispositivo</li>
-    <li>Red</li>
-    <li>Centro de datos</li>
-    <li>Servidores</li>
-    <li>Electricidad y refrigeración</li>
-  </ol>
-</figure>
+Un equipo nuevo puede consumir menos durante el uso y requerir impactos de fabricación que el antiguo ya tenía incorporados. Decidir exige conocer necesidades, estado y vida útil restante. No compararemos «nuevo» y «viejo» como etiquetas, sino alternativas concretas para prestar el mismo servicio.
 
-Por tanto, **una actividad digital también necesita recursos materiales y energéticos**.
+### Se trabaja
 
-#### Un ejemplo
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-Cuando abrimos una página web intervienen cuatro capas físicas a la vez:
+1. Abre el caso de equipos de PixelStore y crea el documento de UD2. Dibuja las cinco etapas del ciclo de un portátil.
+2. Escribe en cada etapa un recurso utilizado y una consecuencia posible. Marca qué información aporta el caso y qué datos tendrías que pedir al fabricante o al proveedor.
+3. Compara conservar, reparar y sustituir un portátil. Para cada opción anota qué etapas se prolongan, se evitan o vuelven a producirse.
+4. Elige un servicio concreto, como tramitar pedidos durante un año, y comprueba si las tres opciones lo pueden prestar con condiciones adecuadas de uso y seguridad.
+5. Explica por escrito por qué conocer solo los vatios del equipo nuevo no basta para decidir. Guarda dos datos que solicitarías antes de recomendar la compra.
 
-| Capa | Qué pone |
-| ---- | -------- |
-| Nuestro dispositivo | Pantalla, CPU, memoria, batería |
-| La red | Router, antenas, fibra, equipos de telecomunicaciones |
-| El servidor | CPU, memoria, almacenamiento |
-| El centro de datos | Electricidad, refrigeración, infraestructura |
+### Cierre
 
-No hace falta calcular cuánto consume exactamente cada visita. Lo importante es entender que **Internet no funciona en el aire**.
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
----
+El esquema contempla todo el ciclo de vida y compara alternativas para el mismo servicio, sin afirmar un ahorro ambiental que no se ha calculado.
 
-### El impacto tampoco empieza cuando encendemos el dispositivo
-
-Imaginad un ordenador portátil nuevo. Antes de que llegue a vuestra mesa han pasado muchas cosas:
-
-<figure class="diagram">
-  <figcaption>Todo lo que ocurre alrededor de un dispositivo</figcaption>
-  <ol class="flow">
-    <li>Materias primas</li>
-    <li>Fabricación de componentes</li>
-    <li>Montaje</li>
-    <li>Transporte</li>
-    <li>Uso</li>
-    <li>Reparación o sustitución</li>
-    <li>Reutilización o residuo</li>
-  </ol>
-</figure>
-
-A esto lo llamamos:
-
-<p class="term">Ciclo de vida</p>
-
-Consiste en analizar un producto desde la obtención de sus materiales hasta el final de su utilización. Podemos simplificarlo en cinco etapas:
-
-| Etapa | Qué incluye |
-| ----- | ----------- |
-| Materias primas | Metales, plásticos y otros materiales |
-| Fabricación | Procesadores, memorias, baterías, pantallas |
-| Transporte | De las fábricas hasta los usuarios |
-| Uso | Electricidad, mantenimiento y reparación |
-| Final de vida | Reutilización, reparación, reciclaje o eliminación |
-
-Cuando analizamos si una decisión es sostenible no basta con mirar cuánto consume mientras lo usamos. También hay que pensar **qué ha hecho falta para fabricarlo y qué pasará cuando lo sustituyamos**.
-
-### Primera tarea · ¿Dónde está el impacto?
-
-Pensad en un ordenador portátil e identificad los posibles impactos de cada etapa.
-
-| Etapa           | Posibles impactos |
-| --------------- | ----------------- |
-| *Ejemplo · Materias primas* | Extracción de metales, consumo de agua y alteración de ecosistemas |
-| Materias primas |                   |
-| Fabricación     |                   |
-| Transporte      |                   |
-| Uso             |                   |
-| Final de vida   |                   |
-
-Después, tres preguntas que van sobre vosotros y no sobre el portátil:
-
-* ¿En qué etapa pensabais primero, antes de esta actividad?
-* ¿Habíais considerado la fabricación?
-* ¿Qué etapa os parece más fácil de controlar como usuarios?
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-
----
-
-### ¿Nuevo significa mejor?
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Ordenador A</p>
-    <p class="compare-body">Tiene 4 años. Consume unos 40 W en uso habitual.</p>
-  </div>
-  <div>
-    <p class="compare-label">Ordenador B</p>
-    <p class="compare-body">Es nuevo. Consume unos 25 W.</p>
-  </div>
-</div>
-
-La conclusión inmediata sería: B consume menos, sustituyamos A.
-
-Pero falta información. Para fabricar B también han hecho falta materias primas, energía, transporte, componentes y embalaje. Nada de eso aparece en los 25 W.
-
-> **Un dispositivo más eficiente no es automáticamente la opción más sostenible si sustituye innecesariamente a otro que todavía funciona.**
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Entiendes que la tecnología digital necesita infraestructura física.</li>
-    <li>Sabes qué significa ciclo de vida y nombrar sus cinco etapas.</li>
-    <li>Entiendes por qué no basta con analizar el consumo durante el uso.</li>
-    <li>Sabes que sustituir un dispositivo genera impactos nuevos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué una aplicación web tiene impacto físico?</li>
-    <li>¿Qué etapas incluye el ciclo de vida de un portátil?</li>
-    <li>Un ordenador nuevo consume menos electricidad. ¿Es siempre la opción más sostenible?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque usa dispositivos, redes, servidores, centros de datos y electricidad.</p>
-  <p>2 · Materias primas, fabricación, transporte, uso y final de vida.</p>
-  <p>3 · No necesariamente. Hay que contar también el impacto de fabricar el equipo nuevo y de retirar el antiguo.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 1»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 2 · Economía lineal y economía circular
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Los principios de economía circular aplicados a TI: jerarquía de las 9R (rechazar, reducir, reparar, reutilizar, reciclar).</li>
-    <li><strong>2. Haz:</strong> Evalúa la reparabilidad, disponibilidad de repuestos y soporte de seguridad para extender la vida útil de los equipos.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall sobre economía circular y ecodiseño.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Política de renovación de equipos», sesión 2 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El modelo tradicional
+### Se explica
+
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
+
+El modelo lineal termina en retirada y residuo; la **economía circular** busca conservar utilidad y valor mediante mantenimiento, reparación, reutilización y recuperación. Reciclar es importante, pero no es la única ni siempre la primera opción.
+
+Reparar tampoco es una obligación incondicional. Un equipo puede no cubrir la necesidad o no admitir un uso seguro. El **ecodiseño** considera estas decisiones desde el diseño: piezas sustituibles, desmontaje, duración y consumo. Compararemos opciones con criterios explícitos en vez de aplicar «comprar siempre» o «conservar siempre».
+
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
+
+#### El modelo tradicional
 
 Durante mucho tiempo la mayoría de los productos ha seguido este camino:
 
@@ -206,7 +112,7 @@ Durante mucho tiempo la mayoría de los productos ha seguido este camino:
 
 El problema es que cada sustitución vuelve a exigir materiales, fabricación y transporte, y genera residuos, componentes difíciles de recuperar y equipos que quizá todavía funcionaban.
 
-### Economía circular
+#### Economía circular
 
 La economía circular intenta reducir ese problema:
 
@@ -224,7 +130,7 @@ La economía circular intenta reducir ese problema:
 
 La idea es **mantener productos y materiales útiles durante el mayor tiempo razonable**.
 
-#### Un ejemplo tecnológico
+##### Un ejemplo tecnológico
 
 Un portátil funciona perfectamente salvo por una batería degradada. Hay al menos cuatro salidas:
 
@@ -239,7 +145,7 @@ La economía circular no dice cuál elegir. Dice qué preguntar antes:
 
 > **¿Podemos mantener el producto útil antes de convertirlo en residuo?**
 
-#### Residuos electrónicos
+##### Residuos electrónicos
 
 Los dispositivos que llegan al final de su vida generan:
 
@@ -249,97 +155,7 @@ Residuos de Aparatos Eléctricos y Electrónicos: ordenadores, móviles, pantall
 
 No son basura convencional. Contienen materiales recuperables, componentes peligrosos y sustancias que deben gestionarse de una forma concreta.
 
----
-
-### Segunda tarea · ¿Reparar o sustituir?
-
-Cinco situaciones. Para cada una hay que elegir entre **reparar, reutilizar, sustituir, mantener o reciclar**, y justificarlo. El primer caso lo resolvemos juntos.
-
-<p class="stage">Paso 1 · Te enseño uno</p>
-
-#### Caso A · portátil de 3 años, todo bien salvo la batería
-
-<dl class="worked">
-  <dt>¿Qué ha fallado exactamente?</dt>
-  <dd>Una pieza consumible, que se degrada por diseño. No el equipo.</dd>
-  <dt>¿Sigue siendo adecuado para su trabajo?</dt>
-  <dd>Sí. Tres años no es mucho para desarrollo, y no hay ningún otro síntoma.</dd>
-  <dt>¿Qué arrastraría sustituirlo?</dt>
-  <dd>Materias primas, fabricación, transporte y embalaje de un equipo entero, para resolver el fallo de un componente.</dd>
-  <dt>Decisión</dt>
-  <dd>Reparar: cambiar la batería. Y comprobar que el modelo permite hacerlo, porque no todos lo permiten.</dd>
-</dl>
-
-Fijaos en el orden. La decisión no sale de la antigüedad del equipo, sale de qué ha fallado y de si sigue sirviendo. «Tiene tres años» no es un diagnóstico.
-
-<p class="stage stage--guided">Paso 2 · Lo hacemos juntos</p>
-
-Los dos siguientes, con las mismas cuatro preguntas delante.
-
-#### Caso B · ordenador de 11 años
-
-No permite ejecutar razonablemente las herramientas actuales necesarias para trabajar.
-
-<dl class="answer">
-  <dt>Elección</dt>
-  <dd></dd>
-  <dt>Motivo</dt>
-  <dd></dd>
-</dl>
-
-#### Caso C · ordenador que ya no sirve para desarrollo
-
-Pero funciona correctamente para tareas administrativas.
-
-<dl class="answer">
-  <dt>Elección</dt>
-  <dd></dd>
-  <dt>Motivo</dt>
-  <dd></dd>
-</dl>
-
-<p class="stage stage--solo">Paso 3 · Hazlo tú</p>
-
-#### Caso D · disco duro averiado
-
-El resto del equipo funciona correctamente.
-
-<dl class="answer">
-  <dt>Elección</dt>
-  <dd></dd>
-  <dt>Motivo</dt>
-  <dd></dd>
-</dl>
-
-#### Caso E · equipo completamente averiado
-
-No puede repararse de forma razonable.
-
-<dl class="answer">
-  <dt>Elección</dt>
-  <dd></dd>
-  <dt>Motivo</dt>
-  <dd></dd>
-</dl>
-
----
-
-### Y ahora, lo vuestro
-
-La misma lógica, aplicada a lo que tenéis en el bolsillo y en la mochila. Responded individualmente, sin justificaros:
-
-<dl class="answer">
-  <dt>¿Cuántos años tiene vuestro móvil actual, y qué haréis con él cuando lo cambiéis?</dt>
-  <dd></dd>
-  <dt>¿Dónde acabó el anterior? ¿Lo sabéis con certeza?</dt>
-  <dd></dd>
-  <dt>De todo lo visto hoy, ¿qué decisión reduciría de verdad el impacto de vuestros propios dispositivos?</dt>
-  <dd></dd>
-</dl>
-
-No es una encuesta de conciencia ambiental. Es la comprobación de que el mecanismo se entiende: si sabéis por qué a PixelStore le conviene alargar la vida de sus 45 portátiles, sabéis por qué os conviene a vosotros con uno.
-
-### Circular no significa «para siempre»
+#### Circular no significa «para siempre»
 
 Economía circular **no** significa usar los dispositivos el máximo número de años posible. Puede llegar un momento en que un equipo no sea seguro, no reciba actualizaciones, falle constantemente o impida trabajar.
 
@@ -356,7 +172,7 @@ La decisión equilibra cinco cosas a la vez:
   </ol>
 </figure>
 
-### Ecodiseño
+#### Ecodiseño
 
 Una idea relacionada:
 
@@ -366,63 +182,42 @@ Consiste en pensar en el impacto ambiental **desde que se diseña el producto**.
 
 El software también puede diseñarse pensando en los recursos que consume. Lo veremos más adelante.
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
-  <ul class="checklist">
-    <li>Distingues economía lineal de economía circular.</li>
-    <li>Entiendes por qué reparar y reutilizar reducen impacto.</li>
-    <li>Sabes qué son los RAEE y por qué no son basura normal.</li>
-    <li>Sabes que mantener un equipo antiguo tampoco es siempre lo mejor.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre reparar, reutilizar y reciclar?</li>
-    <li>Un equipo de ocho años funciona pero ya no recibe actualizaciones de seguridad. ¿Lo mantenéis?</li>
-    <li>¿Qué es el ecodiseño y en qué momento actúa?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Reparar devuelve el funcionamiento al mismo producto. Reutilizar le da un uso nuevo, quizá otro. Reciclar renuncia al producto y recupera sus materiales.</p>
-  <p>2 · Probablemente no en su función actual. Un equipo sin parches de seguridad es un riesgo, y la circularidad no está por encima de eso: se puede reutilizar en una tarea aislada o retirarlo.</p>
-  <p>3 · Pensar el impacto ambiental cuando se diseña el producto, no cuando ya existe. Es el único momento en que se decide si algo será reparable.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Copia la tabla de escenarios de equipos del paquete de casos. Resuelve primero el portátil que funciona pero tiene una batería degradada: identifica qué falla y qué servicio debe seguir prestando.
+2. Compara coste de reparación, duración esperada y adecuación del equipo con la sustitución. Los importes de la ficha son datos didácticos, no ofertas actuales.
+3. Aplica los mismos criterios a un equipo sin soporte y a otro con daño grave. Si la información es insuficiente, pide el dato concreto en vez de forzar una respuesta.
+4. Propón dos características de diseño que habrían facilitado mantener esos equipos, como acceso a la batería o repuestos disponibles. Explica qué etapa del ciclo mejoran.
+5. Formula una regla de decisión que admita excepciones justificadas y pruébala sobre los tres casos. Corrígela si lleva a conservar un equipo que no cubre la necesidad.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Las decisiones distinguen mantenimiento, reparación, reutilización y retirada. La política explica bajo qué condiciones cambiaría la recomendación.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 2»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 3 · Centros de datos, energía y recursos
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La huella de los centros de datos: eficiencia energética (PUE), mix eléctrico e intensidad hídrica (WUE).</li>
-    <li><strong>2. Haz:</strong> Compara el impacto de alojar servicios en diferentes regiones geográficas y proveedores cloud.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall de la sesión 3.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Política de renovación de equipos», sesión 3 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### ¿Dónde viven nuestras aplicaciones?
+### Se explica
 
-Cuando desplegamos una aplicación en cloud el servidor no desaparece: pasa a estar en infraestructura administrada por otra empresa.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-<figure class="diagram">
-  <figcaption>Dónde acaba estando vuestra aplicación</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Aplicación</li>
-    <li>Servidor</li>
-    <li>Centro de datos</li>
-  </ol>
-</figure>
+La información se procesa y guarda en centros de datos que necesitan equipos, electricidad y otros recursos. **Energía** y **emisiones** no son la misma magnitud: para estimar emisiones a partir de electricidad necesitamos información adicional sobre su origen y un modelo apropiado.
 
-Un centro de datos contiene servidores, almacenamiento, redes, sistemas eléctricos y sistemas de refrigeración.
+El **PUE** relaciona energía total del centro con energía de sus equipos informáticos. Ayuda a describir una parte de la eficiencia, pero no dice por sí solo cuánto trabajo útil se realiza ni la huella completa del servicio. Compararemos sus valores dentro de un contexto, sin convertir un número aislado en una clasificación de sostenibilidad.
 
-Los equipos electrónicos generan calor, y cuanta más carga computacional, más calor hay que disipar. Por eso hace falta refrigeración, que implica electricidad, infraestructura y, en determinados sistemas, agua.
+<details class="aside aside--extra">
+<summary>Consultar ejemplos y conceptos de esta sesión</summary>
 
-### Energía y emisiones no son lo mismo
+#### Energía y emisiones no son lo mismo
 
 Aquí hay que separar dos ideas que suelen confundirse.
 
@@ -447,7 +242,7 @@ Podemos entenderla como cuántas emisiones lleva asociadas producir una cantidad
 
 Están relacionados, pero **no son lo mismo**. Un mismo trabajo puede emitir bastante más o bastante menos según dónde y cuándo se ejecute.
 
-### PUE
+#### PUE
 
 En centros de datos aparece una métrica:
 
@@ -459,386 +254,58 @@ No hacen falta cálculos complejos. Basta con recordar que **un centro de datos 
 
 Y no todo es electricidad: algunos centros de datos usan agua en sus sistemas de refrigeración.
 
-### Tercera tarea · ¿Dónde está el recurso?
-
-Clasificad cada actividad según el recurso principal implicado: energía, almacenamiento, agua, materiales, red, o varios.
-
-| Actividad                       | Principal recurso implicado |
-| ------------------------------- | --------------------------- |
-| *Ejemplo · Guardar copias de seguridad* | Almacenamiento, electricidad y hardware |
-| Ejecutar cálculos en CPU        |                             |
-| Guardar millones de fotografías |                             |
-| Refrigerar infraestructura      |                             |
-| Fabricar un servidor            |                             |
-| Transferir datos continuamente  |                             |
-| Sustituir discos                |                             |
-
----
-
-### No todo dato debe existir para siempre
-
-Imaginad una aplicación que guarda los logs de todos los usuarios durante diez años, pero que nadie consulta pasados tres meses. Eso no es una carpeta: es una cadena.
-
-<figure class="diagram">
-  <figcaption>Lo que arrastra un dato que nadie mira</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Almacenamiento</li>
-    <li>Copias de seguridad</li>
-    <li>Procesamiento</li>
-    <li>Costes</li>
-    <li>Recursos</li>
-  </ol>
-</figure>
-
-Antes de guardar algo indefinidamente conviene preguntarse: **¿seguimos necesitando este dato?**
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
-  <ul class="checklist">
-    <li>Sabes qué existe físicamente detrás del cloud.</li>
-    <li>Diferencias energía consumida de emisiones.</li>
-    <li>Sabes por qué los centros de datos necesitan refrigeración.</li>
-    <li>Entiendes que almacenar datos también consume recursos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Dos empresas consumen los mismos kWh. ¿Emiten lo mismo?</li>
-    <li>¿Qué compara el PUE?</li>
-    <li>¿Por qué un log que nadie lee sigue costando recursos?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · No necesariamente. Depende de la intensidad de carbono de la red que las alimenta, que cambia según el lugar y el momento.</p>
-  <p>2 · La energía total del centro de datos con la que usan solo los equipos informáticos. La diferencia es refrigeración, iluminación y sistemas auxiliares.</p>
-  <p>3 · Porque ocupa almacenamiento, entra en las copias de seguridad, se procesa en cada tarea que lo recorre y hay que mantenerlo.</p>
 </details>
 
----
+### Se trabaja
+
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
+
+1. Dibuja dónde intervienen dispositivo, red y centro de datos al consultar un pedido. Añade almacenamiento y refrigeración para hacer visibles recursos que no aparecen en la pantalla.
+2. Calcula el PUE del escenario A de la ficha: 150 kWh totales y 100 kWh de equipos informáticos. Escribe la operación y explica qué representa el resultado 1,5.
+3. Compara con el escenario B: 240 kWh totales y 200 kWh informáticos. Su PUE es menor, pero consume más energía total; explica por qué ambas afirmaciones pueden ser ciertas.
+4. Anota qué información falta para comparar emisiones y servicio prestado. No supongas igual carga, igual electricidad ni igual número de usuarios.
+5. Elige un recurso que PixelStore podría dejar de conservar o procesar innecesariamente y propone una comprobación antes de retirarlo. Guardar menos requiere conocer finalidad y restricciones.
+
+### Cierre
+
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
+
+Puedes calcular e interpretar PUE sin confundirlo con consumo total o emisiones. Las comparaciones declaran sus datos y límites.
+
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 3»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. Este avance forma parte de la actividad de la unidad, no de una segunda entrega independiente.
 
 ## Sesión 4 · PixelStore quiere renovar sus equipos
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo auditar políticas empresariales de adquisición y renovación de equipamiento informático.</li>
-    <li><strong>2. Haz:</strong> Analiza la propuesta de renovación masiva de PixelStore, calcula su impacto real y diseña una política circular alternativa.</li>
-    <li><strong>3. Entrega:</strong> Entrega la propuesta técnica de renovación de hardware y gestión de fin de vida.</li>
-  </ol>
-</div>
+**Punto de partida.** Actividad «Política de renovación de equipos», sesión 4 de 4. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-### El caso · PixelStore
+### Se explica
 
-Volvemos a la empresa de la UD1. Hoy miramos una pieza concreta: **su hardware**. La infraestructura digital —cloud, datos e IA— tiene su propia unidad más adelante, y allí la decidiréis con criterio en lugar de a ojo.
+<p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-PixelStore tiene 45 trabajadores, 45 portátiles, varios monitores, teléfonos de empresa y material de red.
+Una política de renovación indica cuándo mantener, reparar, reasignar o retirar equipos y quién documenta la decisión. Evita sustituir todo por calendario sin revisar su estado. También necesita conocer qué ocurre con los equipos retirados; trasladarlos a un almacén no cierra su ciclo.
 
-#### Situación actual
+En la ficha de PixelStore, los portátiles se renuevan cada tres años y no se registra bien el destino de las retiradas. Esa falta de información es parte del diagnóstico. No la rellenaremos con porcentajes inventados de reciclaje.
 
-| Equipo | Política actual |
-| ------ | --------------- |
-| Portátiles | Uno nuevo cada 3 años, aunque muchos funcionan bien. Los anteriores se almacenan, se venden o se desechan |
-| Teléfonos | Se sustituyen cada 2 años |
-| Monitores | Solo se sustituyen cuando fallan |
-| Equipos retirados | Nadie lleva la cuenta de dónde acaban |
+### Se trabaja
 
-Y la dirección afirma:
+<p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-> Queremos ser más sostenibles, así que compraremos portátiles nuevos de bajo consumo para todos los empleados.
+1. Revisa el inventario y la política actual del caso. Construye una tabla con equipo, estado, necesidad cubierta, opción elegida y motivo.
+2. Redacta criterios de revisión periódica y excepciones por necesidad, soporte o reparación inviable. Aplica la regla a los escenarios analizados y comprueba que no contradice tus decisiones.
+3. Define qué registrar al retirar: identificador, motivo, tratamiento de los datos, receptor y justificante cuando proceda. Distingue borrado de información de reciclaje del material.
+4. Elige tres indicadores con unidad y fuente: vida útil, proporción reparada y destino documentado, por ejemplo. Señala si faltan los valores iniciales y cómo se recogerán.
+5. Entrega la política y las decisiones justificadas. Cada integrante explica una excepción y la información que podría cambiarla. Enlaza el ciclo de vida ya elaborado, sin copiarlo en otro informe.
 
-Vuestra misión es analizar **si esa decisión tiene sentido**.
+### Cierre
 
-### Primera tarea · Analizar el ciclo de vida
+<p class="stage">5 minutos · comprobar y guardar el avance</p>
 
-Elegid un dispositivo —portátil, móvil o monitor— y representad su ciclo de vida completo: materiales, fabricación, transporte, uso, mantenimiento y final de vida.
+La actividad es una política aplicable y verificable. No se evalúa recomendar siempre comprar ni recomendar siempre conservar.
 
-Después señalad en qué etapas puede actuar PixelStore realmente. Son menos de las que parece.
-
-### Segunda tarea · Política de renovación
-
-La política actual cabe en una línea: portátil, tres años, sustituir. Proponed una mejor. Algo así:
-
-<figure class="diagram">
-  <figcaption>Una política que decide por el estado del equipo, no por su edad</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 320" role="img" aria-labelledby="pol-title pol-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="pol-title">Árbol de decisión de renovación de equipos</title>
-    <desc id="pol-desc">Se evalúa el equipo. Si funciona correctamente, se mantiene. Si no funciona, se comprueba si es reparable: si lo es, se repara; si no lo es, se sustituye.</desc>
-    <defs>
-      <marker id="pol-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
-      </marker>
-    </defs>
-    <g class="diagram-edges">
-      <path d="M 360 46 L 360 74" marker-end="url(#pol-arrow)" />
-      <path d="M 360 122 L 360 146 L 110 146 L 110 170" marker-end="url(#pol-arrow)" />
-      <path d="M 360 122 L 360 146 L 560 146 L 560 170" marker-end="url(#pol-arrow)" />
-      <path d="M 560 214 L 560 238 L 430 238 L 430 262" marker-end="url(#pol-arrow)" />
-      <path d="M 560 214 L 560 238 L 620 238 L 620 262" marker-end="url(#pol-arrow)" />
-    </g>
-    <text class="diagram-label" x="228" y="140">Sí</text>
-    <text class="diagram-label" x="472" y="140">No</text>
-    <text class="diagram-label" x="492" y="232">Sí</text>
-    <text class="diagram-label" x="596" y="232">No</text>
-    <g class="diagram-node">
-      <rect x="280" y="10" width="160" height="36" rx="3" />
-      <text x="360" y="33">Evaluar equipo</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="250" y="86" width="220" height="36" rx="3" />
-      <text x="360" y="109">¿Funciona correctamente?</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="30" y="170" width="160" height="44" rx="3" />
-      <text x="110" y="197">Mantener</text>
-    </g>
-    <g class="diagram-node diagram-node--accent">
-      <rect x="480" y="170" width="160" height="44" rx="3" />
-      <text x="560" y="197">¿Es reparable?</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="360" y="262" width="140" height="44" rx="3" />
-      <text x="430" y="289">Reparar</text>
-    </g>
-    <g class="diagram-node">
-      <rect x="550" y="262" width="140" height="44" rx="3" />
-      <text x="620" y="289">Sustituir</text>
-    </g>
-  </svg>
-</figure>
-
-Vuestra política tiene que responder a cuatro cosas: cuándo mantener, cuándo reparar, cuándo sustituir y qué se hace con el equipo retirado. La última es la que casi todo el mundo se deja.
-
-### Tercera tarea · ¿Dónde acaban los equipos retirados?
-
-PixelStore retira unos quince equipos al año y no sabe qué pasa con ellos. Decidid el destino de cada lote y qué haría falta para poder darlo.
-
-| Equipo retirado | Destino propuesto | Qué hace falta para poder hacerlo |
-| --------------- | ----------------- | --------------------------------- |
-| *Ejemplo · Portátil funcional de 4 años* | Reasignarlo a una tarea menos exigente | Comprobar estado, borrar los datos anteriores y registrar el nuevo uso |
-| Portátiles de 3 años que funcionan | | |
-| Portátiles con la batería agotada | | |
-| Monitores antiguos que funcionan | | |
-| Teléfonos de 2 años | | |
-| Equipos averiados sin reparación viable | | |
-
-Y una pregunta que casi siempre falta: antes de que salgan por la puerta, **¿qué hacemos con los datos que contienen?**
-
-Después, coged uno de esos portátiles retirados y responded las tres preguntas con la norma delante:
-
-<dl class="answer">
-  <dt>¿Puede ir a la basura convencional? ¿Por qué?</dt>
-  <dd></dd>
-  <dt>¿Qué canal de gestión le corresponde?</dt>
-  <dd></dd>
-  <dt>¿Qué norma respalda vuestra respuesta?</dt>
-  <dd></dd>
-</dl>
-
-<div class="rule">
-  <p class="rule-label">Aquí ya no decide solo el criterio técnico</p>
-  <p>Un ordenador retirado no es basura corriente. Los <strong>residuos de aparatos eléctricos y electrónicos</strong> —los RAEE— están regulados en España por el <strong>Real Decreto 110/2015</strong>: hay que entregarlos a un gestor autorizado, no pueden ir al contenedor común, y la empresa responde de que acaben donde deben.</p>
-  <p>Antes de eso hay otro requisito. Si el equipo contiene datos personales, hay que borrarlos de forma segura. Vender un portátil con el disco intacto no es reutilizar: es una brecha de datos con buena intención.</p>
-  <p>Y por el otro extremo de la vida del producto está el <strong>ecodiseño</strong>, que también tiene requisitos regulados. Que un fabricante deba ofrecer piezas de repuesto y facilitar la reparación durante unos años no es una cortesía suya: es lo que hace posible que vuestra política de alargar la vida útil se pueda cumplir de verdad.</p>
-</div>
-
-### Cuarta tarea · ¿Qué haríais primero?
-
-PixelStore tiene presupuesto limitado y seis opciones. Ordenadlas del 1 al 6 y justificad el orden.
-
-| Opción | Acción |
-| ------ | ------ |
-| A | Comprar portátiles nuevos para todos |
-| B | Reparar y alargar la vida de los equipos que siguen siendo adecuados |
-| C | Inventariar qué equipos hay y en qué estado |
-| D | Crear una política de reutilización de hardware |
-| E | Un procedimiento de borrado seguro y entrega a gestor autorizado |
-| F | Cambiar todos los teléfonos |
-
-| Prioridad | Acción | Justificación |
-| --------: | ------ | ------------- |
-| *Ejemplo · 1* | Inventariar los equipos y su estado | Sin saber qué existe no se puede decidir qué reparar, reutilizar o retirar |
-|         1 |        |               |
-|         2 |        |               |
-|         3 |        |               |
-|         4 |        |               |
-|         5 |        |               |
-|         6 |        |               |
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · no sé por dónde ordenar</summary>
-  <p>No ordenéis por lo que suena mejor. Preguntad de cada opción:</p>
-  <ol>
-    <li>¿Cuánto impacto evita, contando el ciclo de vida completo y no solo el consumo?</li>
-    <li>¿Cuánto cuesta hacerlo? Hay acciones que no cuestan casi nada y evitan bastante.</li>
-    <li>¿Es reversible? Comprar hardware no lo es; revisar recursos cloud sí.</li>
-    <li>¿Evita impacto futuro o solo arregla el pasado? Una política vale más que una compra.</li>
-    <li>¿Alguna es obligatoria? Si lo es, deja de competir con las demás por el primer puesto.</li>
-  </ol>
-  <p>Si una opción no evita ningún impacto y además fabrica dispositivos nuevos, ya sabéis en qué mitad de la lista va.</p>
-</details>
-
-### Quinta tarea · ¿Cómo lo mediríamos?
-
-Elegid al menos tres indicadores. Estos son ejemplos, no la lista cerrada:
-
-| Aspecto | Indicador |
-| ------- | --------- |
-| Vida media de los portátiles | Años por equipo |
-| Equipos reparados | % reparados antes de sustituir |
-| Equipos reutilizados | % de equipos retirados que se reutilizan |
-| Trazabilidad | % de equipos retirados de los que se sabe dónde acabaron |
-| Borrado seguro | % de equipos retirados con borrado certificado |
-
-### Sexta tarea · La decisión
-
-Y ahora la pregunta del principio:
-
-> **¿Debería PixelStore comprar ordenadores nuevos para todos los trabajadores con el argumento de que consumen menos energía?**
-
-Sí, no o depende. Justificadlo usando ciclo de vida, fabricación, consumo, reparación, vida útil y necesidades reales.
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-
----
-
-### Producto final
-
-Cada pareja entrega **una única página o diapositiva** con cinco bloques.
-
-#### A · Ciclo de vida
-
-Representación visual de uno de los dispositivos.
-
-#### B · Nueva política de renovación
-
-Cuándo mantener, reparar, reutilizar, sustituir y reciclar.
-
-#### C · Tres acciones prioritarias
-
-<p class="write-line"></p>
-<p class="write-line"></p>
-<p class="write-line"></p>
-
-#### D · Tres indicadores
-
-| Acción | Indicador |
-| ------ | --------- |
-| *Ejemplo · Reparar antes de sustituir* | Porcentaje de averías resueltas mediante reparación |
-|        |           |
-|        |           |
-|        |           |
-
-#### E · Decisión final
-
-¿Compraríais portátiles nuevos para todos? Con una justificación de **tres frases como máximo**.
-
-### Presentación
-
-Cada pareja dispone de unos **3 minutos** y responde a cuatro preguntas:
-
-* ¿Cuál es el principal error de la política actual?
-* ¿Qué acción haríais primero?
-* ¿Cuándo tiene sentido sustituir un equipo?
-* ¿Qué indicador usaríais para comprobar la mejora?
-
-### Evaluación
-
-| Criterio                             | Puntos |
-| ------------------------------------ | -----: |
-| Comprensión del ciclo de vida        |      2 |
-| Aplicación de economía circular      |      2 |
-| Calidad de la política de renovación |      2 |
-| Priorización razonada                |    1,5 |
-| Selección de indicadores             |    1,5 |
-| **Justificación de la decisión final** |  **1** |
-
-Durante la exposición se preguntará **individualmente** a cualquiera de los dos miembros por una decisión del trabajo.
-
-No obtiene mejor nota quien afirma que nunca hay que comprar equipos nuevos. Tampoco quien afirma que los dispositivos nuevos siempre son más eficientes. La respuesta que buscamos es que **depende del ciclo de vida, del estado del equipo y de las necesidades reales** — y que sepáis decir de cuáles.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
-  <ul class="checklist">
-    <li>Todo lo medido y decidido está guardado en vuestro repositorio de evidencias.</li>
-    <li>Habéis analizado el ciclo de vida completo, no solo el consumo eléctrico.</li>
-    <li>Distinguís reparar, reutilizar y reciclar.</li>
-    <li>Vuestra política dice también cuándo sustituir.</li>
-    <li>Habéis identificado recursos cloud que también generan impacto.</li>
-    <li>Cada propuesta importante tiene un indicador.</li>
-    <li>Podéis justificar por qué priorizasteis unas acciones frente a otras.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre economía lineal y circular?</li>
-    <li>¿Por qué un equipo nuevo más eficiente no es automáticamente más sostenible?</li>
-    <li>¿Qué significa alargar la vida útil?</li>
-    <li>¿Por qué guardar datos que nadie usa también tiene impacto?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · La lineal va de extraer a fabricar, usar y desechar. La circular intenta mantener productos y materiales útiles mediante mantenimiento, reparación, reutilización y reciclaje.</p>
-  <p>2 · Porque hay que contar los recursos de fabricar el nuevo y de gestionar el antiguo, no solo los vatios de la etiqueta.</p>
-  <p>3 · Mantener un producto en uso mientras siga siendo funcional, seguro y adecuado. Las tres condiciones, no solo la primera.</p>
-  <p>4 · Porque el almacenamiento necesita infraestructura, energía, copias y mantenimiento.</p>
-</details>
-
----
+**Entrega de la sesión.** Actualiza el documento de la actividad de UD2 (Word, LibreOffice o documento en línea) y conserva una versión en PDF con «Sesión 4»: resultado, enlace o archivo de evidencia, comprobación y pendiente. Cada integrante identifica su aportación. Comparte el PDF y los enlaces a las evidencias por el canal del aula; si el trabajo está en GitHub, identifica el commit y comprueba el acceso del docente. La actividad de la unidad queda lista para valorar con su rúbrica; las correcciones se documentan en el mismo registro.
 
 ## Lo que debes recordar
 
-### El método
+La actividad se sostiene en una decisión explicada y una evidencia que otra persona pueda comprobar. Conserva el contexto, el procedimiento y sus límites; una captura sin condiciones o un resultado de IA sin revisar no sustituyen esa explicación.
 
-Al valorar una tecnología no miréis solo cuánto consume ahora. Recorred esto:
-
-<figure class="diagram">
-  <figcaption>El ciclo completo</figcaption>
-  <ol class="flow">
-    <li>Materias primas</li>
-    <li>Fabricación</li>
-    <li>Transporte</li>
-    <li>Uso</li>
-    <li>Mantenimiento</li>
-    <li>Reparación</li>
-    <li>Reutilización</li>
-    <li>Final de vida</li>
-  </ol>
-</figure>
-
-Y antes de sustituir algo, la pregunta que resume la unidad:
-
-> **¿Hace falta de verdad fabricar otro producto para resolver este problema?**
-
-La idea de fondo es esta:
-
-<p class="term">Usar los recursos mientras sigan aportando valor</p>
-
-Sin olvidar la seguridad, el rendimiento, el mantenimiento y las necesidades reales. Circular no es «para siempre».
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Ciclo de vida | Todas las etapas de un producto, de las materias primas al final de vida |
-| Economía lineal | Extraer, producir, utilizar y desechar |
-| Economía circular | Mantener productos y materiales útiles mediante reparación, reutilización y reciclaje |
-| Vida útil | El tiempo durante el cual un producto sigue cumpliendo su función |
-| Ecodiseño | Diseñar contando ya con el impacto de todo el ciclo de vida |
-| RAEE | Residuos de Aparatos Eléctricos y Electrónicos |
-| Reparación | Devolver el funcionamiento al mismo producto |
-| Reutilización | Volver a usar un producto o un componente |
-| Reacondicionamiento | Revisar y preparar un producto usado para que vuelva a servir |
-| Reciclaje | Recuperar los materiales de un producto que ya no sirve |
-| kWh | La unidad habitual para medir energía |
-| Intensidad de carbono | Las emisiones asociadas a generar una cantidad de electricidad |
-| Centro de datos | La instalación donde viven servidores, almacenamiento y redes |
-| PUE | Cuánta energía usa el centro de datos frente a la que usan sus servidores |
+Reutiliza los resultados de esta unidad cuando el plan final los necesite, enlazando su versión. No vuelvas a redactar las mismas pruebas ni conviertas datos ficticios o estimaciones en mediciones reales.

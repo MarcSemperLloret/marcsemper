@@ -4,35 +4,25 @@ label: "UD4 · Conectar"
 section: "ud-04"
 order: 4
 lang: "es"
-summary: "Llevar al circuito la API que se está construyendo en Servidor —repositorio propio, CI que compila y prueba, despliegue en Azure App Service— y escribir el cliente que la consume: listar, crear, modificar y borrar desde el portfolio."
+summary: "Reutilizar el repositorio de Servidor, ejecutar su CI, publicar el backend, comprobar el contrato con la colección y preparar PostgreSQL en pruebas y producción."
 duration: "18 horas · 6 sesiones de 3 h"
-modality: "Taller · el 80 % de la sesión es trabajo del alumnado"
-deliverable: "API desplegada con su propio pipeline y su base de datos, y el CRUD completo funcionando desde el portfolio publicado."
+modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
+deliverable: "Repositorio de GitHub, commit de cada sesión y enlaces a PR, CI y documentos comunes con Servidor."
 date: "2026-09-09"
-outcomes:
-  - "Poner un proyecto Java bajo el mismo circuito de trabajo que el portfolio."
-  - "Escribir un CI que compila y ejecuta los tests, y explicar en qué se diferencia de uno que pasa linters."
-  - "Desplegar una aplicación de Spring Boot en Azure App Service desde GitHub Actions."
-  - "Diagnosticar un fallo de arranque en producción leyendo el registro del servicio."
-  - "Explicar qué es CORS y configurarlo sin abrirlo a todo el mundo."
-  - "Desplegar una base de datos, conectarla por variables de entorno y demostrar que los datos sobreviven a un reinicio."
-  - "Consumir una API desde el navegador contemplando carga, error y vacío."
-  - "Escribir contra la API creando, modificando y borrando, con los errores de validación junto al campo que los provoca."
-  - "Coordinar dos piezas que se despliegan por separado y saber qué se rompe cuando una va por delante."
-requirements:
-  - "El portfolio de las unidades anteriores, publicado y con su pipeline."
-  - "La API de Spring Boot que estáis construyendo en Desarrollo Web en Entorno Servidor."
-  - "Java y Maven instalados, y la API arrancando en local."
+outcomes: ["Configurar el CI de Java sobre el repositorio existente.", "Desplegar el artefacto y diagnosticar su arranque.", "Comprobar el contrato publicado con la colección de Servidor.", "Preparar PostgreSQL aislado para CI y persistente en producción.", "Identificar versión, configuración y evidencias del producto compartido."]
+requirements: ["Portfolio publicado con pipeline.", "Repositorio de Spring Boot creado en Servidor y su wrapper de Maven.", "Java 21 y colección de peticiones existente."]
 priorKnowledge:
   - "El circuito completo: issue, rama, pull request, revisión, fusión y despliegue."
   - "De Servidor: controladores REST, DTO, validación y manejo de errores."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">Vuestra API funciona en el portátil de quien la escribió. Este proyecto consiste en que funcione en una URL, con el mismo circuito que el portfolio, y en que el portfolio la use.</p>
 
 <div class="rule">
   <p class="rule-label">Quién evalúa qué, otra vez</p>
-  <p>El código de la API es de <strong>Servidor</strong>: sus capas, sus validaciones, sus errores y sus tests. Aquí no se corrige nada de eso. Lo que se evalúa aquí es que ese código viva en un repositorio con su circuito, que un pipeline lo compile y lo pruebe antes de dejarlo entrar, que esté desplegado y que el portfolio lo consuma. Podéis tener la mejor API de la clase y suspender esta unidad si solo existe en vuestro ordenador.</p>
+  <p>El código de la API es de <strong>Servidor</strong>: sus capas, sus validaciones, sus errores y sus tests. Los defectos técnicos se corrigen en el mismo repositorio y su criterio de evaluación pertenece a Servidor. Lo que se evalúa aquí es que ese código viva en un repositorio con su circuito, que un pipeline lo compile y lo pruebe antes de dejarlo entrar, que esté desplegado y que la colección compruebe su contrato; el cliente completo llega tras Servidor 33–34. Podéis tener la mejor API de la clase y suspender esta unidad si solo existe en vuestro ordenador.</p>
 </div>
 
 <div class="rule">
@@ -49,9 +39,12 @@ priorKnowledge:
 | CRUD con PostgreSQL y tests de repositorio, en la UD5 | Configurar la base de datos del entorno desplegado, sus variables y el entorno de pruebas del CI; publicar la misma API persistente |
 | Versión del primer trimestre revisada y defendida, en la UD6 | Identificar el mismo commit desplegado y conservar las evidencias del workflow, CI, revisiones y puesta en producción |
 
-Los hitos se coordinan por versión disponible: no se exige una funcionalidad antes de trabajarla en Servidor. Las cinco sesiones de esta unidad se mantienen. El circuito que queda montado se sigue utilizando con cada avance del backend hasta el cierre del trimestre. Si al terminar la sesión 11 todavía falta parte de la UD5 de Servidor, se publica la versión disponible y sus siguientes mejoras recorren el mismo circuito; la entrega del trimestre sí incluye persistencia en producción.
+Los hitos se coordinan por versión disponible: no se exige una funcionalidad antes de trabajarla en Servidor. Las seis sesiones de esta unidad mantienen sus 18 horas. El circuito que queda montado se sigue utilizando con cada avance del backend hasta el cierre del trimestre. Si al terminar la sesión 11 todavía falta parte de la UD5 de Servidor, se publica la versión disponible y sus siguientes mejoras recorren el mismo circuito; la entrega del trimestre sí incluye persistencia en producción.
 
-## Sesión 7 · El segundo repositorio
+## Sesión 7 · El CI del repositorio de Servidor
+
+**Punto de partida compartido.** Semana lectiva 7: sitúa este taller después de las sesiones 13–14 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-7). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -66,131 +59,33 @@ Los hitos se coordinan por versión disponible: no se exige una funcionalidad an
 
 ### Se explica
 
-#### Dos repositorios, y por qué no uno
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-El portfolio y la API son dos cosas distintas: se escriben en lenguajes distintos, se compilan de forma distinta, se despliegan en sitios distintos y se rompen por motivos distintos. Van a vivir en dos repositorios.
+#### Reutilizar el repositorio desde el primer día
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Todo junto</p>
-    <p class="compare-body">Un repositorio con la web y el proyecto Java dentro. Cada cambio en el HTML dispara la compilación de la API, y el portfolio que os lleváis arrastra un proyecto de backend que no tiene nada que ver con él.</p>
-  </div>
-  <div>
-    <p class="compare-label">Separados</p>
-    <p class="compare-body">Cada uno con su pipeline, su ritmo y su versión. Es como está montado casi cualquier producto que vayáis a tocar fuera, y obliga a aprender lo que de verdad cuesta: que dos piezas independientes se pongan de acuerdo.</p>
-  </div>
-</div>
+El backend ya está en GitHub desde Servidor 1. Conservamos ese repositorio, sus ramas y su historial; no se copia a otro para Intermodular. El portfolio puede tener su propio repositorio de presentación. Si el cliente del producto vive dentro del backend, también se conserva esa estructura: un monorepo puede configurar rutas de trabajo por job.
 
-#### Un CI que compila no se parece al que ya tenéis
+#### Qué hace el CI de Java
 
-El pipeline del portfolio ejecuta herramientas que **miran** los ficheros. El de la API hace algo más ambicioso: **construye el proyecto entero** y **ejecuta sus tests**. Si algo no compila, no hay nada que revisar.
+Maven lee pom.xml, compila el código, ejecuta las pruebas y construye el JAR. GitHub Actions repetirá ese proceso en un runner limpio. El wrapper fija Maven, pero para reproducir la construcción también deben coincidir Java, dependencias y configuración.
 
-| Vuestro CI del portfolio | El CI de la API |
-| ------------------------ | --------------- |
-| Comprueba que los ficheros cumplen unas reglas | Compila el código fuente a un artefacto ejecutable |
-| Falla por un enlace muerto o un contraste bajo | Falla por un error de compilación o un test en rojo |
-| Tarda segundos | Tarda minutos: descarga dependencias y construye |
-| No produce nada | Produce un `.jar`, que es lo que después se despliega |
+Un artefacto es el resultado construido, en este caso el JAR. No se guarda en Git: el workflow lo genera y lo entrega al despliegue. Las pruebas se implementan en Servidor; aquí se comprueba que el proceso las ejecuta y que su fallo bloquea la fusión.
 
-<p class="term">Artefacto</p>
+#### Antes de publicar
 
-El resultado de construir el proyecto: en vuestro caso un fichero `.jar` con la aplicación entera dentro. Es lo que se despliega. No se guarda en el repositorio: se genera cada vez a partir del código, y por eso el código es lo único que hay que conservar.
-
-#### Lo que no se sube
-
-<div class="rule">
-  <p class="rule-label">La carpeta de construcción no va al repositorio</p>
-  <p>Al compilar aparece una carpeta con el resultado, y subirla es uno de los errores clásicos: pesa mucho, cambia entera con cada compilación, provoca conflictos imposibles de resolver y no aporta nada, porque se regenera con un comando. Al repositorio va lo que escribís vosotros; lo que produce la máquina, no. Lo mismo con los ficheros de configuración de vuestro editor.</p>
-</div>
-
----
+Primero se reproduce verify en local y después en CI. Un fallo local se registra y se corrige sobre la misma rama del producto. Un fallo del runner puede deberse a Java, permisos del wrapper o configuración; los logs permiten distinguirlo de un defecto de implementación.
 
 ### Se trabaja
 
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+
 #### Bloque A · El repositorio de la API
 
-<p class="stage stage--solo">Individual, con vuestro proyecto de Servidor a mano</p>
-
-**1 · Comprobad que compila donde está ahora.** Antes de mover nada, en la carpeta de vuestro proyecto de Servidor:
-
-```bash
-./mvnw -B verify
-```
-
-Si eso no termina en «BUILD SUCCESS», paradlo aquí: hoy no es el día de arreglar la compilación. Un proyecto que no compila en vuestro ordenador no va a compilar en ninguna máquina del mundo, y si lo movéis roto vais a estar media sesión creyendo que el problema es GitHub.
-
-**2 · Anotad la versión de Java que declara el proyecto.** Abrid el `pom.xml` y buscad `<java.version>` o `maven.compiler.release`. Ese número lo vais a necesitar dos veces hoy y una en la sesión siguiente, y si en alguna de las tres ponéis otro, compilaréis dos cosas distintas sin enteraros.
-
-<dl class="answer">
-  <dt>Versión de Java de vuestro proyecto</dt>
-  <dd></dd>
-</dl>
-
-**3 · Crear el repositorio** en GitHub, igual que el del portfolio pero con una diferencia importante:
-
-| Campo | Valor |
-| ----- | ----- |
-| Repository name | <code>api-</code> y el tema de vuestro proyecto |
-| Visibilidad | **Public** |
-| Add a README file | Sí |
-| **.gitignore template** | **Maven** |
-| License | MIT |
-
-<div class="rule">
-  <p class="rule-label">Maven, no Java</p>
-  <p>En ese desplegable hay dos plantillas que parecen valer y solo una vale. La de <strong>Java</strong> no ignora la carpeta de construcción, y en cambio sí ignora todo lo que acabe en <code>.jar</code>, que es exactamente lo que produce vuestro proyecto. La de <strong>Maven</strong> ignora la carpeta de construcción entera, que es lo que queréis. Si os equivocáis lo vais a notar en el tamaño del primer commit y en un CI que se comporta de forma rarísima.</p>
-</div>
-
-**4 · Copiar el proyecto dentro.** Clonad el repositorio recién creado, que está vacío salvo por el README y el `.gitignore`:
-
-```bash
-git clone https://github.com/VUESTRO-USUARIO/api-loquesea.git
-cd api-loquesea
-```
-
-Y copiad ahí, desde vuestro proyecto de Servidor:
-
-| Sí se copia | No se copia |
-| ----------- | ----------- |
-| <code>pom.xml</code> | La carpeta <code>target</code>: se regenera |
-| La carpeta <code>src</code> entera | La carpeta <code>.git</code>, si vuestro proyecto ya era un repositorio |
-| <code>mvnw</code> y <code>mvnw.cmd</code> | Las carpetas de vuestro editor: <code>.idea</code>, <code>.vscode</code> |
-| La carpeta <code>.mvn</code> | Nada que contenga una contraseña |
-
-<details class="aside aside--help">
-  <summary>Si vuestro proyecto de Servidor ya tenía su propio <code>.git</code></summary>
-  <p>Copiar esa carpeta traería también su historial y su origen remoto, y acabaríais empujando a un sitio que no es este. Copiad todo lo demás y dejadla fuera. Vuestro historial de Servidor no se pierde: sigue donde estaba.</p>
-</details>
-
-**5 · Comprobad qué va a subirse, antes de subirlo.**
-
-```bash
-git add .
-git status
-```
-
-Leed la lista entera y comprobad las dos direcciones:
-
-<ul class="checklist">
-  <li>No aparece la carpeta <code>target</code> ni ningún fichero compilado.</li>
-  <li>Sí aparecen <code>mvnw</code>, <code>mvnw.cmd</code> y el contenido de <code>.mvn</code>. Sin ellos, el CI de la siguiente parte no arranca.</li>
-</ul>
-
-```bash
-git commit -m "Anadir el proyecto inicial de la API"
-git push
-```
-
-**6 · Cerrar la rama principal.** El mismo ruleset de la sesión 2, porque este repositorio empieza igual de desprotegido que aquel. **Settings → Rules → Rulesets → New ruleset → New branch ruleset**, nombre <code>main protegida</code>, *Enforcement* en **Active**, *Target branches* con **Include default branch**, y estas reglas:
-
-| Regla | Valor |
-| ----- | ----- |
-| Restrict deletions | marcada |
-| Block force pushes | marcada |
-| Require a pull request before merging | marcada, con *Required approvals* en **0** |
-| Require status checks to pass | marcada, pendiente de añadir el check que aún no existe |
-
-Este repositorio tampoco lleva colaboradores: vuestra pareja revisará aquí igual que en el portfolio, sin acceso de escritura.
+1. Abre la carpeta del backend de Servidor. Ejecuta `git remote -v`, `git status` y `git log -5 --oneline`; comprueba que es el repositorio entregado desde la sesión 1, con su historial. No ejecutes git init ni crees otro remoto.
+2. En main actualizada, crea una rama para la issue del CI. Ejecuta `.\mvnw.cmd -B verify` en PowerShell (`./mvnw -B verify` en Linux/macOS). Si falla, guarda el mensaje causal y corrige la configuración o enlaza la issue técnica; conserva el trabajo útil de la sesión.
+3. Abre pom.xml y anota Java 21, la versión del proyecto y la presencia del wrapper. Revisa que target y credenciales no se rastrean. `git status` permite ver qué subirás; el historial de Servidor se conserva completo.
+4. Comprueba las reglas configuradas en Intermodular 2 también en el backend. Si aún falta el check de Java, se añadirá después de su primera ejecución. La política de revisión debe ser la misma en ambos módulos.
+5. Continúa con el workflow del bloque B. El código que compilamos es el CRUD con DTO y errores disponible después de Servidor 14.
 
 #### Bloque B · El CI que compila
 
@@ -222,7 +117,7 @@ jobs:
           cache: maven
 
       - name: Compilar y ejecutar los tests
-        run: ./mvnw -B verify
+        run: bash ./mvnw -B verify
 ```
 
 <dl class="worked">
@@ -247,15 +142,15 @@ jobs:
 
 <details class="aside aside--help">
   <summary>Si no tenéis <code>mvnw</code> en el proyecto</summary>
-  <p>Usad <code>mvn -B verify</code> sin el <code>./</code>: los runners traen Maven instalado. Funciona, pero es peor, porque la versión de Maven la elige la máquina y no vosotros. Si podéis, regenerad el proyecto con el wrapper incluido.</p>
+  <p>Usad <code>mvn -B verify</code> sin el <code>./</code>: los runners traen Maven instalado. Funciona, pero es peor, porque la versión de Maven la elige la máquina y no vosotros. Recuperad los archivos del wrapper desde el historial o la plantilla de Servidor, conservando vuestro código y repositorio.</p>
 </details>
 
-**Romperlo a propósito, como siempre.** Provocad estos dos fallos y mirad qué dice cada uno:
+**Romperlo a propósito, como siempre.** Provocad estos dos fallos en una rama de diagnóstico, sin fusionarlos, y restauradla antes de aprobar:
 
 | Qué rompéis | Qué demuestra |
 | ----------- | ------------- |
 | Un punto y coma que falta en una clase | El CI no deja pasar código que ni siquiera compila |
-| Un test que devuelve lo contrario de lo que debe | El CI no deja pasar código que compila pero está mal |
+| Una aserción invertida temporalmente en una rama de diagnóstico | El CI no deja pasar código que compila pero está mal |
 
 Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y conviene verla una vez con los ojos.
 
@@ -280,6 +175,10 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
 ---
 
 ### Cierre
+
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 7.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-07.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-13.pdf` y `sesion-14.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
@@ -310,6 +209,9 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
 
 ## Sesión 8 · La API en una URL
 
+**Punto de partida compartido.** Semana lectiva 8: sitúa este taller después de las sesiones 15–16 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-8). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
+
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
@@ -323,56 +225,27 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
 
 ### Se explica
 
-#### Desplegar algo que se ejecuta
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-Hasta ahora habéis desplegado ficheros: Azure los copiaba y un servidor los servía tal cual. Hoy despliegan un programa, y eso añade tres preguntas que con un sitio estático no existían.
+#### Del JAR a un proceso accesible
 
-<figure class="diagram">
-  <figcaption>Lo que cambia al desplegar una aplicación</figcaption>
-  <ol class="flow">
-    <li><span class="flow-role">Construcción</span>Hay que compilar antes de subir. Lo que se despliega no es lo que escribisteis, es el artefacto.</li>
-    <li><span class="flow-role">Arranque</span>Alguien tiene que ejecutar el programa, y el programa puede fallar al arrancar aunque el despliegue haya ido bien.</li>
-    <li><span class="flow-role">Entorno</span>El programa necesita saber cosas del sitio donde vive: en qué puerto escuchar, quién puede llamarlo. Y esas cosas cambian entre vuestro portátil y producción.</li>
-  </ol>
-</figure>
+Una web estática publica archivos; una aplicación Java necesita además un proceso en ejecución. El CI produce el JAR y el despliegue lo entrega al servicio. Un workflow verde no demuestra todavía que el proceso haya arrancado o responda en su ruta.
 
-#### Configuración que cambia según dónde estéis
+#### Puerto y configuración del runtime elegido
 
-<p class="term">Variable de entorno</p>
+Este taller utiliza App Service con publicación Código y runtime Java SE. No es un contenedor personalizado. El entorno Java proporciona SERVER_PORT, que Spring Boot puede leer; mantened la configuración compatible con ese entorno y comprobad el puerto efectivo en los logs. WEBSITES_PORT pertenece a la configuración de contenedores personalizados y no se añade aquí como solución genérica. [Referencia oficial de App Service](https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings).
 
-Un valor que el programa lee del sistema donde se está ejecutando, en lugar de tenerlo escrito dentro. Es lo que permite que el mismo artefacto funcione en vuestro portátil y en producción sin cambiar ni una línea.
+#### Entorno de aula
 
-La primera que os va a hacer falta es el puerto, y ahí hay un desencuentro que os va a pasar a todos. **App Service manda las peticiones al puerto 80** de vuestra aplicación, porque es lo que espera por defecto. **Spring Boot escucha en el 8080**, porque es lo que hace siempre. Nadie está equivocado, sencillamente no se han puesto de acuerdo.
-
-Se arregla por cualquiera de los dos lados: o la aplicación escucha en el 80, o se le dice a App Service que vosotros estáis en el 8080. Vamos a hacer lo segundo, porque no toca el código y porque el mismo artefacto sigue arrancando igual en vuestro portátil.
-
-Si no se hace, pasa lo más desconcertante de la sesión: **la aplicación arranca perfectamente y no la encuentra nadie**. No hay ningún error, solo una URL que no responde.
-
-#### El plan gratuito, con sus dos peajes
-
-Vais a desplegar en el plan **F1**, que no consume crédito. A cambio tiene dos limitaciones que hay que conocer antes de la demostración, no durante:
-
-| Limitación | Qué se nota | Qué hacer |
-| ---------- | ----------- | --------- |
-| Se duerme tras un rato sin uso | La primera petición después de un rato tarda medio minuto o más | Abrir la URL unos minutos antes de enseñarla |
-| Cuota diaria de CPU | Si se abusa, el servicio deja de responder hasta el día siguiente | No es un problema para lo que vais a hacer, pero conviene saber que existe |
-
----
+Antes de crear recursos comprobad la oferta y los límites que muestra vuestra suscripción. El plan F1, cuando esté disponible para la combinación elegida, tiene cuotas y puede suspender la aplicación por inactividad. La primera respuesta puede tardar más que las siguientes. El docente fija la alternativa para el grupo si no está disponible, conservando el mismo repositorio y artefacto.
 
 ### Se trabaja
 
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+
 #### Bloque A · Comprobar en qué puerto escucháis
 
-<p class="stage stage--solo">Individual, en local</p>
-
-Arrancad la API en vuestro ordenador y leed la línea que escribe al arrancar. Dice el puerto. Si no habéis tocado nada, será el **8080**, que es el de Spring Boot por defecto.
-
-<dl class="answer">
-  <dt>Puerto en el que escucha vuestra API</dt>
-  <dd></dd>
-</dl>
-
-Ese número lo vais a necesitar en el bloque siguiente, en cuanto exista el servicio donde configurarlo. No cambiéis nada en el código: lo que se va a ajustar es el servicio, no la aplicación.
+Abre application.properties y revisa si existe una propiedad server.port. En este taller puede escribirse `server.port=${SERVER_PORT:8080}`: usa el puerto del entorno cuando esté definido y 8080 en local. Conserva el resto de configuración. Arranca la API, anota el puerto de los logs y prueba una ruta conocida. Más adelante repetirás esa comprobación en el runtime Java SE del proveedor.
 
 #### Bloque B · Crear el servicio en Azure
 
@@ -394,13 +267,7 @@ En **portal.azure.com**, buscad `App Services` y pulsad **Crear** → **Aplicaci
 
 Revisar y crear. Cuando termine, **Ir al recurso** y abrid la URL: veréis la página por defecto de App Service, porque todavía no hay nada vuestro dentro.
 
-**El ajuste del puerto, ahora que ya hay dónde ponerlo.** En el menú del servicio: **Configuración → Variables de entorno**, y añadid una nueva:
-
-| Nombre | Valor |
-| ------ | ----- |
-| <code>WEBSITES_PORT</code> | El puerto que anotasteis en el bloque A, normalmente <code>8080</code> |
-
-Guardad. Con eso le habéis dicho a App Service dónde escucháis, en lugar de obligar a vuestra aplicación a mudarse al 80.
+**Verificar el runtime.** Confirma Código, Java SE y la misma versión de Java del pom. No añadas WEBSITES_PORT: no estamos publicando una imagen propia. Después del despliegue comprueba SERVER_PORT y el puerto de arranque en el registro del servicio. Si no coincide, revisa la propiedad server.port y los argumentos de arranque antes de cambiar otras opciones.
 
 #### Bloque C · Conectarlo con GitHub
 
@@ -409,13 +276,10 @@ Guardad. Con eso le habéis dicho a App Service dónde escucháis, en lugar de o
 1. En el recurso, menú lateral → **Centro de implementación** (*Deployment Center*).
 2. Origen: **GitHub**. Autorizad si lo pide.
 3. Organización, repositorio `api-loquesea`, rama `main`.
-4. Si os pregunta por el tipo de autenticación, dejad la opción que venga marcada por defecto.
+4. Elige la identidad federada configurada por el docente y comprueba que el workflow declara los permisos y la conexión esperados; no habilites autenticación básica para ocultar un fallo de configuración.
 5. **Guardar**.
 
-<details class="aside aside--help">
-  <summary>Si al guardar se queja de la autenticación básica</summary>
-  <p>Algunos servicios se crean con la autenticación básica desactivada, y entonces el centro de implementación no puede usar el método del perfil de publicación. Tenéis dos salidas. La limpia: elegir la opción de <strong>identidad</strong> en ese mismo desplegable, que no necesita contraseñas. La rápida: en el menú del servicio, <strong>Configuración → General</strong>, activar la autenticación básica y volver a intentarlo. Las dos funcionan; la primera es la que se usa fuera de clase.</p>
-</details>
+<p>Si el centro de implementación intenta escribir en main protegida, prepara el workflow en una rama y revísalo por PR. No desactives las reglas para generar el archivo. Comprueba la identidad de despliegue con el docente y guarda las credenciales en Secrets o en la conexión federada, nunca en YAML.</p>
 
 Igual que hizo Static Web Apps en la sesión 1, Azure escribe un workflow en vuestro repositorio y guarda las credenciales como secreto. Traedlo y leedlo:
 
@@ -456,7 +320,7 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 | -------------------------- | ------------- |
 | La aplicación arranca y dice el puerto | Arrancó bien: el problema es de ruta, probad otra vez la URL completa |
 | Una excepción al arrancar | Es vuestro código o vuestra configuración: mismo error que veríais en local |
-| Nada, y la URL da error de aplicación | Casi siempre el puerto: comprobad que <code>WEBSITES_PORT</code> vale lo mismo que dice vuestra aplicación al arrancar |
+| Nada, y la URL da error de aplicación | Revisad artefacto, comando de arranque, runtime Java SE y variables; activad los logs si todavía no muestran información |
 
 <div class="rule">
   <p class="rule-label">El registro es la primera herramienta, no la última</p>
@@ -481,10 +345,14 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 
 ### Cierre
 
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 8.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-08.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-15.pdf` y `sesion-16.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
+
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
-    <li>App Service manda las peticiones al 80 y vuestra aplicación escucha en el 8080. ¿De cuántas formas se puede arreglar y cuál habéis usado?</li>
+    <li>¿Qué runtime habéis elegido y cómo comprobáis el puerto efectivo?</li>
     <li>¿Por qué el workflow de la API tiene dos jobs y el del portfolio uno?</li>
     <li>La URL da error y el despliegue está en verde. ¿Cuál es vuestro primer movimiento?</li>
     <li>¿Por qué la primera petición del día tarda tanto?</li>
@@ -493,7 +361,7 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · De dos: que la aplicación escuche en el 80, o decirle a App Service que escucháis en el 8080 con <code>WEBSITES_PORT</code>. Hemos usado la segunda, porque no toca el código y el artefacto sigue siendo el mismo en local y en producción.</p>
+  <p>1 · Java SE con publicación de código. Contrastamos SERVER_PORT, la configuración de Spring Boot y los logs; WEBSITES_PORT se reserva al caso de contenedores personalizados.</p>
   <p>2 · Porque hay que construir antes de desplegar: un job produce el artefacto y el otro lo sube.</p>
   <p>3 · Abrir el flujo de registro del servicio. Leer antes que tocar.</p>
   <p>4 · Porque el plan gratuito duerme el servicio tras un rato sin uso y la primera petición lo despierta.</p>
@@ -508,452 +376,139 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
   </ul>
 </div>
 
-## Sesión 9 · El cliente que lee
+## Sesión 9 · Comprobar el contrato publicado
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
-  <ol>
-    <li>Vuestra página está en un dominio y vuestra API en otro. ¿Debería el navegador dejar que una llame a la otra sin más?</li>
-    <li>¿Qué debería ver el usuario mientras la respuesta viaja?</li>
-    <li>¿Y si la API está dormida y tarda medio minuto?</li>
-  </ol>
-</div>
+**Punto de partida compartido.** Semana lectiva 9: sitúa este taller después de las sesiones 17–18 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-9). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
 
----
 
 ### Se explica
 
-#### El JavaScript ya lo sabéis; lo nuevo es contra qué
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-Pedir datos con `fetch`, recorrer un array y pintarlo en el documento es de primero. Lo que cambia hoy es que al otro lado no hay un fichero de ejemplo ni una API pública de prácticas: **está vuestro propio servidor**, escrito por vosotros, desplegado por vosotros y con los fallos que le hayáis dejado dentro.
+Un **contrato de API** describe lo que otro programa puede pedir y lo que recibirá: método, ruta, campos y estados HTTP. Ya habéis construido esas respuestas en Servidor. Hoy comprobaremos que la versión publicada cumple el mismo contrato que la local, sin volver a implementar sus controladores.
 
-Eso tiene una consecuencia práctica desde el primer minuto: cuando algo no funcione, el problema puede estar en tres sitios distintos, y hay que saber en cuál mirar.
+El consumidor puede ser Bruno, una prueba o un navegador. Para detectar un cambio incompatible no hace falta haber programado todavía una interfaz. El cliente completo con fetch y CORS se trabajará después de las sesiones 33–34 de Servidor, en Intermodular 17. Ahora utilizamos la colección que ya conoce el grupo.
 
-| Síntoma | Dónde está el problema |
-| ------- | ---------------------- |
-| La consola habla de CORS o de política de origen | En la API: no ha dado permiso a vuestro origen |
-| La petición sale y devuelve 404 | En la ruta: la que pide el cliente no es la que expone la API |
-| La petición devuelve 500 | En la API: hay una excepción, y el registro del servicio dice cuál |
-| Todo responde bien y no se ve nada | En el cliente: los datos llegaron y no los estáis pintando |
+**Una base URL cambia el destino, no el contrato.** La ruta `/tareas` debe seguir llamándose igual en local y en producción. El prefijo `/api/v1` llegará en Servidor 32; no lo añadáis por copiar un tutorial. Un 404 puede indicar una ruta equivocada, aunque el programa haya arrancado correctamente.
 
-Esa tabla es media sesión. Sabed en qué fila estáis antes de tocar nada.
-
-#### CORS, o por qué el navegador os corta
-
-Vuestra primera petición va a fallar, y no por un error vuestro. El navegador impide que una página de un origen lea la respuesta de otro origen distinto, salvo que ese otro origen dé permiso explícito.
-
-<p class="term">Origen</p>
-
-La combinación de esquema, dominio y puerto. Vuestro portfolio y vuestra API tienen dominios distintos, así que son orígenes distintos, y para el navegador eso basta.
-
-No es una molestia arbitraria: sin esa regla, cualquier web que visitarais podría hacer peticiones en vuestro nombre a cualquier servicio donde tuvierais sesión abierta y leer la respuesta.
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Lo que la gente hace</p>
-    <p class="compare-body">Permitir cualquier origen para que deje de dar la lata. Funciona, y significa que cualquier página del mundo puede llamar a vuestra API desde el navegador de sus visitantes.</p>
-  </div>
-  <div>
-    <p class="compare-label">Lo que se hace</p>
-    <p class="compare-body">Permitir exactamente el origen de vuestro portfolio, y ponerlo en una variable de entorno para no tener la URL escrita en el código.</p>
-  </div>
-</div>
-
-<div class="rule">
-  <p class="rule-label">CORS no protege vuestra API</p>
-  <p>Conviene decirlo claro porque se malinterpreta siempre: CORS es una regla del navegador, no del servidor. Cualquiera puede llamar a vuestra API desde una terminal, con o sin CORS. Lo que decide quién puede hacer qué es la autorización, y eso lo veréis en Servidor. CORS solo dice qué páginas pueden leer la respuesta desde el navegador de una persona.</p>
-</div>
-
-#### Una llamada de red tiene tres finales, no uno
-
-Cuando pedís datos a otra máquina, hay tres cosas que el usuario puede ver, y en clase se programa siempre solo la primera:
-
-| Estado | Qué se enseña | Qué pasa si no lo contempláis |
-| ------ | ------------- | ----------------------------- |
-| **Cargando** | Un aviso de que se está pidiendo | La página parece rota durante los segundos que tarda, y con el plan gratuito pueden ser treinta |
-| **Error** | Un mensaje que dice qué ha fallado y qué hacer | Pantalla vacía sin explicación: el usuario cree que el fallo es suyo |
-| **Vacío** | «Todavía no hay nada» | No se distingue de un error, y da la sensación de que la aplicación no funciona |
-
-Los tres son parte de la funcionalidad, no un adorno que se añade si sobra tiempo.
-
----
+La demostración consiste en enviar la misma petición a dos entornos, comparar sus estados y campos y localizar el commit que produjo la respuesta pública. El resultado se documenta una vez y sirve a los dos módulos.
 
 ### Se trabaja
 
-#### Bloque A · Abrir la puerta en el servidor
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
-<p class="stage stage--solo">Individual, en el repositorio de la API</p>
+#### Bloque A · Preparar dos entornos de la misma colección
 
-**1 · La propiedad**, en `application.properties`:
+1. Abre la colección de Servidor. Conserva sus peticiones; crea los entornos `local` y `produccion` con una variable `baseUrl` en cada uno.
+2. Local usa `http://localhost:8080`; producción usa la URL HTTPS de Intermodular 8. Retira la barra final si las rutas ya empiezan por `/`.
+3. Cambia una petición a `{{baseUrl}}/tu-ruta-real`. Elige una lectura de Servidor que ya funcione, no una ruta inventada.
+4. Envía con cada entorno y anota estado, Content-Type y estructura del JSON. Los ids y datos pueden diferir; los tipos y nombres de campos deben cumplir el mismo contrato.
 
-```properties
-app.cors.origin=${APP_CORS_ORIGIN:http://localhost:5500}
-```
+#### Bloque B · Escribir un caso comprobable
 
-**2 · La configuración**, en una clase nueva del proyecto:
+1. En `docs/contrato.pdf` añade una tabla con método, ruta, entrada mínima, estado esperado y campos de respuesta.
+2. Selecciona tres casos ya implementados: lectura correcta, recurso inexistente y entrada inválida. Copia ejemplos de tu API y elimina datos sensibles.
+3. Ejecuta cada caso en ambos entornos. Si difieren, comprueba primero versión desplegada y configuración; después abre una issue con petición y respuesta que reproduzcan el fallo.
+4. La corrección de implementación se realiza sobre el código compartido de Servidor. Intermodular conserva la prueba que detectó el desajuste y la PR que lo corrige.
 
-```java
-@Configuration
-public class CorsConfig implements WebMvcConfigurer {
+#### Bloque C · Enlazar el producto desde el portfolio
 
-    @Value("${app.cors.origin}")
-    private String origin;
+1. Actualiza la ficha existente con qué resuelve el producto, el repositorio y su estado actual. Utiliza el tema elegido al principio de Servidor.
+2. Añade un enlace al contrato y a una ruta GET pública de demostración. No necesitas construir hoy un formulario ni un cliente CRUD.
+3. Abre los enlaces desde la web publicada. Si el backend aún usa memoria, indica que los datos se reinician; esa limitación cambiará al publicar PostgreSQL.
+4. Lleva la modificación por issue, rama y PR. La persona revisora sigue los enlaces y reproduce uno de los casos del contrato.
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins(origin)
-                .allowedMethods("GET", "POST", "PUT", "DELETE");
-    }
-}
-```
+#### Bloque D · Registrar la compatibilidad
 
-**3 · El valor real, en Azure.** Portal → vuestro App Service → **Configuración** → **Variables de entorno** → añadid `APP_CORS_ORIGIN` con la URL de vuestro portfolio, sin barra final. Guardad: el servicio se reinicia.
-
-Fijaos en lo que acabáis de hacer: **la URL de vuestro portfolio no está en el código**. Si mañana cambia, se cambia la variable y no hace falta compilar nada.
-
-#### Bloque B · La dirección de la API, en un solo sitio
-
-<p class="stage stage--solo">Individual, en el repositorio del portfolio</p>
-
-Vuestro portfolio no se compila, así que no hay dónde meter una configuración por entorno. Se resuelve con un fichero pequeño y explícito, `js/config.js`:
-
-```js
-export const API = location.hostname === "localhost"
-  ? "http://localhost:8080"
-  : "https://VUESTRA-API.azurewebsites.net";
-```
-
-Es simple a propósito. Lo importante no es la técnica, es la regla: **una dirección que cambia entre entornos se escribe en un solo sitio**. El día que la tengáis repetida en cuatro ficheros y cambie, os enteraréis por un usuario.
-
-#### Bloque C · Una sola función habla con la red
-
-<p class="stage stage--solo">Individual</p>
-
-Antes de pintar nada, escribid la función por la que van a pasar **todas** vuestras peticiones, esta sesión y la siguiente. Se hace ahora porque en la sesión 10 vais a añadir tres llamadas más, y sin esto acabaréis con la misma lógica de errores copiada cuatro veces.
-
-```js
-import { API } from "./config.js";
-
-export class ErrorDeApi extends Error {
-  constructor(estado, detalle) {
-    super(`El servidor respondió ${estado}`);
-    this.estado = estado;
-    this.detalle = detalle;
-  }
-}
-
-export async function pedir(ruta, opciones = {}) {
-  const respuesta = await fetch(`${API}${ruta}`, {
-    headers: { "Content-Type": "application/json" },
-    ...opciones
-  });
-
-  if (!respuesta.ok) {
-    const detalle = await respuesta.json().catch(() => null);
-    throw new ErrorDeApi(respuesta.status, detalle);
-  }
-
-  return respuesta.status === 204 ? null : respuesta.json();
-}
-```
-
-<dl class="worked">
-  <dt>Por qué una clase de error propia</dt>
-  <dd>Porque en la sesión 10 vais a necesitar distinguir un 400 de validación —culpa de lo que escribió el usuario— de un 500 —culpa vuestra—. Con un error genérico no se puede.</dd>
-  <dt>Por qué se intenta leer el cuerpo del error</dt>
-  <dd>Porque vuestra API, tal como la habéis hecho en Servidor, no devuelve un error vacío: devuelve un cuerpo que explica qué ha fallado. Tirarlo y enseñar «ha habido un error» es desperdiciar el trabajo que hicisteis allí.</dd>
-  <dt>Por qué el 204</dt>
-  <dd>Es la respuesta correcta a un borrado: «hecho, y no tengo nada que devolverte». Si intentáis leer JSON de un 204, revienta.</dd>
-</dl>
-
-#### Bloque D · Pintar desde una sola fuente de verdad
-
-<p class="stage stage--solo">Individual</p>
-
-Nada de ir añadiendo elementos al documento a medida que llegan. Se guardan los datos en una variable y se pinta desde ella, porque en la sesión 10 esa variable va a cambiar y la pantalla tendrá que reflejarlo sin que reescribáis el renderizado.
-
-```js
-let estado = { carga: "cargando", datos: [], error: null };
-
-function pintar() {
-  const zona = document.querySelector("#lista");
-  if (estado.carga === "cargando") return pintarCargando(zona);
-  if (estado.error) return pintarError(zona, estado.error);
-  if (estado.datos.length === 0) return pintarVacio(zona);
-  pintarFilas(zona, estado.datos);
-}
-
-async function cargar() {
-  estado = { carga: "cargando", datos: [], error: null };
-  pintar();
-  try {
-    estado = { carga: "listo", datos: await pedir("/api/vuestro-recurso"), error: null };
-  } catch (error) {
-    estado = { carga: "listo", datos: [], error };
-  }
-  pintar();
-}
-```
-
-**Y probad los estados de verdad**, no de palabra:
-
-| Cómo se provoca | Qué tenéis que ver |
-| --------------- | ------------------ |
-| Parar la API en Azure desde el portal | El mensaje de error, no una página en blanco |
-| Vaciar los datos de la API | El mensaje de vacío, distinto del de error |
-| Abrir la página con la API dormida | El aviso de carga durante todo el rato que tarde |
-| Quitar la variable del origen permitido | El fallo de CORS en la consola, para reconocerlo cuando os pase de verdad |
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La lista se ve en el portfolio publicado leyendo de la API publicada, con los tres estados contemplados.</span></div>
-  <div><strong>Si lo tenéis</strong><span>Los cuatro fallos de la tabla provocados y reconocidos, sabiendo decir en qué fila de la tabla del principio cae cada uno.</span></div>
-  <div><strong>Reto</strong><span>Haced que el aviso de carga solo aparezca si la respuesta tarda más de un cuarto de segundo, para que las cargas rápidas no den un parpadeo.</span></div>
-</div>
-
----
+Anota los dos entornos usados y el SHA del backend desplegado en `docs/intermodular/sesion-09.pdf`. Enlaza `docs/contrato.pdf` y las peticiones existentes, sin copiarlas a otra colección. Comprueba que una persona que llegue al README pueda localizar producto, versión y forma de probarlo.
 
 ### Cierre
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>¿Qué es un origen y por qué el portfolio y la API son dos distintos?</li>
-    <li>¿Protege CORS vuestra API de que alguien la llame?</li>
-    <li>¿Por qué la URL permitida está en una variable de entorno y no en el código?</li>
-    <li>La consola dice 404. ¿En qué lado está el problema?</li>
-    <li>¿Por qué se pinta desde una variable en vez de ir añadiendo elementos según llegan?</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · comprobación y entrega</p>
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Esquema, dominio y puerto. Están en dominios distintos, así que para el navegador son orígenes distintos.</p>
-  <p>2 · No. Es una regla del navegador: cualquiera puede llamarla desde una terminal. Quien decide qué se puede hacer es la autorización.</p>
-  <p>3 · Para poder cambiarla sin recompilar ni tocar el código, y para que el mismo artefacto sirva en cualquier entorno.</p>
-  <p>4 · En la ruta: la que pide el cliente no coincide con la que expone la API. La petición sí llegó al servidor.</p>
-  <p>5 · Porque la pantalla tiene que poder repintarse cuando los datos cambien, y eso empieza en la sesión siguiente.</p>
-</details>
+**Entrega de Intermodular 9.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-09.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-17.pdf` y `sesion-18.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
-<div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 10</p>
-  <ul class="checklist">
-    <li>El portfolio publicado lee datos de la API publicada, con los tres estados probados.</li>
-    <li>Traéis a mano el contrato de errores de vuestra API: qué devuelve exactamente cuando una validación falla.</li>
-    <li>Traéis dibujado en papel el formulario que va a crear elementos, con sus campos y sus reglas.</li>
-  </ul>
-</div>
+Explica una diferencia entre «el despliegue terminó» y «la versión publicada cumple el contrato». Entrega el repositorio y commit, con enlaces a la PR y las comprobaciones. En la próxima sesión el CI incorporará la configuración que necesita la persistencia.
 
-## Sesión 10 · El cliente que escribe
+## Sesión 10 · Preparar el CI de la versión persistente
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
-  <ol>
-    <li>El usuario envía un formulario y la API responde que un campo no vale. ¿De quién es el fallo y qué debería ver?</li>
-    <li>Acabáis de crear un elemento. ¿Cómo se entera la lista que ya estaba pintada?</li>
-    <li>¿Qué debería pasar si alguien pulsa dos veces seguidas el botón de guardar?</li>
-  </ol>
-</div>
+**Punto de partida compartido.** Semana lectiva 10: sitúa este taller después de las sesiones 19–20 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-10). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
 
----
 
 ### Se explica
 
-#### Escribir no es leer con otro verbo
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-Una lectura que falla es una molestia: se reintenta. Una escritura que falla puede dejar al usuario sin saber si sus datos se han guardado, y puede duplicarlos si insiste. Por eso escribir trae tres problemas que leer no tiene.
+En Servidor 19–20 el proyecto comienza a utilizar PostgreSQL. El código deja de bastar para arrancar: también necesita una base de datos. Si el pipeline no prepara esa dependencia, puede fallar aunque la implementación sea correcta.
 
-<figure class="diagram">
-  <figcaption>Lo que aparece al escribir</figcaption>
-  <ol class="flow">
-    <li><span class="flow-role">La respuesta importa</span>Un 400 no es un fallo del programa: es el servidor diciendo que lo enviado no vale, y con el detalle de por qué.</li>
-    <li><span class="flow-role">La pantalla se ha quedado vieja</span>La lista que estaba pintada ya no refleja lo que hay al otro lado. Alguien tiene que actualizarla.</li>
-    <li><span class="flow-role">El usuario puede insistir</span>Si el botón sigue activo mientras la petición viaja, se envía dos veces y se crean dos elementos.</li>
-  </ol>
-</figure>
+Un **servicio del job** es un contenedor que GitHub Actions crea para esa ejecución. Tendrá una base de datos vacía, credenciales ficticias y un comprobador de disponibilidad. Al terminar el job se descarta. La base de pruebas del CI nunca es la de producción.
 
-#### El 400 de vuestra API es información, no un error
-
-En Servidor habéis dedicado semanas a que la API valide lo que recibe y devuelva errores con una forma acordada. Ese trabajo se tira a la basura en el momento en que el cliente lo convierte en un «ha habido un error».
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Lo que hace casi todo el mundo</p>
-    <p class="compare-body">Un mensaje rojo genérico arriba del formulario. El usuario tiene que adivinar qué campo está mal y qué se esperaba de él.</p>
-  </div>
-  <div>
-    <p class="compare-label">Lo que se hace</p>
-    <p class="compare-body">Se lee el detalle del 400, se busca cada campo del formulario que aparece en él y se pone el mensaje al lado. Vuestra API ya os ha dicho exactamente eso.</p>
-  </div>
-</div>
-
-<div class="rule">
-  <p class="rule-label">Validar en el cliente no sustituye a validar en el servidor</p>
-  <p>El navegador valida para ser amable: avisa antes de molestar al servidor. El servidor valida porque <strong>es el único sitio donde la validación no se puede saltar</strong>: cualquiera puede mandar una petición sin pasar por vuestro formulario. Que existan las dos no es duplicar trabajo; quitar la del servidor sí es dejar la puerta abierta.</p>
-</div>
-
-#### Después de escribir, la lista miente
-
-Tenéis dos formas de arreglarlo, y conviene elegir a sabiendas:
-
-| Estrategia | Cómo funciona | Cuándo conviene |
-| ---------- | ------------- | --------------- |
-| **Recargar del servidor** | Después de crear o borrar, se vuelve a pedir la lista entera | Casi siempre, mientras las listas sean pequeñas. Es simple y no puede desincronizarse |
-| **Tocar el estado local** | Se añade o se quita el elemento del array que ya tenéis y se repinta | Cuando recargar sea caro. Es más rápido, y se desincroniza en cuanto os equivoquéis en un detalle |
-
-Empezad por la primera. La segunda es una optimización, y optimizar antes de tener el problema es como se introducen los fallos que nadie sabe reproducir.
-
-#### Lo que cambia en pantalla hay que anunciarlo
-
-Un elemento que aparece o desaparece sin recargar la página es invisible para quien usa un lector de pantalla, salvo que se lo digáis. Y quien acaba de borrar la fila donde tenía el foco se queda con el foco en ninguna parte.
-
-Dos reglas, y las dos las mide el job de calidad que ya tenéis:
-
-<ul class="checklist">
-  <li>La zona donde aparecen los avisos —guardado, error, vacío— se marca como región activa para que se anuncie sola al cambiar.</li>
-  <li>Después de borrar una fila, el foco se lleva a un sitio con sentido: la fila siguiente, o el encabezado de la lista.</li>
-</ul>
-
----
+El trabajo de Servidor es escribir pruebas que verifiquen las reglas y, en su sesión 22, las consultas. Aquí aseguramos que se ejecutan con el entorno correcto y que un fallo impide fusionar. No cambiamos una aserción para conseguir un check verde.
 
 ### Se trabaja
 
-#### Bloque A · Crear
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
-<p class="stage stage--solo">Individual, issue y rama como siempre</p>
+#### Bloque A · Reproducir la construcción local
 
-**1 · El formulario**, en HTML de verdad: etiquetas asociadas a sus campos, tipos correctos y los atributos de obligatoriedad que correspondan. Nada de una fila de cajas de texto sueltas.
+1. Abre el repositorio de backend existente y crea una issue para preparar PostgreSQL en CI. Anota qué dependencia añadió la versión de Servidor y qué error aparece en el runner.
+2. Ejecuta `.\mvnw.cmd -B verify` en PowerShell, con PostgreSQL local encendido y las variables del README. En Linux/macOS utiliza `./mvnw -B verify`.
+3. Separa un fallo de conexión de un fallo de test leyendo el primer mensaje causal. Guarda ese fragmento sin contraseñas.
 
-**2 · El envío**, sin recargar la página:
+#### Bloque B · Preparar PostgreSQL en el job
 
-```js
-formulario.addEventListener("submit", async (evento) => {
-  evento.preventDefault();
-  limpiarErrores();
-  boton.disabled = true;
-  try {
-    await pedir("/api/vuestro-recurso", {
-      method: "POST",
-      body: JSON.stringify(Object.fromEntries(new FormData(formulario)))
-    });
-    formulario.reset();
-    anunciar("Elemento creado");
-    await cargar();
-  } catch (error) {
-    mostrarFallo(error);
-  } finally {
-    boton.disabled = false;
-  }
-});
+En `.github/workflows/ci.yml`, añade `services` y `env` dentro del job `build`, al mismo nivel que `runs-on` y `steps`. Conserva checkout, Java y verify de la sesión 7. Usa la misma versión mayor de PostgreSQL que en vuestro proyecto; 16 es el ejemplo.
+
+```yaml
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: gestor_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: prueba_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d gestor_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      SPRING_PROFILES_ACTIVE: test
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/gestor_test
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: prueba_ci
+      TEST_DB_PASSWORD: prueba_ci
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      SPRING_SQL_INIT_MODE: never
 ```
 
-Fijaos en el `finally`: el botón se vuelve a activar **pase lo que pase**. Si eso estuviera dentro del `try`, un error dejaría el formulario bloqueado para siempre.
+El ejemplo está indentado para pegarlo dentro del job. `create-drop` se permite aquí porque el contenedor es exclusivo y desechable. Nunca lo copies a las variables del App Service. El perfil `test` de Servidor 22 reutilizará este entorno; hasta entonces verifica las pruebas ya disponibles.
 
-**3 · Mirad la pestaña de red mientras guardáis.** Vais a ver dos peticiones donde esperabais una.
+#### Bloque C · Comprobar el aislamiento
 
-<details class="aside aside--help">
-  <summary>Por qué aparecen dos peticiones en vez de una</summary>
-  <p>Para las peticiones que modifican datos, el navegador manda antes una petición de sondeo preguntando si tiene permiso, y solo después manda la de verdad. Se llama <em>preflight</em>. Si veis una petición <code>OPTIONS</code> en la pestaña de red, no es un error: es el navegador comprobando el permiso que configurasteis en la sesión anterior.</p>
-</details>
+1. Sube la rama y abre la PR. En Actions localiza la creación del servicio, su comprobación de disponibilidad y la ejecución Maven.
+2. Revisa el informe de tests: debe indicar cuántas pruebas se ejecutaron. Un build sin pruebas no demuestra las reglas del producto.
+3. En una rama de prueba cambia temporalmente el nombre de la base de datos a uno inexistente. Comprueba que falla por conexión, no por compilación. Restaura el nombre antes de fusionar.
+4. Confirma que `Compilar y probar` sigue siendo obligatorio. Al llegar los tests JPA de Servidor 22, ejecútalos en este mismo job; no abras otro proyecto de pruebas.
 
-#### Bloque B · Los errores del servidor, en su campo
+#### Bloque D · Conservar las evidencias
 
-<p class="stage stage--solo">Individual, con el contrato de errores de vuestra API delante</p>
-
-Enviad a propósito algo que vuestra API rechace: un campo vacío, un número fuera de rango, un texto demasiado largo. Mirad en la pestaña de red **qué cuerpo devuelve exactamente** ese 400. Esa forma la acordasteis vosotros en Servidor, así que el código que la lee tiene que corresponderse con ella y no con la que salga en un tutorial.
-
-```js
-function mostrarFallo(error) {
-  if (error.estado === 400 && error.detalle) {
-    for (const [campo, mensaje] of Object.entries(erroresPorCampo(error.detalle))) {
-      const destino = formulario.querySelector(`[name="${campo}"]`);
-      if (destino) ponerMensajeJunto(destino, mensaje);
-    }
-    anunciar("Revisa los campos marcados");
-    return;
-  }
-  anunciar("No se ha podido guardar. Inténtalo de nuevo en unos segundos.");
-}
-```
-
-`erroresPorCampo` la escribís vosotros, y es donde se traduce **vuestro** contrato a un objeto de campo y mensaje. Si no sabéis qué poner ahí, es que no habéis mirado la respuesta real todavía.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Comprobación del bloque B</p>
-  <ul class="checklist">
-    <li>Un campo obligatorio vacío muestra el mensaje junto a ese campo, no arriba del formulario.</li>
-    <li>Un fallo que no sea de validación muestra un mensaje distinto, y no dice «400».</li>
-    <li>Con la API parada, el formulario avisa y el botón vuelve a estar activo.</li>
-  </ul>
-</div>
-
-#### Bloque C · Borrar
-
-<p class="stage stage--solo">Individual</p>
-
-**1 · Un solo escuchador para todas las filas.** Las filas se crean y se destruyen, así que el escuchador va en la lista, no en cada botón:
-
-```js
-lista.addEventListener("click", async (evento) => {
-  const boton = evento.target.closest("[data-borrar]");
-  if (!boton) return;
-  if (!confirm("¿Seguro que quieres borrarlo?")) return;
-  await pedir(`/api/vuestro-recurso/${boton.dataset.borrar}`, { method: "DELETE" });
-  anunciar("Elemento borrado");
-  await cargar();
-});
-```
-
-**2 · El foco.** Después de recargar la lista, el elemento donde estaba el foco ya no existe. Llevadlo al encabezado de la lista o a la fila siguiente. Probadlo navegando solo con el teclado: si después de borrar hay que pulsar el tabulador quince veces para volver, está mal.
-
-**3 · La confirmación.** `confirm` sirve hoy. Si os apetece hacerlo bien, un diálogo propio; si no, no pasa nada. Lo que no vale es borrar sin preguntar.
-
-#### Bloque D · Cerrar el CRUD
-
-<p class="stage stage--solo">Individual</p>
-
-Con crear, listar y borrar funcionando contra la API publicada, falta la operación que más se salta todo el mundo: **modificar**. Añadidla reutilizando el mismo formulario en modo edición.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Crear, listar y borrar funcionando desde la web publicada contra la API publicada, con los errores de validación en su campo.</span></div>
-  <div><strong>Si lo tenéis</strong><span>Modificar, reutilizando el formulario, y el foco bien llevado después de cada operación.</span></div>
-  <div><strong>Reto</strong><span>Haced que pulsar dos veces muy rápido el botón de guardar cree un solo elemento, y demostradlo en la pestaña de red.</span></div>
-</div>
-
----
+En `docs/intermodular/sesion-10.pdf` enlaza la ejecución correcta y el fallo controlado. Documenta por qué la contraseña del contenedor de pruebas es ficticia y dónde se configura la de producción. La siguiente sesión prepara la base pública y comprobará que sus datos sobreviven al reinicio.
 
 ### Cierre
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>Un 400 con detalle, ¿es un fallo de vuestro programa?</li>
-    <li>Si el navegador ya valida el formulario, ¿para qué valida también el servidor?</li>
-    <li>¿Por qué el botón se reactiva en el <code>finally</code> y no al final del <code>try</code>?</li>
-    <li>¿Por qué el escuchador del borrado va en la lista y no en cada botón?</li>
-    <li>Habéis borrado la fila donde estaba el foco. ¿Qué hay que hacer?</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · comprobación y entrega</p>
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · No: es el servidor diciendo que lo enviado no cumple las reglas, con el detalle de cuál. Mostrarlo bien es aprovechar el trabajo hecho en Servidor.</p>
-  <p>2 · Porque la del navegador se puede saltar mandando la petición por otro medio. La del servidor es la única que no.</p>
-  <p>3 · Para que se reactive también cuando haya un error; si no, un fallo deja el formulario bloqueado.</p>
-  <p>4 · Porque las filas se crean y se destruyen: un escuchador en la lista sigue funcionando con las filas que todavía no existen.</p>
-  <p>5 · Llevarlo a un sitio con sentido —la fila siguiente o el encabezado— para que quien navega con teclado no se quede perdido.</p>
-</details>
+**Entrega de Intermodular 10.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-10.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-19.pdf` y `sesion-20.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
-<div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 11</p>
-  <ul class="checklist">
-    <li>El CRUD completo funcionando entre las dos URL públicas, no en local.</li>
-    <li>Los errores de validación de vuestra API se ven junto al campo que los provocó.</li>
-    <li>Sabéis decir dónde guarda los datos vuestra API hoy y qué les pasa cuando se reinicia.</li>
-  </ul>
-</div>
+Entrega repositorio, commit y PR. Explica qué crea el job, qué elimina al terminar y qué evidencia distingue «los tests pasaron» de «no se ejecutó ningún test».
 
 ## Sesión 11 · La base de datos en producción
+
+**Punto de partida compartido.** Semana lectiva 11: sitúa este taller después de las sesiones 21–22 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-11). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -968,52 +523,25 @@ Con crear, listar y borrar funcionando contra la API publicada, falta la operaci
 
 ### Se explica
 
-#### Lo que cambia cuando el estado sobrevive
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-Hasta hoy vuestra API era desechable: se reiniciaba y volvía a empezar de cero. Eso hacía los despliegues muy baratos, porque no había nada que perder. A partir de hoy hay algo que perder, y eso trae tres problemas nuevos que no existían.
+#### Publicar el estado persistente
 
-<figure class="diagram">
-  <figcaption>Lo que añade tener datos de verdad</figcaption>
-  <ol class="flow">
-    <li><span class="flow-role">Un servicio más</span>La base de datos no vive dentro de vuestra aplicación: es otro servicio, con su propia dirección, su propio ciclo de vida y su propia factura.</li>
-    <li><span class="flow-role">La credencial más peligrosa</span>Quien tenga la cadena de conexión tiene los datos. No se escribe en el código, no se pega en un chat y no se sube a un repositorio público.</li>
-    <li><span class="flow-role">Un esquema que cambia</span>Vuestro código evoluciona y las tablas tienen que seguirle. Eso deja de ser gratis en cuanto hay datos dentro que no queréis perder.</li>
-  </ol>
-</figure>
+Servidor 19–22 ya ha preparado JPA, PostgreSQL y pruebas de repositorio. Hoy cambia su entorno: utilizamos el mismo backend y publicamos la base de datos que necesita. No reescribimos entidades ni consultas para Intermodular.
 
-#### Dos bases de datos, una aplicación
+Distinguimos desarrollo, prueba/CI y producción. Cada uno tiene su propia base y configuración. La de CI se destruye al terminar; la pública conserva los datos de demostración. Un cambio de esquema debe quedar identificado y comprobado antes de aplicarlo sobre datos que queremos mantener.
 
-<p class="term">Entorno</p>
+#### Comprobar la oferta antes de crear
 
-Cada sitio donde corre la misma aplicación con una configuración distinta. Vosotros vais a tener dos: el de vuestro portátil, con datos inventados que podéis borrar cuando queráis, y el de producción, con los datos que enseñaréis en la defensa.
+La oferta de Azure for Students tiene requisitos de elegibilidad y límites por servicio. La página oficial incluye una cantidad gratuita de PostgreSQL durante un periodo limitado para cuentas elegibles; no garantiza que toda cuenta del alumnado tenga activada esa oferta. Revisad suscripción, región, tamaño, almacenamiento y coste estimado con el docente. Si no encaja, utilizad el recurso de aula acordado: no es necesario contratar un plan para superar la sesión. [Condiciones y servicios de Azure for Students](https://azure.microsoft.com/en-us/free/students/).
 
-La regla es la misma de la sesión 9, ahora con más consecuencias: **ninguna de las dos direcciones se escribe en el código**. La aplicación las lee del entorno, y por eso el mismo artefacto que probasteis en local es exactamente el que corre en producción.
+#### Configuración y esquema
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Mal</p>
-    <p class="compare-body">La cadena de conexión y su contraseña en <code>application.properties</code>. Funciona hasta que hay dos entornos, y para entonces la credencial ya está en el historial del repositorio para siempre.</p>
-  </div>
-  <div>
-    <p class="compare-label">Bien</p>
-    <p class="compare-body">La aplicación lee la dirección, el usuario y la contraseña del entorno. En el repositorio solo hay un fichero de ejemplo con los nombres de las variables y valores falsos.</p>
-  </div>
-</div>
-
-<div class="rule">
-  <p class="rule-label">Una credencial filtrada no se borra: se cambia</p>
-  <p>Si subís una contraseña por error y luego la quitáis en otro commit, sigue estando en el historial y cualquiera puede leerla. Lo único que la neutraliza es <strong>cambiarla en el servidor</strong>. Borrar el commit no sirve de nada, y hacerlo os deja además con la falsa sensación de haberlo arreglado.</p>
-</div>
-
-#### Qué cuesta esto
-
-Nada, si lo hacéis como toca. Vuestra cuenta de estudiante incluye durante doce meses un servidor de PostgreSQL pequeño —750 horas al mes y 32 GB— que es más de lo que necesitáis y que **no consume el crédito de 100 dólares**. 750 horas al mes cubren una instancia encendida todo el mes.
-
-Dos avisos que van juntos: si creáis un servidor más grande que ese, sí empieza a costar crédito; y cuando pasen los doce meses la oferta se acaba, así que en algún momento tendréis que decidir si lo mantenéis o lo apagáis. Anotad hoy la fecha.
-
----
+Las credenciales reales se configuran en el proveedor; los nombres de variables y el procedimiento se guardan en el repositorio. Para producción seguimos la decisión de Servidor: esquema preparado y ddl-auto=validate. La creación automática update de desarrollo no se convierte en el procedimiento de actualización de producción.
 
 ### Se trabaja
+
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
 #### Bloque A · Crear el servidor
 
@@ -1033,10 +561,10 @@ En **portal.azure.com**, buscad `Azure Database for PostgreSQL` y elegid **Servi
 
 <div class="rule">
   <p class="rule-label">Comprobad el tamaño antes de crear</p>
-  <p>Si el proceso no dice <strong>B1ms</strong>, paradlo. Es la única configuración que entra en lo que vuestra cuenta cubre gratis; cualquier otra empieza a descontar crédito desde el primer minuto, y un servidor de base de datos encendido gasta esté o no atendiendo peticiones.</p>
+  <p>Si el proceso no dice <strong>B1ms</strong>, paradlo. Es el tamaño de referencia de esta práctica; comprobad que está cubierto por vuestra oferta antes de crear el recurso, y un servidor de base de datos encendido gasta esté o no atendiendo peticiones.</p>
 </div>
 
-**La red.** En la pestaña de conectividad, acceso **público**, y marcad la casilla que permite que **los servicios de Azure** se conecten al servidor. Sin eso vuestro App Service no llega. Añadid también vuestra propia dirección IP si queréis conectaros desde clase.
+**La red.** En la pestaña de conectividad, acceso **público**, y permitid las direcciones de salida del App Service y la IP del aula que necesite acceso. Revisad con el docente la conectividad elegida; no asumáis que abrir el acceso a todos los servicios de Azure limita las conexiones a vuestra suscripción.
 
 **La base de datos.** Cuando el servidor exista, cread dentro una base de datos con el nombre de vuestro proyecto. Un servidor puede contener varias; la aplicación se conecta a una.
 
@@ -1061,33 +589,29 @@ En vuestro App Service: **Configuración → Variables de entorno**, y tres nuev
 
 #### Bloque C · Que las tablas existan, y sepáis quién las creó
 
-<p class="stage stage--solo">Individual</p>
+1. En la base local de ensayo, comprueba que el esquema coincide con las entidades y que los tests de Servidor 22 pasan. Genera un script de esquema a partir de esa versión, por ejemplo con pg_dump, instalado con las herramientas de PostgreSQL. En PowerShell ajusta usuario, base y ruta del ejecutable a tu instalación:
 
-Vuestra aplicación puede crear el esquema sola al arrancar. Es cómodo y tiene un límite que hay que conocer **antes** de que muerda:
+```powershell
+pg_dump --host=localhost --port=5432 --username=postgres --schema-only --no-owner --no-privileges --file=docs/esquema-inicial.sql gestor_db
+```
 
-<dl class="worked">
-  <dt>Lo que sí hace</dt>
-  <dd>Crear tablas y columnas que faltan. Si añadís un campo a una entidad y desplegáis, aparece la columna.</dd>
-  <dt>Lo que no hace nunca</dt>
-  <dd>Borrar ni renombrar nada. Si quitáis un campo, la columna se queda ahí para siempre. Si lo renombráis, tendréis las dos.</dd>
-  <dt>La consecuencia</dt>
-  <dd>Vuestro esquema de producción acaba dependiendo del orden en que desplegasteis, y no de lo que dice el código hoy. Con un proyecto de aula se aguanta; en una empresa, no.</dd>
-  <dt>Lo que se usa fuera</dt>
-  <dd>Migraciones: ficheros versionados que describen cada cambio del esquema y se aplican en orden. No las vamos a montar aquí, pero sabed que es lo que falta.</dd>
-</dl>
+El comando pide la contraseña si la conexión lo necesita; no la escribas en el script. El archivo contiene estructura, no una copia de tus registros. Revisa nombres y restricciones en una PR y enlaza el commit que lo produjo.
 
-**Datos de prueba.** Cargad unos cuantos, inventados, suficientes para que la demostración enseñe algo. Una lista vacía no demuestra nada, y llenarla a mano delante del tribunal tampoco.
+2. Prueba el script en una base vacía de ensayo. No lo ejecutes sobre la base pública si ya contiene tablas. Para la primera instalación pública, el docente revisa el destino vacío y se aplica el script mediante el cliente PostgreSQL conectado con TLS.
+3. En las variables del App Service configura `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` y `SPRING_SQL_INIT_MODE=never`. Conserva URL, usuario y contraseña de su propio entorno. No copies create-drop de CI.
+4. Arranca el backend y comprueba que valida el esquema. Si falta una columna, revisa la versión de script y JAR; no cambies validate por update para ocultar la discrepancia.
+5. Carga datos ficticios mediante la colección. En las siguientes semanas los cambios de relaciones de Servidor 23–26 requieren scripts incrementales revisados y una prueba sobre copia de datos; no se vuelve a aplicar el esquema completo.
 
 #### Bloque D · La comprobación que importa
 
 <p class="stage stage--solo">Individual, y esta es la que decide si la sesión ha salido</p>
 
-1. Cread un elemento desde vuestro portfolio publicado.
+1. Cread un elemento con la colección contra la URL pública.
 2. En el portal, **reiniciad** vuestro App Service.
-3. Esperad a que despierte y volved a abrir el portfolio.
+3. Esperad a que arranque y consultad el mismo id desde la colección.
 4. El elemento sigue ahí.
 
-Eso, y solo eso, es tener persistencia en producción. Hasta hoy ese elemento habría desaparecido.
+La comprobación demuestra que ese registro sobrevive al reinicio del backend. Completadla verificando que está en la base pública y en la versión identificada.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación de la sesión</p>
@@ -1107,33 +631,18 @@ Eso, y solo eso, es tener persistencia en producción. Hasta hoy ese elemento ha
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Servidor creado, conexión por variables de entorno y datos que sobreviven a un reinicio.</span></div>
   <div><strong>Si lo tenéis</strong><span>El fichero de ejemplo en el repositorio, con los nombres de las variables y ningún valor real.</span></div>
-  <div><strong>Reto</strong><span>Haced que el CI ejecute los tests contra una base de datos de verdad, levantando PostgreSQL como servicio del workflow en lugar de simularla.</span></div>
+  <div><strong>Reto</strong><span>Comprobad que los tests de repositorio de Servidor 22 pasan en la base aislada configurada en Intermodular 10.</span></div>
 </div>
 
-<details class="aside aside--extra">
-  <summary>Cómo se levanta PostgreSQL dentro del CI</summary>
-
-```yaml
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-```
-
-  <p>Va dentro del job, al mismo nivel que <code>steps</code>. GitHub levanta ese contenedor antes de ejecutar nada y lo destruye al terminar, así que cada ejecución empieza con una base de datos limpia. Vuestros tests se conectan a <code>localhost:5432</code>.</p>
-</details>
+<p>El servicio PostgreSQL del CI se configuró en Intermodular 10. Reutilizad ese job y verificad ahora que ejecuta los tests de repositorio de Servidor 22.</p>
 
 ---
 
 ### Cierre
+
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 11.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-11.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-21.pdf` y `sesion-22.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
@@ -1150,7 +659,7 @@ Eso, y solo eso, es tener persistencia en producción. Hasta hoy ese elemento ha
   <summary>Ver respuestas</summary>
   <p>1 · Porque el repositorio es público y porque la dirección cambia entre entornos. Va en el entorno, y en el repositorio solo un ejemplo con valores falsos.</p>
   <p>2 · No. Sigue en el historial. Lo único que lo resuelve es cambiar la contraseña en el servidor.</p>
-  <p>3 · Se queda. La creación automática de esquema añade, pero no borra ni renombra nunca.</p>
+  <p>3 · Con validate, el arranque comprueba el esquema y no lo modifica. Un cambio se prepara mediante un script incremental revisado y ensayado.</p>
   <p>4 · Porque solo acepta conexiones cifradas, y el error que da no menciona el cifrado: parece un problema de red.</p>
   <p>5 · Que los datos viven fuera de la aplicación. Es la única comprobación que distingue persistencia de casualidad.</p>
 </details>
@@ -1166,6 +675,9 @@ Eso, y solo eso, es tener persistencia en producción. Hasta hoy ese elemento ha
 
 ## Sesión 12 · Dos piezas, una entrega
 
+**Punto de partida compartido.** Semana lectiva 12: sitúa este taller después de las sesiones 23–24 de Servidor. Reutiliza su mismo producto, repositorio y autoría/equipo. Comprueba el hito concreto en la [secuencia y evaluación conjunta](/es/docencia/coordinacion-servidor-intermodular/#semana-12). Si el horario real altera ese orden, el docente desplaza la comprobación dependiente; mientras tanto prepara casos, revisión o configuración sobre la versión disponible.
+
+
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
@@ -1178,6 +690,8 @@ Eso, y solo eso, es tener persistencia en producción. Hasta hoy ese elemento ha
 ---
 
 ### Se explica
+
+<p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
 #### El contrato es lo que os une, y nadie lo vigila
 
@@ -1203,23 +717,14 @@ Cada repositorio lleva su propio número de versión: no hay una versión conjun
 
 ### Se trabaja
 
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+
 #### Bloque A · Provocar la ruptura
 
-<p class="stage stage--guided">Por parejas, y merece la pena hacerlo de verdad</p>
-
-Vais a romper vuestro propio producto a propósito, en un entorno donde no importa.
-
-1. En la API, renombrad un campo de la respuesta. Entra por el circuito y se despliega.
-2. Sin tocar el portfolio, abridlo. Miradlo bien: qué se ve, qué dice la consola del navegador y qué **no** avisó.
-3. Anotad en qué momento exacto os habríais enterado si no lo hubierais provocado vosotros.
-4. Arregladlo aplicando la regla: primero la API acepta los dos nombres, después el portfolio usa el nuevo, y al final se retira el viejo. Tres pull requests, en ese orden.
-
-<dl class="answer">
-  <dt>¿Qué check habría podido detectarlo, y por qué ninguno lo hizo?</dt>
-  <dd></dd>
-  <dt>¿Cuánto tiempo habría estado roto en producción?</dt>
-  <dd></dd>
-</dl>
+1. Conserva una exportación de la colección con el contrato actual. Trabaja en una rama o un entorno de pruebas y renombra temporalmente un campo de respuesta; no publiques una ruptura deliberada en la URL compartida.
+2. Ejecuta la petición y su aserción sobre el campo original. Comprueba qué test detecta el cambio y qué check no lo detectaría. El consumidor de este trimestre es la colección de Intermodular 9; el cliente completo se integra en 17.
+3. Restaura el campo y ejecuta de nuevo. Registra el fallo y la corrección en la misma issue, indicando la versión de prueba.
+4. Escribe cómo coordinarías un cambio real: conservar compatibilidad mientras se actualiza el consumidor y retirar el contrato anterior solo después de comprobar sus usos. Servidor 32 explicará su implementación mediante versionado.
 
 #### Bloque B · El README de la API
 
@@ -1244,11 +749,9 @@ No es el mismo que el del portfolio, porque el lector es otro: alguien que quier
 
 #### Bloque C · Publicar las dos versiones
 
-<p class="stage stage--solo">Individual</p>
-
-1. En la API, etiquetad y publicad `v1.0.0` con sus notas, como en la sesión 6.
-2. En el portfolio, subid la versión: hay algo nuevo que antes no estaba, así que sube la menor. La `1.0.1` pasa a ser `1.1.0`.
-3. En las notas del portfolio, decid qué hace ahora que antes no hacía y enlazad la versión de la API con la que se probó.
+1. Comprueba qué commit está publicado y qué criterios del primer trimestre ya supera. Si todavía se incorporarán relaciones o transacciones de Servidor 25–26, etiqueta una versión intermedia, por ejemplo `v0.1.0`, y describe lo pendiente.
+2. Enlaza esa release desde la ficha del portfolio, conservando su versión propia. No presupongas que el portfolio está en 1.0.1: consulta sus etiquetas y aplica el cambio de versión que corresponda.
+3. En `docs/entrega-t1.pdf` registra URL y SHA del backend, versión del portfolio y ejecución de CI. Este documento se actualizará en las sesiones 13–14 con la versión completa que también se defiende en Servidor 27–28.
 
 #### Bloque D · El ensayo de la demostración
 
@@ -1269,6 +772,10 @@ Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres
 ---
 
 ### Cierre
+
+<p class="stage">15 minutos · comprobación y entrega</p>
+
+**Entrega de Intermodular 12.** Enlaza el repositorio y el commit de la sesión. Actualiza el documento editable y expórtalo como `docs/intermodular/sesion-12.pdf` antes del commit, con lo que has cambiado, PR/revisión, ejecución CI o comprobación manual, resultado y pendientes. En el backend, enlaza los registros `docs/sesiones/sesion-23.pdf` y `sesion-24.pdf` de Servidor cuando aporten la evidencia; no copies su explicación o pruebas. Si hoy solo cambia el portfolio, su registro enlaza el backend compartido. Comprueba que el docente pueda abrir los enlaces. Una funcionalidad pendiente se declara como tal y no se sustituye por una captura de otro proyecto.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Producto de la unidad</p>
@@ -1308,48 +815,23 @@ Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres
   <ul class="checklist">
     <li>Las dos piezas publicadas, enlazadas entre sí desde sus README.</li>
     <li>Una revisión vuestra en cada repositorio de vuestra pareja: el del portfolio y el de la API.</li>
-    <li>Traéis pensado, de las dos semanas siguientes, qué proyecto os gustaría hacer de verdad: en la sesión 13 se empieza a elegir el problema del proyecto grande.</li>
+    <li>Traéis observaciones sobre el producto actual: en la sesión 13 se prioriza una mejora de ese mismo producto.</li>
   </ul>
 </div>
 
 ## Lo que debes recordar
 
-### El método
+| Decisión | Comprobación |
+| --- | --- |
+| Conservar el repositorio de Servidor | Historial, remoto y aportaciones continúan desde el comienzo |
+| Ejecutar las pruebas en CI | El informe muestra tests ejecutados y un fallo bloquea la fusión |
+| Identificar el artefacto | El despliegue corresponde a un commit y una ejecución concretos |
+| Separar despliegue y arranque | El workflow termina y después la aplicación responde en su ruta |
+| Mantener entornos separados | Desarrollo, CI y producción usan bases y credenciales propias |
+| Preparar el esquema | validate comprueba la estructura; el script revisado prepara sus cambios |
+| Reutilizar el contrato | La misma colección se ejecuta contra local y producción |
+| Coordinar el cierre | La versión completa se comprueba con Servidor 27–28 e Intermodular 14 |
 
-<figure class="diagram">
-  <figcaption>Lo que añade desplegar un programa</figcaption>
-  <ol class="flow">
-    <li><span class="flow-role">Construir</span>Lo que se despliega es el artefacto, no el código. El CI lo compila y ejecuta los tests antes de dejar pasar nada.</li>
-    <li><span class="flow-role">Arrancar</span>Un despliegue en verde no significa una aplicación viva. El registro del servicio dice cuál de las dos cosas ha pasado.</li>
-    <li><span class="flow-role">Configurar</span>Lo que cambia entre entornos —el puerto, el origen permitido— se lee del entorno, no se escribe en el código.</li>
-    <li><span class="flow-role">Conectar</span>Dos orígenes distintos necesitan permiso explícito del servidor, y ese permiso nombra a uno, no a todos.</li>
-    <li><span class="flow-role">Coordinar</span>Dos piezas que se despliegan por separado se rompen en silencio. Primero se despliega lo que añade.</li>
-  </ol>
-</figure>
+### Vocabulario que utilizarás
 
-| Idea | Por qué |
-| ---- | ------- |
-| **El artefacto no se guarda, se genera** | El repositorio guarda lo que escribe una persona; lo que produce la máquina se reconstruye cuando hace falta |
-| **Leer antes que tocar** | El registro tarda diez segundos en decir qué pasó; volver a desplegar tarda cinco minutos en no decir nada |
-| **La configuración vive fuera del código** | Es lo que permite que el mismo artefacto funcione en el portátil y en producción |
-| **CORS no es seguridad** | Es una regla del navegador. Quien decide qué se puede hacer es la autorización |
-| **Cargando, error y vacío son funcionalidad** | Sin ellos, cualquier lentitud o cualquier fallo se ve igual: una pantalla rota sin explicación |
-| **Se pinta desde una sola fuente de verdad** | La pantalla es el reflejo de una variable. Así puede repintarse cuando los datos cambien, sin reescribir el renderizado |
-| **El error del servidor es información** | Un 400 con detalle dice qué campo falla. Convertirlo en «ha habido un error» tira el trabajo hecho en Servidor |
-| **Las limitaciones se escriben** | Un límite conocido y documentado es criterio; el mismo límite descubierto en directo es un fallo |
-
-### El vocabulario de la unidad
-
-| Concepto | Significa |
-| -------- | --------- |
-| Artefacto | El resultado de construir el proyecto, que es lo que se despliega |
-| Variable de entorno | Valor que el programa lee del sistema donde se ejecuta, en vez de tenerlo escrito dentro |
-| Origen | Esquema, dominio y puerto. Dos direcciones con dominios distintos son orígenes distintos |
-| CORS | Regla del navegador que impide leer respuestas de otro origen sin permiso explícito de ese origen |
-| Preflight | Petición previa que hace el navegador para preguntar si tiene permiso, antes de la que modifica datos |
-| Arranque en frío | El retraso de la primera petición cuando el servicio llevaba un rato dormido |
-| Flujo de registro | La salida de vuestra aplicación en producción, leída en directo |
-| Contrato | El acuerdo entre dos piezas sobre qué se pide y qué se devuelve. No lo vigila ninguna herramienta |
-| Cambio compatible | Un cambio que se puede desplegar sin romper a quien todavía usa lo anterior |
-| Fuente de verdad | La variable de la que se pinta la pantalla. Cambia ella, se repinta todo |
-| Delegación de eventos | Un solo escuchador en el contenedor, que sigue funcionando con los elementos que aún no existen |
+Un **artefacto** es el resultado construido. Un **entorno** reúne servicios y configuración de una ejecución. Un **contrato** describe peticiones y respuestas y puede comprobarse con tests. Un **script incremental** modifica una versión del esquema conservando los datos previstos. Una **release** identifica una versión y declara qué se ha comprobado y qué queda pendiente.

@@ -1,0 +1,82 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import weeks from '@/data/server-intermodular.json';
+---
+<BaseLayout lang="es" title="Servidor e Intermodular · Secuencia y evaluación conjunta" description="26 semanas del mismo producto: dependencias entre las 52 sesiones de Servidor y las 26 de Proyecto Intermodular.">
+  <article class="coordination">
+    <nav aria-label="Módulos"><a href="/es/docencia/desarrollo-web-entorno-servidor/">Servidor</a> · <a href="/es/docencia/proyecto-intermodular/">Proyecto Intermodular</a></nav>
+    <h1>Un producto, dos módulos coordinados</h1>
+    <p>El mismo grupo desarrolla el mismo producto durante los dos trimestres. Conserva tema, autoría/equipo, repositorio de backend e historial. El portfolio presenta ese producto; el cliente utiliza ese backend. El gestor de los ejemplos sirve de referencia y cada proyecto mantiene su propio dominio.</p>
+    <h2>Horario y dependencias</h2>
+    <p>Plan de 26 semanas lectivas: dos sesiones de Servidor y una de Intermodular por semana, de tres horas cada una. Cada sesión reserva 25 minutos de explicación, 140 de trabajo guiado y 15 de cierre. Primer trimestre: 28 sesiones de Servidor (84 horas) y 14 de Intermodular (42 horas). Segundo: 24 de Servidor (72 horas) y 12 de Intermodular (36 horas).</p>
+    <p>El orden previsto sitúa Intermodular después de las dos sesiones de Servidor de esa semana. Son semanas de trabajo, no fechas oficiales del calendario escolar. Si festivos u horario alteran el orden, el docente ajusta la comprobación dependiente: se puede preparar configuración, datos o revisión sobre la versión disponible, pero no exigir una funcionalidad aún no explicada.</p>
+    <div class="table-scroll" role="region" aria-label="Secuencia semanal de ambos módulos" tabindex="0">
+      <table>
+        <caption>Secuencia de los dos trimestres y punto de encuentro semanal</caption>
+        <thead><tr><th scope="col">Semana</th><th scope="col">Servidor · implementación disponible</th><th scope="col">Intermodular · trabajo sobre esa versión</th><th scope="col">Comprobación compartida</th></tr></thead>
+        <tbody>{weeks.map(w => <tr id={`semana-${w.week}`}>
+          <th scope="row">{w.week}<small>{w.week <= 14 ? 'Primer trimestre' : 'Segundo trimestre'}</small></th>
+          <td>{w.server.map(s => <a class="lesson" href={s.href}>{s.number}. {s.title}</a>)}</td>
+          <td><a href={w.intermodular.href}>{w.week}. {w.intermodular.title}</a></td>
+          <td>{w.evidence}</td>
+        </tr>)}</tbody>
+      </table>
+    </div>
+    <h2>Una entrega, criterios diferenciados</h2>
+    <p>En cada cierre de trimestre se utiliza el mismo commit y la misma demostración. Cada módulo conserva sus criterios y calificación; no se repite una memoria ni se concede la misma puntuación dos veces por el mismo requisito. La ponderación se concreta en la programación y rúbrica del módulo.</p>
+    <div class="table-scroll" role="region" aria-label="Criterios de evaluación por módulo" tabindex="0">
+      <table>
+        <caption>Qué aporta cada evidencia a la evaluación</caption>
+        <thead><tr><th scope="col">Evidencia común</th><th scope="col">Servidor evalúa</th><th scope="col">Intermodular evalúa</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Caso de uso y código</th><td>Modelo, reglas, integridad y comportamiento del backend.</td><td>Criterio de aceptación, dependencias y alcance del cambio.</td></tr>
+          <tr><th scope="row">Test y ejecución CI</th><td>Qué comportamiento comprueba, sus casos y sus aserciones.</td><td>Entorno reproducible, ejecución efectiva y bloqueo de fusión cuando falla.</td></tr>
+          <tr><th scope="row">Issue y pull request</th><td>Corrección de la solución y justificación técnica.</td><td>Trazabilidad, aportación individual y revisión con observaciones comprobables.</td></tr>
+          <tr><th scope="row">Versión desplegada</th><td>Funcionamiento del backend, persistencia y, cuando se hayan trabajado, permisos e integraciones.</td><td>Identificación de versión, configuración, publicación, comprobación posterior y recuperación.</td></tr>
+          <tr><th scope="row">Cliente y contrato</th><td>Respuestas, errores y controles de acceso que implementa la API.</td><td>Compatibilidad entre versiones y recorrido integrado reproducible.</td></tr>
+          <tr><th scope="row">Defensa</th><td>Explicación del código y sus decisiones.</td><td>Explicación del proceso y sus evidencias. La demostración del producto se comparte.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2>Dónde se guarda cada cosa</h2>
+    <p>Las fichas, registros y memorias se redactan en Word, LibreOffice o un documento en línea y se exportan a PDF en las rutas indicadas antes de hacer el commit. Conserva el original editable: cada actualización sustituye el PDF anterior. Los enlaces deben ser accesibles desde el PDF. El README.md sigue siendo la portada técnica del repositorio; no sustituye las entregas documentales en PDF.</p>
+    <ul>
+      <li><code>docs/sesiones/sesion-NN.pdf</code>: registro técnico de Servidor.</li>
+      <li><code>docs/intermodular/sesion-NN.pdf</code>: cambio de proceso, revisión, CI o despliegue; enlaza el registro técnico cuando sea la misma evidencia.</li>
+      <li><code>docs/contrato.pdf</code>, <code>docs/evolucion.pdf</code> y <code>docs/despliegue.pdf</code>: documentos vivos compartidos. Se actualizan y enlazan, no se vuelven a redactar en cada asignatura.</li>
+      <li><code>docs/entrega-t1.pdf</code> y <code>docs/entrega-final.pdf</code>: URL, SHA del backend, versión del cliente, PR, CI, aceptación y pendientes. Son el punto de entrada a las dos evaluaciones.</li>
+    </ul>
+    <p>Una issue puede servir a ambos módulos. Una revisión externa no cambia la autoría/equipo del proyecto. Cada integrante explica su aportación con cambios, decisiones y comprobaciones; el número de commits o de fallos del pipeline no determina la nota.</p>
+    <h2>Qué se explica una vez y qué se practica después</h2>
+    <ul>
+      <li>Servidor introduce Spring Boot, Maven, HTTP, DTO, JPA, seguridad e integraciones. Intermodular utiliza el código y las pruebas ya disponibles para configurar su revisión y publicación.</li>
+      <li>Intermodular introduce issues, ramas, PR, reglas, CI y despliegue. Servidor aplica ese circuito desde que se haya trabajado, sin repetir el tutorial de Git.</li>
+      <li>El primer trimestre publica el backend y verifica su contrato con la colección. El cliente completo se integra en Intermodular 17, después de fetch y CORS en Servidor 33–34.</li>
+      <li>Intermodular 18 prepara permisos y configuración; 19 comprueba roles y propiedad tras Servidor 37–38; 20 publica JWT después de Servidor 39–40.</li>
+      <li>En el segundo trimestre se actualiza el entorno del primero: no se repiten el alta de infraestructura, la elección de tema ni la creación del repositorio.</li>
+    </ul>
+    <h2>Cierres coordinados</h2>
+    <p>Servidor 27–28 e Intermodular 14 cierran el backend persistente del primer trimestre. Servidor 51–52 e Intermodular 26 cierran su evolución. El docente reparte los turnos entre esas sesiones; cada integrante realiza la defensa prevista, y el grupo que espera verifica los recorridos de otros proyectos. La versión evaluada queda identificada y cualquier fallo pendiente se declara.</p>
+  </article>
+</BaseLayout>
+<style>
+  .coordination { max-width: 1120px; margin: 0 auto; padding: 3rem 1.25rem 5rem; line-height: 1.7; }
+  h1 { font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1.15; margin: 1.5rem 0; }
+  h2 { font-size: 1.5rem; margin: 2.5rem 0 1rem; }
+  p, li { max-width: 90ch; }
+  p { margin: 1rem 0; }
+  ul { padding-left: 1.4rem; }
+  li { margin: .65rem 0; }
+  a { text-decoration: underline; text-underline-offset: .2em; }
+  .table-scroll { overflow-x: auto; margin: 1.5rem 0; }
+  table { width: 100%; border-collapse: collapse; min-width: 700px; }
+  caption { text-align: left; font-weight: 600; padding-bottom: .7rem; }
+  th, td { text-align: left; vertical-align: top; padding: .8rem; border-bottom: 1px solid #8885; }
+  thead th { background: #8881; }
+  tbody th { min-width: 90px; }
+  small, .lesson { display: block; }
+  small { font-weight: normal; font-size: .75rem; }
+  .lesson + .lesson { margin-top: .5rem; }
+  tr { scroll-margin-top: 6rem; }
+  :target { background: #b6942520; }
+</style>

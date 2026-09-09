@@ -22,17 +22,22 @@ priorKnowledge:
   - "JPA, relaciones y consultas."
 ---
 
+**Cómo preparar los documentos.** Redacta las fichas, registros y memorias en Word, LibreOffice o un documento en línea. Conserva el original editable y usa «Exportar» o «Descargar como PDF» para guardarlo con el nombre y en la carpeta indicados. Cuando se pida ampliar un documento, modifica ese mismo original y sustituye su PDF por la versión actualizada. Comprueba que los enlaces del PDF se puedan abrir. La entrega sigue siendo el enlace al repositorio de GitHub y al commit de la sesión, con el código y los PDF correspondientes. El `README.md` es la portada técnica del repositorio y se edita como texto; las fichas y memorias se entregan en PDF.
+
 <p class="lead">Comienza el segundo trimestre sobre la versión persistente del mismo producto. Se profundiza en relaciones expuestas, filtros, paginación, contrato y pruebas HTTP.</p>
 
 ## Semana 15 · Relaciones expuestas y filtros
 
 ## Sesión 29 · Relaciones expuestas y filtros
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 15: Planificar el incremento y sus dependencias](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-15/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-15).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-El segundo trimestre amplía la versión persistente existente. Los recursos relacionados y los filtros deben seguir un contrato predecible.
+Retomas el backend persistente del primer trimestre. Hoy harás más útiles sus consultas: un subrecurso expresa una relación en la URL y un filtro reduce los resultados según criterios. Los ejemplos amplían el contrato existente de tu proyecto.
 
 #### El dilema de la profundidad relacional en REST
 
@@ -94,7 +99,7 @@ Con tan solo 4 criterios combinables, ¡necesitarías crear 2⁴ = 16 endpoints 
 <div class="rule">
   <p class="rule-label">La convención REST para filtros</p>
   <p><strong>Un recurso de colección tiene una única ruta canónica en plural (<code>/tareas</code>).</strong></p>
-  <p>Todas las variaciones de filtrado, búsqueda y ordenación se transmiten mediante parámetros de consulta en la URL (<em>Query Parameters</em>): <code>GET /tareas?prioridad=ALTA&completada=false</code>.</p>
+  <p>Todas las variaciones de filtrado, búsqueda y ordenación se transmiten mediante parámetros de consulta en la URL (<em>Query Parameters</em>): <code>GET /tareas?prioridad=alta&completada=false</code>.</p>
 </div>
 
 #### Estrategias de filtrado en Spring Data JPA
@@ -111,23 +116,33 @@ Para resolver consultas con parámetros opcionales en Spring Data existen tres e
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Revisad cómo se consultan las relaciones de vuestro dominio y añadid filtros combinables.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Aplicad los filtros a casos reales del producto y probad valores ausentes, inválidos y sin resultados.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Exponer relaciones sin romper el contrato</p>
+1. Ejecuta la colección de la versión anterior y abre los listados, sus DTO y los métodos de repositorio que los alimentan.
+2. Prepara registros que coincidan solo con un filtro, con varios y con ninguno. Incluye texto con diferencias de mayúsculas o acentos para observar la política elegida.
+3. Anota las combinaciones de filtros que permitirá tu API y qué respuesta esperas cuando se omitan.
 
 #### Paso 2 · Subrecursos desacoplados y DTOs específicos
 
-Vamos a aplicar estos patrones al gestor de proyectos para que un cliente pueda consultar tanto el proyecto de forma ligera como su colección de tareas asociadas sin saturar la red.
+**Preparar el mapper usado por los bloques siguientes.** Abre TareaMapper, conserva sus métodos anteriores, añade `@Component` (import `org.springframework.stereotype.Component`) a la clase y sustituye su constructor privado por uno público sin argumentos. Así Spring puede inyectarlo. Añade estos métodos de instancia e importa TareaResumenResponse, TareaDetalleResponse y Etiqueta de tus paquetes:
+
+```java
+public TareaResumenResponse toResumenResponse(Tarea tarea) {
+    return new TareaResumenResponse(tarea.getId(), tarea.getTitulo(),
+        tarea.getPrioridad(), tarea.isCompletada());
+}
+
+public TareaDetalleResponse toDetalleResponse(Tarea tarea) {
+    return new TareaDetalleResponse(tarea.getId(), tarea.getTitulo(),
+        tarea.getPrioridad(), tarea.isCompletada(), tarea.getProyecto().getId(),
+        tarea.getProyecto().getNombre(),
+        tarea.getEtiquetas().stream().map(Etiqueta::getNombre).toList());
+}
+```
+
+Haz la conversión de detalle dentro de un método transaccional del servicio, porque accede a relaciones LAZY. Los métodos estáticos anteriores pueden conservarse mientras migras sus llamadas; no cambies todos los controladores a la vez.
+
+Cada `public record` del primer bloque va en un archivo distinto dentro de `dto`. Antes de cambiar el servicio, conserva o amplía los mappers de la UD3: el nombre `toResumen` del ejemplo debe corresponder a un método real que construya el DTO con sus componentes. Si tu mapper sigue siendo estático, llámalo por su clase; si decides inyectarlo, conviértelo en componente y ajusta todos sus usos. Modifica el controlador existente y amplía su constructor para recibir los servicios necesarios, sin borrar los otros endpoints.
 
 Creamos dos representaciones distintas según la vista del cliente:
 
@@ -275,7 +290,7 @@ Si el parámetro `:q` es nulo o viene vacío, la cláusula `(:q IS NULL OR ...)`
 
 #### Paso 6 · Consulta multicriterio de tareas
 
-Vamos a construir el buscador de tareas combinable en nuestra aplicación:
+Añade la consulta al repositorio existente, conservando sus métodos CRUD. Mantén una sola operación de listado en el controlador: reemplaza su implementación para pasar los filtros opcionales al servicio. En la consulta agrupa cada filtro entre paréntesis y enlázalos con AND; un parámetro null desactiva solo ese filtro. Prepara registros que permitan distinguir cada combinación y compara los ids obtenidos. El uso de LOWER resuelve mayúsculas, no elimina acentos por sí mismo.
 
 Añadimos el método de búsqueda en `TareaRepository` asegurándonos de incluir `JOIN FETCH` sobre el proyecto para evitar el problema N+1:
 
@@ -368,13 +383,13 @@ Abre **Bruno** o **Postman** y verifica cómo se comporta el mismo endpoint `/ta
 
 1. **Sin parámetros:** `GET http://localhost:8080/tareas`
    * Devuelve la lista completa de todas las tareas del sistema.
-2. **Un solo filtro:** `GET http://localhost:8080/tareas?prioridad=ALTA`
+2. **Un solo filtro:** `GET http://localhost:8080/tareas?prioridad=alta`
    * Devuelve únicamente tareas con prioridad `ALTA`.
 3. **Filtros combinados:** `GET http://localhost:8080/tareas?proyectoId=1&completada=false`
    * Devuelve solo las tareas pendientes que pertenecen al proyecto 1.
 4. **Búsqueda textual:** `GET http://localhost:8080/tareas?q=auth`
    * Devuelve tareas cuyo título contenga la palabra `"auth"`, `"Auth"` o `"AUTORIZACION"`.
-5. **Todos los filtros a la vez:** `GET http://localhost:8080/tareas?proyectoId=1&prioridad=ALTA&completada=false&q=login`
+5. **Todos los filtros a la vez:** `GET http://localhost:8080/tareas?proyectoId=1&prioridad=alta&completada=false&q=login`
    * Devuelve la intersección exacta de todos los criterios.
 6. **Auditoría de consola SQL:**
    * Observa la sentencia emitida en la terminal: verás una única consulta SQL con `LEFT/INNER JOIN` y la cláusula `WHERE` evaluada de forma limpia en PostgreSQL.
@@ -407,10 +422,8 @@ Aplica el patrón de filtrado a la entidad `Proyecto`:
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **exponed relaciones y filtros del producto**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Prueba cada filtro aislado y combinado y contrasta los ids devueltos con los datos preparados.
+2. Consulta un subrecurso desde dos recursos principales distintos: no debe mezclar registros ajenos ni exponer campos internos de las entidades.
 
 #### Ampliación si has completado el trabajo
 
@@ -429,7 +442,7 @@ Analiza y responde con criterio de ingeniería:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita una justificación de diseño de endpoints de relaciones, el formato de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-relaciones.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -475,35 +488,29 @@ Analiza qué ocurre si un usuario malicioso o despistado introduce en el buscado
 
 El cliente puede consultar relaciones y filtrar sin conocer las tablas internas.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 29 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-29.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-29.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-29.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 30 · Paginación y ordenación
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 15: Planificar el incremento y sus dependencias](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-15/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-15).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Paginar limita el coste de una respuesta; ordenar de forma estable evita resultados impredecibles entre páginas.
+Tus filtros ya seleccionan resultados, pero el listado puede crecer demasiado. Una página devuelve una parte de la consulta; la ordenación estable permite recorrerla sin repeticiones ni saltos causados por empates. Hoy combinarás esos parámetros con los filtros existentes.
 
 #### El colapso del `findAll()` sin límites
 
@@ -575,23 +582,15 @@ De esta forma, la memoria de la máquina virtual solo almacena 10 objetos, con i
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Añadid paginación y ordenación a un listado que pueda crecer y definid sus límites.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Cargad datos suficientes para varias páginas y probad tamaños, páginas vacías y criterios de orden.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Paginación y ordenación en la API</p>
+1. Abre el listado filtrado, su DTO de respuesta y la consulta de repositorio. Conserva la petición sin paginación para comparar el cambio de contrato.
+2. Crea más registros que el tamaño de página con el que vas a probar e incluye valores repetidos en el campo de ordenación.
+3. Anota la numeración inicial de página, el tamaño máximo y los campos por los que permitirás ordenar. Deben coincidir con lo que documenta tu API.
 
 #### Paso 2 · Implementar paginación y ordenación
 
-Vamos a paginar el listado de proyectos con ordenación configurable:
+Modifica en orden repositorio, servicio y controlador. El servicio transforma los elementos con `Page.map(...)`; conserva el resto de metadatos de página. Sustituye el GET de listado existente y mantén los otros métodos de `ProyectoController`. En el campo de ordenación utiliza un atributo real de tu entidad: si se llama `fechaCreacion`, no copies `creadoEn`. Para una primera comprobación estable puedes ordenar por id. Actualiza el cliente y la colección para leer los resultados dentro de `content`.
 
 En `ProyectoRepository`, `JpaRepository` ya hereda soporte para `Pageable`. Añadimos además un método derivado para filtrar por estado con paginación:
 
@@ -651,7 +650,7 @@ public class ProyectoController {
     @GetMapping
     public ResponseEntity<Page<ProyectoResponse>> listar(
         @RequestParam(required = false) Boolean activo,
-        @PageableDefault(page = 0, size = 10, sort = "creadoEn", direction = Sort.Direction.DESC) Pageable pageable
+        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<ProyectoResponse> pagina = proyectoService.listarProyectos(activo, pageable);
         return ResponseEntity.ok(pagina);
@@ -676,16 +675,39 @@ Ejecuta estas peticiones en **Bruno** o **Postman** y analiza los resultados:
 
 #### Paso 4 · Combinar filtros multicriterio con paginación en Tareas
 
-Combina lo aprendido en la sesión 29 con la paginación de esta sesión en la entidad `Tarea`:
+Sustituye la firma anterior de `buscarConFiltros` por esta en TareaRepository. Importa Page y Pageable de `org.springframework.data.domain`; conserva Query y Param de Spring Data JPA. Elimina el método anterior con los mismos parámetros para no mantener dos versiones incoherentes.
+
+```java
+@Query(value = """
+    SELECT t FROM Tarea t JOIN FETCH t.proyecto p
+    WHERE (:proyectoId IS NULL OR p.id = :proyectoId)
+      AND (:prioridad IS NULL OR t.prioridad = :prioridad)
+      AND (:completada IS NULL OR t.completada = :completada)
+      AND (:q IS NULL OR LOWER(t.titulo) LIKE LOWER(CONCAT('%', :q, '%')))
+    """, countQuery = """
+    SELECT COUNT(t) FROM Tarea t JOIN t.proyecto p
+    WHERE (:proyectoId IS NULL OR p.id = :proyectoId)
+      AND (:prioridad IS NULL OR t.prioridad = :prioridad)
+      AND (:completada IS NULL OR t.completada = :completada)
+      AND (:q IS NULL OR LOWER(t.titulo) LIKE LOWER(CONCAT('%', :q, '%')))
+    """)
+Page<Tarea> buscarConFiltros(@Param("proyectoId") Long proyectoId,
+    @Param("prioridad") String prioridad, @Param("completada") Boolean completada,
+    @Param("q") String q, Pageable pageable);
+```
+
+En el servicio añade Pageable como último parámetro, pásalo al repositorio y sustituye `.stream().map(...).toList()` por `.map(tareaMapper::toResumenResponse)`. Cambia su retorno a Page<TareaResumenResponse>. El controlador también recibe y pasa Pageable y devuelve esa Page. El compilador te señalará los consumidores pendientes de actualizar; corrígelos antes de probar la colección.
+
+En la consulta paginada de tareas añade una `countQuery` equivalente, con los mismos filtros pero sin FETCH ni ORDER BY. El método principal devuelve `Page<Tarea>` y recibe `Pageable`. Comprueba una consulta filtrada con más resultados que el tamaño de página: además del contenido, verifica que `totalElements` coincide con el número de registros que cumplen esos filtros. Una consulta de recuento distinta produciría páginas incorrectas aunque el primer listado pareciera válido.
 
 1. Modifica `TareaRepository.buscarConFiltros` para que reciba como último argumento `Pageable pageable` y devuelva `Page<Tarea>`.
 2. Actualiza `TareaService` para que devuelva `Page<TareaResumenResponse>` usando `.map()`.
 3. Configura en `TareaController`:
    `@PageableDefault(page = 0, size = 15, sort = "id", direction = Sort.Direction.ASC) Pageable pageable`
 4. Prueba en Bruno la combinación de filtros y paginación:
-   `GET /tareas?prioridad=ALTA&completada=false&page=0&size=5&sort=titulo,asc`
+   `GET /tareas?prioridad=alta&completada=false&page=0&size=5&sort=titulo,asc`
 5. Verifica que los metadatos `totalElements` reflejan el total de tareas **filtradas**, no el total absoluto de la tabla. Es el error más habitual: si pides `?completada=false&size=5` y `totalElements` te devuelve el número de filas de toda la tabla, el cliente calculará mal el número de páginas y mostrará páginas vacías al final.
-6. **Mira el SQL.** Con `show-sql=true` activado, comprueba que una petición paginada genera **dos** sentencias: un `SELECT ... LIMIT ? OFFSET ?` y un `SELECT count(*)`. Esa segunda es el precio de poder decirle al cliente cuántas páginas hay. Si no la necesitas, devolver `Slice` en vez de `Page` la evita.
+6. **Mira el SQL.** Con `show-sql=true` activado, comprueba si la petición paginada genera las sentencias: un `SELECT ... LIMIT ? OFFSET ?` y un `SELECT count(*)`. Esa segunda es el precio de poder decirle al cliente cuántas páginas hay. Si no la necesitas, devolver `Slice` en vez de `Page` la evita.
 7. **Comprueba los límites**, que es donde se rompe la paginación:
    * `?page=999` sobre una tabla de 20 filas: debe devolver `200` con una lista vacía y los metadatos correctos, nunca un `404` ni un error.
    * `?size=10000`: decide si lo permites. Si no pones techo, un cliente puede pedirte la tabla entera en una sola petición y tirarte la memoria, que es justo lo que la paginación venía a evitar. Configura `spring.data.web.pageable.max-page-size`.
@@ -694,15 +716,13 @@ Combina lo aprendido en la sesión 29 con la paginación de esta sesión en la e
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
-  <dd>Filtros y paginación funcionan combinados; <code>totalElements</code> cuenta lo filtrado; una página fuera de rango devuelve <code>200</code> con lista vacía; hay un tamaño máximo de página configurado; y has visto en los logs las dos sentencias SQL que genera cada petición paginada.</dd>
+  <dd>Filtros y paginación funcionan combinados; <code>totalElements</code> cuenta lo filtrado; una página fuera de rango devuelve <code>200</code> con lista vacía; hay un tamaño máximo de página configurado; y has identificado el SELECT paginado y cuándo se ejecuta el recuento.</dd>
 </dl>
 
 #### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **paginad y ordenad los listados**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Recorre al menos dos páginas y comprueba sus contenidos, totales y orden. Añade un criterio de desempate cuando el campo elegido tenga valores iguales.
+2. Prueba filtro más paginación, página sin resultados y tamaño inválido. Verifica la política documentada para cada caso y adapta el cliente si cambia el formato.
 
 #### Ampliación si has completado el trabajo
 
@@ -720,7 +740,7 @@ Analiza las consecuencias técnicas y diseña una alternativa:
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe de optimización de bases de datos o comparativa de rendimiento, el formato de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-paginacion.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -743,37 +763,31 @@ Analiza las consecuencias técnicas y diseña una alternativa:
 
 La API informa del contenido y los metadatos previstos y no devuelve todo el catálogo por defecto.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 30 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-30.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-30.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-30.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Semana 16 · Tests HTTP y documentación OpenAPI
 
 ## Sesión 31 · Tests HTTP y documentación OpenAPI
 
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 16: Revisar y publicar un contrato compatible](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-16/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-16).
+
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Los tests de endpoint comprueban el contrato en la frontera HTTP. OpenAPI lo hace consultable por quienes integran el cliente.
+Ya tienes consultas avanzadas comprobadas manualmente. MockMvc permite enviar peticiones al procesamiento web de Spring desde un test. OpenAPI describe el contrato de forma estructurada y Swagger UI ofrece una página para explorarlo. Hoy contrastarás pruebas y documentación.
 
 #### La brecha entre el servicio y el protocolo HTTP
 
@@ -852,23 +866,15 @@ Conviene distinguir con precisión ambos términos:
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Escribid tests con MockMvc para una ruta de éxito y sus errores; documentad entradas y respuestas.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Extendédlos a filtros o relaciones y contrastad la documentación con las respuestas reales.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Tests de endpoints con MockMvc</p>
+1. Abre los controladores, la colección y los tests existentes. Elige un listado paginado y un caso de validación como primeras pruebas HTTP.
+2. Localiza `src/test/java` y `pom.xml`; revisa qué dependencias y configuración requiere cada bloque antes de pegar sus ejemplos.
+3. Anota método, ruta, entrada, estado y campos de salida del endpoint elegido. Ese mismo contrato debe aparecer en el test y en la documentación.
 
 #### Paso 2 · Crear la suite de ProyectoControllerTest
 
-Vamos a construir la suite de pruebas automatizadas para el contrato de `ProyectoController`:
+Crea primero el archivo de test con imports, anotaciones y campos. `@MockBean` sustituye al servicio en ese contexto: prepara con `when(...).thenReturn(...)` la respuesta que esperas de él para cada caso. Si el controlador recibe más colaboradores, decláralos también. Añade los métodos de test siguientes **dentro de la misma clase**, antes de su última llave. Los JSON y los constructores de DTO deben coincidir con tu contrato actual, incluida la paginación; ejecuta un test antes de añadir el siguiente.
 
 Crea `src/test/java/com/ejemplo/gestor/controller/ProyectoControllerTest.java`. Aislamos el controlador inyectando `MockMvc` y simulando el colaborador de negocio con `@MockBean`.
 
@@ -1039,7 +1045,7 @@ Aplica el mismo patrón para blindar el contrato de `TareaController`:
 
 #### Paso 6 · Integrar y documentar con springdoc-openapi
 
-En proyectos Spring Boot 3 utilizamos la librería oficial de la comunidad `springdoc-openapi`:
+Añade la dependencia dentro del bloque `dependencies` existente de `pom.xml` y sincroniza Maven. Crea `config/OpenApiConfig.java` e importa los tipos de `io.swagger.v3.oas.models` que utiliza; después añade las anotaciones de documentación a los métodos existentes. No reemplaces un controlador completo por el fragmento que solo muestra el POST. Arranca, abre `/v3/api-docs` y después Swagger UI: la primera URL comprueba el documento y la segunda su interfaz.
 
 ```xml
 <dependency>
@@ -1197,10 +1203,8 @@ Documenta el controlador de tareas aplicando las anotaciones correspondientes:
 
 #### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **probad y documentad el contrato http**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta los tests HTTP con un caso válido, uno rechazado y uno ausente. Comprueba estado y contenido significativo, no solo que la petición termine.
+2. Abre Swagger UI y compara sus parámetros, ejemplos y estados con las respuestas reales de la colección.
 
 #### Ampliación si has completado el trabajo
 
@@ -1241,7 +1245,7 @@ Investiga cómo funciona la herramienta de código abierto `openapi-generator-cl
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe sobre adopción de OpenAPI en pipelines de integración continua, el formato de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-openapi.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -1264,35 +1268,29 @@ Investiga cómo funciona la herramienta de código abierto `openapi-generator-cl
 
 Una modificación incompatible hace fallar el test y la documentación describe el contrato ejecutado.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 31 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-31.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-31.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-31.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Sesión 32 · Evolucionar el contrato sin romper el cliente
+
+**Coordinación con Intermodular.** Estas dos sesiones de la semana alimentan [Intermodular 16: Revisar y publicar un contrato compatible](/es/docencia/proyecto-intermodular/ud7-planificar-y-revisar-el-incremento/sesion-16/). Utiliza el mismo repositorio y enlaza las evidencias existentes; consulta la [secuencia y los criterios compartidos](/es/docencia/coordinacion-servidor-intermodular/#semana-16).
+
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-El backend y el cliente pueden publicarse por separado. Un cambio compatible ofrece un tránsito verificable entre versiones.
+El cliente ya depende del contrato documentado. Hoy distinguirás un cambio compatible de otro que obliga a modificarlo. Versionar ofrece una transición cuando ambos contratos deben convivir; marcar una operación como obsoleta avisa de que se retirará, sin eliminarla inmediatamente.
 
 #### El coste invisible de romper un contrato publicado
 
@@ -1342,19 +1340,11 @@ Cuando un cambio incompatible es estrictamente necesario, la API debe ofrecer **
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
 
-Preparad una evolución concreta del contrato y documentad qué consumidor se ve afectado.
+#### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-Aplicad y probad la secuencia de publicación con el cliente del portfolio antes de retirar lo anterior.
-
-Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
-
-#### Paso 1 · Preparar el punto de partida
-
-1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
-2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
-3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
-
-<p class="stage">Evolucionar el contrato sin romper a quien lo consume</p>
+1. Guarda una colección que represente al cliente actual y abre las rutas que vas a evolucionar. No la edites todavía para adaptarla al cambio.
+2. Elige un campo añadido y un cambio incompatible, como renombrar uno requerido por el cliente. Escribe el efecto previsto de cada uno.
+3. Localiza las rutas que ya consume Intermodular y define cómo seguirán funcionando mientras se actualiza el consumidor.
 
 #### Paso 2 · La Ley de Postel (Principio de Robustez)
 
@@ -1381,13 +1371,15 @@ Link: </api/v2/proyectos>; rel="successor-version"
 
 #### Paso 4 · Versionar rutas y añadir campos de forma compatible
 
-Podemos establecer el prefijo `/api/v1` de forma explícita en nuestros controladores:
+Guarda una copia exportada de la colección que representa al cliente anterior. En el controlador identifica un cambio compatible, como un campo opcional añadido, y otro incompatible, como una clave renombrada. Mantén temporalmente las rutas anteriores mientras conectas `/api/v1`; registra la transición en la documentación y prueba ambas colecciones. No cambies a la vez todas las URLs del cliente antiguo: dejarías de comprobar su compatibilidad.
+
+Modifica únicamente el `@RequestMapping` de tu ProyectoController existente, conservando el cuerpo completo:
 
 ```java
-@RestController
-@RequestMapping("/api/v1/proyectos")
-public class ProyectoV1Controller { ... }
+@RequestMapping({"/proyectos", "/api/v1/proyectos"})
 ```
+
+Así ambas rutas llegan temporalmente a la misma implementación. No crees un controlador vacío ni dupliques los endpoints. Actualiza Location y la colección para utilizar la nueva ruta, manteniendo una prueba del cliente anterior.
 
 Supongamos que el equipo de producto nos pide que los proyectos incluyan una etiqueta de color corporativo opcional:
 
@@ -1438,7 +1430,7 @@ public ResponseEntity<ProyectoResponse> obtenerLegado(@PathVariable Long id) {
 
 #### Paso 6 · Migrar tu API entera a /api/v1
 
-Esta es la sesión en la que tus rutas dejan de ser `/proyectos` y pasan a ser `/api/v1/proyectos`, para el resto del curso. Hazlo entero y de una vez, porque a partir de la UD8 todo lo que escribas dará por supuesto ese prefijo.
+Haz inventario de todos los prefijos actuales, añade `/api/v1` de manera consistente y actualiza la variable base de la colección si incluyes allí ese prefijo. Comprueba que no aparece dos veces, como `/api/v1/api/v1`. Ajusta también Location, rutas anidadas, pruebas y configuración CORS. Retira las rutas anteriores solo cuando hayas migrado los consumidores acordados; documenta cualquier retirada en vez de presentarla como un cambio compatible.
 
 1. Añade el prefijo `/api/v1` al `@RequestMapping` de **todos** tus controladores. No lo pongas endpoint a endpoint: un solo sitio por controlador.
 2. Actualiza tu colección de peticiones. Si has usado una variable de entorno para la URL base —como enseñaba la sesión 7—, este paso es un único cambio; si escribiste la URL a mano en cada petición, hoy descubres por qué aquello importaba.
@@ -1455,10 +1447,8 @@ Esta es la sesión en la que tus rutas dejan de ser `/proyectos` y pasan a ser `
 
 #### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
 
-1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
-2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
-3. Compara el resultado con la tarea de esta sesión: **evolucionad el contrato sin romper al consumidor**. Explica qué clase o configuración produce el comportamiento observado.
-4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+1. Ejecuta la colección del cliente anterior contra las rutas mantenidas y verifica que sigue funcionando durante la transición.
+2. Prueba también el contrato nuevo y comprueba los avisos de obsolescencia previstos. Actualiza documentación y consumidor antes de retirar una ruta antigua.
 
 #### Ampliación si has completado el trabajo
 
@@ -1474,7 +1464,7 @@ Investiga el concepto de **pruebas de contrato dirigidas por el consumidor** (*C
 
 <div class="rule">
   <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe técnico sobre la estrategia de versionado y ciclo de obsolescencia de la API, el formato de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-versionado.pdf</code>), nunca un archivo markdown suelto.</p>
+  <p>Incluye esta explicación en el registro de la sesión dentro del repositorio de GitHub, junto al código y las comprobaciones. La entrega es el enlace al repositorio y al commit de la sesión.</p>
 </div>
 
 <div class="practice-levels">
@@ -1497,27 +1487,18 @@ Investiga el concepto de **pruebas de contrato dirigidas por el consumidor** (*C
 
 El consumidor sigue funcionando durante la transición y las versiones compatibles quedan registradas.
 
-Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 #### Entrega de la sesión 32 · Repositorio de GitHub
 
-**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+**Entrega el enlace al repositorio de GitHub del proyecto y al commit con el trabajo de esta sesión.** Incluye el código y las pruebas, colecciones o scripts que hayas modificado. Actualiza el README si cambia el arranque o el uso.
 
-Antes de entregar:
+Actualiza el documento editable y expórtalo como `docs/sesiones/sesion-32.pdf` antes del commit. Registra qué has realizado, qué archivos has cambiado, las comprobaciones anteriores con sus resultados y los pendientes. Guarda ahí también las tablas o respuestas escritas que pide el taller; no necesitas duplicarlas en otro informe.
 
-1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
-2. Crea o actualiza `docs/sesiones/sesion-32.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
-3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
-4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+Sube la versión siguiendo el workflow de Intermodular y comprueba en GitHub que se ven los archivos y el commit y que el profesor puede acceder. Si queda algún fallo, descríbelo y entrega el trabajo realizado. La evaluación es coordinada: Servidor valora esa implementación y sus pruebas; Intermodular valora el proceso de revisión, CI y publicación de la misma versión.
 
-| Dato de la entrega | Qué debes facilitar |
-| --- | --- |
-| Repositorio | Enlace a la página del proyecto en GitHub |
-| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
-| Registro del trabajo | `docs/sesiones/sesion-32.md`, dentro de ese repositorio |
 
-La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 
@@ -1554,7 +1535,7 @@ Un backend descuidado devuelve árboles gigantes de datos, inventa rutas para ca
 | Decisión de ingeniería | Lo que tienes que poder defender ante un tribunal |
 | :--- | :--- |
 | **Subrecursos frente a incrustación masiva** | La incrustación de colecciones completas satura el ancho de banda y provoca problemas de rendimiento; externalizar colecciones dinámicas a subrecursos (`/proyectos/{id}/tareas`) permite paginarlas y consultarlas bajo demanda. |
-| **Parámetros de consulta frente a explosión de rutas** | Expresar filtros mediante Query Params (`/tareas?prioridad=ALTA`) respeta la semántica de recurso único en REST y evita crear combinaciones factoriales de endpoints en el controlador. |
+| **Parámetros de consulta frente a explosión de rutas** | Expresar filtros mediante Query Params (`/tareas?prioridad=alta`) respeta la semántica de recurso único en REST y evita crear combinaciones factoriales de endpoints en el controlador. |
 | **JPQL condicional con evaluación de nulos** | La cláusula `(:param IS NULL OR columna = :param)` permite resolver filtros combinables opcionales en una única consulta limpia sin requerir librerías complejas para catálogos medianos. |
 | **Paginación obligatoria con metadatos** | Devolver `Page<T>` protege la memoria Heap de la JVM, previene colapsos del recolector de basura y proporciona al cliente los metadatos indispensables (`totalElements`, `totalPages`) para renderizar interfaces de navegación. |
 | **`@PageableDefault` con ordenación segura** | Fija límites por defecto (ej: 10 o 20 registros) para clientes que no envíen parámetros, impidiendo que peticiones maliciosas o despistadas descarguen tablas enteras. |
