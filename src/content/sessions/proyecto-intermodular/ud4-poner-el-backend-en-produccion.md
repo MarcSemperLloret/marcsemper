@@ -99,40 +99,86 @@ El resultado de construir el proyecto: en vuestro caso un fichero `.jar` con la 
 
 <p class="stage stage--solo">Individual, con vuestro proyecto de Servidor a mano</p>
 
-**1 · Crear el repositorio** en GitHub, igual que el del portfolio pero con una diferencia importante:
+**1 · Comprobad que compila donde está ahora.** Antes de mover nada, en la carpeta de vuestro proyecto de Servidor:
+
+```bash
+./mvnw -B verify
+```
+
+Si eso no termina en «BUILD SUCCESS», paradlo aquí: hoy no es el día de arreglar la compilación. Un proyecto que no compila en vuestro ordenador no va a compilar en ninguna máquina del mundo, y si lo movéis roto vais a estar media sesión creyendo que el problema es GitHub.
+
+**2 · Anotad la versión de Java que declara el proyecto.** Abrid el `pom.xml` y buscad `<java.version>` o `maven.compiler.release`. Ese número lo vais a necesitar dos veces hoy y una en la sesión siguiente, y si en alguna de las tres ponéis otro, compilaréis dos cosas distintas sin enteraros.
+
+<dl class="answer">
+  <dt>Versión de Java de vuestro proyecto</dt>
+  <dd></dd>
+</dl>
+
+**3 · Crear el repositorio** en GitHub, igual que el del portfolio pero con una diferencia importante:
 
 | Campo | Valor |
 | ----- | ----- |
 | Repository name | <code>api-</code> y el tema de vuestro proyecto |
 | Visibilidad | **Public** |
 | Add a README file | Sí |
-| **.gitignore template** | **Java** |
+| **.gitignore template** | **Maven** |
 | License | MIT |
 
-Esa plantilla de `.gitignore` es la que evita el error del recuadro anterior. Abridla cuando esté creado el repositorio y ved qué contiene: reconoceréis la carpeta de construcción y las extensiones de los ficheros compilados.
+<div class="rule">
+  <p class="rule-label">Maven, no Java</p>
+  <p>En ese desplegable hay dos plantillas que parecen valer y solo una vale. La de <strong>Java</strong> no ignora la carpeta de construcción, y en cambio sí ignora todo lo que acabe en <code>.jar</code>, que es exactamente lo que produce vuestro proyecto. La de <strong>Maven</strong> ignora la carpeta de construcción entera, que es lo que queréis. Si os equivocáis lo vais a notar en el tamaño del primer commit y en un CI que se comporta de forma rarísima.</p>
+</div>
 
-**2 · Meter dentro el proyecto que ya tenéis.** Clonad el repositorio vacío y copiad ahí el contenido de vuestro proyecto de Servidor: el `pom.xml`, la carpeta `src`, y los ficheros del wrapper de Maven —`mvnw`, `mvnw.cmd` y la carpeta `.mvn`— si los tenéis.
+**4 · Copiar el proyecto dentro.** Clonad el repositorio recién creado, que está vacío salvo por el README y el `.gitignore`:
 
 ```bash
 git clone https://github.com/VUESTRO-USUARIO/api-loquesea.git
 cd api-loquesea
 ```
 
-**3 · Comprobad qué va a subirse antes de subirlo.**
+Y copiad ahí, desde vuestro proyecto de Servidor:
+
+| Sí se copia | No se copia |
+| ----------- | ----------- |
+| <code>pom.xml</code> | La carpeta <code>target</code>: se regenera |
+| La carpeta <code>src</code> entera | La carpeta <code>.git</code>, si vuestro proyecto ya era un repositorio |
+| <code>mvnw</code> y <code>mvnw.cmd</code> | Las carpetas de vuestro editor: <code>.idea</code>, <code>.vscode</code> |
+| La carpeta <code>.mvn</code> | Nada que contenga una contraseña |
+
+<details class="aside aside--help">
+  <summary>Si vuestro proyecto de Servidor ya tenía su propio <code>.git</code></summary>
+  <p>Copiar esa carpeta traería también su historial y su origen remoto, y acabaríais empujando a un sitio que no es este. Copiad todo lo demás y dejadla fuera. Vuestro historial de Servidor no se pierde: sigue donde estaba.</p>
+</details>
+
+**5 · Comprobad qué va a subirse, antes de subirlo.**
 
 ```bash
 git add .
 git status
 ```
 
-Leed la lista entera. Si aparece la carpeta de construcción o ficheros con extensión de clase compilada, el `.gitignore` no está haciendo su trabajo: revisadlo antes de continuar.
+Leed la lista entera y comprobad las dos direcciones:
+
+<ul class="checklist">
+  <li>No aparece la carpeta <code>target</code> ni ningún fichero compilado.</li>
+  <li>Sí aparecen <code>mvnw</code>, <code>mvnw.cmd</code> y el contenido de <code>.mvn</code>. Sin ellos, el CI de la siguiente parte no arranca.</li>
+</ul>
 
 ```bash
 git commit -m "Anadir el proyecto inicial de la API"
 git push
 ```
 
-**4 · Cerrar la rama principal.** Repetid el ruleset de la sesión 2, con las mismas cuatro reglas y cero aprobaciones obligatorias. Este repositorio tampoco lleva colaboradores.
+**6 · Cerrar la rama principal.** El mismo ruleset de la sesión 2, porque este repositorio empieza igual de desprotegido que aquel. **Settings → Rules → Rulesets → New ruleset → New branch ruleset**, nombre <code>main protegida</code>, *Enforcement* en **Active**, *Target branches* con **Include default branch**, y estas reglas:
+
+| Regla | Valor |
+| ----- | ----- |
+| Restrict deletions | marcada |
+| Block force pushes | marcada |
+| Require a pull request before merging | marcada, con *Required approvals* en **0** |
+| Require status checks to pass | marcada, pendiente de añadir el check que aún no existe |
+
+Este repositorio tampoco lleva colaboradores: vuestra pareja revisará aquí igual que en el portfolio, sin acceso de escritura.
 
 #### Bloque B · El CI que compila
 
@@ -169,7 +215,7 @@ jobs:
 
 <dl class="worked">
   <dt><code>distribution</code> y <code>java-version</code></dt>
-  <dd>El runner no trae Java preparado para vosotros: se le dice qué distribución y qué versión. Tiene que ser la misma con la que compiláis en clase, o compilaréis dos cosas distintas sin enteraros.</dd>
+  <dd><strong>Poned aquí la versión que anotasteis en el paso 2</strong>, no el 21 del ejemplo. El runner no trae Java preparado para vosotros: se le dice qué distribución y qué versión, y si no coincide con la que declara el <code>pom.xml</code> la compilación falla con un error que no menciona ninguna de las dos.</dd>
   <dt><code>cache: maven</code></dt>
   <dd>Guarda las dependencias descargadas entre ejecuciones. Sin esto, cada pull request se baja medio internet y tarda el triple.</dd>
   <dt><code>./mvnw</code></dt>
@@ -323,7 +369,7 @@ En **portal.azure.com**, buscad `App Services` y pulsad **Crear** → **Aplicaci
 | Grupo de recursos | El mismo del portfolio, o uno nuevo |
 | Nombre | <code>api-</code> y algo vuestro: forma parte de la URL pública |
 | Publicar | **Código** |
-| Pila del entorno de ejecución | **Java 21** |
+| Pila del entorno de ejecución | **La versión de Java que anotasteis en la sesión 7**, no la que venga sugerida |
 | Servidor web de Java | **Java SE (servidor web integrado)** |
 | Sistema operativo | **Linux** |
 | Región | West Europe |
@@ -341,6 +387,11 @@ Revisar y crear. Cuando termine, **Ir al recurso** y abrid la URL: veréis la p�
 4. Si os pregunta por el tipo de autenticación, dejad la opción que venga marcada por defecto.
 5. **Guardar**.
 
+<details class="aside aside--help">
+  <summary>Si al guardar se queja de la autenticación básica</summary>
+  <p>Algunos servicios se crean con la autenticación básica desactivada, y entonces el centro de implementación no puede usar el método del perfil de publicación. Tenéis dos salidas. La limpia: elegir la opción de <strong>identidad</strong> en ese mismo desplegable, que no necesita contraseñas. La rápida: en el menú del servicio, <strong>Configuración → General</strong>, activar la autenticación básica y volver a intentarlo. Las dos funcionan; la primera es la que se usa fuera de clase.</p>
+</details>
+
 Igual que hizo Static Web Apps en la sesión 1, Azure escribe un workflow en vuestro repositorio y guarda las credenciales como secreto. Traedlo y leedlo:
 
 ```bash
@@ -357,7 +408,14 @@ Buscad en el fichero nuevo las dos diferencias con el del portfolio: **hay un pa
   <dd></dd>
   <dt>¿Cómo se llama el secreto que ha creado?</dt>
   <dd></dd>
+  <dt>¿Qué versión de Java usa, y coincide con la vuestra?</dt>
+  <dd></dd>
 </dl>
+
+<div class="rule">
+  <p class="rule-label">Ahora tenéis dos workflows, y hacen cosas distintas</p>
+  <p>El vuestro, <code>ci.yml</code>, se ejecuta en cada pull request y su trabajo es <strong>impedir</strong> que entre algo roto. El de Azure se ejecuta cuando algo ya ha entrado en <code>main</code> y su trabajo es <strong>publicar</strong>. Si algún día veís dos ejecuciones por cada cambio, no es un error de configuración: es el circuito funcionando, exactamente igual que en el portfolio.</p>
+</div>
 
 #### Bloque D · Que arranque, y si no, por qué
 
