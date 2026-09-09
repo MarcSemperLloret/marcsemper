@@ -26,10 +26,10 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Por qué se defiende el proceso y no el producto</p>
-  <p>Un producto se puede copiar, encargar o improvisar el último fin de semana. Un rastro de trabajo de trece semanas, no: lleva fechas, y las fechas no se reescriben. Por eso la defensa de hoy va sobre tres cosas que solo existen si de verdad trabajasteis así.</p>
+  <p>Un producto se puede copiar, encargar o improvisar el último fin de semana. Un rastro de trabajo de catorce semanas, no: lleva fechas, y las fechas no se reescriben. Por eso la defensa de hoy va sobre tres cosas que solo existen si de verdad trabajasteis así.</p>
 </div>
 
-## Sesión 13 · La defensa del proceso
+## Sesión 14 · La defensa del proceso
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -87,8 +87,9 @@ Las preguntas salen del trimestre, y las tenéis todas desde hoy:
 | 8 | Vuestra URL da error y el despliegue está en verde. ¿Por dónde empezáis? |
 | 9 | ¿Protege CORS vuestra API? |
 | 10 | Enseñadme un error de validación en pantalla. ¿De dónde sale ese texto? |
-| 11 | Si mañana cambiáis un campo de la API, ¿qué se rompe y quién avisa? |
-| 12 | ¿Por qué elegisteis ese problema y no los otros dos? |
+| 11 | ¿Dónde vive vuestra base de datos y qué hacéis si alguien ve su contraseña? |
+| 12 | Si mañana cambiáis un campo de la API, ¿qué se rompe y quién avisa? |
+| 13 | ¿Por qué elegisteis ese problema y no los otros dos? |
 
 #### Cómo se puntúa
 
@@ -125,7 +126,7 @@ Antes de defender nada, mirad lo que hay como si fuera de otra persona. Es la mi
 | Releases | Qué versiones hay y si sus notas se entienden |
 
 <dl class="answer">
-  <dt>Semanas con actividad, de trece</dt>
+  <dt>Semanas con actividad, de catorce</dt>
   <dd></dd>
   <dt>Pull requests sin issue asociada</dt>
   <dd></dd>
@@ -211,7 +212,7 @@ Ocho minutos por persona, con los dos repositorios y las dos URL abiertas antes 
     <li>Portfolio publicado, con contenido real y su pipeline de cuatro comprobaciones.</li>
     <li>API desplegada, con su repositorio, su CI que compila y prueba, y su CRUD funcionando desde el portfolio.</li>
     <li>Releases publicadas en los dos repositorios, con READMEs que se entienden.</li>
-    <li>Un rastro de trece semanas: issues, ramas, pull requests, revisiones y fallos resueltos.</li>
+    <li>Un rastro de catorce semanas: issues, ramas, pull requests, revisiones y fallos resueltos.</li>
     <li>El problema del proyecto grande, elegido y fichado.</li>
   </ul>
 </div>
@@ -228,7 +229,7 @@ Ocho minutos por persona, con los dos repositorios y las dos URL abiertas antes 
 
 <div class="rule">
   <p class="rule-label">Qué pasa en enero</p>
-  <p>Empieza el proyecto grande con el problema que elegisteis en la sesión 12, y el circuito deja de explicarse: se usa desde el primer día y se evalúa igual que hoy. Lo que sube es el listón del producto —base de datos, roles, integración externa— y lo que baja es la ayuda. Si esta defensa ha ido bien, la de marzo es la misma con un proyecto más grande detrás.</p>
+  <p>Empieza el proyecto grande con el problema que elegisteis en la sesión 13, y el circuito deja de explicarse: se usa desde el primer día y se evalúa igual que hoy. Lo que sube es el listón del producto —base de datos, roles, integración externa— y lo que baja es la ayuda. Si esta defensa ha ido bien, la de marzo es la misma con un proyecto más grande detrás.</p>
 </div>
 
 ## Lo que debes recordar

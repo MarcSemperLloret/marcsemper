@@ -28,7 +28,7 @@ priorKnowledge:
   <p>Porque la parte que no se puede acelerar es hablar con alguien que sufra el problema, y eso se hace fuera del aula. Si salís hoy con un candidato y un nombre, en enero empezáis a construir. Si salís sin nada, la primera semana de enero se va en elegir, la segunda en dudar, y el proyecto nace con un mes menos.</p>
 </div>
 
-## Sesión 12 · Elegir el problema del proyecto grande
+## Sesión 13 · Elegir el problema del proyecto grande
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -287,10 +287,10 @@ Crear el repositorio del proyecto grande no toca hoy; lo que toca es que la deci
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 13</p>
+  <p class="checkpoint-label">Antes de la sesión 14</p>
   <ul class="checklist">
     <li><code>candidatos.md</code> en el repositorio, con el elegido señalado.</li>
-    <li>Traed preparados los tres artefactos de la defensa: vuestro tablero, la pull request que más se discutió y una ejecución de Actions que falló. En la sesión 13 se defiende con ellos.</li>
+    <li>Traed preparados los tres artefactos de la defensa: vuestro tablero, la pull request que más se discutió y una ejecución de Actions que falló. En la sesión 14 se defiende con ellos.</li>
   </ul>
 </div>
 

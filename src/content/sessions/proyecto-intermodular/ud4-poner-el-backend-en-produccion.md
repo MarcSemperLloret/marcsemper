@@ -5,9 +5,9 @@ section: "ud-04"
 order: 4
 lang: "es"
 summary: "Llevar al circuito la API que se está construyendo en Servidor —repositorio propio, CI que compila y prueba, despliegue en Azure App Service— y escribir el cliente que la consume: listar, crear, modificar y borrar desde el portfolio."
-duration: "15 horas · 5 sesiones de 3 h"
+duration: "18 horas · 6 sesiones de 3 h"
 modality: "Taller · el 80 % de la sesión es trabajo del alumnado"
-deliverable: "API desplegada en una URL pública con su propio pipeline, y el CRUD completo funcionando desde el portfolio publicado."
+deliverable: "API desplegada con su propio pipeline y su base de datos, y el CRUD completo funcionando desde el portfolio publicado."
 date: "2026-09-09"
 outcomes:
   - "Poner un proyecto Java bajo el mismo circuito de trabajo que el portfolio."
@@ -15,6 +15,7 @@ outcomes:
   - "Desplegar una aplicación de Spring Boot en Azure App Service desde GitHub Actions."
   - "Diagnosticar un fallo de arranque en producción leyendo el registro del servicio."
   - "Explicar qué es CORS y configurarlo sin abrirlo a todo el mundo."
+  - "Desplegar una base de datos, conectarla por variables de entorno y demostrar que los datos sobreviven a un reinicio."
   - "Consumir una API desde el navegador contemplando carga, error y vacío."
   - "Escribir contra la API creando, modificando y borrando, con los errores de validación junto al campo que los provoca."
   - "Coordinar dos piezas que se despliegan por separado y saber qué se rompe cuando una va por delante."
@@ -35,7 +36,7 @@ priorKnowledge:
 </div>
 
 <div class="rule">
-  <p class="rule-label">Sin base de datos, y se dice</p>
+  <p class="rule-label">La persistencia llega dentro del trimestre</p>
   <p>Se despliega el mismo CRUD que elegisteis y estáis construyendo en Servidor. La primera publicación puede guardar datos en memoria: esa limitación se documenta. PostgreSQL llega en la UD5 de Servidor, dentro del <strong>primer trimestre</strong>, y desde entonces se publica la versión persistente por este mismo workflow. No se crea otra API para Intermodular.</p>
 </div>
 
@@ -944,15 +945,226 @@ Con crear, listar y borrar funcionando contra la API publicada, falta la operaci
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 12</p>
+  <p class="checkpoint-label">Antes de la sesión 11</p>
   <ul class="checklist">
     <li>El CRUD completo funcionando entre las dos URL públicas, no en local.</li>
     <li>Los errores de validación de vuestra API se ven junto al campo que los provocó.</li>
+    <li>Sabéis decir dónde guarda los datos vuestra API hoy y qué les pasa cuando se reinicia.</li>
+  </ul>
+</div>
+
+## Sesión 11 · La base de datos en producción
+
+<div class="checkpoint checkpoint--start">
+  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
+  <ol>
+    <li>Vuestra API se reinicia. ¿Qué pasa hoy con lo que habíais guardado?</li>
+    <li>La contraseña de vuestra base de datos local, ¿dónde está escrita ahora mismo?</li>
+    <li>Añadís un campo a una entidad y desplegáis. ¿Quién cambia la tabla?</li>
+  </ol>
+</div>
+
+---
+
+### Se explica
+
+#### Lo que cambia cuando el estado sobrevive
+
+Hasta hoy vuestra API era desechable: se reiniciaba y volvía a empezar de cero. Eso hacía los despliegues muy baratos, porque no había nada que perder. A partir de hoy hay algo que perder, y eso trae tres problemas nuevos que no existían.
+
+<figure class="diagram">
+  <figcaption>Lo que añade tener datos de verdad</figcaption>
+  <ol class="flow">
+    <li><span class="flow-role">Un servicio más</span>La base de datos no vive dentro de vuestra aplicación: es otro servicio, con su propia dirección, su propio ciclo de vida y su propia factura.</li>
+    <li><span class="flow-role">La credencial más peligrosa</span>Quien tenga la cadena de conexión tiene los datos. No se escribe en el código, no se pega en un chat y no se sube a un repositorio público.</li>
+    <li><span class="flow-role">Un esquema que cambia</span>Vuestro código evoluciona y las tablas tienen que seguirle. Eso deja de ser gratis en cuanto hay datos dentro que no queréis perder.</li>
+  </ol>
+</figure>
+
+#### Dos bases de datos, una aplicación
+
+<p class="term">Entorno</p>
+
+Cada sitio donde corre la misma aplicación con una configuración distinta. Vosotros vais a tener dos: el de vuestro portátil, con datos inventados que podéis borrar cuando queráis, y el de producción, con los datos que enseñaréis en la defensa.
+
+La regla es la misma de la sesión 9, ahora con más consecuencias: **ninguna de las dos direcciones se escribe en el código**. La aplicación las lee del entorno, y por eso el mismo artefacto que probasteis en local es exactamente el que corre en producción.
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Mal</p>
+    <p class="compare-body">La cadena de conexión y su contraseña en <code>application.properties</code>. Funciona hasta que hay dos entornos, y para entonces la credencial ya está en el historial del repositorio para siempre.</p>
+  </div>
+  <div>
+    <p class="compare-label">Bien</p>
+    <p class="compare-body">La aplicación lee la dirección, el usuario y la contraseña del entorno. En el repositorio solo hay un fichero de ejemplo con los nombres de las variables y valores falsos.</p>
+  </div>
+</div>
+
+<div class="rule">
+  <p class="rule-label">Una credencial filtrada no se borra: se cambia</p>
+  <p>Si subís una contraseña por error y luego la quitáis en otro commit, sigue estando en el historial y cualquiera puede leerla. Lo único que la neutraliza es <strong>cambiarla en el servidor</strong>. Borrar el commit no sirve de nada, y hacerlo os deja además con la falsa sensación de haberlo arreglado.</p>
+</div>
+
+#### Qué cuesta esto
+
+Nada, si lo hacéis como toca. Vuestra cuenta de estudiante incluye durante doce meses un servidor de PostgreSQL pequeño —750 horas al mes y 32 GB— que es más de lo que necesitáis y que **no consume el crédito de 100 dólares**. 750 horas al mes cubren una instancia encendida todo el mes.
+
+Dos avisos que van juntos: si creáis un servidor más grande que ese, sí empieza a costar crédito; y cuando pasen los doce meses la oferta se acaba, así que en algún momento tendréis que decidir si lo mantenéis o lo apagáis. Anotad hoy la fecha.
+
+---
+
+### Se trabaja
+
+#### Bloque A · Crear el servidor
+
+<p class="stage stage--guided">Todos a la vez, a la misma pantalla</p>
+
+En **portal.azure.com**, buscad `Azure Database for PostgreSQL` y elegid **Servidor flexible** (*Flexible server*) → **Crear**.
+
+| Campo | Valor |
+| ----- | ----- |
+| Suscripción y grupo de recursos | Los mismos que la API |
+| Nombre del servidor | <code>db-</code> y algo vuestro: forma parte de una dirección pública |
+| Región | La misma que vuestro App Service |
+| Tipo de carga de trabajo | **Desarrollo** |
+| Proceso y almacenamiento | **Burstable B1ms**, 32 GB |
+| Nombre de usuario administrador | Uno vuestro, y **no** <code>admin</code> |
+| Contraseña | Larga, y guardada donde podáis recuperarla |
+
+<div class="rule">
+  <p class="rule-label">Comprobad el tamaño antes de crear</p>
+  <p>Si el proceso no dice <strong>B1ms</strong>, paradlo. Es la única configuración que entra en lo que vuestra cuenta cubre gratis; cualquier otra empieza a descontar crédito desde el primer minuto, y un servidor de base de datos encendido gasta esté o no atendiendo peticiones.</p>
+</div>
+
+**La red.** En la pestaña de conectividad, acceso **público**, y marcad la casilla que permite que **los servicios de Azure** se conecten al servidor. Sin eso vuestro App Service no llega. Añadid también vuestra propia dirección IP si queréis conectaros desde clase.
+
+**La base de datos.** Cuando el servidor exista, cread dentro una base de datos con el nombre de vuestro proyecto. Un servidor puede contener varias; la aplicación se conecta a una.
+
+#### Bloque B · La conexión, como secreto
+
+<p class="stage stage--solo">Individual, sin escribir nada en el código</p>
+
+En vuestro App Service: **Configuración → Variables de entorno**, y tres nuevas:
+
+| Nombre | Valor |
+| ------ | ----- |
+| <code>SPRING_DATASOURCE_URL</code> | <code>jdbc:postgresql://VUESTRO-SERVIDOR.postgres.database.azure.com:5432/VUESTRA-BD?sslmode=require</code> |
+| <code>SPRING_DATASOURCE_USERNAME</code> | El usuario administrador que creasteis |
+| <code>SPRING_DATASOURCE_PASSWORD</code> | Su contraseña |
+
+<details class="aside aside--help">
+  <summary>Por qué <code>sslmode=require</code> no es opcional</summary>
+  <p>El servidor rechaza las conexiones sin cifrar. Si lo omitís, el fallo que veréis no dice «falta SSL»: dice que no se puede conectar, y os pasaréis media sesión mirando el cortafuegos. Es de los errores que solo se reconocen una vez.</p>
+</details>
+
+**Lo que va al repositorio.** Nada de lo anterior. Lo que sí va es un fichero de ejemplo con los nombres de las variables y valores inventados, para que quien clone el proyecto sepa qué tiene que rellenar. Esa es la diferencia entre un proyecto que otra persona puede arrancar y uno que solo funciona en vuestro ordenador.
+
+#### Bloque C · Que las tablas existan, y sepáis quién las creó
+
+<p class="stage stage--solo">Individual</p>
+
+Vuestra aplicación puede crear el esquema sola al arrancar. Es cómodo y tiene un límite que hay que conocer **antes** de que muerda:
+
+<dl class="worked">
+  <dt>Lo que sí hace</dt>
+  <dd>Crear tablas y columnas que faltan. Si añadís un campo a una entidad y desplegáis, aparece la columna.</dd>
+  <dt>Lo que no hace nunca</dt>
+  <dd>Borrar ni renombrar nada. Si quitáis un campo, la columna se queda ahí para siempre. Si lo renombráis, tendréis las dos.</dd>
+  <dt>La consecuencia</dt>
+  <dd>Vuestro esquema de producción acaba dependiendo del orden en que desplegasteis, y no de lo que dice el código hoy. Con un proyecto de aula se aguanta; en una empresa, no.</dd>
+  <dt>Lo que se usa fuera</dt>
+  <dd>Migraciones: ficheros versionados que describen cada cambio del esquema y se aplican en orden. No las vamos a montar aquí, pero sabed que es lo que falta.</dd>
+</dl>
+
+**Datos de prueba.** Cargad unos cuantos, inventados, suficientes para que la demostración enseñe algo. Una lista vacía no demuestra nada, y llenarla a mano delante del tribunal tampoco.
+
+#### Bloque D · La comprobación que importa
+
+<p class="stage stage--solo">Individual, y esta es la que decide si la sesión ha salido</p>
+
+1. Cread un elemento desde vuestro portfolio publicado.
+2. En el portal, **reiniciad** vuestro App Service.
+3. Esperad a que despierte y volved a abrir el portfolio.
+4. El elemento sigue ahí.
+
+Eso, y solo eso, es tener persistencia en producción. Hasta hoy ese elemento habría desaparecido.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación de la sesión</p>
+  <ul class="checklist">
+    <li>El servidor de base de datos existe, es B1ms y está en la misma región que la API.</li>
+    <li>Las tres variables están en el App Service y ninguna en el repositorio.</li>
+    <li>Hay datos de ejemplo cargados.</li>
+    <li>Los datos sobreviven a un reinicio del servicio, comprobado por vosotros.</li>
+  </ul>
+</div>
+
+<details class="aside aside--help">
+  <summary>Si en Servidor todavía no habéis terminado la persistencia</summary>
+  <p>Haced igualmente los bloques A y B: el servidor y las variables son trabajo de esta asignatura y no dependen de que vuestra aplicación sepa usarlos todavía. En cuanto la versión con persistencia esté lista, entra por el circuito de siempre y el bloque D se hace entonces. Lo que no vale es llegar a la entrega del trimestre sin haberlo comprobado nunca.</p>
+</details>
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Servidor creado, conexión por variables de entorno y datos que sobreviven a un reinicio.</span></div>
+  <div><strong>Si lo tenéis</strong><span>El fichero de ejemplo en el repositorio, con los nombres de las variables y ningún valor real.</span></div>
+  <div><strong>Reto</strong><span>Haced que el CI ejecute los tests contra una base de datos de verdad, levantando PostgreSQL como servicio del workflow en lugar de simularla.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Cómo se levanta PostgreSQL dentro del CI</summary>
+
+```yaml
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+```
+
+  <p>Va dentro del job, al mismo nivel que <code>steps</code>. GitHub levanta ese contenedor antes de ejecutar nada y lo destruye al terminar, así que cada ejecución empieza con una base de datos limpia. Vuestros tests se conectan a <code>localhost:5432</code>.</p>
+</details>
+
+---
+
+### Cierre
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
+  <ol>
+    <li>¿Por qué la contraseña de la base de datos no puede estar en <code>application.properties</code>?</li>
+    <li>Subís una credencial por error y la quitáis en el commit siguiente. ¿Está resuelto?</li>
+    <li>Quitáis un campo de una entidad y desplegáis. ¿Qué le pasa a la columna?</li>
+    <li>¿Por qué el servidor rechaza vuestra conexión si no pedís SSL?</li>
+    <li>¿Qué demuestra reiniciar el servicio y volver a mirar?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque el repositorio es público y porque la dirección cambia entre entornos. Va en el entorno, y en el repositorio solo un ejemplo con valores falsos.</p>
+  <p>2 · No. Sigue en el historial. Lo único que lo resuelve es cambiar la contraseña en el servidor.</p>
+  <p>3 · Se queda. La creación automática de esquema añade, pero no borra ni renombra nunca.</p>
+  <p>4 · Porque solo acepta conexiones cifradas, y el error que da no menciona el cifrado: parece un problema de red.</p>
+  <p>5 · Que los datos viven fuera de la aplicación. Es la única comprobación que distingue persistencia de casualidad.</p>
+</details>
+
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Antes de la sesión 12</p>
+  <ul class="checklist">
+    <li>Los datos de vuestra API sobreviven a un reinicio, comprobado.</li>
+    <li>Ninguna credencial en ninguno de vuestros dos repositorios, revisado mirando el historial y no solo los ficheros de hoy.</li>
     <li>Traéis anotado qué pasaría si mañana cambiarais el nombre de un campo en la API.</li>
   </ul>
 </div>
 
-## Sesión 11 · Dos piezas, una entrega
+## Sesión 12 · Dos piezas, una entrega
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -1092,11 +1304,11 @@ Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 11</p>
+  <p class="checkpoint-label">Antes de la sesión 13</p>
   <ul class="checklist">
     <li>Las dos piezas publicadas, enlazadas entre sí desde sus README.</li>
     <li>Una revisión vuestra en cada repositorio de vuestra pareja: el del portfolio y el de la API.</li>
-    <li>Traéis pensado, de las dos semanas siguientes, qué proyecto os gustaría hacer de verdad: en la sesión 12 se empieza a elegir el problema del proyecto grande.</li>
+    <li>Traéis pensado, de las dos semanas siguientes, qué proyecto os gustaría hacer de verdad: en la sesión 13 se empieza a elegir el problema del proyecto grande.</li>
   </ul>
 </div>
 
