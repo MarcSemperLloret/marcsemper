@@ -1352,6 +1352,14 @@ select {
     grid-template-columns: 250px minmax(0, 760px);
   }
 
+  /* A class with two or fewer sections has no rail. Without this, its content
+     would be laid out in the rail's column: squeezed to a third of the width,
+     pinned to the left, with every table scrolling sideways. */
+  .lesson-grid--full {
+    grid-template-columns: minmax(0, 760px);
+    justify-content: center;
+  }
+
   .lesson-toc {
     align-self: start;
     position: sticky;

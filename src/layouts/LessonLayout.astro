@@ -73,6 +73,13 @@ const eyebrow =
 // subsections too would be longer than the class it summarises.
 const outline = headings.filter((heading) => heading.depth === 2);
 
+/**
+ * A class with two or fewer sections gets no rail: an index of two entries is
+ * longer to read than the page it indexes. The grid has to be told, because
+ * otherwise its content lands in the column the rail would have occupied.
+ */
+const hasOutline = outline.length > 2;
+
 const jsonLd = {
   "@type": "LearningResource",
   "@id": `${site.url}${Astro.url.pathname}#lesson`,
@@ -102,8 +109,8 @@ const jsonLd = {
   />
 
   <article class="lesson-body">
-    <div class="container lesson-grid">
-      {outline.length > 2 && (
+    <div class:list={["container", "lesson-grid", !hasOutline && "lesson-grid--full"]}>
+      {hasOutline && (
         <nav class="lesson-toc" aria-label={t.contents}>
           <p class="toc-title">{t.contents}</p>
           <ol>
