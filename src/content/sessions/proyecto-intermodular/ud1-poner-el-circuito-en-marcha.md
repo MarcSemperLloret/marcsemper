@@ -78,7 +78,7 @@ Todo lo que hagáis de aquí a diciembre pasa por estos siete pasos, siempre en 
 
 <figure class="diagram">
   <figcaption>El circuito, de la tarea a la URL</figcaption>
-  <ol class="flow flow--chain">
+  <ol class="flow">
     <li><span class="flow-role">Issue</span>Una tarea escrita, con un criterio para saber cuándo está hecha.</li>
     <li><span class="flow-role">Rama</span>Una copia de trabajo donde se puede romper todo sin afectar a lo publicado.</li>
     <li><span class="flow-role">Commit</span>El cambio, con un mensaje que dice qué cambia.</li>
@@ -462,7 +462,7 @@ La lista de condiciones que cumple cualquier trabajo antes de considerarse hecho
 
 <figure class="diagram">
   <figcaption>Terminado, en este módulo</figcaption>
-  <ol class="flow flow--chain">
+  <ol class="flow">
     <li>El cambio está en una rama con el número de su issue.</li>
     <li>Ha entrado por una pull request que dice qué issue cierra.</li>
     <li>La comprobación automática está en verde.</li>
@@ -511,7 +511,7 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
 
 **3 · Escribir seis issues.** Pestaña **Issues** → **New issue**. Convertid vuestras seis frases en issues con título y criterio de aceptación. Ejemplo del formato exacto:
 
-<dl class="record">
+<dl class="worked">
   <dt>Título</dt>
   <dd>Añadir la cabecera con nombre y titulación</dd>
   <dt>Cuerpo</dt>
@@ -767,7 +767,7 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 
 <figure class="diagram">
   <figcaption>De la tarea a la URL, sin atajos</figcaption>
-  <ol class="flow flow--chain">
+  <ol class="flow">
     <li><span class="flow-role">Issue</span>Título con verbo y criterio de aceptación. Si no cabe en una sesión, son dos.</li>
     <li><span class="flow-role">Rama</span><code>numero-descripcion-corta</code>, sacada siempre de <code>main</code> actualizada.</li>
     <li><span class="flow-role">Commit</span>Un cambio, un mensaje en imperativo, una línea.</li>
@@ -788,23 +788,14 @@ Tres ideas que sostienen todo lo demás:
 
 ### El vocabulario de la unidad
 
-<dl class="record">
-  <dt>Issue</dt>
-  <dd>Una tarea con criterio de aceptación. Se cierra sola desde la pull request que la resuelve.</dd>
-  <dt>Rama</dt>
-  <dd>Línea de trabajo paralela donde se puede romper todo sin tocar lo publicado.</dd>
-  <dt>Pull request</dt>
-  <dd>Propuesta de incorporar una rama a otra. Es donde ocurren la comprobación automática y la revisión humana.</dd>
-  <dt>Workflow</dt>
-  <dd>Fichero en <code>.github/workflows/</code> que dice qué ejecuta GitHub y cuándo. Va versionado con el proyecto.</dd>
-  <dt>Check</dt>
-  <dd>Resultado de una comprobación automática sobre una pull request. Puede bloquear la fusión.</dd>
-  <dt>Entorno de vista previa</dt>
-  <dd>URL temporal donde se publica una rama mientras su pull request está abierta. Desaparece al cerrarla.</dd>
-  <dt>Secreto</dt>
-  <dd>Credencial guardada en el repositorio, legible por los workflows y por nadie más. Nunca se escribe en un fichero.</dd>
-  <dt>Ruleset</dt>
-  <dd>Conjunto de reglas que GitHub aplica sobre una rama. Es lo que convierte el circuito en obligatorio.</dd>
-  <dt>Definición de terminado</dt>
-  <dd>Las cinco condiciones que cumple cualquier trabajo de este módulo antes de darse por hecho.</dd>
-</dl>
+| Concepto | Significa |
+| -------- | --------- |
+| Issue | Una tarea con criterio de aceptación. Se cierra sola desde la pull request que la resuelve |
+| Rama | Línea de trabajo paralela donde se puede romper todo sin tocar lo publicado |
+| Pull request | Propuesta de incorporar una rama a otra. Es donde ocurren la comprobación automática y la revisión humana |
+| Workflow | Fichero en <code>.github/workflows/</code> que dice qué ejecuta GitHub y cuándo. Va versionado con el proyecto |
+| Check | Resultado de una comprobación automática sobre una pull request. Puede bloquear la fusión |
+| Entorno de vista previa | URL temporal donde se publica una rama mientras su pull request está abierta. Desaparece al cerrarla |
+| Secreto | Credencial guardada en el repositorio, legible por los workflows y por nadie más. Nunca se escribe en un fichero |
+| Ruleset | Conjunto de reglas que GitHub aplica sobre una rama. Es lo que convierte el circuito en obligatorio |
+| Definición de terminado | Las cinco condiciones que cumple cualquier trabajo de este módulo antes de darse por hecho |

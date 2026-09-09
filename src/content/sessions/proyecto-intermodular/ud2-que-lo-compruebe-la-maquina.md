@@ -659,7 +659,7 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
 
 <figure class="diagram">
   <figcaption>Las puertas del portfolio, y quién las vigila</figcaption>
-  <ol class="flow flow--chain">
+  <ol class="flow">
     <li><span class="flow-role">Azure</span>¿Ha subido? Es un check de despliegue, no dice nada de la calidad.</li>
     <li><span class="flow-role">HTML válido</span>¿El documento está bien construido? Máquina.</li>
     <li><span class="flow-role">Enlaces vivos</span>¿Todos los enlaces llevan a algún sitio? Máquina.</li>
@@ -679,21 +679,13 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
 
 ### El vocabulario de la unidad
 
-<dl class="record">
-  <dt>Runner</dt>
-  <dd>Máquina limpia que GitHub crea para ejecutar un workflow y destruye al acabar.</dd>
-  <dt>Job</dt>
-  <dd>Un trabajo dentro del workflow. Corre en su propia máquina, en paralelo con los demás, y aparece como un check propio.</dd>
-  <dt>Step</dt>
-  <dd>Un paso de un job, en orden. <code>uses</code> ejecuta una acción ajena; <code>run</code>, un comando vuestro.</dd>
-  <dt>Integración continua</dt>
-  <dd>Comprobar automáticamente cada cambio antes de incorporarlo, en lugar de descubrir los problemas al final.</dd>
-  <dt>Formateador</dt>
-  <dd>Herramienta que impone un formato fijo. En modo comprobación no toca nada: informa y falla.</dd>
-  <dt>Lighthouse</dt>
-  <dd>Auditoría automática de una página: rendimiento, accesibilidad, buenas prácticas y SEO, de 0 a 100.</dd>
-  <dt>Presupuesto de calidad</dt>
-  <dd>Mínimo acordado por adelantado y escrito en un fichero. Por debajo, no se fusiona.</dd>
-  <dt>Falso positivo</dt>
-  <dd>Un fallo del CI sobre algo que en realidad está bien. Se resuelve configurando la excepción y explicándola, nunca apagando la comprobación.</dd>
-</dl>
+| Concepto | Significa |
+| -------- | --------- |
+| Runner | Máquina limpia que GitHub crea para ejecutar un workflow y destruye al acabar |
+| Job | Un trabajo dentro del workflow. Corre en su propia máquina, en paralelo con los demás, y aparece como un check propio |
+| Step | Un paso de un job, en orden. <code>uses</code> ejecuta una acción ajena; <code>run</code>, un comando vuestro |
+| Integración continua | Comprobar automáticamente cada cambio antes de incorporarlo, en lugar de descubrir los problemas al final |
+| Formateador | Herramienta que impone un formato fijo. En modo comprobación no toca nada: informa y falla |
+| Lighthouse | Auditoría automática de una página: rendimiento, accesibilidad, buenas prácticas y SEO, de 0 a 100 |
+| Presupuesto de calidad | Mínimo acordado por adelantado y escrito en un fichero. Por debajo, no se fusiona |
+| Falso positivo | Un fallo del CI sobre algo que en realidad está bien. Se resuelve configurando la excepción y explicándola, nunca apagando la comprobación |
