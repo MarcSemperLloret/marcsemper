@@ -291,7 +291,7 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
   <p class="checkpoint-label">Antes de la sesión 8</p>
   <ul class="checklist">
     <li>La API arranca en vuestro ordenador y responde a una petición desde el navegador.</li>
-    <li>Sabéis decir en qué puerto escucha y qué ruta devuelve la lista de vuestros datos.</li>
+    <li>Sabéis decir en qué puerto escucha —lo dice al arrancar— y qué ruta devuelve la lista de vuestros datos.</li>
     <li>El check de compilación está en verde en <code>main</code>.</li>
   </ul>
 </div>
@@ -330,7 +330,11 @@ Hasta ahora habéis desplegado ficheros: Azure los copiaba y un servidor los ser
 
 Un valor que el programa lee del sistema donde se está ejecutando, en lugar de tenerlo escrito dentro. Es lo que permite que el mismo artefacto funcione en vuestro portátil y en producción sin cambiar ni una línea.
 
-La primera que os va a hacer falta es el puerto. En vuestro ordenador mandáis vosotros; en un servicio gestionado manda el servicio, que le dice a la aplicación por dónde tiene que escuchar. Una aplicación que ignora esa indicación arranca correctamente y **no la encuentra nadie**, que es el fallo más desconcertante de esta sesión porque no aparece ningún error.
+La primera que os va a hacer falta es el puerto, y ahí hay un desencuentro que os va a pasar a todos. **App Service manda las peticiones al puerto 80** de vuestra aplicación, porque es lo que espera por defecto. **Spring Boot escucha en el 8080**, porque es lo que hace siempre. Nadie está equivocado, sencillamente no se han puesto de acuerdo.
+
+Se arregla por cualquiera de los dos lados: o la aplicación escucha en el 80, o se le dice a App Service que vosotros estáis en el 8080. Vamos a hacer lo segundo, porque no toca el código y porque el mismo artefacto sigue arrancando igual en vuestro portátil.
+
+Si no se hace, pasa lo más desconcertante de la sesión: **la aplicación arranca perfectamente y no la encuentra nadie**. No hay ningún error, solo una URL que no responde.
 
 #### El plan gratuito, con sus dos peajes
 
@@ -345,17 +349,18 @@ Vais a desplegar en el plan **F1**, que no consume crédito. A cambio tiene dos 
 
 ### Se trabaja
 
-#### Bloque A · Decirle a la aplicación en qué puerto escuchar
+#### Bloque A · Comprobar en qué puerto escucháis
 
-<p class="stage stage--solo">Individual, en el proyecto de la API</p>
+<p class="stage stage--solo">Individual, en local</p>
 
-En `src/main/resources/application.properties`:
+Arrancad la API en vuestro ordenador y leed la línea que escribe al arrancar. Dice el puerto. Si no habéis tocado nada, será el **8080**, que es el de Spring Boot por defecto.
 
-```properties
-server.port=${PORT:8080}
-```
+<dl class="answer">
+  <dt>Puerto en el que escucha vuestra API</dt>
+  <dd></dd>
+</dl>
 
-Se lee así: «escucha en el puerto que diga la variable de entorno `PORT`, y si no hay ninguna, en el 8080». Con eso, el mismo artefacto sirve para las dos situaciones. Comprobad que en local sigue arrancando igual que antes, y que entra por el circuito como cualquier otro cambio.
+Ese número lo vais a necesitar en el bloque siguiente, en cuanto exista el servicio donde configurarlo. No cambiéis nada en el código: lo que se va a ajustar es el servicio, no la aplicación.
 
 #### Bloque B · Crear el servicio en Azure
 
@@ -376,6 +381,14 @@ En **portal.azure.com**, buscad `App Services` y pulsad **Crear** → **Aplicaci
 | Plan de precios | **F1 gratuito** |
 
 Revisar y crear. Cuando termine, **Ir al recurso** y abrid la URL: veréis la página por defecto de App Service, porque todavía no hay nada vuestro dentro.
+
+**El ajuste del puerto, ahora que ya hay dónde ponerlo.** En el menú del servicio: **Configuración → Variables de entorno**, y añadid una nueva:
+
+| Nombre | Valor |
+| ------ | ----- |
+| <code>WEBSITES_PORT</code> | El puerto que anotasteis en el bloque A, normalmente <code>8080</code> |
+
+Guardad. Con eso le habéis dicho a App Service dónde escucháis, en lugar de obligar a vuestra aplicación a mudarse al 80.
 
 #### Bloque C · Conectarlo con GitHub
 
@@ -431,7 +444,7 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 | -------------------------- | ------------- |
 | La aplicación arranca y dice el puerto | Arrancó bien: el problema es de ruta, probad otra vez la URL completa |
 | Una excepción al arrancar | Es vuestro código o vuestra configuración: mismo error que veríais en local |
-| Nada, y la URL da error de aplicación | Casi siempre el puerto: revisad el bloque A |
+| Nada, y la URL da error de aplicación | Casi siempre el puerto: comprobad que <code>WEBSITES_PORT</code> vale lo mismo que dice vuestra aplicación al arrancar |
 
 <div class="rule">
   <p class="rule-label">El registro es la primera herramienta, no la última</p>
@@ -451,7 +464,7 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
-    <li>¿Qué hace <code>server.port=${PORT:8080}</code> y por qué no vale con dejar el 8080 a secas?</li>
+    <li>App Service manda las peticiones al 80 y vuestra aplicación escucha en el 8080. ¿De cuántas formas se puede arreglar y cuál habéis usado?</li>
     <li>¿Por qué el workflow de la API tiene dos jobs y el del portfolio uno?</li>
     <li>La URL da error y el despliegue está en verde. ¿Cuál es vuestro primer movimiento?</li>
     <li>¿Por qué la primera petición del día tarda tanto?</li>
@@ -460,7 +473,7 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Escucha en el puerto que indique el entorno y, si no hay ninguno, en el 8080. Sin eso, en producción la aplicación arranca donde nadie la busca.</p>
+  <p>1 · De dos: que la aplicación escuche en el 80, o decirle a App Service que escucháis en el 8080 con <code>WEBSITES_PORT</code>. Hemos usado la segunda, porque no toca el código y el artefacto sigue siendo el mismo en local y en producción.</p>
   <p>2 · Porque hay que construir antes de desplegar: un job produce el artefacto y el otro lo sube.</p>
   <p>3 · Abrir el flujo de registro del servicio. Leer antes que tocar.</p>
   <p>4 · Porque el plan gratuito duerme el servicio tras un rato sin uso y la primera petición lo despierta.</p>
