@@ -485,6 +485,19 @@ export const teachingCourses: TeachingCourse[] = [
         phase: "1 · WORKING METHOD",
         phaseEs: "1 · MÉTODO DE TRABAJO",
         resources: []
+      },
+      {
+        id: "ud-04",
+        number: "UD4",
+        verb: "CONNECT",
+        verbEs: "CONECTAR",
+        title: "Put the backend into production",
+        titleEs: "Poner el backend en producción",
+        description: "Bring the API being built in the server module into the same circuit: a repository of its own, a CI that compiles and runs the tests, deployment to Azure App Service, and the portfolio consuming it from the browser.",
+        descriptionEs: "Llevar al circuito la API que se construye en Servidor: repositorio propio, un CI que compila y ejecuta los tests, despliegue en Azure App Service, y el portfolio consumiéndola desde el navegador.",
+        phase: "2 · TWO PIECES IN PRODUCTION",
+        phaseEs: "2 · DOS PIEZAS EN PRODUCCIÓN",
+        resources: []
       }
     ]
   },
