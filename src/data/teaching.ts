@@ -498,6 +498,32 @@ export const teachingCourses: TeachingCourse[] = [
         phase: "2 · TWO PIECES IN PRODUCTION",
         phaseEs: "2 · DOS PIEZAS EN PRODUCCIÓN",
         resources: []
+      },
+      {
+        id: "ud-05",
+        number: "UD5",
+        verb: "CHOOSE",
+        verbEs: "ELEGIR",
+        title: "Choose the big problem",
+        titleEs: "Elegir el problema grande",
+        description: "Generate candidate problems from contexts the student can actually reach, discard them with checkable criteria, and leave with one chosen and a person to talk to.",
+        descriptionEs: "Generar candidatos de problema desde contextos con acceso real, descartarlos con criterios comprobables, y salir con uno elegido y una persona con la que hablar.",
+        phase: "3 · CLOSING AND WHAT COMES NEXT",
+        phaseEs: "3 · CIERRE Y SIGUIENTE PROYECTO",
+        resources: []
+      },
+      {
+        id: "ud-06",
+        number: "UD6",
+        verb: "DEFEND",
+        verbEs: "DEFENDER",
+        title: "Defend the method",
+        titleEs: "Defender el método",
+        description: "Close the term by defending how the work was done, with three pieces of evidence that cannot be improvised: the board, the most discussed pull request and a pipeline run that failed.",
+        descriptionEs: "Cerrar la evaluación defendiendo cómo se ha trabajado, con tres evidencias que no se pueden improvisar: el tablero, la pull request más discutida y una ejecución del pipeline que falló.",
+        phase: "3 · CLOSING AND WHAT COMES NEXT",
+        phaseEs: "3 · CIERRE Y SIGUIENTE PROYECTO",
+        resources: []
       }
     ]
   },

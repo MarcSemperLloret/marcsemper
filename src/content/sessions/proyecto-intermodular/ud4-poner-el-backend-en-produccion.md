@@ -457,6 +457,14 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
   <div><strong>Reto</strong><span>Añadid una ruta de estado que devuelva simplemente que la aplicación está viva, y comprobadla con <code>curl</code> desde vuestra terminal.</span></div>
 </div>
 
+<details class="aside aside--extra">
+  <summary>Plan alternativo si el plan gratuito no da de sí</summary>
+  <p>El F1 tiene dos límites que pueden apretar. Uno es 1 GB de memoria. El otro son <strong>60 minutos de CPU al día</strong>, contados por región y por suscripción y compartidos entre todas vuestras aplicaciones gratuitas de esa región: si se agotan, el servicio se para y todo responde 403 hasta la medianoche UTC. Una aplicación que arranca y muere en bucle se los come en una mañana.</p>
+  <p>La alternativa es <strong>Azure Container Apps</strong>, que tiene franja mensual gratuita —180.000 segundos de vCPU, 360.000 de memoria y dos millones de peticiones— y que <em>escala a cero</em>: mientras nadie la usa no consume nada.</p>
+  <p>Lo importante es lo que <strong>no</strong> cambia: el repositorio, el circuito, el CI, el ajuste del puerto, CORS y la coordinación entre las dos piezas son idénticos. Lo único distinto es que allí se despliega una imagen en lugar de un artefacto, y Spring Boot la construye solo con <code>./mvnw spring-boot:build-image</code>, sin que tengáis que escribir un Dockerfile.</p>
+  <p>Esto se decide en clase y para todo el grupo. No os cambiéis por vuestra cuenta.</p>
+</details>
+
 ---
 
 ### Cierre
