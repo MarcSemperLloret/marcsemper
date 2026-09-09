@@ -18,6 +18,7 @@ requirements:
   - "Segunda versión funcional de la UD10."
 priorKnowledge:
   - "Testing, seguridad, accesibilidad y revisión aprendidos en los módulos correspondientes."
+draft: true
 ---
 
 <p class="lead">Proyecto Intermodular consolida la calidad aprendida en otros módulos. No añade listas de conceptos: exige evidencias sobre la versión que se va a publicar.</p>

@@ -17,6 +17,7 @@ requirements:
   - "MVP, prototipo y modelo de datos inicial."
 priorKnowledge:
   - "Fundamentos de HTTP del módulo de Desarrollo Web en Entorno Servidor."
+draft: true
 ---
 
 <p class="lead">Esta es una API v0.1 deliberadamente temprana. El diseño REST formal se estudia en Desarrollo Web en Entorno Servidor; aquí se decide qué necesita este producto y se deja el contrato por escrito antes de implementarlo.</p>

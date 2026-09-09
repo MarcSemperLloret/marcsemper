@@ -17,6 +17,7 @@ requirements:
   - "La idea seleccionada y justificada en la UD2."
 priorKnowledge:
   - "Criterios de viabilidad, interés y diferenciación."
+draft: true
 ---
 
 <p class="lead">La idea deja de ser una frase y se convierte en una especificación que otra persona puede revisar, discutir y construir.</p>

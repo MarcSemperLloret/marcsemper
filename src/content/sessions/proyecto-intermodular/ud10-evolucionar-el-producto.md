@@ -19,6 +19,7 @@ requirements:
   - "Personas disponibles para probarlo."
 priorKnowledge:
   - "Flujo con issues, ramas y pull requests."
+draft: true
 ---
 
 <p class="lead">Una vez que el MVP funciona, el proyecto deja de obedecer únicamente al plan inicial y empieza a responder a evidencias de uso.</p>

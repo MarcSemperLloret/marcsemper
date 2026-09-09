@@ -20,6 +20,7 @@ requirements:
 priorKnowledge:
   - "Cloud y despliegue del módulo de Digitalización."
   - "Build y configuración de Angular y Spring Boot."
+draft: true
 ---
 
 <p class="lead">El producto deja de ser una captura o una ejecución local. Debe tener una URL pública, una configuración reproducible y evidencias de que funciona en producción.</p>

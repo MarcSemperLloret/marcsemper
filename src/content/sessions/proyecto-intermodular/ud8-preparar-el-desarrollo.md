@@ -18,6 +18,7 @@ requirements:
   - "Cuenta de GitHub."
 priorKnowledge:
   - "Fundamentos de Git y GitHub."
+draft: true
 ---
 
 <p class="lead">La gestión de proyecto se introduce de forma aplicada: cada concepto modifica el repositorio y el tablero que se utilizarán durante la construcción.</p>

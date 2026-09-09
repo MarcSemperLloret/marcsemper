@@ -18,6 +18,7 @@ requirements:
   - "Aplicación pública y repositorio consolidado."
 priorKnowledge:
   - "Documentación técnica y comunicación escrita."
+draft: true
 ---
 
 <p class="lead">La aplicación existe, pero todavía hay que hacerla comprensible para una persona que dedica pocos minutos a decidir si quiere saber más.</p>

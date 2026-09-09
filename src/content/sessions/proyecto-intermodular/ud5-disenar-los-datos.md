@@ -17,6 +17,7 @@ requirements:
   - "Especificación y prototipo actualizados."
 priorKnowledge:
   - "Fundamentos de modelado aprendidos en Bases de Datos."
+draft: true
 ---
 
 <p class="lead">El modelo se trabaja primero a nivel conceptual. Proyecto Intermodular conecta con Bases de Datos, pero no vuelve a enseñar el módulo.</p>

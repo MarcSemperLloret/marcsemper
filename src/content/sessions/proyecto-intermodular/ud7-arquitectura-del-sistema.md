@@ -17,6 +17,7 @@ requirements:
   - "Prototipo, modelo de datos y API v0.1."
 priorKnowledge:
   - "Visión general de Angular, Spring Boot y PostgreSQL."
+draft: true
 ---
 
 <p class="lead">La arquitectura de referencia será Angular → Spring Boot → PostgreSQL, adaptada a las particularidades reales de cada proyecto.</p>

@@ -19,6 +19,7 @@ requirements:
   - "Proyecto público y caso de portfolio de la UD13."
 priorKnowledge:
   - "Dominio técnico completo del proyecto propio."
+draft: true
 ---
 
 <p class="lead">La defensa no premia una presentación comercial: comprueba si el alumnado entiende lo que ha construido, puede demostrarlo y reconoce sus límites.</p>

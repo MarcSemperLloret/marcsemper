@@ -17,6 +17,7 @@ requirements:
   - "Los criterios de evaluación construidos en la UD1."
 priorKnowledge:
   - "Capacidad para documentar fuentes, supuestos y decisiones."
+draft: true
 ---
 
 <p class="lead">Objetivo: encontrar un problema suficientemente interesante, viable y defendible. Aquí empieza el proyecto propio.</p>

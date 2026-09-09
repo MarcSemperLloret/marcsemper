@@ -19,6 +19,7 @@ requirements:
   - "Avance suficiente en los módulos técnicos relacionados."
 priorKnowledge:
   - "Git, Angular, Spring Boot, PostgreSQL y APIs según el momento del curso."
+draft: true
 ---
 
 <p class="lead">Aquí cambia el funcionamiento: Proyecto Intermodular no vuelve a enseñar JPA, Angular o REST; los exige, enlaza su material de referencia y acompaña la integración.</p>

@@ -19,6 +19,7 @@ requirements:
   - "Herramienta de wireframes o diseño."
 priorKnowledge:
   - "HTML, CSS y fundamentos de accesibilidad del módulo correspondiente."
+draft: true
 ---
 
 <p class="lead">Todavía no hace falta Angular. Primero se comprueba si el producto se entiende, se puede recorrer y responde al problema definido.</p>
