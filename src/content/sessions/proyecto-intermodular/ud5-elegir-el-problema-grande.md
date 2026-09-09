@@ -51,7 +51,7 @@ Tres cosas, y solo una es técnica.
 | ------------------ | ------------------ |
 | El problema lo pongo yo | El problema lo elegís vosotros, y lo defendéis |
 | El circuito se explica paso a paso | El circuito se da por sabido: se usa y se evalúa |
-| Datos en memoria, un solo tipo de usuario | Base de datos de verdad, roles con permisos distintos, y una integración con algo externo |
+| Un solo tipo de usuario y nada externo | Roles con permisos distintos de verdad, y una integración con un servicio que no controláis |
 
 Lo que **no** cambia es qué se evalúa aquí: el método. Vuestro producto puede ser modesto; lo que no puede ser es un producto sobre el que no sepáis decir por qué existe.
 
