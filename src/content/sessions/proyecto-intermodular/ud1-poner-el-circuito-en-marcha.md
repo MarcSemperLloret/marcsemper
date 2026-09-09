@@ -410,7 +410,7 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 
 <div class="rule">
   <p class="rule-label">Qué pasa en la sesión 2</p>
-  <p>Se cierra <code>main</code>. A partir del martes que viene ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request revisada por vuestra pareja. La sesión consiste en montar eso y recorrerlo dos veces.</p>
+  <p>Se cierra <code>main</code>. A partir del martes que viene ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request, y ninguna se fusiona sin que vuestra pareja la haya revisado antes. La sesión consiste en montar eso y recorrerlo dos veces.</p>
 </div>
 
 ## Sesión 2 · Issues, tablero y la primera pull request
@@ -458,7 +458,7 @@ Cada issue de este curso lleva tres cosas:
 
 <p class="term">Definición de terminado</p>
 
-La lista de condiciones que cumple cualquier trabajo antes de considerarse hecho. Es la misma para todas las tareas del curso, se acuerda una vez y no se negocia tarea a tarea. En este módulo son cinco, y las cinco se comprueban solas:
+La lista de condiciones que cumple cualquier trabajo antes de considerarse hecho. Es la misma para todas las tareas del curso, se acuerda una vez y no se negocia tarea a tarea. En este módulo son cinco, y cuatro de ellas las comprueba GitHub por su cuenta:
 
 <figure class="diagram">
   <figcaption>Terminado, en este módulo</figcaption>
@@ -466,7 +466,7 @@ La lista de condiciones que cumple cualquier trabajo antes de considerarse hecho
     <li>El cambio está en una rama con el número de su issue.</li>
     <li>Ha entrado por una pull request que dice qué issue cierra.</li>
     <li>La comprobación automática está en verde.</li>
-    <li>Otra persona la ha aprobado.</li>
+    <li>Otra persona la ha revisado. Esta es la única que no comprueba ninguna máquina.</li>
     <li>Está visible en la URL pública.</li>
   </ol>
 </figure>
@@ -477,7 +477,7 @@ Fijaos en lo que **no** aparece: nada sobre si la web es bonita, si el CSS está
 
 Hasta hoy podíais hacer `git push` a `main` y publicar. A partir de hoy no, y no es por desconfianza: es que **una regla que se puede saltar no es una regla, es una recomendación**.
 
-Cuando `main` está protegida pasan tres cosas a la vez. La primera, que nadie publica sin que otra persona lo haya visto. La segunda, que nada llega a producción con el pipeline en rojo. Y la tercera, la que os importa para la nota: el historial del repositorio se convierte en **una prueba** de cómo trabajasteis, porque ya no se puede reescribir a posteriori.
+Cuando `main` está protegida pasan tres cosas a la vez. La primera, que ningún cambio llega a la web sin pasar por una pull request, donde queda a la vista de quien quiera mirarla. La segunda, que nada llega a producción con el pipeline en rojo. Y la tercera, la que os importa para la nota: el historial del repositorio se convierte en **una prueba** de cómo trabajasteis, porque ya no se puede reescribir a posteriori.
 
 <div class="compare-pair">
   <div>
@@ -538,9 +538,12 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
 
 <p class="stage stage--guided">A la vez, y al final se comprueba rompiéndolo</p>
 
-**1 · Añadir a vuestra pareja como colaborador.** Sin esto no podrá aprobar nada. **Settings → Collaborators → Add people**, y su usuario de GitHub. Quien reciba la invitación, acéptela desde su correo o desde github.com/notifications.
+<div class="rule">
+  <p class="rule-label">Vuestro repositorio no lleva colaboradores</p>
+  <p>El portfolio es vuestro y nadie más va a tener permiso de escritura sobre él. Vuestra pareja puede revisar sin ningún acceso especial, porque el repositorio es público y cualquiera con una cuenta de GitHub puede entrar en una pull request, comentar sobre las líneas y dejar su revisión. Lo único que necesitaría permiso de escritura es que esa aprobación <em>bloqueara</em> la fusión, y no es lo que queremos: nadie debe quedarse parado en su propio portfolio porque otra persona haya faltado a clase.</p>
+</div>
 
-**2 · Crear la regla.** **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
+**1 · Crear la regla.** **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
 
 | Campo | Valor |
 | ----- | ----- |
@@ -548,13 +551,13 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
 | Enforcement status | **Active** |
 | Target branches | **Add target → Include default branch** |
 
-**3 · Marcar estas cuatro reglas**, y solo estas:
+**2 · Marcar estas cuatro reglas**, y solo estas:
 
 | Regla | Qué impide |
 | ----- | ---------- |
 | **Restrict deletions** | Que alguien borre <code>main</code> |
 | **Block force pushes** | Que se reescriba el historial y desaparezcan las pruebas de vuestro trabajo |
-| **Require a pull request before merging** → *Required approvals:* **1** | Que entre nada sin que otra persona lo apruebe |
+| **Require a pull request before merging** → *Required approvals:* **0** | Que entre nada sin pasar por una pull request, ni siquiera vuestro |
 | **Require status checks to pass** → añadid el check de Azure | Que entre nada con el despliegue en rojo |
 
 <details class="aside aside--help">
@@ -562,9 +565,14 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
   <p>GitHub solo ofrece los checks que ha visto ejecutarse al menos una vez, y el vuestro solo ha corrido sobre <code>main</code>. Dejad la regla sin marcar de momento, haced la primera pull request del bloque C y volved aquí después: ya estará en la lista, con el nombre del job del workflow.</p>
 </details>
 
-**4 · Guardar** con **Create**.
+**3 · Guardar** con **Create**.
 
-**5 · Comprobar que os bloquea a vosotros.** Esto no es opcional: una protección que nadie ha probado no se sabe si está activa.
+<div class="rule">
+  <p class="rule-label">Cero aprobaciones no significa que nadie revise</p>
+  <p>Con cero aprobaciones obligatorias podéis fusionar vosotros mismos, pero solo desde una pull request y solo con los checks en verde. Quien vigila que el trabajo sea correcto es la máquina; quien vigila que <em>haga lo que la issue pedía</em> es vuestra pareja, y esa revisión no la comprueba GitHub: la comprueba la nota. Cada proyecto se entrega con las revisiones que habéis dejado en el repositorio del otro, y son públicas y llevan fecha.</p>
+</div>
+
+**4 · Comprobar que os bloquea a vosotros.** Esto no es opcional: una protección que nadie ha probado no se sabe si está activa.
 
 ```bash
 git switch main
@@ -619,7 +627,7 @@ git push -u origin 3-cabecera-con-nombre
 | ----- | --------- |
 | Título | El mismo que la issue |
 | Descripción | Qué habéis hecho, en dos líneas, y en una línea aparte: <code>Closes #3</code> |
-| Reviewers | Vuestra pareja |
+| Reviewers | Vuestra pareja. Si GitHub no la ofrece en la lista, por no ser colaboradora, le pasáis el enlace de la pull request y revisa igual |
 
 <div class="rule">
   <p class="rule-label">La línea que ata el código a la tarea</p>
@@ -630,7 +638,7 @@ git push -u origin 3-cabecera-con-nombre
 
 **7 · Revisión.** Vuestra pareja hace el bloque D sobre esta pull request. Mientras tanto, vosotros hacéis lo mismo con la suya.
 
-**8 · Fusionar.** Aprobada y con los checks en verde, se activa **Merge pull request**. Elegid **Squash and merge**: los commits de la rama se resumen en uno solo en `main`, y el historial de la rama principal queda con una entrada por tarea. Después, **Delete branch**.
+**8 · Fusionar.** Con la revisión hecha y los checks en verde, **Merge pull request**. Fusionar antes de que vuestra pareja haya respondido es saltarse el circuito aunque GitHub os deje. Elegid **Squash and merge**: los commits de la rama se resumen en uno solo en `main`, y el historial de la rama principal queda con una entrada por tarea. Después, **Delete branch**.
 
 **9 · Comprobar los cuatro efectos.** Sin tocar nada más:
 
@@ -696,11 +704,11 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 | ------ | ------ |
 | **Comment** | Tenéis una duda pero no bloqueáis |
 | **Approve** | Habéis abierto la vista previa y cumple el criterio |
-| **Request changes** | Falta algo del criterio. Bloquea la fusión hasta que se corrija |
+| **Request changes** | Falta algo del criterio. No bloquea técnicamente, pero queda escrito: fusionar con cambios pedidos sin contestarlos se ve, y se pregunta en diciembre |
 
 <div class="rule">
   <p class="rule-label">Aprobar sin mirar es la falta grave de este módulo</p>
-  <p>Una aprobación dice que habéis comprobado algo. Si aprobáis sin abrir la vista previa y luego lo publicado no cumple la issue, el fallo es de los dos. En la defensa de diciembre voy a abrir una pull request vuestra al azar y voy a preguntar por la revisión que dejasteis.</p>
+  <p>Vuestra aprobación ya no bloquea nada, y por eso vale más: es una afirmación de que habéis comprobado algo, sin ninguna máquina detrás obligándoos. Si aprobáis sin abrir la vista previa y luego lo publicado no cumple la issue, el fallo es de los dos. En la defensa de diciembre voy a abrir una pull request vuestra al azar y voy a preguntar por la revisión que dejasteis.</p>
 </div>
 
 ---
@@ -713,7 +721,7 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
     <li>URL pública en Azure funcionando, y el repositorio público enlazado desde ella.</li>
     <li>Tablero con seis issues, dos de ellas en <em>Done</em> cerradas por su pull request.</li>
     <li><code>main</code> protegida con las cuatro reglas, comprobado con un push rechazado.</li>
-    <li>Dos pull requests fusionadas con aprobación de vuestra pareja y comentarios que dicen qué se miró.</li>
+    <li>Dos pull requests fusionadas después de que vuestra pareja las revisara, con comentarios que dicen qué se miró.</li>
     <li>Dos revisiones hechas por vosotros en el repositorio de vuestra pareja.</li>
   </ul>
 </div>
@@ -723,7 +731,7 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
   <ol>
     <li>¿Qué le falta a la tarea «mejorar la página de inicio» para ser una issue?</li>
     <li>¿Qué hace exactamente <code>Closes #7</code> y dónde se escribe?</li>
-    <li>Habéis aprobado una pull request pero el check está en rojo. ¿Podéis fusionar?</li>
+    <li>Vuestra pareja ha revisado y aprobado, pero el check está en rojo. ¿Podéis fusionar?</li>
     <li>¿Por qué se vuelve a <code>main</code> y se hace <code>pull</code> antes de crear cada rama?</li>
     <li>¿En qué se diferencia la URL que aparece en el comentario de una pull request de la URL del README?</li>
   </ol>
@@ -733,7 +741,7 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
   <summary>Ver respuestas</summary>
   <p>1 · Un criterio de aceptación: qué se tiene que ver en pantalla para darla por hecha. Sin eso no se puede terminar ni revisar.</p>
   <p>2 · En la descripción de la pull request. Al fusionar, cierra la issue 7 y su tarjeta pasa a <em>Done</em> sola.</p>
-  <p>3 · No. La regla de <em>status checks</em> lo impide, y esa es justamente su función: la aprobación humana y la comprobación automática son dos condiciones distintas.</p>
+  <p>3 · No. La regla de <em>status checks</em> lo impide, y esa es justamente su función: la revisión humana y la comprobación automática son dos condiciones distintas, y esta segunda no se negocia.</p>
   <p>4 · Para que la rama nueva salga de lo último publicado. Si sale de la rama anterior, la pull request arrastra cambios que no le corresponden.</p>
   <p>5 · La del README es producción y refleja <code>main</code>. La de la pull request es temporal, refleja solo esa rama y desaparece al cerrarla.</p>
 </details>
