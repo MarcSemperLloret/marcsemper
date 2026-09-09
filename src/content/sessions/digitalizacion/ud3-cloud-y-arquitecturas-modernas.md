@@ -6,7 +6,7 @@ order: 3
 lang: "es"
 summary: "Publica tu primera aplicación en Internet. De localhost a un dominio propio con HTTPS, pasando por una máquina virtual, Nginx, reglas de red, DNS y certificados."
 duration: "5 horas · 5 sesiones"
-modality: "Individual o parejas"
+modality: "Taller individual o en parejas · unos minutos de explicación y el resto se trabaja"
 deliverable: "Una página web accesible públicamente mediante HTTPS y una breve memoria técnica."
 date: "2026-08-28"
 outcomes:
@@ -38,51 +38,23 @@ priorKnowledge:
   </ol>
 </div>
 
-## Sesión 1 · Qué es la nube y qué vamos a construir
+<div class="rule">
+  <p class="rule-label">Cómo se reparte cada sesión</p>
+  <p>Unos minutos de explicación al principio y el resto del tiempo trabajando. Lo que se explica es lo justo para poder empezar; lo demás aparece donde hace falta, en el paso donde hace falta. La actividad ocupa las cinco sesiones: se explica entera hoy y a partir de la siguiente se entra directamente a trabajar donde se dejó.</p>
+</div>
+
+## Sesión 1 · Del portátil a una máquina en Azure
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es el cloud computing, la diferencia entre IaaS, PaaS y SaaS, y el mapa de arquitectura que construiremos.</li>
-    <li><strong>2. Haz:</strong> Configura tu cuenta de Azure for Students y comprende los componentes del despliegue en la nube.</li>
-    <li><strong>3. Comprueba:</strong> Responde a las preguntas de recall y completa el Checkpoint de la sesión 1.</li>
+    <li><strong>Se explica:</strong> qué vamos a montar y por qué el cloud se paga.</li>
+    <li><strong>Se trabaja:</strong> la web que vais a publicar, el repositorio, la máquina virtual y la primera conexión por SSH.</li>
+    <li><strong>Se comprueba:</strong> entráis en vuestro servidor y sabéis cuánto cuesta lo que habéis creado.</li>
   </ol>
 </div>
 
-### El reto
-
-Hasta ahora estamos acostumbrados a desarrollar aplicaciones en nuestro ordenador.
-
-Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>Desarrollo en local</figcaption>
-  <ol class="flow flow--row">
-    <li>Nuestro código</li>
-    <li>localhost</li>
-    <li>http://localhost:5500</li>
-  </ol>
-</figure>
-
-Esto funciona para desarrollar.
-
-Pero hay un problema evidente:
-
-> Nadie fuera de nuestro ordenador puede acceder a la aplicación.
-
-Cuando una aplicación pasa a estar disponible para usuarios reales hablamos de **ponerla en producción** o **desplegarla**.
-
-Nuestro objetivo será pasar de:
-
-<p class="single-node single-node--mono">localhost</p>
-
-a algo parecido a:
-
-<p class="single-node single-node--mono">https://miweb.duckdns.org</p>
-
-accesible desde cualquier dispositivo conectado a Internet.
-
----
+### Se explica
 
 ### ¿Qué vamos a construir?
 
@@ -161,149 +133,9 @@ Y protegeremos la comunicación:
 
 ---
 
-### Antes de empezar: ¿qué es realmente «la nube»?
-
-La nube no es algo mágico.
-
-Cuando utilizamos cloud seguimos utilizando:
-
-* procesadores;
-* memoria RAM;
-* discos;
-* redes;
-* servidores.
-
-La diferencia es que esos recursos están en los centros de datos de otra empresa y podemos crearlos y administrarlos a través de Internet.
-
-Empresas conocidas que ofrecen servicios cloud son:
-
-* Microsoft Azure;
-* Amazon Web Services;
-* Google Cloud.
-
 ---
 
-### IaaS, PaaS y SaaS
-
-Cloud ofrece distintos niveles de control.
-
-#### IaaS — Infrastructure as a Service
-
-El proveedor nos proporciona infraestructura.
-
-Por ejemplo:
-
-> Una máquina virtual.
-
-Nosotros nos ocupamos de:
-
-* sistema operativo;
-* servidor web;
-* actualizaciones;
-* aplicación;
-* configuración.
-
-Eso es precisamente lo que utilizaremos.
-
-<figure class="diagram">
-  <figcaption>IaaS · todo lo que queda bajo nuestra responsabilidad</figcaption>
-  <ol class="flow">
-    <li>Azure</li>
-    <li>Máquina virtual</li>
-    <li>Ubuntu</li>
-    <li>Nginx</li>
-    <li>Nuestra web</li>
-  </ol>
-</figure>
-
-#### PaaS — Platform as a Service
-
-El proveedor administra más componentes.
-
-Nosotros nos preocupamos principalmente de nuestra aplicación.
-
-Por ejemplo:
-
-<figure class="diagram">
-  <figcaption>PaaS · la plataforma se ocupa del resto</figcaption>
-  <ol class="flow flow--row">
-    <li>Código</li>
-    <li>Azure App Service</li>
-    <li>Internet</li>
-  </ol>
-</figure>
-
-No necesitamos instalar manualmente Nginx ni administrar todo el servidor.
-
-#### SaaS — Software as a Service
-
-Utilizamos directamente una aplicación que administra otra empresa.
-
-Ejemplos:
-
-* Gmail;
-* Microsoft 365;
-* Canva;
-* GitHub.
-
-#### Una pregunta importante
-
-¿Por qué utilizaremos IaaS si PaaS podría ser más sencillo?
-
-Porque queremos comprender qué ocurre realmente cuando desplegamos una aplicación.
-
-Al administrar una VM veremos:
-
-* sistema operativo;
-* red;
-* puertos;
-* firewall;
-* servidor HTTP;
-* DNS;
-* certificados;
-* HTTPS.
-
-Después podremos valorar por qué existen servicios que automatizan todo esto.
-
----
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Sabes qué es realmente «la nube» y dónde está tu servidor.</li>
-    <li>Puedes poner un ejemplo propio de IaaS, PaaS y SaaS.</li>
-    <li>Sabes qué vas a construir y en qué orden.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Quién administra el sistema operativo en IaaS? ¿Y en PaaS?</li>
-    <li>¿Dónde está físicamente «la nube»?</li>
-    <li>¿Por qué empezamos por una máquina virtual y no por un servicio que lo haga todo?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · En IaaS lo administráis vosotros; en PaaS lo administra el proveedor y vosotros solo entregáis la aplicación.</p>
-  <p>2 · En centros de datos de otra empresa. Es el ordenador de otro, al que accedéis por Internet.</p>
-  <p>3 · Porque queremos ver todas las piezas —sistema, servidor web, red, DNS, certificado— antes de que un servicio las esconda.</p>
-</details>
-
----
-
-## Sesión 2 · Del código local a un servidor en Azure
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo crear una máquina virtual en Azure y autenticarte mediante un par de claves SSH asimétricas.</li>
-    <li><strong>2. Haz:</strong> Despliega una VM Ubuntu en Azure, sube tu proyecto web a GitHub y accede al servidor por SSH con tu clave privada.</li>
-    <li><strong>3. Comprueba:</strong> Anota la IP pública de tu servidor y verifica que puedes entrar por SSH sin errores.</li>
-  </ol>
-</div>
+### Se trabaja
 
 Necesitamos algo que publicar.
 
@@ -466,7 +298,7 @@ Mantener el software actualizado es una de las medidas básicas de seguridad.
 ---
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
   <ul class="checklist">
     <li>Tu web funciona en local.</li>
     <li>El proyecto está en un repositorio de GitHub.</li>
@@ -477,7 +309,7 @@ Mantener el software actualizado es una de las medidas básicas de seguridad.
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
     <li>¿Qué es la IP pública de vuestra máquina y en qué se diferencia de la privada?</li>
     <li>¿Por qué usamos clave SSH en lugar de contraseña?</li>
@@ -494,14 +326,14 @@ Mantener el software actualizado es una de las medidas básicas de seguridad.
 
 ---
 
-## Sesión 3 · Nginx y abrir la puerta a Internet
+## Sesión 2 · Nginx y abrir la puerta a Internet
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> El rol del servidor web Nginx y por qué existen dos firewalls (el del cloud en Azure y el del sistema en Ubuntu).</li>
-    <li><strong>2. Haz:</strong> Instala y configura Nginx, clona tu repositorio en <code>/var/www/</code> y abre el puerto 80 (HTTP) en NSG y UFW.</li>
-    <li><strong>3. Comprueba:</strong> Abre la IP pública en tu navegador y comprueba que la web responde desde Internet.</li>
+    <li><strong>Se explica:</strong> qué hace un servidor web y por qué hay dos cortafuegos y no uno.</li>
+    <li><strong>Se trabaja:</strong> instalad Nginx, abrid el puerto 80 en los dos sitios, clonad vuestro repositorio y decidle a Nginx dónde está.</li>
+    <li><strong>Se comprueba:</strong> vuestra web se ve escribiendo la IP pública en el navegador.</li>
   </ol>
 </div>
 
@@ -814,7 +646,7 @@ Vamos a solucionar ambos.
 ---
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
   <ul class="checklist">
     <li>Nginx instalado y arrancado.</li>
     <li>Puerto 80 abierto en el Network Security Group de Azure.</li>
@@ -824,7 +656,7 @@ Vamos a solucionar ambos.
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
     <li>¿Por qué hay dos cortafuegos y no uno?</li>
     <li>¿Qué comprueba exactamente <code>nginx -t</code>?</li>
@@ -841,14 +673,14 @@ Vamos a solucionar ambos.
 
 ---
 
-## Sesión 4 · Un nombre propio y HTTPS
+## Sesión 3 · Un nombre propio y HTTPS
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo funciona la resolución DNS y por qué HTTPS requiere certificados TLS emitidos por una autoridad de confianza.</li>
-    <li><strong>2. Haz:</strong> Configura un subdominio en DuckDNS hacia tu IP pública e instala un certificado TLS gratuito con Certbot.</li>
-    <li><strong>3. Comprueba:</strong> Accede a tu dominio con <code>https://</code> y verifica el candado verde y la redirección automática desde HTTP.</li>
+    <li><strong>Se explica:</strong> qué resuelve el DNS y qué añade un certificado que no añade el cifrado por sí solo.</li>
+    <li><strong>Se trabaja:</strong> vuestro subdominio apuntando a la IP, Nginx respondiendo a ese nombre y el certificado instalado.</li>
+    <li><strong>Se comprueba:</strong> vuestro dominio abre con candado y HTTP redirige a HTTPS.</li>
   </ol>
 </div>
 
@@ -1083,7 +915,7 @@ Queremos entender **por qué el navegador confía en nuestra conexión**.
 ---
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
   <ul class="checklist">
     <li>Tienes un nombre DNS apuntando a tu IP pública.</li>
     <li>Nginx responde a ese nombre, no solo a la IP.</li>
@@ -1093,7 +925,7 @@ Queremos entender **por qué el navegador confía en nuestra conexión**.
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
     <li>¿Qué traduce exactamente el DNS?</li>
     <li>¿Qué demuestra un certificado y qué NO demuestra?</li>
@@ -1110,14 +942,14 @@ Queremos entender **por qué el navegador confía en nuestra conexión**.
 
 ---
 
-## Sesión 5 · Mantener y explicar la arquitectura
+## Sesión 4 · Mantener y endurecer
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo realizar despliegues continuos con Git y cómo explicar y defender la arquitectura desplegada.</li>
-    <li><strong>2. Haz:</strong> Despliega una actualización de tu web con <code>git pull</code>, dibuja el mapa de arquitectura y completa la memoria técnica.</li>
-    <li><strong>3. Entrega:</strong> Entrega la URL pública HTTPS de tu web y la memoria técnica con el diagrama de red y componentes.</li>
+    <li><strong>Se explica:</strong> por qué actualizar no puede significar rehacerlo todo.</li>
+    <li><strong>Se trabaja:</strong> publicad una versión nueva sin tocar el servidor, y pasad la revisión de seguridad.</li>
+    <li><strong>Se comprueba:</strong> la versión nueva se ve en vuestro dominio y la revisión está completa.</li>
   </ol>
 </div>
 
@@ -1236,6 +1068,158 @@ Esto reduce información expuesta, pero recordad:
 > **No sustituye a mantener el software actualizado ni a configurar correctamente la seguridad.**
 
 ---
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <ul class="checklist">
+    <li>Una versión nueva de vuestra web publicada sin volver a configurar nada del servidor.</li>
+    <li>Las seis preguntas de la revisión contestadas, y corregido lo que hiciera falta.</li>
+    <li>Nginx ya no publica su versión.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
+  <ol>
+    <li>¿Qué hace <code>git pull</code> en el servidor, y por qué no hay que volver a tocar Nginx?</li>
+    <li>¿Por qué actualizar el sistema es una medida de seguridad y no solo de mantenimiento?</li>
+    <li>Ocultar la versión de Nginx, ¿protege el servidor?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Trae los cambios del repositorio al directorio que Nginx ya está sirviendo. La configuración apunta al directorio, no a los ficheros que hay dentro.</p>
+  <p>2 · Porque la mayoría de los ataques aprovechan fallos ya conocidos y ya corregidos en versiones más nuevas. Un sistema sin actualizar es una lista pública de puertas abiertas.</p>
+  <p>3 · No. Se lo pone un poco más difícil a quien busca objetivos en masa, y nada más. Lo que protege es tener el software al día y solo lo necesario abierto.</p>
+</details>
+
+---
+
+## Sesión 5 · Explicar la arquitectura
+
+<div class="today-box">
+  <p class="today-label">Hoy · Hoja de ruta</p>
+  <ol class="today-steps">
+    <li><strong>Se explica:</strong> los tres niveles de servicio cloud, ahora que ya habéis montado uno entero a mano.</li>
+    <li><strong>Se trabaja:</strong> el mapa de vuestra arquitectura, la memoria técnica y las preguntas de reflexión.</li>
+    <li><strong>Se entrega:</strong> la URL pública con HTTPS y la memoria.</li>
+  </ol>
+</div>
+
+### Se explica
+
+Habéis montado a mano un sistema operativo, un servidor web, unas reglas de red, un nombre y un certificado. Con eso delante, la clasificación que se usa en la industria para hablar de cloud se entiende en dos minutos.
+
+### Antes de empezar: ¿qué es realmente «la nube»?
+
+La nube no es algo mágico.
+
+Cuando utilizamos cloud seguimos utilizando:
+
+* procesadores;
+* memoria RAM;
+* discos;
+* redes;
+* servidores.
+
+La diferencia es que esos recursos están en los centros de datos de otra empresa y podemos crearlos y administrarlos a través de Internet.
+
+Empresas conocidas que ofrecen servicios cloud son:
+
+* Microsoft Azure;
+* Amazon Web Services;
+* Google Cloud.
+
+---
+
+### IaaS, PaaS y SaaS
+
+Cloud ofrece distintos niveles de control.
+
+#### IaaS — Infrastructure as a Service
+
+El proveedor nos proporciona infraestructura.
+
+Por ejemplo:
+
+> Una máquina virtual.
+
+Nosotros nos ocupamos de:
+
+* sistema operativo;
+* servidor web;
+* actualizaciones;
+* aplicación;
+* configuración.
+
+Eso es precisamente lo que utilizaremos.
+
+<figure class="diagram">
+  <figcaption>IaaS · todo lo que queda bajo nuestra responsabilidad</figcaption>
+  <ol class="flow">
+    <li>Azure</li>
+    <li>Máquina virtual</li>
+    <li>Ubuntu</li>
+    <li>Nginx</li>
+    <li>Nuestra web</li>
+  </ol>
+</figure>
+
+#### PaaS — Platform as a Service
+
+El proveedor administra más componentes.
+
+Nosotros nos preocupamos principalmente de nuestra aplicación.
+
+Por ejemplo:
+
+<figure class="diagram">
+  <figcaption>PaaS · la plataforma se ocupa del resto</figcaption>
+  <ol class="flow flow--row">
+    <li>Código</li>
+    <li>Azure App Service</li>
+    <li>Internet</li>
+  </ol>
+</figure>
+
+No necesitamos instalar manualmente Nginx ni administrar todo el servidor.
+
+#### SaaS — Software as a Service
+
+Utilizamos directamente una aplicación que administra otra empresa.
+
+Ejemplos:
+
+* Gmail;
+* Microsoft 365;
+* Canva;
+* GitHub.
+
+#### Una pregunta importante
+
+¿Por qué utilizaremos IaaS si PaaS podría ser más sencillo?
+
+Porque queremos comprender qué ocurre realmente cuando desplegamos una aplicación.
+
+Al administrar una VM veremos:
+
+* sistema operativo;
+* red;
+* puertos;
+* firewall;
+* servidor HTTP;
+* DNS;
+* certificados;
+* HTTPS.
+
+Después podremos valorar por qué existen servicios que automatizan todo esto.
+
+---
+
+---
+
+### Se trabaja
 
 ### El mapa completo
 
@@ -1469,7 +1453,7 @@ La parte con mayor peso de la actividad es:
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
     <li>Recorred vuestra arquitectura en voz alta, del navegador al fichero.</li>
     <li>¿Qué pasa si mañana caduca el certificado?</li>
@@ -1482,6 +1466,11 @@ La parte con mayor peso de la actividad es:
   <p>1 · Navegador → DNS → IP pública → NSG → firewall del sistema → Nginx → fichero. Si os saltáis un paso, ahí está vuestro punto ciego.</p>
   <p>2 · Certbot lo renueva automáticamente, pero solo si el servicio de renovación sigue activo y el puerto sigue abierto.</p>
   <p>3 · Os ahorraría el sistema operativo, el servidor web y el certificado. Perderíais control sobre la configuración y visibilidad de lo que ocurre por debajo.</p>
+</details>
+
+<details class="aside aside--extra">
+  <summary>Si además cursáis Proyecto Intermodular</summary>
+  <p>Allí publicáis sin tocar ninguna de las cajas de este mapa: no hay sistema operativo que actualizar, ni servidor web que configurar, ni certificado que pedir. Poned los dos mapas uno al lado del otro y decid, caja por caja, quién se ocupa de ella en cada caso. Es la misma pregunta de arriba respondida con dos ejemplos vuestros en lugar de con una definición.</p>
 </details>
 
 ---
