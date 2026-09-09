@@ -5,10 +5,10 @@ section: "ud-03"
 order: 3
 lang: "es"
 summary: "Las reglas de diseño que convierten un montón de endpoints en una API defendible: recursos, representaciones, DTO, entrada validada y errores coherentes."
-duration: "18 horas · 3 semanas · 9 sesiones"
-modality: "Taller de diseño · 60 % guía / 40 % autonomía"
-deliverable: "La API del gestor rediseñada como recursos, con DTO de entrada y salida, validación y un formato de error único."
-date: "2026-09-02"
+duration: "18 horas · 3 semanas · 6 sesiones de 3 h"
+modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
+deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+date: "2026-09-09"
 outcomes:
   - "Distinguir una API HTTP cualquiera de una API orientada a recursos."
   - "Nombrar recursos y URLs sin meter verbos ni acciones en la ruta."
@@ -23,38 +23,21 @@ priorKnowledge:
   - "Serialización y deserialización JSON."
 ---
 
-<p class="lead">Llevas dos unidades construyendo endpoints. Aquí aprendes a diseñarlos antes de que la aplicación crezca lo suficiente como para que rediseñarla salga caro.</p>
+<p class="lead">El mismo CRUD aprende a publicar un contrato estable: recursos, DTO, validación y errores. Al terminar, Intermodular dispone de una versión que puede compilar, desplegar y consumir.</p>
 
-<div class="rule">
-  <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje medio. Las reglas de diseño se explican y se aplican juntos sobre el gestor; el rediseño final se entrega a partir de criterios de aceptación, sin una solución de referencia.</p>
-</div>
+## Semana 5 · Recursos y contrato REST del dominio
 
-## Semana 5 · Pensar en recursos
+## Sesión 9 · Recursos y contrato REST del dominio
 
-## Sesión 13 · De una API HTTP a una API REST
+### Se explica
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> qué es REST de verdad, qué no es, y en qué se diferencia de «devolver JSON por HTTP».</li>
-    <li><strong>2. Haz:</strong> audita tu propia API de la UD2 contra una rúbrica y sitúala en el mapa.</li>
-    <li><strong>3. Comprueba:</strong> sabes decir qué partes de tu API son REST, cuáles no, y qué costaría arreglarlo.</li>
-  </ol>
-</div>
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Escribe qué crees que significa que una API sea «REST». No mires nada.</li>
-    <li>¿Qué significa que HTTP no tenga estado? Lo viste en la UD1.</li>
-    <li>Enumera las rutas de tu API de la UD2. ¿Cuántas hay y cómo se llaman?</li>
-  </ol>
-</div>
+Una API se diseña alrededor de recursos y relaciones. Se comparan rutas de vuestro dominio y se justifican sus métodos, incluyendo operaciones que exceden el CRUD.
 
-### Tu API funciona. Eso no la hace REST
+#### Tu API funciona. Eso no la hace REST
 
-En la sesión 12 entregaste dieciséis endpoints con sus códigos correctos y una colección que los comprueba. Funciona, es verificable y otra persona puede usarla.
+En la sesión 8 entregaste dieciséis endpoints con sus códigos correctos y una colección que los comprueba. Funciona, es verificable y otra persona puede usarla.
 
 Y aun así, si mañana en una entrevista te preguntan «¿es una API REST?», la respuesta honesta hoy sería: *en parte, y no sabría decir en qué parte*.
 
@@ -66,7 +49,7 @@ Eso es lo que arreglamos esta semana. No porque la palabra sea importante, sino 
   <p>Lo que decide no es qué formato usas, sino <strong>cómo organizas lo que hay detrás de las URLs y qué significan tus métodos y tus códigos</strong>.</p>
 </div>
 
-### Qué es REST
+#### Qué es REST
 
 <p class="term">REST</p>
 
@@ -86,7 +69,7 @@ Las que importan aquí son cinco:
 
 Tres las cumples sin haber hecho nada: te las regaló HTTP. La cuarta es el trabajo de esta unidad.
 
-#### La interfaz uniforme, que es la que cuesta
+##### La interfaz uniforme, que es la que cuesta
 
 Es la restricción central y se apoya en tres ideas:
 
@@ -99,9 +82,83 @@ Es la restricción central y se apoya en tres ideas:
   </ol>
 </figure>
 
-La segunda idea es la de la sesión 15 y la que más cuesta al principio. La primera y la tercera son las de esta semana.
+La segunda idea es la de la sesión 10 y la que más cuesta al principio. La primera y la tercera son las de esta semana.
 
-### El mapa · cuatro niveles
+#### Un recurso es un sustantivo
+
+<p class="term">Recurso</p>
+
+Cualquier cosa de la que tu API pueda hablar y a la que se pueda dar una dirección: un proyecto, una tarea, un usuario, un comentario. También una colección de ellas.
+
+Esa es toda la definición, y la consecuencia práctica es enorme: **si tu URL contiene un verbo, no estás nombrando una cosa, estás dando una orden**. Y las órdenes no se pueden identificar, ni cachear, ni relacionar entre sí.
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Pensar en acciones</p>
+    <p class="compare-body">Cada funcionalidad nueva inventa una ruta nueva. La API crece como una lista de órdenes que hay que memorizar, y solo la conoce quien la escribió.</p>
+  </div>
+  <div>
+    <p class="compare-label">Pensar en recursos</p>
+    <p class="compare-body">Las cosas del dominio son pocas y estables. Sobre cada una se aplican siempre los mismos cinco métodos, así que quien conoce una sabe usar las demás.</p>
+  </div>
+</div>
+
+Esa es la ganancia real. No es elegancia: es que **una API de nivel 2 con veinte recursos se aprende una vez**, mientras que una de nivel 1 con veinte recursos son cien rutas distintas que hay que consultar.
+
+#### Las siete reglas de nombrado
+
+| # | Regla | Mal | Bien |
+| :---: | :--- | :--- | :--- |
+| 1 | Sustantivos, nunca verbos | `/crearTarea` | `POST /tareas` |
+| 2 | Colecciones en plural | `/tarea/3` | `/tareas/3` |
+| 3 | Minúsculas y guiones | `/ordenesDeTrabajo` | `/ordenes-de-trabajo` |
+| 4 | Sin extensión de archivo | `/tareas.json` | `/tareas` |
+| 5 | Jerarquía para la pertenencia | `/tareas?proyecto=7` | `/proyectos/7/tareas` |
+| 6 | Query string para filtrar | `/tareas/completadas` | `/tareas?completada=true` |
+| 7 | Sin barra final | `/tareas/` | `/tareas` |
+
+Las dos que de verdad se piensan son la 5 y la 6, porque son la misma decisión de la UD1 vista desde arriba.
+
+##### Jerarquía o filtro
+
+<div class="rule">
+  <p class="rule-label">La pregunta que lo resuelve</p>
+  <p><strong>¿El recurso existe por sí solo, o solo tiene sentido dentro de otro?</strong></p>
+  <p>Una tarea existe por sí sola: tiene su id y se puede consultar directamente en <code>/tareas/41</code>. Que además pertenezca a un proyecto es una <em>relación</em>, y <code>/proyectos/7/tareas</code> es una forma cómoda de recorrerla.</p>
+  <p>Un comentario de una incidencia, en cambio, no significa nada fuera de ella. Ahí la jerarquía no es una comodidad: es la única dirección que tiene sentido.</p>
+</div>
+
+Y un límite práctico:
+
+```text
+/proyectos/7/tareas/41/comentarios/5/respuestas/2
+```
+
+Nadie escribe eso, nadie lo lee y nadie lo mantiene. **Dos niveles de profundidad es el máximo razonable.** Si un recurso tiene id propio, se accede directo:
+
+```text
+/comentarios/5/respuestas
+```
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Inventariad los endpoints existentes y rediseñad nombres, jerarquías y métodos con un criterio común.
+
+Escribid la tabla de contrato de vuestro proyecto y adaptad la colección sin perder operaciones.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">De una API HTTP a una API REST</p>
+
+#### Paso 2 · El mapa · cuatro niveles
 
 Hay una forma muy práctica de situar cualquier API, y sirve tanto para juzgar la tuya como para entender la de otro. Son cuatro niveles, cada uno construido sobre el anterior.
 
@@ -117,7 +174,7 @@ Hay una forma muy práctica de situar cualquier API, y sirve tanto para juzgar l
 
 Míralos con ejemplos, porque así se reconocen de un vistazo:
 
-#### Nivel 0 · una sola puerta
+##### Nivel 0 · una sola puerta
 
 ```text
 POST /api
@@ -129,7 +186,7 @@ POST /api
 
 HTTP se usa solo como sobre. Todo pasa por una URL y un método, y la intención va escondida en el cuerpo. Ni las URLs ni los códigos significan nada.
 
-#### Nivel 1 · recursos con nombre
+##### Nivel 1 · recursos con nombre
 
 ```text
 POST /tareas/obtener
@@ -141,7 +198,7 @@ Ya hay URLs distintas para cosas distintas: es un avance real. Pero la acción s
 
 Reconoce esto, porque **es exactamente lo que escribe todo el mundo la primera vez**, y es lo que la UD1 te prohibió sin explicarte del todo por qué.
 
-#### Nivel 2 · el método y el código hacen su trabajo
+##### Nivel 2 · el método y el código hacen su trabajo
 
 ```text
 GET    /tareas/3        → 200
@@ -152,7 +209,7 @@ PATCH  /tareas/3        → 200
 
 La ruta dice **sobre qué**, el método dice **qué**, y el código dice **cómo ha ido**. Aquí es donde vive la inmensa mayoría de las APIs profesionales, y donde debe estar la tuya al terminar la unidad.
 
-#### Nivel 3 · la respuesta te dice qué puedes hacer ahora
+##### Nivel 3 · la respuesta te dice qué puedes hacer ahora
 
 ```json
 {
@@ -175,7 +232,7 @@ El cliente no necesita saberse las rutas: las va descubriendo en las respuestas,
   <p>En este módulo llegaremos al nivel 2 y lo haremos bien. Del 3 tienes que saber que existe, por qué existe y por qué se decide no usarlo: eso es exactamente lo que se espera de un profesional junior.</p>
 </div>
 
-### Dónde está tu API ahora mismo
+#### Paso 3 · Dónde está tu API ahora mismo
 
 Cógela y sitúala. Esta es la rúbrica:
 
@@ -196,18 +253,16 @@ Cógela y sitúala. Esta es la rúbrica:
   <dt>Del 1 al 6</dt>
   <dd>Deberías tenerlos ya. La UD1 y la UD2 te los impusieron como reglas sueltas, sin decirte que juntas formaban el nivel 2.</dd>
   <dt>El 7 y el 8</dt>
-  <dd>Es donde se decide la sesión 14. Probablemente tengas el 7 a medias, con la ruta anidada de tareas de un proyecto, y el 8 sin comprobar nunca.</dd>
+  <dd>Es donde se decide la sesión 9. Probablemente tengas el 7 a medias, con la ruta anidada de tareas de un proyecto, y el 8 sin comprobar nunca.</dd>
   <dt>El 9</dt>
-  <dd>Casi seguro que es un no, y es el tema de la sesión 15. Tu API publica exactamente los campos que tenga la clase, sin que nadie lo haya decidido.</dd>
+  <dd>Casi seguro que es un no, y es el tema de la sesión 10. Tu API publica exactamente los campos que tenga la clase, sin que nadie lo haya decidido.</dd>
   <dt>El 10</dt>
   <dd>Es un no, y va a seguir siéndolo. Es el nivel 3, y ya sabes por qué no vamos.</dd>
 </dl>
 
-### Práctica guiada · La misma aplicación, tres veces
+#### Paso 4 · La misma aplicación, tres veces
 
 Aquí tienes la misma funcionalidad —consultar una incidencia, cerrarla y listar las de un proyecto— escrita en tres niveles.
-
-<p class="stage">Nivel 0</p>
 
 ```text
 POST /servicio
@@ -220,15 +275,11 @@ POST /servicio
 { "op": "listarIncidencias", "proyecto": 7 }
 ```
 
-<p class="stage">Nivel 1</p>
-
 ```text
 POST /incidencia/get/41
 POST /incidencia/cerrar/41
 POST /incidencias/listar/7
 ```
-
-<p class="stage">Nivel 2</p>
 
 ```text
 GET   /incidencias/41
@@ -245,16 +296,132 @@ Responde por escrito, comparando las tres columnas:
 
 La pregunta 4 es la que resume la unidad. **Una API bien diseñada es la que se puede adivinar.**
 
-### Ahora tú · Audita tu propia API
+#### Paso 5 · Audita tu propia API
 
 1. Pasa la rúbrica de diez criterios a tu API de la UD2, endpoint por endpoint. Sé duro: un «a medias» es un no.
 2. Sitúa tu API en el mapa de niveles y justifica la posición en tres frases.
 3. Haz una lista de **todo lo que incumples**, ordenada por lo que costaría arreglarlo, de más barato a más caro.
 4. Para los tres más baratos, escribe exactamente qué cambiarías.
 
-Guarda esta auditoría: en la sesión 21 volverás a pasarla y la diferencia entre las dos es parte de la entrega de la unidad.
+Guarda esta auditoría: en la sesión 14 volverás a pasarla y la diferencia entre las dos es parte de la entrega de la unidad.
 
-### Reto · Diagnostica una API ajena
+<p class="stage">Recursos y REST</p>
+
+#### Paso 6 · Lo que no es un CRUD
+
+Aquí está la parte difícil y la que separa una API pensada de una API copiada. ¿Qué haces con «archivar un proyecto», «cerrar una incidencia», «enviar un aviso» o «iniciar sesión»?
+
+Ninguna es crear, leer, actualizar ni borrar. Y sin embargo hay que exponerlas. Hay tres estrategias, en este orden de preferencia:
+
+La mayoría de las «acciones» son en realidad un campo que cambia de valor.
+
+```text
+PATCH /incidencias/41
+{ "estado": "cerrada" }
+```
+
+«Cerrar» no es una operación: es poner el estado a `cerrada`. Si el dominio ya tiene ese campo, no hace falta inventar nada.
+
+A veces la acción esconde una cosa que merece existir por sí misma.
+
+```text
+POST /incidencias/41/comentarios
+POST /proyectos/7/miembros
+```
+
+«Comentar» no es un verbo que colgar de la incidencia: es **crear un comentario**. En cuanto lo ves así, aparece una colección que además se puede listar, paginar y borrar.
+
+Cuando lo anterior no encaja, se expone la acción como un recurso propio y se documenta:
+
+```text
+POST /incidencias/41/cierre
+POST /pedidos/12/reembolso
+POST /sesiones
+```
+
+Fíjate en que siguen siendo sustantivos: el *cierre*, el *reembolso*, la *sesión*. Y en que se hacen con `POST`, porque no son idempotentes.
+
+<div class="rule">
+  <p class="rule-label">Cuándo está bien salirse de la norma</p>
+  <p>La estrategia 3 no es una derrota. Hay operaciones —un pago, un envío de correo, un proceso largo— que <strong>no son el cambio de un campo</strong> y forzarlas a serlo produce una API peor y más confusa.</p>
+  <p>Lo que no vale es usarla por defecto porque es la más fácil. La regla: <strong>intenta la 1, luego la 2, y solo entonces la 3 — y cuando uses la 3, escribe por qué.</strong></p>
+</div>
+
+<details class="aside aside--extra">
+  <summary>El caso del <em>login</em>, que todo el mundo pregunta</summary>
+  <p>Iniciar sesión no es CRUD por ninguna parte, y aun así encaja en la estrategia 2 si lo miras bien: lo que se crea es <strong>una sesión</strong>.</p>
+  <p><code>POST /sesiones</code> crea una, <code>DELETE /sesiones/actual</code> la cierra. Verás también <code>POST /auth/login</code>, que es la estrategia 3, y es perfectamente común.</p>
+  <p>Lo trabajaremos de verdad en la UD9. Hoy solo interesa que veas que hasta el caso más raro tiene un sustantivo detrás si lo buscas.</p>
+</details>
+
+#### Paso 7 · Repara doce rutas
+
+Reescribe cada una al nivel 2. Indica **método y ruta**, y en las que lo necesiten, qué va en el cuerpo.
+
+| # | Ruta original | Qué hace |
+| :---: | :--- | :--- |
+| 1 | `POST /crearProyecto` | Crea un proyecto |
+| 2 | `GET /obtenerProyecto?id=7` | Devuelve el proyecto 7 |
+| 3 | `GET /borrarProyecto/7` | Borra el proyecto 7 |
+| 4 | `POST /proyecto/7/editar` | Cambia el nombre del proyecto 7 |
+| 5 | `GET /listadoDeTareas` | Todas las tareas |
+| 6 | `GET /tareasDelProyecto/7` | Las tareas del proyecto 7 |
+| 7 | `GET /tareas/pendientes` | Las tareas no completadas |
+| 8 | `POST /tarea/41/marcarCompletada` | Marca la tarea 41 como completada |
+| 9 | `POST /tarea/41/asignarUsuario/3` | Asigna la tarea 41 al usuario 3 |
+| 10 | `POST /añadirComentario` | Añade un comentario a una incidencia |
+| 11 | `GET /proyectos.json` | Todos los proyectos |
+| 12 | `POST /archivarProyectosCerrados` | Archiva todos los proyectos cerrados |
+
+Tres avisos, para que no las despaches en cinco minutos:
+
+* La **3** tiene un problema mucho más grave que el nombre. Ya sabes cuál desde la UD1.
+* La **9** admite al menos dos soluciones buenas y distintas. Escribe las dos y elige una argumentando.
+* La **12** no encaja limpiamente en ninguna estrategia. Es a propósito: resuélvela como puedas y explica qué te chirría.
+
+#### Paso 8 · El contrato de recursos del gestor
+
+Con las reglas ya aplicadas, escribe el contrato completo de la aplicación. Este es el formato, con las dos primeras filas resueltas como ejemplo:
+
+| Recurso | Colección | Elemento | Relaciones |
+| :--- | :--- | :--- | :--- |
+| Proyecto | `/proyectos` | `/proyectos/{id}` | `/proyectos/{id}/tareas` |
+| Tarea | `/tareas` | `/tareas/{id}` | — |
+| Usuario | | | |
+| Comentario | | | |
+| Etiqueta | | | |
+
+Para cada recurso, decide además:
+
+1. Qué métodos acepta la colección y qué métodos acepta el elemento. **No todos tienen que aceptar los cinco**: un recurso que no se borra nunca no expone `DELETE`, y decirlo es diseñar.
+2. Qué filtros admite la colección, en query string.
+3. Si alguna relación merece ruta anidada o basta con un filtro.
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · las etiquetas</summary>
+  <p>Una etiqueta es un recurso propio: existe aunque ninguna tarea la use, se lista y se borra. Hasta ahí, fácil.</p>
+  <p>Lo difícil es la relación: una tarea tiene varias etiquetas y una etiqueta está en varias tareas. Piensa qué URL representa «las etiquetas de la tarea 41», y qué método usarías para añadirle una que ya existe. Ojo: añadir una etiqueta existente a una tarea <strong>no crea una etiqueta nueva</strong>.</p>
+</details>
+
+#### Paso 9 · Aplica el contrato a tu código
+
+1. Renombra en tu proyecto todas las rutas que incumplan alguna de las siete reglas.
+2. Actualiza la colección de Postman para que siga en verde con las rutas nuevas. Si sacaste el servidor a `{{baseUrl}}`, esto es rápido; si no, ya sabes por qué se hacía.
+3. Añade el recurso `Comentario` a la API, anidado donde corresponda, con al menos listar y crear.
+4. Anota en `DECISIONES.md` qué rutas cambiaron y por qué.
+
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **revisad el contrato rest de vuestro dominio**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Diagnostica una API ajena
 
 Estas son rutas reales de una API interna de una empresa ficticia:
 
@@ -280,27 +447,6 @@ GET  /api/pedidos?borrarCancelados=true
   <div><strong>Reto</strong><span>La API ajena diagnosticada, reescrita a nivel 2 y con la ruta peligrosa identificada y argumentada.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 13</p>
-  <ul class="checklist">
-    <li>Sabes decir qué es REST sin mencionar la palabra JSON.</li>
-    <li>Reconoces los cuatro niveles viendo un puñado de rutas.</li>
-    <li>Has situado tu API en el mapa y sabes justificar la posición.</li>
-    <li>Tienes por escrito la lista de lo que incumple tu API y el coste de arreglarlo.</li>
-    <li>Puedes explicar por qué el nivel 3 existe y por qué no vamos a implementarlo.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué devolver JSON no convierte una API en REST?</li>
-    <li>¿Qué tres restricciones de REST cumples solo por usar HTTP correctamente?</li>
-    <li>¿Qué distingue el nivel 1 del nivel 2?</li>
-    <li>¿Por qué casi nadie implementa el nivel 3?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque REST no dice nada del formato: habla de cómo se identifican los recursos, cómo se manipulan y qué significan los mensajes. Se puede devolver JSON con un diseño de nivel 0.</p>
@@ -309,192 +455,7 @@ GET  /api/pedidos?borrarCancelados=true
   <p>4 · Porque añade complejidad al servidor y muy pocos clientes aprovechan los enlaces: la mayoría se escriben conociendo las rutas de antemano. Es una decisión de coste y beneficio, no un olvido.</p>
 </details>
 
-## Sesión 14 · Recursos y REST
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> qué es un recurso, cómo se nombran las URLs y qué hacer con las acciones que no son un CRUD.</li>
-    <li><strong>2. Haz:</strong> repara doce rutas mal diseñadas y escribe el contrato de recursos del gestor.</li>
-    <li><strong>3. Comprueba:</strong> alguien que no conoce tu API puede adivinar una ruta que no le has enseñado.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué separa el nivel 1 del nivel 2 en el mapa de ayer?</li>
-    <li>De la UD1: ¿qué dato va en la ruta y cuál en la <em>query string</em>?</li>
-    <li>Escribe la ruta que usarías para «las tareas del proyecto 7».</li>
-  </ol>
-</div>
-
-### Un recurso es un sustantivo
-
-<p class="term">Recurso</p>
-
-Cualquier cosa de la que tu API pueda hablar y a la que se pueda dar una dirección: un proyecto, una tarea, un usuario, un comentario. También una colección de ellas.
-
-Esa es toda la definición, y la consecuencia práctica es enorme: **si tu URL contiene un verbo, no estás nombrando una cosa, estás dando una orden**. Y las órdenes no se pueden identificar, ni cachear, ni relacionar entre sí.
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Pensar en acciones</p>
-    <p class="compare-body">Cada funcionalidad nueva inventa una ruta nueva. La API crece como una lista de órdenes que hay que memorizar, y solo la conoce quien la escribió.</p>
-  </div>
-  <div>
-    <p class="compare-label">Pensar en recursos</p>
-    <p class="compare-body">Las cosas del dominio son pocas y estables. Sobre cada una se aplican siempre los mismos cinco métodos, así que quien conoce una sabe usar las demás.</p>
-  </div>
-</div>
-
-Esa es la ganancia real. No es elegancia: es que **una API de nivel 2 con veinte recursos se aprende una vez**, mientras que una de nivel 1 con veinte recursos son cien rutas distintas que hay que consultar.
-
-### Las siete reglas de nombrado
-
-| # | Regla | Mal | Bien |
-| :---: | :--- | :--- | :--- |
-| 1 | Sustantivos, nunca verbos | `/crearTarea` | `POST /tareas` |
-| 2 | Colecciones en plural | `/tarea/3` | `/tareas/3` |
-| 3 | Minúsculas y guiones | `/ordenesDeTrabajo` | `/ordenes-de-trabajo` |
-| 4 | Sin extensión de archivo | `/tareas.json` | `/tareas` |
-| 5 | Jerarquía para la pertenencia | `/tareas?proyecto=7` | `/proyectos/7/tareas` |
-| 6 | Query string para filtrar | `/tareas/completadas` | `/tareas?completada=true` |
-| 7 | Sin barra final | `/tareas/` | `/tareas` |
-
-Las dos que de verdad se piensan son la 5 y la 6, porque son la misma decisión de la UD1 vista desde arriba.
-
-#### Jerarquía o filtro
-
-<div class="rule">
-  <p class="rule-label">La pregunta que lo resuelve</p>
-  <p><strong>¿El recurso existe por sí solo, o solo tiene sentido dentro de otro?</strong></p>
-  <p>Una tarea existe por sí sola: tiene su id y se puede consultar directamente en <code>/tareas/41</code>. Que además pertenezca a un proyecto es una <em>relación</em>, y <code>/proyectos/7/tareas</code> es una forma cómoda de recorrerla.</p>
-  <p>Un comentario de una incidencia, en cambio, no significa nada fuera de ella. Ahí la jerarquía no es una comodidad: es la única dirección que tiene sentido.</p>
-</div>
-
-Y un límite práctico:
-
-```text
-/proyectos/7/tareas/41/comentarios/5/respuestas/2
-```
-
-Nadie escribe eso, nadie lo lee y nadie lo mantiene. **Dos niveles de profundidad es el máximo razonable.** Si un recurso tiene id propio, se accede directo:
-
-```text
-/comentarios/5/respuestas
-```
-
-### Lo que no es un CRUD
-
-Aquí está la parte difícil y la que separa una API pensada de una API copiada. ¿Qué haces con «archivar un proyecto», «cerrar una incidencia», «enviar un aviso» o «iniciar sesión»?
-
-Ninguna es crear, leer, actualizar ni borrar. Y sin embargo hay que exponerlas. Hay tres estrategias, en este orden de preferencia:
-
-<p class="stage">Estrategia 1 · Es un cambio de estado</p>
-
-La mayoría de las «acciones» son en realidad un campo que cambia de valor.
-
-```text
-PATCH /incidencias/41
-{ "estado": "cerrada" }
-```
-
-«Cerrar» no es una operación: es poner el estado a `cerrada`. Si el dominio ya tiene ese campo, no hace falta inventar nada.
-
-<p class="stage">Estrategia 2 · Es un recurso que no habías visto</p>
-
-A veces la acción esconde una cosa que merece existir por sí misma.
-
-```text
-POST /incidencias/41/comentarios
-POST /proyectos/7/miembros
-```
-
-«Comentar» no es un verbo que colgar de la incidencia: es **crear un comentario**. En cuanto lo ves así, aparece una colección que además se puede listar, paginar y borrar.
-
-<p class="stage">Estrategia 3 · Es una acción, y se admite</p>
-
-Cuando lo anterior no encaja, se expone la acción como un recurso propio y se documenta:
-
-```text
-POST /incidencias/41/cierre
-POST /pedidos/12/reembolso
-POST /sesiones
-```
-
-Fíjate en que siguen siendo sustantivos: el *cierre*, el *reembolso*, la *sesión*. Y en que se hacen con `POST`, porque no son idempotentes.
-
-<div class="rule">
-  <p class="rule-label">Cuándo está bien salirse de la norma</p>
-  <p>La estrategia 3 no es una derrota. Hay operaciones —un pago, un envío de correo, un proceso largo— que <strong>no son el cambio de un campo</strong> y forzarlas a serlo produce una API peor y más confusa.</p>
-  <p>Lo que no vale es usarla por defecto porque es la más fácil. La regla: <strong>intenta la 1, luego la 2, y solo entonces la 3 — y cuando uses la 3, escribe por qué.</strong></p>
-</div>
-
-<details class="aside aside--extra">
-  <summary>El caso del <em>login</em>, que todo el mundo pregunta</summary>
-  <p>Iniciar sesión no es CRUD por ninguna parte, y aun así encaja en la estrategia 2 si lo miras bien: lo que se crea es <strong>una sesión</strong>.</p>
-  <p><code>POST /sesiones</code> crea una, <code>DELETE /sesiones/actual</code> la cierra. Verás también <code>POST /auth/login</code>, que es la estrategia 3, y es perfectamente común.</p>
-  <p>Lo trabajaremos de verdad en la UD9. Hoy solo interesa que veas que hasta el caso más raro tiene un sustantivo detrás si lo buscas.</p>
-</details>
-
-### Práctica guiada · Repara doce rutas
-
-Reescribe cada una al nivel 2. Indica **método y ruta**, y en las que lo necesiten, qué va en el cuerpo.
-
-| # | Ruta original | Qué hace |
-| :---: | :--- | :--- |
-| 1 | `POST /crearProyecto` | Crea un proyecto |
-| 2 | `GET /obtenerProyecto?id=7` | Devuelve el proyecto 7 |
-| 3 | `GET /borrarProyecto/7` | Borra el proyecto 7 |
-| 4 | `POST /proyecto/7/editar` | Cambia el nombre del proyecto 7 |
-| 5 | `GET /listadoDeTareas` | Todas las tareas |
-| 6 | `GET /tareasDelProyecto/7` | Las tareas del proyecto 7 |
-| 7 | `GET /tareas/pendientes` | Las tareas no completadas |
-| 8 | `POST /tarea/41/marcarCompletada` | Marca la tarea 41 como completada |
-| 9 | `POST /tarea/41/asignarUsuario/3` | Asigna la tarea 41 al usuario 3 |
-| 10 | `POST /añadirComentario` | Añade un comentario a una incidencia |
-| 11 | `GET /proyectos.json` | Todos los proyectos |
-| 12 | `POST /archivarProyectosCerrados` | Archiva todos los proyectos cerrados |
-
-Tres avisos, para que no las despaches en cinco minutos:
-
-* La **3** tiene un problema mucho más grave que el nombre. Ya sabes cuál desde la UD1.
-* La **9** admite al menos dos soluciones buenas y distintas. Escribe las dos y elige una argumentando.
-* La **12** no encaja limpiamente en ninguna estrategia. Es a propósito: resuélvela como puedas y explica qué te chirría.
-
-### El contrato de recursos del gestor
-
-Con las reglas ya aplicadas, escribe el contrato completo de la aplicación. Este es el formato, con las dos primeras filas resueltas como ejemplo:
-
-| Recurso | Colección | Elemento | Relaciones |
-| :--- | :--- | :--- | :--- |
-| Proyecto | `/proyectos` | `/proyectos/{id}` | `/proyectos/{id}/tareas` |
-| Tarea | `/tareas` | `/tareas/{id}` | — |
-| Usuario | | | |
-| Comentario | | | |
-| Etiqueta | | | |
-
-Para cada recurso, decide además:
-
-1. Qué métodos acepta la colección y qué métodos acepta el elemento. **No todos tienen que aceptar los cinco**: un recurso que no se borra nunca no expone `DELETE`, y decirlo es diseñar.
-2. Qué filtros admite la colección, en query string.
-3. Si alguna relación merece ruta anidada o basta con un filtro.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · las etiquetas</summary>
-  <p>Una etiqueta es un recurso propio: existe aunque ninguna tarea la use, se lista y se borra. Hasta ahí, fácil.</p>
-  <p>Lo difícil es la relación: una tarea tiene varias etiquetas y una etiqueta está en varias tareas. Piensa qué URL representa «las etiquetas de la tarea 41», y qué método usarías para añadirle una que ya existe. Ojo: añadir una etiqueta existente a una tarea <strong>no crea una etiqueta nueva</strong>.</p>
-</details>
-
-### Ahora tú · Aplica el contrato a tu código
-
-1. Renombra en tu proyecto todas las rutas que incumplan alguna de las siete reglas.
-2. Actualiza la colección de Postman para que siga en verde con las rutas nuevas. Si sacaste el servidor a `{{baseUrl}}`, esto es rápido; si no, ya sabes por qué se hacía.
-3. Añade el recurso `Comentario` a la API, anidado donde corresponda, con al menos listar y crear.
-4. Anota en `DECISIONES.md` qué rutas cambiaron y por qué.
-
-### Reto · La prueba de que se puede adivinar
+##### Reto · La prueba de que se puede adivinar
 
 Este es el examen real de una API bien nombrada.
 
@@ -511,28 +472,6 @@ Hazlo también al revés, con la API de él.
   <div><strong>Reto</strong><span>La prueba de adivinanza hecha en las dos direcciones, con los fallos analizados.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 14</p>
-  <ul class="checklist">
-    <li>Ninguna ruta de tu API contiene un verbo.</li>
-    <li>Las colecciones están en plural y las relaciones de pertenencia usan jerarquía.</li>
-    <li>Sabes decidir entre ruta anidada y filtro, y justificarlo.</li>
-    <li>Conoces las tres estrategias para lo que no es CRUD y el orden en que se intentan.</li>
-    <li>Tienes el contrato de recursos escrito, con los métodos que acepta cada uno.</li>
-    <li>Alguien ha adivinado al menos una ruta tuya que no le habías enseñado.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué una URL no debe contener un verbo?</li>
-    <li>¿Cuándo se usa ruta anidada y cuándo un filtro en la query string?</li>
-    <li>Enumera las tres estrategias para exponer algo que no es CRUD.</li>
-    <li>¿Cuál es la ganancia práctica de tener veinte recursos en lugar de cien rutas?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque la URL identifica una cosa y la acción ya la expresa el método HTTP. Con el verbo en la ruta, cada funcionalidad nueva inventa una dirección nueva y la API deja de ser adivinable.</p>
@@ -541,27 +480,99 @@ Hazlo también al revés, con la API de él.
   <p>4 · Que se aprende una vez. Sobre cada recurso se aplican siempre los mismos métodos, así que quien sabe usar uno sabe usar los demás sin consultar nada.</p>
 </details>
 
-## Sesión 15 · RestController y representaciones
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> por qué lo que viaja por la red no es tu objeto, sino una representación que tú decides.</li>
-    <li><strong>2. Haz:</strong> separa por primera vez el modelo de lo que la API publica.</li>
-    <li><strong>3. Comprueba:</strong> cambias el modelo por dentro y el contrato no se entera.</li>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
+
+Cada ruta tiene un recurso o una operación de negocio justificable; la colección sigue funcionando.
+
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 9 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-09.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-09.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 10 · Representaciones y DTO
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+La respuesta pública tiene su propio modelo. Devolver directamente el objeto interno mezcla decisiones de implementación con lo que consume el cliente.
+
+#### Un recurso no es un objeto
+
+<p class="term">Representación</p>
+
+Lo que viaja por la red cuando alguien pide un recurso. **No es el recurso**: es una descripción suya, en un formato concreto, con los datos que se ha decidido incluir.
+
+Es la segunda idea de la interfaz uniforme que viste en la sesión 9, y ahora se puede decir con precisión:
+
+<figure class="diagram">
+  <figcaption>Tres cosas distintas que se confunden</figcaption>
+  <ol class="flow flow--before">
+    <li><strong>El recurso:</strong> «la tarea 41», una idea del dominio</li>
+    <li><strong>El modelo:</strong> la clase <code>Tarea</code> en tu memoria, con lo que tu código necesita</li>
+    <li><strong>La representación:</strong> el JSON que envías, con lo que el cliente necesita</li>
   </ol>
+</figure>
+
+Ahora mismo tienes las dos últimas pegadas: tu representación **es** tu modelo. Y cada vez que tocas uno, cambias el otro sin querer.
+
+#### Los tres daños concretos
+
+No es una cuestión de pureza. Son tres problemas que vas a sufrir:
+
+<dl class="worked">
+  <dt>1 · Publicas lo que no querías</dt>
+  <dd>Lo acabas de ver con <code>notaInterna</code>. Cuando en la UD9 la clase <code>Usuario</code> tenga la contraseña, el mismo mecanismo la publicará sin preguntar. No es hipotético: es una de las filtraciones de datos más habituales que existen.</dd>
+  <dt>2 · No puedes tocar tu código sin romper el de otros</dt>
+  <dd>Renombrar <code>titulo</code> a <code>nombre</code> es una mejora interna de dos segundos. Con el modelo publicado, es un cambio del contrato que rompe a todos los clientes. Acabas no renombrando nada por miedo, y el código se pudre.</dd>
+  <dt>3 · No puedes dar respuestas distintas</dt>
+  <dd>El listado quiere pocos campos y rápido; el detalle quiere todo. Con una sola clase publicada, o mandas de más en el listado o mandas de menos en el detalle.</dd>
+</dl>
+
+<div class="rule">
+  <p class="rule-label">La regla, de una vez</p>
+  <p><strong>Tu modelo interno es asunto tuyo. Tu contrato es un compromiso con otros.</strong> Son dos cosas con motivos de cambio distintos, y por eso tienen que ser dos clases distintas.</p>
+  <p>Cuando en la UD5 el modelo pase a ser una entidad de base de datos, con relaciones y carga perezosa, publicarlo directamente pasará de ser incómodo a ser inviable. Lo separamos ahora, mientras es barato.</p>
 </div>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿De dónde saca Jackson las claves del JSON que devuelve tu API?</li>
-    <li>Añades un campo privado con su <em>getter</em> a la clase <code>Tarea</code>. ¿Quién decide si aparece en la respuesta?</li>
-    <li>Del criterio 9 de la rúbrica de la sesión 13: ¿tu API publica campos internos? ¿Cuáles?</li>
-  </ol>
-</div>
+### Se trabaja
 
-### El experimento incómodo
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Introducid un DTO de salida para la entidad principal y seleccionad explícitamente sus campos.
+
+Aplicadlo a la segunda entidad y comparad detalle y listado cuando necesiten representaciones diferentes.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">RestController y representaciones</p>
+
+#### Paso 2 · El experimento incómodo
 
 Abre tu clase `Tarea` y añade esto, tal cual:
 
@@ -584,45 +595,7 @@ Ahí está, publicado en internet. **Tú no has tocado el controlador.** No has 
 
 Esa es la situación real de tu API desde la UD1: **publica exactamente lo que tenga la clase**, y la clase la tocas por motivos que no tienen nada que ver con lo que quieres publicar.
 
-### Un recurso no es un objeto
-
-<p class="term">Representación</p>
-
-Lo que viaja por la red cuando alguien pide un recurso. **No es el recurso**: es una descripción suya, en un formato concreto, con los datos que se ha decidido incluir.
-
-Es la segunda idea de la interfaz uniforme que viste en la sesión 13, y ahora se puede decir con precisión:
-
-<figure class="diagram">
-  <figcaption>Tres cosas distintas que se confunden</figcaption>
-  <ol class="flow flow--before">
-    <li><strong>El recurso:</strong> «la tarea 41», una idea del dominio</li>
-    <li><strong>El modelo:</strong> la clase <code>Tarea</code> en tu memoria, con lo que tu código necesita</li>
-    <li><strong>La representación:</strong> el JSON que envías, con lo que el cliente necesita</li>
-  </ol>
-</figure>
-
-Ahora mismo tienes las dos últimas pegadas: tu representación **es** tu modelo. Y cada vez que tocas uno, cambias el otro sin querer.
-
-### Los tres daños concretos
-
-No es una cuestión de pureza. Son tres problemas que vas a sufrir:
-
-<dl class="worked">
-  <dt>1 · Publicas lo que no querías</dt>
-  <dd>Lo acabas de ver con <code>notaInterna</code>. Cuando en la UD9 la clase <code>Usuario</code> tenga la contraseña, el mismo mecanismo la publicará sin preguntar. No es hipotético: es una de las filtraciones de datos más habituales que existen.</dd>
-  <dt>2 · No puedes tocar tu código sin romper el de otros</dt>
-  <dd>Renombrar <code>titulo</code> a <code>nombre</code> es una mejora interna de dos segundos. Con el modelo publicado, es un cambio del contrato que rompe a todos los clientes. Acabas no renombrando nada por miedo, y el código se pudre.</dd>
-  <dt>3 · No puedes dar respuestas distintas</dt>
-  <dd>El listado quiere pocos campos y rápido; el detalle quiere todo. Con una sola clase publicada, o mandas de más en el listado o mandas de menos en el detalle.</dd>
-</dl>
-
-<div class="rule">
-  <p class="rule-label">La regla, de una vez</p>
-  <p><strong>Tu modelo interno es asunto tuyo. Tu contrato es un compromiso con otros.</strong> Son dos cosas con motivos de cambio distintos, y por eso tienen que ser dos clases distintas.</p>
-  <p>Cuando en la UD5 el modelo pase a ser una entidad de base de datos, con relaciones y carga perezosa, publicarlo directamente pasará de ser incómodo a ser inviable. Lo separamos ahora, mientras es barato.</p>
-</div>
-
-### La primera representación
+#### Paso 3 · La primera representación
 
 <p class="term">DTO</p>
 
@@ -656,7 +629,7 @@ Cuatro líneas. Y esta vez **sí es un `record`**, al revés que el modelo. La d
 
 Jackson serializa un `record` igual de bien, leyendo sus componentes.
 
-### La conversión
+#### Paso 4 · La conversión
 
 Alguien tiene que pasar de `Tarea` a `TareaResponse`. Hoy, un método estático en el propio DTO:
 
@@ -711,19 +684,13 @@ public List<TareaResponse> lista() {
   <p>Si ya manejas <em>streams</em>, úsalo. Si no, el bucle es igual de correcto y se entiende mejor: no cambies a una sintaxis que no sabrías explicar en una defensa.</p>
 </details>
 
-### La comprobación que lo demuestra todo
+#### Paso 5 · La comprobación que lo demuestra todo
 
 Esta es la prueba de que ha servido para algo, y hay que hacerla:
 
-<p class="stage">Paso 1 · Comprueba que la nota interna ya no sale</p>
-
 `GET /tareas`. El campo `notaInterna` ha desaparecido, sin haberlo borrado de la clase. Sigue ahí, para tu código, y ya no se publica.
 
-<p class="stage">Paso 2 · Rompe el modelo a propósito</p>
-
 En la clase `Tarea`, renombra el atributo `titulo` a `nombre`, y su *getter* a `getNombre()`. El proyecto dejará de compilar en un sitio: **el método de conversión**. Arréglalo ahí, cambiando `tarea.getTitulo()` por `tarea.getNombre()`.
-
-<p class="stage">Paso 3 · Mira el JSON</p>
 
 ```json
 {"id":1,"titulo":"Revisar el login","prioridad":"alta","completada":false}
@@ -739,7 +706,7 @@ En la clase `Tarea`, renombra el atributo `titulo` a `nombre`, y su *getter* a `
 
 Deja el modelo con `titulo`, como estaba, antes de seguir.
 
-### Lo que esto cuesta
+#### Paso 6 · Lo que esto cuesta
 
 Sería deshonesto vendértelo como gratis:
 
@@ -754,17 +721,28 @@ En una aplicación de tres clases, el coste se nota y la ganancia no. En una de 
 <div class="rule">
   <p class="rule-label">Y todavía falta la mitad</p>
   <p>Hoy solo has separado <strong>la salida</strong>. La entrada sigue recibiendo el modelo directamente con <code>@RequestBody Tarea</code>, con todo lo que eso implica: el cliente todavía puede mandarte el <code>id</code>, o campos que no debería poder tocar.</p>
-  <p>Esa es la sesión 16. Y el código de conversión, que hoy has escrito a mano y que crecerá, se ordena en la 17.</p>
+  <p>Esa es la sesión 11. Y el código de conversión, que hoy has escrito a mano y que crecerá, se ordena en la 17.</p>
 </div>
 
-### Ahora tú · La representación de proyectos
+#### Paso 7 · La representación de proyectos
 
 1. Crea `ProyectoResponse` con los campos que **decidas** publicar, y justifica en un comentario cuál dejas fuera y por qué.
 2. Cambia el controlador de proyectos para devolverlo, en el elemento y en la colección.
 3. Añade a `Proyecto` un campo interno que no deba publicarse —por ejemplo `presupuestoInterno`— y comprueba que no aparece.
 4. Repite el paso 2 de la comprobación: renombra un campo del modelo y verifica que la colección de Postman sigue en verde.
 
-### Reto · Dos vistas del mismo recurso
+#### Paso 8 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **separad la representación pública del modelo interno**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Dos vistas del mismo recurso
 
 El listado de tareas de un proyecto grande devuelve doscientas tareas con todos sus campos. Es lento y el cliente solo necesita pintar una lista con el título y el estado.
 
@@ -784,27 +762,6 @@ La tercera pregunta no tiene una respuesta cerrada. Existen APIs que dejan al cl
   <div><strong>Reto</strong><span>Las dos vistas funcionando y las tres preguntas respondidas.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 15</p>
-  <ul class="checklist">
-    <li>Ningún endpoint devuelve ya el modelo directamente.</li>
-    <li>Existe un paquete <code>dto</code> con al menos dos representaciones de salida.</li>
-    <li>Has demostrado que renombrar un campo del modelo no cambia el JSON.</li>
-    <li>Sabes explicar la diferencia entre recurso, modelo y representación.</li>
-    <li>Puedes decir qué cuesta esta separación y por qué se hace igualmente.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre un recurso, un modelo y una representación?</li>
-    <li>Enumera los tres daños de publicar el modelo directamente.</li>
-    <li>¿Por qué el modelo es una clase y la respuesta un <code>record</code>?</li>
-    <li>¿Qué parte del contrato sigue sin separar al terminar hoy?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · El recurso es la idea del dominio; el modelo es la clase que tu código necesita en memoria; la representación es el JSON concreto que envías, con los campos que hayas decidido publicar.</p>
@@ -813,29 +770,45 @@ La tercera pregunta no tiene una respuesta cerrada. Existen APIs que dejan al cl
   <p>4 · La entrada. El cuerpo de las peticiones sigue llegando directamente al modelo, y eso permite al cliente mandar campos que no debería poder tocar.</p>
 </details>
 
-## Semana 6 · Lo que la API publica
+### Cierre
 
-## Sesión 16 · DTO de entrada y salida
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> por qué lo que un cliente puede enviarte y lo que tú le devuelves no son la misma lista de campos.</li>
-    <li><strong>2. Haz:</strong> cierra la mitad que faltaba: los DTO de entrada, uno para crear y otro para modificar.</li>
-    <li><strong>3. Comprueba:</strong> el cliente ya no puede colarte un <code>id</code> ni tocar campos que no le corresponden.</li>
-  </ol>
-</div>
+Una modificación interna no añade campos accidentalmente a la respuesta JSON.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué parte del contrato separaste ayer y cuál quedó sin separar?</li>
-    <li>De la UD2: ¿qué pasa hoy si el cliente envía <code>{"id": 999, "titulo": "Algo"}</code> a tu creación?</li>
-    <li>¿Por qué tu <code>PATCH</code> no puede modificar el campo <code>completada</code>?</li>
-  </ol>
-</div>
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-### La puerta que sigue abierta
+
+#### Entrega de la sesión 10 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-10.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-10.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Semana 6 · Entradas, salidas y mapeo
+
+## Sesión 11 · Entradas, salidas y mapeo
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+El cliente propone datos y el servidor decide identificadores y campos calculados. Los DTO de entrada y salida y su mapeo hacen visible esa frontera.
+
+#### La puerta que sigue abierta
 
 Ayer cerraste la salida. La entrada sigue exactamente como estaba:
 
@@ -854,7 +827,7 @@ Hoy da lo mismo, porque `Tarea` tiene cuatro campos inocentes. Cuando tenga `cre
   <p>El caso clásico: un formulario de registro que manda <code>{"nombre":"Ana","email":"...","rol":"ADMIN"}</code>. Nadie ha puesto <code>rol</code> en el formulario, pero la clase <code>Usuario</code> lo tiene, y Jackson lo asigna encantado. Aparece en listas de vulnerabilidades reales todos los años.</p>
 </div>
 
-### Entrada y salida no son simétricas
+#### Entrada y salida no son simétricas
 
 Es la idea de la sesión, y se ve mejor con una tabla que con una explicación:
 
@@ -878,7 +851,74 @@ Mira las dos últimas filas: hay campos que **entran y no salen**, y campos que 
   </ol>
 </figure>
 
-### El DTO de entrada es una lista blanca
+#### Tres clases por recurso, ¿no es demasiado?
+
+Es la objeción sensata, y la respuesta honesta es «depende».
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Cuándo sobra</p>
+    <p class="compare-body">Un recurso pequeño, interno, con los mismos campos de entrada y de salida y sin nada que ocultar. Ahí tres clases son ceremonia.</p>
+  </div>
+  <div>
+    <p class="compare-label">Cuándo salva</p>
+    <p class="compare-body">En cuanto haya un campo que el cliente no deba tocar, uno que no deba ver, o el modelo pase a ser una entidad de base de datos. Es decir: casi siempre, y siempre en la UD5.</p>
+  </div>
+</div>
+
+En este módulo se hacen las tres **siempre**, por el mismo motivo por el que en la UD1 se escribía el HTML a mano antes de usar Emmet: primero se aprende a hacerlo, y después se decide cuándo saltárselo.
+
+#### Cuenta los sitios
+
+Abre tu controlador de tareas y busca todas las líneas que pasan datos de una clase a otra. Vas a encontrar tres zonas:
+
+<figure class="diagram">
+  <figcaption>Dónde está hoy la conversión</figcaption>
+  <ol class="flow flow--before">
+    <li>En <code>TareaResponse.desde()</code>, un método estático dentro del DTO</li>
+    <li>En el <code>POST</code>, construyendo un <code>Tarea</code> a mano campo a campo</li>
+    <li>En el <code>PATCH</code>, con una cadena de <code>if</code> que asigna uno a uno</li>
+  </ol>
+</figure>
+
+Tres estilos distintos para el mismo trabajo, en dos archivos. Y ninguno lo eligió nadie: han ido apareciendo.
+
+#### La dirección de las dependencias
+
+Esto importa más de lo que parece, y es una pregunta habitual en una defensa:
+
+<figure class="diagram">
+  <figcaption>Quién conoce a quién</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>DTO · no conoce a nadie</li>
+    <li>Mapper · conoce a los dos</li>
+    <li>Modelo · no conoce a nadie</li>
+  </ol>
+</figure>
+
+El modelo no sabe que existe una API. Los DTO no saben que existe un modelo. Solo el mapper sabe de ambos, y por eso **es el único archivo que hay que tocar cuando cambia la traducción**.
+
+Si mañana publicas la misma aplicación por otro canal, el modelo se reutiliza entero. Si mañana cambias de base de datos, los DTO no se enteran.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Separad los DTO de creación, actualización y respuesta que necesite vuestro contrato; centralizad las conversiones repetidas.
+
+Enviad campos que el cliente no debe controlar y comprobad que no alteran el estado interno.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">DTO de entrada y salida</p>
+
+#### Paso 2 · El DTO de entrada es una lista blanca
 
 ```java
 package com.ejemplo.gestor.dto;
@@ -926,9 +966,9 @@ Fíjate en lo que **no** está: no hay `id` y no hay `completada`. Y ahí está 
   <p>Ese silencio que en la UD2 era un peligro, aquí es exactamente la protección que necesitas. <strong>El DTO de entrada define qué campos existen para el cliente</strong>, y todo lo demás deja de ser un problema, sin escribir una sola comprobación.</p>
 </div>
 
-Y otro detalle que no es casual: es una **clase**, no un `record`. Jackson necesita construirla vacía y rellenarla con los *setters*, y en la sesión 18 le colgaremos anotaciones de validación campo a campo.
+Y otro detalle que no es casual: es una **clase**, no un `record`. Jackson necesita construirla vacía y rellenarla con los *setters*, y en la sesión 12 le colgaremos anotaciones de validación campo a campo.
 
-#### El controlador
+##### El controlador
 
 ```java
 @PostMapping
@@ -953,8 +993,6 @@ public ResponseEntity<TareaResponse> crear(@RequestBody TareaRequest peticion) {
 
 Lee la línea `tarea.setCompletada(false)`. Es una decisión de negocio que antes estaba en manos del cliente: **una tarea recién creada nace sin completar**. Antes, si el cliente mandaba `"completada": true`, nacía terminada. Nadie lo había decidido; simplemente el campo estaba ahí.
 
-<p class="stage">Compruébalo</p>
-
 ```json
 POST /tareas
 { "id": 999, "titulo": "Colarme un id", "completada": true }
@@ -962,7 +1000,7 @@ POST /tareas
 
 Responde `201`, con `id` asignado por el servidor y `completada` en `false`. Los dos campos que sobraban se han ignorado, sin una sola línea de comprobación.
 
-### El DTO que arregla el `PATCH`
+#### Paso 3 · El DTO que arregla el `PATCH`
 
 En la UD2 anotaste dos limitaciones del `PATCH`: no podía tocar `completada`, porque un `boolean` primitivo no distingue «no enviado» de `false`. Ahora tiene arreglo:
 
@@ -1015,24 +1053,7 @@ public ResponseEntity<TareaResponse> modificar(
   <p>Se resuelve, y la solución habitual es declarar los campos como <code>Optional&lt;String&gt;</code>: entonces «no enviado» llega como <code>null</code> y «enviado como nulo» llega como <code>Optional.empty()</code>. No lo vamos a implementar, pero <strong>sabe que existe y por qué hace falta</strong>: es una pregunta de entrevista frecuente.</p>
 </div>
 
-### Tres clases por recurso, ¿no es demasiado?
-
-Es la objeción sensata, y la respuesta honesta es «depende».
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Cuándo sobra</p>
-    <p class="compare-body">Un recurso pequeño, interno, con los mismos campos de entrada y de salida y sin nada que ocultar. Ahí tres clases son ceremonia.</p>
-  </div>
-  <div>
-    <p class="compare-label">Cuándo salva</p>
-    <p class="compare-body">En cuanto haya un campo que el cliente no deba tocar, uno que no deba ver, o el modelo pase a ser una entidad de base de datos. Es decir: casi siempre, y siempre en la UD5.</p>
-  </div>
-</div>
-
-En este módulo se hacen las tres **siempre**, por el mismo motivo por el que en la UD1 se escribía el HTML a mano antes de usar Emmet: primero se aprende a hacerlo, y después se decide cuándo saltárselo.
-
-### Ahora tú · La entrada de proyectos
+#### Paso 4 · La entrada de proyectos
 
 1. Crea `ProyectoRequest` con solo lo que un cliente puede enviar al crear un proyecto.
 2. Crea `ProyectoPatchRequest` con tipos envoltorio.
@@ -1040,111 +1061,13 @@ En este módulo se hacen las tres **siempre**, por el mismo motivo por el que en
 4. Comprueba con Postman que un `POST` con un `id` y con un campo interno responde `201` e ignora los dos.
 5. Anota en `DECISIONES.md` qué campos dejaste fuera de la entrada y por qué.
 
-### Reto · La API de usuarios
+<p class="stage">Del JSON al modelo y del modelo al JSON</p>
 
-Diseña, sin escribir código todavía, las tres clases de un recurso `Usuario` con estos campos internos:
-
-```text
-id, nombre, email, contraseñaCifrada, rol, fechaDeAlta, ultimoAcceso, activo
-```
-
-Requisitos del negocio:
-
-* Al registrarse, el usuario envía nombre, email y contraseña en claro.
-* El rol lo asigna siempre un administrador, nunca el propio usuario.
-* Nadie, jamás, puede leer la contraseña por la API.
-* El perfil público muestra nombre y fecha de alta.
-* El propio usuario, al consultarse a sí mismo, ve además su email y su último acceso.
-
-Entrega una tabla con **una fila por campo** y una columna por clase, marcando dónde aparece cada uno:
-
-| Campo | `UsuarioRequest` | `Usuario` | `UsuarioResponse` | `UsuarioPublico` |
-| :--- | :---: | :---: | :---: | :---: |
-
-Y responde a dos preguntas:
-
-1. Hay un campo que aparece en la entrada y **no existe** en el modelo con ese nombre. ¿Cuál, y qué pasa con él entre una clase y otra?
-2. ¿Qué habría ocurrido con el campo `rol` si hubieras usado el modelo como cuerpo de la petición?
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span><code>TareaRequest</code> y <code>TareaPatchRequest</code> en uso, con el <code>id</code> del cliente ya ignorado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Proyectos con sus dos DTO de entrada y el <code>PATCH</code> capaz de marcar y desmarcar.</span></div>
-  <div><strong>Reto</strong><span>Las cuatro clases de <code>Usuario</code> repartidas campo a campo, con las dos preguntas respondidas.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 16</p>
-  <ul class="checklist">
-    <li>Ningún <code>@RequestBody</code> recibe ya una clase del modelo.</li>
-    <li>Un cliente que envía un <code>id</code> o un campo interno recibe <code>201</code> y esos campos se ignoran.</li>
-    <li>Tu <code>PATCH</code> distingue «no enviado» de <code>false</code> gracias a los tipos envoltorio.</li>
-    <li>Sabes explicar qué es <em>mass assignment</em> y por qué el DTO de entrada lo previene.</li>
-    <li>Puedes nombrar un campo que entra y no sale, y otro que sale y no entra.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué un DTO de entrada funciona como lista blanca sin escribir comprobaciones?</li>
-    <li>¿Por qué <code>Boolean</code> y no <code>boolean</code> en un DTO de modificación?</li>
-    <li>Pon un ejemplo de campo que entra y no sale, y uno que sale y no entra.</li>
-    <li>¿Qué limitación del <code>PATCH</code> sigue sin resolverse y cómo se resolvería?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque Jackson solo asigna las claves para las que encuentra un <em>setter</em>. Si el campo no existe en la clase de entrada, se ignora en silencio, así que la propia clase decide qué puede enviar el cliente.</p>
-  <p>2 · Porque el primitivo no puede valer <code>null</code> y siempre llega como <code>false</code>, de modo que no se distingue «no me lo han enviado» de «pónmelo a falso». El envoltorio sí admite <code>null</code>.</p>
-  <p>3 · Entra y no sale: la contraseña. Sale y no entra: el <code>id</code>, o la fecha de creación.</p>
-  <p>4 · Vaciar un campo a propósito. Se resolvería declarándolo como <code>Optional</code>, que distingue el campo ausente del campo enviado con valor nulo.</p>
-</details>
-
-## Sesión 17 · Del JSON al modelo y del modelo al JSON
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> por qué la conversión repartida por el controlador acaba publicando el mismo recurso de dos formas distintas.</li>
-    <li><strong>2. Haz:</strong> reúne toda la conversión en un único sitio y deja el controlador legible.</li>
-    <li><strong>3. Comprueba:</strong> una prueba de ida y vuelta demuestra que ningún campo se pierde por el camino.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuántos sitios distintos de tu código convierten hoy entre DTO y modelo? Cuéntalos de verdad.</li>
-    <li>¿Qué clase conoce a cuál: sabe <code>Tarea</code> que existe <code>TareaResponse</code>?</li>
-    <li>Añades un campo nuevo al recurso. ¿Cuántos archivos tienes que tocar?</li>
-  </ol>
-</div>
-
-### Cuenta los sitios
-
-Abre tu controlador de tareas y busca todas las líneas que pasan datos de una clase a otra. Vas a encontrar tres zonas:
-
-<figure class="diagram">
-  <figcaption>Dónde está hoy la conversión</figcaption>
-  <ol class="flow flow--before">
-    <li>En <code>TareaResponse.desde()</code>, un método estático dentro del DTO</li>
-    <li>En el <code>POST</code>, construyendo un <code>Tarea</code> a mano campo a campo</li>
-    <li>En el <code>PATCH</code>, con una cadena de <code>if</code> que asigna uno a uno</li>
-  </ol>
-</figure>
-
-Tres estilos distintos para el mismo trabajo, en dos archivos. Y ninguno lo eligió nadie: han ido apareciendo.
-
-### El fallo que provoca, demostrado
+#### Paso 5 · El fallo que provoca, demostrado
 
 No es un problema estético. Vamos a producirlo a propósito para que lo veas.
 
-<p class="stage">Paso 1 · Añade un campo al recurso</p>
-
 Añade `proyectoId` a `Tarea` y a `TareaResponse`, con sus accesos.
-
-<p class="stage">Paso 2 · Actualiza la conversión… en un sitio</p>
 
 Actualiza `TareaResponse.desde()` para que lo incluya. Y ahora **haz como si se te olvidara** el listado: deja el `GET /tareas` construyendo la respuesta a mano, como quizá lo tengas:
 
@@ -1163,8 +1086,6 @@ public List<TareaResponse> lista() {
 }
 ```
 
-<p class="stage">Paso 3 · Compara las dos respuestas</p>
-
 ```json
 GET /tareas      → [{"id":1,"titulo":"Revisar","prioridad":"alta","completada":false}]
 GET /tareas/1    → {"id":1,"titulo":"Revisar","prioridad":"alta","completada":false,"proyectoId":7}
@@ -1178,7 +1099,7 @@ GET /tareas/1    → {"id":1,"titulo":"Revisar","prioridad":"alta","completada":
   <p>Y la causa no es un descuido: es que <strong>había dos sitios donde hacer el mismo cambio</strong> y solo uno era obligatorio.</p>
 </div>
 
-### La regla · un solo sitio
+#### Paso 6 · La regla · un solo sitio
 
 <p class="term">Mapper</p>
 
@@ -1256,24 +1177,7 @@ public class TareaMapper {
   <dd>Porque todavía no hemos visto inyección de dependencias. En la UD4 esta clase pasará a ser un componente que Spring construye e inyecta, y entonces entenderás qué se gana. Hoy, estático y funcionando.</dd>
 </dl>
 
-### La dirección de las dependencias
-
-Esto importa más de lo que parece, y es una pregunta habitual en una defensa:
-
-<figure class="diagram">
-  <figcaption>Quién conoce a quién</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>DTO · no conoce a nadie</li>
-    <li>Mapper · conoce a los dos</li>
-    <li>Modelo · no conoce a nadie</li>
-  </ol>
-</figure>
-
-El modelo no sabe que existe una API. Los DTO no saben que existe un modelo. Solo el mapper sabe de ambos, y por eso **es el único archivo que hay que tocar cuando cambia la traducción**.
-
-Si mañana publicas la misma aplicación por otro canal, el modelo se reutiliza entero. Si mañana cambias de base de datos, los DTO no se enteran.
-
-### El controlador, después
+#### Paso 7 · El controlador, después
 
 ```java
 @GetMapping
@@ -1316,24 +1220,18 @@ Ese método `buscar(id)` privado que aparece ahí es tuyo: sácalo también, por
   <p>Sabe que existen. Úsalas cuando escribir mappers a mano te resulte aburrido, que es la señal de que ya entiendes lo que hacen.</p>
 </details>
 
-### La prueba de ida y vuelta
+#### Paso 8 · La prueba de ida y vuelta
 
 Un mapper roto no lanza excepciones: **pierde datos en silencio**. Si te olvidas de una línea, ese campo llega vacío y nadie protesta.
 
 La forma de detectarlo es recorrer el circuito completo y comparar los extremos. Con las herramientas que tienes:
-
-<p class="stage">Paso 1 · Envía todo lo que la API acepta</p>
 
 ```json
 POST /tareas
 { "titulo": "Revisar el login", "prioridad": "alta", "proyectoId": 7 }
 ```
 
-<p class="stage">Paso 2 · Recupera lo creado</p>
-
 Usa la cabecera `Location`, o `{{tareaId}}` si ya lo tienes encadenado en la colección.
-
-<p class="stage">Paso 3 · Comprueba campo a campo</p>
 
 Añade a esa petición de la colección una comprobación por cada campo enviado:
 
@@ -1353,7 +1251,7 @@ pm.test("El proyecto sobrevive al viaje", function () {
   <p>Es la primera prueba de tu proyecto que comprueba una <em>transformación</em> y no un código de estado. En la UD4 esto mismo se escribirá en Java y se ejecutará sin Postman, pero la idea no cambiará.</p>
 </div>
 
-### Ahora tú · El mapper de proyectos
+#### Paso 9 · El mapper de proyectos
 
 1. Crea `ProyectoMapper` con los cuatro métodos equivalentes.
 2. Vacía el controlador de proyectos de toda conversión.
@@ -1361,7 +1259,58 @@ pm.test("El proyecto sobrevive al viaje", function () {
 4. Añade a la colección la prueba de ida y vuelta para proyectos, con una comprobación por campo.
 5. Comprueba que la colección entera sigue en verde.
 
-### Reto · Encuentra el campo perdido
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **separad los dto y centralizad las conversiones**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · La API de usuarios
+
+Diseña, sin escribir código todavía, las tres clases de un recurso `Usuario` con estos campos internos:
+
+```text
+id, nombre, email, contraseñaCifrada, rol, fechaDeAlta, ultimoAcceso, activo
+```
+
+Requisitos del negocio:
+
+* Al registrarse, el usuario envía nombre, email y contraseña en claro.
+* El rol lo asigna siempre un administrador, nunca el propio usuario.
+* Nadie, jamás, puede leer la contraseña por la API.
+* El perfil público muestra nombre y fecha de alta.
+* El propio usuario, al consultarse a sí mismo, ve además su email y su último acceso.
+
+Entrega una tabla con **una fila por campo** y una columna por clase, marcando dónde aparece cada uno:
+
+| Campo | `UsuarioRequest` | `Usuario` | `UsuarioResponse` | `UsuarioPublico` |
+| :--- | :---: | :---: | :---: | :---: |
+
+Y responde a dos preguntas:
+
+1. Hay un campo que aparece en la entrada y **no existe** en el modelo con ese nombre. ¿Cuál, y qué pasa con él entre una clase y otra?
+2. ¿Qué habría ocurrido con el campo `rol` si hubieras usado el modelo como cuerpo de la petición?
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span><code>TareaRequest</code> y <code>TareaPatchRequest</code> en uso, con el <code>id</code> del cliente ya ignorado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Proyectos con sus dos DTO de entrada y el <code>PATCH</code> capaz de marcar y desmarcar.</span></div>
+  <div><strong>Reto</strong><span>Las cuatro clases de <code>Usuario</code> repartidas campo a campo, con las dos preguntas respondidas.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque Jackson solo asigna las claves para las que encuentra un <em>setter</em>. Si el campo no existe en la clase de entrada, se ignora en silencio, así que la propia clase decide qué puede enviar el cliente.</p>
+  <p>2 · Porque el primitivo no puede valer <code>null</code> y siempre llega como <code>false</code>, de modo que no se distingue «no me lo han enviado» de «pónmelo a falso». El envoltorio sí admite <code>null</code>.</p>
+  <p>3 · Entra y no sale: la contraseña. Sale y no entra: el <code>id</code>, o la fecha de creación.</p>
+  <p>4 · Vaciar un campo a propósito. Se resolvería declarándolo como <code>Optional</code>, que distingue el campo ausente del campo enviado con valor nulo.</p>
+</details>
+
+##### Reto · Encuentra el campo perdido
 
 Haz este ejercicio en pareja, y hazlo en las dos direcciones.
 
@@ -1382,27 +1331,6 @@ Y responde por escrito:
   <div><strong>Reto</strong><span>El campo perdido del compañero detectado y la colección ampliada hasta cazarlo.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 17</p>
-  <ul class="checklist">
-    <li>Existe un paquete <code>mapper</code> y es el único sitio del proyecto donde se traduce.</li>
-    <li>Ningún controlador construye un DTO ni un modelo campo a campo.</li>
-    <li>El listado y el detalle devuelven exactamente los mismos campos del mismo recurso.</li>
-    <li>La colección comprueba el viaje completo de al menos un recurso, campo a campo.</li>
-    <li>Sabes explicar por qué el DTO no conoce el modelo y el mapper conoce a los dos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué fallo concreto produce tener la conversión en dos sitios?</li>
-    <li>¿Por qué el mapper no es un método dentro del DTO?</li>
-    <li>¿Por qué <code>aplicar</code> no devuelve un objeto nuevo?</li>
-    <li>¿Qué comprueba una prueba de ida y vuelta que no comprueba un código de estado?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Que un cambio se aplique solo en uno de los dos, y el mismo recurso acabe publicándose de dos formas distintas según el endpoint. Las dos respuestas son válidas, así que nada lo detecta.</p>
@@ -1411,27 +1339,43 @@ Y responde por escrito:
   <p>4 · Que los datos sobreviven a la transformación. Un <code>200</code> solo dice que la petición se atendió; no dice que los campos hayan llegado ni que valgan lo que valían.</p>
 </details>
 
-## Sesión 18 · Validación de entrada
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> por qué la validación del navegador no cuenta y dónde tiene que estar la de verdad.</li>
-    <li><strong>2. Haz:</strong> añade Bean Validation a los DTO de entrada y comprueba que rechaza antes de ejecutar nada.</li>
-    <li><strong>3. Comprueba:</strong> una tarea sin título ya no se crea, y la respuesta dice qué campo falla.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Desde la UD2: ¿qué crea hoy tu API si le envías <code>{}</code> a la creación de una tarea?</li>
-    <li>¿En qué clase habría que poner las reglas de «qué es una tarea válida», en el modelo o en el DTO de entrada?</li>
-    <li>¿Qué diferencia hay entre un cuerpo inválido y uno incompleto?</li>
-  </ol>
-</div>
+Identificadores y valores calculados conservan el control del servidor; los mapeos de ambas entidades son coherentes.
 
-### El formulario del cliente no es una defensa
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 11 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-11.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-11.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 12 · Validar las entradas del CRUD
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+La validación en el servidor protege las invariantes de entrada aunque se omita el formulario. Se demuestra una petición inválida enviada directamente desde el cliente HTTP.
+
+#### El formulario del cliente no es una defensa
 
 Un cliente bien hecho comprueba los datos antes de enviarlos: marca en rojo el campo vacío y no deja pulsar el botón. Es buena práctica y mejora la experiencia.
 
@@ -1453,7 +1397,42 @@ Y **no protege absolutamente de nada**, porque esa comprobación vive en la máq
   <p>Que estén las dos no es duplicar trabajo: una evita un viaje innecesario y mejora la experiencia; la otra protege los datos. Si solo puedes tener una, es la del servidor.</p>
 </div>
 
-### Instala la dependencia, porque no viene puesta
+#### Valida antes de ejecutar, como todo lo demás
+
+Es el mismo mecanismo que ya has visto dos veces: en la UD1 con un `@RequestParam` que faltaba, y en la UD2 con un cuerpo que no se podía leer.
+
+<figure class="diagram">
+  <figcaption>Dónde encaja la validación en el recorrido</figcaption>
+  <ol class="flow flow--before">
+    <li>Se busca el método que atiende la ruta</li>
+    <li>Jackson convierte el cuerpo en el DTO de entrada</li>
+    <li><strong>Se comprueban las restricciones del DTO</strong></li>
+    <li class="is-error">Si alguna falla, <code>400</code> y aquí se acaba</li>
+    <li>Si todas pasan, se ejecuta tu método</li>
+  </ol>
+</figure>
+
+La consecuencia práctica es la buena noticia del día: **dentro de tu método ya no hace falta comprobar nada de esto**. Si el código se está ejecutando, el título no está vacío y la prioridad es una de las tres. No escribas `if (titulo == null)` en el controlador: eso ya está resuelto antes, y en un solo sitio.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Aplicad Bean Validation a los DTO y activadla en los endpoints. Elegid límites adecuados al dominio.
+
+Preparad una tabla de entradas vacías, fuera de rango y válidas; ejecutadla sobre altas y modificaciones.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Validación de entrada</p>
+
+#### Paso 2 · Instala la dependencia, porque no viene puesta
 
 Esto sorprende a mucha gente: la validación **no está incluida** en `spring-boot-starter-web`. Hay que pedirla.
 
@@ -1474,9 +1453,9 @@ Sin versión: la pone el padre, como aprendiste en la UD1. Recarga las dependenc
   <p>Cuando eso pase, lo primero que se mira es si la dependencia está en el <code>pom.xml</code> y si Maven la ha descargado.</p>
 </div>
 
-### Las reglas van en el DTO de entrada
+#### Paso 3 · Las reglas van en el DTO de entrada
 
-Y no en el modelo. El motivo enlaza con las dos sesiones anteriores:
+Y no en el modelo. El motivo enlaza con los dos pasos anteriores:
 
 <div class="compare-pair">
   <div>
@@ -1518,7 +1497,7 @@ public class TareaRequest {
 
 Fíjate en el paquete: `jakarta.validation`, no `javax`. Si el autocompletado te ofrece `javax`, es de una versión anterior y no funcionará con Spring Boot 3.
 
-#### Las restricciones que cubren casi todo
+##### Las restricciones que cubren casi todo
 
 | Anotación | Comprueba |
 | :--- | :--- |
@@ -1532,7 +1511,7 @@ Fíjate en el paquete: `jakarta.validation`, no `javax`. Si el autocompletado te
 | `@Pattern(regexp)` | Que el texto encaje con una expresión regular |
 | `@Past` / `@Future` | Que una fecha sea anterior o posterior a hoy |
 
-#### Las tres que se confunden siempre
+##### Las tres que se confunden siempre
 
 | Valor recibido | `@NotNull` | `@NotEmpty` | `@NotBlank` |
 | :--- | :---: | :---: | :---: |
@@ -1549,7 +1528,7 @@ Para un texto obligatorio quieres casi siempre `@NotBlank`: es la única que imp
   <p>Ya usabas <code>Integer</code> y <code>Boolean</code> en los DTO por lo del <code>PATCH</code>. Esta es la segunda razón, y es igual de importante.</p>
 </div>
 
-### Activarla · `@Valid`
+#### Paso 4 · Activarla · `@Valid`
 
 Las anotaciones por sí solas no hacen nada. Hay que pedir que se comprueben, en el controlador:
 
@@ -1561,8 +1540,6 @@ public ResponseEntity<TareaResponse> crear(@Valid @RequestBody TareaRequest peti
 ```
 
 Una palabra. `jakarta.validation.Valid`.
-
-<p class="stage">Compruébalo</p>
 
 ```json
 POST /tareas
@@ -1580,24 +1557,7 @@ POST /tareas
 
 `400`, y la tarea no se ha creado. Mira además la consola: ahí sí está el detalle completo, con el campo y la restricción que ha fallado.
 
-### Valida antes de ejecutar, como todo lo demás
-
-Es el mismo mecanismo que ya has visto dos veces: en la UD1 con un `@RequestParam` que faltaba, y en la UD2 con un cuerpo que no se podía leer.
-
-<figure class="diagram">
-  <figcaption>Dónde encaja la validación en el recorrido</figcaption>
-  <ol class="flow flow--before">
-    <li>Se busca el método que atiende la ruta</li>
-    <li>Jackson convierte el cuerpo en el DTO de entrada</li>
-    <li><strong>Se comprueban las restricciones del DTO</strong></li>
-    <li class="is-error">Si alguna falla, <code>400</code> y aquí se acaba</li>
-    <li>Si todas pasan, se ejecuta tu método</li>
-  </ol>
-</figure>
-
-La consecuencia práctica es la buena noticia del día: **dentro de tu método ya no hace falta comprobar nada de esto**. Si el código se está ejecutando, el título no está vacío y la prioridad es una de las tres. No escribas `if (titulo == null)` en el controlador: eso ya está resuelto antes, y en un solo sitio.
-
-### El problema que queda para la sesión 20
+#### Paso 5 · El problema que queda para la sesión 13
 
 Vuelve a mirar ese `400`. Ponte en el lugar de quien consume tu API:
 
@@ -1609,7 +1569,7 @@ Vuelve a mirar ese `400`. Ponte en el lugar de quien consume tu API:
 
 **No hay forma de saberlo.** La información existe —está entera en tu consola— y no se la estás dando a quien la necesita. Un cliente que recibe esto solo puede probar a ciegas.
 
-Eso es la sesión 20. Hoy la validación ya protege tus datos; el mensaje todavía no ayuda a nadie.
+Eso es la sesión 13. Hoy la validación ya protege tus datos; el mensaje todavía no ayuda a nadie.
 
 <details class="aside aside--extra">
   <summary>Validar parámetros que no van en el cuerpo</summary>
@@ -1617,7 +1577,7 @@ Eso es la sesión 20. Hoy la validación ya protege tus datos; el mensaje todav�
   <p>Sin esa anotación de clase, un <code>@Positive</code> sobre un parámetro se ignora sin avisar. Es otro caso de «no da error y no hace nada», así que conviene reconocerlo.</p>
 </details>
 
-### Práctica guiada · La tabla de rechazos
+#### Paso 6 · La tabla de rechazos
 
 Con `@Valid` puesto, envía estos cuerpos a `POST /tareas` y **predice antes** el código y el motivo:
 
@@ -1638,7 +1598,7 @@ Las dos interesantes son la **4** y la **9**:
 * La 4 solo la caza `@NotBlank`. Con `@NotEmpty` habrías creado una tarea titulada con tres espacios.
 * La 9 devuelve `400` **igual que las demás, pero por otro motivo completamente distinto**: falla antes, al convertir el JSON, porque `"siete"` no es un número. Ni siquiera llega a validarse. Compruébalo en la consola: la excepción no es la misma.
 
-### Ahora tú · Las reglas de proyectos
+#### Paso 7 · Las reglas de proyectos
 
 1. Añade restricciones a `ProyectoRequest`: el nombre obligatorio y entre 3 y 80 caracteres, la descripción opcional pero como máximo 500.
 2. Pon `@Valid` en el `POST` y en el `PUT`.
@@ -1647,7 +1607,18 @@ Las dos interesantes son la **4** y la **9**:
 
 La pregunta 3 es la que se piensa. Un `PATCH` recibe campos ausentes por definición, así que `@NotNull` ahí sería un error. Pero `@Size` sí tiene sentido: *si* llega, que tenga la longitud correcta.
 
-### Reto · Escribe el contrato de validación
+#### Paso 8 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **rechazad entradas inválidas antes de ejecutar el caso de uso**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Escribe el contrato de validación
 
 Antes de tocar más código, escribe la tabla de reglas de **todos** los recursos de tu API. Este es el formato:
 
@@ -1660,34 +1631,12 @@ Después responde:
 2. Para cada una de esas dos, ¿dónde tendría que comprobarse entonces? Piensa en quién sabe la respuesta: ¿la clase del DTO, o algo que tenga acceso a la lista de proyectos?
 3. Tu API acepta hoy una tarea de un proyecto inexistente. ¿Es eso un `400` o un `404`? Argumenta las dos posturas y quédate con una.
 
-La pregunta 1 abre la sesión siguiente, y la 2 apunta a la UD4. La 3 no tiene respuesta única y se defiende.
+La pregunta 1 abre el trabajo siguiente, y la 2 apunta a la UD4. La 3 no tiene respuesta única y se defiende.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>La dependencia instalada, <code>TareaRequest</code> validado y la tabla de nueve rechazos comprobada.</span></div>
   <div><strong>Si lo tienes</strong><span>Proyectos validados, con la decisión sobre el <code>PATCH</code> justificada y tres rechazos en la colección.</span></div>
   <div><strong>Reto</strong><span>El contrato de validación completo y las dos reglas que las anotaciones no alcanzan, identificadas y situadas.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 18</p>
-  <ul class="checklist">
-    <li><code>spring-boot-starter-validation</code> está en el <code>pom.xml</code>.</li>
-    <li>Las restricciones están en los DTO de entrada, no en el modelo.</li>
-    <li>Un cuerpo vacío responde <code>400</code> y no crea nada.</li>
-    <li>Sabes distinguir <code>@NotNull</code>, <code>@NotEmpty</code> y <code>@NotBlank</code> con un ejemplo de cada.</li>
-    <li>Tu controlador no comprueba a mano nada que ya compruebe una anotación.</li>
-    <li>Sabes decir por qué el <code>400</code> actual todavía no le sirve a quien consume la API.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué la validación del navegador no protege nada?</li>
-    <li>Pones las anotaciones y no pasa nada. ¿Qué compruebas primero?</li>
-    <li>¿Qué valor pasa <code>@NotEmpty</code> y falla <code>@NotBlank</code>?</li>
-    <li>¿Por qué <code>@NotNull</code> sobre un <code>int</code> no sirve?</li>
-  </ol>
 </div>
 
 <details class="aside aside--extra">
@@ -1698,29 +1647,45 @@ La pregunta 1 abre la sesión siguiente, y la 2 apunta a la UD4. La 3 no tiene r
   <p>4 · Porque un primitivo no puede ser nulo: un campo ausente llega como <code>0</code> y la comprobación pasa. Hay que declararlo como <code>Integer</code>.</p>
 </details>
 
-## Semana 7 · Entrada fiable y errores honestos
+### Cierre
 
-## Sesión 19 · Reglas propias y mensajes de validación útiles
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> a escribir mensajes que digan qué corregir y restricciones que expresen reglas de tu dominio.</li>
-    <li><strong>2. Haz:</strong> haz visibles los mensajes, reescríbelos todos y crea tu propia anotación de validación.</li>
-    <li><strong>3. Comprueba:</strong> quien recibe un 400 sabe qué campo arreglar sin preguntarte.</li>
-  </ol>
-</div>
+Las entradas inválidas no crean ni modifican recursos y el cliente recibe una respuesta que puede interpretar.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué información da hoy el cuerpo de tu <code>400</code> a quien consume la API?</li>
-    <li>¿Dónde está esa información ahora mismo, si no está en la respuesta?</li>
-    <li>De la sesión 18: nombra una regla de tu API que las anotaciones no pueden expresar.</li>
-  </ol>
-</div>
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-### Ponte en el otro lado
+
+#### Entrega de la sesión 12 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-12.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-12.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Semana 7 · Reglas propias y errores coherentes
+
+## Sesión 13 · Reglas propias y errores coherentes
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Una restricción de formato y un conflicto de negocio requieren explicaciones diferentes. Un manejador común convierte excepciones conocidas en errores de API estables.
+
+#### Ponte en el otro lado
 
 Estás escribiendo un cliente contra una API ajena. Envías tu formulario y recibes esto:
 
@@ -1732,43 +1697,7 @@ Estás escribiendo un cliente contra una API ajena. Envías tu formulario y reci
 
 **Esa API eres tú desde ayer.** Hoy lo arreglamos.
 
-### Primero, hazlos visibles
-
-La información existe: Spring sabe perfectamente qué campo ha fallado y por qué, y lo tienes en la consola. Simplemente no se envía, porque por defecto no se publican detalles de error.
-
-En `application.properties`:
-
-```properties
-server.error.include-message=always
-server.error.include-binding-errors=always
-```
-
-Reinicia y repite el `POST` con el cuerpo vacío:
-
-```json
-{
-  "timestamp": "2026-09-02T10:14:22.831+00:00",
-  "status": 400,
-  "error": "Bad Request",
-  "message": "Validation failed for object='tareaRequest'. Error count: 3",
-  "errors": [
-    { "field": "titulo", "defaultMessage": "must not be blank" },
-    { "field": "prioridad", "defaultMessage": "must not be null" },
-    { "field": "proyectoId", "defaultMessage": "must not be null" }
-  ],
-  "path": "/tareas"
-}
-```
-
-Ya se puede trabajar con eso: hay campos y hay motivos.
-
-<div class="rule">
-  <p class="rule-label">Dos avisos sobre estas dos líneas</p>
-  <p><strong>Uno.</strong> Es una solución provisional. El formato lo decide Spring, no tú, y arrastra ruido como <code>defaultMessage</code> o <code>object=</code>. En la sesión 20 diseñarás tu propio formato y estas propiedades sobrarán.</p>
-  <p><strong>Dos.</strong> <code>include-message=always</code> también publica el mensaje de <strong>cualquier</strong> excepción, incluidas las inesperadas. En una aplicación real eso puede filtrar detalles internos a quien no debería verlos. Aquí se acepta porque estamos aprendiendo y porque dura una sesión.</p>
-</div>
-
-### Un mensaje útil dice qué se espera
+#### Un mensaje útil dice qué se espera
 
 Los mensajes por defecto están en inglés y describen la restricción, no el problema. Compara:
 
@@ -1821,208 +1750,7 @@ public class TareaRequest {
   <p>Sirve para traducir la API a varios idiomas y para revisar todos los textos de una vez sin abrir veinte clases. No lo necesitamos aquí, pero es lo que verás en cualquier aplicación que se publique en más de un idioma.</p>
 </details>
 
-### Cuando la regla es tuya, la anotación también
-
-`@Pattern(regexp = "baja|media|alta")` funciona, y tiene tres problemas:
-
-1. Está repetida en `TareaRequest` y en `TareaPatchRequest`.
-2. Si mañana se añade la prioridad `crítica`, hay que acordarse de los dos sitios.
-3. No dice nada: hay que leer la expresión regular para entender la regla.
-
-Vamos a convertir esa regla del dominio en una anotación propia.
-
-<p class="stage">Paso 1 · La anotación</p>
-
-```java
-package com.ejemplo.gestor.validacion;
-
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target({ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PrioridadValidaValidator.class)
-public @interface PrioridadValida {
-
-    String message() default "La prioridad debe ser baja, media o alta";
-
-    Class<?>[] groups() default {};
-
-    Class<? extends Payload>[] payload() default {};
-}
-```
-
-<dl class="worked">
-  <dt><code>@Target(FIELD)</code></dt>
-  <dd>Dónde se puede poner esta anotación. Aquí, sobre atributos.</dd>
-  <dt><code>@Retention(RUNTIME)</code></dt>
-  <dd>Que siga existiendo mientras el programa se ejecuta. Sin esto, la anotación desaparece al compilar y nadie la ve.</dd>
-  <dt><code>@Constraint(validatedBy = ...)</code></dt>
-  <dd>Qué clase contiene la comprobación de verdad. La anotación solo es la etiqueta.</dd>
-  <dt><code>groups</code> y <code>payload</code></dt>
-  <dd>Los exige la especificación de Bean Validation y casi nunca se usan. Se copian tal cual.</dd>
-</dl>
-
-<p class="stage">Paso 2 · La comprobación</p>
-
-```java
-package com.ejemplo.gestor.validacion;
-
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-
-import java.util.List;
-
-public class PrioridadValidaValidator
-        implements ConstraintValidator<PrioridadValida, String> {
-
-    private static final List<String> VALIDAS = List.of("baja", "media", "alta");
-
-    @Override
-    public boolean isValid(String valor, ConstraintValidatorContext contexto) {
-        // Un valor ausente es asunto de @NotNull, no nuestro.
-        if (valor == null) {
-            return true;
-        }
-        return VALIDAS.contains(valor);
-    }
-}
-```
-
-Ese `if (valor == null) return true` no es un descuido: **cada anotación comprueba una sola cosa**. Si además rechazara los nulos, no podrías tener un campo opcional con esta regla, y es justo lo que necesitas en el `PATCH`.
-
-<p class="stage">Paso 3 · Úsala</p>
-
-```java
-@NotNull(message = "La prioridad es obligatoria")
-@PrioridadValida
-private String prioridad;
-```
-
-En `TareaPatchRequest`, donde el campo es opcional, va sola:
-
-```java
-@PrioridadValida
-private String prioridad;
-```
-
-La regla vive ahora **en un solo sitio**, se lee sin descifrar nada, y añadir `crítica` es tocar una línea.
-
-<div class="rule">
-  <p class="rule-label">Y aun así, la mejor validación es la que no hace falta</p>
-  <p>Si <code>prioridad</code> fuera un <code>enum</code> en lugar de un <code>String</code>, un valor inválido sería imposible de representar: Jackson rechazaría <code>"urgentísima"</code> él solo, y no habría regla que escribir ni que mantener.</p>
-  <p><strong>Antes de validar un dato, pregúntate si puedes elegir un tipo en el que el dato incorrecto no quepa.</strong> Es una idea que vale para toda la carrera, y volveremos a ella en la UD5 al modelar la base de datos.</p>
-</div>
-
-### Reglas que miran dos campos a la vez
-
-En la sesión 18 encontraste reglas que no encajaban en un solo campo. La más habitual: «la fecha de fin no puede ser anterior a la de inicio».
-
-Ese tipo de restricción se pone **sobre la clase**, no sobre un atributo, porque necesita ver el objeto entero:
-
-```java
-@FechasCoherentes
-public class ProyectoRequest {
-
-    @NotNull
-    private LocalDate fechaInicio;
-
-    private LocalDate fechaFin;
-}
-```
-
-Se escribe igual que la de antes, cambiando dos cosas: `@Target(TYPE)` en la anotación, y `ConstraintValidator<FechasCoherentes, ProyectoRequest>` en el validador, cuyo `isValid` recibe el objeto completo y puede comparar los dos campos.
-
-<div class="rule">
-  <p class="rule-label">Dónde se acaba lo que puede hacer Bean Validation</p>
-  <p>Todo lo de hoy comprueba <strong>el objeto que ha llegado, y nada más</strong>. Puede mirar un campo, o varios campos entre sí.</p>
-  <p>Lo que no puede es responder «¿existe el proyecto 7?», porque para eso hay que consultar los datos, y un validador no tiene acceso a ellos. Esa comprobación es una <strong>regla de negocio</strong>, no una regla de formato, y su sitio es otro: se resuelve con una excepción propia en la sesión 20 y encontrará su hogar definitivo en la UD4.</p>
-</div>
-
-### Práctica guiada · Reescribe todos tus mensajes
-
-1. Activa las dos propiedades y comprueba que ves los mensajes.
-2. Recorre todos tus DTO de entrada y pon un `message` en **cada** restricción, aplicando las cuatro reglas.
-3. Envía `{}` a la creación de tareas y de proyectos, y lee el resultado como si fueras el cliente.
-4. Para cada mensaje, pregúntate: **¿podría enseñárselo tal cual a un usuario final?** Si la respuesta es no, reescríbelo.
-
-### Ahora tú · Tu propia anotación
-
-1. Implementa `@PrioridadValida` y úsala en los dos DTO de tareas.
-2. Crea una segunda anotación propia para una regla real de **tu** dominio. Algunas ideas: un código de proyecto con un formato concreto, un nombre sin caracteres especiales, una fecha que no sea festivo.
-3. Añade a la colección una petición que la incumpla y comprueba que responde `400` con **tu** mensaje.
-4. Escribe en `DECISIONES.md` por qué esa regla merece una anotación propia en lugar de un `@Pattern`.
-
-### Reto · La regla que no se deja validar
-
-1. Coge la regla «una tarea solo puede pertenecer a un proyecto que exista» e **intenta** implementarla como anotación propia. Llega hasta donde puedas.
-2. Vas a chocar con un muro concreto. Descríbelo: ¿qué necesita el validador que no tiene?
-3. Investiga si Spring permitiría dárselo, y en caso afirmativo explica **por qué seguiría siendo mala idea** meter ahí esa comprobación. Piensa en qué pasa cuando esa misma regla se necesita en una operación que no venga de una petición HTTP.
-4. Propón dónde debería vivir la comprobación y qué código de estado debería producir. Argumenta entre `400` y `404`.
-
-Este reto no tiene una solución cerrada y es el que más se parece a una discusión de equipo real.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Mensajes visibles y reescritos en todos los DTO de entrada, aplicando las cuatro reglas.</span></div>
-  <div><strong>Si lo tienes</strong><span><code>@PrioridadValida</code> implementada y en uso, más una segunda anotación de tu dominio con su prueba.</span></div>
-  <div><strong>Reto</strong><span>El muro del validador descrito, y la comprobación de existencia situada y argumentada.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 19</p>
-  <ul class="checklist">
-    <li>El cuerpo de un <code>400</code> nombra los campos que fallan y por qué.</li>
-    <li>Ningún mensaje está en inglés ni describe la anotación en lugar del problema.</li>
-    <li>Tienes al menos una anotación de validación propia, con su validador.</li>
-    <li>Tu validador propio deja pasar los nulos y sabes explicar por qué.</li>
-    <li>Sabes decir qué reglas no puede comprobar Bean Validation y por qué.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué hace mejor un mensaje que dice lo que se espera frente a uno que dice lo que está mal?</li>
-    <li>¿Por qué un validador propio no debe rechazar el valor nulo?</li>
-    <li>¿Dónde se coloca una restricción que compara dos campos?</li>
-    <li>¿Por qué un <code>enum</code> es mejor que validar un texto?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que se puede actuar sobre él sin consultar nada más, e incluso enseñárselo tal cual al usuario final. Decir «longitud inválida» obliga a buscar cuál es la longitud correcta.</p>
-  <p>2 · Porque cada restricción comprueba una sola cosa: la obligatoriedad es trabajo de <code>@NotNull</code>. Si además rechazara los nulos, no podría usarse en un campo opcional como los del <code>PATCH</code>.</p>
-  <p>3 · Sobre la clase, con <code>@Target(TYPE)</code>, porque necesita ver el objeto completo para comparar sus campos.</p>
-  <p>4 · Porque el valor incorrecto deja de ser representable: no hace falta escribir ni mantener una regla para algo que el tipo ya impide.</p>
-</details>
-
-## Sesión 20 · Errores coherentes de API
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> por qué tu API responde hoy los errores en cinco formatos distintos y qué cuesta eso a quien la consume.</li>
-    <li><strong>2. Haz:</strong> diseña un único formato de error y céntralo todo en un solo sitio.</li>
-    <li><strong>3. Comprueba:</strong> cualquier error de tu API, sea cual sea, llega con la misma forma.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Enumera los códigos de error que tu API puede devolver hoy. Deberían salirte al menos cinco.</li>
-    <li>¿Qué cuerpo devuelve tu <code>404</code> ahora mismo?</li>
-    <li>¿Qué pasa si dentro de un método tuyo salta una excepción que no esperabas?</li>
-  </ol>
-</div>
-
-### Cinco errores, cinco formatos
+#### Cinco errores, cinco formatos
 
 Provoca los cinco, uno detrás de otro, y copia el cuerpo de cada respuesta. Es el punto de partida de la sesión.
 
@@ -2044,7 +1772,7 @@ Ponte otra vez en el lado del cliente. Para tratar los errores de tu API tiene q
   <p>Si los errores tienen una forma única y predecible, quien consume la API escribe el tratamiento <strong>una vez</strong> y le sirve para todos los endpoints, incluidos los que aún no existen.</p>
 </div>
 
-### Diseña el formato antes de escribir código
+#### Diseña el formato antes de escribir código
 
 Un error útil responde a cuatro preguntas: qué ha pasado, cuándo, dónde y qué hay que corregir.
 
@@ -2083,7 +1811,194 @@ public record ErrorResponse(
   <p>Aquí construimos el nuestro porque diseñarlo enseña qué preguntas tiene que responder un error. Cuando lo tengas claro, cambiar a <code>ProblemDetail</code> es media hora.</p>
 </details>
 
-### Excepciones que hablan de tu dominio
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Implementad una regla propia del dominio y un tratamiento centralizado para validación, ausencia y conflicto.
+
+Provocad cada error desde la colección y acordad con quien hace el cliente los campos que podrá mostrar.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Reglas propias y mensajes de validación útiles</p>
+
+#### Paso 2 · Primero, hazlos visibles
+
+La información existe: Spring sabe perfectamente qué campo ha fallado y por qué, y lo tienes en la consola. Simplemente no se envía, porque por defecto no se publican detalles de error.
+
+En `application.properties`:
+
+```properties
+server.error.include-message=always
+server.error.include-binding-errors=always
+```
+
+Reinicia y repite el `POST` con el cuerpo vacío:
+
+```json
+{
+  "timestamp": "2026-09-02T10:14:22.831+00:00",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Validation failed for object='tareaRequest'. Error count: 3",
+  "errors": [
+    { "field": "titulo", "defaultMessage": "must not be blank" },
+    { "field": "prioridad", "defaultMessage": "must not be null" },
+    { "field": "proyectoId", "defaultMessage": "must not be null" }
+  ],
+  "path": "/tareas"
+}
+```
+
+Ya se puede trabajar con eso: hay campos y hay motivos.
+
+<div class="rule">
+  <p class="rule-label">Dos avisos sobre estas dos líneas</p>
+  <p><strong>Uno.</strong> Es una solución provisional. El formato lo decide Spring, no tú, y arrastra ruido como <code>defaultMessage</code> o <code>object=</code>. En la sesión 13 diseñarás tu propio formato y estas propiedades sobrarán.</p>
+  <p><strong>Dos.</strong> <code>include-message=always</code> también publica el mensaje de <strong>cualquier</strong> excepción, incluidas las inesperadas. En una aplicación real eso puede filtrar detalles internos a quien no debería verlos. Aquí se acepta porque estamos aprendiendo y porque dura una sesión.</p>
+</div>
+
+#### Paso 3 · Cuando la regla es tuya, la anotación también
+
+`@Pattern(regexp = "baja|media|alta")` funciona, y tiene tres problemas:
+
+1. Está repetida en `TareaRequest` y en `TareaPatchRequest`.
+2. Si mañana se añade la prioridad `crítica`, hay que acordarse de los dos sitios.
+3. No dice nada: hay que leer la expresión regular para entender la regla.
+
+Vamos a convertir esa regla del dominio en una anotación propia.
+
+```java
+package com.ejemplo.gestor.validacion;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = PrioridadValidaValidator.class)
+public @interface PrioridadValida {
+
+    String message() default "La prioridad debe ser baja, media o alta";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+}
+```
+
+<dl class="worked">
+  <dt><code>@Target(FIELD)</code></dt>
+  <dd>Dónde se puede poner esta anotación. Aquí, sobre atributos.</dd>
+  <dt><code>@Retention(RUNTIME)</code></dt>
+  <dd>Que siga existiendo mientras el programa se ejecuta. Sin esto, la anotación desaparece al compilar y nadie la ve.</dd>
+  <dt><code>@Constraint(validatedBy = ...)</code></dt>
+  <dd>Qué clase contiene la comprobación de verdad. La anotación solo es la etiqueta.</dd>
+  <dt><code>groups</code> y <code>payload</code></dt>
+  <dd>Los exige la especificación de Bean Validation y casi nunca se usan. Se copian tal cual.</dd>
+</dl>
+
+```java
+package com.ejemplo.gestor.validacion;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+import java.util.List;
+
+public class PrioridadValidaValidator
+        implements ConstraintValidator<PrioridadValida, String> {
+
+    private static final List<String> VALIDAS = List.of("baja", "media", "alta");
+
+    @Override
+    public boolean isValid(String valor, ConstraintValidatorContext contexto) {
+        // Un valor ausente es asunto de @NotNull, no nuestro.
+        if (valor == null) {
+            return true;
+        }
+        return VALIDAS.contains(valor);
+    }
+}
+```
+
+Ese `if (valor == null) return true` no es un descuido: **cada anotación comprueba una sola cosa**. Si además rechazara los nulos, no podrías tener un campo opcional con esta regla, y es justo lo que necesitas en el `PATCH`.
+
+```java
+@NotNull(message = "La prioridad es obligatoria")
+@PrioridadValida
+private String prioridad;
+```
+
+En `TareaPatchRequest`, donde el campo es opcional, va sola:
+
+```java
+@PrioridadValida
+private String prioridad;
+```
+
+La regla vive ahora **en un solo sitio**, se lee sin descifrar nada, y añadir `crítica` es tocar una línea.
+
+<div class="rule">
+  <p class="rule-label">Y aun así, la mejor validación es la que no hace falta</p>
+  <p>Si <code>prioridad</code> fuera un <code>enum</code> en lugar de un <code>String</code>, un valor inválido sería imposible de representar: Jackson rechazaría <code>"urgentísima"</code> él solo, y no habría regla que escribir ni que mantener.</p>
+  <p><strong>Antes de validar un dato, pregúntate si puedes elegir un tipo en el que el dato incorrecto no quepa.</strong> Es una idea que vale para toda la carrera, y volveremos a ella en la UD5 al modelar la base de datos.</p>
+</div>
+
+#### Paso 4 · Reglas que miran dos campos a la vez
+
+En la sesión 12 encontraste reglas que no encajaban en un solo campo. La más habitual: «la fecha de fin no puede ser anterior a la de inicio».
+
+Ese tipo de restricción se pone **sobre la clase**, no sobre un atributo, porque necesita ver el objeto entero:
+
+```java
+@FechasCoherentes
+public class ProyectoRequest {
+
+    @NotNull
+    private LocalDate fechaInicio;
+
+    private LocalDate fechaFin;
+}
+```
+
+Se escribe igual que la de antes, cambiando dos cosas: `@Target(TYPE)` en la anotación, y `ConstraintValidator<FechasCoherentes, ProyectoRequest>` en el validador, cuyo `isValid` recibe el objeto completo y puede comparar los dos campos.
+
+<div class="rule">
+  <p class="rule-label">Dónde se acaba lo que puede hacer Bean Validation</p>
+  <p>Todo lo de hoy comprueba <strong>el objeto que ha llegado, y nada más</strong>. Puede mirar un campo, o varios campos entre sí.</p>
+  <p>Lo que no puede es responder «¿existe el proyecto 7?», porque para eso hay que consultar los datos, y un validador no tiene acceso a ellos. Esa comprobación es una <strong>regla de negocio</strong>, no una regla de formato, y su sitio es otro: se resuelve con una excepción propia en la sesión 13 y encontrará su hogar definitivo en la UD4.</p>
+</div>
+
+#### Paso 5 · Reescribe todos tus mensajes
+
+1. Activa las dos propiedades y comprueba que ves los mensajes.
+2. Recorre todos tus DTO de entrada y pon un `message` en **cada** restricción, aplicando las cuatro reglas.
+3. Envía `{}` a la creación de tareas y de proyectos, y lee el resultado como si fueras el cliente.
+4. Para cada mensaje, pregúntate: **¿podría enseñárselo tal cual a un usuario final?** Si la respuesta es no, reescríbelo.
+
+#### Paso 6 · Tu propia anotación
+
+1. Implementa `@PrioridadValida` y úsala en los dos DTO de tareas.
+2. Crea una segunda anotación propia para una regla real de **tu** dominio. Algunas ideas: un código de proyecto con un formato concreto, un nombre sin caracteres especiales, una fecha que no sea festivo.
+3. Añade a la colección una petición que la incumpla y comprueba que responde `400` con **tu** mensaje.
+4. Escribe en `DECISIONES.md` por qué esa regla merece una anotación propia en lugar de un `@Pattern`.
+
+<p class="stage">Errores coherentes de API</p>
+
+#### Paso 7 · Excepciones que hablan de tu dominio
 
 Ahora mismo tu controlador devuelve `ResponseEntity.notFound().build()` desde dentro de un bucle. Mezcla dos cosas: **buscar** y **decidir qué responder**.
 
@@ -2117,7 +2032,7 @@ public TareaResponse detalle(@PathVariable(name = "id") int id) {
 
 Fíjate en dos cambios: ya no devuelve `ResponseEntity`, porque **solo tiene un final posible**; y el caso de error es una línea que se lee como una frase.
 
-### El sitio único · `@RestControllerAdvice`
+#### Paso 8 · El sitio único · `@RestControllerAdvice`
 
 <p class="term">@RestControllerAdvice</p>
 
@@ -2217,7 +2132,7 @@ public class ManejadorDeErrores {
   <p>Ahora ya puedes quitar las dos propiedades <code>server.error.*</code> de ayer: eran el andamio, y esto es el edificio.</p>
 </div>
 
-### Antes y después
+#### Paso 9 · Antes y después
 
 Repite los cinco errores del principio. Ahora los cinco responden igual:
 
@@ -2265,7 +2180,7 @@ Ese es el formato que acabas de diseñar. Dentro de un momento lo pasaremos al e
 
 Mismo formato, campos siempre en el mismo sitio, mensajes en tu idioma y escritos por ti. Un cliente escribe el tratamiento una vez.
 
-### El último paso · pasar tu formato al estándar
+#### Paso 10 · El último paso · pasar tu formato al estándar
 
 Ya sabes qué preguntas tiene que responder un error, porque acabas de decidirlas tú. Ahora conviene dejar de mantener un formato propio: el resto del curso —la documentación OpenAPI de la UD7, los códigos de seguridad de la UD9, el cliente Angular de la UD12— da por supuesto el estándar, y quien consuma tu API lo reconocerá sin leer nada.
 
@@ -2279,8 +2194,6 @@ El cambio es pequeño, porque el diseño ya está hecho. Solo cambian los nombre
 | `ruta` | `instance` | Solo el nombre |
 | `momento` | propiedad extra | No es campo del estándar: se añade aparte |
 | `errores` | propiedad extra | Tampoco lo es; la llamaremos `invalidParams` |
-
-<p class="stage">Paso 1 · Borrar tu record y usar el de Spring</p>
 
 Spring trae la clase `ProblemDetail` de serie. No hay que añadir ninguna dependencia: elimina tu `ErrorResponse` y sustituye el método `construir` por este.
 
@@ -2308,8 +2221,6 @@ import org.springframework.http.ProblemDetail;
 
 Cambia también el tipo de retorno de los cuatro manejadores, de `ResponseEntity<ErrorResponse>` a `ProblemDetail`. Ya no hace falta envolver nada en un `ResponseEntity`: Spring lee el `status` del propio `ProblemDetail` y lo usa como código de la respuesta.
 
-<p class="stage">Paso 2 · Comprobar los dos cambios visibles</p>
-
 Repite el `404` y el `400` y compara con lo que devolvías antes:
 
 ```json
@@ -2335,7 +2246,7 @@ Fíjate en dos cosas que no estaban:
   <p>A partir de aquí, todo el curso usa este formato: los tests de la UD7 comprobarán <code>$.title</code> y <code>$.status</code>, la seguridad de la UD9 devolverá <code>401</code> y <code>403</code> con esta forma, y el cliente Angular de la UD12 leerá <code>detail</code> para mostrarlo en pantalla.</p>
 </div>
 
-### El error que faltaba · el conflicto
+#### Paso 11 · El error que faltaba · el conflicto
 
 Hay una familia de errores que tu API todavía no sabe expresar: cuando la petición es correcta pero **choca con el estado actual de los datos**.
 
@@ -2358,7 +2269,7 @@ public class ConflictoException extends RuntimeException {
 
 Añade su manejador con `HttpStatus.CONFLICT` y úsalo, por ejemplo, para impedir dos proyectos con el mismo nombre.
 
-### Ahora tú · Unifica toda tu API
+#### Paso 12 · Unifica toda tu API
 
 1. Crea el paquete `error` con las tres clases y el manejador.
 2. Sustituye **todos** los `ResponseEntity.notFound()` por la excepción.
@@ -2368,7 +2279,41 @@ Añade su manejador con `HttpStatus.CONFLICT` y úsalo, por ejemplo, para impedi
 6. Provoca los cinco errores del principio y comprueba que los cinco tienen la misma forma.
 7. Haz la migración a `ProblemDetail` del apartado anterior y vuelve a provocarlos: los cinco deben seguir teniendo la misma forma, ahora con los nombres del estándar y la cabecera `Content-Type: application/problem+json`. Guarda las cinco peticiones en tu colección: son las que la UD7 convertirá en tests automáticos.
 
-### Reto · La prueba de que no se escapa nada
+#### Paso 13 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **implementad reglas propias y un formato de error común**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · La regla que no se deja validar
+
+1. Coge la regla «una tarea solo puede pertenecer a un proyecto que exista» e **intenta** implementarla como anotación propia. Llega hasta donde puedas.
+2. Vas a chocar con un muro concreto. Descríbelo: ¿qué necesita el validador que no tiene?
+3. Investiga si Spring permitiría dárselo, y en caso afirmativo explica **por qué seguiría siendo mala idea** meter ahí esa comprobación. Piensa en qué pasa cuando esa misma regla se necesita en una operación que no venga de una petición HTTP.
+4. Propón dónde debería vivir la comprobación y qué código de estado debería producir. Argumenta entre `400` y `404`.
+
+Este reto no tiene una solución cerrada y es el que más se parece a una discusión de equipo real.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Mensajes visibles y reescritos en todos los DTO de entrada, aplicando las cuatro reglas.</span></div>
+  <div><strong>Si lo tienes</strong><span><code>@PrioridadValida</code> implementada y en uso, más una segunda anotación de tu dominio con su prueba.</span></div>
+  <div><strong>Reto</strong><span>El muro del validador descrito, y la comprobación de existencia situada y argumentada.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Que se puede actuar sobre él sin consultar nada más, e incluso enseñárselo tal cual al usuario final. Decir «longitud inválida» obliga a buscar cuál es la longitud correcta.</p>
+  <p>2 · Porque cada restricción comprueba una sola cosa: la obligatoriedad es trabajo de <code>@NotNull</code>. Si además rechazara los nulos, no podría usarse en un campo opcional como los del <code>PATCH</code>.</p>
+  <p>3 · Sobre la clase, con <code>@Target(TYPE)</code>, porque necesita ver el objeto completo para comparar sus campos.</p>
+  <p>4 · Porque el valor incorrecto deja de ser representable: no hace falta escribir ni mantener una regla para algo que el tipo ya impide.</p>
+</details>
+
+##### Reto · La prueba de que no se escapa nada
 
 1. Añade a la colección **una comprobación de formato** para cada error: que existan las claves `estado`, `mensaje` y `ruta`.
 2. Escribe un endpoint temporal que lance una excepción a propósito:
@@ -2392,28 +2337,6 @@ El paso 3 es el que hay que ver con los propios ojos. Es la diferencia entre ent
   <div><strong>Reto</strong><span>La comprobación de formato en la colección y la demostración de que el mensaje interno no sale.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 20</p>
-  <ul class="checklist">
-    <li>Todos los errores de tu API tienen la misma forma, el <code>404</code> incluido.</li>
-    <li>Ningún controlador construye una respuesta de error.</li>
-    <li>Existe un manejador genérico y ninguna excepción se escapa con formato ajeno.</li>
-    <li>Un <code>500</code> devuelve un mensaje genérico y deja la traza en la consola.</li>
-    <li>Tu API sabe expresar un conflicto con <code>409</code>.</li>
-    <li>Las propiedades <code>server.error.*</code> ya no están.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué gana quien consume tu API cuando todos los errores tienen la misma forma?</li>
-    <li>¿Por qué el manejador genérico no devuelve el mensaje de la excepción?</li>
-    <li>¿Cuándo se usa un <code>409</code> y no un <code>400</code>?</li>
-    <li>Si el cliente ya no recibe el detalle del <code>500</code>, ¿dónde queda?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Que escribe el tratamiento de errores una sola vez y le sirve para todos los endpoints, incluidos los que todavía no existen.</p>
@@ -2422,32 +2345,43 @@ El paso 3 es el que hay que ver con los propios ojos. Es la diferencia entre ent
   <p>4 · En el registro del servidor, escrito por el manejador con <code>log.error</code>. Si no se registra ahí, se pierde y el fallo será indiagnosticable.</p>
 </details>
 
-## Sesión 21 · Rediseño completo de la API del gestor
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> por qué endpoints correctos por separado pueden formar una API incoherente en conjunto.</li>
-    <li><strong>2. Haz:</strong> pasa la rúbrica de la sesión 13 otra vez y cierra todo lo que quede abierto.</li>
-    <li><strong>3. Comprueba:</strong> la API entera es coherente y lo demuestras con una colección y con una auditoría.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Saca la auditoría que hiciste en la sesión 13. ¿Cuántos criterios incumplías?</li>
-    <li>¿Cuántas clases hay hoy entre el JSON que llega y el JSON que sale?</li>
-    <li>¿Qué formato tienen tus errores y cuántos sitios los construyen?</li>
-  </ol>
-</div>
+Las respuestas 400, 404 y 409 tienen una estructura coherente y mensajes útiles, sin trazas internas.
 
-<div class="rule">
-  <p class="rule-label">Cómo es esta sesión</p>
-  <p>Sesión de cierre de unidad. No hay contenido nuevo: hay <strong>una especificación, unos criterios de aceptación y una auditoría</strong>. Todo lo necesario está entre la sesión 13 y la 20.</p>
-</div>
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-### Correcto no es lo mismo que coherente
+
+#### Entrega de la sesión 13 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-13.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-13.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 14 · Publicar el contrato que consumirá el portfolio
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+El consumidor necesita un contrato comprobable, incluso mientras los datos siguen en memoria. Cambiar rutas o nombres de campo afecta a otra pieza del mismo producto.
+
+#### Correcto no es lo mismo que coherente
 
 Cada endpoint que has escrito estas tres semanas está bien por separado. Y aun así, una API puede fallar en el conjunto de una forma que ninguna prueba individual detecta:
 
@@ -2464,11 +2398,42 @@ Cada endpoint que has escrito estas tres semanas está bien por separado. Y aun 
 
 Todas son «pequeñas». Todas obligan a quien consume la API a **tratar cada endpoint como un caso especial**, que es exactamente lo que la unidad quería evitar.
 
-### La segunda auditoría
+#### Coherencia entre endpoints
 
-Vuelve a la rúbrica de la sesión 13, la misma tabla, sin cambiar ni un criterio:
+Dos operaciones pueden pasar sus pruebas individuales y, aun así, formar una API incoherente. Por ejemplo, un alta puede devolver errores con un campo llamado mensaje y una modificación devolver una página HTML. El cliente tendría que programar una estrategia distinta para cada ruta. Hoy comprobamos que los patrones de respuesta, validación y nombres se mantienen a través de todo el contrato.
 
-| # | Criterio | Sesión 13 | Hoy |
+Una auditoría útil parte de la tabla de endpoints. Para cada uno se comparan entrada válida, entrada inválida, ausencia del recurso y conflicto cuando corresponda. No todos los endpoints necesitan todos los casos: se justifica cuáles aplican. El resultado se guarda en la colección HTTP, no solo en una captura de pantalla.
+
+Intermodular consumirá esta misma API. Por eso se entregan una URL base configurable, ejemplos de petición y respuesta y una versión del repositorio que compila. A partir de este punto, renombrar un campo publicado es también una decisión que afecta al cliente; el cambio se comunica y se comprueba en ambas piezas.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Revisad todas las operaciones y errores de vuestro proyecto con la colección HTTP.
+
+Entregad esa misma versión a Intermodular con tabla de endpoints, JSON de ejemplo y variables de entorno documentadas.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<div class="rule">
+  <p class="rule-label">Cómo es esta sesión</p>
+  <p>Sesión de cierre de unidad. No hay contenido nuevo: hay <strong>una especificación, unos criterios de aceptación y una auditoría</strong>. Todo lo necesario está entre la sesión 9 y la 20.</p>
+</div>
+
+<p class="stage">Rediseño completo de la API del gestor</p>
+
+#### Paso 2 · La segunda auditoría
+
+Vuelve a la rúbrica de la sesión 9, la misma tabla, sin cambiar ni un criterio:
+
+| # | Criterio | Sesión 9 | Hoy |
 | :---: | :--- | :---: | :---: |
 | 1 | Ninguna ruta contiene un verbo | | |
 | 2 | Cada recurso tiene una URL propia y estable | | |
@@ -2485,11 +2450,11 @@ Rellena las dos columnas y **quédate con la diferencia**: es la medida de lo qu
 
 El criterio 10 debe seguir siendo «no», y tienes que poder decir por qué sin que suene a excusa.
 
-### Especificación · el estado final de la API
+#### Paso 3 · Especificación · el estado final de la API
 
 Tu API tiene que cumplir esto por completo.
 
-#### Estructura del proyecto
+##### Estructura del proyecto
 
 ```text
 com.ejemplo.gestor
@@ -2501,7 +2466,7 @@ com.ejemplo.gestor
 └── error          · excepciones, formato y manejador
 ```
 
-#### Recursos y rutas
+##### Recursos y rutas
 
 | Método y ruta | Caso | Respuesta |
 | :--- | :--- | :--- |
@@ -2519,7 +2484,7 @@ com.ejemplo.gestor
 | `PATCH /tareas/{id}` | Válido / no existe | `200` / `404` |
 | `DELETE /tareas/{id}` | — | `204` |
 
-#### Reglas que se comprueban
+##### Reglas que se comprueban
 
 1. Ninguna ruta lleva verbos y todas las colecciones están en plural.
 2. Ningún `@RequestBody` recibe una clase del modelo.
@@ -2539,23 +2504,11 @@ com.ejemplo.gestor
   <p>Y prueba los caminos raros: una ruta que no existe, un método no permitido, un <code>Content-Type</code> incorrecto. Alguno de esos ni siquiera llega a un controlador tuyo, así que piensa qué excepción lanza Spring y si tu manejador la cubre.</p>
 </details>
 
-### La colección de aceptación
+#### Paso 4 · La colección de aceptación
 
 Amplía la de la UD2 hasta cubrir esto:
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Criterios de aceptación de la colección</p>
-  <ul class="checklist">
-    <li>Cubre las trece filas de la tabla, con sus casos correctos y de error.</li>
-    <li>Incluye al menos <strong>seis peticiones de error distintas</strong>: 400 de validación, 400 de JSON ilegible, 404, 405, 415 y 409.</li>
-    <li>Cada petición de error comprueba que el cuerpo tiene <code>estado</code>, <code>mensaje</code> y <code>ruta</code>.</li>
-    <li>Al menos una comprueba el contenido de <code>errores</code> campo a campo.</li>
-    <li>Incluye la prueba de ida y vuelta de la sesión 17 para los dos recursos.</li>
-    <li>Se ejecuta entera en verde, dos veces seguidas.</li>
-  </ul>
-</div>
-
-### Entrega de la unidad
+#### Paso 5 · Preparar la evidencia de esta versión
 
 1. **El proyecto**, con la estructura de paquetes de la especificación.
 2. **La colección exportada**, en `pruebas/`.
@@ -2567,7 +2520,7 @@ Amplía la de la UD2 hasta cubrir esto:
    * Qué caso de tu API responde `409` y por qué no es un `400` ni un `404`.
    * Por qué tu API se queda en el nivel 2 y no implementa hipermedia.
 
-### Autoevaluación · el examen de coherencia
+#### Paso 6 · Autoevaluación · el examen de coherencia
 
 Esta lista no mira endpoints sueltos: mira el conjunto. Pásatela con la API delante.
 
@@ -2582,7 +2535,7 @@ Esta lista no mira endpoints sueltos: mira el conjunto. Pásatela con la API del
 
 La fila de la validación es la que más suspende. Es muy fácil validar a fondo el recurso con el que empezaste y dejar el segundo a medias.
 
-### Lo que sigue haciendo mal, y es mucho
+#### Paso 7 · Lo que sigue haciendo mal, y es mucho
 
 Esto ya no son defectos del contrato: **el contrato está bien**. Lo que está mal es lo que hay detrás.
 
@@ -2608,34 +2561,12 @@ Abre tu `TareaController` y cuenta lo que hace:
 | La regla «el proyecto debe existir» sigue sin sitio | UD4 |
 | Al reiniciar se pierde todo | UD5, con PostgreSQL |
 
-Esa cuarta fila viene de la sesión 19: la encontraste, viste por qué una anotación no podía resolverla, y desde entonces está esperando. En la UD4 tendrá por fin dónde vivir.
+Esa cuarta fila viene de la sesión 13: la encontraste, viste por qué una anotación no podía resolverla, y desde entonces está esperando. En la UD4 tendrá por fin dónde vivir.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Las trece filas cumplidas, la estructura de paquetes y todos los errores unificados.</span></div>
   <div><strong>Si lo tienes</strong><span>La colección de aceptación con sus seis errores comprobados y la auditoría con sus dos columnas.</span></div>
   <div><strong>Reto</strong><span>El examen de coherencia superado en las seis filas, incluida la validación uniforme entre recursos.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 21</p>
-  <ul class="checklist">
-    <li>La estructura de paquetes es la de la especificación.</li>
-    <li>Las trece filas responden exactamente lo que dice la tabla.</li>
-    <li>Los seis tipos de error tienen la misma forma, comprobada en la colección.</li>
-    <li>La segunda auditoría está escrita junto a la primera, con su comentario.</li>
-    <li><code>DECISIONES.md</code> responde a las cinco preguntas.</li>
-    <li>Puedes enumerar lo que sigue mal y en qué unidad se resuelve cada cosa.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué tipo de fallo no detecta ninguna prueba de un endpoint aislado?</li>
-    <li>¿Cuántos sitios de tu API construyen hoy una respuesta de error?</li>
-    <li>¿Qué hace tu controlador que no debería hacer un controlador?</li>
-    <li>¿Por qué tu API se queda en el nivel 2?</li>
-  </ol>
 </div>
 
 <details class="aside aside--extra">
@@ -2645,6 +2576,41 @@ Esa cuarta fila viene de la sesión 19: la encontraste, viste por qué una anota
   <p>3 · Guardar los datos, generar identificadores, buscar y filtrar, y decidir reglas de negocio. Un controlador debería recibir la petición, delegar y responder.</p>
   <p>4 · Porque la hipermedia añade complejidad al servidor que muy pocos clientes aprovechan, y es una decisión de coste y beneficio tomada a conciencia.</p>
 </details>
+
+#### Paso 8 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **preparad el contrato que consumirá intermodular**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+### Cierre
+
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
+
+El repositorio compila y el contrato queda disponible para el CI y el despliegue de Intermodular; los cambios siguientes se comunican al cliente.
+
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 14 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-14.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-14.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 
@@ -2760,7 +2726,7 @@ Si además puedes coger un dominio nuevo y escribir su contrato de recursos, sus
     <li>Existe al menos una anotación de validación propia.</li>
     <li>Los seis tipos de error tienen exactamente la misma forma.</li>
     <li>Un <code>500</code> no revela nada del interior y deja la traza en la consola.</li>
-    <li>La auditoría de la sesión 13 y la de la sesión 21 están las dos escritas.</li>
+    <li>La auditoría de la sesión 9 y la de la sesión 14 están las dos escritas.</li>
   </ul>
 </div>
 
@@ -2802,6 +2768,6 @@ Porque el contrato de tu API está bien, y detrás de él hay un controlador que
 | «El proyecto debe existir» sigue sin tener sitio | UD4 |
 | Al reiniciar se pierde todo | UD5, con PostgreSQL |
 
-Fíjate en la cuarta fila. Esa regla la encontraste tú en la sesión 19, viste por qué una anotación de validación no podía resolverla y la dejaste apuntada. Lleva dos sesiones esperando un sitio donde vivir, y en la unidad siguiente lo encontrará.
+Fíjate en la cuarta fila. Esa regla la encontraste tú en la sesión 13, viste por qué una anotación de validación no podía resolverla y la dejaste apuntada. Lleva dos sesiones esperando un sitio donde vivir, y en la unidad siguiente lo encontrará.
 
 Y aquí se cobra el trabajo de estas tres semanas: la UD4 **no va a cambiar ni una ruta, ni un DTO, ni un código de estado**. Va a reorganizar lo que hay detrás sin tocar el contrato. Tu colección de pruebas, que ya cubre la API entera, será exactamente lo que demuestre que no has roto nada por el camino.

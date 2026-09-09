@@ -5,10 +5,10 @@ section: "ud-10"
 order: 10
 lang: "es"
 summary: "Conectar el backend con servicios que no controlamos y diseñar el comportamiento cuando la red, el proveedor o los datos no responden como se esperaba."
-duration: "12 horas · 2 semanas · 6 sesiones"
-modality: "Laboratorio de integración · 20 % guía / 80 % autonomía"
-deliverable: "Una integración externa resiliente y una funcionalidad de ficheros, correo o webhook."
-date: "2026-09-02"
+duration: "12 horas · 2 semanas · 4 sesiones de 3 h"
+modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
+deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+date: "2026-09-09"
 outcomes:
   - "Consumir una API externa mediante un cliente HTTP."
   - "Aislar contratos externos con DTO propios."
@@ -22,41 +22,19 @@ priorKnowledge:
   - "Autenticación y configuración externa."
 ---
 
-<p class="lead">El backend deja de vivir solo. Al conectarlo con otra API aparecen latencia, formatos ajenos, límites y fallos que no controlamos.</p>
+<p class="lead">El backend se conecta con servicios externos e incorpora ficheros y comunicación. Cada integración debe responder a un caso de uso del producto y contemplar fallos.</p>
 
-<div class="rule">
-  <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje muy bajo. El profesorado proporciona al comenzar la unidad el contrato del servicio externo y los criterios de aceptación; el diseño del adaptador y de la degradación queda en manos del alumnado.</p>
-</div>
+## Semana 21 · Consumir un servicio externo
 
-<div class="rule">
-  <p class="rule-label">Por qué esta unidad llega ahora y no antes</p>
-  <p>Hasta aquí tu backend siempre ha sido el que responde. Al llamar a otro servicio pasa a ser también el que pregunta, y eso solo se puede enseñar cuando ya tienes con qué protegerte: los <strong>DTO</strong> de la UD3 son lo que evita que un contrato ajeno se cuele en tu modelo, el <strong>manejador de errores</strong> de la UD3 es donde aterriza un timeout, la <strong>capa de servicio</strong> de la UD4 es la que decide qué hacer cuando el proveedor no contesta, y la <strong>seguridad</strong> de la UD9 es la que decide quién puede subir un fichero.</p>
-</div>
+## Sesión 41 · Consumir un servicio externo
 
-## Semana 21 · Consumir sin acoplarse
+### Se explica
 
-## Sesión 61 · Consumir una API externa
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la transición de servidor pasivo a cliente HTTP saliente, la evolución de clientes en Spring (<code>RestTemplate</code> frente al moderno y síncrono <code>RestClient</code> introducido en Spring Boot 3.2) y cómo inspeccionar URL, cabeceras, latencia y respuesta remota.</li>
-    <li><strong>2. Haz:</strong> configura un bean <code>RestClient</code> en tu aplicación y construye un servicio cliente que realiza una llamada real a la API abierta de Open-Meteo para obtener datos meteorológicos asociados a la ubicación de un proyecto.</li>
-    <li><strong>3. Comprueba:</strong> lanzas una petición a tu propio endpoint en Bruno y observas en los logs de Spring Boot la traza de la conexión HTTP saliente (handshake TLS, tiempo de latencia de red y deserialización del JSON externo).</li>
-  </ol>
-</div>
+Un servicio externo tiene su propio contrato y puede cambiar al margen de vuestro dominio. El cliente HTTP y sus DTO delimitan esa dependencia.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Hasta ahora tu backend solo recibía peticiones. ¿Qué componentes del sistema operativo y de red entran en juego cuando es tu propio servidor quien inicia una petición hacia el exterior?</li>
-    <li>¿Qué clase cliente moderna introdujo Spring Boot 3.2 para sustituir al tradicional <code>RestTemplate</code> con una API fluida y síncrona?</li>
-    <li>¿Por qué una consulta a una API externa tarda habitualmente entre 50 y 500 ms mientras que una consulta a PostgreSQL local tarda menos de 2 ms?</li>
-  </ol>
-</div>
-
-### El backend deja de ser una isla solitaria
+#### El backend deja de ser una isla solitaria
 
 Hasta este punto del curso, tu aplicación backend siempre ha sido el **servidor**: esperaba pasivamente en el puerto `8080` a que un navegador o Bruno le enviaran peticiones HTTP para consultar la base de datos local de PostgreSQL.
 
@@ -75,7 +53,7 @@ En el desarrollo empresarial moderno ningún backend vive aislado:
   </ol>
 </figure>
 
-### Clientes HTTP en Spring Boot: de RestTemplate a RestClient
+#### Clientes HTTP en Spring Boot: de RestTemplate a RestClient
 
 En el ecosistema Java y Spring han existido tres generaciones de clientes HTTP:
 
@@ -87,7 +65,73 @@ En el ecosistema Java y Spring han existido tres generaciones de clientes HTTP:
 
 `RestClient` combina la sencillez síncrona de `RestTemplate` con la elegancia y expresividad de la interfaz fluida de `WebClient`, sin necesidad de arrastrar la complejidad reactiva de WebFlux.
 
-### La API externa de pruebas: Open-Meteo
+#### El peligro mortal: Acoplar tu dominio a una API externa
+
+En el trabajo anterior devolvimos un `String` con el JSON crudo de Open-Meteo. Aunque sirvió para ver que la red funcionaba, **hacer eso en una aplicación real es un antipatrón arquitectónico gravísimo**:
+
+```json
+{
+  "latitude": 39.4699,
+  "longitude": -0.3763,
+  "generationtime_ms": 0.04100799560546875,
+  "utc_offset_seconds": 0,
+  "timezone": "GMT",
+  "timezone_abbreviation": "GMT",
+  "elevation": 15.0,
+  "current_weather": {
+    "temperature": 22.4,
+    "windspeed": 14.8,
+    "winddirection": 180,
+    "weathercode": 0,
+    "is_day": 1,
+    "time": "2026-09-02T12:00"
+  }
+}
+```
+
+Si devuelves este JSON a tu cliente web o lo guardas tal cual en tu base de datos:
+1. **Tu frontend se acopla a las decisiones de un tercero:** Si Open-Meteo cambia `windspeed` por `wind_speed_kmh`, tu pantalla de React/Angular deja de mostrar el viento.
+2. **Contaminas tu arquitectura con ruido:** A tu gestor de proyectos no le importa `generationtime_ms` ni `utc_offset_seconds`.
+3. **Pérdida de semántica de negocio:** El código `weathercode: 0` es un número incomprensible; tu usuario necesita ver *"Cielo despejado"*.
+
+<div class="rule">
+  <p class="rule-label">El principio de la Capa Anticorrupción (ACL)</p>
+  <p><strong>Ningún contrato externo debe cruzar la frontera de tu servicio de integración.</strong></p>
+  <p>Los datos ajenos deben recibirse en <strong>DTOs Externos</strong> (propios del proveedor) y traducirse inmediatamente a <strong>Modelos Propios</strong> antes de entregarse a la capa de negocio.</p>
+</div>
+
+#### La arquitectura de aislamiento
+
+<figure class="diagram">
+  <figcaption>Aislamiento con Capa Anticorrupción (ACL)</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>API Externa (Open-Meteo JSON)</li>
+    <li>DTO Externo (OpenMeteoResponse)</li>
+    <li>Adaptador / Mapeador</li>
+    <li>DTO Interno del Dominio (ClimaProyectoResponse)</li>
+    <li>Controlador / Frontend</li>
+  </ol>
+</figure>
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Elegid una integración útil para vuestro producto e implementad el cliente y el mapeo de su respuesta.
+
+Separad la configuración externa y probad una respuesta conocida antes de incorporarla al caso de uso.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Consumir una API externa</p>
+
+#### Paso 2 · La API externa de pruebas: Open-Meteo
 
 Para aprender integración utilizaremos la API pública de **Open-Meteo** ([open-meteo.com](https://open-meteo.com)):
 * Es completamente gratuita y abierta para uso formativo y de desarrollo.
@@ -95,9 +139,7 @@ Para aprender integración utilizaremos la API pública de **Open-Meteo** ([open
 * Devuelve datos reales de previsión meteorológica a partir de coordenadas geográficas:
   `https://api.open-meteo.com/v1/forecast?latitude=39.47&longitude=-0.38&current_weather=true`
 
-### Paso a paso guiado · Configuración y primer cliente con RestClient
-
-<p class="stage">Paso 1 · Llamar a la API a mano, antes de escribir Java</p>
+#### Paso 3 · Configuración y primer cliente con RestClient
 
 Antes de programar nada, mira con tus ojos lo que vas a consumir. En tu cliente HTTP, lanza directamente:
 
@@ -132,8 +174,6 @@ Anota tres cosas, porque las tres condicionan todo lo que viene después:
 2. **Viene mucho más de lo que necesitas.** De ese objeto entero, a tu gestor de proyectos le interesan dos campos.
 3. **Tarda.** Fíjate en el tiempo que marca tu cliente HTTP: unas décimas de segundo. Comparado con los milisegundos de una consulta a tu PostgreSQL local, es una eternidad, y ese tiempo se lo vas a añadir a cada petición que lo use.
 
-<p class="stage">Paso 2 · Crear la configuración del cliente RestClient</p>
-
 Configuramos un `@Bean` de `RestClient` en una clase de configuración:
 
 ```java
@@ -162,8 +202,6 @@ public class RestClientConfig {
     }
 }
 ```
-
-<p class="stage">Paso 3 · Implementar el servicio cliente de integración</p>
 
 Creamos un servicio que efectúa la llamada saliente mediante la API fluida de `RestClient`:
 
@@ -207,8 +245,6 @@ public class ClimaExternoClient {
 }
 ```
 
-<p class="stage">Paso 4 · Exponer un endpoint en el controlador para probar la llamada</p>
-
 ```java
 package com.ejemplo.gestor.controller;
 
@@ -241,16 +277,16 @@ public class ProyectoClimaController {
 
 <dl class="worked">
   <dt>Por qué el <code>RestClient</code> es un <code>@Bean</code> y no un <code>new</code></dt>
-  <dd>Por lo mismo por lo que en la UD4 dejaste de hacer <code>new TareaRepositorio()</code>: el destino, las cabeceras y —en la sesión 63— los timeouts son configuración, y la configuración se declara una vez en un sitio y se inyecta. Además te permitirá sustituirlo por un doble en los tests sin tocar el servicio.</dd>
+  <dd>Por lo mismo por lo que en la UD4 dejaste de hacer <code>new TareaRepositorio()</code>: el destino, las cabeceras y —en la sesión 42— los timeouts son configuración, y la configuración se declara una vez en un sitio y se inyecta. Además te permitirá sustituirlo por un doble en los tests sin tocar el servicio.</dd>
   <dt>Por qué de momento devolvemos <code>String</code></dt>
-  <dd>Es deliberado y dura una sola sesión. Hoy interesa ver el JSON ajeno tal cual llega, con todos sus campos y sus nombres raros. En la sesión 62 ese <code>String</code> se convierte en un DTO propio, y entenderás la diferencia mucho mejor habiendo visto antes el volcado crudo.</dd>
+  <dd>Es deliberado y dura una sola sesión. Hoy interesa ver el JSON ajeno tal cual llega, con todos sus campos y sus nombres raros. En la sesión 41 ese <code>String</code> se convierte en un DTO propio, y entenderás la diferencia mucho mejor habiendo visto antes el volcado crudo.</dd>
   <dt><code>.retrieve().body(...)</code></dt>
-  <dd><code>retrieve()</code> ejecuta la petición y <code>body()</code> deserializa la respuesta al tipo que le pidas. Con <code>String</code> no deserializa nada: te entrega el texto. Ojo, <code>retrieve()</code> lanza excepción ante un <code>4xx</code> o <code>5xx</code> remoto, y eso hoy todavía no lo estamos tratando: es justo el tema de la sesión 63.</dd>
+  <dd><code>retrieve()</code> ejecuta la petición y <code>body()</code> deserializa la respuesta al tipo que le pidas. Con <code>String</code> no deserializa nada: te entrega el texto. Ojo, <code>retrieve()</code> lanza excepción ante un <code>4xx</code> o <code>5xx</code> remoto, y eso hoy todavía no lo estamos tratando: es justo el tema de la sesión 42.</dd>
   <dt>La cabecera <code>User-Agent</code></dt>
   <dd>No es decorativa. Muchos proveedores rechazan o limitan peticiones anónimas, y algunos (GitHub, sin ir más lejos) devuelven <code>403</code> si no la envías. Identificar tu cliente es una cortesía que además evita bloqueos.</dd>
 </dl>
 
-### La comprobación · Inspección forense de la petición saliente en Bruno
+#### Paso 4 · Inspección forense de la petición saliente en Bruno
 
 1. **Arranca la aplicación Spring Boot.**
 2. **Abre Bruno y lanza:**
@@ -264,9 +300,9 @@ public class ProyectoClimaController {
    ```
    Comprueba cómo tu backend tardó más de 200 ms: ese tiempo no fue CPU local, fue el tiempo que tardó el paquete IP en viajar por Internet, cruzar routers, ser procesado por el proveedor remoto y volver.
 
-5. **Mide el coste de la integración:** lanza `GET /api/v1/proyectos/1` (el endpoint normal, sin clima) y compara el tiempo que marca tu cliente HTTP con el de `/clima-raw`. La diferencia es lo que cuesta salir a Internet, y es el número que justifica toda la sesión 63.
+5. **Mide el coste de la integración:** lanza `GET /api/v1/proyectos/1` (el endpoint normal, sin clima) y compara el tiempo que marca tu cliente HTTP con el de `/clima-raw`. La diferencia es lo que cuesta salir a Internet, y es el número que justifica toda la sesión 42.
 
-### Si algo no sale como dice el guion
+#### Paso 5 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -274,9 +310,9 @@ public class ProyectoClimaController {
 | `404 Not Found` desde Open-Meteo | La ruta está duplicada o incompleta | Si el `baseUrl` ya trae `https://api.open-meteo.com`, el `path` debe ser `/v1/forecast`, ni `/forecast` ni la URL entera |
 | `Parameter 'openMeteoRestClient' not found` | Hay más de un bean `RestClient` | Inyecta por nombre exacto, o marca uno con `@Qualifier` |
 | La respuesta llega vacía o `null` | Faltan parámetros obligatorios | Open-Meteo exige `latitude` y `longitude`; sin `current_weather=true` no devuelve el bloque que buscas |
-| Tarda muchísimo y acaba colgado | No hay timeout configurado | Es correcto: todavía no lo has puesto. Ese es exactamente el problema de la sesión 63 |
+| Tarda muchísimo y acaba colgado | No hay timeout configurado | Es correcto: todavía no lo has puesto. Ese es exactamente el problema de la sesión 42 |
 
-### Ahora tú · Parametrizar la ubicación de la sede del proyecto
+#### Paso 6 · Parametrizar la ubicación de la sede del proyecto
 
 En lugar de pasar las coordenadas por parámetros de query en cada llamada:
 
@@ -291,120 +327,9 @@ En lugar de pasar las coordenadas por parámetros de query en cada llamada:
   <dd>Dos proyectos con coordenadas distintas devuelven temperaturas distintas; el proyecto sin coordenadas responde lo que tú decidiste y no un <code>500</code>; y en los logs aparece una línea de inicio y una de fin con los milisegundos reales de cada llamada saliente.</dd>
 </dl>
 
-### Reto · Consumir la API pública de GitHub para inspeccionar repositorios
+<p class="stage">Cliente HTTP y DTO externos</p>
 
-Muchos proyectos de software tienen un repositorio de código asociado.
-1. Investiga la API pública de GitHub para consultar un repositorio público:
-   `GET https://api.github.com/repos/{propietario}/{repositorio}`
-2. Configura un segundo cliente `githubRestClient` en `RestClientConfig` añadiendo la cabecera obligatoria `User-Agent`.
-3. Implementa un método que consulte un repositorio (por ejemplo, `spring-projects/spring-boot`) y devuelva el número de estrellas (`stargazers_count`) y si está archivado (`archived`).
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Bean <code>RestClient</code> configurado y llamada funcional a Open-Meteo recuperando el JSON de respuesta.</span></div>
-  <div><strong>Si lo tienes</strong><span>Coordenadas vinculadas a la entidad <code>Proyecto</code> y tiempo de latencia registrado en logs.</span></div>
-  <div><strong>Reto</strong><span>Segundo cliente HTTP integrado consultando la API de repositorios de GitHub con cabeceras requeridas.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 61</p>
-  <ul class="checklist">
-    <li>Se comprende el rol dual del backend como servidor entrante y cliente HTTP saliente.</li>
-    <li>Se utiliza la API moderna <code>RestClient</code> de Spring Boot 3.2 en lugar de clientes obsoletos.</li>
-    <li>La URL base y las cabeceras por defecto (<code>Accept</code>, <code>User-Agent</code>) quedan centralizadas.</li>
-    <li>Se observa y mide el impacto de la latencia de red en las peticiones hacia servicios remotos.</li>
-    <li>El backend actúa con éxito como orquestador consumiendo datos en tiempo real de Internet.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué Spring introdujo <code>RestClient</code> en Spring Boot 3.2 si ya existía <code>RestTemplate</code> y <code>WebClient</code>?</li>
-    <li>¿Qué método de <code>RestClient</code> se utiliza para iniciar una petición de tipo GET?</li>
-    <li>¿Por qué es una buena práctica definir siempre una cabecera <code>User-Agent</code> identificativa al invocar APIs de terceros?</li>
-    <li>¿Qué componente de red provoca que una llamada a una API remota sea dos órdenes de magnitud más lenta que una consulta a PostgreSQL?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Para ofrecer una interfaz fluida, moderna y síncrona que sustituya al viejo RestTemplate sin obligar al desarrollador a incorporar la complejidad y dependencias reactivas de WebFlux/WebClient.</p>
-  <p>2 · El método restClient.get().</p>
-  <p>3 · Porque muchos servidores y firewalls externos (como GitHub o Cloudflare) rechazan peticiones sin User-Agent para prevenir abusos de bots anónimos.</p>
-  <p>4 · La latencia de propagación física de la red en Internet, la resolución DNS y la negociación criptográfica TLS (handshake HTTPS).</p>
-</details>
-
-## Sesión 62 · Cliente HTTP y DTO externos
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el grave peligro de la fuga de contratos externos (<em>External Contract Bleeding</em>), el patrón arquitectónico <strong>Capa Anticorrupción (Anticorruption Layer - ACL)</strong> y cómo deserializar JSON ajeno con DTOs de proveedor aislados.</li>
-    <li><strong>2. Haz:</strong> modela los DTOs externos con Jackson (<code>@JsonProperty</code>, <code>@JsonIgnoreProperties</code>), construye un mapeador adaptador y transforma la respuesta externa a un modelo de dominio limpio adaptado a las necesidades de tu sistema.</li>
-    <li><strong>3. Comprueba:</strong> verificas que tu API expone datos meteorológicos con nomenclatura de tu negocio (en español, tipos numéricos correctos, sin campos innecesarios), demostrando que si el proveedor cambia su JSON, tu frontend y tu base de datos no sufren ningún impacto.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué ocurre con tu aplicación frontend si reenvías directamente el JSON crudo del proveedor externo y este decide renombrar o eliminar un campo el próximo mes?</li>
-    <li>¿Qué anotación de Jackson se coloca sobre una clase Java para evitar que falle la deserialización si la API externa devuelve campos adicionales que no hemos mapeado?</li>
-    <li>¿En qué consiste el patrón de arquitectura conocido como «Capa Anticorrupción» (*Anticorruption Layer*)?</li>
-  </ol>
-</div>
-
-### El peligro mortal: Acoplar tu dominio a una API externa
-
-En la sesión anterior devolvimos un `String` con el JSON crudo de Open-Meteo. Aunque sirvió para ver que la red funcionaba, **hacer eso en una aplicación real es un antipatrón arquitectónico gravísimo**:
-
-```json
-{
-  "latitude": 39.4699,
-  "longitude": -0.3763,
-  "generationtime_ms": 0.04100799560546875,
-  "utc_offset_seconds": 0,
-  "timezone": "GMT",
-  "timezone_abbreviation": "GMT",
-  "elevation": 15.0,
-  "current_weather": {
-    "temperature": 22.4,
-    "windspeed": 14.8,
-    "winddirection": 180,
-    "weathercode": 0,
-    "is_day": 1,
-    "time": "2026-09-02T12:00"
-  }
-}
-```
-
-Si devuelves este JSON a tu cliente web o lo guardas tal cual en tu base de datos:
-1. **Tu frontend se acopla a las decisiones de un tercero:** Si Open-Meteo cambia `windspeed` por `wind_speed_kmh`, tu pantalla de React/Angular deja de mostrar el viento.
-2. **Contaminas tu arquitectura con ruido:** A tu gestor de proyectos no le importa `generationtime_ms` ni `utc_offset_seconds`.
-3. **Pérdida de semántica de negocio:** El código `weathercode: 0` es un número incomprensible; tu usuario necesita ver *"Cielo despejado"*.
-
-<div class="rule">
-  <p class="rule-label">El principio de la Capa Anticorrupción (ACL)</p>
-  <p><strong>Ningún contrato externo debe cruzar la frontera de tu servicio de integración.</strong></p>
-  <p>Los datos ajenos deben recibirse en <strong>DTOs Externos</strong> (propios del proveedor) y traducirse inmediatamente a <strong>Modelos Propios</strong> antes de entregarse a la capa de negocio.</p>
-</div>
-
-### La arquitectura de aislamiento
-
-<figure class="diagram">
-  <figcaption>Aislamiento con Capa Anticorrupción (ACL)</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>API Externa (Open-Meteo JSON)</li>
-    <li>DTO Externo (OpenMeteoResponse)</li>
-    <li>Adaptador / Mapeador</li>
-    <li>DTO Interno del Dominio (ClimaProyectoResponse)</li>
-    <li>Controlador / Frontend</li>
-  </ol>
-</figure>
-
-### Paso a paso guiado · De DTOs externos al modelo de dominio
-
-<p class="stage">Paso 1 · Diseñar los DTOs externos con Jackson</p>
+#### Paso 7 · De DTOs externos al modelo de dominio
 
 Creamos registros que representan exactamente la estructura que envía Open-Meteo. Usamos `@JsonIgnoreProperties(ignoreUnknown = true)` para que Jackson ignore de forma segura cualquier campo que no nos interese:
 
@@ -449,8 +374,6 @@ public record CurrentWeatherExternal(
   <dd>Porque el paquete es documentación. Cualquiera que abra <code>integration.dto</code> sabe que lo de dentro no lo decides tú y que puede cambiar sin previo aviso. Si mezclas esas clases con las tuyas, en seis meses nadie sabrá cuáles se pueden refactorizar con libertad y cuáles están atadas a un contrato ajeno.</dd>
 </dl>
 
-<p class="stage">Paso 2 · Diseñar el DTO interno del Dominio</p>
-
 Este es el contrato que le pertenece a **nuestra aplicación**: nombres limpios, unidades explícitas y descripción humana:
 
 ```java
@@ -463,8 +386,6 @@ public record ClimaProyectoResponse(
     boolean esFavorableParaTrabajoExterior
 ) {}
 ```
-
-<p class="stage">Paso 3 · Crear el adaptador de traducción (Mapper)</p>
 
 El adaptador interpreta los códigos numéricos del proveedor y genera nuestra regla de negocio:
 
@@ -512,8 +433,6 @@ public class ClimaAdapter {
 }
 ```
 
-<p class="stage">Paso 4 · Conectar el cliente tipado en el servicio</p>
-
 Modificamos el cliente para que deserialice directamente al DTO externo y devuelva el modelo interno mediante el adaptador:
 
 ```java
@@ -551,7 +470,7 @@ public class ClimaService {
 }
 ```
 
-### La comprobación · El contrato limpio en Bruno
+#### Paso 8 · El contrato limpio en Bruno
 
 Actualiza tu controlador para devolver `ClimaProyectoResponse` y lanza la petición en Bruno:
 
@@ -573,8 +492,6 @@ Comprueba la diferencia:
 * Añadido valor de negocio real (`esFavorableParaTrabajoExterior`).
 * **Inmunidad garantizada:** Si Open-Meteo decide añadir 10 campos nuevos mañana, Jackson los ignorará en silencio y tu aplicación seguirá funcionando sin tocar ni una línea.
 
-<p class="stage">Comprobación 2 · Demostrar que la capa anticorrupción aguanta</p>
-
 La inmunidad de la que habla el punto anterior no es una promesa: se comprueba en dos minutos.
 
 1. Abre `CurrentWeatherExternal` y **borra** el componente `isDay`.
@@ -585,17 +502,17 @@ La inmunidad de la que habla el punto anterior no es una promesa: se comprueba e
 
 Acabas de ver, en tu propia aplicación, cómo un campo que a ti no te importa —y que ni siquiera pediste— puede tumbar tu backend. Esa línea es lo único que separa una integración robusta de una que se cae el día que el proveedor despliega.
 
-### Si algo no sale como dice el guion
+#### Paso 9 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
-| Todos los campos llegan a `0.0` o `null` | Los nombres no coinciden | El JSON dice `windspeed`, en una palabra. Compara letra a letra con el volcado del paso 1 de la sesión 61 |
+| Todos los campos llegan a `0.0` o `null` | Los nombres no coinciden | El JSON dice `windspeed`, en una palabra. Compara letra a letra con el volcado del paso 1 de la sesión 41 |
 | `UnrecognizedPropertyException` | Falta la anotación | `@JsonIgnoreProperties(ignoreUnknown = true)` en **cada** record externo, también en los anidados |
 | `current` llega `null` y peta el adaptador | Falta el `@JsonProperty` del anidado | `current_weather` no se mapea solo a `current` |
 | `Cannot construct instance ... no Creators` | Estás usando una clase, no un `record` | Con `record`, Jackson usa el constructor canónico. Con una clase necesitarías constructor vacío y setters |
-| El adaptador devuelve `null` y el controlador lanza `NullPointerException` | El `null` del adaptador no lo trata nadie | Es una decisión pendiente: la resuelve la sesión 63 con la degradación elegante |
+| El adaptador devuelve `null` y el controlador lanza `NullPointerException` | El `null` del adaptador no lo trata nadie | Es una decisión pendiente: la resuelve la sesión 42 con la degradación elegante |
 
-### Ahora tú · Integrar el clima en la respuesta completa del proyecto
+#### Paso 10 · Integrar el clima en la respuesta completa del proyecto
 
 Modifica `ProyectoResponse` (el DTO que devuelve `GET /api/v1/proyectos/{id}`):
 
@@ -603,7 +520,7 @@ Modifica `ProyectoResponse` (el DTO que devuelve `GET /api/v1/proyectos/{id}`):
 2. En `ProyectoService.obtenerPorId(id)`, llama a `climaService.consultarClima(proyecto.getLatitud(), proyecto.getLongitud())` e incrusta el clima en la respuesta.
 3. Verifica que al consultar los detalles de un proyecto, la respuesta contiene tanto los datos de la base de datos local (nombre, cliente, tareas) como el clima en tiempo real de su ubicación.
 4. Amplía la regla de negocio del adaptador: añade a `ClimaProyectoResponse` un campo `String recomendacion` que devuelva `"Aplazar trabajo en exterior"` cuando no sea favorable y `"Condiciones adecuadas"` cuando sí lo sea. Fíjate en dónde estás poniendo esa regla: en **tu** adaptador, no en el DTO externo. Open-Meteo no sabe nada de obras.
-5. Repasa la sesión 45: `GET /api/v1/proyectos` devuelve una **lista paginada**. Si incrustas el clima también ahí, una página de 20 proyectos dispara 20 llamadas a Internet y tarda cuatro segundos. Decide qué haces —incrustarlo solo en el detalle, o solo cuando se pida con `?incluirClima=true`— y anótalo con su justificación. Es el mismo razonamiento del N+1 de la UD5, pero contra una red en lugar de contra una base de datos.
+5. Repasa la sesión 30: `GET /api/v1/proyectos` devuelve una **lista paginada**. Si incrustas el clima también ahí, una página de 20 proyectos dispara 20 llamadas a Internet y tarda cuatro segundos. Decide qué haces —incrustarlo solo en el detalle, o solo cuando se pida con `?incluirClima=true`— y anótalo con su justificación. Es el mismo razonamiento del N+1 de la UD5, pero contra una red en lugar de contra una base de datos.
 6. Actualiza la documentación OpenAPI de la UD7: el nuevo campo `clima` necesita su `@Schema` con ejemplo, y el endpoint debe declarar que ese campo puede venir vacío.
 
 <dl class="worked">
@@ -611,7 +528,40 @@ Modifica `ProyectoResponse` (el DTO que devuelve `GET /api/v1/proyectos/{id}`):
   <dd>El JSON que devuelve tu API no contiene ni un solo nombre de campo de Open-Meteo; ningún <code>OpenMeteoResponse</code> sale del paquete <code>integration</code>; has decidido y justificado qué pasa con el listado paginado; y borrar un campo del DTO externo no rompe nada.</dd>
 </dl>
 
-### Reto · Pruebas unitarias del Adaptador sin llamadas de red
+#### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **integrad el cliente http y sus dto externos**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Consumir la API pública de GitHub para inspeccionar repositorios
+
+Muchos proyectos de software tienen un repositorio de código asociado.
+1. Investiga la API pública de GitHub para consultar un repositorio público:
+   `GET https://api.github.com/repos/{propietario}/{repositorio}`
+2. Configura un segundo cliente `githubRestClient` en `RestClientConfig` añadiendo la cabecera obligatoria `User-Agent`.
+3. Implementa un método que consulte un repositorio (por ejemplo, `spring-projects/spring-boot`) y devuelva el número de estrellas (`stargazers_count`) y si está archivado (`archived`).
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Bean <code>RestClient</code> configurado y llamada funcional a Open-Meteo recuperando el JSON de respuesta.</span></div>
+  <div><strong>Si lo tienes</strong><span>Coordenadas vinculadas a la entidad <code>Proyecto</code> y tiempo de latencia registrado en logs.</span></div>
+  <div><strong>Reto</strong><span>Segundo cliente HTTP integrado consultando la API de repositorios de GitHub con cabeceras requeridas.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Para ofrecer una interfaz fluida, moderna y síncrona que sustituya al viejo RestTemplate sin obligar al desarrollador a incorporar la complejidad y dependencias reactivas de WebFlux/WebClient.</p>
+  <p>2 · El método restClient.get().</p>
+  <p>3 · Porque muchos servidores y firewalls externos (como GitHub o Cloudflare) rechazan peticiones sin User-Agent para prevenir abusos de bots anónimos.</p>
+  <p>4 · La latencia de propagación física de la red en Internet, la resolución DNS y la negociación criptográfica TLS (handshake HTTPS).</p>
+</details>
+
+##### Reto · Pruebas unitarias del Adaptador sin llamadas de red
 
 Una de las enormes ventajas de la Capa Anticorrupción es que el mapeador puede probarse al 100 % sin levantar la red ni llamar a Internet:
 1. Crea una clase de test `ClimaAdapterTest`.
@@ -626,27 +576,6 @@ Una de las enormes ventajas de la Capa Anticorrupción es que el mapeador puede 
   <div><strong>Reto</strong><span>Suite de pruebas unitarias sobre el adaptador validando reglas de negocio climáticas sin red.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 62</p>
-  <ul class="checklist">
-    <li>Se erradica el antipatrón de propagar JSONs ajenos por el controlador y el dominio.</li>
-    <li>Se comprende y aplica el patrón Capa Anticorrupción (Anticorruption Layer - ACL).</li>
-    <li>La anotación <code>@JsonIgnoreProperties(ignoreUnknown = true)</code> protege ante campos nuevos imprevistos.</li>
-    <li>Los DTOs propios reflejan la semántica, unidades y reglas de negocio de la aplicación.</li>
-    <li>El adaptador aísla el resto del backend ante cualquier evolución del contrato del proveedor.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué es una mala práctica arquitectónica usar las mismas clases para deserializar una API ajena que para exponer datos a tu frontend?</li>
-    <li>¿Qué hace la anotación <code>@JsonProperty("current_weather")</code> en un atributo Java?</li>
-    <li>¿Qué ocurriría al deserializar un JSON con Jackson si el proveedor añade un campo nuevo y la clase no tiene <code>@JsonIgnoreProperties(ignoreUnknown = true)</code>?</li>
-    <li>¿Dónde reside la regla de negocio que decide si el clima es favorable para trabajar en el exterior?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque cualquier cambio o deprecación en la API del proveedor externo rompería de forma involuntaria el contrato de tu propio frontend.</p>
@@ -655,27 +584,43 @@ Una de las enormes ventajas de la Capa Anticorrupción es que el mapeador puede 
   <p>4 · En el adaptador o en un servicio de dominio de nuestra aplicación, nunca en los DTOs externos ni en el proveedor remoto.</p>
 </details>
 
-## Sesión 63 · Errores, timeouts y servicios no disponibles
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> las falacias de la computación distribuida, el peligro mortal del agotamiento de hilos (<em>Thread Starvation</em>) por llamadas colgadas, la configuración obligatoria de <strong>Timeouts de conexión y lectura</strong>, y el patrón de <strong>Degradación Elegante (Graceful Degradation)</strong>.</li>
-    <li><strong>2. Haz:</strong> configura límites temporales estrictos en <code>RestClient</code> mediante <code>ClientHttpRequestFactory</code>, captura errores remotos (4xx y 5xx) y construye un mecanismo de contingencia para que la caída del servicio externo nunca tumbe el backend.</li>
-    <li><strong>3. Comprueba:</strong> simulas caídas de red e IPs inalcanzables, comprobando que tu servidor corta la espera en 2 segundos y responde al cliente con los datos locales del proyecto y una advertencia amigable sin lanzar un error 500.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué le ocurre a un servidor web Tomcat si 200 usuarios hacen una petición a un endpoint cuya llamada externa se queda congelada durante 60 segundos sin responder?</li>
-    <li>¿Cuál es la diferencia entre un <em>Connect Timeout</em> y un <em>Read Timeout</em>?</li>
-    <li>¿Por qué es inaceptable que la caída de un servicio secundario (como el clima) impida a un usuario consultar o editar los datos principales de su proyecto?</li>
-  </ol>
-</div>
+El dominio no depende directamente del formato externo y las credenciales no aparecen en el repositorio.
 
-### La falacia de la red fiable y el colapso de hilos
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 41 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-41.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-41.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 42 · Timeouts y fallos parciales
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Una llamada saliente puede tardar, fallar o devolver datos inesperados. El caso de uso debe decidir qué resultado ofrecer en cada situación.
+
+#### La falacia de la red fiable y el colapso de hilos
 
 En los años 90, los ingenieros de Sun Microsystems formularon las famosas **8 Falacias de la Computación Distribuida**. Las dos primeras dicen:
 1. *«La red es fiable.»* (Falso: los cables se cortan, los servidores remotos se saturan y los firewalls descartan paquetes).
@@ -693,7 +638,7 @@ Si no configuras límites en tus peticiones HTTP salientes, estás cometiendo un
   <p>Toda llamada HTTP saliente debe tener tiempos límite estrictos (timeouts de pocos segundos) y una estrategia de degradación elegante ante indisponibilidad.</p>
 </div>
 
-### Configuración obligatoria: Connect Timeout y Read Timeout
+#### Configuración obligatoria: Connect Timeout y Read Timeout
 
 Debemos configurar dos límites independientes en la factoría de conexiones HTTP:
 
@@ -711,9 +656,25 @@ Debemos configurar dos límites independientes en la factoría de conexiones HTT
 * **Connect Timeout:** Tiempo máximo permitido para establecer el socket TCP y completar la negociación TLS/HTTPS con el servidor remoto (ej: 2 segundos). Si la IP no responde o el firewall descarta los paquetes SYN, se aborta.
 * **Read Timeout:** Tiempo máximo de inactividad entre paquetes de datos una vez establecida la conexión (ej: 3 segundos). Si el servidor remoto aceptó la conexión pero se queda calculando indefinidamente, se corta.
 
-### Paso a paso guiado · Configuración de timeouts y degradación elegante
+### Se trabaja
 
-<p class="stage">Paso 1 · Configurar la factoría de peticiones con timeouts en RestClientConfig</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Definid límites de espera y tratamiento de errores para la integración de vuestro backend.
+
+Simulad caída, respuesta inválida y respuesta lenta; comprobad que el error se traduce al contrato de vuestra API.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Errores, timeouts y servicios no disponibles</p>
+
+#### Paso 2 · Configuración de timeouts y degradación elegante
 
 Configuramos `SimpleClientHttpRequestFactory` con límites estrictos parametrizados en `application.properties`:
 
@@ -753,8 +714,6 @@ public class RestClientConfig {
     }
 }
 ```
-
-<p class="stage">Paso 2 · Manejo de excepciones y Degradación Elegante en ClimaService</p>
 
 Protegemos la llamada con un bloque `try-catch` específico que captura fallos de red (`ResourceAccessException`) y errores HTTP del servidor remoto (`HttpStatusCodeException`):
 
@@ -825,7 +784,7 @@ public class ClimaService {
 }
 ```
 
-### La comprobación · Simulación de fallo en Bruno
+#### Paso 3 · Simulación de fallo en Bruno
 
 Vamos a verificar empíricamente que la degradación funciona:
 
@@ -845,7 +804,7 @@ Vamos a verificar empíricamente que la degradación funciona:
 4. **Inspecciona la consola:**
    Aparece un `WARN` limpio registrado en los logs sin saturar la consola con trazas descontroladas.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -855,8 +814,6 @@ Vamos a verificar empíricamente que la degradación funciona:
 | `@Cacheable` no hace nada | Falta `@EnableCaching` | Va en la clase principal o en una `@Configuration` |
 | `@Cacheable` no hace nada aunque esté habilitado | Llamada interna | Si el método se invoca desde otro método de la misma clase, el proxy no interviene |
 | El clima se queda congelado durante horas | La caché no expira | Una caché sin `ttl` no caduca nunca: para datos que cambian, configura el tiempo de vida |
-
-<p class="stage">La comprobación 2 · Medir el coste de no tener timeout</p>
 
 Antes de configurar nada, comprueba qué pasa sin red y sin límite de espera:
 
@@ -868,7 +825,7 @@ Antes de configurar nada, comprueba qué pasa sin red y sin límite de espera:
 
 Ese es el argumento completo de la sesión: **un timeout no sirve para responder rápido, sirve para que el fallo de otro no se convierta en el tuyo.**
 
-### Ahora tú · Cachear respuestas climáticas para ahorrar peticiones
+#### Paso 5 · Cachear respuestas climáticas para ahorrar peticiones
 
 El tiempo meteorológico no cambia cada medio segundo: consultar la API en cada petición a `/proyectos/{id}` desperdicia ancho de banda y aumenta la latencia innecesariamente.
 
@@ -890,7 +847,18 @@ El tiempo meteorológico no cambia cada medio segundo: consultar la API en cada 
   <dd>Con el proveedor caído, tu API responde en el tiempo del timeout, con código correcto y un aviso legible, nunca un <code>500</code>; dos proyectos distintos reciben climas distintos; y sabes decir de memoria tus tres números y por qué son esos.</dd>
 </dl>
 
-### Reto · El patrón Circuit Breaker con Resilience4j
+#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **reproducid y controlad fallos de red**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · El patrón Circuit Breaker con Resilience4j
 
 Cuando un servicio externo está completamente caído, reintentar la conexión 200 veces por segundo sigue consumiendo 2 segundos de timeout en cada petición.
 
@@ -910,27 +878,6 @@ Investiga la librería **Resilience4j**:
   <div><strong>Reto</strong><span>Diseño conceptual del patrón Circuit Breaker con Resilience4j y sus tres estados.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 63</p>
-  <ul class="checklist">
-    <li>Se comprenden las falacias de la computación distribuida y el riesgo de agotamiento de hilos.</li>
-    <li>Los timeouts de conexión y lectura están configurados y parametrizados por entorno.</li>
-    <li>La aplicación no colapsa con error 500 cuando un proveedor externo sufre una avería.</li>
-    <li>Se aplica degradación elegante (*Graceful Degradation*) manteniendo la operatividad local.</li>
-    <li>Se comprueba que la respuesta se recupera en tiempo acotado ante caídas de conectividad.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué es el agotamiento de hilos (*Thread Starvation*) y cómo lo provoca una llamada externa colgada?</li>
-    <li>¿Qué excepción lanza Spring cuando se agota el tiempo límite de conexión configurado en <code>RestClient</code>?</li>
-    <li>¿En qué consiste el principio de degradación elegante (*Graceful Degradation*)?</li>
-    <li>¿Por qué almacenar en caché una respuesta meteorológica durante 15 minutos mejora tanto el rendimiento como la resiliencia?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Es la saturación del pool de hilos de trabajo de Tomcat al quedar todos bloqueados esperando respuestas externas lentas, impidiendo atender cualquier otra petición entrante al servidor.</p>
@@ -939,30 +886,45 @@ Investiga la librería **Resilience4j**:
   <p>4 · Reduce drásticamente la latencia para el usuario (de ~200 ms a ~1 ms), ahorra ancho de banda y peticiones contra la API externa, y permite responder con datos recientes si el proveedor sufre una caída temporal.</p>
 </details>
 
+### Cierre
 
-## Semana 22 · Ficheros y eventos
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-## Sesión 64 · Subida y descarga de ficheros
+El servicio no queda esperando indefinidamente y las pruebas reproducen los fallos externos.
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el transporte binario sobre HTTP con <code>multipart/form-data</code>, los vectores de ataque críticos en subida de ficheros (<em>Path Traversal</em>, ejecución remota de código en carpetas estáticas y agotamiento de disco), los límites de tamaño en Spring Boot y la descarga segura mediante la cabecera <code>Content-Disposition</code>.</li>
-    <li><strong>2. Haz:</strong> configura el almacenamiento seguro en un directorio externo al proyecto, renombra los ficheros con identificadores únicos UUID, persiste los metadatos en PostgreSQL y construye endpoints protegidos para adjuntar ficheros a tareas y descargarlos con autorización.</li>
-    <li><strong>3. Comprueba:</strong> subes documentos PDF e imágenes desde Bruno mediante <em>Multipart Form</em>, verificas en el disco que los nombres están sanitizados y compruebas que la descarga autorizada sirve el binario con su nombre original y tipo MIME correcto.</li>
-  </ol>
-</div>
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué una petición con un archivo adjunto debe enviarse con el tipo de contenido <code>multipart/form-data</code> en lugar de <code>application/json</code>?</li>
-    <li>¿Qué grave vulnerabilidad de seguridad (*Path Traversal*) se produce si guardas un fichero en el disco utilizando directamente el nombre original que envía el cliente (ej: <code>../../etc/passwd</code>)?</li>
-    <li>¿Por qué nunca se deben guardar los ficheros subidos por los usuarios dentro de la carpeta <code>src/main/resources/static</code> de la aplicación?</li>
-  </ol>
-</div>
 
-### El transporte binario: multipart/form-data
+#### Entrega de la sesión 42 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-42.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-42.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Semana 22 · Ficheros y comunicación externa
+
+## Sesión 43 · Ficheros y comunicación externa
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Un adjunto necesita límites y permisos; un correo o webhook produce un efecto fuera del proceso. Ambos deben vincularse a un caso de uso del producto.
+
+#### El transporte binario: multipart/form-data
 
 Hasta ahora todas nuestras peticiones enviaban texto estructurado en formato JSON. Sin embargo, un fichero (un PDF con especificaciones, una captura de un bug en PNG o un informe de obra) es una secuencia de bytes binarios.
 
@@ -970,7 +932,7 @@ Para transmitir simultáneamente datos JSON y flujos binarios, el protocolo HTTP
 * El cuerpo de la petición se divide en bloques independientes delimitados por una cadena frontera (*boundary*).
 * Cada bloque tiene sus propias cabeceras `Content-Disposition` y `Content-Type`, seguidas de los bytes correspondientes.
 
-### Los tres vectores de ataque en la subida de ficheros
+#### Los tres vectores de ataque en la subida de ficheros
 
 Aceptar ficheros del exterior es una de las puertas de entrada más peligrosas en una aplicación web. Un atacante intentará explotar tres vectores clásicos:
 
@@ -986,9 +948,77 @@ Aceptar ficheros del exterior es una de las puertas de entrada más peligrosas e
   <p>Los ficheros subidos deben residir en un directorio externo configurable (ej: <code>/var/uploads/</code>), inaccesible mediante URL directa, y servirse siempre a través de un controlador que verifique la autenticación del usuario.</p>
 </div>
 
-### Paso a paso guiado · Subida y descarga segura de adjuntos
+#### El problema de la doble escritura y la frontera transaccional
 
-<p class="stage">Paso 1 · Configurar límites de multipart en application.properties</p>
+Imagina este caso de uso en nuestro gestor de proyectos:
+* Cuando un usuario crea una tarea de prioridad **CRÍTICA**, el sistema debe:
+  1. **Guardar la tarea en PostgreSQL** (operación ACID local).
+  2. **Notificar a un sistema externo** (enviar un correo SMTP o emitir un webhook HTTP hacia un canal de Discord/Slack de soporte).
+
+Si implementas esto de forma síncrona dentro del método del servicio:
+
+```java
+// ANTIPATRÓN: Acoplamiento síncrono de efectos secundarios
+@Transactional
+public TareaResponse crearTarea(TareaRequest request) {
+    Tarea tarea = tareaRepository.save(new Tarea(...)); // Paso 1: Base de datos
+
+    webhookClient.notificarAlerta(tarea); // Paso 2: Red externa síncrona (¡PELIGRO!)
+
+    return mapearResponse(tarea);
+}
+```
+
+Este código contiene **dos defectos arquitectónicos gravísimos**:
+1. **Latencia acumulada:** El cliente web se queda esperando en blanco mientras el servidor contacta con Slack o el servidor de correo. Si la red remota tarda 5 segundos, la API tarda 5 segundos.
+2. **Inconsistencia transaccional:**
+   * Si la llamada a Slack falla con una excepción, Spring hace rollback en PostgreSQL: **la tarea no se guarda porque Slack estaba caído**.
+   * Si la base de datos hace commit pero la notificación falla después, ¿cómo sabes qué se notificó y qué no?
+
+<div class="rule">
+  <p class="rule-label">El principio de desacoplamiento de efectos secundarios</p>
+  <p><strong>Las notificaciones externas son efectos secundarios; nunca deben bloquear la transacción principal de negocio.</strong></p>
+  <p>La persistencia en base de datos debe confirmarse primero. Una vez garantizado el <em>commit</em>, los efectos secundarios se disparan de forma asíncrona mediante <strong>Eventos de Dominio</strong>.</p>
+</div>
+
+#### Arquitectura de Eventos de Dominio en Spring
+
+Para resolver este problema con elegancia, Spring proporciona un bus de eventos en memoria:
+
+<figure class="diagram">
+  <figcaption>Eventos desacoplados con @TransactionalEventListener</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Controlador recibe petición</li>
+    <li>2. Servicio guarda Tarea en DB</li>
+    <li>3. Publica TareaCreadaEvent</li>
+    <li>4. Commit de la Transacción local (DB asegurada)</li>
+    <li>5. Listener en hilo @Async envía Webhook en background</li>
+  </ol>
+</figure>
+
+* **`ApplicationEventPublisher`:** Publica un objeto de evento inmutable (`record`).
+* **`@TransactionalEventListener(phase = AFTER_COMMIT)`:** Garantiza que el evento solo se procesará **después de que la transacción de base de datos se haya confirmado con éxito**. Si la base de datos falla, la notificación externa jamás se envía.
+* **`@Async`:** Ejecuta el listener en un pool de hilos independiente en segundo plano, liberando al hilo de Tomcat inmediatamente.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Implementad subida y descarga de ficheros con restricciones de tipo, tamaño y acceso.
+
+Añadid correo, servicio de notificación o webhook según vuestro dominio y comprobad destinatario y contenido en un entorno de prueba.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Subida y descarga de ficheros</p>
+
+#### Paso 2 · Subida y descarga segura de adjuntos
 
 ```properties
 # Límite máximo por fichero individual (5 MB)
@@ -999,8 +1029,6 @@ spring.servlet.multipart.max-request-size=10MB
 # Directorio de almacenamiento externo en disco
 app.almacenamiento.directorio-subidas=./almacenamiento/adjuntos
 ```
-
-<p class="stage">Paso 2 · Entidad JPA para metadatos de ficheros</p>
 
 La base de datos almacena la trazabilidad y la relación con la tarea:
 
@@ -1055,8 +1083,6 @@ public class Adjunto {
     public long getTamanoBytes() { return tamanoBytes; }
 }
 ```
-
-<p class="stage">Paso 3 · Servicio de almacenamiento local seguro</p>
 
 Este servicio valida el fichero, genera el UUID y escribe los bytes en el disco con control estricto:
 
@@ -1150,8 +1176,6 @@ public class AlmacenamientoService {
 }
 ```
 
-<p class="stage">Paso 4 · Controlador de subida y descarga autorizada</p>
-
 ```java
 package com.ejemplo.gestor.controller;
 
@@ -1175,8 +1199,8 @@ public class AdjuntoController {
     private final AdjuntoRepository adjuntoRepository;
     private final TareaRepository tareaRepository;
 
-    public AdjuntoController(AlmacenamientoService almacenamientoService, 
-                             AdjuntoRepository adjuntoRepository, 
+    public AdjuntoController(AlmacenamientoService almacenamientoService,
+                             AdjuntoRepository adjuntoRepository,
                              TareaRepository tareaRepository) {
         this.almacenamientoService = almacenamientoService;
         this.adjuntoRepository = adjuntoRepository;
@@ -1223,7 +1247,7 @@ public class AdjuntoController {
 }
 ```
 
-### La comprobación · Pruebas de subida y descarga en Bruno
+#### Paso 3 · Pruebas de subida y descarga en Bruno
 
 1. **Subida de fichero mediante Bruno:**
    * Crea una petición `POST http://localhost:8080/api/v1/tareas/1/adjuntos`.
@@ -1243,7 +1267,7 @@ public class AdjuntoController {
    * Intenta subir un script `prueba.sh` o un ejecutable `.exe`.
    * **Resultado esperado:** Error `400 Bad Request` con mensaje *"Tipo de archivo no permitido"*. El archivo es rechazado y nada se escribe en el disco.
 
-### Ahora tú · Listar los adjuntos de una tarea
+#### Paso 4 · Listar los adjuntos de una tarea
 
 Implementa el endpoint de consulta de adjuntos:
 1. Crea `GET /api/v1/tareas/{id}/adjuntos`.
@@ -1260,125 +1284,9 @@ Implementa el endpoint de consulta de adjuntos:
 3. Donde `urlDescarga` sea `/api/v1/adjuntos/{adjunto.id}/descargar`.
 4. Verifica con Bruno que el cliente web puede consultar la lista de adjuntos y descargar cada uno mediante su URL correspondiente.
 
-### Reto · Validación de firmas mágicas binarias (Magic Bytes)
+<p class="stage">Correo, servicio externo o webhook</p>
 
-Un atacante avanzado puede renombrar un ejecutable `virus.exe` a `informe.pdf`.
-* Si tu servidor solo comprueba la extensión o la cabecera `Content-Type` enviada por el cliente, el fichero será aceptado porque el navegador reporta lo que la extensión sugiere.
-
-Investiga cómo inspeccionar los **Magic Bytes** del flujo binario:
-1. ¿Cuáles son los primeros 4 bytes característicos de un archivo PDF legítimo (`%PDF` / `0x25 0x50 0x44 0x46`) y de una imagen PNG (`0x89 0x50 0x4E 0x47`)?
-2. Integra la librería `Apache Tika` o implementa una comprobación directa de los primeros bytes de `archivo.getInputStream()` para verificar el tipo real antes de escribir en disco.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Configuración de límites multipart y servicio de almacenamiento local con UUIDs operativos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Subida y descarga autorizada con Spring Security, metadatos en PostgreSQL y <code>Content-Disposition</code>.</span></div>
-  <div><strong>Reto</strong><span>Validación profunda de tipos de archivo mediante inspección de firmas mágicas (*Magic Bytes*).</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 64</p>
-  <ul class="checklist">
-    <li>Se comprende el protocolo <code>multipart/form-data</code> para el transporte de binarios.</li>
-    <li>Se neutraliza el ataque de *Path Traversal* generando UUIDs opacos para el disco.</li>
-    <li>Los ficheros se almacenan en un directorio externo, nunca en carpetas web públicas.</li>
-    <li>Los límites de tamaño (<code>max-file-size</code>) protegen el servidor contra saturación de disco.</li>
-    <li>La descarga está blindada por autorización y emite cabeceras de descarga correctas.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué nunca se debe guardar un fichero usando directamente <code>archivo.getOriginalFilename()</code>?</li>
-    <li>¿Qué cabecera HTTP le indica al navegador que no intente renderizar el archivo en la pestaña sino que lo descargue al disco?</li>
-    <li>¿Qué dos propiedades de <code>application.properties</code> establecen el tamaño máximo permitido para subidas?</li>
-    <li>¿Por qué es peligroso validar el tipo de fichero únicamente a través de la extensión de su nombre?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque el cliente puede enviar nombres maliciosos con secuencias de salto de directorio (../../) para sobrescribir archivos del sistema o inyectar código ejecutable.</p>
-  <p>2 · La cabecera Content-Disposition: attachment; filename="nombre.ext".</p>
-  <p>3 · spring.servlet.multipart.max-file-size y spring.servlet.multipart.max-request-size.</p>
-  <p>4 · Porque la extensión puede ser alterada trivialmente por el usuario (ej: renombrar un script .sh a .pdf) eludiendo la comprobación si no se valida el MIME o los magic bytes.</p>
-</details>
-
-## Sesión 65 · Correo, servicio externo o webhook
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el problema de la doble escritura y la frontera transaccional al notificar a terceros, la ejecución asíncrona desacoplada con <code>@Async</code>, y el patrón de <strong>Eventos de Dominio</strong> con <code>ApplicationEventPublisher</code> y <code>@TransactionalEventListener</code>.</li>
-    <li><strong>2. Haz:</strong> publica un evento al crear una tarea urgente y constrúyelo de forma que un listener asíncrono emita una notificación por webhook HTTP saliente sin ralentizar ni bloquear la transacción de la base de datos principal.</li>
-    <li><strong>3. Comprueba:</strong> verificas en los logs de Spring Boot que el controlador responde en menos de 20 ms mientras que la notificación externa se procesa en segundo plano en un hilo independiente (<code>task-executor</code>), demostrando que un fallo en la notificación externa no afecta a la persistencia local.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué ocurre con la respuesta de tu API si el controlador envía un correo electrónico de forma síncrona y el servidor SMTP tarda 8 segundos en conectar?</li>
-    <li>Si la llamada externa de notificación falla con una excepción, ¿debería cancelarse (*rollback*) la tarea que el usuario acaba de guardar en PostgreSQL?</li>
-    <li>¿Qué diferencia fundamental existe entre un listener estándar con <code>@EventListener</code> y uno con <code>@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)</code>?</li>
-  </ol>
-</div>
-
-### El problema de la doble escritura y la frontera transaccional
-
-Imagina este caso de uso en nuestro gestor de proyectos:
-* Cuando un usuario crea una tarea de prioridad **CRÍTICA**, el sistema debe:
-  1. **Guardar la tarea en PostgreSQL** (operación ACID local).
-  2. **Notificar a un sistema externo** (enviar un correo SMTP o emitir un webhook HTTP hacia un canal de Discord/Slack de soporte).
-
-Si implementas esto de forma síncrona dentro del método del servicio:
-
-```java
-// ANTIPATRÓN: Acoplamiento síncrono de efectos secundarios
-@Transactional
-public TareaResponse crearTarea(TareaRequest request) {
-    Tarea tarea = tareaRepository.save(new Tarea(...)); // Paso 1: Base de datos
-
-    webhookClient.notificarAlerta(tarea); // Paso 2: Red externa síncrona (¡PELIGRO!)
-
-    return mapearResponse(tarea);
-}
-```
-
-Este código contiene **dos defectos arquitectónicos gravísimos**:
-1. **Latencia acumulada:** El cliente web se queda esperando en blanco mientras el servidor contacta con Slack o el servidor de correo. Si la red remota tarda 5 segundos, la API tarda 5 segundos.
-2. **Inconsistencia transaccional:**
-   * Si la llamada a Slack falla con una excepción, Spring hace rollback en PostgreSQL: **la tarea no se guarda porque Slack estaba caído**.
-   * Si la base de datos hace commit pero la notificación falla después, ¿cómo sabes qué se notificó y qué no?
-
-<div class="rule">
-  <p class="rule-label">El principio de desacoplamiento de efectos secundarios</p>
-  <p><strong>Las notificaciones externas son efectos secundarios; nunca deben bloquear la transacción principal de negocio.</strong></p>
-  <p>La persistencia en base de datos debe confirmarse primero. Una vez garantizado el <em>commit</em>, los efectos secundarios se disparan de forma asíncrona mediante <strong>Eventos de Dominio</strong>.</p>
-</div>
-
-### Arquitectura de Eventos de Dominio en Spring
-
-Para resolver este problema con elegancia, Spring proporciona un bus de eventos en memoria:
-
-<figure class="diagram">
-  <figcaption>Eventos desacoplados con @TransactionalEventListener</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>1. Controlador recibe petición</li>
-    <li>2. Servicio guarda Tarea en DB</li>
-    <li>3. Publica TareaCreadaEvent</li>
-    <li>4. Commit de la Transacción local (DB asegurada)</li>
-    <li>5. Listener en hilo @Async envía Webhook en background</li>
-  </ol>
-</figure>
-
-* **`ApplicationEventPublisher`:** Publica un objeto de evento inmutable (`record`).
-* **`@TransactionalEventListener(phase = AFTER_COMMIT)`:** Garantiza que el evento solo se procesará **después de que la transacción de base de datos se haya confirmado con éxito**. Si la base de datos falla, la notificación externa jamás se envía.
-* **`@Async`:** Ejecuta el listener en un pool de hilos independiente en segundo plano, liberando al hilo de Tomcat inmediatamente.
-
-### Paso a paso guiado · Webhooks asíncronos con Eventos de Dominio
-
-<p class="stage">Paso 1 · Activar el soporte asíncrono en AsyncConfig</p>
+#### Paso 5 · Webhooks asíncronos con Eventos de Dominio
 
 Configuramos el ejecutor de tareas asíncronas con un pool de hilos dimensionado:
 
@@ -1409,8 +1317,6 @@ public class AsyncConfig {
 }
 ```
 
-<p class="stage">Paso 2 · Definir el Evento de Dominio</p>
-
 Creamos un registro inmutable que transporta los datos mínimos necesarios:
 
 ```java
@@ -1424,8 +1330,6 @@ public record TareaCriticaCreadaEvent(
     String creadoPor
 ) {}
 ```
-
-<p class="stage">Paso 3 · Publicar el evento desde TareaService</p>
 
 El servicio solo se preocupa de guardar el dato y publicar el evento. Cero código de correos o webhooks:
 
@@ -1477,8 +1381,6 @@ public class TareaService {
 }
 ```
 
-<p class="stage">Paso 4 · Listener asíncrono emisor de Webhook</p>
-
 El listener se ejecuta en segundo plano solo tras el commit de la base de datos:
 
 ```java
@@ -1528,7 +1430,7 @@ public class NotificacionWebhookListener {
                 .retrieve()
                 .toBodilessEntity();
 
-            log.info("[{}] Notificación de webhook enviada con éxito para tarea #{}", 
+            log.info("[{}] Notificación de webhook enviada con éxito para tarea #{}",
                 Thread.currentThread().getName(), evento.tareaId());
 
         } catch (Exception ex) {
@@ -1540,7 +1442,7 @@ public class NotificacionWebhookListener {
 }
 ```
 
-### La comprobación · Inspección de hilos y tiempos en Bruno
+#### Paso 6 · Inspección de hilos y tiempos en Bruno
 
 1. **Lanza la creación de una tarea crítica:**
    `POST http://localhost:8080/api/v1/proyectos/1/tareas`
@@ -1562,7 +1464,7 @@ public class NotificacionWebhookListener {
    * El hilo de Tomcat `http-nio-8080-exec-1` guardó en la base de datos y respondió al cliente en 18 ms.
    * El hilo `notif-thread-1` procesó el webhook en segundo plano durante 330 ms sin que el usuario sufriera ninguna espera.
 
-### Si algo no sale como dice el guion
+#### Paso 7 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1572,7 +1474,7 @@ public class NotificacionWebhookListener {
 | El webhook falla y se pierde la tarea | El listener está dentro de la transacción | Con `AFTER_COMMIT` esto no puede pasar: la tarea ya está guardada pase lo que pase |
 | El webhook falla y nadie se entera | La excepción muere en el hilo asíncrono | Un `@Async` sin `try/catch` traga el error en silencio: registra siempre el fallo |
 
-### Ahora tú · Notificación simulada por correo electrónico
+#### Paso 8 · Notificación simulada por correo electrónico
 
 Añade un segundo listener que simule el envío de un correo de alerta:
 
@@ -1593,7 +1495,41 @@ Añade un segundo listener que simule el envío de un correo de alerta:
   <dd>Un evento dispara dos listeners independientes; un fallo en uno no afecta al otro ni al alta; el tiempo de respuesta del endpoint no cambia al añadirlos; y sabes explicar en qué caso concreto una notificación se perdería.</dd>
 </dl>
 
-### Reto · El patrón Outbox para garantizar entrega (Transactional Outbox)
+#### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **añadid adjuntos y notificaciones al caso de uso**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Validación de firmas mágicas binarias (Magic Bytes)
+
+Un atacante avanzado puede renombrar un ejecutable `virus.exe` a `informe.pdf`.
+* Si tu servidor solo comprueba la extensión o la cabecera `Content-Type` enviada por el cliente, el fichero será aceptado porque el navegador reporta lo que la extensión sugiere.
+
+Investiga cómo inspeccionar los **Magic Bytes** del flujo binario:
+1. ¿Cuáles son los primeros 4 bytes característicos de un archivo PDF legítimo (`%PDF` / `0x25 0x50 0x44 0x46`) y de una imagen PNG (`0x89 0x50 0x4E 0x47`)?
+2. Integra la librería `Apache Tika` o implementa una comprobación directa de los primeros bytes de `archivo.getInputStream()` para verificar el tipo real antes de escribir en disco.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Configuración de límites multipart y servicio de almacenamiento local con UUIDs operativos.</span></div>
+  <div><strong>Si lo tienes</strong><span>Subida y descarga autorizada con Spring Security, metadatos en PostgreSQL y <code>Content-Disposition</code>.</span></div>
+  <div><strong>Reto</strong><span>Validación profunda de tipos de archivo mediante inspección de firmas mágicas (*Magic Bytes*).</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque el cliente puede enviar nombres maliciosos con secuencias de salto de directorio (../../) para sobrescribir archivos del sistema o inyectar código ejecutable.</p>
+  <p>2 · La cabecera Content-Disposition: attachment; filename="nombre.ext".</p>
+  <p>3 · spring.servlet.multipart.max-file-size y spring.servlet.multipart.max-request-size.</p>
+  <p>4 · Porque la extensión puede ser alterada trivialmente por el usuario (ej: renombrar un script .sh a .pdf) eludiendo la comprobación si no se valida el MIME o los magic bytes.</p>
+</details>
+
+##### Reto · El patrón Outbox para garantizar entrega (Transactional Outbox)
 
 Si el servidor se apaga repentinamente justo después de hacer commit en la base de datos pero antes de que el hilo asíncrono ejecute el webhook, la notificación se pierde para siempre.
 
@@ -1607,27 +1543,6 @@ Investiga el patrón **Transactional Outbox**:
   <div><strong>Reto</strong><span>Diseño conceptual del patrón Transactional Outbox para tolerancia a fallos y reintentos.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 65</p>
-  <ul class="checklist">
-    <li>Se erradica el antipatrón de encadenar llamadas externas síncronas en transacciones locales.</li>
-    <li>Se utiliza el bus de eventos en memoria de Spring (<code>ApplicationEventPublisher</code>).</li>
-    <li>La anotación <code>@TransactionalEventListener(phase = AFTER_COMMIT)</code> evita notificar transacciones abortadas.</li>
-    <li>El procesamiento asíncrono con <code>@Async</code> mantiene tiempos de respuesta de milisegundos en la API.</li>
-    <li>Los fallos en servicios de terceros quedan contenidos en auditoría sin romper el flujo de negocio.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué es un error ejecutar una llamada HTTP externa dentro de un método anotado con <code>@Transactional</code>?</li>
-    <li>¿Qué garantiza la fase <code>TransactionPhase.AFTER_COMMIT</code> en un <code>@TransactionalEventListener</code>?</li>
-    <li>¿Qué sucede con la petición del usuario si el listener asíncrono falla con una excepción no controlada?</li>
-    <li>¿Por qué es recomendable definir un <code>ThreadPoolTaskExecutor</code> propio en lugar de usar el executor por defecto de Spring?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque mantiene la conexión de base de datos y los bloqueos de filas abiertos durante todo el tiempo que tarda la red externa, reduciendo drásticamente la concurrencia y arriesgando rollbacks indebidos.</p>
@@ -1636,27 +1551,43 @@ Investiga el patrón **Transactional Outbox**:
   <p>4 · Para controlar el tamaño de la cola, limitar el número máximo de hilos concurrentes y evitar que un aluvión de notificaciones consuma toda la memoria de la máquina.</p>
 </details>
 
-## Sesión 66 · Miniintegración
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la síntesis de una arquitectura backend completa: cómo orquestar de forma coherente <strong>Persistencia (PostgreSQL)</strong>, <strong>Seguridad (Spring Security / JWT)</strong>, <strong>Integración Externa (RestClient / Open-Meteo)</strong>, <strong>Gestión de Ficheros (Multipart)</strong> y <strong>Eventos Asíncronos</strong> en un único caso de uso empresarial.</li>
-    <li><strong>2. Haz:</strong> implementa el flujo integral de gestión de incidencias de campo: subida de informe técnico adjunto, consulta automática del clima de la sede del proyecto con degradación elegante y emisión de alerta por webhook a los responsables.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas la batería de pruebas verificando tanto el camino feliz (todos los sistemas operativos) como los escenarios de contingencia (proveedor meteorológico caído y webhook inaccesible), certificando que la aplicación se comporta de forma robusta y predecible.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué diferencia a un backend profesional de una colección de ejemplos de clase aislados?</li>
-    <li>Si la API externa de clima falla y el webhook de alerta falla, ¿qué código de estado HTTP debe devolver el endpoint de creación de incidencia si el dato local y el archivo adjunto se guardaron correctamente?</li>
-    <li>¿Cómo garantizamos que solo un usuario autenticado con rol adecuado pueda registrar una incidencia con adjunto?</li>
-  </ol>
-</div>
+Un archivo no permitido se rechaza y una persona sin permisos no descarga un adjunto ajeno.
 
-### La prueba del mundo real: Todo el sistema en marcha
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 43 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-43.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-43.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 44 · Integración completa comprobada
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+La integración se evalúa dentro del flujo del usuario, incluyendo lo que ocurre cuando una dependencia falla.
+
+#### La prueba del mundo real: Todo el sistema en marcha
 
 A lo largo del curso has aprendido piezas individuales:
 * Controladores REST y DTOs con validación (UD3).
@@ -1681,7 +1612,7 @@ El objetivo de esta sesión es **integrar todas estas capacidades en un único f
   </ol>
 </figure>
 
-### El caso de uso: Registro de Incidencias de Obra
+#### El caso de uso: Registro de Incidencias de Obra
 
 Un operario de campo registra una incidencia urgente sobre un proyecto:
 1. Envía los datos de la incidencia (título, descripción, severidad) junto a un archivo adjunto (fotografía o informe técnico en PDF).
@@ -1691,9 +1622,25 @@ Un operario de campo registra una incidencia urgente sobre un proyecto:
 5. Se persiste la incidencia en base de datos.
 6. Se publica el evento que notifica a los responsables vía webhook en segundo plano.
 
-### Paso a paso guiado · Ensamblado del flujo completo
+### Se trabaja
 
-<p class="stage">Paso 1 · El DTO de respuesta integral</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Encadenad la operación de negocio, la llamada externa y el adjunto o notificación que corresponda.
+
+Añadid pruebas del recorrido completo y sus fallos; revisad configuración y logs en el despliegue.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Miniintegración</p>
+
+#### Paso 2 · Ensamblado del flujo completo
 
 ```java
 package com.ejemplo.gestor.dto;
@@ -1711,8 +1658,6 @@ public record IncidenciaCompletaResponse(
     LocalDateTime fechaRegistro
 ) {}
 ```
-
-<p class="stage">Paso 2 · El servicio orquestador IncidenciaService</p>
 
 ```java
 package com.ejemplo.gestor.service;
@@ -1815,8 +1760,6 @@ public class IncidenciaService {
 }
 ```
 
-<p class="stage">Paso 3 · Controlador protegido con Multipart y Seguridad</p>
-
 ```java
 package com.ejemplo.gestor.controller;
 
@@ -1859,7 +1802,7 @@ public class IncidenciaController {
 }
 ```
 
-### La comprobación · Batería de escenarios en Bruno
+#### Paso 3 · Batería de escenarios en Bruno
 
 Ejecuta la suite de verificación de integración:
 
@@ -1879,23 +1822,23 @@ Ejecuta la suite de verificación de integración:
    * Intenta adjuntar un archivo ejecutable `virus.exe`.
    * **Resultado:** Código **`400 Bad Request`**. La transacción se aborta limpiamente.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
 | El adjunto se guarda en disco pero no hay fila en la base de datos | El guardado del fichero está fuera de la transacción | El sistema de archivos no participa en el `rollback`: guarda primero la fila y el fichero después, o borra el fichero en el `catch` |
-| La incidencia falla entera cuando cae Open-Meteo | El `try/catch` no envuelve la llamada saliente | La degradación de la sesión 63 debe aplicarse aquí también: el clima es un extra, no un requisito |
+| La incidencia falla entera cuando cae Open-Meteo | El `try/catch` no envuelve la llamada saliente | La degradación de la sesión 42 debe aplicarse aquí también: el clima es un extra, no un requisito |
 | `413 Payload Too Large` con un fichero de 3 MB | El límite por defecto de Spring es 1 MB | `spring.servlet.multipart.max-file-size` y `max-request-size` en `application.properties` |
 | El `multipart` responde `415` | El cliente fija mal el `Content-Type` | En una petición multiparte, deja que el cliente ponga él el `boundary`: no lo escribas a mano |
 | La descarga baja un fichero con nombre UUID ilegible | Falta la cabecera `Content-Disposition` | Devuelve el nombre original en `filename=`, guardando el UUID solo en disco |
 | Todo funciona pero la petición tarda 3 segundos | Estás esperando a Open-Meteo antes de responder | Es correcto y es el coste que decidiste asumir: mídelo y anótalo, o pásalo a asíncrono |
 
-### Ahora tú · Cerrar la integración de extremo a extremo
+#### Paso 5 · Cerrar la integración de extremo a extremo
 
 El objetivo de la sesión es que un caso de uso completo atraviese **todas** las piezas del curso a la vez: validación, persistencia, seguridad, fichero y servicio externo.
 
 1. Ejecuta el alta completa de una incidencia con fotografía adjunta y comprueba que la respuesta `201 Created` incluye el identificador del adjunto y el bloque de clima.
-2. **Repite el alta con la red cortada** (desactiva el wifi o apunta el `base-url` a un host inexistente). Debe seguir devolviendo `201`, con el aviso de degradación en el campo del clima y el fichero correctamente guardado. Si devuelve `500`, la resiliencia de la sesión 63 no está aplicada en este camino.
+2. **Repite el alta con la red cortada** (desactiva el wifi o apunta el `base-url` a un host inexistente). Debe seguir devolviendo `201`, con el aviso de degradación en el campo del clima y el fichero correctamente guardado. Si devuelve `500`, la resiliencia de la sesión 42 no está aplicada en este camino.
 3. Comprueba en disco que el fichero existe con su nombre UUID, y en la base de datos que la fila del adjunto apunta a él. Los dos o ninguno: un fichero huérfano en disco o una fila apuntando a nada son los dos fallos clásicos de esta sesión.
 4. Actualiza tu página web de la UD8: añade una sección de incidencias de un proyecto, pinta en verde las condiciones favorables y en naranja las desfavorables o degradadas, y añade el botón de descarga del adjunto.
 5. Documenta el endpoint en OpenAPI. Un `multipart` necesita su `@RequestBody` anotado con el tipo de contenido correcto, o Swagger no ofrecerá el selector de archivo y nadie podrá probarlo desde ahí.
@@ -1906,7 +1849,18 @@ El objetivo de la sesión es que un caso de uso completo atraviese **todas** las
   <dd>El alta funciona con red y sin red, devolviendo <code>201</code> en los dos casos; fichero y fila siempre van juntos; el tiempo con la red caída coincide con tu timeout; y la operación se puede ejecutar entera desde Swagger.</dd>
 </dl>
 
-### Reto · Auditoría de integraciones externas
+#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **ejecutad el caso de uso con sus integraciones**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Auditoría de integraciones externas
 
 Diseña una tabla de auditoría en PostgreSQL:
 ```sql
@@ -1933,27 +1887,6 @@ Implementa un aspecto `@Aspect` o un interceptor en `RestClient` (`ClientHttpReq
   <div><strong>Reto</strong><span>Tabla e interceptor de auditoría de peticiones salientes registrando latencias y fallos.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 66</p>
-  <ul class="checklist">
-    <li>Se articulan coherentemente todas las capas del backend en un único caso de uso.</li>
-    <li>La persistencia transaccional y el almacenamiento binario en disco operan en armonía.</li>
-    <li>La degradación elegante garantiza la continuidad del servicio ante averías externas.</li>
-    <li>Las notificaciones asíncronas no degradan la latencia percibida por el usuario.</li>
-    <li>La seguridad por token protege tanto la mutación de datos como la descarga de adjuntos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué la consulta meteorológica debe realizarse antes de guardar la incidencia pero el webhook debe dispararse después?</li>
-    <li>¿Qué ocurriría con el archivo guardado en disco si la transacción de PostgreSQL falla al final con un error de clave duplicada?</li>
-    <li>¿Cómo se asegura que un usuario solo pueda descargar adjuntos si está autenticado?</li>
-    <li>¿Qué ventajas ofrece devolver un DTO integral (<code>IncidenciaCompletaResponse</code>) frente a hacer que el frontend consulte tres endpoints distintos?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque los datos climáticos forman parte de la información que enriquece la incidencia a guardar; el webhook, en cambio, es un efecto secundario de notificación que solo debe emitirse si el registro tuvo éxito.</p>
@@ -1961,6 +1894,34 @@ Implementa un aspecto `@Aspect` o un interceptor en `RestClient` (`ClientHttpReq
   <p>3 · Protegiendo el endpoint GET de descarga con @PreAuthorize("isAuthenticated()") o verificando roles específicos en la SecurityFilterChain.</p>
   <p>4 · Reduce el número de peticiones de red entre navegador y servidor (round-trips), disminuye la latencia total y simplifica la lógica del cliente frontend.</p>
 </details>
+
+### Cierre
+
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
+
+El caso de uso funciona desde el cliente y sus limitaciones y respuestas ante fallos están documentadas.
+
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 44 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-44.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-44.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 
@@ -2079,4 +2040,3 @@ Un desarrollador principiante asume que la red es mágica y que los proveedores 
     <li>Subir y descargar ficheros e integrar correo o webhooks.</li>
   </ul>
 </div>
-

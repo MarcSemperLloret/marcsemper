@@ -5,10 +5,10 @@ section: "ud-12"
 order: 12
 lang: "es"
 summary: "Un proyecto autónomo desde la especificación hasta la defensa técnica, con el cliente Angular ya integrado y la seguridad puesta."
-duration: "18 horas · 3 semanas · 9 sesiones"
-modality: "Proyecto evaluable · 10 % guía / 90 % autonomía"
-deliverable: "Un backend completo verificable con Postman o Bruno, conectado a Angular, probado, documentado y defendido técnicamente."
-date: "2026-09-02"
+duration: "18 horas · 3 semanas · 6 sesiones de 3 h"
+modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
+deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+date: "2026-09-09"
 outcomes:
   - "Traducir una especificación en un modelo, un contrato y una arquitectura."
   - "Implementar un backend completo con persistencia, seguridad e integraciones."
@@ -22,59 +22,19 @@ priorKnowledge:
   - "Angular, del módulo de desarrollo web en entorno cliente."
 ---
 
-<p class="lead">Ya no existe tutorial. El profesorado entrega una especificación y el equipo decide modelo, contrato, arquitectura, estrategia de seguridad, integración y pruebas. Angular actúa como consumidor final, pero el backend debe seguir pudiendo comprobarse de forma completa con Postman o Bruno.</p>
+<p class="lead">Las seis sesiones finales completan y defienden la ampliación del mismo producto: especificación, arquitectura, desarrollo, seguridad, integraciones, cliente Angular, pruebas y documentación. El backend se sigue comprobando de forma independiente del cliente.</p>
 
-<div class="rule">
-  <p class="rule-label">Progresión de autonomía</p>
-  <p>Sin andamiaje. Solo especificación, criterios de aceptación y fechas.</p>
-</div>
+## Semana 24 · Especificar la ampliación final
 
-<div class="rule">
-  <p class="rule-label">Qué traes puesto al empezar</p>
-  <p>No se parte de cero: se parte de once unidades. El <strong>modelo y las relaciones</strong> vienen de la UD5, el <strong>diseño de recursos, DTO, validación y errores</strong> de la UD3, la <strong>separación en capas</strong> de la UD4, los <strong>filtros, la paginación y OpenAPI</strong> de la UD7, <strong>CORS</strong> de la UD8, la <strong>autenticación con JWT y la matriz de permisos</strong> de la UD9, el <strong>cliente saliente resiliente y los adjuntos</strong> de la UD10 y la <strong>estrategia de pruebas y de logs</strong> de la UD11.</p>
-  <p>Lo único que se añade aquí es la decisión: qué usar de todo eso, en qué orden y por qué. Esa justificación es lo que se defiende en la sesión 78.</p>
-</div>
+## Sesión 47 · Especificar la ampliación final
 
-## Semana 24 · Especificar antes de construir
+### Se explica
 
-## Sesión 70 · Especificación y modelado
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> a descomponer una especificación de negocio ambigua en <strong>Actores</strong>, <strong>Casos de Uso</strong>, <strong>Reglas de Negocio Invariantes</strong> y <strong>Criterios de Aceptación ejecutables (Gherkin)</strong>, diseñando el modelo conceptual del dominio antes de escribir una sola línea de código.</li>
-    <li><strong>2. Haz:</strong> elabora la matriz de actores y permisos preliminar, traduce los requisitos funcionales en criterios formales de aceptación y dibuja el diagrama conceptual de entidades identificando agregados, identificadores y restricciones.</li>
-    <li><strong>3. Comprueba:</strong> sometes tu modelo a tres pruebas de estrés resolviendo casos límite no contemplados explícitamente en el enunciado (ej: estados terminales, concurrencia de asignaciones y borrado de entidades con histórico), garantizando que no quedan decisiones de diseño en el aire.</li>
-  </ol>
-</div>
+La versión final continúa el mismo producto. La especificación concreta qué falta para completar sus casos de uso con seguridad e integraciones.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué empezar a escribir controladores y entidades JPA sin haber validado las reglas de negocio suele obligar a reescribir la mitad del proyecto a mitad del desarrollo?</li>
-    <li>¿Cuál es la diferencia entre un «Requisito Funcional» (lo que el sistema debe hacer) y una «Regla de Negocio Invariante» (una restricción que nunca puede violarse)?</li>
-    <li>¿Cómo ayuda el formato de especificación <em>Given-When-Then</em> (Dado-Cuando-Entonces) a acordar el comportamiento de un endpoint entre el backend y el frontend?</li>
-  </ol>
-</div>
-
-### Dejar de teclear: La disciplina de la especificación
-
-En los proyectos anteriores contabas con un itinerario guiado paso a paso. En esta unidad final asumes el rol de **ingeniero de backend autónomo**.
-
-El error más común del programador inexperto es abrir el IDE, crear entidades JPA a toda velocidad y empezar a programar endpoints basándose en suposiciones apresuradas.
-* A los tres días descubre que un proyecto no podía tener más de un responsable activo.
-* Descubre que una tarea cerrada no debía poder recibir adjuntos.
-* Descubre que los importes monetarios debían registrarse con impuestos desglosados y no como un simple número flotante.
-
-Modificar el modelo de datos con la aplicación a medio construir cuesta diez veces más tiempo que resolver esas ambigüedades sobre el papel.
-
-<div class="rule">
-  <p class="rule-label">La ley del modelado previo</p>
-  <p><strong>El código no toma decisiones de negocio: las ejecuta.</strong></p>
-  <p>Toda duda o ambigüedad que no resuelvas durante la fase de especificación se convertirá en un bug en producción o en una refactorización dolorosa en la base de datos.</p>
-</div>
-
-### Los cuatro pilares de una especificación técnica
+#### Los cuatro pilares de una especificación técnica
 
 Para blindar el diseño de tu backend, descompón el problema en cuatro matrices complementarias:
 
@@ -108,139 +68,7 @@ Para blindar el diseño de tu backend, descompón el problema en cuatro matrices
      Y el estado del proyecto permanece "EN_CURSO"
    ```
 
-### Paso a paso guiado · Del enunciado al modelo conceptual
-
-<p class="stage">Paso 1 · Identificar entidades y objetos de valor (Value Objects)</p>
-
-Diferenciamos dos tipos de objetos en nuestro modelo:
-* **Entidades (con identidad propia en el tiempo):** `Proyecto`, `Tarea`, `Usuario`, `Incidencia`, `Adjunto`. Si dos proyectos tienen el mismo nombre pero diferente ID, son proyectos distintos.
-* **Objetos de Valor (inmutables, definidos por sus atributos):** `Dinero` (importe + divisa), `Coordenadas` (latitud + longitud), `PeriodoFechas` (fechaInicio + fechaFin). Si dos objetos `Coordenadas` tienen la misma latitud y longitud, son idénticos.
-
-<p class="stage">Paso 2 · Diseñar la máquina de estados de las entidades principales</p>
-
-Una entidad crítica nunca debería cambiar de estado mediante simples setters arbitrarios. Debe seguir un ciclo de vida estrictamente regulado:
-
-```text
-[BORRADOR] ──(Aprobar presupuesto)──> [PLANIFICADO] ──(Asignar equipo)──> [EN_CURSO]
-                                                                              │
-               [CANCELADO] <──────(Cancelar con motivo justificado)────────────┤
-                                                                              │
-               [FINALIZADO] <─────(Verificar que no hay tareas pendientes)────┘
-```
-
-<p class="stage">Paso 3 · La matriz de casos de uso y contratos de API</p>
-
-| Caso de Uso | Método HTTP | Ruta propuesta | Actor autorizado | Códigos HTTP previstos |
-| :--- | :--- | :--- | :--- | :--- |
-| **Registrar proyecto** | `POST` | `/api/v1/proyectos` | `JEFE_PROYECTO`, `ADMIN` | `201`, `400`, `401`, `403`, `409` |
-| **Aprobar presupuesto** | `PATCH` | `/api/v1/proyectos/{id}/presupuesto` | `ADMIN` | `200`, `400`, `404`, `409` |
-| **Cerrar proyecto** | `POST` | `/api/v1/proyectos/{id}/cerrar` | `JEFE_PROYECTO` | `200`, `409`, `404` |
-| **Adjuntar informe** | `POST` | `/api/v1/tareas/{id}/adjuntos` | `OPERARIO`, `JEFE_PROYECTO` | `201`, `400`, `413`, `404` |
-
-### La comprobación · Prueba de estrés del modelo conceptual
-
-Somete tu modelo a tres preguntas trampa para verificar su solidez:
-
-1. **Caso límite 1 (Concurrencia):** Dos jefes de proyecto intentan cerrar el mismo proyecto exactamente en el mismo segundo. ¿Cómo previene tu modelo que se ejecute la notificación de cierre dos veces? *(Requiere control de concurrencia optimista con `@Version` o bloqueos pesimistas).*
-2. **Caso límite 2 (Integridad de datos):** Un usuario borra un proyecto que tiene 50 tareas y 10 incidencias históricas. ¿Se borran en cascada perdiendo la auditoría o se aplica un borrado lógico (*Soft Delete*)?
-3. **Caso límite 3 (Degradación):** El servicio externo de firma digital o meteorología no responde durante el alta. ¿Se bloquea el caso de uso o se guarda en estado pendiente de sincronización?
-
-### Los tres vicios de una especificación mal escrita
-
-Antes de redactar la tuya, aprende a reconocer lo que la invalida. Los tres aparecen siempre y los tres se arreglan con la misma medicina: **un número**.
-
-<dl class="worked">
-  <dt>1 · El requisito que no se puede comprobar</dt>
-  <dd><em>«El sistema debe ser rápido.»</em> ¿Cuánto es rápido? Nadie puede decir si eso se ha cumplido, así que no es un requisito: es un deseo. La versión utilizable es <em>«el listado de proyectos responde en menos de 300 ms con 500 proyectos en la base de datos»</em>. Ahora se puede medir, y por tanto se puede aprobar o suspender.</dd>
-  <dt>2 · El requisito que esconde una decisión</dt>
-  <dd><em>«Un proyecto no puede cerrarse si tiene tareas pendientes.»</em> Parece cerrado y no lo está: ¿qué es «pendiente»? ¿Cuenta una tarea bloqueada? ¿Y una cancelada? Enumera los estados concretos, o descubrirás la ambigüedad el día de la demostración.</dd>
-  <dt>3 · El requisito que solo describe el camino feliz</dt>
-  <dd><em>«El usuario adjunta una fotografía a la incidencia.»</em> ¿Y si pesa 40 MB? ¿Y si es un <code>.exe</code>? ¿Y si el disco está lleno? Cada caso de uso necesita, como mínimo, un escenario de rechazo con su código HTTP. Si tu especificación solo tiene escenarios que terminan bien, no has especificado: has ilustrado.</dd>
-</dl>
-
-### Ahora tú · Redactar la especificación formal del proyecto
-
-Elabora el documento de especificación formal de tu proyecto backend:
-
-1. Define los 4 actores y la matriz de control de acceso basada en roles (RBAC), con el mismo formato de la sesión 53: una fila por endpoint y método, una columna por rol y el código HTTP esperado en cada casilla. Esta tabla es el contrato de seguridad y va a ser lo que se pruebe en la sesión 76.
-2. Detalla al menos **6 casos de uso** con sus escenarios *Given-When-Then*. Cada uno necesita un escenario feliz **y al menos dos de rechazo**, con su código de estado.
-3. Enumera **5 reglas de negocio invariantes** que tu código garantizará siempre. Una invariante es una afirmación que nunca puede ser falsa: «la suma de costes de las tareas no supera el presupuesto del proyecto» lo es; «el usuario debería revisar el presupuesto» no lo es.
-4. Para cada invariante, escribe **dónde va a vivir**: ¿una restricción `CHECK` en PostgreSQL, una validación en el DTO, una comprobación en el servicio? Esta columna es la que convierte la especificación en un plan de trabajo, y es la que dicta el modelo de la sesión 71.
-5. **Pasa la prueba de la ambigüedad:** dale la especificación a otro equipo y pídeles que anoten cada punto donde tengan que suponer algo. Cada suposición es un hueco. Los que no cierres ahora se convertirán en una discusión en la semana 26, cuando ya no haya tiempo.
-6. Marca lo que **no** vas a hacer. Una especificación sin alcance excluido es una especificación que crecerá hasta que se acabe el plazo. «No habrá recuperación de contraseña por correo» es una decisión legítima y defendible, siempre que esté escrita.
-
-<dl class="worked">
-  <dt>Cómo saber que lo has terminado</dt>
-  <dd>Cada requisito se puede comprobar con una petición HTTP y un resultado esperado; cada caso de uso tiene escenarios de rechazo además del feliz; cada invariante tiene asignado el sitio donde se hará cumplir; otro equipo ha leído el documento y su lista de suposiciones está vacía o resuelta; y hay un apartado que dice qué queda fuera.</dd>
-</dl>
-
-<div class="rule">
-  <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita la memoria formal de análisis y especificación del proyecto, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>especificacion-proyecto.pdf</code>), nunca un archivo markdown suelto.</p>
-</div>
-
-### Reto · Formalización de contratos con OpenAPI antes de codificar (API-First)
-
-En la metodología **API-First**, antes de escribir una clase en Java, se redacta el archivo de especificación OpenAPI en formato YAML (`openapi.yaml`):
-1. Diseña el contrato del endpoint `POST /api/v1/proyectos` en YAML detallando el esquema del JSON de entrada, los campos obligatorios y los ejemplos de respuestas de error RFC 7807.
-2. Utiliza el editor Swagger Editor o la extensión OpenAPI de tu IDE para validar sintácticamente el contrato.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Lista de actores, casos de uso básicos y diagrama de entidades inicial.</span></div>
-  <div><strong>Si lo tienes</strong><span>Reglas invariantes formalizadas, máquinas de estado finitas y escenarios Gherkin.</span></div>
-  <div><strong>Reto</strong><span>Enfoque API-First con contrato OpenAPI 3 preliminar redactado antes de programar.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 70</p>
-  <ul class="checklist">
-    <li>Se supera el impulso de programar sin un análisis previo de requisitos y riesgos.</li>
-    <li>Se definen con precisión los actores y sus permisos en el sistema.</li>
-    <li>Las reglas de negocio invariantes están claramente aisladas de la lógica de interfaz.</li>
-    <li>Los criterios de aceptación en formato Gherkin eliminan ambigüedades contractuales.</li>
-    <li>El modelo conceptual de datos soporta los casos límite y de contingencia identificados.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué es arriesgado que un caso de uso se denomine simplemente «ModificarProyecto» en lugar de nombres con intención de negocio?</li>
-    <li>¿Qué diferencia conceptual existe entre una Entidad y un Objeto de Valor (Value Object)?</li>
-    <li>¿Qué estructura componen las tres cláusulas de un escenario Gherkin?</li>
-    <li>¿Qué riesgo operativo previene definir una máquina de estados finita para las entidades críticas?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque «ModificarProyecto» es un saco genérico que suele saltarse validaciones específicas; nombres como «AprobarPresupuesto» o «ReasignarResponsable» encapsulan reglas precisas de transición.</p>
-  <p>2 · Las entidades se distinguen por un identificador único que perdura en el tiempo aunque cambien sus datos; los objetos de valor carecen de identidad propia y se definen exclusivamente por sus atributos inmutables.</p>
-  <p>3 · Dado (Given: contexto o estado inicial), Cuando (When: acción o evento disparador) y Entonces (Then: resultado o consecuencias esperadas).</p>
-  <p>4 · Evita transiciones ilegales o incoherentes en la base de datos (por ejemplo, que un proyecto cancelado pase directamente a finalizado sin pasar por revisión previa).</p>
-</details>
-
-## Sesión 71 · Arquitectura y modelo de datos
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el diseño del esquema relacional en PostgreSQL (tipos nativos óptimos, integridad referencial con <code>RESTRICT</code> frente a <code>CASCADE</code>, índices estratégicos), la estructuración por paquetes modular y la gestión de esquemas mediante scripts SQL versionados.</li>
-    <li><strong>2. Haz:</strong> redacta el script <code>schema.sql</code> completo con restricciones de clave foránea e índices, diseña el script de semillas iniciales <code>data.sql</code> con datos realistas para pruebas y estructura los paquetes del proyecto Spring Boot.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas el script SQL en una base de datos PostgreSQL limpia, comprobando que las tablas se crean sin colisiones, que las restricciones de unicidad e integridad funcionan y que los datos iniciales cargan de forma instantánea.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué en entornos de producción está terminantemente prohibido utilizar <code>spring.jpa.hibernate.ddl-auto=update</code> o <code>create-drop</code>?</li>
-    <li>¿Por qué nunca se debe utilizar el tipo de datos <code>DOUBLE</code> o <code>FLOAT</code> para almacenar cantidades monetarias o presupuestos en una base de datos?</li>
-    <li>¿Qué ventaja ofrece estructurar los paquetes Java por componente de negocio (*Package by Feature*) frente a hacerlo por capa técnica (*Package by Layer*) en un proyecto mediano o grande?</li>
-  </ol>
-</div>
-
-### El peligro del ddl-auto en proyectos reales
+#### El peligro del ddl-auto en proyectos reales
 
 Durante las primeras semanas del curso resultaba cómodo dejar que Hibernate generara y alterara las tablas automáticamente con `ddl-auto=update`.
 
@@ -255,7 +83,7 @@ En un proyecto profesional, delegar el esquema en Hibernate es una **receta para
   <p>El esquema debe definirse mediante scripts SQL explícitos (<code>schema.sql</code> o migraciones con Flyway/Liquibase). Hibernate debe configurarse en modo <code>ddl-auto=validate</code> para comprobar que las entidades coinciden con el esquema sin modificarlo nunca automáticamente.</p>
 </div>
 
-### Tipos de datos óptimos en PostgreSQL
+#### Tipos de datos óptimos en PostgreSQL
 
 | Concepto de negocio | Tipo SQL recomendado | Tipo Java equivalente | Justificación técnica |
 | :--- | :--- | :--- | :--- |
@@ -266,9 +94,109 @@ En un proyecto profesional, delegar el esquema en Hibernate es una **receta para
 | **Marcas temporales** | `TIMESTAMP WITH TIME ZONE` | `Instant` o `OffsetDateTime` | Almacena el instante universal en UTC evitando ambigüedades por cambios de horario de verano/invierno. |
 | **Estados / Enums** | `VARCHAR(30)` | `Enum` de Java | Más flexible y legible en consultas SQL manuales que los ordinales numéricos (`0, 1, 2`). |
 
-### Paso a paso guiado · Script de base de datos profesional y estructura modular
+### Se trabaja
 
-<p class="stage">Paso 1 · El script de esquema schema.sql</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Auditad alcance, actores y criterios de aceptación sobre el proyecto existente y definid la ampliación pendiente.
+
+Actualizad modelo de datos y contrato sin descartar el código ya comprobado.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Especificación y modelado</p>
+
+#### Paso 2 · Dejar de teclear: La disciplina de la especificación
+
+Continúas el producto que llevas construyendo durante el curso. Los pasos de esta unidad te ayudan a especificar y completar su ampliación final; las decisiones de dominio y el código que las implementa siguen siendo tuyos.
+
+El error más común del programador inexperto es abrir el IDE, crear entidades JPA a toda velocidad y empezar a programar endpoints basándose en suposiciones apresuradas.
+* A los tres días descubre que un proyecto no podía tener más de un responsable activo.
+* Descubre que una tarea cerrada no debía poder recibir adjuntos.
+* Descubre que los importes monetarios debían registrarse con impuestos desglosados y no como un simple número flotante.
+
+Modificar el modelo de datos con la aplicación a medio construir cuesta diez veces más tiempo que resolver esas ambigüedades sobre el papel.
+
+<div class="rule">
+  <p class="rule-label">La ley del modelado previo</p>
+  <p><strong>El código no toma decisiones de negocio: las ejecuta.</strong></p>
+  <p>Toda duda o ambigüedad que no resuelvas durante la fase de especificación se convertirá en un bug en producción o en una refactorización dolorosa en la base de datos.</p>
+</div>
+
+#### Paso 3 · Del enunciado al modelo conceptual
+
+Diferenciamos dos tipos de objetos en nuestro modelo:
+* **Entidades (con identidad propia en el tiempo):** `Proyecto`, `Tarea`, `Usuario`, `Incidencia`, `Adjunto`. Si dos proyectos tienen el mismo nombre pero diferente ID, son proyectos distintos.
+* **Objetos de Valor (inmutables, definidos por sus atributos):** `Dinero` (importe + divisa), `Coordenadas` (latitud + longitud), `PeriodoFechas` (fechaInicio + fechaFin). Si dos objetos `Coordenadas` tienen la misma latitud y longitud, son idénticos.
+
+Una entidad crítica nunca debería cambiar de estado mediante simples setters arbitrarios. Debe seguir un ciclo de vida estrictamente regulado:
+
+```text
+[BORRADOR] ──(Aprobar presupuesto)──> [PLANIFICADO] ──(Asignar equipo)──> [EN_CURSO]
+                                                                              │
+               [CANCELADO] <──────(Cancelar con motivo justificado)────────────┤
+                                                                              │
+               [FINALIZADO] <─────(Verificar que no hay tareas pendientes)────┘
+```
+
+| Caso de Uso | Método HTTP | Ruta propuesta | Actor autorizado | Códigos HTTP previstos |
+| :--- | :--- | :--- | :--- | :--- |
+| **Registrar proyecto** | `POST` | `/api/v1/proyectos` | `JEFE_PROYECTO`, `ADMIN` | `201`, `400`, `401`, `403`, `409` |
+| **Aprobar presupuesto** | `PATCH` | `/api/v1/proyectos/{id}/presupuesto` | `ADMIN` | `200`, `400`, `404`, `409` |
+| **Cerrar proyecto** | `POST` | `/api/v1/proyectos/{id}/cerrar` | `JEFE_PROYECTO` | `200`, `409`, `404` |
+| **Adjuntar informe** | `POST` | `/api/v1/tareas/{id}/adjuntos` | `OPERARIO`, `JEFE_PROYECTO` | `201`, `400`, `413`, `404` |
+
+#### Paso 4 · Prueba de estrés del modelo conceptual
+
+Somete tu modelo a tres preguntas trampa para verificar su solidez:
+
+1. **Caso límite 1 (Concurrencia):** Dos jefes de proyecto intentan cerrar el mismo proyecto exactamente en el mismo segundo. ¿Cómo previene tu modelo que se ejecute la notificación de cierre dos veces? *(Requiere control de concurrencia optimista con `@Version` o bloqueos pesimistas).*
+2. **Caso límite 2 (Integridad de datos):** Un usuario borra un proyecto que tiene 50 tareas y 10 incidencias históricas. ¿Se borran en cascada perdiendo la auditoría o se aplica un borrado lógico (*Soft Delete*)?
+3. **Caso límite 3 (Degradación):** El servicio externo de firma digital o meteorología no responde durante el alta. ¿Se bloquea el caso de uso o se guarda en estado pendiente de sincronización?
+
+#### Paso 5 · Los tres vicios de una especificación mal escrita
+
+Antes de redactar la tuya, aprende a reconocer lo que la invalida. Los tres aparecen siempre y los tres se arreglan con la misma medicina: **un número**.
+
+<dl class="worked">
+  <dt>1 · El requisito que no se puede comprobar</dt>
+  <dd><em>«El sistema debe ser rápido.»</em> ¿Cuánto es rápido? Nadie puede decir si eso se ha cumplido, así que no es un requisito: es un deseo. La versión utilizable es <em>«el listado de proyectos responde en menos de 300 ms con 500 proyectos en la base de datos»</em>. Ahora se puede medir, y por tanto se puede aprobar o suspender.</dd>
+  <dt>2 · El requisito que esconde una decisión</dt>
+  <dd><em>«Un proyecto no puede cerrarse si tiene tareas pendientes.»</em> Parece cerrado y no lo está: ¿qué es «pendiente»? ¿Cuenta una tarea bloqueada? ¿Y una cancelada? Enumera los estados concretos, o descubrirás la ambigüedad el día de la demostración.</dd>
+  <dt>3 · El requisito que solo describe el camino feliz</dt>
+  <dd><em>«El usuario adjunta una fotografía a la incidencia.»</em> ¿Y si pesa 40 MB? ¿Y si es un <code>.exe</code>? ¿Y si el disco está lleno? Cada caso de uso necesita, como mínimo, un escenario de rechazo con su código HTTP. Si tu especificación solo tiene escenarios que terminan bien, no has especificado: has ilustrado.</dd>
+</dl>
+
+#### Paso 6 · Redactar la especificación formal del proyecto
+
+Elabora el documento de especificación formal de tu proyecto backend:
+
+1. Define los 4 actores y la matriz de control de acceso basada en roles (RBAC), con el mismo formato de la sesión 35: una fila por endpoint y método, una columna por rol y el código HTTP esperado en cada casilla. Esta tabla es el contrato de seguridad y va a ser lo que se pruebe en la sesión 51.
+2. Detalla al menos **6 casos de uso** con sus escenarios *Given-When-Then*. Cada uno necesita un escenario feliz **y al menos dos de rechazo**, con su código de estado.
+3. Enumera **5 reglas de negocio invariantes** que tu código garantizará siempre. Una invariante es una afirmación que nunca puede ser falsa: «la suma de costes de las tareas no supera el presupuesto del proyecto» lo es; «el usuario debería revisar el presupuesto» no lo es.
+4. Para cada invariante, escribe **dónde va a vivir**: ¿una restricción `CHECK` en PostgreSQL, una validación en el DTO, una comprobación en el servicio? Esta columna es la que convierte la especificación en un plan de trabajo, y es la que dicta el modelo de la sesión 47.
+5. **Pasa la prueba de la ambigüedad:** dale la especificación a otro equipo y pídeles que anoten cada punto donde tengan que suponer algo. Cada suposición es un hueco. Los que no cierres ahora se convertirán en una discusión en la semana 26, cuando ya no haya tiempo.
+6. Marca lo que **no** vas a hacer. Una especificación sin alcance excluido es una especificación que crecerá hasta que se acabe el plazo. «No habrá recuperación de contraseña por correo» es una decisión legítima y defendible, siempre que esté escrita.
+
+<dl class="worked">
+  <dt>Cómo saber que lo has terminado</dt>
+  <dd>Cada requisito se puede comprobar con una petición HTTP y un resultado esperado; cada caso de uso tiene escenarios de rechazo además del feliz; cada invariante tiene asignado el sitio donde se hará cumplir; otro equipo ha leído el documento y su lista de suposiciones está vacía o resuelta; y hay un apartado que dice qué queda fuera.</dd>
+</dl>
+
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita la memoria formal de análisis y especificación del proyecto, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>especificacion-proyecto.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
+
+<p class="stage">Arquitectura y modelo de datos</p>
+
+#### Paso 7 · Script de base de datos profesional y estructura modular
 
 Creamos el archivo `src/main/resources/schema.sql` con definición formal de tablas, claves e índices:
 
@@ -307,7 +235,7 @@ CREATE TABLE proyectos (
     fecha_inicio DATE NOT NULL,
     fecha_fin_estimada DATE NOT NULL,
     fecha_creacion TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_proyectos_responsable FOREIGN KEY (responsable_id) 
+    CONSTRAINT fk_proyectos_responsable FOREIGN KEY (responsable_id)
         REFERENCES usuarios (id) ON DELETE RESTRICT,
     CONSTRAINT chk_fechas_proyecto CHECK (fecha_fin_estimada >= fecha_inicio)
 );
@@ -321,9 +249,9 @@ CREATE TABLE tareas (
     coste_estimado NUMERIC(10, 2) NOT NULL DEFAULT 0.00 CHECK (coste_estimado >= 0),
     proyecto_id BIGINT NOT NULL,
     asignado_a BIGINT,
-    CONSTRAINT fk_tareas_proyecto FOREIGN KEY (proyecto_id) 
+    CONSTRAINT fk_tareas_proyecto FOREIGN KEY (proyecto_id)
         REFERENCES proyectos (id) ON DELETE CASCADE,
-    CONSTRAINT fk_tareas_asignado FOREIGN KEY (asignado_a) 
+    CONSTRAINT fk_tareas_asignado FOREIGN KEY (asignado_a)
         REFERENCES usuarios (id) ON DELETE SET NULL
 );
 
@@ -333,8 +261,6 @@ CREATE INDEX idx_proyectos_estado ON proyectos (estado);
 CREATE INDEX idx_tareas_proyecto ON tareas (proyecto_id);
 CREATE INDEX idx_tareas_estado ON tareas (estado);
 ```
-
-<p class="stage">Paso 2 · El script de semillas data.sql</p>
 
 Creamos `src/main/resources/data.sql` con datos realistas para verificar inmediatamente el sistema:
 
@@ -355,8 +281,6 @@ INSERT INTO tareas (titulo, prioridad, estado, coste_estimado, proyecto_id, asig
 ('Cimentación de inversores solares', 'ALTA', 'FINALIZADA', 25000.00, 1, 3);
 ```
 
-<p class="stage">Paso 3 · Configuración de application.properties para validación estricta</p>
-
 ```properties
 # Conexión a PostgreSQL
 spring.datasource.url=jdbc:postgresql://localhost:5432/gestion_proyectos
@@ -374,7 +298,7 @@ spring.jpa.show-sql=false
 spring.jpa.properties.hibernate.format_sql=true
 ```
 
-### La comprobación · Validación de esquema y restricciones en PostgreSQL
+#### Paso 8 · Validación de esquema y restricciones en PostgreSQL
 
 1. **Ejecuta la inicialización de la base de datos:**
    Arranca el backend o ejecuta el script en tu cliente PostgreSQL preferido (DBeaver, psql).
@@ -390,7 +314,7 @@ spring.jpa.properties.hibernate.format_sql=true
 3. **Comprueba el modo `ddl-auto=validate`:**
    Si la aplicación arranca sin lanzar `SchemaManagementException`, significa que las clases `@Entity` de Java coinciden al 100 % con el esquema SQL real.
 
-### Ahora tú · Estructurar la arquitectura modular de paquetes
+#### Paso 9 · Estructurar la arquitectura modular de paquetes
 
 Organiza los paquetes de tu código fuente bajo la estrategia de **componentes de negocio** (*Package by Feature*):
 ```text
@@ -420,7 +344,38 @@ Además de mover paquetes, completa estas cuatro decisiones de modelo y anota la
 3. **Qué se borra en cascada y qué no.** Borrar un proyecto, ¿borra sus tareas? ¿Y sus incidencias con adjuntos en disco? Decídelo explícitamente: por omisión, PostgreSQL rechazará el borrado y te encontrarás un `500` que en realidad era una regla de negocio sin declarar.
 4. **Qué índices necesitas.** Todo campo por el que filtres o busques (el `codigo` del proyecto, la clave ajena de tarea a proyecto, el `username`) merece un índice. Sin ellos, la paginación de la UD7 hace un recorrido completo de la tabla en cada página.
 
-### Reto · Versionado formal con Flyway
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **especificad la ampliación del producto existente**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Formalización de contratos con OpenAPI antes de codificar (API-First)
+
+En la metodología **API-First**, antes de escribir una clase en Java, se redacta el archivo de especificación OpenAPI en formato YAML (`openapi.yaml`):
+1. Diseña el contrato del endpoint `POST /api/v1/proyectos` en YAML detallando el esquema del JSON de entrada, los campos obligatorios y los ejemplos de respuestas de error RFC 7807.
+2. Utiliza el editor Swagger Editor o la extensión OpenAPI de tu IDE para validar sintácticamente el contrato.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Lista de actores, casos de uso básicos y diagrama de entidades inicial.</span></div>
+  <div><strong>Si lo tienes</strong><span>Reglas invariantes formalizadas, máquinas de estado finitas y escenarios Gherkin.</span></div>
+  <div><strong>Reto</strong><span>Enfoque API-First con contrato OpenAPI 3 preliminar redactado antes de programar.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque «ModificarProyecto» es un saco genérico que suele saltarse validaciones específicas; nombres como «AprobarPresupuesto» o «ReasignarResponsable» encapsulan reglas precisas de transición.</p>
+  <p>2 · Las entidades se distinguen por un identificador único que perdura en el tiempo aunque cambien sus datos; los objetos de valor carecen de identidad propia y se definen exclusivamente por sus atributos inmutables.</p>
+  <p>3 · Dado (Given: contexto o estado inicial), Cuando (When: acción o evento disparador) y Entonces (Then: resultado o consecuencias esperadas).</p>
+  <p>4 · Evita transiciones ilegales o incoherentes en la base de datos (por ejemplo, que un proyecto cancelado pase directamente a finalizado sin pasar por revisión previa).</p>
+</details>
+
+##### Reto · Versionado formal con Flyway
 
 En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **Flyway**:
 1. Añade la dependencia `org.flywaydb:flyway-core` y `flyway-database-postgresql`.
@@ -435,27 +390,6 @@ En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **F
   <div><strong>Reto</strong><span>Migraciones incrementales versionadas gestionadas automáticamente con Flyway.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 71</p>
-  <ul class="checklist">
-    <li>Se erradica la dependencia de Hibernate para alterar el esquema en entornos reales.</li>
-    <li>Los importes monetarios están blindados con tipos decimales exactos (<code>NUMERIC</code> / <code>BigDecimal</code>).</li>
-    <li>Las restricciones de integridad referencial (<code>ON DELETE RESTRICT</code>) impiden borrados accidentales.</li>
-    <li>Se crean índices específicos sobre claves foráneas y campos frecuentes de filtrado.</li>
-    <li>La arquitectura de paquetes por componente favorece la mantenibilidad y el trabajo en equipo.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué el modo <code>spring.jpa.hibernate.ddl-auto=validate</code> es el más seguro para producción?</li>
-    <li>¿Por qué debe evitarse <code>ON DELETE CASCADE</code> en entidades que contienen información contable o de auditoría?</li>
-    <li>¿Qué beneficio aporta crear un índice sobre la columna de una clave foránea en una tabla hija?</li>
-    <li>¿Por qué se utiliza el tipo <code>TIMESTAMP WITH TIME ZONE</code> en lugar de una simple fecha sin zona horaria?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque verifica que el modelo de clases Java coincide exactamente con las tablas existentes en la base de datos sin ejecutar ninguna instrucción DDL que pueda alterar o borrar datos.</p>
@@ -464,27 +398,43 @@ En lugar de recargar `schema.sql` en cada arranque, investiga la herramienta **F
   <p>4 · Porque almacena el instante temporal exacto normalizado en UTC, permitiendo que clientes ubicados en distintos husos horarios interpreten la fecha y hora sin discrepancias.</p>
 </details>
 
-## Sesión 72 · Inicio de implementación
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la estrategia de entrega por <strong>Corte Vertical (Vertical Slice)</strong> frente al antipatrón de capas horizontales, la construcción del esqueleto ejecutable (<em>Walking Skeleton</em>) y la verificación temprana con tests de integración MockMvc.</li>
-    <li><strong>2. Haz:</strong> implementa el primer corte vertical completo para el alta de proyectos: desde el DTO de entrada con validaciones Jakarta, pasando por el servicio con reglas de negocio y el repositorio JPA, hasta la respuesta HTTP <code>201 Created</code> con cabecera <code>Location</code>.</li>
-    <li><strong>3. Comprueba:</strong> lanzas la batería de pruebas de integración con MockMvc y ejecutas la colección de Bruno verificando que la petición devuelve el código y la cabecera correcta, confirmando la fila persistida en PostgreSQL en menos de 50 ms.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué riesgo asume un equipo que pasa dos semanas programando todas las entidades JPA y repositorios antes de crear su primer controlador REST?</li>
-    <li>¿Qué es un <em>Walking Skeleton</em> en el desarrollo de software ágil?</li>
-    <li>¿Por qué la respuesta a una petición <code>POST</code> exitosa de creación de recurso debe incluir la cabecera HTTP <code>Location</code>?</li>
-  </ol>
-</div>
+Cada requisito pendiente se vincula a una operación del producto y una comprobación.
 
-### El antipatrón de las capas horizontales
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 47 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-47.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-47.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 48 · Implementar la ampliación por capas
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Una ampliación atraviesa DTO, servicios, persistencia y pruebas. Planificar una primera operación completa permite validar pronto el diseño.
+
+#### El antipatrón de las capas horizontales
 
 Un error clásico al iniciar un proyecto es trabajar por estratos horizontales:
 * Semana 1: Creamos todas las entidades JPA de todas las tablas.
@@ -494,7 +444,7 @@ Un error clásico al iniciar un proyecto es trabajar por estratos horizontales:
 
 Si en la cuarta semana descubres que la forma en que diseñaste las relaciones en JPA dificulta las consultas que necesita el cliente web, **tienes que reescribir las tres semanas anteriores**.
 
-### La estrategia del Corte Vertical (Vertical Slice)
+#### La estrategia del Corte Vertical (Vertical Slice)
 
 La ingeniería moderna construye el software por **cortes verticales**:
 
@@ -513,9 +463,33 @@ En lugar de construir el 100 % de las entidades sin probarlas, **construyes un �
 * Si completas el alta de proyectos en 3 horas, tienes una aplicación que compila, arranca, persiste datos en PostgreSQL, pasa sus tests y devuelve respuestas HTTP estándar.
 * Tienes una base sólida y probada sobre la que construir los siguientes casos de uso con total confianza.
 
-### Paso a paso guiado · El primer corte vertical: Alta de Proyectos
+#### Ampliar mediante una operación completa
 
-<p class="stage">Paso 1 · El DTO de entrada con validación estricta</p>
+Un corte vertical añade una operación que puede ejecutarse de extremo a extremo: entrada HTTP, validación, regla de negocio, persistencia y respuesta. Permite descubrir pronto un desajuste entre DTO y servicio o una restricción de la base de datos. Escribir primero todas las entidades nuevas y dejar las pruebas HTTP para el final retrasa ese descubrimiento.
+
+El punto de partida es el producto del trimestre, no un esqueleto vacío. Se elige una ampliación pendiente, se identifica qué clases existentes deben cambiar y se conserva el contrato de las operaciones que ya funcionan. Si una regla cambia, se actualiza expresamente su criterio de aceptación y su prueba.
+
+La operación termina cuando hay una petición válida comprobada, un rechazo relevante y una prueba que reproduce el resultado. Solo entonces se replica el patrón en la siguiente ampliación. El ejemplo de alta que aparece en la práctica sirve para seguir todas las piezas; en vuestro proyecto aplicadlo al caso de uso pendiente, sin volver a implementar un alta que ya esté terminada.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Implementad un recorrido vertical de la ampliación siguiendo la arquitectura y el modelo acordados.
+
+Ejecutad los tests y el contrato anterior para detectar regresiones al integrar el cambio.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Inicio de implementación</p>
+
+#### Paso 2 · El primer corte vertical: Alta de Proyectos
 
 ```java
 package com.ejemplo.gestor.proyecto.dto;
@@ -555,8 +529,6 @@ public record CrearProyectoRequest(
     LocalDate fechaFinEstimada
 ) {}
 ```
-
-<p class="stage">Paso 2 · La entidad JPA y el Repositorio</p>
 
 ```java
 package com.ejemplo.gestor.proyecto.model;
@@ -655,8 +627,6 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
 }
 ```
 
-<p class="stage">Paso 3 · La capa de Servicio con lógica de negocio</p>
-
 ```java
 package com.ejemplo.gestor.proyecto.service;
 
@@ -727,8 +697,6 @@ public class ProyectoService {
 }
 ```
 
-<p class="stage">Paso 4 · El Controlador REST con cabecera Location</p>
-
 ```java
 package com.ejemplo.gestor.proyecto.controller;
 
@@ -774,7 +742,7 @@ public class ProyectoController {
 }
 ```
 
-### La comprobación · Prueba de Integración con MockMvc
+#### Paso 3 · Prueba de Integración con MockMvc
 
 Verificamos el corte vertical con una prueba que recorre todas las capas sin levantar el navegador:
 
@@ -830,7 +798,7 @@ class ProyectoCorteVerticalIntegrationTest {
 }
 ```
 
-### Ahora tú · Implementar el segundo corte: Consulta de Proyecto por ID
+#### Paso 4 · Implementar el segundo corte: Consulta de Proyecto por ID
 
 Construye el corte vertical simétrico de lectura:
 1. Implementa `GET /api/v1/proyectos/{id}`.
@@ -838,7 +806,18 @@ Construye el corte vertical simétrico de lectura:
 3. Si no existe, lanza una excepción de recurso no encontrado capturada por el `GlobalExceptionHandler` devolviendo `404 Not Found` en formato Problem Details RFC 7807.
 4. Añade el test correspondiente en MockMvc verificando tanto el caso de éxito (`200`) como el de recurso inexistente (`404`).
 
-### Reto · Generación automática y atómica del código de proyecto
+#### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **implementad la primera operación de la ampliación**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Generación automática y atómica del código de proyecto
 
 En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), automatiza su generación en el servicio:
 1. Diseña un método en el repositorio que obtenga el número secuencial más alto del año en curso.
@@ -851,27 +830,6 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
   <div><strong>Reto</strong><span>Generación secuencial atómica del código de proyecto tolerante a concurrencia.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 72</p>
-  <ul class="checklist">
-    <li>Se adopta la metodología de desarrollo por cortes verticales frente al diseño por capas aisladas.</li>
-    <li>El Walking Skeleton de la aplicación está vivo, persistiendo datos reales en PostgreSQL.</li>
-    <li>La petición <code>POST</code> emite correctamente el código <code>201 Created</code> y la cabecera <code>Location</code>.</li>
-    <li>Las reglas de negocio de fechas y códigos duplicados están protegidas en la capa de servicio.</li>
-    <li>Un test de integración automatizado con MockMvc valida todo el circuito de extremo a extremo.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué el enfoque de corte vertical reduce el riesgo técnico al inicio de un proyecto?</li>
-    <li>¿Qué información debe contener la cabecera HTTP <code>Location</code> en una respuesta <code>201 Created</code>?</li>
-    <li>¿Por qué la validación de que la fecha de fin sea posterior a la de inicio se implementa en el servicio y no solo con anotaciones estándar de campo en el DTO?</li>
-    <li>¿Qué papel cumple la anotación <code>@WithMockUser</code> en los tests de integración con MockMvc?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque valida inmediatamente la integración de todas las piezas (red, serialización, seguridad, lógica de negocio y base de datos) desde el primer día, detectando problemas arquitectónicos antes de que se extiendan a otras entidades.</p>
@@ -880,30 +838,45 @@ En lugar de que el usuario introduzca el código manualmente (`PRJ-2026-001`), a
   <p>4 · Inyecta un usuario simulado en el SecurityContext de Spring Security durante la ejecución del test, permitiendo verificar endpoints protegidos sin necesidad de generar un token JWT real.</p>
 </details>
 
+### Cierre
 
-## Semana 25 · Desarrollo e integración
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-## Sesión 73 · Desarrollo I: núcleo funcional
+Una operación nueva funciona completa y las operaciones existentes siguen verificadas.
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> a priorizar los casos de uso por valor de negocio frente a dispersar el esfuerzo, el modelado de relaciones entre agregados (<code>Proyecto</code> ↔ <code>Tarea</code>), la protección de reglas de integridad presupuestaria mediante transacciones ACID y la paginación eficiente de resultados con <code>Pageable</code>.</li>
-    <li><strong>2. Haz:</strong> implementa los casos de uso de alta de tareas vinculadas con cálculo de techo presupuestario, cambio de estado regulado por máquina de estados y cierre atómico de proyectos condicionado a la resolución de tareas.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas pruebas en Bruno intentando sobrepasar el presupuesto del proyecto o cerrar un proyecto con tareas pendientes, verificando que el backend responde con los códigos semánticos <code>400 Bad Request</code> y <code>409 Conflict</code> protegiendo la base de datos de inconsistencias.</li>
-  </ol>
-</div>
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué intentar programar todas las entidades secundarias a la vez suele dejar el backend con muchos endpoints a medias y ninguno completamente probado?</li>
-    <li>¿Qué ocurriría si dos usuarios crean tareas simultáneas en el mismo proyecto y la comprobación del presupuesto disponible no se ejecuta dentro de una transacción con aislamiento adecuado?</li>
-    <li>¿Por qué los endpoints que devuelven colecciones de datos siempre deben implementar paginación mediante <code>Pageable</code> en lugar de devolver listas completas con <code>findAll()</code>?</li>
-  </ol>
-</div>
 
-### La trampa de la dispersión frente al núcleo funcional
+#### Entrega de la sesión 48 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-48.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-48.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Semana 25 · Completar núcleo, seguridad e integración
+
+## Sesión 49 · Completar núcleo, seguridad e integración
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+El núcleo funcional queda completo cuando las reglas, los permisos y las dependencias externas funcionan juntos.
+
+#### La trampa de la dispersión frente al núcleo funcional
 
 Cuando un desarrollador afronta un proyecto grande, la tentación habitual es crear quince entidades y diez controladores a la vez: la entidad de etiquetas, la de comentarios, la de historial, la de categorías...
 * Al final de la jornada tiene miles de líneas de código escritas, pero **ningún caso de uso funciona de verdad**.
@@ -919,7 +892,7 @@ El desarrollo profesional se rige por la **priorización por valor**:
   <p>Construye y prueba a fondo las reglas más críticas del dominio (presupuestos, transiciones de estado e integridad referencial) antes de dedicar tiempo a comentarios, avatares o filtros decorativos.</p>
 </div>
 
-### Reglas de negocio e integridad entre Agregados
+#### Reglas de negocio e integridad entre Agregados
 
 En nuestro dominio empresarial, un `Proyecto` actúa como **raíz de agregado (*Aggregate Root*)** sobre sus `Tareas`:
 
@@ -934,9 +907,41 @@ En nuestro dominio empresarial, un `Proyecto` actúa como **raíz de agregado (*
   </ol>
 </figure>
 
-### Paso a paso guiado · Implementación del núcleo transaccional
+#### Más allá de los roles: Autorización basada en la propiedad del dato
 
-<p class="stage">Paso 1 · El repositorio con consultas agregadas de coste</p>
+Comprobar roles (`ADMINISTRADOR`, `JEFE_PROYECTO`, `DESARROLLADOR`) es solo la primera línea de defensa.
+* Si el usuario Elena es `JEFE_PROYECTO` y el usuario Marcos también es `JEFE_PROYECTO`, **Elena no debe poder modificar el presupuesto ni reasignar tareas del proyecto que gestiona Marcos**.
+* Esto se conoce como **Control de Acceso Basado en Atributos (ABAC) o Seguridad a Nivel de Dominio**.
+
+<figure class="diagram">
+  <figcaption>Las dos capas de autorización en Spring Security</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Petición HTTP con Bearer JWT</li>
+    <li>2. Capa 1: ¿Tiene el Rol adecuado? (RBAC: hasRole)</li>
+    <li>3. Capa 2: ¿Es el Propietario del Recurso? (ABAC: esResponsable)</li>
+    <li>4. Ejecución del método de negocio</li>
+  </ol>
+</figure>
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Terminad los casos de uso pendientes y aplicad la matriz de autorización a cada nuevo endpoint.
+
+Probad éxitos, conflictos y fallos de la integración sobre datos reproducibles.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Desarrollo I: núcleo funcional</p>
+
+#### Paso 2 · Implementación del núcleo transaccional
 
 Necesitamos saber de forma instantánea cuánto presupuesto se ha consumido sin traernos todas las tareas a memoria:
 
@@ -966,8 +971,6 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     long countByProyectoIdAndEstadoNot(Long proyectoId, EstadoTarea estado);
 }
 ```
-
-<p class="stage">Paso 2 · Lógica de negocio en TareaService</p>
 
 ```java
 package com.ejemplo.gestor.tarea.service;
@@ -1029,8 +1032,6 @@ public class TareaService {
 }
 ```
 
-<p class="stage">Paso 3 · Caso de uso: Cierre atómico del Proyecto</p>
-
 ```java
     @Transactional
     public void cerrarProyecto(Long proyectoId) {
@@ -1052,8 +1053,6 @@ public class TareaService {
         proyectoRepository.save(proyecto);
     }
 ```
-
-<p class="stage">Paso 4 · Controlador REST de Tareas con Paginación</p>
 
 ```java
 package com.ejemplo.gestor.tarea.controller;
@@ -1101,7 +1100,7 @@ public class TareaController {
 }
 ```
 
-### La comprobación · Batería de pruebas en Bruno
+#### Paso 3 · Batería de pruebas en Bruno
 
 1. **Creación dentro de presupuesto:**
    * Lanza `POST /api/v1/proyectos/1/tareas` con coste de `5000.00 €`.
@@ -1115,7 +1114,7 @@ public class TareaController {
    * Lanza `POST /api/v1/proyectos/1/cerrar`.
    * **Resultado:** Código **`409 Conflict`** indicando que existen tareas pendientes. El estado del proyecto permanece inalterado en `EN_CURSO`.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1125,7 +1124,7 @@ public class TareaController {
 | El `409` sale como `500` | Falta el `@ExceptionHandler` de tu excepción de negocio | Tu `@RestControllerAdvice` de la UD3 debe conocer la excepción nueva |
 | `LazyInitializationException` al construir la respuesta | Estás leyendo una relación fuera de la transacción | Mapea a DTO **dentro** del servicio, no en el controlador |
 
-### Ahora tú · Máquina de estados para Tareas
+#### Paso 5 · Máquina de estados para Tareas
 
 Implementa el endpoint de transición de estados de tarea:
 1. Diseña `PATCH /api/v1/tareas/{id}/estado`.
@@ -1138,90 +1137,11 @@ Implementa el endpoint de transición de estados de tarea:
 5. **Modélalo dentro del enum**, no en el servicio. Un método `puedeTransitarA(EstadoTarea destino)` en el propio `EstadoTarea` mantiene la regla junto al dato al que pertenece, y hace imposible olvidarla en un segundo sitio.
 6. Prueba las cuatro transiciones legales y **al menos tres ilegales**. Comprueba que las ilegales devuelven `409` con un `detail` que dice qué transición se intentó y cuáles eran posibles: un `409` sin explicación obliga al cliente a adivinar.
 7. Comprueba el caso que casi nadie prueba: transitar a **el mismo estado** en el que ya está. Decide si es un `409`, un `204` inocuo o una operación idempotente que responde `200`. Cualquiera se defiende; no haberlo pensado, no.
-8. Escribe el test de la regla antes de darla por terminada. Es una de las que la sesión 76 clasificará como riesgo crítico, porque afecta a la integridad de los datos.
+8. Escribe el test de la regla antes de darla por terminada. Es una de las que la sesión 51 clasificará como riesgo crítico, porque afecta a la integridad de los datos.
 
-### Reto · Control de concurrencia pesimista en presupuestos
+<p class="stage">Desarrollo II: seguridad e integración</p>
 
-Si dos usuarios añaden tareas simultáneamente al mismo proyecto en milisegundos idénticos, ambos podrían leer el mismo coste actual acumulado antes de que el otro guarde su fila (*Race Condition*), superando el presupuesto total.
-
-Investiga cómo resolver esta condición de carrera:
-1. Utiliza `@Lock(LockModeType.PESSIMISTIC_WRITE)` en la consulta de búsqueda de `Proyecto` para bloquear la fila en PostgreSQL durante la transacción.
-2. Comprueba mediante un test concurrente multihilo que las dos creaciones se serializan y la segunda es rechazada correctamente por falta de saldo.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Relación Proyecto-Tarea operativa con consultas paginadas y respuesta 201.</span></div>
-  <div><strong>Si lo tienes</strong><span>Cálculo atómico de techo presupuestario y rechazo 409 al cerrar con tareas pendientes.</span></div>
-  <div><strong>Reto</strong><span>Bloqueo pesimista (<code>PESSIMISTIC_WRITE</code>) para blindar el presupuesto ante concurrencia extrema.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 73</p>
-  <ul class="checklist">
-    <li>Se prioriza el desarrollo del núcleo de negocio antes de incorporar entidades accesorias.</li>
-    <li>Las operaciones de cálculo se delegan eficientemente en la base de datos SQL (<code>SUM</code>, <code>COUNT</code>).</li>
-    <li>La regla de techo presupuestario está garantizada en la capa de servicios mediante transacciones.</li>
-    <li>Las listas de datos utilizan paginación estándar (<code>Pageable</code>) para proteger la memoria RAM.</li>
-    <li>El cierre de proyectos respeta la integridad de sus tareas emitiendo código <code>409 Conflict</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué es más eficiente calcular el sumatorio de costes con <code>SUM</code> en SQL que iterar una lista Java en memoria?</li>
-    <li>¿Qué código de estado HTTP estándar de la RFC 9110 debe devolverse cuando una acción choca con el estado actual del negocio?</li>
-    <li>¿Por qué el método de servicio que verifica y descuenta el presupuesto debe estar anotado con <code>@Transactional</code>?</li>
-    <li>¿Qué ventajas aporta la anotación <code>@PageableDefault</code> en los métodos de un controlador REST?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque la base de datos procesa millones de filas de forma indexada en milisegundos y devuelve solo un número decimal por la red, mientras que iterar en Java exige transferir miles de entidades y saturar la memoria RAM.</p>
-  <p>2 · El código 409 Conflict (indica que la petición no puede procesarse debido a un conflicto con el estado actual del recurso).</p>
-  <p>3 · Para garantizar la atomicidad y el aislamiento ACID: si la comprobación pasa y la tarea se guarda, la operación se confirma; si algo falla, no se modifica la base de datos.</p>
-  <p>4 · Permite definir valores por defecto sensatos (tamaño de página, campo de ordenación y dirección ascendente/descendente) si el cliente no envía los parámetros en la URL.</p>
-</details>
-
-## Sesión 74 · Desarrollo II: seguridad e integración
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el cierre del perímetro de seguridad, la autorización granular por propiedad del recurso (<em>Domain-Level Security</em>) evaluando si el usuario es el responsable asignado, y la integración robusta del cliente saliente de meteorología y el servicio de ficheros con degradación elegante.</li>
-    <li><strong>2. Haz:</strong> implementa un evaluador de seguridad personalizado en Spring Security (<code>@seguridadService.esResponsable(...)</code>), conecta el cliente <code>ClimaService</code> con timeouts estrictos y añade el soporte de adjuntos multipart sanitizados con UUID.</li>
-    <li><strong>3. Comprueba:</strong> verificas con tokens JWT de distintos roles que un jefe de proyecto no puede modificar los proyectos de otro, que los operarios solo acceden a sus tareas y que la caída de la API de Open-Meteo no bloquea el alta de incidencias.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué una comprobación simple de roles como <code>@PreAuthorize("hasRole('JEFE_PROYECTO')")</code> no es suficiente para evitar que un usuario modifique datos ajenos?</li>
-    <li>¿Cómo se define una expresión SpEL (Spring Expression Language) para delegar la autorización en un bean de Spring propio?</li>
-    <li>¿Qué ocurre con la experiencia del usuario si el servicio externo de meteorología sufre una caída de red durante el registro de una incidencia en obra?</li>
-  </ol>
-</div>
-
-### Más allá de los roles: Autorización basada en la propiedad del dato
-
-Comprobar roles (`ADMINISTRADOR`, `JEFE_PROYECTO`, `DESARROLLADOR`) es solo la primera línea de defensa.
-* Si el usuario Elena es `JEFE_PROYECTO` y el usuario Marcos también es `JEFE_PROYECTO`, **Elena no debe poder modificar el presupuesto ni reasignar tareas del proyecto que gestiona Marcos**.
-* Esto se conoce como **Control de Acceso Basado en Atributos (ABAC) o Seguridad a Nivel de Dominio**.
-
-<figure class="diagram">
-  <figcaption>Las dos capas de autorización en Spring Security</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>1. Petición HTTP con Bearer JWT</li>
-    <li>2. Capa 1: ¿Tiene el Rol adecuado? (RBAC: hasRole)</li>
-    <li>3. Capa 2: ¿Es el Propietario del Recurso? (ABAC: esResponsable)</li>
-    <li>4. Ejecución del método de negocio</li>
-  </ol>
-</figure>
-
-### Paso a paso guiado · Bean de seguridad y llamadas salientes resilientes
-
-<p class="stage">Paso 1 · El evaluador de propiedad SeguridadService</p>
+#### Paso 6 · Bean de seguridad y llamadas salientes resilientes
 
 Creamos un bean gestionado por Spring que resuelve la propiedad del recurso consultando la base de datos:
 
@@ -1259,8 +1179,6 @@ public class SeguridadService {
 }
 ```
 
-<p class="stage">Paso 2 · Proteger el método en el controlador con SpEL</p>
-
 Vinculamos la comprobación directamente en la anotación `@PreAuthorize`:
 
 ```java
@@ -1273,8 +1191,6 @@ Vinculamos la comprobación directamente en la anotación `@PreAuthorize`:
         return ResponseEntity.ok(proyectoService.actualizarProyecto(id, request));
     }
 ```
-
-<p class="stage">Paso 3 · El servicio de Clima saliente con degradación elegante</p>
 
 Conectamos la integración de la UD10 garantizando que el alta de incidencias nunca colapse ante averías de Open-Meteo:
 
@@ -1328,9 +1244,7 @@ public class ClimaService {
 }
 ```
 
-<p class="stage">Paso 4 · Enganchar los adjuntos al alta de incidencias</p>
-
-Los adjuntos ya los sabes tratar: la sesión 64 dejó el almacenamiento con nombre saneado por UUID y validación de tipo MIME. Aquí solo hay que conectarlo al caso de uso y protegerlo como todo lo demás:
+Los adjuntos ya los sabes tratar: la sesión 43 dejó el almacenamiento con nombre saneado por UUID y validación de tipo MIME. Aquí solo hay que conectarlo al caso de uso y protegerlo como todo lo demás:
 
 1. Recupera de la UD10 tu `AlmacenamientoService` y el endpoint `POST /api/v1/incidencias` de tipo `multipart/form-data`.
 2. Protégelo con la misma regla de propiedad: solo el `DESARROLLADOR` asignado a la tarea, el `JEFE_PROYECTO` responsable o un `ADMINISTRADOR` pueden adjuntar un parte a una incidencia.
@@ -1347,7 +1261,7 @@ Los adjuntos ya los sabes tratar: la sesión 64 dejó el almacenamiento con nomb
   <dd>La comprobación de <code>ROLE_ADMINISTRADOR</code> está antes de tocar el repositorio: un administrador no paga la consulta. Ordenar las condiciones de más barata a más cara es lo que evita que la seguridad se convierta en el cuello de botella.</dd>
 </dl>
 
-### La comprobación · Pruebas de matriz de permisos en Bruno
+#### Paso 7 · Pruebas de matriz de permisos en Bruno
 
 1. **Prueba de usurpación de proyecto (Caso no autorizado):**
    * Autentícate como `jefe2` (Elena).
@@ -1363,7 +1277,7 @@ Los adjuntos ya los sabes tratar: la sesión 64 dejó el almacenamiento con nomb
    * Da de alta una incidencia con fichero adjunto.
    * **Resultado esperado:** Código **`201 Created`**. El informe se guarda con su archivo en disco y el campo clima reporta *"Servicio meteorológico fuera de línea temporalmente"*.
 
-### Ahora tú · Autorización granular en Tareas
+#### Paso 8 · Autorización granular en Tareas
 
 Implementa la regla de propiedad para tareas:
 1. Añade a `SeguridadService` el método `puedeModificarTarea(Long tareaId, Authentication auth)`.
@@ -1372,7 +1286,7 @@ Implementa la regla de propiedad para tareas:
 
 4. **Prueba de la lectura ajena:** comprueba también qué pasa cuando `jefe2` **lee** el proyecto de `jefe1`. Decide si eso debe permitirse o no, anótalo, e impleméntalo. No hay respuesta única —en muchas organizaciones los proyectos son visibles para todos y solo la edición es privada—, pero tiene que ser una decisión tomada y no un descuido.
 
-### Si algo no sale como dice el guion
+#### Paso 9 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1380,10 +1294,43 @@ Implementa la regla de propiedad para tareas:
 | Todos reciben `403`, incluso el responsable | La comparación falla | ¿`getResponsable()` llega `null` por carga perezosa? Compara `username`, no objetos `Usuario` |
 | `LazyInitializationException` dentro de `SeguridadService` | Se accede al responsable fuera de la transacción | Anota el método con `@Transactional(readOnly = true)`, o usa una consulta con `JOIN FETCH` |
 | El administrador recibe `403` | La condición del atajo no encaja | La autoridad guardada es `ROLE_ADMINISTRADOR` con prefijo; compárala tal cual |
-| La regla no se aplica en absoluto | Falta `@EnableMethodSecurity` | Igual que en la sesión 57: sin esa anotación, `@PreAuthorize` es decoración |
+| La regla no se aplica en absoluto | Falta `@EnableMethodSecurity` | Igual que en la sesión 38: sin esa anotación, `@PreAuthorize` es decoración |
 | La incidencia se guarda sin adjunto cuando cae Open-Meteo | Orden de operaciones equivocado | Guarda el fichero y la fila antes de enriquecer con el clima, no al revés |
 
-### Reto · Auditoría de accesos denegados en base de datos
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **completad reglas, permisos e integración**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Control de concurrencia pesimista en presupuestos
+
+Si dos usuarios añaden tareas simultáneamente al mismo proyecto en milisegundos idénticos, ambos podrían leer el mismo coste actual acumulado antes de que el otro guarde su fila (*Race Condition*), superando el presupuesto total.
+
+Investiga cómo resolver esta condición de carrera:
+1. Utiliza `@Lock(LockModeType.PESSIMISTIC_WRITE)` en la consulta de búsqueda de `Proyecto` para bloquear la fila en PostgreSQL durante la transacción.
+2. Comprueba mediante un test concurrente multihilo que las dos creaciones se serializan y la segunda es rechazada correctamente por falta de saldo.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Relación Proyecto-Tarea operativa con consultas paginadas y respuesta 201.</span></div>
+  <div><strong>Si lo tienes</strong><span>Cálculo atómico de techo presupuestario y rechazo 409 al cerrar con tareas pendientes.</span></div>
+  <div><strong>Reto</strong><span>Bloqueo pesimista (<code>PESSIMISTIC_WRITE</code>) para blindar el presupuesto ante concurrencia extrema.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque la base de datos procesa millones de filas de forma indexada en milisegundos y devuelve solo un número decimal por la red, mientras que iterar en Java exige transferir miles de entidades y saturar la memoria RAM.</p>
+  <p>2 · El código 409 Conflict (indica que la petición no puede procesarse debido a un conflicto con el estado actual del recurso).</p>
+  <p>3 · Para garantizar la atomicidad y el aislamiento ACID: si la comprobación pasa y la tarea se guarda, la operación se confirma; si algo falla, no se modifica la base de datos.</p>
+  <p>4 · Permite definir valores por defecto sensatos (tamaño de página, campo de ordenación y dirección ascendente/descendente) si el cliente no envía los parámetros en la URL.</p>
+</details>
+
+##### Reto · Auditoría de accesos denegados en base de datos
 
 Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un error inocente o de un ataque malicioso de fuerza bruta / enumeración de IDs.
 1. Implementa un listener para el evento de Spring Security `AuthorizationFailureEvent`.
@@ -1395,27 +1342,6 @@ Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un e
   <div><strong>Reto</strong><span>Auditoría reactiva de eventos <code>AuthorizationFailureEvent</code> persistida en base de datos.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 74</p>
-  <ul class="checklist">
-    <li>Se superan los roles genéricos implementando seguridad a nivel de dominio y propiedad.</li>
-    <li>El evaluador <code>@seguridadService</code> encapsula las reglas de acceso en expresiones SpEL legibles.</li>
-    <li>El cliente <code>RestClient</code> cuenta con timeouts y contingencia garantizada ante caídas de red.</li>
-    <li>Los ficheros adjuntos se gestionan mediante almacenamiento seguro con UUIDs y tipo MIME validado.</li>
-    <li>El sistema distingue con exactitud entre no autenticado (<code>401</code>) y no autorizado (<code>403</code>).</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué un rol <code>JEFE_PROYECTO</code> no debe tener barra libre para modificar cualquier proyecto del sistema?</li>
-    <li>¿Qué objeto proporciona Spring Security a través del parámetro <code>authentication</code> en las expresiones SpEL?</li>
-    <li>¿Qué ventaja ofrece el patrón de degradación elegante frente a relanzar una excepción cuando una API externa falla?</li>
-    <li>¿Cuál es la diferencia entre el error HTTP 401 y el error HTTP 403?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque violaría el principio de aislamiento y confidencialidad; cada responsable solo debe gestionar los proyectos y presupuestos formalmente asignados a su cargo.</p>
@@ -1424,27 +1350,43 @@ Cada vez que un usuario recibe un código `403 Forbidden` puede tratarse de un e
   <p>4 · 401 Unauthorized significa que el cliente no se ha identificado (falta el token o es inválido); 403 Forbidden significa que el servidor sabe quién es el usuario pero sus permisos son insuficientes para esa acción.</p>
 </details>
 
-## Sesión 75 · Integración con Angular
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> los desafíos de la integración frontend-backend: el protocolo <strong>CORS (Cross-Origin Resource Sharing)</strong> y las peticiones de sondeo previo (<strong>Preflight OPTIONS</strong>), la alineación de contratos de datos TypeScript ↔ Java DTO, y el manejo centralizado de errores RFC 7807 mediante interceptores HTTP.</li>
-    <li><strong>2. Haz:</strong> configura <code>CorsConfigurationSource</code> en Spring Security con orígenes específicos y cabeceras expuestas, conecta los servicios Angular a la API y sincroniza los modelos tipados con el cliente web.</li>
-    <li><strong>3. Comprueba:</strong> abres la aplicación Angular en el navegador, inspeccionas en DevTools la petición previa <code>OPTIONS</code> confirmando el código <code>200 OK</code> y las cabeceras CORS, y verificas el flujo interactivo de creación y visualización de proyectos sin que el backend pierda su independencia.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué una petición que responde perfectamente en Postman o Bruno falla con un error rojo de CORS al ejecutarse desde Angular en el navegador?</li>
-    <li>¿Qué es una petición HTTP de sondeo previo (*Preflight Request*) y qué método HTTP utiliza?</li>
-    <li>¿Por qué la verificación del backend nunca debe depender de que el frontend Angular esté terminado o funcionando?</li>
-  </ol>
-</div>
+El backend satisface los criterios del producto sin depender de que exista ya una pantalla para cada operación.
 
-### El salto de Bruno al Navegador: La barrera de CORS
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 49 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-49.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-49.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 50 · Conectar Angular al backend del proyecto
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Angular consume el contrato que ya está probado. La integración requiere coordinar rutas, credenciales, estados de carga y mensajes de error.
+
+#### El salto de Bruno al Navegador: La barrera de CORS
 
 Durante todo el curso has probado tus endpoints con herramientas de escritorio como Bruno o curl. En ese entorno no existe ninguna restricción de origen cruzado.
 
@@ -1463,15 +1405,39 @@ Antes de enviar una petición destructiva (`POST`, `PUT`, `DELETE`) con cabecera
   <p>El backend solo responde a contratos HTTP estándar. Angular es solo un cliente más. La suite de pruebas de Bruno sigue siendo el certificador técnico oficial e independiente del backend.</p>
 </div>
 
-### Paso a paso guiado · Configuración de CORS y sincronización de contratos
+#### Acordar tipos y errores entre Angular y Spring
+
+El cliente Angular consume JSON, no entidades Java. Su interfaz TypeScript debe corresponder al DTO publicado: nombre de los campos, valores opcionales, fechas y estructura de errores. Que ambos proyectos compilen no demuestra que ese acuerdo se cumpla; la comprobación es la petición real y su respuesta.
+
+La URL base pertenece a la configuración del entorno. Las credenciales se añaden de acuerdo con la estrategia implantada y el servidor sigue comprobando cada permiso. Ocultar un botón mejora la experiencia, pero el endpoint también debe rechazar la operación cuando se envía directamente desde un cliente HTTP sin autorización.
+
+La práctica conecta el cliente de Desarrollo Web en Entorno Cliente al mismo backend desplegado. Se observa en DevTools qué ruta se pidió, qué credencial se envió y qué respondió la API. Se prueban un caso válido, un rechazo por permisos y una validación de formulario. La colección HTTP se mantiene para diagnosticar si el problema está en Angular o en el backend.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Conectad el cliente trabajado en Desarrollo Web en Entorno Cliente con los casos de uso del backend.
+
+Recorred creación, consulta, modificación y borrado con usuarios de distintos permisos y corregid desajustes del contrato.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Integración con Angular</p>
+
+#### Paso 2 · Configuración de CORS y sincronización de contratos
 
 <div class="rule">
   <p class="rule-label">Qué se evalúa hoy y qué no</p>
   <p>Esta sesión es de <strong>backend</strong>, aunque se vea TypeScript. Lo que se evalúa es que tu API se deje consumir desde un navegador con seguridad puesta: CORS acotado, cabeceras expuestas, errores legibles. El cliente Angular es el instrumento de medida, no el entregable.</p>
   <p>La regla de la UD8 sigue vigente y es la que te salva si Angular no está listo: <strong>el backend debe poder comprobarse entero sin él</strong>. Si algo no funciona, la primera pregunta es siempre si la misma petición funciona desde tu cliente HTTP. Si desde ahí va y desde el navegador no, el problema es CORS. Si no va desde ninguno de los dos, el problema no tiene nada que ver con Angular.</p>
 </div>
-
-<p class="stage">Paso 1 · Configurar CorsConfigurationSource en Spring Security</p>
 
 Configuramos de forma granular los orígenes y cabeceras permitidas en `SecurityConfig`:
 
@@ -1505,26 +1471,26 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        
+
         // Origen del cliente Angular de desarrollo
         configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        
+
         // Métodos HTTP permitidos
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        
+
         // Cabeceras permitidas en las peticiones entrantes
         configuration.setAllowedHeaders(List.of(
             "Authorization", "Content-Type", "X-Correlation-ID", "Accept"
         ));
-        
+
         // Cabeceras expuestas legibles por el código JavaScript de Angular
         configuration.setExposedHeaders(List.of(
             "Location", "X-Correlation-ID", "Content-Disposition"
         ));
-        
+
         // Permitir envío de credenciales/cookies si fuera necesario
         configuration.setAllowCredentials(true);
-        
+
         // Tiempo de caché del resultado del preflight (1 hora)
         configuration.setMaxAge(3600L);
 
@@ -1534,8 +1500,6 @@ public class SecurityConfig {
     }
 }
 ```
-
-<p class="stage">Paso 2 · Sincronizar modelos en TypeScript (Angular)</p>
 
 Creamos las interfaces en Angular espejando los DTOs de Java:
 
@@ -1571,8 +1535,6 @@ export interface ProblemDetails {
   correlationId?: string;
 }
 ```
-
-<p class="stage">Paso 3 · Interceptor HTTP en Angular para inyectar JWT y trazar errores</p>
 
 ```typescript
 // src/app/interceptors/auth.interceptor.ts
@@ -1621,7 +1583,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   <dd>Con credenciales activadas, el estándar prohíbe <code>setAllowedOrigins(List.of("*"))</code>. Spring lanza una excepción al arrancar. Si necesitas varios orígenes, enuméralos, o usa <code>setAllowedOriginPatterns</code>. Y en producción, jamás el comodín.</dd>
 </dl>
 
-### La comprobación · Inspección de red en DevTools
+#### Paso 3 · Inspección de red en DevTools
 
 1. **Arranca el backend (`:8080`) y el cliente Angular (`:4200`).**
 2. **Abre las herramientas de desarrollo de Chrome (F12) en la pestaña Network (Red).**
@@ -1635,7 +1597,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 5. **Provoca el fallo de CORS a propósito, para saber reconocerlo:** cambia `setAllowedOrigins` a `http://localhost:9999`, reinicia el backend y repite la operación desde Angular. Lee el mensaje exacto de la consola del navegador y anótalo. Comprueba a la vez que **la misma petición sigue funcionando desde tu cliente HTTP**: esa asimetría es la firma inconfundible de un problema de CORS y te ahorrará horas el día que aparezca de verdad. Devuelve el origen a `:4200`.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma en la consola del navegador | Causa real | Qué mirar |
 | :--- | :--- | :--- |
@@ -1647,7 +1609,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 | `401` en todas las llamadas de Angular pero no en el cliente HTTP | El interceptor no adjunta el token | Comprueba en DevTools → Network → Headers que sale `Authorization: Bearer …` |
 | Funciona todo salvo la subida de ficheros | El interceptor fija `Content-Type: application/json` | En un `multipart`, el navegador debe poner él el `Content-Type` con su `boundary`: no lo sobrescribas |
 
-### Ahora tú · Cerrar el circuito completo desde el navegador
+#### Paso 5 · Cerrar el circuito completo desde el navegador
 
 El objetivo no es que Angular quede bonito, sino que **todas** las capacidades de tu backend se puedan ejercer desde un navegador con seguridad puesta.
 
@@ -1655,15 +1617,26 @@ El objetivo no es que Angular quede bonito, sino que **todas** las capacidades d
 2. Si el backend responde con el aviso de degradación de la UD10 (*«Servicio no disponible»*), muestra una alerta amarilla **sin romper la vista del proyecto**. Es la demostración visible de que la degradación elegante servía para algo.
 3. Comprueba desde el navegador las tres respuestas de error que más cuesta ver bien: un `400` de validación (envía un presupuesto negativo), un `403` de permisos (entra como operario e intenta editar un proyecto ajeno) y un `404`. Las tres deben mostrar el `detail` del RFC 7807 y ninguna debe dejar la pantalla en blanco.
 4. Verifica que la cabecera `Location` del `201 Created` **se lee desde Angular** y la usas para navegar al recurso recién creado. Si no la ves, vuelve a `setExposedHeaders`.
-5. Repite el recorrido con los tres roles y comprueba que la interfaz oculta lo que el usuario no puede hacer **y** que el backend lo rechaza igualmente si lo fuerzas desde el cliente HTTP. Esa doble comprobación es la lección de la sesión 58 aplicada a tu propio proyecto.
-6. Anota en la memoria técnica los orígenes permitidos y **por qué** esos: es una decisión de seguridad y hay que defenderla en la sesión 78.
+5. Repite el recorrido con los tres roles y comprueba que la interfaz oculta lo que el usuario no puede hacer **y** que el backend lo rechaza igualmente si lo fuerzas desde el cliente HTTP. Esa doble comprobación es la lección de la sesión 38 aplicada a tu propio proyecto.
+6. Anota en la memoria técnica los orígenes permitidos y **por qué** esos: es una decisión de seguridad y hay que defenderla en la sesión 52.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
   <dd>En DevTools ves el par <code>OPTIONS 200</code> + <code>POST 201</code>; Angular lee la cabecera <code>Location</code>; los errores del backend llegan a la pantalla como texto legible y no como una pantalla en blanco; ninguna operación depende del cliente para poder comprobarse; y sabes reconocer un fallo de CORS por el hecho de que tu cliente HTTP sí funciona.</dd>
 </dl>
 
-### Reto · Descarga de ficheros binarios Blob en Angular
+#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **conectad angular al mismo backend**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Descarga de ficheros binarios Blob en Angular
 
 La descarga de un archivo binario mediante un enlace `<a>` tradicional no permite inyectar cabeceras `Authorization: Bearer <token>`:
 1. Investiga cómo descargar el archivo mediante Angular `HttpClient` configurando `{ responseType: 'blob' }`.
@@ -1680,27 +1653,6 @@ La descarga de un archivo binario mediante un enlace `<a>` tradicional no permit
   <div><strong>Reto</strong><span>Descarga programática de binarios Blob con inyección de JWT y extracción de <code>Content-Disposition</code>.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 75</p>
-  <ul class="checklist">
-    <li>Se comprende el funcionamiento de las peticiones preflight OPTIONS en el estándar CORS.</li>
-    <li>La configuración de CORS en Spring Security autoriza orígenes, métodos y cabeceras exactas.</li>
-    <li>Los modelos TypeScript en Angular están sincronizados con los DTOs inmutables de Java.</li>
-    <li>El interceptor HTTP gestiona de forma centralizada la autenticación y las trazas RFC 7807.</li>
-    <li>El backend mantiene su autonomía y puede verificarse independientemente de Angular.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué las herramientas como Bruno o Postman no sufren nunca bloqueos por CORS?</li>
-    <li>¿Qué cabecera HTTP de respuesta indica al navegador qué origen tiene permiso para leer los datos?</li>
-    <li>¿Por qué es necesario declarar cabeceras expuestas (*Exposed Headers*) en la configuración de CORS?</li>
-    <li>¿Qué información crucial de soporte técnico extrae el interceptor de Angular del cuerpo RFC 7807?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque las restricciones de CORS son implementadas exclusivamente por los navegadores web para proteger a los usuarios de peticiones no autorizadas entre sitios; los clientes de escritorio como Bruno no aplican la política Same-Origin.</p>
@@ -1709,30 +1661,45 @@ La descarga de un archivo binario mediante un enlace `<a>` tradicional no permit
   <p>4 · El correlationId generado por el servidor, que permite al usuario comunicar ese código al soporte técnico para que localicen el fallo exacto en los archivos de log del servidor.</p>
 </details>
 
+### Cierre
 
-## Semana 26 · Demostrar que está terminado
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-## Sesión 76 · Testing y revisión
+El cliente Angular utiliza la misma API que sigue verificándose de manera independiente con la colección HTTP.
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el enfoque de pruebas basado en riesgos (<em>Risk-Based Testing</em>), la auditoría de regresión automatizada antes de la entrega final y la verificación de que ningún error imprevisto exponga información interna de infraestructura o base de datos.</li>
-    <li><strong>2. Haz:</strong> diseña la matriz de riesgos del proyecto, programa tests de integración con MockMvc que cubran los tres puntos más críticos del sistema (concurrencia de datos, denegación de accesos no autorizados y degradación externa) y ejecuta la suite completa de verificación con Maven y JaCoCo.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw clean verify</code> en la terminal verificando que el 100 % de los tests pasan en verde, que la cobertura de ramas supera el umbral del 75 % y que los informes de error RFC 7807 nunca filtran trazas de pila (<em>stack traces</em>) al cliente.</li>
-  </ol>
-</div>
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué tener 100 tests que prueban getters, setters y casos obvios no demuestra que el backend sea seguro ni fiable?</li>
-    <li>¿Qué es una «prueba de regresión» y por qué es indispensable ejecutarla antes de dar por cerrado un proyecto?</li>
-    <li>¿Qué grave problema de seguridad supone que un error 500 devuelva al cliente un fragmento de la traza de Hibernate o de la consulta SQL?</li>
-  </ol>
-</div>
 
-### Pruebas basadas en riesgos: Dónde poner el foco
+#### Entrega de la sesión 50 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-50.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-50.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Semana 26 · Verificar, documentar y preparar la versión
+
+## Sesión 51 · Verificar, documentar y preparar la versión
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Una versión candidata reúne un resultado reproducible, documentación coherente y defectos conocidos explícitos.
+
+#### Pruebas basadas en riesgos: Dónde poner el foco
 
 En la recta final del proyecto el tiempo es limitado. No puedes probarlo absolutamente todo con el mismo nivel de detalle.
 
@@ -1751,9 +1718,83 @@ El principio rector del **Testing Basado en Riesgos (*Risk-Based Testing*)** est
   <p>Toda excepción no controlada debe ser capturada por el <code>GlobalExceptionHandler</code> devolviendo un JSON Problem Details limpio con código 500 y un <code>correlationId</code> para auditoría interna, suprimiendo cualquier clase, línea de código Java o sentencia SQL.</p>
 </div>
 
-### Paso a paso guiado · La suite de regresión final
+#### La sincronización tridimensional de la entrega
 
-<p class="stage">Paso 1 · Matriz de riesgos de la aplicación final</p>
+Un proyecto no es solo el archivo `.jar` que compila. En el mundo empresarial una entrega de software es un **paquete coherente en tres dimensiones**:
+
+<figure class="diagram">
+  <figcaption>La coherencia tridimensional de la entrega técnica</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>1. Código Fuente Java (Limpio, sin warnings, refactorizado)</li>
+    <li>2. Contratos OpenAPI 3 (Sincronizados con los DTOs y errores reales)</li>
+    <li>3. Guía de Despliegue README (Reproducible en 3 pasos por cualquiera)</li>
+  </ol>
+</figure>
+
+Si el código espera el campo `fechaInicio` pero el Swagger dice `fecha_inicio` y el `README` dice que la base de datos se llama `test_db` cuando el código busca `gestion_proyectos`, **el proyecto está roto**.
+
+#### Estructura del README.md técnico profesional
+
+Un buen `README.md` no cuenta qué es Java ni explica qué es un microservicio. Es una **guía operacional concisa** para que otro ingeniero levante y verifique el proyecto en 3 minutos:
+
+````markdown
+# Gestor de Proyectos e Incidencias · Backend API
+
+Servicio backend REST modular construido con Spring Boot 3.5, Spring Security (JWT),
+PostgreSQL y cliente HTTP saliente hacia Open-Meteo.
+
+## 1. Requisitos previos
+* Java 21 (Eclipse Temurin o GraalVM)
+* Docker y Docker Compose
+* Maven 3.9+ (o utilizar `./mvnw` incluido)
+
+## 2. Puesta en marcha en 3 pasos
+
+1. **Iniciar la base de datos PostgreSQL:**
+   ```bash
+   docker compose up -d
+   ```
+2. **Compilar y ejecutar la aplicación:**
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+3. **Verificar que el servicio responde:**
+   Abrir en el navegador: `http://localhost:8080/swagger-ui.html`
+
+## 3. Credenciales de prueba (data.sql)
+| Usuario | Contraseña | Rol | Ámbito |
+| :--- | :--- | :--- | :--- |
+| `admin` | `password123` | `ADMINISTRADOR` | Acceso global a todos los recursos y presupuestos |
+| `jefe1` | `password123` | `JEFE_PROYECTO` | Responsable de los proyectos PRJ-2026-001 y 002 |
+| `operario1` | `password123` | `DESARROLLADOR` | Operario asignado a tareas de campo |
+
+## 4. Documentación interactiva (Swagger UI)
+* URL: `http://localhost:8080/swagger-ui.html`
+* Para probar endpoints protegidos: autenticarse en `/api/v1/auth/login`, copiar el token Bearer y pulsar en el botón **Authorize**.
+
+## 5. Colección de pruebas de integración
+En la carpeta `/bruno` se incluye la colección completa exportada para verificar los flujos de negocio sin depender del frontend.
+````
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Ejecutad pruebas y recorridos de integración, revisad código y corregid las incidencias prioritarias.
+
+Actualizad documentación, preparad datos de demostración y publicad la versión mediante el workflow existente.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Testing y revisión</p>
+
+#### Paso 2 · La suite de regresión final
 
 | Riesgo técnico identificado | Prueba de mitigación implementada | Clase de test |
 | :--- | :--- | :--- |
@@ -1761,8 +1802,6 @@ El principio rector del **Testing Basado en Riesgos (*Risk-Based Testing*)** est
 | La API de Open-Meteo se cae durante una guardia nocturna. | Simulación de `ResourceAccessException` en `ClimaService` esperando 201 y aviso. | `ClimaDegradacionIntegrationTest` |
 | Se intenta cerrar un proyecto que tiene tareas activas. | Llamada a `POST /proyectos/{id}/cerrar` esperando 409 Conflict. | `ProyectoCicloVidaIntegrationTest` |
 | Se envía un archivo `.sh` ejecutable o de 20 MB. | Petición multipart esperando 400 Bad Request o 413 Payload Too Large. | `AdjuntoSeguridadIntegrationTest` |
-
-<p class="stage">Paso 2 · Test de integración de los tres riesgos críticos</p>
 
 ```java
 package com.ejemplo.gestor;
@@ -1818,8 +1857,6 @@ class RiesgosCriticosIntegrationTest {
   <dd>El test del riesgo 2 asume que el proyecto <code>1</code> existe y tiene tareas pendientes. Si otro test lo cierra antes, este falla sin que nada esté roto. Anota <code>@Sql</code> o un <code>@BeforeEach</code> que cree sus propios datos: un test que depende de lo que hicieron los anteriores es un test que mentirá tarde o temprano.</dd>
 </dl>
 
-<p class="stage">Paso 3 · El tercer riesgo: que un error filtre las tripas del servidor</p>
-
 Los dos tests anteriores comprueban lo que la aplicación **hace**. Este comprueba lo que no debe **decir**:
 
 ```java
@@ -1844,7 +1881,7 @@ Los dos tests anteriores comprueban lo que la aplicación **hace**. Este comprue
 
 Un `500` con una traza de Hibernate le regala a un atacante el nombre de tus tablas, tu versión de Spring y la estructura de tus paquetes. Este test convierte esa regla en algo que la suite vigila sola.
 
-### La comprobación · Auditoría completa con Maven y JaCoCo
+#### Paso 3 · Auditoría completa con Maven y JaCoCo
 
 Ejecuta el ciclo de vida completo de Maven en tu terminal:
 
@@ -1866,7 +1903,7 @@ Ejecuta el ciclo de vida completo de Maven en tu terminal:
    * De cada uno, decide una de dos cosas: o escribes el test que falta, o anotas por qué esa clase no lo necesita (un DTO sin lógica, por ejemplo). Las dos respuestas son válidas; lo que no vale es no haber mirado.
    * Busca en `service` los `if` que JaCoCo pinta en **amarillo**: significa que la condición se ha ejecutado, pero solo por una de sus dos ramas. En una regla de negocio, la rama que nunca se ha probado suele ser justo la que rechaza.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1876,7 +1913,7 @@ Ejecuta el ciclo de vida completo de Maven en tu terminal:
 | JaCoCo no genera informe | El plugin no está enganchado a la fase | El `prepare-agent` debe ejecutarse antes de `test`, y `report` en `verify` |
 | Cobertura muy alta y aun así aparecen fallos a mano | Estás midiendo líneas, no ramas | Mira la columna *Branch*, no la de *Instructions* |
 
-### Ahora tú · La prueba de caja negra, y lo que revele
+#### Paso 5 · La prueba de caja negra, y lo que revele
 
 Los tests automáticos comprueban lo que se te ocurrió comprobar. Esta pasada busca lo que no.
 
@@ -1885,145 +1922,22 @@ Los tests automáticos comprueban lo que se te ocurrió comprobar. Esta pasada b
 3. Repite la secuencia entera con cada uno de los tres roles. Anota cada respuesta que te sorprenda, aunque sea un código correcto con un mensaje confuso.
 4. Prueba a propósito las cinco barbaridades que un usuario real acabará haciendo: enviar el cuerpo vacío, mandar un `id` que no existe, mandar texto donde esperas un número, repetir dos veces la misma alta y usar el token de otro usuario.
 5. Por cada fallo encontrado, haz dos cosas en este orden: **primero escribe el test que lo reproduce en rojo**, y después arréglalo. Si lo arreglas antes, nunca sabrás si el test lo habría cazado.
-6. Cierra con el número que resume la sesión: cuántos fallos ha encontrado la pasada manual que la suite automática no había visto. Ese número es la medida real de la calidad de tus tests, y es lo que se defiende en la sesión 78.
+6. Cierra con el número que resume la sesión: cuántos fallos ha encontrado la pasada manual que la suite automática no había visto. Ese número es la medida real de la calidad de tus tests, y es lo que se defiende en la sesión 52.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
   <dd><code>./mvnw clean verify</code> termina en <code>BUILD SUCCESS</code>; la cobertura de <strong>ramas</strong> de <code>service</code> y <code>security</code> pasa del 75 %; ningún cuerpo de respuesta contiene el nombre de un paquete o de una tabla; y cada fallo que encontraste a mano tiene ahora un test que lo vigila.</dd>
 </dl>
 
-### Reto · Detección de fugas de memoria y rendimiento en carga
+<p class="stage">Documentación y refactorización</p>
 
-Simula una ráfaga de 100 peticiones concurrentes utilizando una herramienta de estrés como `Apache Bench` (`ab`) o `k6`:
-```bash
-ab -n 500 -c 20 -H "Authorization: Bearer <token>" http://localhost:8080/api/v1/proyectos
-```
-Comprueba que el tiempo medio de respuesta se mantiene por debajo de 50 ms y que el pool de conexiones de HikariCP en PostgreSQL no sufre agotamiento.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Suite de pruebas automatizadas pasando al 100 % con <code>./mvnw test</code>.</span></div>
-  <div><strong>Si lo tienes</strong><span>Matriz de riesgos implementada y cobertura de ramas superior al 75 % en JaCoCo.</span></div>
-  <div><strong>Reto</strong><span>Prueba de carga concurrente validando tiempos de respuesta y estabilidad del pool HikariCP.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 76</p>
-  <ul class="checklist">
-    <li>Se audita la suite de pruebas bajo el prisma del enfoque basado en riesgos.</li>
-    <li>Los escenarios más destructivos (permisos, concurrencia, degradación) están cubiertos.</li>
-    <li>La compilación y verificación de Maven finaliza en verde sin advertencias.</li>
-    <li>Los informes de error 500 no filtran detalles técnicos de la infraestructura.</li>
-    <li>El backend demuestra estabilidad y solidez ante peticiones anómalas.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué priorizar las pruebas según el riesgo económico o de seguridad optimiza el tiempo de entrega?</li>
-    <li>¿Qué diferencia a un test de regresión de un test funcional nuevo?</li>
-    <li>¿Cómo evita el GlobalExceptionHandler que un error de base de datos exponga información a un atacante?</li>
-    <li>¿Qué comando de Maven ejecuta simultáneamente los tests unitarios, de integración y la generación de JaCoCo?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque asegura que los recursos limitados se inviertan en blindar las áreas donde un fallo tendría consecuencias catastróficas (seguridad, dinero, datos), en lugar de perder tiempo en piezas triviales.</p>
-  <p>2 · El test funcional verifica una funcionalidad recién creada; el test de regresión comprueba que los cambios nuevos no han roto nada de lo que ya funcionaba previamente en el sistema.</p>
-  <p>3 · Capturando la excepción genérica Exception.class y devolviendo una respuesta estándar 500 con un mensaje neutro ("Error interno del servidor") y un correlationId, sin volcar la traza de la excepción al JSON.</p>
-  <p>4 · ./mvnw clean verify (ejecuta el ciclo completo hasta la fase de verificación emitiendo los reportes).</p>
-</details>
-
-## Sesión 77 · Documentación y refactorización
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la sincronización tridimensional entre <strong>Código Fuente</strong>, <strong>Contratos OpenAPI</strong> y <strong>Guía de Despliegue (README técnico)</strong>, y las pautas de refactorización limpia para erradicar deuda técnica sin romper ningún test existente.</li>
-    <li><strong>2. Haz:</strong> redacta el archivo <code>README.md</code> del repositorio con instrucciones de puesta en marcha en 3 pasos, sincroniza la documentación OpenAPI con descripciones de esquemas y refactoriza clases eliminando constantes mágicas y código muerto.</li>
-    <li><strong>3. Comprueba:</strong> simulas la instalación limpia del proyecto en una máquina desde cero siguiendo al pie de la letra el <code>README.md</code>, verificando que la base de datos se levanta con Docker, la aplicación arranca y Swagger UI documenta con fidelidad todos los contratos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué un proyecto con código excelente pero un <code>README</code> desactualizado o incompleto suspende en una auditoría profesional?</li>
-    <li>¿Qué significa el principio de «refactorización con red de seguridad»?</li>
-    <li>¿Qué cinco apartados mínimos debe contener el archivo <code>README.md</code> de un backend profesional?</li>
-  </ol>
-</div>
-
-### La sincronización tridimensional de la entrega
-
-Un proyecto no es solo el archivo `.jar` que compila. En el mundo empresarial una entrega de software es un **paquete coherente en tres dimensiones**:
-
-<figure class="diagram">
-  <figcaption>La coherencia tridimensional de la entrega técnica</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>1. Código Fuente Java (Limpio, sin warnings, refactorizado)</li>
-    <li>2. Contratos OpenAPI 3 (Sincronizados con los DTOs y errores reales)</li>
-    <li>3. Guía de Despliegue README (Reproducible en 3 pasos por cualquiera)</li>
-  </ol>
-</figure>
-
-Si el código espera el campo `fechaInicio` pero el Swagger dice `fecha_inicio` y el `README` dice que la base de datos se llama `test_db` cuando el código busca `gestion_proyectos`, **el proyecto está roto**.
-
-### Estructura del README.md técnico profesional
-
-Un buen `README.md` no cuenta qué es Java ni explica qué es un microservicio. Es una **guía operacional concisa** para que otro ingeniero levante y verifique el proyecto en 3 minutos:
-
-````markdown
-# Gestor de Proyectos e Incidencias · Backend API
-
-Servicio backend REST modular construido con Spring Boot 3.5, Spring Security (JWT), 
-PostgreSQL y cliente HTTP saliente hacia Open-Meteo.
-
-## 1. Requisitos previos
-* Java 21 (Eclipse Temurin o GraalVM)
-* Docker y Docker Compose
-* Maven 3.9+ (o utilizar `./mvnw` incluido)
-
-## 2. Puesta en marcha en 3 pasos
-
-1. **Iniciar la base de datos PostgreSQL:**
-   ```bash
-   docker compose up -d
-   ```
-2. **Compilar y ejecutar la aplicación:**
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-3. **Verificar que el servicio responde:**
-   Abrir en el navegador: `http://localhost:8080/swagger-ui.html`
-
-## 3. Credenciales de prueba (data.sql)
-| Usuario | Contraseña | Rol | Ámbito |
-| :--- | :--- | :--- | :--- |
-| `admin` | `password123` | `ADMINISTRADOR` | Acceso global a todos los recursos y presupuestos |
-| `jefe1` | `password123` | `JEFE_PROYECTO` | Responsable de los proyectos PRJ-2026-001 y 002 |
-| `operario1` | `password123` | `DESARROLLADOR` | Operario asignado a tareas de campo |
-
-## 4. Documentación interactiva (Swagger UI)
-* URL: `http://localhost:8080/swagger-ui.html`
-* Para probar endpoints protegidos: autenticarse en `/api/v1/auth/login`, copiar el token Bearer y pulsar en el botón **Authorize**.
-
-## 5. Colección de pruebas de integración
-En la carpeta `/bruno` se incluye la colección completa exportada para verificar los flujos de negocio sin depender del frontend.
-````
-
-### Paso a paso guiado · Refactorización limpia y eliminación de deuda
-
-<p class="stage">Paso 1 · Poner la red de seguridad antes de tocar nada</p>
+#### Paso 6 · Refactorización limpia y eliminación de deuda
 
 Refactorizar es cambiar la forma sin cambiar el comportamiento. Sin una manera de comprobar que el comportamiento no ha cambiado, no estás refactorizando: estás reescribiendo a ciegas.
 
 1. Ejecuta `./mvnw clean verify` y comprueba que **todo está en verde antes de empezar**.
 2. Haz `git commit` de ese estado. Es tu punto de retorno.
 3. A partir de aquí, la regla es: un cambio pequeño → ejecutar los tests → commit. Si algo se pone en rojo, sabes exactamente qué lo rompió porque solo has tocado una cosa.
-
-<p class="stage">Paso 2 · Erradicar números y cadenas mágicas</p>
 
 Busca en tu código literales sueltos con `Ctrl+Shift+F`: números que no sean `0` o `1`, y cadenas entre comillas que no sean mensajes.
 
@@ -2042,8 +1956,6 @@ if (proyecto.getPresupuestoTotal().compareTo(PRESUPUESTO_MAXIMO_SIN_APROBACION) 
 ```
 
 Si el valor puede cambiar sin recompilar —un límite de tamaño de fichero, una URL, un tiempo de expiración—, no es una constante: es una propiedad. Sácalo a `application.properties` e inyéctalo con `@Value`.
-
-<p class="stage">Paso 3 · Adelgazar los controladores</p>
 
 Recorre tus controladores y comprueba que **ningún método contiene**: un `if` de negocio, una cuenta, una llamada a un repositorio o un `try/catch`. Un método de controlador tiene tres líneas: recibe, delega, responde.
 
@@ -2068,16 +1980,14 @@ public ResponseEntity<TareaResponse> cambiarEstado(@PathVariable Long id,
 }
 ```
 
-Si esto te suena, es porque es exactamente el ejercicio de la sesión 22, «El controller monstruoso». Cinco meses después, el código vuelve a engordar por el mismo sitio: esa recurrencia es la lección.
-
-<p class="stage">Paso 4 · Limpieza de código muerto</p>
+Si esto te suena, es porque es exactamente el ejercicio de la sesión 15, «El controller monstruoso». Cinco meses después, el código vuelve a engordar por el mismo sitio: esa recurrencia es la lección.
 
 1. Elimina los `import` no utilizados (tu IDE los marca en gris; `Ctrl+Alt+O` en IntelliJ los quita todos).
-2. Borra los métodos privados que nadie llama y los endpoints de prueba que fuiste dejando por el camino: `/clima-raw` de la sesión 61, cualquier `/test`, `/boom` o `/diagnostico`. Están sin proteger y sin documentar.
+2. Borra los métodos privados que nadie llama y los endpoints de prueba que fuiste dejando por el camino: `/clima-raw` de la sesión 41, cualquier `/test`, `/boom` o `/diagnostico`. Están sin proteger y sin documentar.
 3. Borra los comentarios que ya mienten. Un comentario que contradice al código es peor que no tener comentario: el código es verdad por definición y el comentario engaña al que lo lee.
 4. Ejecuta `./mvnw clean verify` una última vez. Si sigue verde, has refactorizado. Si no, has cambiado el comportamiento sin querer, y ahí tienes el porqué del paso 1.
 
-### La comprobación · La prueba del desarrollador nuevo
+#### Paso 7 · La prueba del desarrollador nuevo
 
 Simula que eres un nuevo integrante del equipo que acaba de clonar el proyecto:
 1. Abre una terminal limpia en una carpeta vacía.
@@ -2088,7 +1998,7 @@ Simula que eres un nuevo integrante del equipo que acaba de clonar el proyecto:
    * Puedes autenticarte en Swagger UI con las credenciales documentadas.
    * La colección de Bruno pasa todas las peticiones con éxito.
 
-### Si algo no sale como dice el guion
+#### Paso 8 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -2098,7 +2008,7 @@ Simula que eres un nuevo integrante del equipo que acaba de clonar el proyecto:
 | `Schema-validation: missing table` con `ddl-auto=validate` | El `schema.sql` no está sincronizado con las entidades | Es justo lo que este modo existe para detectar: corrige el script, no bajes a `update` |
 | El `README` funciona para ti y para nadie más | Lo has probado con la aplicación ya arrancada | La prueba solo vale desde una terminal nueva y una base de datos recién creada |
 
-### Ahora tú · Pulir y validar Swagger UI
+#### Paso 9 · Pulir y validar Swagger UI
 
 Entra en `http://localhost:8080/swagger-ui.html` y haz la última pasada de contrato:
 
@@ -2114,7 +2024,40 @@ Entra en `http://localhost:8080/swagger-ui.html` y haz la última pasada de cont
   <dd>La suite sigue verde después de refactorizar; no queda ningún literal numérico de negocio suelto en el código; ningún controlador contiene un <code>if</code>; una persona ajena ha levantado tu proyecto siguiendo solo el <code>README</code>, y otra ha usado tu API entera desde Swagger sin preguntarte nada.</dd>
 </dl>
 
-### Reto · Contenedorización completa con Docker Compose
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **preparad una versión final reproducible**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Detección de fugas de memoria y rendimiento en carga
+
+Simula una ráfaga de 100 peticiones concurrentes utilizando una herramienta de estrés como `Apache Bench` (`ab`) o `k6`:
+```bash
+ab -n 500 -c 20 -H "Authorization: Bearer <token>" http://localhost:8080/api/v1/proyectos
+```
+Comprueba que el tiempo medio de respuesta se mantiene por debajo de 50 ms y que el pool de conexiones de HikariCP en PostgreSQL no sufre agotamiento.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Suite de pruebas automatizadas pasando al 100 % con <code>./mvnw test</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Matriz de riesgos implementada y cobertura de ramas superior al 75 % en JaCoCo.</span></div>
+  <div><strong>Reto</strong><span>Prueba de carga concurrente validando tiempos de respuesta y estabilidad del pool HikariCP.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque asegura que los recursos limitados se inviertan en blindar las áreas donde un fallo tendría consecuencias catastróficas (seguridad, dinero, datos), en lugar de perder tiempo en piezas triviales.</p>
+  <p>2 · El test funcional verifica una funcionalidad recién creada; el test de regresión comprueba que los cambios nuevos no han roto nada de lo que ya funcionaba previamente en el sistema.</p>
+  <p>3 · Capturando la excepción genérica Exception.class y devolviendo una respuesta estándar 500 con un mensaje neutro ("Error interno del servidor") y un correlationId, sin volcar la traza de la excepción al JSON.</p>
+  <p>4 · ./mvnw clean verify (ejecuta el ciclo completo hasta la fase de verificación emitiendo los reportes).</p>
+</details>
+
+##### Reto · Contenedorización completa con Docker Compose
 
 Diseña un archivo `docker-compose.yml` que levante tanto la base de datos PostgreSQL como la propia aplicación Spring Boot empaquetada:
 1. Diseña un `Dockerfile` multietapa (*Multi-stage Build*) con Eclipse Temurin 21: una primera etapa con Maven que compile el `.jar`, y una segunda que solo copie ese `.jar` sobre una imagen con JRE.
@@ -2128,27 +2071,6 @@ Diseña un archivo `docker-compose.yml` que levante tanto la base de datos Postg
   <div><strong>Reto</strong><span>Dockerfile multi-stage y docker-compose.yml orquestando backend y base de datos con healthchecks.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 77</p>
-  <ul class="checklist">
-    <li>La entrega está sincronizada en sus tres dimensiones: código, contrato y guía técnica.</li>
-    <li>El archivo <code>README.md</code> permite desplegar el proyecto en menos de 3 minutos.</li>
-    <li>Las credenciales de prueba por cada rol están claramente documentadas.</li>
-    <li>El código fuente ha sido refactorizado manteniendo los controladores delgados.</li>
-    <li>La especificación OpenAPI 3 refleja fielmente el comportamiento real del sistema.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué es fundamental que el README incluya una tabla de credenciales de prueba por cada rol?</li>
-    <li>¿Qué caracteriza a un «controlador delgado» (*Skinny Controller*) en una arquitectura limpia?</li>
-    <li>¿Por qué se debe realizar la refactorización únicamente cuando todos los tests están en verde?</li>
-    <li>¿Qué ventaja aporta un Dockerfile multietapa (*Multi-stage Build*) frente a un Dockerfile convencional?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque permite a cualquier evaluador o nuevo compañero probar de inmediato la matriz de permisos y el comportamiento de la seguridad sin tener que inspeccionar los scripts SQL o adivinar contraseñas.</p>
@@ -2157,29 +2079,45 @@ Diseña un archivo `docker-compose.yml` que levante tanto la base de datos Postg
   <p>4 · Separa la fase pesada de compilación (Maven + JDK completa) de la imagen final de ejecución (solo JRE ligera), reduciendo el tamaño de la imagen Docker de 800 MB a menos de 200 MB y mejorando la seguridad.</p>
 </details>
 
-## Sesión 78 · Defensa técnica
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> a defender técnicamente un proyecto backend ante un tribunal de ingeniería: la diferencia entre una demostración comercial y una argumentación arquitectónica con evidencias, la gestión de preguntas difíciles sobre concurrencia y seguridad, y la honestidad profesional al explicar límites y deuda técnica.</li>
-    <li><strong>2. Haz:</strong> estructura el guion de defensa técnica de 15 minutos, prepara la batería de pruebas en vivo en Bruno demostrando camino feliz y casos límite de negocio, y redacta la memoria técnica final con las decisiones justificadas del sistema.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas la defensa técnica simulada demostrando el flujo integral en vivo (seguridad JWT, persistencia transaccional, degradación meteorológica y control presupuestario), respondiendo con solvencia y evidencias de código a las preguntas del tribunal.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué diferencia una presentación comercial de un producto de una defensa técnica de ingeniería de software?</li>
-    <li>Si un miembro del tribunal te pregunta por un caso límite que no contemplaste en tu código, ¿cuál es la respuesta profesional adecuada?</li>
-    <li>¿Por qué es imprescindible respaldar cada afirmación de la defensa con una evidencia empírica (un test, un log con correlationId o una consulta SQL)?</li>
-  </ol>
-</div>
+El commit desplegado se corresponde con la versión probada y otra persona puede reproducir el recorrido principal.
 
-### La prueba definitiva: La Defensa Técnica
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-Llegar a la Sesión 78 significa que has completado el viaje completo: desde las primeras peticiones HTTP en la UD1 hasta un sistema empresarial complejo, seguro, observable y conectado.
+
+#### Entrega de la sesión 51 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-51.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-51.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 52 · Defender el backend completo
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Defender el producto consiste en demostrar sus decisiones con código y resultados. Cada integrante debe explicar qué ocurre y por qué.
+
+#### La prueba definitiva: La Defensa Técnica
+
+Llegar a la Sesión 52 significa que has completado el viaje completo: desde las primeras peticiones HTTP en la UD1 hasta un sistema empresarial complejo, seguro, observable y conectado.
 
 En el mundo profesional y académico, **el valor de un ingeniero se demuestra en la defensa de sus decisiones**:
 * Un comercial habla de lo atractiva que es la interfaz.
@@ -2191,7 +2129,7 @@ En el mundo profesional y académico, **el valor de un ingeniero se demuestra en
   <p>Un tribunal respeta al desarrollador que reconoce con honestidad: <em>«Esta relación la resolvimos con paginación en memoria por simplicidad, pero en una versión con un millón de registros introduciríamos un índice compuesto en PostgreSQL y particionamiento»</em>.</p>
 </div>
 
-### Estructura de la Defensa Técnica (15 minutos)
+#### Estructura de la Defensa Técnica (15 minutos)
 
 Distribuye tu exposición con rigor profesional siguiendo este minutaje:
 
@@ -2219,7 +2157,25 @@ Distribuye tu exposición con rigor profesional siguiendo este minutaje:
 4. **Bloque 4: Límites y Compromisos de Ingeniería (3 minutos):**
    * Explica los compromisos adquiridos (*Trade-offs*): qué optimizaste (velocidad de desarrollo, consistencia) y qué quedó como deuda técnica para una futura versión 2.0 (ej: migrar a Transactional Outbox para webhooks).
 
-### Paso a paso guiado · Preparación del guion y simulación de preguntas
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Demostrad el producto desplegado con un recorrido válido y otro rechazado por permisos o reglas de negocio.
+
+Resolved una pregunta o pequeña modificación individual y mostrad las pruebas que sostienen vuestras decisiones.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Defensa técnica</p>
+
+#### Paso 2 · Preparación del guion y simulación de preguntas
 
 Las cuatro preguntas clásicas que formulará el tribunal y cómo argumentarlas:
 
@@ -2230,11 +2186,9 @@ Las cuatro preguntas clásicas que formulará el tribunal y cómo argumentarlas:
 | *«¿Por qué no guardas los ficheros directamente en una tabla de base de datos como campos BLOB?»* | *"Porque saturaría el tamaño de las copias de seguridad de PostgreSQL y penalizaría la memoria RAM del motor relacional; almacenar los binarios en un volumen de almacenamiento externo con nombres UUID opacos y guardar solo los metadatos en la base de datos es el estándar de la industria."* |
 | *«Si tu servicio meteorológico externo se congela, ¿se congela tu backend?»* | *"No, porque hemos configurado un Connect Timeout de 2 segundos y un Read Timeout de 3 segundos mediante `SimpleClientHttpRequestFactory` en `RestClient`, acompañado de un bloque de degradación elegante que devuelve datos por defecto."* |
 
-| *«Me dices que tienes un 80 % de cobertura. ¿Qué parte del sistema es la que peor está probada?»* | *"La cobertura de líneas es engañosa. Nuestro punto más débil es la concurrencia sobre el presupuesto: los tests la comprueban en secuencia, no con hilos simultáneos. Lo detectamos en la sesión 76 y está anotado como riesgo abierto en la memoria."* |
+| *«Me dices que tienes un 80 % de cobertura. ¿Qué parte del sistema es la que peor está probada?»* | *"La cobertura de líneas es engañosa. Nuestro punto más débil es la concurrencia sobre el presupuesto: los tests la comprueban en secuencia, no con hilos simultáneos. Lo detectamos en la sesión 51 y está anotado como riesgo abierto en la memoria."* |
 | *«Enséñame dónde está escrita la regla de que un operario no puede cerrar un proyecto.»* | Aquí no se contesta con palabras: se abre el código. *"Está en dos sitios, y a propósito: el `@PreAuthorize` de este método y el test `operario_noPuedeCerrarProyecto` que lo vigila. Si alguien quita la anotación, la suite se pone en rojo."* |
-| *«¿Qué harías distinto si empezaras hoy?»* | La peor respuesta es «nada». *"Habría sacado el esquema a Flyway desde el primer día en vez de a `schema.sql`: lo hicimos en la sesión 71 y ya arrastrábamos datos que hubo que migrar a mano."* |
-
-<p class="stage">Paso 1 · Construir el guion sobre evidencias, no sobre afirmaciones</p>
+| *«¿Qué harías distinto si empezaras hoy?»* | La peor respuesta es «nada». *"Habría sacado el esquema a Flyway desde el primer día en vez de a `schema.sql`: lo hicimos en la sesión 47 y ya arrastrábamos datos que hubo que migrar a mano."* |
 
 Escribe tu guion en una tabla de tres columnas. La tercera es la que decide si apruebas:
 
@@ -2247,8 +2201,6 @@ Escribe tu guion en una tabla de tres columnas. La tercera es la que decide si a
 
 Cualquier fila cuya tercera columna quede vacía es una afirmación sin prueba. O le buscas evidencia, o la quitas del guion: en una defensa técnica, lo que no se enseña no cuenta.
 
-<p class="stage">Paso 2 · Preparar el entorno de la demostración</p>
-
 Una demostración se cae por logística, no por código. Prepara esto **antes** del día:
 
 1. Una carpeta en tu cliente HTTP llamada `defensa`, con las peticiones **en el orden exacto** del guion y numeradas: `01-login-admin`, `02-crear-proyecto`, `03-crear-tarea`…
@@ -2257,14 +2209,12 @@ Una demostración se cae por logística, no por código. Prepara esto **antes** 
 4. Una segunda ventana de terminal con los logs ya corriendo, y el tamaño de letra subido para que se lea desde el fondo del aula.
 5. Un plan B: si la red del centro falla, tu degradación elegante hará que la demostración siga funcionando. Practica **contando eso** como una virtud, porque lo es.
 
-<p class="stage">Paso 3 · Ensayar con un compañero haciendo de tribunal</p>
-
 1. Intercambia proyectos con otro equipo.
 2. Cada uno prepara **cinco preguntas** sobre el proyecto ajeno, mirando el código, no la memoria.
 3. Haced la defensa completa cronometrada, con preguntas al final.
 4. Anota las preguntas que no supiste contestar: esa lista es tu única tarea pendiente hasta el día de la defensa.
 
-### La comprobación · Ensayo general cronometrado
+#### Paso 3 · Ensayo general cronometrado
 
 1. **Prepara el entorno:**
    * Arranca Docker con PostgreSQL limpio.
@@ -2275,7 +2225,7 @@ Una demostración se cae por logística, no por código. Prepara esto **antes** 
    * Comprueba que completas la exposición en exactamente 12 minutos, dejando 3 minutos limpios para preguntas.
    * Si alguna petición falla en vivo, **no entres en pánico**: copia el `correlationId` del JSON de error, búscalo en la terminal de logs y explica al tribunal con total calma qué regla de validación o seguridad ha actuado. **Eso demuestra madurez de ingeniería.**
 
-### Si algo se tuerce en directo
+#### Paso 4 · Si algo se tuerce en directo
 
 | Lo que pasa | Lo que no hay que hacer | Lo que demuestra madurez |
 | :--- | :--- | :--- |
@@ -2285,15 +2235,15 @@ Una demostración se cae por logística, no por código. Prepara esto **antes** 
 | Se te acaba el tiempo | Acelerar y saltarte los límites | Ir directo al bloque 4: reconocer la deuda técnica puntúa más que un caso feliz de más |
 | El tribunal encuentra un fallo real | Justificarlo o minimizarlo | Reconocerlo, decir qué test lo habría cazado y dónde lo colocarías |
 
-### Ahora tú · Redactar la Memoria Técnica de la Defensa
+#### Paso 5 · Redactar la Memoria Técnica de la Defensa
 
 Elabora la memoria técnica consolidada del proyecto. Cada apartado debe apoyarse en algo que existe en el repositorio, no en una descripción general:
 
 1. **Resumen ejecutivo:** qué resuelve el sistema y con qué tecnologías, en una página.
 2. **Modelo de datos:** diagrama entidad-relación y justificación del esquema SQL, tipo por tipo en los campos delicados (dinero, fechas, estados).
-3. **Contrato de la API:** matriz de seguridad RBAC/ABAC frente a la lista de endpoints, con el `openapi.json` de la sesión 77 como anexo.
+3. **Contrato de la API:** matriz de seguridad RBAC/ABAC frente a la lista de endpoints, con el `openapi.json` de la sesión 51 como anexo.
 4. **Resiliencia:** qué servicios externos consumes, con qué timeouts, qué pasa cuando fallan y cómo lo has comprobado.
-5. **Estrategia de pruebas:** qué cubre la suite, qué **no** cubre, y el dato de la sesión 76 sobre cuántos fallos encontró la pasada manual que los tests no vieron.
+5. **Estrategia de pruebas:** qué cubre la suite, qué **no** cubre, y el dato de la sesión 51 sobre cuántos fallos encontró la pasada manual que los tests no vieron.
 6. **Deuda técnica:** inventario honesto de lo que dejarías distinto, ordenado por lo que más duele. Este apartado, bien hecho, vale más que cualquier otro: es el que demuestra que sabes juzgar tu propio trabajo.
 7. **Trazabilidad del curso:** una tabla final que asocie cada capacidad del sistema con la unidad donde la aprendiste. Es tu propio índice de lo que sabes hacer, y es lo que te llevas del módulo.
 
@@ -2307,7 +2257,18 @@ Elabora la memoria técnica consolidada del proyecto. Cada apartado debe apoyars
   <p>La memoria técnica final y el guion de defensa del proyecto backend se entregarán exclusivamente en <strong>documento en formato PDF</strong> (<code>memoria-defensa-tecnica.pdf</code>), sin archivos markdown como tarea de alumnos.</p>
 </div>
 
-### Reto · Automatización de la demo con Newman o Bruno CLI
+#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **demostrad y defended el producto**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Automatización de la demo con Newman o Bruno CLI
 
 En lugar de pulsar las peticiones una a una en la interfaz gráfica durante la defensa, automatiza la ejecución de toda la suite de pruebas desde la línea de comandos:
 1. Instala el CLI de Bruno (`@usebruno/cli`) o utiliza Newman.
@@ -2321,27 +2282,6 @@ En lugar de pulsar las peticiones una a una en la interfaz gráfica durante la d
   <div><strong>Reto</strong><span>Ejecución desatendida de la suite completa de integración mediante CLI en terminal.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 78</p>
-  <ul class="checklist">
-    <li>Se supera la presentación comercial centrando la defensa en decisiones de ingeniería.</li>
-    <li>La demostración en vivo acredita el funcionamiento de las reglas de negocio en base de datos.</li>
-    <li>Se justifican con solvencia las decisiones de seguridad, persistencia y resiliencia.</li>
-    <li>Se reconocen los límites del sistema con honestidad técnica y propuestas de evolución.</li>
-    <li>El proyecto backend completo queda formalmente defendido y concluido con éxito.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué una demostración técnica en vivo es infinitamente más convincente que una presentación de diapositivas estáticas?</li>
-    <li>¿Cómo debe reaccionar un desarrollador si una petición falla inesperadamente durante una demo ante un tribunal?</li>
-    <li>¿Por qué reconocer las limitaciones o deuda técnica del proyecto mejora la valoración de un tribunal de ingeniería?</li>
-    <li>¿Qué tres pilares de un backend empresarial deben quedar demostrados durante la defensa técnica?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque demuestra de forma irrefutable que el sistema está vivo, que el código compila, que la base de datos persiste datos reales y que la aplicación responde a las reglas de negocio acordadas.</p>
@@ -2350,120 +2290,34 @@ En lugar de pulsar las peticiones una a una en la interfaz gráfica durante la d
   <p>4 · La integridad de los datos (persistencia transaccional en PostgreSQL), la seguridad (autenticación y autorización RBAC/ABAC) y la resiliencia (observabilidad, timeouts y degradación elegante ante fallos externos).</p>
 </details>
 
+### Cierre
+
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
+
+Se evalúan individualmente comprensión, implementación y verificación del backend; Intermodular utiliza sus propias evidencias del flujo de trabajo.
+
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 52 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-52.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-52.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
 ## Lo que debes recordar
 
-### El método
-
-En esta última unidad has demostrado que eres capaz de transformar una especificación empresarial ambigua en un backend completo, seguro, observable y defendible ante un tribunal de ingeniería.
-
-A lo largo de las 12 unidades del curso has construido una metodología profesional completa. Cuando afrontes cualquier proyecto backend en tu carrera profesional, aplica siempre este decálogo maestro:
-
-<figure class="diagram">
-  <figcaption>El decálogo maestro del desarrollo web en entorno servidor</figcaption>
-  <ol class="flow">
-    <li><strong>Especifica antes de codificar</strong>: define actores, casos de uso con intención de negocio y reglas invariantes en formato Gherkin.</li>
-    <li><strong>Controla el esquema SQL</strong>: prohíbe <code>ddl-auto=update</code>; utiliza scripts versionados y configura Hibernate en modo <code>validate</code>.</li>
-    <li><strong>Protege los tipos de datos</strong>: utiliza <code>BIGINT IDENTITY</code> para claves primarias y <strong><code>NUMERIC(12,2)</code> / <code>BigDecimal</code> obligatorio para dinero</strong>.</li>
-    <li><strong>Avanza por Cortes Verticales (<em>Vertical Slices</em>)</strong>: construye valor desplegable de extremo a extremo desde el primer día.</li>
-    <li><strong>Aplica la Pirámide de Pruebas</strong>: prioriza tests unitarios rápidos y audita la cobertura de ramas (<em>Branch Coverage</em>) con JaCoCo.</li>
-    <li><strong>Cierra el perímetro de seguridad</strong>: autentica con Bearer JWT y protege tanto los roles (RBAC) como la propiedad del recurso (ABAC con SpEL).</li>
-    <li><strong>Asume las falacias de la red</strong>: toda llamada externa con <code>RestClient</code> debe tener <strong>Timeouts estrictos</strong> y <strong>Degradación Elegante</strong>.</li>
-    <li><strong>Sanitiza todo fichero binario</strong>: almacena los ficheros con UUIDs en directorios externos al classpath y valida firmas y tipos MIME.</li>
-    <li><strong>Garantiza la observabilidad en producción</strong>: prohíbe <code>System.out</code>, estructura tus logs con SLF4J/Logback y correlaciona peticiones con <strong>MDC</strong>.</li>
-    <li><strong>Sincroniza y defiende con evidencias</strong>: mantén código, contratos OpenAPI y documentación alineados, y defiende tus decisiones con pruebas en vivo.</li>
-  </ol>
-</figure>
-
-### La idea más importante
-
-> **Un backend profesional no se define por las librerías que utiliza, sino por su capacidad para proteger la integridad de los datos, aislarse de los fallos del entorno, responder de forma predecible y poder ser defendido técnicamente ante cualquier tribunal o equipo de ingeniería.**
-
-Cualquiera puede hacer una demo que funcione con tres datos ideales en su portátil. Un verdadero ingeniero de servidor diseña sistemas que resisten la concurrencia, protegen la confidencialidad, no colapsan cuando se cae un proveedor externo y se depuran con facilidad gracias a trazas correlacionadas.
-
-### Las decisiones maestras que tienes que saber justificar
-
-| Decisión de ingeniería | Lo que tienes que poder defender ante un tribunal |
-| :--- | :--- |
-| **Corte Vertical frente a Capas Horizontales** | El corte vertical entrega valor funcional verificable de inmediato y reduce el riesgo de descubrir incompatibilidades arquitectónicas tardías. |
-| **`ddl-auto=validate` frente a `update`** | Evita la corrupción silenciosa del esquema relacional en producción, garantizando que los índices y restricciones están bajo control de scripts SQL versionados. |
-| **`NUMERIC` / `BigDecimal` frente a `DOUBLE`** | Elimina los errores de redondeo binario en operaciones aritméticas financieras, garantizando la exactitud contable al céntimo. |
-| **Seguridad ABAC con SpEL (`@seguridadService`)** | Impide que un usuario con rol legítimo (ej: jefe de proyecto) modifique recursos o presupuestos asignados a otros responsables de su mismo nivel. |
-| **Timeouts obligatorios en llamadas HTTP salientes** | Protege al servidor contra el agotamiento de hilos (*Thread Starvation*) en Tomcat cuando una API externa deja de responder. |
-| **Degradación Elegante (*Graceful Degradation*)** | Garantiza la continuidad del negocio; una incidencia en obra se registra aunque el servicio meteorológico externo esté fuera de línea. |
-| **Almacenamiento de ficheros con UUID en disco** | Neutraliza los ataques de salto de directorio (*Path Traversal*) y ejecución remota de código (RCE). |
-| **MDC con `Correlation ID` en logs** | Permite reconstruir en segundos la secuencia de operaciones de una petición específica entre miles de transacciones concurrentes. |
-| **Configuración granular de CORS** | Permite la integración segura con clientes frontend como Angular resolviendo de forma explícita las peticiones preflight `OPTIONS`. |
-| **Documentación viva OpenAPI 3 / Swagger** | Mantiene los contratos de la API sincronizados de forma automática con la implementación real del código fuente Java. |
-
-### Al terminar el curso deberías poder responder
-
-1. ¿Qué transformaciones ocurren en una petición HTTP desde que sale del navegador hasta que Hibernate ejecuta una sentencia SQL?
-2. ¿Por qué la separación estricta entre Entidades JPA y DTOs inmutables (`record`) es un principio innegociable de arquitectura limpia?
-3. ¿Cómo se diseñan las relaciones bidireccionales en JPA para evitar bucles infinitos de serialización y problemas de rendimiento N+1?
-4. ¿Cuál es el papel exacto del filtro `SecurityFilterChain` en Spring Security al interceptar una petición con Bearer Token?
-5. ¿Cómo se implementa el hashing unidireccional de contraseñas con BCrypt y qué función cumple el factor de coste (*work factor*)?
-6. ¿Por qué una API REST moderna debe estandarizar sus respuestas de error siguiendo el estándar RFC 7807 Problem Details?
-7. ¿Qué diferencia técnica existe entre una clave autonumérica `IDENTITY` de 64 bits y un identificador UUID en una base de datos relacional?
-8. ¿Cómo protege una máquina de estados finita a las entidades críticas frente a mutaciones ilegales o desordenadas?
-9. ¿Por qué es una mala práctica empresarial ejecutar llamadas HTTP externas dentro de un bloque `@Transactional`?
-10. ¿Cómo garantiza el patrón de Eventos de Dominio con `@TransactionalEventListener(phase = AFTER_COMMIT)` la consistencia eventual?
-11. ¿Qué es el protocolo `multipart/form-data` y por qué es obligatorio para la transmisión combinada de ficheros y metadatos?
-12. ¿Por qué almacenar archivos con UUID fuera de la carpeta `static` del proyecto previene ataques de ejecución remota de código (RCE)?
-13. ¿Qué mide la métrica de cobertura de ramas (*Branch Coverage*) y por qué es superior a la cobertura de líneas convencional?
-14. ¿Qué cuatro problemas operativos introduce el uso de `System.out.println` en aplicaciones web desplegadas en la nube?
-15. ¿Cómo se utiliza el `Mapped Diagnostic Context` (MDC) de SLF4J para inyectar trazabilidad contextual en los archivos de log?
-16. ¿Qué es una petición de sondeo previo (*Preflight Request*) en el estándar CORS y qué cabeceras exige resolver al backend?
-17. ¿Cómo se vincula el manejo de errores en un cliente Angular mediante un `HttpInterceptor` para capturar objetos Problem Details?
-18. ¿Qué diferencia una prueba unitaria pura con Mockito de una prueba de integración con `@SpringBootTest`?
-19. ¿Por qué el principio de degradación elegante es esencial para construir sistemas tolerantes a fallos en la web moderna?
-20. ¿Qué actitudes y argumentos distinguen una defensa técnica de ingeniería de software de una presentación meramente comercial?
-
-### El vocabulario consolidado del curso
-
-| Concepto | Significa |
-| :--- | :--- |
-| **API REST** | Interfaz de programación que utiliza los métodos, códigos y cabeceras del protocolo HTTP para la manipulación de recursos desacoplados. |
-| **DTO** | *Data Transfer Object*: objeto inmutable diseñado exclusivamente para transportar datos entre capas sin exponer el modelo relacional. |
-| **JPA / Hibernate** | Estándar de persistencia en Java y su implementación de referencia para mapear objetos de dominio a tablas relacionales SQL. |
-| **ACID** | Conjunto de propiedades que garantizan la fiabilidad de las transacciones en bases de datos: Atomicidad, Consistencia, Aislamiento y Durabilidad. |
-| **Spring Security** | Framework declarativo de autenticación, autorización y protección contra ataques para aplicaciones basadas en Spring. |
-| **JWT** | *JSON Web Token*: estándar compacto y autocontenido (RFC 7519) para transmitir identidades y permisos firmados criptográficamente. |
-| **RBAC / ABAC** | Control de acceso basado en roles (*Role-Based*) y control de acceso basado en atributos o propiedad del dato (*Attribute-Based*). |
-| **RestClient** | Cliente HTTP moderno, síncrono y fluido de Spring Boot para iniciar peticiones salientes hacia APIs de terceros. |
-| **Graceful Degradation** | Capacidad de un sistema para seguir operativo con datos por defecto o funcionalidad reducida ante la caída de un servicio secundario. |
-| **MDC** | *Mapped Diagnostic Context*: almacén por hilo de SLF4J que permite estampar identificadores de correlación en todas las líneas de log. |
-| **CORS** | Mecanismo de seguridad de los navegadores que regula si una aplicación web de un origen puede solicitar recursos a otro servidor distinto. |
-| **OpenAPI 3 / Swagger** | Especificación estándar e interfaz interactiva para describir contratos de APIs REST de forma viva y autogenerada. |
-| **Vertical Slice** | Estrategia de entrega que implementa un caso de uso completo a través de todas las capas en lugar de construir estratos horizontales aislados. |
-| **Walking Skeleton** | Implementación mínima ejecutable de extremo a extremo que conecta la interfaz, la lógica y la base de datos desde el inicio del proyecto. |
-| **Problem Details (RFC 7807)** | Formato estándar de JSON para comunicar errores de HTTP con estructura predecible (status, title, detail, instance). |
-
-### Comprobación final del producto de la unidad
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Proyecto backend completo · criterios de producción</p>
-  <ul class="checklist">
-    <li>La especificación de negocio está formalizada en actores, reglas invariantes y escenarios Gherkin.</li>
-    <li>El esquema relacional de PostgreSQL se gestiona mediante scripts SQL versionados con <code>ddl-auto=validate</code>.</li>
-    <li>Los importes monetarios utilizan tipos de precisión decimal exacta (<code>NUMERIC</code> / <code>BigDecimal</code>).</li>
-    <li>La arquitectura sigue una organización modular por componentes de negocio (*Package by Feature*).</li>
-    <li>La relación entre agregados garantiza la integridad presupuestaria mediante transacciones ACID.</li>
-    <li>El perímetro de seguridad combina autenticación JWT con autorización por rol (RBAC) y propiedad (ABAC).</li>
-    <li>Las llamadas externas disponen de timeouts estrictos y degradación elegante garantizada.</li>
-    <li>Los ficheros adjuntos se gestionan con almacenamiento seguro en disco mediante UUIDs opacos.</li>
-    <li>La observabilidad está garantizada mediante SLF4J, rotación de archivos y Correlation ID en MDC.</li>
-    <li>El backend es 100 % verificable de forma autónoma con Bruno e integrable con clientes Angular vía CORS.</li>
-  </ul>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Resultados de la unidad</p>
-  <ul class="checklist">
-    <li>Traducir una especificación en un modelo, un contrato y una arquitectura.</li>
-    <li>Implementar un backend completo con persistencia, seguridad e integraciones.</li>
-    <li>Conectar un cliente Angular sin hacer que la comprobación del backend dependa de él.</li>
-    <li>Probar, documentar y refactorizar antes de entregar.</li>
-    <li>Defender técnicamente las decisiones y reconocer las limitaciones del resultado.</li>
-  </ul>
-</div>
-
+La versión final amplía el producto existente y conserva sus pruebas. Debe demostrar autenticación, autorización por rol y recurso, persistencia, consultas, integraciones y cliente Angular, con documentación y despliegue reproducibles. Cada integrante defiende decisiones concretas y reconoce las limitaciones pendientes.

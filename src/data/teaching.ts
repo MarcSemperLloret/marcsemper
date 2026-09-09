@@ -187,15 +187,15 @@ export const teachingCourses: TeachingCourse[] = [
     hours: "~156 hours",
     hoursEs: "~156 horas",
     status: "current",
-    updatedAt: "2026-09-02",
+    updatedAt: "2026-09-09",
     summary:
       "Building a complete backend with Java and Spring Boot: from HTTP and the first endpoints to PostgreSQL, REST APIs, security, integrations, testing and Angular connection.",
     summaryEs:
       "Construcción de un backend completo con Java y Spring Boot: desde HTTP y los primeros endpoints hasta PostgreSQL, APIs REST, seguridad, integraciones, testing y conexión con Angular.",
     overview:
-      "A two-term, project-led module built around one application that grows with the class: a project manager with projects, tasks, tags and users. It starts as an in-memory API verified with an HTTP client from the very first unit, learns REST design before the code grows enough to make a redesign expensive, is reorganised into layers, gains persistence, meets a real browser client before security is added, with Angular kept for the final project, and finishes with authentication, integrations, testing and a technical defence. Automated tests appear from the architecture unit onwards rather than at the end. Guidance is deliberately reduced as the course advances, so the final project is driven by a specification rather than a tutorial.",
+      "One student-chosen CRUD project grows throughout the module, with enough domain complexity for relationships, business rules, transactions and testing. Two three-hour workshops per week: 25 minutes of explanation and demonstration, 140 minutes of project work and 15 minutes of verification. The existing 156-hour plan keeps 28 sessions (84 hours) in the first term and 24 (72 hours) in the second, subject to the centre calendar. The first term delivers a persistent backend in production; the second adds authentication, permissions, advanced APIs, integrations and Angular. The same repository and version are used in Intermodular Project: this module assesses the backend, while Intermodular assesses workflow, reviews, CI and deployment. The project manager in the notes is a worked example, not a mandatory topic.",
     overviewEs:
-      "Módulo de dos trimestres articulado alrededor de una única aplicación que crece con la clase: un gestor de proyectos con proyectos, tareas, etiquetas y usuarios. Empieza como una API en memoria comprobada con un cliente HTTP desde la primera unidad, aprende a diseñarse como API REST antes de que rediseñarla salga caro, se reorganiza en capas, incorpora persistencia, se enfrenta a un navegador real antes de añadir la seguridad, dejando Angular para el proyecto final, y termina con autenticación, integraciones, pruebas y defensa técnica. Los tests automáticos aparecen desde la unidad de arquitectura y no al final. El andamiaje se retira de forma deliberada: al principio se trabaja con mucha guía y el proyecto final parte únicamente de una especificación.",
+      "Un mismo CRUD elegido por el alumnado crece durante el módulo, con complejidad suficiente para trabajar relaciones, reglas de negocio, transacciones y pruebas. Dos talleres semanales de tres horas: 25 minutos de explicación y demostración, 140 de trabajo sobre el proyecto y 15 de comprobación. Se mantienen las 156 horas previstas: 28 sesiones (84 horas) en el primer trimestre y 24 (72 horas) en el segundo, ajustables al calendario del centro. El primero termina con un backend persistente en producción; el segundo incorpora autenticación, permisos, APIs avanzadas, integraciones y Angular. Se comparte repositorio y versión con Proyecto Intermodular: aquí se evalúa el servidor y allí el workflow, las revisiones, el CI y la puesta en producción. El gestor de los apuntes es un ejemplo resuelto, no un tema obligatorio.",
     outcomes: [
       "Explain what happens between an HTTP request and response, and diagnose it with browser tools and an HTTP client.",
       "Build and verify HTTP backends with controllers, JSON, DTOs, validation, errors and session state.",
@@ -251,8 +251,8 @@ export const teachingCourses: TeachingCourse[] = [
         verbEs: "ENTENDER",
         title: "From Java to the Web: HTTP and Spring Boot",
         titleEs: "De Java a la Web: HTTP y Spring Boot",
-        description: "From the browser request to a small in-memory CRUD API checked with an HTTP client, understanding every Spring piece that appears.",
-        descriptionEs: "De la petición del navegador a una pequeña API CRUD en memoria comprobada con un cliente HTTP, entendiendo cada pieza de Spring que aparece.",
+        description: "Choose the course project and build its first in-memory CRUD, understanding HTTP and each Spring component. Four three-hour workshops.",
+        descriptionEs: "Elegir el proyecto del curso y construir su primer CRUD en memoria, comprendiendo HTTP y cada pieza de Spring. Cuatro talleres de tres horas.",
         resources: []
       },
       {
@@ -306,8 +306,8 @@ export const teachingCourses: TeachingCourse[] = [
         verbEs: "INTEGRAR",
         title: "First-term project",
         titleEs: "Proyecto del primer trimestre",
-        description: "Integrating REST design, layered architecture and persistence from a set of requirements, with a code review and a technical defence.",
-        descriptionEs: "Integrar diseño REST, arquitectura por capas y persistencia a partir de unos requisitos, con revisión de código y defensa técnica.",
+        description: "Close, review and defend the persistent, deployed version of the project chosen in the first session. Two sessions; the project continues throughout the term.",
+        descriptionEs: "Cerrar, revisar y defender la versión persistente y publicada del proyecto elegido en la primera sesión. Dos sesiones; el proyecto se construye durante todo el trimestre.",
         resources: []
       },
       {
@@ -326,10 +326,10 @@ export const teachingCourses: TeachingCourse[] = [
         number: "UD8",
         verb: "CONNECT",
         verbEs: "CONECTAR",
-        title: "The first client: a page in the browser",
-        titleEs: "El primer cliente: una página en el navegador",
-        description: "A framework-free page calling the API with no authentication, so that the browser and CORS are learned in isolation before security is added.",
-        descriptionEs: "Una página sin framework llamando a la API y sin autenticación, para que el navegador y CORS se aprendan aislados antes de añadir la seguridad.",
+        title: "The project client: browser and CORS",
+        titleEs: "El cliente del proyecto: navegador y CORS",
+        description: "Revisit the client already published in Intermodular, diagnose browser and CORS behaviour, and verify integration before adding authentication.",
+        descriptionEs: "Retomar el cliente ya publicado en Intermodular, diagnosticar el navegador y CORS y verificar la integración antes de añadir autenticación.",
         resources: []
       },
       {
@@ -372,8 +372,8 @@ export const teachingCourses: TeachingCourse[] = [
         verbEs: "DEFENDER",
         title: "Complete backend project",
         titleEs: "Proyecto backend completo",
-        description: "An autonomous project from specification and modelling through implementation, Angular integration, testing, documentation and technical defence.",
-        descriptionEs: "Un proyecto autónomo desde la especificación y el modelado hasta la implementación, la integración con Angular, los tests, la documentación y la defensa técnica.",
+        description: "Complete and defend the evolution of the same product: specification, modelling, implementation, Angular integration, tests and documentation.",
+        descriptionEs: "Completar y defender la evolución del mismo producto: especificación, modelado, implementación, integración con Angular, tests y documentación.",
         resources: []
       }
     ]
@@ -389,10 +389,10 @@ export const teachingCourses: TeachingCourse[] = [
     hoursEs: "~78 horas",
     status: "current",
     updatedAt: "2026-09-09",
-    summary: "A client-side portfolio and a small CRUD used as the vehicle for learning how professional work actually travels: issues, branches, reviewed pull requests, continuous integration and automatic deployment.",
-    summaryEs: "Un portfolio de cliente y un CRUD pequeño usados como vehículo para aprender cómo circula el trabajo profesional: issues, ramas, pull requests revisadas, integración continua y despliegue automático.",
-    overview: "A project module that assesses method rather than technology. The site the students build is deliberately modest, because it is not what is being marked: what is marked is whether the work is broken down into checkable tasks, whether every change travels through a branch and a reviewed pull request, whether an automated pipeline can block a merge, and whether the deployment is reproducible. The technical quality of that same code is assessed in the modules that teach it. The evidence is dated, so it cannot be reconstructed the week before the deadline.",
-    overviewEs: "Módulo de proyecto que evalúa el método, no la tecnología. La web que se construye es deliberadamente modesta porque no es lo que se corrige: lo que se corrige es si el trabajo está troceado en tareas comprobables, si cada cambio pasa por una rama y una pull request revisada, si un pipeline automático puede bloquear una fusión y si el despliegue es reproducible. La calidad técnica de ese mismo código se evalúa en los módulos que la enseñan. Las evidencias llevan fecha y no se pueden reconstruir la semana antes de la entrega.",
+    summary: "A portfolio and the same student-chosen CRUD developed in Server-side Web Development: issues, branches, reviewed pull requests, CI and backend deployment during the first term.",
+    summaryEs: "Un portfolio y el mismo CRUD elegido y desarrollado en Servidor: issues, ramas, pull requests revisadas, CI y puesta en producción del backend durante el primer trimestre.",
+    overview: "The working method is assessed on the same CRUD chosen and built throughout the first term in Server-side Web Development. Intermodular focuses on checkable issues, branches, reviewed pull requests, CI that can block a merge, and reproducible deployment. The backend is published during the first term, first in memory and then with PostgreSQL as persistence is introduced in Server-side. Both modules use the same repository and version with separate assessment: backend implementation and behaviour in Server-side; workflow, CI and production delivery here. The portfolio provides the client, and dated repository evidence records the process throughout the term.",
+    overviewEs: "El método de trabajo se evalúa sobre el mismo CRUD elegido y construido durante todo el primer trimestre en Servidor. Intermodular se centra en issues comprobables, ramas, pull requests revisadas, CI capaz de bloquear una fusión y despliegue reproducible. El backend se publica en el primer trimestre, primero en memoria y después con PostgreSQL cuando Servidor incorpora persistencia. Ambos módulos utilizan el mismo repositorio y versión con evaluaciones distintas: implementación y funcionamiento del backend en Servidor; workflow, CI y entrega en producción aquí. El portfolio aporta el cliente y las evidencias fechadas del repositorio recogen el proceso durante todo el trimestre.",
     outcomes: [
       "Turn work into issues with checkable acceptance criteria.",
       "Publish a static site on Azure with continuous deployment from GitHub.",

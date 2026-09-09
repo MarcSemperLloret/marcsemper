@@ -5,10 +5,10 @@ section: "ud-07"
 order: 7
 lang: "es"
 summary: "Lo que distingue una API que funciona de una que se puede consumir: relaciones expuestas con criterio, filtros, paginación, documentación y tests de endpoint."
-duration: "12 horas · 2 semanas · 6 sesiones"
-modality: "Taller de diseño · 40 % guía / 60 % autonomía"
-deliverable: "Una API REST con relaciones, filtros, paginación, documentación OpenAPI y tests de endpoint."
-date: "2026-09-02"
+duration: "12 horas · 2 semanas · 4 sesiones de 3 h"
+modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
+deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+date: "2026-09-09"
 outcomes:
   - "Exponer relaciones sin filtrar el modelo interno ni provocar respuestas gigantes."
   - "Diseñar filtros y búsquedas que no se conviertan en un lenguaje de consulta improvisado."
@@ -22,41 +22,19 @@ priorKnowledge:
   - "JPA, relaciones y consultas."
 ---
 
-<p class="lead">La API ya persiste datos y ya está bien nombrada. Falta lo que se nota cuando otro la consume: relaciones, filtros, páginas y documentación.</p>
+<p class="lead">Comienza el segundo trimestre sobre la versión persistente del mismo producto. Se profundiza en relaciones expuestas, filtros, paginación, contrato y pruebas HTTP.</p>
 
-<div class="rule">
-  <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje bajo. Se plantean requisitos de consumo y el diseño concreto lo decide el alumnado, justificándolo.</p>
-</div>
+## Semana 15 · Relaciones expuestas y filtros
 
-<div class="rule">
-  <p class="rule-label">De dónde sale lo de hoy</p>
-  <p>Esta unidad no abre nada nuevo: cobra las deudas de las anteriores. Las <strong>relaciones</strong> de la sesión 43 son las que modelaste en la UD5 y que hasta ahora solo existían en la base de datos. Los <strong>filtros y la paginación</strong> resuelven el «buscar recorre la lista entera» que la UD4 dejó anotado como defecto conocido. Los <strong>tests de endpoint</strong> con MockMvc son la capa que faltaba sobre los tests de service de la UD4 y los de repositorio de la UD5. Y la <strong>documentación</strong> convierte en contrato público el diseño REST que decidiste en la UD3.</p>
-</div>
+## Sesión 29 · Relaciones expuestas y filtros
 
-## Semana 15 · Consultar sin ahogar la respuesta
+### Se explica
 
-## Sesión 43 · Exponer relaciones sin romper el contrato
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> los tres patrones para exponer recursos relacionados en REST (incrustación resumida, subrecurso dedicado y enlace por ID), cómo prevenir respuestas gigantes (*payload bloat*) y cómo romper ciclos de serialización JSON.</li>
-    <li><strong>2. Haz:</strong> diseña DTOs específicos de relación (<code>ProyectoResponse</code>, <code>TareaResumenResponse</code> y <code>TareaDetalleResponse</code>) e implementa el subrecurso REST canónico <code>GET /proyectos/{id}/tareas</code> sin filtrar entidades internas.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas peticiones HTTP en Bruno o Postman verificando que la respuesta es compacta, no arrastra datos innecesarios y elimina cualquier riesgo de recursión infinita.</li>
-  </ol>
-</div>
+El segundo trimestre amplía la versión persistente existente. Los recursos relacionados y los filtros deben seguir un contrato predecible.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué ocurre a nivel de serialización JSON si un controlador devuelve directamente una entidad JPA que tiene una relación bidireccional <code>@OneToMany</code> y <code>@ManyToOne</code>?</li>
-    <li>¿Qué tres opciones existen para representar un recurso relacionado en el JSON de respuesta de una API REST?</li>
-    <li>¿Por qué incluir la lista completa de tareas dentro del detalle de un proyecto puede convertirse en un problema grave de rendimiento cuando el sistema crece?</li>
-  </ol>
-</div>
-
-### El dilema de la profundidad relacional en REST
+#### El dilema de la profundidad relacional en REST
 
 En la UD5 aprendiste a modelar relaciones en PostgreSQL y JPA: un proyecto tiene muchas tareas, una tarea pertenece a un proyecto y tiene muchas etiquetas.
 
@@ -77,7 +55,7 @@ Si un cliente solicita `GET /proyectos/1`, existen dos extremos desastrosos:
   <p>Cada endpoint debe responder únicamente a las necesidades de su caso de uso de cliente, delimitando la frontera de datos mediante DTOs específicos.</p>
 </div>
 
-### Los tres patrones para exponer recursos relacionados
+#### Los tres patrones para exponer recursos relacionados
 
 Para diseñar una API REST limpia y predecible, disponemos de tres patrones fundamentales:
 
@@ -96,11 +74,60 @@ Para diseñar una API REST limpia y predecible, disponemos de tres patrones fund
 | **2 · Subrecurso dedicado** (*Sub-resource endpoint*) | La colección hija no se incrusta en el padre; se expone a través de una ruta jerárquica propia. | La colección hija puede ser numerosa, tiene ciclo de vida propio o requiere paginación y filtros independientes. | `GET /proyectos/{id}/tareas` para listar las tareas de un proyecto. |
 | **3 · Identificador o Enlace** | El DTO devuelve únicamente la clave ajena (`Long responsableId`) o un enlace URI al recurso completo. | El cliente rara vez necesita los datos del recurso vinculado de forma inmediata. | En `TareaResponse`: `Long responsableId` en lugar del usuario completo. |
 
-### Paso a paso guiado · Subrecursos desacoplados y DTOs específicos
+#### La trampa de la explosión combinatoria de endpoints
+
+Cuando una API empieza a usarse, los clientes necesitan filtrar información:
+* El frontend de proyectos necesita ver *las tareas de un proyecto*.
+* El panel de incidencias necesita ver *las tareas de prioridad alta*.
+* El informe de calidad necesita ver *las tareas completadas de un proyecto*.
+* El buscador necesita encontrar tareas cuyo título contenga una palabra clave.
+
+Un desarrollador principiante suele caer en la **explosión combinatoria de rutas**:
+* `GET /tareas/proyecto/{id}`
+* `GET /tareas/prioridad/{prioridad}`
+* `GET /tareas/completadas`
+* `GET /tareas/proyecto/{id}/prioridad/{prioridad}`
+* `GET /tareas/proyecto/{id}/completadas`
+
+Con tan solo 4 criterios combinables, ¡necesitarías crear 2⁴ = 16 endpoints distintos en tu controlador!
+
+<div class="rule">
+  <p class="rule-label">La convención REST para filtros</p>
+  <p><strong>Un recurso de colección tiene una única ruta canónica en plural (<code>/tareas</code>).</strong></p>
+  <p>Todas las variaciones de filtrado, búsqueda y ordenación se transmiten mediante parámetros de consulta en la URL (<em>Query Parameters</em>): <code>GET /tareas?prioridad=ALTA&completada=false</code>.</p>
+</div>
+
+#### Estrategias de filtrado en Spring Data JPA
+
+Para resolver consultas con parámetros opcionales en Spring Data existen tres enfoques principales:
+
+| Enfoque | Cómo funciona | Ventajas y Desventajas |
+| :--- | :--- | :--- |
+| **Métodos derivados** (`findBy...`) | Nombres de método largos como `findByProyectoIdAndPrioridadAndCompletada`. | Inviable con filtros opcionales: si un parámetro viene nulo, Spring busca filas con valor `NULL` en lugar de omitir el filtro. |
+| **JPQL condicional con comprobación de nulos** | Consulta `@Query` con cláusulas `(:param IS NULL OR columna = :param)`. | **Recomendado para 2-5 filtros comunes.** Muy legible, nativo de JPA, sin librerías externas y con excelente rendimiento. |
+| **Spring Data Specifications (Criteria API)** | Objetos `Specification<T>` que componen el predicado SQL dinámicamente con la API de criterios de JPA. | Máxima flexibilidad para catálogos con 15+ filtros dinámicos, pero introduce mayor complejidad de código y boiler plate. |
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Revisad cómo se consultan las relaciones de vuestro dominio y añadid filtros combinables.
+
+Aplicad los filtros a casos reales del producto y probad valores ausentes, inválidos y sin resultados.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Exponer relaciones sin romper el contrato</p>
+
+#### Paso 2 · Subrecursos desacoplados y DTOs específicos
 
 Vamos a aplicar estos patrones al gestor de proyectos para que un cliente pueda consultar tanto el proyecto de forma ligera como su colección de tareas asociadas sin saturar la red.
-
-<p class="stage">Paso 1 · Diseñar los DTOs de salida específicos</p>
 
 Creamos dos representaciones distintas según la vista del cliente:
 
@@ -139,8 +166,6 @@ public record TareaDetalleResponse(
   <p>Observa cómo <code>TareaDetalleResponse</code> no contiene un objeto <code>Proyecto</code> anidado con todos sus campos ni entidades <code>Etiqueta</code>, sino solo los datos planos que la pantalla necesita (<code>proyectoId</code>, <code>proyectoNombre</code> y nombres de etiquetas). El contrato es completamente inmune a cambios internos del esquema.</p>
 </div>
 
-<p class="stage">Paso 2 · Definir la consulta en TareaRepository</p>
-
 Para resolver el subrecurso sin provocar problemas N+1, definimos la consulta filtrada por la clave foránea en `TareaRepository`:
 
 ```java
@@ -150,8 +175,6 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     List<Tarea> findByProyectoId(@Param("proyectoId") Long proyectoId);
 }
 ```
-
-<p class="stage">Paso 3 · Implementar la regla en TareaService</p>
 
 El servicio valida primero la existencia del proyecto padre antes de buscar sus tareas, garantizando que un identificador erróneo devuelva un código HTTP semántico:
 
@@ -183,8 +206,6 @@ public class TareaService {
 }
 ```
 
-<p class="stage">Paso 4 · Exponer el subrecurso en ProyectoController</p>
-
 En la arquitectura REST, los subrecursos jerárquicos se definen colgando de la ruta del padre:
 
 ```java
@@ -213,7 +234,7 @@ public class ProyectoController {
 }
 ```
 
-### La comprobación · Verificar la frontera de datos en Bruno
+#### Paso 3 · Verificar la frontera de datos en Bruno
 
 Arranca tu aplicación y ejecuta estas dos peticiones en **Bruno** o **Postman**:
 
@@ -227,7 +248,7 @@ Arranca tu aplicación y ejecuta estas dos peticiones en **Bruno** o **Postman**
    * Código de respuesta: `404 Not Found`.
    * El servicio intercepta la ausencia del padre y emite el error estándar RFC 7807 sin devolver un array vacío engañoso.
 
-### Ahora tú · Subrecurso de etiquetas por tarea
+#### Paso 4 · Subrecurso de etiquetas por tarea
 
 Aplica el mismo principio para exponer la relación Many-to-Many entre tareas y etiquetas mediante un subrecurso dedicado:
 
@@ -238,111 +259,9 @@ Aplica el mismo principio para exponer la relación Many-to-Many entre tareas y 
 4. Asegúrate de que `EtiquetaResponse` no incluya la lista de tareas de vuelta (para no generar ciclos de datos).
 5. Comprueba en Bruno que al consultar las etiquetas de una tarea se devuelve la lista limpia con código `200 OK`.
 
-### Reto · ¿Incrustar o enlazar? El parámetro `?expand` frente al subrecurso
+<p class="stage">Filtros y búsqueda</p>
 
-En APIs públicas de gran escala (como Stripe o GitHub) a veces se utiliza un parámetro de consulta para permitir al cliente decidir si quiere incrustar un recurso relacionado en una sola llamada:
-
-* *Ejemplo:* `GET /proyectos/1?expand=tareas` frente a `GET /proyectos/1/tareas`.
-
-Analiza y responde con criterio de ingeniería:
-1. ¿Qué ventaja de latencia tiene el parámetro `?expand` para una aplicación móvil conectada con cobertura 4G inestable?
-2. ¿Qué coste arquitectónico introduce soportar `?expand` en la capa de servicios y en los mappers de DTOs en comparación con mantener dos endpoints separados?
-3. ¿Cómo resolverías la consulta en JPA si el cliente envía `?expand=tareas` para evitar que Hibernate ejecute consultas adicionales innecesarias?
-
-<div class="rule">
-  <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita una justificación de diseño de endpoints de relaciones, el formato de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-relaciones.pdf</code>), nunca un archivo markdown suelto.</p>
-</div>
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>DTOs de salida desacoplados y subrecurso <code>GET /proyectos/{id}/tareas</code> devolviendo <code>TareaResumenResponse</code>.</span></div>
-  <div><strong>Si lo tienes</strong><span>Subrecurso <code>GET /tareas/{id}/etiquetas</code> implementado con validación de existencia del padre y código 404 semántico.</span></div>
-  <div><strong>Reto</strong><span>Análisis del compromiso técnico de <code>?expand</code> frente a subrecursos justificado con métricas de red y complejidad en JPA.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 43</p>
-  <ul class="checklist">
-    <li>Ninguna entidad JPA se serializa directamente en las respuestas HTTP de controladores.</li>
-    <li>Las respuestas de detalle de proyectos no arrastran colecciones masivas de tareas en su carga inicial.</li>
-    <li>Los subrecursos jerárquicos (<code>/proyectos/{id}/tareas</code>) responden a colecciones de recursos relacionados.</li>
-    <li>La petición a un subrecurso de un padre inexistente responde <code>404 Not Found</code> en lugar de un array vacío.</li>
-    <li>Las relaciones Many-to-Many no provocan recursión infinita ni bucles circulares en Jackson.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué se produce una excepción <code>StackOverflowError</code> al serializar directamente entidades JPA bidireccionales?</li>
-    <li>¿Cuál es la diferencia entre el patrón <em>Embedded Summary</em> y el patrón <em>Sub-resource</em>?</li>
-    <li>¿Por qué una consulta a <code>GET /proyectos/999/tareas</code> debe devolver 404 y no un array vacío <code>[]</code>?</li>
-    <li>¿Qué beneficio aporta devolver <code>Long proyectoId</code> en el DTO de tarea en lugar de un objeto <code>Proyecto</code> anidado completo?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque Jackson serializa el padre, que contiene a los hijos; al serializar cada hijo, Jackson lee la referencia hacia el padre y vuelve a serializarlo recursivamente sin fin hasta agotar la pila de memoria (call stack).</p>
-  <p>2 · Embedded Summary incrusta un resumen compacto de los datos del hijo dentro del propio JSON del recurso padre; Sub-resource externaliza la colección a una URL jerárquica independiente (/padre/{id}/hijos).</p>
-  <p>3 · Porque el recurso padre (el proyecto 999) no existe en el sistema. Devolver un array vacío induciría al cliente a pensar erróneamente que el proyecto existe pero que simplemente no tiene tareas asignadas todavía.</p>
-  <p>4 · Reduce el tamaño del JSON transmitido por red (payload), evita consultas SQL innecesarias de atributos no utilizados y aísla el contrato de la API de cambios en la estructura interna de la entidad proyecto.</p>
-</details>
-
-## Sesión 44 · Filtros y búsqueda
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> cómo diseñar filtros combinables con parámetros de consulta (<em>Query Parameters</em>), cómo formular búsquedas textuales parciales insensibles a mayúsculas y cómo implementar consultas dinámicas en Spring Data JPA sin explosión combinatoria de endpoints.</li>
-    <li><strong>2. Haz:</strong> implementa un endpoint de consulta multicriterio <code>GET /tareas?proyectoId=...&prioridad=...&completada=...&q=...</code> con JPQL condicional y manejo de valores opcionales en el repositorio.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas peticiones en Bruno combinando criterios en distintas variaciones y auditas la consola SQL para verificar que PostgreSQL solo filtra por los parámetros enviados.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué crear rutas específicas como <code>/tareas/urgentes</code> o <code>/tareas/por-proyecto</code> es un antipatrón cuando la aplicación crece?</li>
-    <li>¿Qué diferencia técnica y semántica existe entre un <code>@PathVariable</code> y un <code>@RequestParam</code> en Spring MVC?</li>
-    <li>Si un cliente no envía un parámetro opcional en la URL, ¿qué valor recibe el método del controlador y cómo debe tratarlo la consulta en la base de datos?</li>
-  </ol>
-</div>
-
-### La trampa de la explosión combinatoria de endpoints
-
-Cuando una API empieza a usarse, los clientes necesitan filtrar información:
-* El frontend de proyectos necesita ver *las tareas de un proyecto*.
-* El panel de incidencias necesita ver *las tareas de prioridad alta*.
-* El informe de calidad necesita ver *las tareas completadas de un proyecto*.
-* El buscador necesita encontrar tareas cuyo título contenga una palabra clave.
-
-Un desarrollador principiante suele caer en la **explosión combinatoria de rutas**:
-* `GET /tareas/proyecto/{id}`
-* `GET /tareas/prioridad/{prioridad}`
-* `GET /tareas/completadas`
-* `GET /tareas/proyecto/{id}/prioridad/{prioridad}`
-* `GET /tareas/proyecto/{id}/completadas`
-
-Con tan solo 4 criterios combinables, ¡necesitarías crear 2⁴ = 16 endpoints distintos en tu controlador!
-
-<div class="rule">
-  <p class="rule-label">La convención REST para filtros</p>
-  <p><strong>Un recurso de colección tiene una única ruta canónica en plural (<code>/tareas</code>).</strong></p>
-  <p>Todas las variaciones de filtrado, búsqueda y ordenación se transmiten mediante parámetros de consulta en la URL (<em>Query Parameters</em>): <code>GET /tareas?prioridad=ALTA&completada=false</code>.</p>
-</div>
-
-### Estrategias de filtrado en Spring Data JPA
-
-Para resolver consultas con parámetros opcionales en Spring Data existen tres enfoques principales:
-
-| Enfoque | Cómo funciona | Ventajas y Desventajas |
-| :--- | :--- | :--- |
-| **Métodos derivados** (`findBy...`) | Nombres de método largos como `findByProyectoIdAndPrioridadAndCompletada`. | Inviable con filtros opcionales: si un parámetro viene nulo, Spring busca filas con valor `NULL` en lugar de omitir el filtro. |
-| **JPQL condicional con comprobación de nulos** | Consulta `@Query` con cláusulas `(:param IS NULL OR columna = :param)`. | **Recomendado para 2-5 filtros comunes.** Muy legible, nativo de JPA, sin librerías externas y con excelente rendimiento. |
-| **Spring Data Specifications (Criteria API)** | Objetos `Specification<T>` que componen el predicado SQL dinámicamente con la API de criterios de JPA. | Máxima flexibilidad para catálogos con 15+ filtros dinámicos, pero introduce mayor complejidad de código y boiler plate. |
-
-### Búsqueda textual insensible a mayúsculas y acentos
+#### Paso 5 · Búsqueda textual insensible a mayúsculas y acentos
 
 Para que un buscador sea usable, escribir `"bug"`, `"Bug"` o `"BUG"` debe devolver exactamente los mismos resultados. 
 
@@ -354,11 +273,9 @@ LOWER(t.titulo) LIKE LOWER(CONCAT('%', :q, '%'))
 
 Si el parámetro `:q` es nulo o viene vacío, la cláusula `(:q IS NULL OR ...)` desactiva la condición y devuelve todos los registros.
 
-### Paso a paso guiado · Consulta multicriterio de tareas
+#### Paso 6 · Consulta multicriterio de tareas
 
 Vamos a construir el buscador de tareas combinable en nuestra aplicación:
-
-<p class="stage">Paso 1 · Diseñar la consulta JPQL en TareaRepository</p>
 
 Añadimos el método de búsqueda en `TareaRepository` asegurándonos de incluir `JOIN FETCH` sobre el proyecto para evitar el problema N+1:
 
@@ -387,8 +304,6 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
   <p class="rule-label">Por qué un filtro nulo no penaliza la consulta</p>
   <p>Al escribir <code>(:proyectoId IS NULL OR p.id = :proyectoId)</code>, si el cliente no envía el parámetro en la petición, el valor es <code>null</code>. La primera mitad de la condición se evalúa como <code>TRUE</code> y el motor de base de datos descarta ese filtro sin examinar la columna, evaluando únicamente los filtros que sí fueron proporcionados.</p>
 </div>
-
-<p class="stage">Paso 2 · Implementar el servicio con sanitización de texto</p>
 
 En `TareaService`, limpiamos los espacios en blanco del término de búsqueda y tratamos cadenas vacías como nulos:
 
@@ -421,8 +336,6 @@ public class TareaService {
 }
 ```
 
-<p class="stage">Paso 3 · Exponer el endpoint unificado en TareaController</p>
-
 En `TareaController`, definimos los parámetros como `@RequestParam(required = false)`:
 
 ```java
@@ -449,7 +362,7 @@ public class TareaController {
 }
 ```
 
-### La comprobación · Pruebas combinatorias en Bruno
+#### Paso 7 · Pruebas combinatorias en Bruno
 
 Abre **Bruno** o **Postman** y verifica cómo se comporta el mismo endpoint `/tareas` según los parámetros que envíes:
 
@@ -466,7 +379,7 @@ Abre **Bruno** o **Postman** y verifica cómo se comporta el mismo endpoint `/ta
 6. **Auditoría de consola SQL:**
    * Observa la sentencia emitida en la terminal: verás una única consulta SQL con `LEFT/INNER JOIN` y la cláusula `WHERE` evaluada de forma limpia en PostgreSQL.
 
-### Si algo no sale como dice el guion
+#### Paso 8 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -476,7 +389,7 @@ Abre **Bruno** o **Postman** y verifica cómo se comporta el mismo endpoint `/ta
 | `Parameter with that name did not exist` | El `@Param` no coincide | El nombre del `@Param` debe ser idéntico al `:nombre` de la consulta |
 | Filtrar por texto con acentos no encuentra nada | Colación de PostgreSQL | Es comportamiento del motor, no de tu código: anótalo como limitación conocida |
 
-### Ahora tú · Filtro de proyectos por estado y nombre
+#### Paso 9 · Filtro de proyectos por estado y nombre
 
 Aplica el patrón de filtrado a la entidad `Proyecto`:
 
@@ -492,7 +405,48 @@ Aplica el patrón de filtrado a la entidad `Proyecto`:
   <dd>Las cuatro combinaciones de filtros devuelven lo que deben; una petición sin parámetros devuelve la lista completa y no una vacía; un valor no booleano devuelve <code>400</code>; y la búsqueda encuentra igual escribiendo en mayúsculas o en minúsculas.</dd>
 </dl>
 
-### Reto · Caracteres especiales y seguridad en búsquedas `LIKE`
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **exponed relaciones y filtros del producto**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · ¿Incrustar o enlazar? El parámetro `?expand` frente al subrecurso
+
+En APIs públicas de gran escala (como Stripe o GitHub) a veces se utiliza un parámetro de consulta para permitir al cliente decidir si quiere incrustar un recurso relacionado en una sola llamada:
+
+* *Ejemplo:* `GET /proyectos/1?expand=tareas` frente a `GET /proyectos/1/tareas`.
+
+Analiza y responde con criterio de ingeniería:
+1. ¿Qué ventaja de latencia tiene el parámetro `?expand` para una aplicación móvil conectada con cobertura 4G inestable?
+2. ¿Qué coste arquitectónico introduce soportar `?expand` en la capa de servicios y en los mappers de DTOs en comparación con mantener dos endpoints separados?
+3. ¿Cómo resolverías la consulta en JPA si el cliente envía `?expand=tareas` para evitar que Hibernate ejecute consultas adicionales innecesarias?
+
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita una justificación de diseño de endpoints de relaciones, el formato de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-relaciones.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>DTOs de salida desacoplados y subrecurso <code>GET /proyectos/{id}/tareas</code> devolviendo <code>TareaResumenResponse</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Subrecurso <code>GET /tareas/{id}/etiquetas</code> implementado con validación de existencia del padre y código 404 semántico.</span></div>
+  <div><strong>Reto</strong><span>Análisis del compromiso técnico de <code>?expand</code> frente a subrecursos justificado con métricas de red y complejidad en JPA.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque Jackson serializa el padre, que contiene a los hijos; al serializar cada hijo, Jackson lee la referencia hacia el padre y vuelve a serializarlo recursivamente sin fin hasta agotar la pila de memoria (call stack).</p>
+  <p>2 · Embedded Summary incrusta un resumen compacto de los datos del hijo dentro del propio JSON del recurso padre; Sub-resource externaliza la colección a una URL jerárquica independiente (/padre/{id}/hijos).</p>
+  <p>3 · Porque el recurso padre (el proyecto 999) no existe en el sistema. Devolver un array vacío induciría al cliente a pensar erróneamente que el proyecto existe pero que simplemente no tiene tareas asignadas todavía.</p>
+  <p>4 · Reduce el tamaño del JSON transmitido por red (payload), evita consultas SQL innecesarias de atributos no utilizados y aísla el contrato de la API de cambios en la estructura interna de la entidad proyecto.</p>
+</details>
+
+##### Reto · Caracteres especiales y seguridad en búsquedas `LIKE`
 
 En las consultas con operador `LIKE`, los caracteres `%` (cualquier secuencia) y `_` (cualquier carácter único) son comodines del motor SQL.
 
@@ -507,27 +461,6 @@ Analiza qué ocurre si un usuario malicioso o despistado introduce en el buscado
   <div><strong>Reto</strong><span>Escape de comodines SQL (<code>%</code>, <code>_</code>) implementado y análisis de impacto en índices B-Tree justificado.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 44</p>
-  <ul class="checklist">
-    <li>La API utiliza una única ruta canónica en plural para consultar colecciones (<code>/tareas</code>, <code>/proyectos</code>).</li>
-    <li>Todos los filtros se transmiten como parámetros de consulta (<code>@RequestParam(required = false)</code>).</li>
-    <li>La consulta JPQL resuelve combinaciones arbitrarias de filtros sin requerir múltiples métodos en el repositorio.</li>
-    <li>La búsqueda textual es insensible a mayúsculas mediante <code>LOWER()</code> y limpia espacios superfluos.</li>
-    <li>La consulta no provoca el problema N+1 al incluir <code>JOIN FETCH</code> sobre las entidades relacionadas.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué es preferible usar parámetros de consulta (query params) frente a crear rutas dedicadas para cada filtro?</li>
-    <li>¿Cómo funciona el truco de <code>(:param IS NULL OR columna = :param)</code> en una consulta JPQL?</li>
-    <li>¿Por qué debemos usar <code>LOWER()</code> en ambos lados de una comparación <code>LIKE</code>?</li>
-    <li>¿Qué ocurre con los índices tradicionales de base de datos cuando una búsqueda utiliza <code>%termino%</code>?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque evita la explosión combinatoria de rutas (2^N endpoints), respeta la semántica REST de tener una única URI canónica por recurso y permite al cliente combinar cualquier número de filtros opcionales libremente.</p>
@@ -536,27 +469,43 @@ Analiza qué ocurre si un usuario malicioso o despistado introduce en el buscado
   <p>4 · El motor de base de datos no puede utilizar un índice B-Tree para saltar directamente a los registros porque no conoce el prefijo de inicio, obligando a un escaneo secuencial completo de la tabla (Full Table Scan).</p>
 </details>
 
-## Sesión 45 · Paginación y ordenación en la API
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> los riesgos del consumo sin límites, la abstracción <code>Pageable</code>, <code>Page&lt;T&gt;</code> y <code>Sort</code> de Spring Data, y la estructura estándar de una respuesta paginada con metadatos para el cliente.</li>
-    <li><strong>2. Haz:</strong> implementa paginación y ordenación automática en los endpoints de proyectos y tareas utilizando <code>@PageableDefault</code> y mapeo funcional sobre páginas.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas peticiones en Bruno variando <code>page</code>, <code>size</code> y <code>sort</code>, verificando en los registros SQL que PostgreSQL ejecuta cláusulas <code>LIMIT</code>, <code>OFFSET</code> y <code>ORDER BY</code> reales.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué consecuencias fatales tiene para un servidor backend ejecutar <code>findAll()</code> sobre una tabla con 500.000 registros en un entorno real de producción?</li>
-    <li>¿Qué cuatro metadatos numéricos necesita conocer cualquier interfaz de usuario (web o móvil) para poder renderizar una barra de paginación completa?</li>
-    <li>¿Por qué los parámetros de ordenación recibidos desde el cliente deben ser validados para evitar exponer nombres de columnas de base de datos?</li>
-  </ol>
-</div>
+El cliente puede consultar relaciones y filtrar sin conocer las tablas internas.
 
-### El colapso del `findAll()` sin límites
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 29 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-29.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-29.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 30 · Paginación y ordenación
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Paginar limita el coste de una respuesta; ordenar de forma estable evita resultados impredecibles entre páginas.
+
+#### El colapso del `findAll()` sin límites
 
 Durante las primeras semanas de desarrollo, todas las tablas tienen 10 o 20 filas. En ese escenario, hacer `tareaRepository.findAll()` parece inofensivo: responde en 3 milisegundos y todo funciona.
 
@@ -573,7 +522,7 @@ El desastre ocurre cuando la aplicación entra en producción:
   <p>Todo endpoint que devuelva múltiples registros debe exigir un límite de tamaño por página y declarar el número total de elementos existentes.</p>
 </div>
 
-### Anatomía de una respuesta paginada profesional
+#### Anatomía de una respuesta paginada profesional
 
 Un cliente que consume una API paginada no solo necesita los datos: necesita **metadatos de navegación**. 
 
@@ -605,7 +554,7 @@ Spring Boot proporciona el objeto contenedor `Page<T>`, que se serializa en un J
 | `totalPages` | Número total de páginas disponibles (`ceil(totalElements / size)`). |
 | `first` / `last` | Booleanos que indican si estamos en la primera o en la última página (para deshabilitar botones de anterior/siguiente en la UI). |
 
-### Paginación en PostgreSQL: `LIMIT` y `OFFSET`
+#### Paginación en PostgreSQL: `LIMIT` y `OFFSET`
 
 Cuando Spring Data JPA procesa un objeto `Pageable`, traduce automáticamente la petición a dos consultas SQL nativas en PostgreSQL:
 
@@ -622,11 +571,27 @@ SELECT COUNT(p.id) FROM proyectos p;
 
 De esta forma, la memoria de la máquina virtual solo almacena 10 objetos, con independencia de que la tabla contenga millones de filas.
 
-### Paso a paso guiado · Implementar paginación y ordenación
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Añadid paginación y ordenación a un listado que pueda crecer y definid sus límites.
+
+Cargad datos suficientes para varias páginas y probad tamaños, páginas vacías y criterios de orden.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Paginación y ordenación en la API</p>
+
+#### Paso 2 · Implementar paginación y ordenación
 
 Vamos a paginar el listado de proyectos con ordenación configurable:
-
-<p class="stage">Paso 1 · Habilitar Pageable en ProyectoRepository</p>
 
 En `ProyectoRepository`, `JpaRepository` ya hereda soporte para `Pageable`. Añadimos además un método derivado para filtrar por estado con paginación:
 
@@ -639,8 +604,6 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
     Page<Proyecto> findByActivo(boolean activo, Pageable pageable);
 }
 ```
-
-<p class="stage">Paso 2 · Mapear la página en ProyectoService</p>
 
 La interfaz `Page<T>` de Spring incluye un método funcional `.map()` que transforma los elementos internos preservando intactos todos los metadatos de paginación:
 
@@ -672,8 +635,6 @@ public class ProyectoService {
 }
 ```
 
-<p class="stage">Paso 3 · Configurar el endpoint en ProyectoController con @PageableDefault</p>
-
 En el controlador, utilizamos `@PageableDefault` para establecer valores por defecto seguros en caso de que el cliente no envíe parámetros de paginación:
 
 ```java
@@ -698,7 +659,7 @@ public class ProyectoController {
 }
 ```
 
-### La comprobación · Navegar por páginas y ordenar en Bruno
+#### Paso 3 · Navegar por páginas y ordenar en Bruno
 
 Ejecuta estas peticiones en **Bruno** o **Postman** y analiza los resultados:
 
@@ -713,9 +674,9 @@ Ejecuta estas peticiones en **Bruno** o **Postman** y analiza los resultados:
 5. **Comprobar la consola SQL:**
    * Verifica que Hibernate emite la cláusula `LIMIT ? OFFSET ?` en PostgreSQL junto con el `SELECT count(...)`.
 
-### Ahora tú · Combinar filtros multicriterio con paginación en Tareas
+#### Paso 4 · Combinar filtros multicriterio con paginación en Tareas
 
-Combina lo aprendido en la sesión 44 con la paginación de esta sesión en la entidad `Tarea`:
+Combina lo aprendido en la sesión 29 con la paginación de esta sesión en la entidad `Tarea`:
 
 1. Modifica `TareaRepository.buscarConFiltros` para que reciba como último argumento `Pageable pageable` y devuelva `Page<Tarea>`.
 2. Actualiza `TareaService` para que devuelva `Page<TareaResumenResponse>` usando `.map()`.
@@ -729,14 +690,25 @@ Combina lo aprendido en la sesión 44 con la paginación de esta sesión en la e
    * `?page=999` sobre una tabla de 20 filas: debe devolver `200` con una lista vacía y los metadatos correctos, nunca un `404` ni un error.
    * `?size=10000`: decide si lo permites. Si no pones techo, un cliente puede pedirte la tabla entera en una sola petición y tirarte la memoria, que es justo lo que la paginación venía a evitar. Configura `spring.data.web.pageable.max-page-size`.
    * `?sort=campoQueNoExiste`: comprueba qué pasa y decide si un `500` es aceptable como respuesta a un parámetro mal escrito.
-8. Documenta en tu cuaderno el contrato de paginación que has fijado: nombre de los parámetros, tamaño por defecto, tamaño máximo y orden por defecto. En la sesión 47 esto se convierte en documentación OpenAPI, y en la UD12 en parte del contrato que defiendes.
+8. Documenta en tu cuaderno el contrato de paginación que has fijado: nombre de los parámetros, tamaño por defecto, tamaño máximo y orden por defecto. En la sesión 31 esto se convierte en documentación OpenAPI, y en la UD12 en parte del contrato que defiendes.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
   <dd>Filtros y paginación funcionan combinados; <code>totalElements</code> cuenta lo filtrado; una página fuera de rango devuelve <code>200</code> con lista vacía; hay un tamaño máximo de página configurado; y has visto en los logs las dos sentencias SQL que genera cada petición paginada.</dd>
 </dl>
 
-### Reto · El problema de la paginación profunda (Deep Paging)
+#### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **paginad y ordenad los listados**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · El problema de la paginación profunda (Deep Paging)
 
 Cuando una base de datos relacional ejecuta `OFFSET 1000000 LIMIT 10`, PostgreSQL debe leer un millón diez filas de disco y descartar el primer millón en memoria antes de devolver las diez solicitadas. A esto se le conoce como el **problema de la paginación profunda** (*Deep Paging*).
 
@@ -757,27 +729,6 @@ Analiza las consecuencias técnicas y diseña una alternativa:
   <div><strong>Reto</strong><span>Estudio del problema de rendimiento de Deep Paging completado y propuesta técnica de paginación por cursor documentada.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 45</p>
-  <ul class="checklist">
-    <li>Los endpoints de listado devuelven una estructura paginada <code>Page&lt;T&gt;</code> con metadatos completos.</li>
-    <li>La aplicación utiliza <code>@PageableDefault</code> para establecer límites de tamaño de página seguros.</li>
-    <li>PostgreSQL ejecuta sentencias con <code>LIMIT</code> y <code>OFFSET</code> reales, sin cargar colecciones masivas en memoria.</li>
-    <li>La ordenación por columnas (<code>sort=campo,asc/desc</code>) funciona de forma transparente en las consultas.</li>
-    <li>Los filtros multicriterio y la paginación conviven en un único endpoint coherente.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué un endpoint de listado en producción nunca debe devolver un array plano sin paginar?</li>
-    <li>¿Qué convención de numeración de páginas utiliza Spring Data (<code>0-based</code> o <code>1-based</code>)?</li>
-    <li>¿Cómo traduce PostgreSQL la paginación a nivel de sintaxis SQL nativa?</li>
-    <li>¿Qué ventaja ofrece el método <code>.map()</code> sobre un objeto <code>Page&lt;Entidad&gt;</code> en comparación con extraer la lista con <code>getContent()</code>?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque si la tabla crece a decenas o cientos de miles de registros, la aplicación sufrirá consumo desmedido de memoria RAM, saturará el recolector de basura (GC) y enviará payloads gigantes por red que congelarán al cliente.</p>
@@ -786,29 +737,45 @@ Analiza las consecuencias técnicas y diseña una alternativa:
   <p>4 · Mantiene intactos todos los metadatos de paginación (totalElements, totalPages, number, size, first, last) mientras transforma limpiamente cada elemento individual de entidad a DTO.</p>
 </details>
 
-## Semana 16 · Un contrato que otros pueden usar
+### Cierre
 
-## Sesión 46 · Tests de endpoints con MockMvc
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> cómo verificar el contrato HTTP completo (rutas, códigos de estado, cabeceras y cuerpos JSON) mediante <code>@WebMvcTest</code> y <code>MockMvc</code> sin arrancar un servidor Tomcat real ni levantar la base de datos.</li>
-    <li><strong>2. Haz:</strong> escribe una suite de pruebas de capa web para <code>ProyectoController</code> cubriendo el caso exitoso (201 con cabecera <code>Location</code>), errores de validación (400 con RFC 7807) y recursos no encontrados (404).</li>
-    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw test</code> verificando que la batería de pruebas de controladores se ejecuta en milisegundos y garantiza la estabilidad del contrato ante cualquier refactorización.</li>
-  </ol>
-</div>
+La API informa del contenido y los metadatos previstos y no devuelve todo el catálogo por defecto.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué tener tests unitarios del servicio al 100 % de cobertura no garantiza que la API responda con código HTTP 201 en lugar de 200 en un alta?</li>
-    <li>¿Qué ventaja de velocidad y aislamiento tiene utilizar <code>@WebMvcTest</code> frente a arrancar toda la aplicación con <code>@SpringBootTest</code>?</li>
-    <li>¿Qué librería utiliza Spring Boot para evaluar aserciones sobre campos anidados dentro de un JSON de respuesta (expresiones como <code>$.nombre</code>)?</li>
-  </ol>
-</div>
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-### La brecha entre el servicio y el protocolo HTTP
+
+#### Entrega de la sesión 30 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-30.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-30.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Semana 16 · Tests HTTP y documentación OpenAPI
+
+## Sesión 31 · Tests HTTP y documentación OpenAPI
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Los tests de endpoint comprueban el contrato en la frontera HTTP. OpenAPI lo hace consultable por quienes integran el cliente.
+
+#### La brecha entre el servicio y el protocolo HTTP
 
 Hasta ahora has probado tus servicios con tests unitarios y tus repositorios con `@DataJpaTest`. Esas pruebas garantizan que la lógica de negocio y las consultas SQL funcionan.
 
@@ -837,7 +804,7 @@ Para responder a estas preguntas sin tener que arrancar manualmente la aplicaci�
   <p>Carga únicamente los componentes de la capa web (controladores, mappers de Jackson, validadores de Bean Validation y manejadores <code>@RestControllerAdvice</code>), ejecutando docenas de tests en menos de un segundo.</p>
 </div>
 
-### Sintaxis y aserciones fluidas con MockMvc y JSONPath
+#### Sintaxis y aserciones fluidas con MockMvc y JSONPath
 
 `MockMvc` utiliza un patrón fluido para construir la petición y comprobar las expectativas de la respuesta:
 
@@ -860,11 +827,48 @@ Para evaluar el contenido del JSON utilizamos **JSONPath**:
 * `$.content.length()`: la cantidad de elementos devueltos en el array.
 * `$.content[0].titulo`: el título del primer elemento de la lista.
 
-### Paso a paso guiado · Crear la suite de ProyectoControllerTest
+#### La documentación como código vivo (Living Documentation)
+
+En desarrollo de software profesional existe una regla demostrada por la experiencia: **toda documentación que no se genere automáticamente a partir del código acaba mintiendo**.
+
+Un desarrollador añade un campo al DTO, renombra un query param o cambia un código de estado de `200` a `201`. Si la documentación vive en un documento estático, nadie se acuerda de actualizarlo. Al cabo de dos meses, el equipo de frontend intenta consumir la API y nada encaja.
+
+<div class="rule">
+  <p class="rule-label">El principio de la documentación viva</p>
+  <p><strong>El código fuente es la única fuente de verdad (Single Source of Truth).</strong></p>
+  <p>Utilizamos el estándar <strong>OpenAPI 3.0</strong> para que el propio framework inspeccione nuestros controladores, rutas y DTOs, generando una especificación técnica interactiva que se actualiza automáticamente con cada compilación.</p>
+</div>
+
+#### OpenAPI frente a Swagger UI
+
+Conviene distinguir con precisión ambos términos:
+
+| Concepto | Qué es | Para qué sirve | Dónde se consulta |
+| :--- | :--- | :--- | :--- |
+| **OpenAPI 3.0** | Estándar formal independiente de cualquier lenguaje que describe APIs REST en formato JSON o YAML. | Lo consumen las máquinas: generadores de código de clientes, pasarelas de API (API Gateways) y herramientas de pruebas automáticas. | `http://localhost:8080/v3/api-docs` |
+| **Swagger UI** | Aplicación web interactiva que lee la especificación OpenAPI y la renderiza visualmente. | La consumen los humanos: permite a cualquier desarrollador explorar los endpoints, ver ejemplos y lanzar peticiones en vivo (*Try it out*). | `http://localhost:8080/swagger-ui.html` |
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Escribid tests con MockMvc para una ruta de éxito y sus errores; documentad entradas y respuestas.
+
+Extendédlos a filtros o relaciones y contrastad la documentación con las respuestas reales.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Tests de endpoints con MockMvc</p>
+
+#### Paso 2 · Crear la suite de ProyectoControllerTest
 
 Vamos a construir la suite de pruebas automatizadas para el contrato de `ProyectoController`:
-
-<p class="stage">Paso 1 · Estructura de la clase de prueba con @WebMvcTest</p>
 
 Crea `src/test/java/com/ejemplo/gestor/controller/ProyectoControllerTest.java`. Aislamos el controlador inyectando `MockMvc` y simulando el colaborador de negocio con `@MockBean`.
 
@@ -918,8 +922,6 @@ class ProyectoControllerTest {
   <dd><strong>Arrange</strong>: preparas los datos y programas qué debe devolver el <code>@MockBean</code> (<code>when(...).thenReturn(...)</code>). <strong>Act</strong>: lanzas la petición con <code>mockMvc.perform(...)</code>. <strong>Assert</strong>: encadenas los <code>.andExpect(...)</code>. Verlas separadas te dice de un vistazo qué se estaba probando cuando un test falla dentro de seis meses.</dd>
 </dl>
 
-<p class="stage">Paso 2 · Test del caso feliz de creación (POST 201 Created)</p>
-
 Verificamos que un cuerpo válido responde con código `201`, emite la cabecera `Location` correcta y devuelve el recurso creado:
 
 ```java
@@ -945,8 +947,6 @@ Verificamos que un cuerpo válido responde con código `201`, emite la cabecera 
     }
 ```
 
-<p class="stage">Paso 3 · Test de validación con datos inválidos (POST 400 Bad Request)</p>
-
 Comprobamos que si el cliente envía un nombre en blanco, Bean Validation intercepta la petición antes de llegar al servicio y emite el formato estándar RFC 7807:
 
 ```java
@@ -968,8 +968,6 @@ Comprobamos que si el cliente envía un nombre en blanco, Bean Validation interc
     }
 ```
 
-<p class="stage">Paso 4 · Test de recurso no encontrado (GET 404 Not Found)</p>
-
 Simulamos que el servicio lanza `RecursoNoEncontradoException` y comprobamos que el `@RestControllerAdvice` lo transforma limpiamente en un `404`:
 
 ```java
@@ -986,7 +984,7 @@ Simulamos que el servicio lanza `RecursoNoEncontradoException` y comprobamos que
 }
 ```
 
-### La comprobación · Ejecutar la batería en terminal
+#### Paso 3 · Ejecutar la batería en terminal
 
 Ejecuta tu suite desde la terminal de tu IDE o consola:
 
@@ -999,8 +997,6 @@ Observa la salida de Maven:
 * No se realizan conexiones TCP a PostgreSQL.
 * Los 3 tests pasan en verde confirmando que rutas, DTOs, validaciones, códigos de estado y respuestas JSON están blindados.
 
-<p class="stage">Comprobación 2 · Rompe cada test y míralo caer</p>
-
 Un test que solo has visto en verde no te ha demostrado que vigile algo. Provoca los tres fallos, uno a uno, y devuelve el código a su sitio después de cada uno:
 
 | Rompe esto | El test que debe fallar | El mensaje que verás |
@@ -1011,7 +1007,7 @@ Un test que solo has visto en verde no te ha demostrado que vigile algo. Provoca
 
 Ese tercer caso es el más instructivo: sin el manejador, una excepción de negocio se convierte en un `500`, que es el código que le dice a quien consume tu API «el fallo es mío», cuando en realidad había pedido algo que no existe.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1022,7 +1018,7 @@ Ese tercer caso es el más instructivo: sin el manejador, una excepción de nego
 | El servicio simulado devuelve `null` | El `when(...)` no encaja con la llamada real | Usa `any(ProyectoRequest.class)`: si programas `when(servicio.crear(request))` con un objeto concreto y el controlador construye otro, Mockito no lo reconoce |
 | `JSONPath "$.id" does not exist` | La respuesta no es la que crees | Encadena `.andDo(print())` antes de los `andExpect` para volcar en consola la respuesta entera |
 
-### Ahora tú · Batería de pruebas para TareaController
+#### Paso 5 · Batería de pruebas para TareaController
 
 Aplica el mismo patrón para blindar el contrato de `TareaController`:
 
@@ -1031,7 +1027,7 @@ Aplica el mismo patrón para blindar el contrato de `TareaController`:
 3. Escribe `crearTarea_conPrioridadInvalida_devuelve400`, comprobando además con `verify(..., never())` que el servicio no llegó a ejecutarse.
 4. Escribe `listarTareas_conFiltros_devuelveListaPaginada200` verificando que devuelve el array en `$.content` y los metadatos `$.page.totalElements`.
 5. Escribe `obtenerTarea_cuandoNoExiste_devuelve404`, programando el simulacro para que lance `RecursoNoEncontradoException`.
-6. Escribe el subrecurso: `listarTareasDeProyecto_cuandoElProyectoNoExiste_devuelve404`. Esta es la regla que implementaste en la sesión 43 y hasta ahora solo habías comprobado a mano.
+6. Escribe el subrecurso: `listarTareasDeProyecto_cuandoElProyectoNoExiste_devuelve404`. Esta es la regla que implementaste en la sesión 29 y hasta ahora solo habías comprobado a mano.
 7. Ejecuta `./mvnw test` (la suite completa, no solo esta clase) y confirma que siguen en verde los tests de service de la UD4 y los de repositorio de la UD5. Tienes ya los tres niveles de la pirámide.
 
 <dl class="worked">
@@ -1039,94 +1035,9 @@ Aplica el mismo patrón para blindar el contrato de `TareaController`:
   <dd>Seis tests nuevos en verde; cada test de rechazo comprueba el código de estado <strong>y</strong> que el servicio no se invocó; y has visto fallar en rojo, al menos una vez, cada uno de los tres del guion.</dd>
 </dl>
 
-### Reto · Validación de cabeceras de caché HTTP (ETag y Cache-Control)
+<p class="stage">OpenAPI y Swagger</p>
 
-En APIs REST de alto rendimiento, los endpoints de consulta devuelven cabeceras de control de caché para que los clientes no descarguen datos repetidos si no han cambiado.
-
-Diseña un test con MockMvc que verifique el soporte de cabeceras condicionales:
-1. Simula una petición `GET /proyectos/1` que incluya la cabecera `If-None-Match: "v1-abc"`.
-2. Si el recurso no ha cambiado, comprueba que el endpoint devuelve código **`304 Not Modified`** con el cuerpo completamente vacío.
-3. Analiza qué ahorro de ancho de banda y procesamiento representa este mecanismo para una API consumida por miles de clientes simultáneos.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tests de <code>ProyectoControllerTest</code> cubriendo casos 201 y 400 con MockMvc y JSONPath.</span></div>
-  <div><strong>Si lo tienes</strong><span>Suite de <code>TareaControllerTest</code> completa incluyendo validaciones, 404 y respuestas paginadas.</span></div>
-  <div><strong>Reto</strong><span>Test de cabeceras condicionales de caché HTTP (ETag / 304 Not Modified) implementado y verificado.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 46</p>
-  <ul class="checklist">
-    <li>El contrato HTTP se valida de forma automatizada sin requerir peticiones manuales en clientes externos.</li>
-    <li><code>@WebMvcTest</code> se utiliza para aislar la capa web sin arrancar servidores Tomcat ni bases de datos.</li>
-    <li>Las respuestas de error por validación (400) se comprueban campo a campo mediante JSONPath.</li>
-    <li>Los códigos de estado semánticos (201, 204, 400, 404) están garantizados por aserciones estrictas.</li>
-    <li>La suite completa de tests de controladores pasa al 100 % en verde con <code>./mvnw test</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué <code>@WebMvcTest</code> es mucho más rápido que <code>@SpringBootTest</code>?</li>
-    <li>¿Qué rol cumple <code>@MockBean</code> en una prueba de controlador?</li>
-    <li>¿Cómo se comprueba con MockMvc que una petición POST devuelve la cabecera <code>Location</code>?</li>
-    <li>¿Qué expresión JSONPath utilizarías para comprobar el total de elementos de una respuesta paginada?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque no levanta el contexto completo de Spring: ignora repositorios, conexiones JDBC a base de datos y servicios, cargando únicamente los componentes del dispatcher web.</p>
-  <p>2 · Reemplaza el servicio real en el contexto de Spring por un doble de prueba de Mockito, permitiendo definir respuestas simuladas (when/then) e inspeccionar llamadas sin ejecutar lógica de negocio real.</p>
-  <p>3 · Mediante andExpect(header().exists("Location")) o andExpect(header().string("Location", valorEsperado)).</p>
-  <p>4 · jsonPath("$.page.totalElements").value(numeroEsperado) o jsonPath("$.totalElements").value(...).</p>
-</details>
-
-## Sesión 47 · OpenAPI y Swagger
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el estándar OpenAPI 3.0, la diferencia entre la especificación interpretable por máquinas (JSON/YAML) y la interfaz visual interactiva (Swagger UI), y cómo generar documentación viva a partir del código con <code>springdoc-openapi</code>.</li>
-    <li><strong>2. Haz:</strong> integra <code>springdoc-openapi-starter-webmvc-ui</code> en tu proyecto Spring Boot, decora controladores y DTOs con anotaciones semánticas y publica la especificación en <code>/v3/api-docs</code>.</li>
-    <li><strong>3. Comprueba:</strong> abres Swagger UI en el navegador, ejecutas peticiones interactivas reales contra la API y verificas que todos los endpoints, esquemas y códigos de error están documentados.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué mantener la documentación de una API en un documento externo de texto siempre acaba en desincronización con el código?</li>
-    <li>¿Qué diferencia conceptual existe entre la especificación **OpenAPI** y la herramienta **Swagger UI**?</li>
-    <li>¿Cómo permite un archivo OpenAPI generar automáticamente el código del cliente frontend (TypeScript, Axios) o colecciones de pruebas sin programarlas a mano?</li>
-  </ol>
-</div>
-
-### La documentación como código vivo (Living Documentation)
-
-En desarrollo de software profesional existe una regla demostrada por la experiencia: **toda documentación que no se genere automáticamente a partir del código acaba mintiendo**.
-
-Un desarrollador añade un campo al DTO, renombra un query param o cambia un código de estado de `200` a `201`. Si la documentación vive en un documento estático, nadie se acuerda de actualizarlo. Al cabo de dos meses, el equipo de frontend intenta consumir la API y nada encaja.
-
-<div class="rule">
-  <p class="rule-label">El principio de la documentación viva</p>
-  <p><strong>El código fuente es la única fuente de verdad (Single Source of Truth).</strong></p>
-  <p>Utilizamos el estándar <strong>OpenAPI 3.0</strong> para que el propio framework inspeccione nuestros controladores, rutas y DTOs, generando una especificación técnica interactiva que se actualiza automáticamente con cada compilación.</p>
-</div>
-
-### OpenAPI frente a Swagger UI
-
-Conviene distinguir con precisión ambos términos:
-
-| Concepto | Qué es | Para qué sirve | Dónde se consulta |
-| :--- | :--- | :--- | :--- |
-| **OpenAPI 3.0** | Estándar formal independiente de cualquier lenguaje que describe APIs REST en formato JSON o YAML. | Lo consumen las máquinas: generadores de código de clientes, pasarelas de API (API Gateways) y herramientas de pruebas automáticas. | `http://localhost:8080/v3/api-docs` |
-| **Swagger UI** | Aplicación web interactiva que lee la especificación OpenAPI y la renderiza visualmente. | La consumen los humanos: permite a cualquier desarrollador explorar los endpoints, ver ejemplos y lanzar peticiones en vivo (*Try it out*). | `http://localhost:8080/swagger-ui.html` |
-
-### Paso a paso guiado · Integrar y documentar con springdoc-openapi
-
-<p class="stage">Paso 1 · Añadir la dependencia en pom.xml</p>
+#### Paso 6 · Integrar y documentar con springdoc-openapi
 
 En proyectos Spring Boot 3 utilizamos la librería oficial de la comunidad `springdoc-openapi`:
 
@@ -1146,8 +1057,6 @@ En proyectos Spring Boot 3 utilizamos la librería oficial de la comunidad `spri
 
 Al compilar y arrancar la aplicación, Spring Boot habilitará automáticamente los endpoints de documentación sin necesidad de escribir una sola línea de configuración inicial.
 
-<p class="stage">Paso 2 · Mirar lo que se genera solo, antes de tocar nada</p>
-
 Antes de anotar una sola clase, arranca y abre `http://localhost:8080/swagger-ui.html`. Ya tienes una documentación completa que no has escrito.
 
 Léela con ojo crítico y anota en tu cuaderno **tres cosas que un desarrollador externo no podría deducir de ahí**. La lista suele salir así:
@@ -1158,8 +1067,6 @@ Léela con ojo crítico y anota en tu cuaderno **tres cosas que un desarrollador
 * Los campos de los DTO no traen ejemplo, así que quien pruebe *Try it out* tiene que inventarse los valores.
 
 Esas cuatro carencias son exactamente lo que arreglan los pasos 3 a 5. **Documentar no es activar Swagger: es rellenar lo que Swagger no puede adivinar.**
-
-<p class="stage">Paso 3 · Configurar metadatos globales del proyecto</p>
 
 Creamos una clase de configuración para definir el título, descripción y versión de nuestra API:
 
@@ -1180,8 +1087,6 @@ public class OpenApiConfig {
     }
 }
 ```
-
-<p class="stage">Paso 4 · Anotar controladores con @Tag y @Operation</p>
 
 Decoramos `ProyectoController` para estructurar la interfaz en bloques lógicos y documentar el propósito de cada método:
 
@@ -1217,8 +1122,6 @@ public class ProyectoController {
     }
 ```
 
-<p class="stage">Paso 5 · Enriquecer los DTOs con @Schema</p>
-
 Anotamos los atributos de nuestros records para mostrar descripciones claras y ejemplos reales en Swagger:
 
 ```java
@@ -1245,7 +1148,7 @@ public record ProyectoRequest(
   <dd>Springdoc lee los tipos, no la lógica. Puede deducir qué devuelve tu método cuando todo va bien, pero no puede saber que tu servicio lanza <code>NombreDuplicadoException</code> y que tu <code>@RestControllerAdvice</code> la convierte en un <code>409</code>. Ese conocimiento solo está en tu cabeza, y por eso se declara.</dd>
 </dl>
 
-### La comprobación · Explorar Swagger UI en vivo
+#### Paso 7 · Explorar Swagger UI en vivo
 
 Arranca tu aplicación Spring Boot y realiza estas comprobaciones:
 
@@ -1261,7 +1164,7 @@ Arranca tu aplicación Spring Boot y realiza estas comprobaciones:
 
 5. **Comparar antes y después:** vuelve a leer las tres carencias que anotaste en el paso 2 y comprueba, una por una, que ya no están.
 
-### Si algo no sale como dice el guion
+#### Paso 8 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1271,7 +1174,7 @@ Arranca tu aplicación Spring Boot y realiza estas comprobaciones:
 | `cannot find symbol: class Tag` | Import equivocado | Debe ser `io.swagger.v3.oas.annotations.tags.Tag`, no el de JUnit |
 | *Try it out* devuelve `403` en las escrituras | Es el CSRF de Spring Security | Todavía no aplica: llegará en la UD9, y allí se resuelve |
 
-### Ahora tú · Documentar los endpoints de Tareas y Filtros
+#### Paso 9 · Documentar los endpoints de Tareas y Filtros
 
 Documenta el controlador de tareas aplicando las anotaciones correspondientes:
 
@@ -1283,8 +1186,8 @@ Documenta el controlador de tareas aplicando las anotaciones correspondientes:
    ```
 3. Añade ejemplos descriptivos a `TareaRequest` y `TareaDetalleResponse` con `@Schema`.
 4. Recarga Swagger UI y verifica que la documentación de tareas permite filtrar interactivamente desde la propia página web.
-5. Documenta los **errores** de todos los endpoints de tareas, que es la parte que Swagger no puede deducir: `400` de validación, `404` cuando el proyecto padre no existe (la regla de la sesión 43) y `409` si tu dominio tiene alguna restricción de unicidad. Usa `@ApiResponse` para cada uno.
-6. Documenta la paginación de la sesión 45: cada `@RequestParam` de `page`, `size` y `sort` debe llevar su `@Parameter` con `description` y `example`, porque son justo los que un consumidor externo no puede adivinar.
+5. Documenta los **errores** de todos los endpoints de tareas, que es la parte que Swagger no puede deducir: `400` de validación, `404` cuando el proyecto padre no existe (la regla de la sesión 29) y `409` si tu dominio tiene alguna restricción de unicidad. Usa `@ApiResponse` para cada uno.
+6. Documenta la paginación de la sesión 30: cada `@RequestParam` de `page`, `size` y `sort` debe llevar su `@Parameter` con `description` y `example`, porque son justo los que un consumidor externo no puede adivinar.
 7. **La prueba del consumidor:** dale la URL de tu Swagger a un compañero, sin explicarle nada de palabra, y pídele que cree un proyecto con una tarea dentro usando solo *Try it out*. Cada vez que tenga que preguntarte algo, apunta la pregunta: cada una es un `@Schema` o un `@Operation` que te falta. Corrígelos y repite.
 
 <dl class="worked">
@@ -1292,7 +1195,41 @@ Documenta el controlador de tareas aplicando las anotaciones correspondientes:
   <dd>Los dos bloques se llaman «Proyectos» y «Tareas», no <code>proyecto-controller</code>; cada endpoint declara sus códigos de error además del feliz; todos los campos de los DTO traen ejemplo; y un compañero ha conseguido usar tu API entera desde Swagger sin preguntarte nada.</dd>
 </dl>
 
-### Reto · Generación de clientes TypeScript con openapi-generator
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **probad y documentad el contrato http**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Validación de cabeceras de caché HTTP (ETag y Cache-Control)
+
+En APIs REST de alto rendimiento, los endpoints de consulta devuelven cabeceras de control de caché para que los clientes no descarguen datos repetidos si no han cambiado.
+
+Diseña un test con MockMvc que verifique el soporte de cabeceras condicionales:
+1. Simula una petición `GET /proyectos/1` que incluya la cabecera `If-None-Match: "v1-abc"`.
+2. Si el recurso no ha cambiado, comprueba que el endpoint devuelve código **`304 Not Modified`** con el cuerpo completamente vacío.
+3. Analiza qué ahorro de ancho de banda y procesamiento representa este mecanismo para una API consumida por miles de clientes simultáneos.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Tests de <code>ProyectoControllerTest</code> cubriendo casos 201 y 400 con MockMvc y JSONPath.</span></div>
+  <div><strong>Si lo tienes</strong><span>Suite de <code>TareaControllerTest</code> completa incluyendo validaciones, 404 y respuestas paginadas.</span></div>
+  <div><strong>Reto</strong><span>Test de cabeceras condicionales de caché HTTP (ETag / 304 Not Modified) implementado y verificado.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque no levanta el contexto completo de Spring: ignora repositorios, conexiones JDBC a base de datos y servicios, cargando únicamente los componentes del dispatcher web.</p>
+  <p>2 · Reemplaza el servicio real en el contexto de Spring por un doble de prueba de Mockito, permitiendo definir respuestas simuladas (when/then) e inspeccionar llamadas sin ejecutar lógica de negocio real.</p>
+  <p>3 · Mediante andExpect(header().exists("Location")) o andExpect(header().string("Location", valorEsperado)).</p>
+  <p>4 · jsonPath("$.page.totalElements").value(numeroEsperado) o jsonPath("$.totalElements").value(...).</p>
+</details>
+
+##### Reto · Generación de clientes TypeScript con openapi-generator
 
 El mayor superpoder de OpenAPI no es que los humanos lean Swagger UI: es que **las máquinas generen código sin fallos humanos**.
 
@@ -1313,27 +1250,6 @@ Investiga cómo funciona la herramienta de código abierto `openapi-generator-cl
   <div><strong>Reto</strong><span>Flujo de generación automática de clientes cliente-servidor mediante OpenAPI justificado y comprendido.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 47</p>
-  <ul class="checklist">
-    <li>La especificación técnica OpenAPI 3.0 se genera automáticamente a partir del código en <code>/v3/api-docs</code>.</li>
-    <li>Swagger UI está disponible para pruebas interactivas en <code>/swagger-ui.html</code>.</li>
-    <li>Todos los endpoints declaran sus códigos de respuesta esperados (200, 201, 400, 404, 409).</li>
-    <li>Los DTOs muestran ejemplos representativos y restricciones de validación documentadas.</li>
-    <li>Los parámetros de consulta para filtros y paginación disponen de descripciones semánticas.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué la documentación viva generada con OpenAPI previene la desincronización entre frontend y backend?</li>
-    <li>¿Qué diferencia hay entre la ruta <code>/v3/api-docs</code> y <code>/swagger-ui.html</code>?</li>
-    <li>¿Para qué se utiliza la anotación <code>@Schema(example = "...")</code> en un DTO?</li>
-    <li>¿Cómo se agrupan varios endpoints relacionados bajo una misma categoría en la interfaz de Swagger UI?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque inspecciona directamente las anotaciones y clases compiladas de Java en cada ejecución; si el código cambia, la documentación cambia de forma simultánea e inmediata.</p>
@@ -1342,27 +1258,43 @@ Investiga cómo funciona la herramienta de código abierto `openapi-generator-cl
   <p>4 · Mediante la anotación @Tag(name = "NombreGrupo", description = "...") a nivel de clase controladora.</p>
 </details>
 
-## Sesión 48 · Evolucionar el contrato sin romper a quien lo consume
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> qué distingue a un cambio compatible (*Non-breaking change*) de uno incompatible (*Breaking change*), la Ley de Postel (Principio de Robustez), las tres estrategias de versionado de APIs y el ciclo de vida de obsolescencia (*Deprecation*).</li>
-    <li><strong>2. Haz:</strong> implementa una estrategia de versionado en las rutas de tu API (<code>/api/v1/...</code>), aplica una evolución compatible sobre un DTO existente y utiliza cabeceras HTTP estándar de obsolescencia (<code>Deprecation</code> y <code>Sunset</code>).</li>
-    <li><strong>3. Comprueba:</strong> ejecutas peticiones en Bruno simulando tanto clientes antiguos como clientes nuevos, verificando que ambos conviven con éxito sin errores de deserialización.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué es un «breaking change» (cambio incompatible) en una API REST y por qué es una de las causas más graves de caída de sistemas en producción?</li>
-    <li>Menciona dos cambios en un endpoint que sean compatibles hacia atrás y dos que rompan la compatibilidad de inmediato.</li>
-    <li>¿Qué significa el principio de robustez o Ley de Postel en el diseño de protocolos y comunicaciones web?</li>
-  </ol>
-</div>
+Una modificación incompatible hace fallar el test y la documentación describe el contrato ejecutado.
 
-### El coste invisible de romper un contrato publicado
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 31 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-31.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-31.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 32 · Evolucionar el contrato sin romper el cliente
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+El backend y el cliente pueden publicarse por separado. Un cambio compatible ofrece un tránsito verificable entre versiones.
+
+#### El coste invisible de romper un contrato publicado
 
 Cuando desarrollas un proyecto en local, cambiar el nombre de un campo es tan fácil como pulsar `Shift+F6` en IntelliJ y renombrar `titulo` por `nombreTarea`.
 
@@ -1377,7 +1309,7 @@ En producción, ese renombramiento es una **bomba de relojería**:
   <p>Las APIs evolucionan mediante adición compatible o mediante versionado explícito. Quien rompe un contrato sin aviso ni periodo de transición destruye la confianza de sus consumidores.</p>
 </div>
 
-### Cambios compatibles frente a cambios incompatibles
+#### Cambios compatibles frente a cambios incompatibles
 
 Antes de tocar una sola línea de código en un controlador o DTO, debes clasificar tu cambio:
 
@@ -1386,15 +1318,7 @@ Antes de tocar una sola línea de código en un controlador o DTO, debes clasifi
 | **Compatible** (*Non-breaking*) | • Añadir un nuevo endpoint a la API.<br>• Añadir un campo nuevo opcional en la petición de entrada.<br>• Añadir un campo nuevo en el JSON de respuesta.<br>• Relajar una restricción (ej: admitir nombres de hasta 100 caracteres en lugar de 80). | **NO.** Si los clientes están bien programados (lectores tolerantes), ignorarán los campos nuevos y seguirán funcionando. |
 | **Incompatible** (*Breaking*) | • Renombrar o eliminar un campo existente en el JSON.<br>• Cambiar el tipo de dato de un campo (ej: de número a cadena de texto).<br>• Hacer obligatorio un campo que antes era opcional.<br>• Modificar los códigos HTTP semánticos devueltos habitualmente.<br>• Cambiar la estructura de una respuesta (ej: transformar un array plano en un objeto paginado). | **SÍ.** Provoca errores inmediatos de deserialización o validación en cualquier cliente no actualizado. |
 
-### La Ley de Postel (Principio de Robustez)
-
-> *«Sé conservador con lo que envías, y liberal con lo que aceptas.»* — Jon Postel
-
-Aplicado a APIs REST modernas:
-1. **Al recibir datos ( liberal ):** El backend debe ignorar propiedades desconocidas que envíe el cliente en lugar de rechazar la petición con error 400. En Spring Boot esto es el comportamiento por defecto de Jackson (`FAIL_ON_UNKNOWN_PROPERTIES = false`).
-2. **Al enviar datos ( conservador ):** El backend debe enviar únicamente los campos acordados en el contrato, sin alterar sus nombres ni sus tipos de datos.
-
-### Estrategias de versionado de APIs
+#### Estrategias de versionado de APIs
 
 Cuando un cambio incompatible es estrictamente necesario, la API debe ofrecer **versionado**:
 
@@ -1414,7 +1338,33 @@ Cuando un cambio incompatible es estrictamente necesario, la API debe ofrecer **
 * **3 · Versionado por Parámetro:** `GET /proyectos?v=2`.
   * *Ventajas:* Sencillo de añadir; sin embargo, no suele considerarse una buena práctica arquitectónica para cambios estructurales de recursos.
 
-### El protocolo de obsolescencia (Deprecation y Sunset Headers)
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Preparad una evolución concreta del contrato y documentad qué consumidor se ve afectado.
+
+Aplicad y probad la secuencia de publicación con el cliente del portfolio antes de retirar lo anterior.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Evolucionar el contrato sin romper a quien lo consume</p>
+
+#### Paso 2 · La Ley de Postel (Principio de Robustez)
+
+> *«Sé conservador con lo que envías, y liberal con lo que aceptas.»* — Jon Postel
+
+Aplicado a APIs REST modernas:
+1. **Al recibir datos ( liberal ):** El backend debe ignorar propiedades desconocidas que envíe el cliente en lugar de rechazar la petición con error 400. En Spring Boot esto es el comportamiento por defecto de Jackson (`FAIL_ON_UNKNOWN_PROPERTIES = false`).
+2. **Al enviar datos ( conservador ):** El backend debe enviar únicamente los campos acordados en el contrato, sin alterar sus nombres ni sus tipos de datos.
+
+#### Paso 3 · El protocolo de obsolescencia (Deprecation y Sunset Headers)
 
 Cuando una versión o endpoint va a desaparecer, no se apaga sin previo aviso. Se aplica un periodo de gracia informando a los clientes a través de cabeceras HTTP estándar (RFC 8594):
 
@@ -1429,9 +1379,7 @@ Link: </api/v2/proyectos>; rel="successor-version"
 * `Deprecation: true`: Advierte a las herramientas de monitorización de que el endpoint está obsoleto.
 * `Sunset`: Declara la fecha y hora exacta a partir de la cual el endpoint dejará de existir y devolverá `410 Gone` o `404 Not Found`.
 
-### Paso a paso guiado · Versionar rutas y añadir campos de forma compatible
-
-<p class="stage">Paso 1 · Configurar el prefijo de versión en application.properties o controladores</p>
+#### Paso 4 · Versionar rutas y añadir campos de forma compatible
 
 Podemos establecer el prefijo `/api/v1` de forma explícita en nuestros controladores:
 
@@ -1440,8 +1388,6 @@ Podemos establecer el prefijo `/api/v1` de forma explícita en nuestros controla
 @RequestMapping("/api/v1/proyectos")
 public class ProyectoV1Controller { ... }
 ```
-
-<p class="stage">Paso 2 · Evolucionar un DTO de forma compatible</p>
 
 Supongamos que el equipo de producto nos pide que los proyectos incluyan una etiqueta de color corporativo opcional:
 
@@ -1458,8 +1404,6 @@ public record ProyectoResponse(
 ```
 
 Un cliente antiguo que solo lea `id` y `nombre` seguirá funcionando al 100 %, mientras que los nuevos clientes podrán hacer uso del nuevo campo `colorHex`.
-
-<p class="stage">Paso 3 · Añadir cabecera de deprecación en un endpoint obsoleto</p>
 
 Si un método antiguo va a ser reemplazado, inyectamos las cabeceras estándar en el `ResponseEntity`:
 
@@ -1478,7 +1422,7 @@ public ResponseEntity<ProyectoResponse> obtenerLegado(@PathVariable Long id) {
 }
 ```
 
-### La comprobación · Simular clientes antiguos en Bruno
+#### Paso 5 · Simular clientes antiguos en Bruno
 
 1. **Petición del cliente tolerante:** Ejecuta `POST /api/v1/proyectos` enviando un campo adicional desconocido en el JSON:
    ```json
@@ -1492,15 +1436,15 @@ public ResponseEntity<ProyectoResponse> obtenerLegado(@PathVariable Long id) {
 2. **Petición al endpoint legado:** Ejecuta `GET /api/v1/proyectos/legado/1`.
    * Comprueba en la pestaña de *Headers* de Bruno que la respuesta contiene `Deprecation: true` y la fecha de expiración en `Sunset`.
 
-### Ahora tú · Migrar tu API entera a /api/v1
+#### Paso 6 · Migrar tu API entera a /api/v1
 
 Esta es la sesión en la que tus rutas dejan de ser `/proyectos` y pasan a ser `/api/v1/proyectos`, para el resto del curso. Hazlo entero y de una vez, porque a partir de la UD8 todo lo que escribas dará por supuesto ese prefijo.
 
 1. Añade el prefijo `/api/v1` al `@RequestMapping` de **todos** tus controladores. No lo pongas endpoint a endpoint: un solo sitio por controlador.
-2. Actualiza tu colección de peticiones. Si has usado una variable de entorno para la URL base —como enseñaba la sesión 11—, este paso es un único cambio; si escribiste la URL a mano en cada petición, hoy descubres por qué aquello importaba.
+2. Actualiza tu colección de peticiones. Si has usado una variable de entorno para la URL base —como enseñaba la sesión 7—, este paso es un único cambio; si escribiste la URL a mano en cada petición, hoy descubres por qué aquello importaba.
 3. Ejecuta la suite de tests. Los de `@WebMvcTest` van a fallar en bloque porque las rutas han cambiado: **eso es exactamente lo que deben hacer**. Corrígelos y observa que la suite acaba de avisarte de un cambio que rompe el contrato, que es para lo que existe.
 4. Comprueba que la cabecera `Location` de los `201 Created` también lleva el prefijo. Si la construyes con `ServletUriComponentsBuilder.fromCurrentRequest()`, se actualiza sola; si la escribiste a mano, ahora apunta a una ruta que ya no existe.
-5. Regenera la documentación OpenAPI de la sesión 47 y comprueba que Swagger refleja las rutas nuevas.
+5. Regenera la documentación OpenAPI de la sesión 31 y comprueba que Swagger refleja las rutas nuevas.
 6. Aplica una **evolución compatible** sobre `TareaResponse`: añade el campo `diasActiva`, calculado a partir de la fecha de creación, sin tocar ningún campo existente. Vuelve a ejecutar los tests y comprueba que siguen en verde: añadir un campo no rompe a nadie, y esa asimetría —añadir es seguro, quitar y renombrar no— es la regla que hay que memorizar de esta sesión.
 7. Escribe en tu cuaderno los tres cambios que **sí** romperían a un consumidor: quitar un campo, renombrarlo y cambiar su tipo. Junto a cada uno, cómo se hace de forma segura con `/v2` y las cabeceras `Deprecation` y `Sunset`.
 
@@ -1509,7 +1453,18 @@ Esta es la sesión en la que tus rutas dejan de ser `/proyectos` y pasan a ser `
   <dd>No queda ninguna ruta sin el prefijo <code>/api/v1</code>; la colección entera vuelve a pasar; los tests están corregidos y en verde; la cabecera <code>Location</code> apunta a una URL que existe; y Swagger muestra las rutas nuevas.</dd>
 </dl>
 
-### Reto · Matriz de compatibilidad y contratos automatizados
+#### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **evolucionad el contrato sin romper al consumidor**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Matriz de compatibilidad y contratos automatizados
 
 Cuando múltiples servicios independientes colaboran en producción, la compatibilidad no puede dejarse a la memoria de los programadores.
 
@@ -1528,27 +1483,6 @@ Investiga el concepto de **pruebas de contrato dirigidas por el consumidor** (*C
   <div><strong>Reto</strong><span>Propuesta técnica de Consumer-Driven Contracts documentada y justificada para entornos distribuidos.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 48</p>
-  <ul class="checklist">
-    <li>Los cambios sobre el contrato de la API se clasifican rigurosamente antes de su implementación.</li>
-    <li>La aplicación sigue el principio de robustez (Ley de Postel), tolerando propiedades desconocidas sin fallar.</li>
-    <li>Las rutas de la API declaran su versión de forma explícita (<code>/api/v1/...</code>).</li>
-    <li>Los endpoints obsoletos emiten las cabeceras estándar de aviso <code>Deprecation</code> y <code>Sunset</code>.</li>
-    <li>Los clientes existentes continúan operando sin sufrir caídas ante adiciones compatibles de datos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué renombrar un campo en una respuesta JSON es siempre un cambio incompatible (*breaking change*)?</li>
-    <li>¿Qué establece la Ley de Postel y cómo se aplica al consumo de JSON en Spring Boot?</li>
-    <li>¿Qué ventajas ofrece el versionado en la URI (<code>/api/v1</code>) frente al versionado por cabeceras HTTP?</li>
-    <li>¿Qué información obligatoria transmite la cabecera HTTP estándar <code>Sunset</code>?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque cualquier cliente previamente desplegado que busque el nombre antiguo recibirá null o sufrirá un error de deserialización, provocando fallos en su interfaz o lógica.</p>
@@ -1556,6 +1490,34 @@ Investiga el concepto de **pruebas de contrato dirigidas por el consumidor** (*C
   <p>3 · Es explícito, directamente legible y fácil de probar en navegadores y herramientas, y compatible de forma nativa con todas las capas de infraestructura y caché HTTP intermedias.</p>
   <p>4 · La fecha y hora exacta (en formato HTTP-date estándar) a partir de la cual el endpoint dejará de estar disponible y será definitivamente eliminado del servidor.</p>
 </details>
+
+### Cierre
+
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
+
+El consumidor sigue funcionando durante la transición y las versiones compatibles quedan registradas.
+
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 32 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-32.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-32.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 

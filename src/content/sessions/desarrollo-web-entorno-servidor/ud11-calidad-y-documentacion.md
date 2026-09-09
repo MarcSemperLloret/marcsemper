@@ -5,10 +5,10 @@ section: "ud-11"
 order: 11
 lang: "es"
 summary: "Consolidar en una estrategia lo que se ha ido probando desde la UD4, y dejar la aplicación observable, documentada y revisada por otros."
-duration: "6 horas · 1 semana · 3 sesiones"
-modality: "Taller de calidad · 30 % guía / 70 % autonomía"
-deliverable: "Una estrategia de pruebas documentada, logs útiles y documentación técnica revisada por pares."
-date: "2026-09-02"
+duration: "6 horas · 1 semana · 2 sesiones de 3 h"
+modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
+deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+date: "2026-09-09"
 outcomes:
   - "Explicar qué cubre y qué no cubre la suite de pruebas existente."
   - "Completar los casos límite que faltan y medir la cobertura con criterio."
@@ -21,42 +21,19 @@ priorKnowledge:
   - "OpenAPI y diseño de API."
 ---
 
-<p class="lead">Esta no es la unidad en la que aparecen los tests: es la unidad en la que se ordenan. Llevas probando desde la UD4, y ahora toca decidir qué falta, qué sobra y qué se documenta.</p>
+<p class="lead">La calidad se viene trabajando desde las primeras pruebas. Aquí se completa la estrategia, se diagnostican defectos y se revisa que documentación y versión real coincidan.</p>
 
-<div class="rule">
-  <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje bajo. Se audita la propia aplicación con una rúbrica y se corrige lo que la auditoría revele.</p>
-</div>
+## Semana 23 · Estrategia de pruebas y diagnóstico
 
-<div class="rule">
-  <p class="rule-label">Tres cosas que ya has hecho, y en qué se diferencian ahora</p>
-  <p>Nada de lo que aparece en estas tres sesiones es nuevo, y es intencionado. <strong>Los tests</strong> los escribes desde la UD4; aquí decides cuáles faltan. <strong>La documentación OpenAPI</strong> la generaste en la UD7; aquí deja de ser una cáscara autogenerada y pasa a documentar errores, seguridad y ejemplos. <strong>La revisión por pares</strong> la practicaste en la UD6 sobre una API sin seguridad ni integraciones; aquí la rúbrica tiene cinco dimensiones porque la aplicación ya las tiene.</p>
-  <p>Son seis horas para auditar un proyecto de veintitrés semanas, así que el inventario de la sesión 67 no es un trámite: es lo que decide en qué se gastan las otras dos sesiones.</p>
-</div>
+## Sesión 45 · Estrategia de pruebas y diagnóstico
 
-## Semana 23 · Demostrar que funciona y contarlo
+### Se explica
 
-## Sesión 67 · Estrategia de pruebas y cobertura
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la Pirámide de Pruebas (unitarias puras, tests por corte con <code>@WebMvcTest</code> y <code>@DataJpaTest</code>, e integración global), la falacia de la métrica de cobertura de líneas, la identificación de huecos ciegos (<em>blind spots</em>) y la verificación de condiciones límite con <code>@ParameterizedTest</code>.</li>
-    <li><strong>2. Haz:</strong> configura el plugin JaCoCo en Maven, inventaría la suite de pruebas construida desde la UD4 hasta la UD10, y programa los tests de casos límite que faltaban (validación de límites numéricos, cadenas extremas, caracteres especiales y reversión transaccional ante error).</li>
-    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw clean verify jacoco:report</code>, abres el informe HTML en el navegador y analizas con criterio técnico la cobertura de ramas (<em>Branch Coverage</em>) de la capa de servicios demostrando que las bifurcaciones lógicas críticas están probadas.</li>
-  </ol>
-</div>
+Los tests de servicio, repositorio y HTTP cubren fronteras diferentes. Los logs ayudan a localizar el fallo que todavía no tiene una prueba.
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué un proyecto con un 85 % de cobertura de líneas de código puede contener errores críticos en producción?</li>
-    <li>¿Qué diferencia hay en velocidad y coste computacional entre un test unitario con JUnit 5 + Mockito y un test de integración con <code>@SpringBootTest</code>?</li>
-    <li>¿Qué anotación de JUnit 5 permite ejecutar un mismo método de prueba múltiples veces inyectándole una colección de argumentos distintos?</li>
-  </ol>
-</div>
-
-### La falacia de la cobertura: Cantidad frente a Calidad
+#### La falacia de la cobertura: Cantidad frente a Calidad
 
 En muchas empresas se impone un objetivo numérico ciego: *«Todo el código debe tener al menos un 80 % de cobertura de tests»*.
 
@@ -70,7 +47,7 @@ Cumplir ese número es fácil y peligroso:
   <p>Una suite de pruebas profesional no busca probar mil veces lo evidente. Busca probar con rigor las condiciones de frontera: valores cero o negativos, cadenas vacías, desbordamientos de longitud, caracteres no ASCII, duplicados en concurrencia y excepciones transaccionales.</p>
 </div>
 
-### La Pirámide de Pruebas en Spring Boot
+#### La Pirámide de Pruebas en Spring Boot
 
 Para que una batería de pruebas sea rápida, mantenible y fiable, se organiza siguiendo la **Pirámide de Pruebas**:
 
@@ -90,9 +67,59 @@ Para que una batería de pruebas sea rápida, mantenible y fiable, se organiza s
    * `@DataJpaTest`: Arranca solo Hibernate, entidades y repositorios contra una base de datos de pruebas.
 3. **Tests de Integración completa (Cima):** Levantan la aplicación completa con `@SpringBootTest(webEnvironment = RANDOM_PORT)`. Son lentos y pesados; se reservan para verificar los 3 o 4 flujos de negocio más críticos del sistema.
 
-### Paso a paso guiado · Auditoría de cobertura con JaCoCo y tests parametrizados
+#### La amnesia del servidor en producción
 
-<p class="stage">Paso 1 · Configurar el plugin de JaCoCo en pom.xml</p>
+Cuando desarrollas en tu portátil, si algo falla miras la terminal de IntelliJ o VS Code y ves la excepción de inmediato.
+
+En producción la realidad es muy distinta:
+* La aplicación corre en un contenedor Docker o en un servidor Linux en la nube a cientos de kilómetros.
+* Un usuario llama diciendo: *«Hace 10 minutos la web me dio un error al guardar una factura»*.
+* Si tu código no registró trazas útiles con contexto (quién era, qué identificadores envió, qué falló), **no puedes hacer nada más que conjeturas**.
+
+<div class="rule">
+  <p class="rule-label">Por qué System.out.println() está prohibido</p>
+  <p><strong>System.out no es observabilidad: es ruido incontrolado.</strong></p>
+  <p>1. Es una operación síncrona bloqueante que ralentiza los hilos de Tomcat.<br>
+     2. No incluye marcas temporales, nombre de clase ni identificador de hilo.<br>
+     3. No se puede desactivar o filtrar por gravedad sin recompilar el código.<br>
+     4. No permite escribir en archivos rotativos ni exportar a sistemas centralizados (Elasticsearch, Grafana Loki).</p>
+</div>
+
+#### Los 5 niveles estándar de log
+
+En Spring Boot utilizamos la interfaz **SLF4J** respaldada por el motor **Logback**:
+
+```java
+private static final Logger log = LoggerFactory.getLogger(MiServicio.class);
+```
+
+| Nivel de log | Cuándo se utiliza | Ejemplo en nuestro proyecto |
+| :--- | :--- | :--- |
+| **`ERROR`** | El sistema no pudo completar una operación requerida y necesita atención técnica. | Base de datos inaccesible, fallo de escritura en disco, error 500 no controlado. |
+| **`WARN`** | Ocurrió una anomalía pero el sistema pudo recuperarse o degradar el servicio. | Timeout con API de Open-Meteo aplicando degradación, token expirado, intento de acceso sin rol. |
+| **`INFO`** | Hitos relevantes del ciclo de vida normal de la aplicación. | Arranque del sistema, proyecto creado, tarea asignada, fichero subido con éxito. |
+| **`DEBUG`** | Información detallada de diagnóstico útil para desarrolladores. | Parámetros recibidos en DTO, tiempo de ejecución de una consulta, cabeceras procesadas. |
+| **`TRACE`** | Inspección forense extrema paso a paso (muy ruidoso). | Volcado byte a byte de tramas de red o inicialización interna de beans del framework. |
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Auditad las pruebas acumuladas desde el primer trimestre y priorizad huecos en reglas, permisos y persistencia.
+
+Reproducid un defecto con logs o depurador, corregidlo y añadid una prueba de regresión.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Estrategia de pruebas y cobertura</p>
+
+#### Paso 2 · Auditoría de cobertura con JaCoCo y tests parametrizados
 
 Añadimos el plugin oficial de cobertura en el bloque `<plugins>` de nuestro proyecto:
 
@@ -118,8 +145,6 @@ Añadimos el plugin oficial de cobertura en el bloque `<plugins>` de nuestro pro
 </plugin>
 ```
 
-<p class="stage">Paso 2 · Matriz de inventario de la suite existente</p>
-
 Antes de escribir nuevos tests, clasificamos las pruebas construidas durante el curso:
 
 | Módulo / Capa | Tipo de prueba | Anotaciones utilizadas | Qué cubre actualmente | Hueco o caso límite detectado |
@@ -128,8 +153,6 @@ Antes de escribir nuevos tests, clasificamos las pruebas construidas durante el 
 | **Repositorio JPA** | Corte de persistencia | `@DataJpaTest` | Consultas derivadas `findBy...` | No prueba integridad referencial al borrar proyectos con tareas activas. |
 | **Controlador Web** | Corte HTTP y Seguridad | `@WebMvcTest` + `@WithMockUser` | Rutas 401, 403 y 201. | No prueba envío de payloads gigantes ni caracteres extraños en JSON. |
 | **Servicio de Clima** | Unitaria de Adaptador | JUnit 5 puro | Mapeo de códigos a texto. | No prueba comportamiento ante coordenadas polares o valores nulos. |
-
-<p class="stage">Paso 3 · Implementar tests parametrizados para casos límite de negocio</p>
 
 Utilizamos `@ParameterizedTest` para probar múltiples valores frontera sin duplicar código:
 
@@ -157,9 +180,9 @@ class ProyectoBoundaryTest {
     @DisplayName("El alta de proyecto debe fallar ante nombres vacíos o solo con espacios en blanco")
     void crearProyecto_conNombreInvalido_lanzaIllegalArgumentException(String nombreInvalido) {
         var request = new ProyectoRequest(
-            nombreInvalido, 
-            "Cliente A", 
-            LocalDate.now(), 
+            nombreInvalido,
+            "Cliente A",
+            LocalDate.now(),
             LocalDate.now().plusMonths(1),
             39.47, -0.38
         );
@@ -174,9 +197,9 @@ class ProyectoBoundaryTest {
     @DisplayName("Las coordenadas geográficas deben estar acotadas entre -90/90 y -180/180")
     void crearProyecto_conLatitudFueraDeRango_lanzaExcepcion(double latitudInvalida) {
         var request = new ProyectoRequest(
-            "Planta Solar", 
-            "Cliente B", 
-            LocalDate.now(), 
+            "Planta Solar",
+            "Cliente B",
+            LocalDate.now(),
             LocalDate.now().plusMonths(1),
             latitudInvalida, 0.0
         );
@@ -187,8 +210,6 @@ class ProyectoBoundaryTest {
     }
 }
 ```
-
-<p class="stage">Paso 4 · Test de reversión transaccional ante fallo (Rollback Test)</p>
 
 Verificamos que si se produce un fallo durante la creación de un proyecto con tareas iniciales, ninguna fila queda persistida a medias en la base de datos:
 
@@ -234,7 +255,7 @@ class ProyectoTransaccionalTest {
 }
 ```
 
-### La comprobación · Ejecutar y analizar el informe JaCoCo
+#### Paso 3 · Ejecutar y analizar el informe JaCoCo
 
 Ejecuta el ciclo de verificación de Maven:
 
@@ -252,7 +273,7 @@ Ejecuta el ciclo de verificación de Maven:
    * Si una línea aparece en **amarillo**, significa que solo se probó una rama del condicional (ej: se probó el caso `if (true)` pero nunca el caso `else`).
    * Comprueba cómo tras añadir los tests de casos límite, las ramas críticas pasan a color **verde completo**.
 
-### Las cuatro familias de caso límite que siempre faltan
+#### Paso 4 · Las cuatro familias de caso límite que siempre faltan
 
 Cuando alguien dice «no sé qué más probar», casi siempre es porque solo ha pensado en valores razonables. Recorre estas cuatro listas sobre cada regla de negocio de tu aplicación y aparecerán los huecos solos:
 
@@ -269,124 +290,23 @@ Cuando alguien dice «no sé qué más probar», casi siempre es porque solo ha 
 
 Cuando varios de estos casos comparten la misma lógica, `@ParameterizedTest` con `@ValueSource` o `@CsvSource` te ahorra escribir el mismo test cinco veces cambiando un número.
 
-### Ahora tú · Auditar y blindar el servicio de Tareas
+#### Paso 5 · Auditar y blindar el servicio de Tareas
 
 1. **Haz primero el inventario, antes de escribir ningún test.** Una tabla con una fila por regla de negocio de tu aplicación y tres columnas: qué la comprueba hoy, qué caso límite le falta, y qué pasaría en producción si fallase. Sin ese inventario, escribirás tests de lo que ya está probado, que es lo que hace subir la cobertura sin mejorar nada.
 2. Revisa en el informe JaCoCo qué métodos o ramas de `TareaService` tienen menos del 70 % de cobertura de **ramas** —no de líneas—, y crúzalo con tu inventario.
 3. Aplica las cuatro familias de arriba a las reglas de tarea: valores en el borde del presupuesto, título vacío o con solo espacios, título de 10.000 caracteres, fecha de fin anterior a la de inicio, transición de estado repetida y asignación a un usuario inactivo.
 4. Escribe los tests correspondientes, usando `@ParameterizedTest` donde se repita la lógica, y vuelve a compilar hasta que la cobertura de ramas supere el 80 %.
 5. **Comprueba el rollback**, que es el caso límite que casi nadie prueba: provoca un fallo a mitad de una operación que escribe en dos tablas y verifica en PostgreSQL que **no ha quedado nada** de la primera escritura. Una transacción que no revierte deja datos corruptos que ningún test de código detecta.
-6. Cierra con la pregunta honesta que ordena toda la unidad: **¿qué parte de tu aplicación sigue sin estar probada, y por qué has decidido dejarla así?** Esa respuesta, escrita, vale más que un porcentaje: es el punto de partida de la sesión 69 y un apartado de la memoria de la UD12.
+6. Cierra con la pregunta honesta que ordena toda la unidad: **¿qué parte de tu aplicación sigue sin estar probada, y por qué has decidido dejarla así?** Esa respuesta, escrita, vale más que un porcentaje: es el punto de partida de la sesión 46 y un apartado de la memoria de la UD12.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
   <dd>Tienes el inventario de reglas con sus huecos identificados; la cobertura de ramas de <code>service</code> supera el 80 %; cada rango numérico está probado en sus tres valores frontera; has comprobado al menos un <code>rollback</code> mirando la base de datos; y puedes decir qué queda sin probar y por qué.</dd>
 </dl>
 
-### Reto · Umbrales de cobertura mínimos obligatorios en CI/CD
+<p class="stage">Logging y depuración</p>
 
-En proyectos profesionales se configura Maven para que la compilación **falle automáticamente** si un desarrollador introduce código nuevo sin tests suficientes.
-
-Configura una regla de verificación en `jacoco-maven-plugin`:
-1. Añade una ejecución con el objetivo `check` en `pom.xml`.
-2. Establece un límite mínimo de cobertura de ramas (*BRANCH*) del 75 % a nivel de paquete de servicios (`com.ejemplo.gestor.service.*`).
-3. Comprueba que si borras un test crítico, `./mvnw verify` termina con código de error y aborta el empaquetado del archivo JAR.
-
-<div class="rule">
-  <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un documento de auditoría de pruebas y análisis de casos límite, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>estrategia-pruebas.pdf</code>), nunca un archivo markdown suelto.</p>
-</div>
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Plugin JaCoCo integrado en <code>pom.xml</code> e informe HTML generado con <code>./mvnw verify</code>.</span></div>
-  <div><strong>Si lo tienes</strong><span>Tests parametrizados con <code>@ParameterizedTest</code> cubriendo valores límite y verificación de rollback.</span></div>
-  <div><strong>Reto</strong><span>Regla obligatoria de umbral de cobertura (<code>jacoco:check</code>) bloqueando compilaciones sin tests.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 67</p>
-  <ul class="checklist">
-    <li>Se supera la falacia de evaluar la calidad de los tests únicamente por líneas cubiertas.</li>
-    <li>Se conoce y aplica la estructura de la Pirámide de Pruebas en el ecosistema Spring.</li>
-    <li>El plugin JaCoCo genera informes visuales diferenciando cobertura de líneas y de ramas.</li>
-    <li>Se utilizan tests parametrizados (<code>@ParameterizedTest</code>) para verificar valores frontera.</li>
-    <li>Se comprueba la atomicidad transaccional verificando rollbacks ante fallos imprevistos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué mide exactamente la métrica de «cobertura de ramas» (*Branch Coverage*) a diferencia de la cobertura de líneas?</li>
-    <li>¿Por qué es preferible escribir 20 tests unitarios con Mockito que 20 tests con <code>@SpringBootTest</code>?</li>
-    <li>¿Para qué se utiliza la fuente <code>@NullAndEmptySource</code> en una prueba parametrizada?</li>
-    <li>¿Qué significa que una prueba transaccional verifique la propiedad de atomicidad (la A de ACID)?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Mide si todas las posibles decisiones lógicas booleanas de una estructura condicional (ambas ramas de un if, todos los case de un switch) han sido ejecutadas y evaluadas en los tests.</p>
-  <p>2 · Porque los tests unitarios con Mockito se ejecutan en pocos milisegundos sin levantar el contenedor Spring ni la base de datos, permitiendo ciclos de feedback casi instantáneos.</p>
-  <p>3 · Inyecta automáticamente dos casos de prueba: un valor null y una cadena vacía ("") para verificar que el método receptor los gestiona adecuadamente.</p>
-  <p>4 · Que ante un error a mitad de una operación compuesta, todas las modificaciones previas se revierten (rollback), garantizando que o se guarda todo o no se guarda nada.</p>
-</details>
-
-## Sesión 68 · Logging y depuración
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la observabilidad en producción, por qué <code>System.out.println</code> es un antipatrón prohibido, la jerarquía de los 5 niveles de log (ERROR, WARN, INFO, DEBUG, TRACE), la configuración de Logback con rotación de archivos, y el identificador de correlación con <strong>MDC (Mapped Diagnostic Context)</strong>.</li>
-    <li><strong>2. Haz:</strong> configura <code>logback-spring.xml</code>, crea un filtro que asigna un <code>X-Correlation-ID</code> a cada petición HTTP entrante y añade trazas contextuales estructuradas sin filtrar datos confidenciales (PII).</li>
-    <li><strong>3. Comprueba:</strong> lanzas peticiones desde Bruno y demuestras cómo seguir la traza completa de un incidente técnico en los archivos de log filtrando por su identificador de correlación único en menos de un minuto.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué está totalmente desaconsejado utilizar <code>System.out.println()</code> en el código de un backend empresarial?</li>
-    <li>¿En qué nivel de log (ERROR, WARN, INFO o DEBUG) clasificarías un intento fallido de login por contraseña incorrecta de un usuario?</li>
-    <li>¿Qué problema surge al inspeccionar un archivo de log con 100.000 líneas cuando 50 usuarios concurrentes están usando la aplicación a la vez?</li>
-  </ol>
-</div>
-
-### La amnesia del servidor en producción
-
-Cuando desarrollas en tu portátil, si algo falla miras la terminal de IntelliJ o VS Code y ves la excepción de inmediato.
-
-En producción la realidad es muy distinta:
-* La aplicación corre en un contenedor Docker o en un servidor Linux en la nube a cientos de kilómetros.
-* Un usuario llama diciendo: *«Hace 10 minutos la web me dio un error al guardar una factura»*.
-* Si tu código no registró trazas útiles con contexto (quién era, qué identificadores envió, qué falló), **no puedes hacer nada más que conjeturas**.
-
-<div class="rule">
-  <p class="rule-label">Por qué System.out.println() está prohibido</p>
-  <p><strong>System.out no es observabilidad: es ruido incontrolado.</strong></p>
-  <p>1. Es una operación síncrona bloqueante que ralentiza los hilos de Tomcat.<br>
-     2. No incluye marcas temporales, nombre de clase ni identificador de hilo.<br>
-     3. No se puede desactivar o filtrar por gravedad sin recompilar el código.<br>
-     4. No permite escribir en archivos rotativos ni exportar a sistemas centralizados (Elasticsearch, Grafana Loki).</p>
-</div>
-
-### Los 5 niveles estándar de log
-
-En Spring Boot utilizamos la interfaz **SLF4J** respaldada por el motor **Logback**:
-
-```java
-private static final Logger log = LoggerFactory.getLogger(MiServicio.class);
-```
-
-| Nivel de log | Cuándo se utiliza | Ejemplo en nuestro proyecto |
-| :--- | :--- | :--- |
-| **`ERROR`** | El sistema no pudo completar una operación requerida y necesita atención técnica. | Base de datos inaccesible, fallo de escritura en disco, error 500 no controlado. |
-| **`WARN`** | Ocurrió una anomalía pero el sistema pudo recuperarse o degradar el servicio. | Timeout con API de Open-Meteo aplicando degradación, token expirado, intento de acceso sin rol. |
-| **`INFO`** | Hitos relevantes del ciclo de vida normal de la aplicación. | Arranque del sistema, proyecto creado, tarea asignada, fichero subido con éxito. |
-| **`DEBUG`** | Información detallada de diagnóstico útil para desarrolladores. | Parámetros recibidos en DTO, tiempo de ejecución de una consulta, cabeceras procesadas. |
-| **`TRACE`** | Inspección forense extrema paso a paso (muy ruidoso). | Volcado byte a byte de tramas de red o inicialización interna de beans del framework. |
-
-### Correlación de peticiones con MDC (Mapped Diagnostic Context)
+#### Paso 6 · Correlación de peticiones con MDC (Mapped Diagnostic Context)
 
 Cuando 50 usuarios lanzan peticiones simultáneas, las líneas de log de todos los hilos se intercalan en el mismo archivo.
 
@@ -396,9 +316,7 @@ Para no volverse loco buscando qué línea corresponde a qué petición, utiliza
 * **Cada línea de log que se emita en cualquier servicio o repositorio imprimirá automáticamente ese identificador**.
 * Se añade la cabecera `X-Correlation-ID: req-7f3a1b` en la respuesta HTTP para que el cliente pueda reportar ese código ante cualquier incidencia.
 
-### Paso a paso guiado · Configuración de observabilidad con MDC
-
-<p class="stage">Paso 1 · Crear el filtro de correlación CorrelationIdFilter</p>
+#### Paso 7 · Configuración de observabilidad con MDC
 
 ```java
 package com.ejemplo.gestor.config;
@@ -424,8 +342,8 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
     public static final String MDC_KEY = "correlationId";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, 
-                                    HttpServletResponse response, 
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
         // 1. Si el cliente envía un ID lo respetamos; si no, generamos un UUID corto
@@ -451,15 +369,13 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
 }
 ```
 
-<p class="stage">Paso 2 · Configurar el patrón de log en logback-spring.xml</p>
-
 Creamos el archivo `src/main/resources/logback-spring.xml` configurando consola y archivo rotativo con inclusión del `[correlationId]`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- Patrón de log con fecha, hilo, identificador MDC, nivel, logger y mensaje -->
-    <property name="LOG_PATTERN" 
+    <property name="LOG_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{correlationId}] %-5level %logger{36} - %msg%n"/>
 
     <!-- Salida por consola -->
@@ -493,8 +409,6 @@ Creamos el archivo `src/main/resources/logback-spring.xml` configurando consola 
     <logger name="com.ejemplo.gestor" level="DEBUG"/>
 </configuration>
 ```
-
-<p class="stage">Paso 3 · Añadir trazas de log útiles y seguras en ProyectoService</p>
 
 <div class="rule">
   <p class="rule-label">Privacidad y cumplimiento normativo (GDPR / OWASP)</p>
@@ -540,7 +454,7 @@ public class ProyectoService {
 }
 ```
 
-### La comprobación · Depuración forense de un fallo en Bruno
+#### Paso 8 · Depuración forense de un fallo en Bruno
 
 1. **Lanza una petición en Bruno:**
    * Haz un `POST /api/v1/proyectos` intentando crear un proyecto con un nombre que ya existe.
@@ -556,7 +470,7 @@ public class ProyectoService {
 3. **El poder de la correlación:**
    Aunque hubiera 50 usuarios operando en paralelo, con un simple `grep a1b2c3d4 aplicacion.log` reconstruyes la película completa de esa llamada en 5 segundos sin mezclarte con las acciones de otros clientes.
 
-### Ahora tú · Integrar el Correlation ID en las respuestas RFC 7807
+#### Paso 9 · Integrar el Correlation ID en las respuestas RFC 7807
 
 Modifica tu manejador global de excepciones `GlobalExceptionHandler`:
 1. Al capturar cualquier error (400, 404, 500), inyecta el `MDC.get("correlationId")` en el objeto de error Problem Details:
@@ -571,7 +485,46 @@ Modifica tu manejador global de excepciones `GlobalExceptionHandler`:
    ```
 2. De este modo, si un usuario recibe una pantalla de error en el frontend, solo tiene que enviar ese `correlationId` al equipo de soporte para que los ingenieros localicen el incidente inmediatamente en los logs del servidor.
 
-### Reto · Enmascaramiento automático de datos sensibles
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **cubrid riesgos y diagnosticad defectos con pruebas y logs**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Umbrales de cobertura mínimos obligatorios en CI/CD
+
+En proyectos profesionales se configura Maven para que la compilación **falle automáticamente** si un desarrollador introduce código nuevo sin tests suficientes.
+
+Configura una regla de verificación en `jacoco-maven-plugin`:
+1. Añade una ejecución con el objetivo `check` en `pom.xml`.
+2. Establece un límite mínimo de cobertura de ramas (*BRANCH*) del 75 % a nivel de paquete de servicios (`com.ejemplo.gestor.service.*`).
+3. Comprueba que si borras un test crítico, `./mvnw verify` termina con código de error y aborta el empaquetado del archivo JAR.
+
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un documento de auditoría de pruebas y análisis de casos límite, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>estrategia-pruebas.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Plugin JaCoCo integrado en <code>pom.xml</code> e informe HTML generado con <code>./mvnw verify</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>Tests parametrizados con <code>@ParameterizedTest</code> cubriendo valores límite y verificación de rollback.</span></div>
+  <div><strong>Reto</strong><span>Regla obligatoria de umbral de cobertura (<code>jacoco:check</code>) bloqueando compilaciones sin tests.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Mide si todas las posibles decisiones lógicas booleanas de una estructura condicional (ambas ramas de un if, todos los case de un switch) han sido ejecutadas y evaluadas en los tests.</p>
+  <p>2 · Porque los tests unitarios con Mockito se ejecutan en pocos milisegundos sin levantar el contenedor Spring ni la base de datos, permitiendo ciclos de feedback casi instantáneos.</p>
+  <p>3 · Inyecta automáticamente dos casos de prueba: un valor null y una cadena vacía ("") para verificar que el método receptor los gestiona adecuadamente.</p>
+  <p>4 · Que ante un error a mitad de una operación compuesta, todas las modificaciones previas se revierten (rollback), garantizando que o se guarda todo o no se guarda nada.</p>
+</details>
+
+##### Reto · Enmascaramiento automático de datos sensibles
 
 Diseña un filtro o conversor personalizado en Logback (`PatternLayoutEncoder` o `CompositeConverter`):
 1. Investiga cómo aplicar expresiones regulares en Logback para sustituir números de tarjetas bancarias o emails por valores enmascarados (ej: `j***@empresa.com`).
@@ -583,27 +536,6 @@ Diseña un filtro o conversor personalizado en Logback (`PatternLayoutEncoder` o
   <div><strong>Reto</strong><span>Inclusión de <code>correlationId</code> en respuestas RFC 7807 y enmascaramiento automático de datos sensibles.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 68</p>
-  <ul class="checklist">
-    <li>Se erradica por completo el uso de <code>System.out.println</code> en el código backend.</li>
-    <li>Se utiliza la jerarquía estricta de 5 niveles de log (ERROR, WARN, INFO, DEBUG, TRACE).</li>
-    <li>El archivo <code>logback-spring.xml</code> gestiona la rotación y compresión diaria de trazas.</li>
-    <li>El patrón MDC asigna un <code>Correlation ID</code> único a cada hilo de petición HTTP.</li>
-    <li>Se respeta la privacidad de datos personales garantizando que no se loguean secretos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué es fundamental ejecutar <code>MDC.remove("correlationId")</code> en el bloque <code>finally</code> de un filtro?</li>
-    <li>¿Cuál es la diferencia de severidad entre emitir un log a nivel <code>WARN</code> y uno a nivel <code>ERROR</code>?</li>
-    <li>¿Qué ventaja ofrece la rotación de archivos de log (*Log Rolling*) frente a escribir en un único archivo infinito?</li>
-    <li>¿Cómo ayuda el <code>Correlation ID</code> al equipo de soporte cuando un cliente reporta una incidencia en producción?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque Tomcat reutiliza hilos de su pool de trabajo; si no limpias el MDC, la siguiente petición procesada por ese mismo hilo heredaría el ID de la petición anterior causando contaminación de trazas.</p>
@@ -612,27 +544,43 @@ Diseña un filtro o conversor personalizado en Logback (`PatternLayoutEncoder` o
   <p>4 · Permite al ingeniero buscar directamente ese código alfanumérico en el archivo de logs y obtener exactamente las líneas de traza de esa petición aisladas de la concurrencia de otros usuarios.</p>
 </details>
 
-## Sesión 69 · OpenAPI, documentación y code review
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el valor del código autodocumentado, la especificación profesional de contratos con <strong>OpenAPI 3 / Swagger</strong>, y la metodología de <strong>Revisión de Código por Pares (Peer Code Review)</strong> mediante una rúbrica de auditoría técnica.</li>
-    <li><strong>2. Haz:</strong> enriquece la documentación OpenAPI en controladores con anotaciones declarativas (<code>@Operation</code>, <code>@ApiResponse</code>, esquemas y ejemplos), y audita una aplicación funcional buscando defectos de seguridad, rendimiento (consultas N+1) y acoplamiento.</li>
-    <li><strong>3. Comprueba:</strong> abres Swagger UI interactivo verificando que los contratos reflejan fielmente los códigos de error RFC 7807 y la seguridad JWT, y redactas un informe de revisión por pares priorizado con recomendaciones constructivas.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué una interfaz Swagger generada automáticamente con anotaciones vacías no es suficiente para que un equipo frontend externo consuma tu API sin dudas?</li>
-    <li>¿Qué defecto de rendimiento de JPA se conoce como el problema de las «consultas N+1»?</li>
-    <li>¿Cuál es el propósito principal de una revisión de código entre compañeros (*Peer Code Review*) en un equipo de desarrollo?</li>
-  </ol>
-</div>
+La corrección tiene evidencia reproducible y los logs no exponen credenciales ni datos innecesarios.
 
-### La documentación viva frente a los documentos muertos
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 45 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-45.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-45.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 46 · Documentación y revisión de calidad
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+La documentación debe permitir ejecutar y consumir la versión actual. Una revisión útil contrasta requisitos, contrato y código.
+
+#### La documentación viva frente a los documentos muertos
 
 Un documento Word o PDF con la descripción de una API queda obsoleto en el mismo instante en que un programador cambia el nombre de un atributo en un DTO.
 
@@ -656,7 +604,7 @@ Para que esa documentación sea profesional y no una cáscara vacía, debemos en
 })
 ```
 
-### Metodología de Revisión de Código por Pares (Peer Code Review)
+#### Metodología de Revisión de Código por Pares (Peer Code Review)
 
 El software no se evalúa únicamente por si compila y pasa los tests: se evalúa por su **mantenibilidad a largo plazo**.
 
@@ -673,7 +621,7 @@ Durante un Code Review, los desarrolladores revisan el código de sus compañero
   </ol>
 </figure>
 
-### Rúbrica de Auditoría Técnica de Código Backend
+#### Rúbrica de Auditoría Técnica de Código Backend
 
 Utiliza esta lista de comprobación para auditar la aplicación:
 
@@ -685,9 +633,25 @@ Utiliza esta lista de comprobación para auditar la aplicación:
 | **Rendimiento** | ¿Existen consultas N+1 en relaciones JPA? | Relaciones `@OneToMany` con `FetchType.EAGER` o bucles `for` llamando a repositorios. | Consultas con `JOIN FETCH`, paginación en listados y transacciones de solo lectura (`readOnly = true`). |
 | **Observabilidad** | ¿Están las trazas estructuradas con Correlation ID? | Uso de `System.out.println` o logs que imprimen contraseñas / tokens. | SLF4J en niveles adecuados, `logback-spring.xml` rotativo y `X-Correlation-ID` en MDC. |
 
-### Paso a paso guiado · Enriquecimiento de OpenAPI y Swagger UI
+### Se trabaja
 
-<p class="stage">Paso 1 · Configuración global de OpenAPI con seguridad JWT</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Actualizad OpenAPI, configuración y README y revisad un caso de uso de otro proyecto.
+
+Aplicad las correcciones y ejecutad la suite y la colección desde un arranque limpio.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">OpenAPI, documentación y code review</p>
+
+#### Paso 2 · Enriquecimiento de OpenAPI y Swagger UI
 
 Configuramos el bean de OpenAPI para que Swagger UI incluya el botón **Authorize** permitiendo probar endpoints protegidos con tokens Bearer:
 
@@ -727,10 +691,8 @@ public class OpenApiConfig {
 }
 ```
 
-<p class="stage">Paso 2 · Documentación declarativa en el controlador</p>
-
 ```java
-    @Operation(summary = "Subir un archivo adjunto a una tarea", 
+    @Operation(summary = "Subir un archivo adjunto a una tarea",
                description = "Sube un archivo (PDF, PNG, JPG) de hasta 5 MB vinculado a una tarea específica.")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Fichero subido y registrado con éxito"),
@@ -744,7 +706,7 @@ public class OpenApiConfig {
     public ResponseEntity<Void> subirAdjunto( ... )
 ```
 
-### La comprobación · Inspección de Swagger UI y sesión de Code Review
+#### Paso 3 · Inspección de Swagger UI y sesión de Code Review
 
 1. **Abre Swagger UI en tu navegador:**
    `http://localhost:8080/swagger-ui.html`
@@ -764,7 +726,7 @@ public class OpenApiConfig {
   <p><strong>Se separa lo que bloquea de lo que es opinión.</strong> Marca cada comentario como <em>bloqueante</em> (un fallo de seguridad, una pérdida de datos), <em>recomendado</em> o <em>sugerencia</em>. Sin esa etiqueta, quien recibe la revisión no sabe qué es urgente y acaba ignorándola entera o rehaciéndolo todo.</p>
 </div>
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -774,7 +736,7 @@ public class OpenApiConfig {
 | Corriges un hallazgo y se rompen tres tests | Estabas cambiando comportamiento, no forma | Es información valiosa: significa que el comportamiento estaba probado. Decide cuál de los dos es correcto |
 | SonarLint devuelve cientos de avisos | Estás mirando todas las severidades | Filtra por *Blocker* y *Critical*: el resto es ruido para lo que toca hoy |
 
-### Ahora tú · Auditar y ser auditado
+#### Paso 5 · Auditar y ser auditado
 
 1. **Recibe:** intercambia repositorios con otro equipo. Clona el suyo desde cero y arráncalo siguiendo solo su documentación, sin preguntarles nada. Cronometra cuánto tardas.
 2. **Audita:** recorre las cinco dimensiones de la rúbrica y anota **al menos un hallazgo en cada una**, con la etiqueta de gravedad y la razón. Un informe con quince comentarios de estilo y ninguno de seguridad es un informe que no ha hecho su trabajo.
@@ -794,7 +756,18 @@ public class OpenApiConfig {
   <dd>Has arrancado el proyecto de otro equipo sin ayuda; tu informe tiene hallazgos en las cinco dimensiones, etiquetados por gravedad y con su razón; has respondido a todos los que te hicieron; los bloqueantes están corregidos y la suite sigue verde.</dd>
 </dl>
 
-### Reto · Detección estática de deuda técnica con SonarLint
+#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **revisad código y documentación de la versión real**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Detección estática de deuda técnica con SonarLint
 
 Instala la extensión **SonarLint** en tu entorno de desarrollo (IntelliJ o VS Code):
 1. Analiza todos los archivos Java de tu proyecto.
@@ -815,27 +788,6 @@ Instala la extensión **SonarLint** en tu entorno de desarrollo (IntelliJ o VS C
   <div><strong>Reto</strong><span>Inspección estática de código con SonarLint y resolución completa de advertencias de deuda técnica.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 69</p>
-  <ul class="checklist">
-    <li>La documentación OpenAPI 3 se genera de forma viva y sincronizada con el código.</li>
-    <li>La interfaz Swagger UI permite probar endpoints autenticados mediante tokens Bearer.</li>
-    <li>Se aplica con rigor la metodología de revisión de código por pares (*Code Review*).</li>
-    <li>Se utiliza una rúbrica estructurada evaluando arquitectura, seguridad y rendimiento.</li>
-    <li>El código resultante es mantenible, legible y preparado para su entrega profesional.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué ventaja ofrece la documentación generada con OpenAPI frente a un manual de API redactado a mano?</li>
-    <li>¿Cómo se configura OpenAPI para permitir autenticación por Bearer JWT en Swagger UI?</li>
-    <li>¿Por qué una revisión de código debe centrarse en la arquitectura y la resiliencia y no en el estilo estético de formateo?</li>
-    <li>¿Qué es el problema de las consultas N+1 en JPA y cómo se detecta durante una revisión de código?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Garantiza que la documentación nunca quede desactualizada respecto a la implementación real, ya que se autogenera directamente a partir del código y sus anotaciones.</p>
@@ -843,6 +795,34 @@ Instala la extensión **SonarLint** en tu entorno de desarrollo (IntelliJ o VS C
   <p>3 · Porque el formateo estético debe delegarse a herramientas automáticas (linters/formatters); el criterio humano del revisor debe concentrarse en la lógica de negocio, la seguridad, la concurrencia y la mantenibilidad.</p>
   <p>4 · Ocurre cuando al consultar una lista de N entidades se dispara una consulta adicional individual por cada elemento para cargar sus relaciones perezosas (1 + N consultas SQL); se detecta revisando logs de SQL o buscando relaciones sin JOIN FETCH.</p>
 </details>
+
+### Cierre
+
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
+
+Otra persona puede arrancar la API, comprender sus permisos y reproducir un recorrido documentado.
+
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 46 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-46.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-46.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 
@@ -959,4 +939,3 @@ Hacer que un programa funcione con datos perfectos en local lo consigue cualquie
     <li>Publicar documentación técnica y someterla a una revisión por pares.</li>
   </ul>
 </div>
-

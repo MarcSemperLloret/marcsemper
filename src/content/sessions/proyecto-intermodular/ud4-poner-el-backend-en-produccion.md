@@ -36,8 +36,19 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Sin base de datos, y se dice</p>
-  <p>En estas semanas vuestra API guarda los datos en memoria, porque la persistencia se estudia en Servidor más adelante. Eso significa que al reiniciarse pierde todo lo que hubiera. No es un defecto que haya que esconder: es una limitación conocida que se escribe en el README y que se explica en la demostración. La base de datos llega en la segunda evaluación.</p>
+  <p>Se despliega el mismo CRUD que elegisteis y estáis construyendo en Servidor. La primera publicación puede guardar datos en memoria: esa limitación se documenta. PostgreSQL llega en la UD5 de Servidor, dentro del <strong>primer trimestre</strong>, y desde entonces se publica la versión persistente por este mismo workflow. No se crea otra API para Intermodular.</p>
 </div>
+
+### Los hitos compartidos del primer trimestre
+
+| Lo que entrega Servidor | Lo que se trabaja aquí |
+| --- | --- |
+| CRUD en memoria con DTO, validación y errores, al terminar la UD3 | Repositorio del backend, CI y primera puesta en producción |
+| Capas y tests de servicio, en la UD4 | Ejecutar las pruebas en cada pull request y comprobar que un fallo bloquea la fusión |
+| CRUD con PostgreSQL y tests de repositorio, en la UD5 | Configurar la base de datos del entorno desplegado, sus variables y el entorno de pruebas del CI; publicar la misma API persistente |
+| Versión del primer trimestre revisada y defendida, en la UD6 | Identificar el mismo commit desplegado y conservar las evidencias del workflow, CI, revisiones y puesta en producción |
+
+Los hitos se coordinan por versión disponible: no se exige una funcionalidad antes de trabajarla en Servidor. Las cinco sesiones de esta unidad se mantienen. El circuito que queda montado se sigue utilizando con cada avance del backend hasta el cierre del trimestre. Si al terminar la sesión 11 todavía falta parte de la UD5 de Servidor, se publica la versión disponible y sus siguientes mejoras recorren el mismo circuito; la entrega del trimestre sí incluye persistencia en producción.
 
 ## Sesión 7 · El segundo repositorio
 
@@ -1011,12 +1022,12 @@ No es el mismo que el del portfolio, porque el lector es otro: alguien que quier
 | Endpoints | Tabla con método, ruta y para qué sirve. Solo eso: no es documentación completa |
 | Cómo se ejecuta en local | Los comandos exactos, del clonado al arranque |
 | Cómo se despliega | Qué lo dispara, adónde va y en qué plan |
-| Limitaciones conocidas | **Los datos están en memoria y se pierden al reiniciar.** Y que el plan gratuito duerme |
+| Persistencia y limitaciones conocidas | Estado real de la versión: memoria en el primer despliegue o PostgreSQL cuando se incorpora en Servidor; documentad también las limitaciones del alojamiento |
 | Portfolio que la consume | Enlace |
 
 <div class="rule">
   <p class="rule-label">Las limitaciones conocidas suman, no restan</p>
-  <p>Escribir que los datos se pierden al reiniciar no os deja en mal lugar: demuestra que sabéis dónde está el límite de lo que habéis hecho y por qué está ahí. Lo que deja en mal lugar es que lo descubra quien os está evaluando, en directo, mientras vosotros ponéis cara de sorpresa.</p>
+  <p>El README describe la versión publicada. Si todavía guarda en memoria, se indica; al incorporar PostgreSQL se actualiza y se comprueba la persistencia. Mantener una limitación que ya no existe desinforma igual que ocultar una real. La entrega del primer trimestre conserva los datos al reiniciar el backend.</p>
 </div>
 
 #### Bloque C · Publicar las dos versiones
@@ -1038,7 +1049,7 @@ Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres
   <ul class="checklist">
     <li>Abrir la API unos minutos antes, para que no la pillen dormida.</li>
     <li>Tener datos de ejemplo cargados: una lista vacía no demuestra nada.</li>
-    <li>Saber decir en una frase por qué los datos se pierden al reiniciar y cuándo dejará de pasar.</li>
+    <li>Explicar dónde guarda los datos la versión publicada y comprobarlo reiniciando el backend: la entrega del trimestre debe conservarlos en PostgreSQL.</li>
     <li>Tener a mano las dos pestañas de Actions, por si os piden ver el pipeline.</li>
   </ul>
 </div>
@@ -1056,6 +1067,7 @@ Vuestra pareja abre las dos URL sin tocar nada más y vosotros contáis, en tres
     <li>CORS permitiendo exactamente vuestro origen, configurado por variable de entorno.</li>
     <li>Los dos README, con las limitaciones conocidas escritas.</li>
     <li>Dos releases publicadas, y las notas del portfolio diciendo con qué versión de la API se probó.</li>
+    <li>Al cerrar el primer trimestre, PostgreSQL conectado en producción, datos conservados tras reiniciar y el mismo commit identificado para las evaluaciones de Servidor e Intermodular.</li>
   </ul>
 </div>
 

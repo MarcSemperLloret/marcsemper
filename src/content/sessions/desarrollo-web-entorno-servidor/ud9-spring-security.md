@@ -5,10 +5,10 @@ section: "ud-09"
 order: 9
 lang: "es"
 summary: "Desde por qué HTTP no recuerda quién eres hasta una API protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada."
-duration: "18 horas · 3 semanas · 9 sesiones"
-modality: "Taller técnico · 40 % guía / 60 % autonomía"
-deliverable: "La aplicación protegida con usuarios persistentes, roles y una estrategia de sesión o token justificada, consumida desde la página cliente de la UD8."
-date: "2026-09-02"
+duration: "18 horas · 3 semanas · 6 sesiones de 3 h"
+modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
+deliverable: "Repositorio de GitHub actualizado con el código, la documentación y las comprobaciones de las sesiones de esta unidad."
+date: "2026-09-09"
 outcomes:
   - "Explicar por qué HTTP no mantiene estado y cómo lo resuelven cookies y sesión."
   - "Distinguir autenticación de autorización."
@@ -25,36 +25,19 @@ priorKnowledge:
   - "Integración con un cliente y CORS básico."
 ---
 
-<p class="lead">Hasta ahora cualquiera podía hacer cualquier cosa. Aquí aparece la identidad, y con ella la pregunta que ordena toda la unidad: quién eres y qué te está permitido.</p>
+<p class="lead">El mismo producto incorpora identidad, usuarios persistentes y permisos. La matriz de autorización nace de su dominio e incluye tanto roles como acceso a recursos propios y ajenos.</p>
 
-<div class="rule">
-  <p class="rule-label">Progresión de autonomía</p>
-  <p>Andamiaje bajo. Los mecanismos se explican; la estrategia de seguridad de la aplicación la decide y la defiende el alumnado.</p>
-</div>
+## Semana 18 · Identidad, sesión y permisos del producto
 
-## Semana 18 · HTTP no recuerda quién eres
+## Sesión 35 · Identidad, sesión y permisos del producto
 
-## Sesión 52 · Peticiones independientes, cookies y sesión
+### Se explica
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> por qué el protocolo HTTP es estrictamente sin estado (<em>stateless</em>), cómo el servidor inventa la continuidad mediante el mecanismo de sesión y cookies (<code>JSESSIONID</code>), las directivas de seguridad esenciales de una cookie (<code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>) y el impacto en la memoria del servidor.</li>
-    <li><strong>2. Haz:</strong> implementa un controlador de demostración de sesión con <code>HttpSession</code> en Spring Boot, observa cómo el contenedor Tomcat genera la cabecera <code>Set-Cookie</code> y comprueba cómo el cliente la devuelve en peticiones sucesivas.</li>
-    <li><strong>3. Comprueba:</strong> inspeccionas el almacén de cookies en las DevTools del navegador (pestaña Aplicación / Storage) y en la pestaña Red, eliminas manualmente la cookie y observas cómo el servidor te trata de inmediato como un visitante anónimo desconocido.</li>
-  </ol>
-</div>
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué significa formalmente que el protocolo HTTP sea un protocolo «sin estado» (<em>stateless</em>)?</li>
-    <li>¿Qué cabecera HTTP envía el servidor para ordenar al navegador que almacene una cookie en su disco o memoria?</li>
-    <li>¿Qué peligro crítico de seguridad previene marcar una cookie con la directiva <code>HttpOnly</code>?</li>
-  </ol>
-</div>
+HTTP trata cada petición de forma independiente. Autenticar identifica al usuario; autorizar decide qué operaciones puede realizar sobre cada recurso.
 
-### La amnesia congénita del protocolo HTTP
+#### La amnesia congénita del protocolo HTTP
 
 Cuando envías una petición `GET /api/v1/proyectos`, el servidor abre un socket TCP, lee la petición, consulta la base de datos, envía el JSON de respuesta y cierra o reutiliza la conexión.
 
@@ -66,7 +49,7 @@ Si un milisegundo después envías `POST /api/v1/proyectos`, **para el servidor 
   <p>Para construir experiencias web donde un usuario «inicia sesión» y realiza múltiples acciones consecutivas, tuvimos que inventar un mecanismo artificial de continuidad sobre un protocolo amnésico: <strong>las sesiones y las cookies</strong>.</p>
 </div>
 
-### El truco del guardarropa: Session ID y Cookies
+#### El truco del guardarropa: Session ID y Cookies
 
 Imagina que vas al guardarropa de un teatro:
 1. Entregas tu abrigo (haces login con usuario y contraseña).
@@ -84,7 +67,7 @@ Imagina que vas al guardarropa de un teatro:
   </ol>
 </figure>
 
-### Las directivas de seguridad indispensables de una cookie
+#### Las directivas de seguridad indispensables de una cookie
 
 Una cookie no es un simple par clave-valor; es un mensaje con instrucciones de seguridad estrictas para el navegador:
 
@@ -95,11 +78,86 @@ Una cookie no es un simple par clave-valor; es un mensaje con instrucciones de s
 | **`SameSite=Lax` / `Strict`** | Controla si la cookie se envía en peticiones originadas desde sitios web de terceros. | Es la defensa nativa de los navegadores modernos contra ataques de falsificación de peticiones en sitios cruzados (**CSRF**). |
 | **`Path=/`** | Delimita qué rutas del servidor tienen acceso a la cookie. | Evita que aplicaciones aisladas bajo el mismo dominio compartan identificadores de sesión. |
 
-### Paso a paso guiado · Experimentar con HttpSession en Spring Boot
+#### Los dos pilares de la seguridad: AuthN y AuthZ
+
+En conversaciones informales es muy habitual escuchar a desarrolladores mezclar estos dos conceptos. En ingeniería de software profesional, confundirlos es la puerta de entrada a fallos críticos de seguridad:
+
+<figure class="diagram">
+  <figcaption>Las dos etapas del control de acceso</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Petición entrante</li>
+    <li>1. Autenticación (AuthN): ¿Quién eres?</li>
+    <li>2. Autorización (AuthZ): ¿Tienes permiso?</li>
+    <li>Ejecución del Controlador</li>
+  </ol>
+</figure>
+
+* **Autenticación (AuthN - *Authentication*):** Es el proceso de **verificar la identidad** de un actor.
+  * Responde a la pregunta: *¿Quién eres tú y cómo demuestras que eres quien dices ser?*
+  * Mecanismos: Usuario y contraseña, biometría, tarjeta inteligente, token criptográfico firmado.
+* **Autorización (AuthZ - *Authorization*):** Es el proceso de **determinar si una identidad confirmada tiene permiso** para ejecutar una acción sobre un recurso.
+  * Responde a la pregunta: *¿Este usuario autenticado tiene derecho a ejecutar `DELETE /api/v1/proyectos/1`?*
+  * Mecanismos: Roles (`ROLE_ADMINISTRADOR`), permisos puntuales (`TAREA_EDITAR`), listas de control de acceso (ACL).
+
+<div class="rule">
+  <p class="rule-label">La regla de oro de la precedencia</p>
+  <p><strong>La autorización no tiene sentido sin una autenticación previa.</strong></p>
+  <p>No puedes decidir qué permisos tiene alguien si no sabes quién es. Primero se identifica al actor (AuthN); si la identidad es válida, se evalúan sus permisos (AuthZ).</p>
+</div>
+
+#### La distinción semántica entre 401 y 403
+
+Uno de los errores más frecuentes en APIs REST es devolver el código HTTP equivocado ante accesos denegados:
+
+| Código HTTP | Nombre formal | Significado real | Cuándo se devuelve |
+| :--- | :--- | :--- | :--- |
+| **`401`** | `Unauthorized` | En realidad significa **Unauthenticated** (No identificado o credenciales no válidas). | El cliente no ha enviado ninguna credencial, o el token/contraseña que envió está caducado o es incorrecto. El cliente puede reintentar la petición aportando credenciales válidas. |
+| **`403`** | `Forbidden` | **Identificado pero sin privilegios suficientes** (Prohibido). | El servidor sabe perfectamente quién es el usuario (está autenticado), pero sus roles o permisos no le permiten realizar esa operación concreta. Reintentar con las mismas credenciales no servirá de nada. |
+
+#### Diseño de la Matriz de Control de Acceso (RBAC)
+
+Para que el desarrollo de la seguridad no sea caótico, el equipo de ingeniería define una **Matriz RBAC (Role-Based Access Control)** antes de escribir código de seguridad:
+
+Definimos los 4 roles del sistema. Son los nombres que usará el resto del curso, del `enum Rol` que escribes dentro de un momento hasta el proyecto final, así que conviene fijarlos aquí y no volver a tocarlos:
+
+1. **`ANON`:** visitante sin autenticar. No es un rol de la aplicación: es la ausencia de credenciales.
+2. **`DESARROLLADOR`:** miembro técnico del equipo.
+3. **`JEFE_PROYECTO`:** responsable de planificación y asignación.
+4. **`ADMINISTRADOR`:** administrador global de la plataforma.
+
+| Endpoint | Método HTTP | `ANON` | `DESARROLLADOR` | `JEFE_PROYECTO` | `ADMINISTRADOR` |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `/api/v1/proyectos` | `GET` (Listar) | 401 | 200 OK | 200 OK | 200 OK |
+| `/api/v1/proyectos/{id}` | `GET` (Detalle) | 401 | 200 OK | 200 OK | 200 OK |
+| `/api/v1/proyectos` | `POST` (Crear) | 401 | 403 | 201 Created | 201 Created |
+| `/api/v1/proyectos/{id}` | `PUT` (Editar) | 401 | 403 | 200 OK | 200 OK |
+| `/api/v1/proyectos/{id}` | `DELETE` (Borrar) | 401 | 403 | 403 | 204 No Content |
+| `/api/v1/proyectos/{id}/tareas` | `GET` (Tareas) | 401 | 200 OK | 200 OK | 200 OK |
+| `/api/v1/proyectos/{id}/tareas` | `POST` (Crear tarea) | 401 | 201 Created | 201 Created | 201 Created |
+| `/api/v1/tareas/{id}` | `DELETE` (Borrar tarea) | 401 | 403 | 204 No Content | 204 No Content |
+| `/api/v1/usuarios` | `GET` (Listar usuarios) | 401 | 403 | 403 | 200 OK |
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Definid los actores de vuestro producto y una matriz de operaciones, roles y propiedad de los datos.
+
+Observad cookies y sesión en una demostración y convertid la matriz en casos de acceso permitido y rechazado.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Peticiones independientes, cookies y sesión</p>
+
+#### Paso 2 · Experimentar con HttpSession en Spring Boot
 
 Vamos a crear un endpoint de prueba para observar el comportamiento nativo de sesiones de Spring Boot y Tomcat:
-
-<p class="stage">Paso 1 · Crear SesionDemoController</p>
 
 ```java
 package com.ejemplo.gestor.controller;
@@ -145,8 +203,6 @@ public class SesionDemoController {
 }
 ```
 
-<p class="stage">Paso 2 · Configurar directivas de cookies en application.properties</p>
-
 En Spring Boot podemos forzar que las cookies de sesión cumplan las máximas directivas de seguridad:
 
 ```properties
@@ -162,7 +218,7 @@ server.servlet.session.timeout=30m
   <p>En desarrollo local mantenemos <code>server.servlet.session.cookie.secure=false</code> porque trabajamos sobre <code>http://localhost</code>. En producción con certificados TLS/HTTPS, debe ser siempre <code>true</code>.</p>
 </div>
 
-### La comprobación · Inspección forense en DevTools
+#### Paso 3 · Inspección forense en DevTools
 
 Arranca tu aplicación y realiza este experimento en tu navegador abriendo `http://localhost:8080/api/v1/sesion-demo/visita`:
 
@@ -181,17 +237,17 @@ Arranca tu aplicación y realiza este experimento en tu navegador abriendo `http
    * Haz clic derecho sobre la cookie `JSESSIONID` en DevTools y selecciona **Delete** (Borrar).
    * Recarga la página: el servidor te asigna un nuevo `JSESSIONID` y el contador vuelve a empezar en `1`.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
 | El contador vuelve a 1 en cada petición | La cookie no viaja de vuelta | En DevTools → Application → Cookies, comprueba que existe `JSESSIONID` para `localhost:8080` |
 | Funciona en el cliente HTTP y no en el navegador | Falta `credentials: 'include'` | En una petición a otro origen, el navegador no manda cookies salvo que se lo pidas |
-| Con `credentials: 'include'` salta un error de CORS | El servidor no admite credenciales | `allowCredentials(true)` y orígenes enumerados, nunca comodín: es la sesión 50 |
+| Con `credentials: 'include'` salta un error de CORS | El servidor no admite credenciales | `allowCredentials(true)` y orígenes enumerados, nunca comodín: es la sesión 33 |
 | El contador se comparte entre dos pestañas | Es el comportamiento correcto | La sesión es del navegador, no de la pestaña. Para verlo con otra identidad, abre una ventana de incógnito |
 | El contador se reinicia al recompilar | La sesión vive en la memoria del proceso | Es exactamente el problema del reto de esta sesión |
 
-### Ahora tú · Integrar la cookie con el cliente web de la UD8
+#### Paso 5 · Integrar la cookie con el cliente web de la UD8
 
 Vuelve a tu página `cliente/index.html` de la UD8:
 1. Haz un `fetch('http://localhost:8080/api/v1/sesion-demo/visita')` desde el cliente en `http://localhost:5500`.
@@ -205,142 +261,18 @@ Vuelve a tu página `cliente/index.html` de la UD8:
 4. **Localiza la cookie con tus ojos.** DevTools → pestaña *Application* (o *Almacenamiento*) → *Cookies* → `http://localhost:8080`. Ahí está `JSESSIONID` con su valor. Anótalo.
 5. **Comprueba que la cookie es la sesión, y no otra cosa.** Bórrala desde ese mismo panel y vuelve a lanzar la petición: el contador empieza de cero y aparece un `JSESSIONID` nuevo. El servidor no te ha reconocido, aunque eres la misma persona en el mismo ordenador. Eso es lo que significa que HTTP no tiene memoria.
 6. **Comprueba que la sesión vive en el servidor.** Con el contador en 5, reinicia Spring Boot sin tocar el navegador y vuelve a pedir. Vuelve a 1: la cookie sigue en tu navegador, pero los datos que apuntaba estaban en la memoria del proceso, y el proceso ha muerto. Es el mismo hecho que descubriste en la sesión 1 con las tareas en memoria, aplicado ahora a la identidad.
-7. Escribe en tres líneas la diferencia entre lo que guarda el navegador (un identificador opaco) y lo que guarda el servidor (los datos asociados). Esa distinción es lo que hará que en la sesión 59 entiendas de golpe qué cambia con un JWT.
+7. Escribe en tres líneas la diferencia entre lo que guarda el navegador (un identificador opaco) y lo que guarda el servidor (los datos asociados). Esa distinción es lo que hará que en la sesión 39 entiendas de golpe qué cambia con un JWT.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
   <dd>Has visto la cookie <code>JSESSIONID</code> en DevTools, la has borrado y has comprobado el efecto; sabes que reiniciar el servidor pierde la sesión aunque la cookie siga; y puedes explicar por qué la misma petición desde tu cliente HTTP no arrastra estado.</dd>
 </dl>
 
-### Reto · El coste de la sesión: ¿Qué pasa al escalar a 5 servidores?
+<p class="stage">Autenticación frente a autorización</p>
 
-El almacenamiento de sesiones en memoria tiene un enemigo mortal: **el escalado horizontal**.
-
-Imagina que tu empresa tiene tanto éxito que un solo servidor Spring Boot no da abasto y pones un balanceador de carga (Nginx o AWS ALB) delante de dos instancias del backend (Servidor 1 y Servidor 2):
-1. El usuario hace login en el Servidor 1. El Servidor 1 guarda su sesión en su memoria RAM local y emite `JSESSIONID=ABC`.
-2. En la siguiente petición, el balanceador desvía el tráfico al Servidor 2.
-3. ¿Qué ocurre en el Servidor 2 cuando recibe `JSESSIONID=ABC`? ¿Tiene esa sesión en su memoria local?
-4. Investiga las dos soluciones industriales a este problema: **Sesiones pegajosas (*Sticky Sessions*)** frente a un **Almacén centralizado en memoria (*Spring Session con Redis*)**.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Controlador de sesión implementado y cabeceras <code>Set-Cookie</code> y <code>Cookie</code> inspeccionadas en DevTools.</span></div>
-  <div><strong>Si lo tienes</strong><span>Consumo desde el cliente web con <code>credentials: 'include'</code> y directivas <code>HttpOnly</code> verificadas.</span></div>
-  <div><strong>Reto</strong><span>Problema de escalabilidad de sesiones en memoria y solución con Spring Session / Redis comprendido y argumentado.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 52</p>
-  <ul class="checklist">
-    <li>Se comprende por qué HTTP es un protocolo sin estado y cómo las cookies reconstruyen la continuidad.</li>
-    <li>Se identifica el ciclo completo de vida de la cabecera <code>Set-Cookie</code> y el identificador <code>JSESSIONID</code>.</li>
-    <li>Las directivas críticas de seguridad (<code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>) están configuradas y auditadas.</li>
-    <li>El cliente web envía credenciales en peticiones cross-origin con <code>credentials: 'include'</code>.</li>
-    <li>Se conoce el impacto de almacenar sesiones en la memoria del servidor frente al escalado horizontal.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué HTTP se define como un protocolo sin estado (*stateless*)?</li>
-    <li>¿Qué almacena exactamente el identificador <code>JSESSIONID</code>: los datos del usuario o una clave de búsqueda en memoria?</li>
-    <li>¿Qué sucede si un script malicioso intenta ejecutar <code>document.cookie</code> sobre una cookie marcada con <code>HttpOnly</code>?</li>
-    <li>¿Por qué una petición fetch entre distintos puertos requiere <code>credentials: 'include'</code> para enviar cookies?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque el protocolo no conserva ninguna información ni contexto entre peticiones sucesivas; cada mensaje se procesa de forma totalmente independiente.</p>
-  <p>2 · Solo una clave opaca aleatoria (un puntero); los datos reales del usuario (atributos de sesión) permanecen almacenados en la memoria del servidor.</p>
-  <p>3 · El navegador devuelve una cadena vacía u oculta la cookie, impidiendo que el código JavaScript del cliente acceda a ella y neutralizando el robo de sesión por XSS.</p>
-  <p>4 · Porque por la Política del Mismo Origen el navegador restringe el envío automático de credenciales a orígenes externos por defecto para evitar fugas involuntarias de sesión.</p>
-</details>
-
-## Sesión 53 · Autenticación frente a autorización
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la distinción arquitectónica entre <strong>Autenticación (AuthN: ¿quién eres?)</strong> y <strong>Autorización (AuthZ: ¿qué puedes hacer?)</strong>, la diferencia semántica entre los códigos HTTP <code>401 Unauthorized</code> y <code>403 Forbidden</code>, y el diseño formal de una Matriz de Control de Acceso basado en roles (RBAC).</li>
-    <li><strong>2. Haz:</strong> elabora la matriz de permisos para el Gestor de Proyectos e Incidencias cruzando actores del sistema con endpoints y verbos HTTP.</li>
-    <li><strong>3. Comprueba:</strong> auditas cada intersección de la matriz validando qué código de estado exacto (200, 201, 204, 401 o 403) debe emitir el backend ante cada combinación de credencial y permiso.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si un usuario no autenticado intenta consultar una ruta privada, ¿qué código HTTP debe devolver la API: 401 o 403?</li>
-    <li>Si un usuario con rol de <code>DESARROLLADOR</code> intenta borrar un proyecto (acción reservada para <code>ADMIN</code>), ¿qué código HTTP debe recibir: 401 o 403?</li>
-    <li>¿Por qué se dice en ingeniería de software que el nombre del código HTTP <code>401 Unauthorized</code> fue una mala elección histórica de vocabulario?</li>
-  </ol>
-</div>
-
-### Los dos pilares de la seguridad: AuthN y AuthZ
-
-En conversaciones informales es muy habitual escuchar a desarrolladores mezclar estos dos conceptos. En ingeniería de software profesional, confundirlos es la puerta de entrada a fallos críticos de seguridad:
-
-<figure class="diagram">
-  <figcaption>Las dos etapas del control de acceso</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Petición entrante</li>
-    <li>1. Autenticación (AuthN): ¿Quién eres?</li>
-    <li>2. Autorización (AuthZ): ¿Tienes permiso?</li>
-    <li>Ejecución del Controlador</li>
-  </ol>
-</figure>
-
-* **Autenticación (AuthN - *Authentication*):** Es el proceso de **verificar la identidad** de un actor.
-  * Responde a la pregunta: *¿Quién eres tú y cómo demuestras que eres quien dices ser?*
-  * Mecanismos: Usuario y contraseña, biometría, tarjeta inteligente, token criptográfico firmado.
-* **Autorización (AuthZ - *Authorization*):** Es el proceso de **determinar si una identidad confirmada tiene permiso** para ejecutar una acción sobre un recurso.
-  * Responde a la pregunta: *¿Este usuario autenticado tiene derecho a ejecutar `DELETE /api/v1/proyectos/1`?*
-  * Mecanismos: Roles (`ROLE_ADMINISTRADOR`), permisos puntuales (`TAREA_EDITAR`), listas de control de acceso (ACL).
-
-<div class="rule">
-  <p class="rule-label">La regla de oro de la precedencia</p>
-  <p><strong>La autorización no tiene sentido sin una autenticación previa.</strong></p>
-  <p>No puedes decidir qué permisos tiene alguien si no sabes quién es. Primero se identifica al actor (AuthN); si la identidad es válida, se evalúan sus permisos (AuthZ).</p>
-</div>
-
-### La distinción semántica entre 401 y 403
-
-Uno de los errores más frecuentes en APIs REST es devolver el código HTTP equivocado ante accesos denegados:
-
-| Código HTTP | Nombre formal | Significado real | Cuándo se devuelve |
-| :--- | :--- | :--- | :--- |
-| **`401`** | `Unauthorized` | En realidad significa **Unauthenticated** (No identificado o credenciales no válidas). | El cliente no ha enviado ninguna credencial, o el token/contraseña que envió está caducado o es incorrecto. El cliente puede reintentar la petición aportando credenciales válidas. |
-| **`403`** | `Forbidden` | **Identificado pero sin privilegios suficientes** (Prohibido). | El servidor sabe perfectamente quién es el usuario (está autenticado), pero sus roles o permisos no le permiten realizar esa operación concreta. Reintentar con las mismas credenciales no servirá de nada. |
-
-### Diseño de la Matriz de Control de Acceso (RBAC)
-
-Para que el desarrollo de la seguridad no sea caótico, el equipo de ingeniería define una **Matriz RBAC (Role-Based Access Control)** antes de escribir código de seguridad:
-
-Definimos los 4 roles del sistema. Son los nombres que usará el resto del curso, del `enum Rol` que escribes dentro de un momento hasta el proyecto final, así que conviene fijarlos aquí y no volver a tocarlos:
-
-1. **`ANON`:** visitante sin autenticar. No es un rol de la aplicación: es la ausencia de credenciales.
-2. **`DESARROLLADOR`:** miembro técnico del equipo.
-3. **`JEFE_PROYECTO`:** responsable de planificación y asignación.
-4. **`ADMINISTRADOR`:** administrador global de la plataforma.
-
-| Endpoint | Método HTTP | `ANON` | `DESARROLLADOR` | `JEFE_PROYECTO` | `ADMINISTRADOR` |
-| :--- | :--- | :---: | :---: | :---: | :---: |
-| `/api/v1/proyectos` | `GET` (Listar) | 401 | 200 OK | 200 OK | 200 OK |
-| `/api/v1/proyectos/{id}` | `GET` (Detalle) | 401 | 200 OK | 200 OK | 200 OK |
-| `/api/v1/proyectos` | `POST` (Crear) | 401 | 403 | 201 Created | 201 Created |
-| `/api/v1/proyectos/{id}` | `PUT` (Editar) | 401 | 403 | 200 OK | 200 OK |
-| `/api/v1/proyectos/{id}` | `DELETE` (Borrar) | 401 | 403 | 403 | 204 No Content |
-| `/api/v1/proyectos/{id}/tareas` | `GET` (Tareas) | 401 | 200 OK | 200 OK | 200 OK |
-| `/api/v1/proyectos/{id}/tareas` | `POST` (Crear tarea) | 401 | 201 Created | 201 Created | 201 Created |
-| `/api/v1/tareas/{id}` | `DELETE` (Borrar tarea) | 401 | 403 | 204 No Content | 204 No Content |
-| `/api/v1/usuarios` | `GET` (Listar usuarios) | 401 | 403 | 403 | 200 OK |
-
-### Paso a paso guiado · De la matriz al modelo conceptual en Java
+#### Paso 6 · De la matriz al modelo conceptual en Java
 
 Para representar roles en Spring Boot de forma limpia, creamos un enumerado estándar:
-
-<p class="stage">Paso 1 · Crear el Enum Rol</p>
 
 ```java
 package com.ejemplo.gestor.model;
@@ -353,8 +285,6 @@ public enum Rol {
     // Prefijo ROLE_ requerido por conveniencia en Spring Security
 }
 ```
-
-<p class="stage">Paso 2 · Diseñar la entidad Usuario</p>
 
 Un usuario tiene credenciales de autenticación (username, password) y una colección de roles para autorización:
 
@@ -371,7 +301,7 @@ public class Usuario {
     private String username;
 
     @Column(nullable = false)
-    private String password; // ¡Nunca en texto plano! (lo veremos en la sesión 54)
+    private String password; // ¡Nunca en texto plano! (lo veremos en la sesión 36)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
@@ -384,7 +314,7 @@ public class Usuario {
 }
 ```
 
-### La comprobación · Auditoría cruzada de la matriz
+#### Paso 7 · Auditoría cruzada de la matriz
 
 Revisa la matriz de permisos y responde a estas comprobaciones de diseño:
 
@@ -395,7 +325,7 @@ Revisa la matriz de permisos y responde a estas comprobaciones de diseño:
    * Si un `DESARROLLADOR` autenticado intenta borrar un proyecto (`DELETE /api/v1/proyectos/5`), ¿por qué devolver `401` sería un grave error técnico?
    * *Respuesta:* Porque el usuario ya está autenticado; devolver `401` le induciría a pensar que su contraseña falló, cuando en realidad no tiene el privilegio necesario (`403 Forbidden`).
 
-### Ahora tú · Control de acceso basado en atributos (ABAC)
+#### Paso 8 · Control de acceso basado en atributos (ABAC)
 
 La matriz por roles (RBAC) es muy potente, pero tiene un límite:
 * Un `DESARROLLADOR` tiene permiso para editar tareas (`PUT /api/v1/tareas/{id}`).
@@ -406,10 +336,10 @@ Diseña la regla de negocio para el control de acceso a nivel de fila (*Row-Leve
 2. Define la condición lógica: *«Un usuario con rol `DESARROLLADOR` solo puede modificar el estado de una tarea si `tarea.asignadoA.id == usuarioAutenticado.id`»*.
 3. Si intenta editar la tarea de otro desarrollador, ¿qué código HTTP debe responder la API?
 4. **Construye la matriz completa** de la que va a depender el resto de la unidad. Una fila por cada combinación de endpoint y método, una columna por rol, y en cada casilla el código de estado exacto. Son las 9 filas de la tabla de esta sesión, y ese documento se convierte en:
-   * la configuración que escribes en la sesión 55,
-   * las anotaciones `@PreAuthorize` de la sesión 57,
-   * y los tests automáticos de la sesión 58.
-   Si la matriz está mal, las tres sesiones siguientes construyen sobre un error, así que merece la pena discutirla ahora.
+   * la configuración que escribes en la sesión 36,
+   * las anotaciones `@PreAuthorize` de la sesión 38,
+   * y los tests automáticos de la sesión 38.
+   Si la matriz está mal, la implementación de seguridad construye sobre un error, así que merece la pena discutirla ahora.
 5. **Resuelve las cuatro casillas que siempre generan debate**, y anota la razón de cada decisión:
    * ¿Un `DESARROLLADOR` puede **ver** los proyectos que no son suyos, aunque no pueda editarlos?
    * ¿Un `JEFE_PROYECTO` puede borrar un proyecto, o eso solo el `ADMINISTRADOR`?
@@ -422,7 +352,42 @@ Diseña la regla de negocio para el control de acceso a nivel de fila (*Row-Leve
   <dd>Tienes una tabla con todas las casillas rellenas, sin ninguna «depende»; las cuatro decisiones polémicas están tomadas y justificadas por escrito; y has elegido entre <code>403</code> y <code>404</code> con un criterio que puedes defender.</dd>
 </dl>
 
-### Reto · Matriz formal de seguridad de la aplicación
+#### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **definid la identidad y la matriz de permisos**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · El coste de la sesión: ¿Qué pasa al escalar a 5 servidores?
+
+El almacenamiento de sesiones en memoria tiene un enemigo mortal: **el escalado horizontal**.
+
+Imagina que tu empresa tiene tanto éxito que un solo servidor Spring Boot no da abasto y pones un balanceador de carga (Nginx o AWS ALB) delante de dos instancias del backend (Servidor 1 y Servidor 2):
+1. El usuario hace login en el Servidor 1. El Servidor 1 guarda su sesión en su memoria RAM local y emite `JSESSIONID=ABC`.
+2. En la siguiente petición, el balanceador desvía el tráfico al Servidor 2.
+3. ¿Qué ocurre en el Servidor 2 cuando recibe `JSESSIONID=ABC`? ¿Tiene esa sesión en su memoria local?
+4. Investiga las dos soluciones industriales a este problema: **Sesiones pegajosas (*Sticky Sessions*)** frente a un **Almacén centralizado en memoria (*Spring Session con Redis*)**.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Controlador de sesión implementado y cabeceras <code>Set-Cookie</code> y <code>Cookie</code> inspeccionadas en DevTools.</span></div>
+  <div><strong>Si lo tienes</strong><span>Consumo desde el cliente web con <code>credentials: 'include'</code> y directivas <code>HttpOnly</code> verificadas.</span></div>
+  <div><strong>Reto</strong><span>Problema de escalabilidad de sesiones en memoria y solución con Spring Session / Redis comprendido y argumentado.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque el protocolo no conserva ninguna información ni contexto entre peticiones sucesivas; cada mensaje se procesa de forma totalmente independiente.</p>
+  <p>2 · Solo una clave opaca aleatoria (un puntero); los datos reales del usuario (atributos de sesión) permanecen almacenados en la memoria del servidor.</p>
+  <p>3 · El navegador devuelve una cadena vacía u oculta la cookie, impidiendo que el código JavaScript del cliente acceda a ella y neutralizando el robo de sesión por XSS.</p>
+  <p>4 · Porque por la Política del Mismo Origen el navegador restringe el envío automático de credenciales a orígenes externos por defecto para evitar fugas involuntarias de sesión.</p>
+</details>
+
+##### Reto · Matriz formal de seguridad de la aplicación
 
 En entornos profesionales de desarrollo seguro (como los marcos ISO 27001 o ENS - Esquema Nacional de Seguridad), la seguridad no puede dejarse a la improvisación.
 
@@ -442,27 +407,6 @@ Elabora una matriz formal de control de accesos completa para el sistema:
   <div><strong>Reto</strong><span>Extensión de la matriz con reglas de seguridad a nivel de fila (ABAC) y justificación de respuestas 403 vs 404.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 53</p>
-  <ul class="checklist">
-    <li>Se distingue con precisión matemática entre autenticación (identidad) y autorización (permisos).</li>
-    <li>Los códigos de respuesta HTTP <code>401 Unauthorized</code> y <code>403 Forbidden</code> se aplican con estricta semántica.</li>
-    <li>La matriz de control de accesos basada en roles (RBAC) está formalmente definida para todos los endpoints.</li>
-    <li>Se comprende la limitación de los roles globales y la necesidad del control de acceso por atributos (ABAC).</li>
-    <li>El modelo conceptual de usuarios y roles está preparado para su persistencia en base de datos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Cuál es la diferencia exacta entre autenticación y autorización?</li>
-    <li>¿En qué circunstancia una API debe responder con código HTTP 403 en lugar de 401?</li>
-    <li>¿Por qué el estándar HTTP utilizó la palabra «Unauthorized» para el código 401 cuando debería llamarse «Unauthenticated»?</li>
-    <li>¿Qué significa el acrónimo RBAC en el diseño de seguridad de aplicaciones?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Autenticación es verificar la identidad del actor (quién es); autorización es comprobar si esa identidad verificada tiene derecho a ejecutar una acción concreta.</p>
@@ -471,39 +415,43 @@ Elabora una matriz formal de control de accesos completa para el sistema:
   <p>4 · Role-Based Access Control: Control de Acceso Basado en Roles.</p>
 </details>
 
-## Sesión 54 · Contraseñas y hashing
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> por qué las contraseñas <strong>NUNCA se guardan en texto plano ni se cifran de forma reversible</strong>, qué es una función hash criptográfica unidireccional, el rol fundamental del <em>Salt</em> aleatorio frente a ataques de diccionario y tablas arcoíris, y por qué algoritmos rápidos como MD5 o SHA-256 son peligrosos requiriendo funciones adaptativas lentas (BCrypt, Argon2).</li>
-    <li><strong>2. Haz:</strong> configura el bean <code>PasswordEncoder</code> con <code>BCryptPasswordEncoder</code> en Spring Boot, escribe tests unitarios que verifiquen cómo una misma contraseña genera hashes totalmente distintos y comprueba la verificación con <code>matches()</code>.</li>
-    <li><strong>3. Comprueba:</strong> mides el tiempo de cómputo variando el factor de coste de BCrypt (de 10 a 14 rondas), analizando el equilibrio entre resistencia ante ataques de fuerza bruta y latencia admisible para el usuario.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuál es la diferencia fundamental entre «cifrar» (encriptar) un dato y «hashear» un dato?</li>
-    <li>Si dos usuarios eligen exactamente la misma contraseña (<code>"Secreto123!"</code>), ¿por qué en la base de datos sus cadenas resultantes deben ser completamente diferentes?</li>
-    <li>¿Por qué utilizar algoritmos ultrarrápidos como SHA-256 o MD5 para almacenar contraseñas se considera hoy una negligencia grave de seguridad?</li>
-  </ol>
-</div>
+La matriz incluye usuario anónimo, usuario autenticado, recurso propio y recurso ajeno.
 
-### La mayor negligencia de un desarrollador backend
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-En 2012, una famosa red social profesional sufrió una filtración de su base de datos. Los atacantes extrajeron millones de filas. Para sorpresa y escándalo del mundo tecnológico, las contraseñas estaban almacenadas con el algoritmo **SHA-1 sin sal (*salt*)**.
 
-En menos de 24 horas, los investigadores y atacantes habían recuperado el **90 % de las contraseñas originales** utilizando tablas precalculadas.
+#### Entrega de la sesión 35 · Repositorio de GitHub
 
-<div class="rule">
-  <p class="rule-label">La ley inquebrantable del almacenamiento de contraseñas</p>
-  <p><strong>Las contraseñas NUNCA se almacenan en texto plano y NUNCA se cifran de forma reversible.</strong></p>
-  <p>Si cifras una contraseña con una clave simétrica (AES), quien robe la base de datos y encuentre la clave maestra recuperará todas las contraseñas de tus usuarios. Una contraseña debe transformarse mediante una <strong>función hash criptográfica irreversible y lenta</strong>.</p>
-</div>
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
 
-### Cifrado reversible frente a Hash unidireccional
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-35.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-35.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 36 · Contraseñas y Spring Security
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Las contraseñas se verifican mediante hashing adaptativo. Spring Security aplica la política antes de llegar a los endpoints.
+
+#### Cifrado reversible frente a Hash unidireccional
 
 Conviene fijar con máxima claridad conceptual estos dos términos:
 
@@ -523,7 +471,7 @@ Conviene fijar con máxima claridad conceptual estos dos términos:
 2. El servidor le aplica la misma función hash a lo que el usuario acaba de escribir.
 3. Si el hash resultante coincide con el hash guardado en la base de datos, el usuario conoce la contraseña. **El servidor jamás necesita saber cuál era la contraseña original**.
 
-### Por qué SHA-256 no sirve para contraseñas: La necesidad de funciones lentas
+#### Por qué SHA-256 no sirve para contraseñas: La necesidad de funciones lentas
 
 Muchos estudiantes preguntan: *«¿Por qué no usamos SHA-256 si es un hash seguro?»*.
 
@@ -535,7 +483,7 @@ Para almacenar contraseñas necesitamos **funciones de derivación de claves del
 * Si el cálculo de un hash BCrypt tarda **250 milisegundos**, un usuario legítimo al hacer login ni siquiera nota el retardo de un cuarto de segundo.
 * Para el atacante, probar 1.000 millones de contraseñas ya no tarda minutos: tarda **miles de años**.
 
-### El rol del Salt (Sal criptográfica) y la anatomía de BCrypt
+#### El rol del Salt (Sal criptográfica) y la anatomía de BCrypt
 
 Para evitar que dos usuarios con la misma contraseña tengan el mismo hash en la base de datos (lo que permitiría usar tablas arcoíris precalculadas), se añade un **Salt**: un conjunto de bytes aleatorios únicos generados para cada usuario.
 
@@ -557,16 +505,88 @@ $2a$12$KIXQ0zv4pO3mR7uYbA1c.eW9tHnL5sD2fG8jV4xZ6qC1aB3dE5gHi
 Id  Cost         Salt                        Hash
 ```
 
-Ese ejemplo sirve para ver la estructura, no para copiarlo: cada hash lleva su propia sal, así que el tuyo será distinto aunque la contraseña sea la misma. En la sesión 56 generarás los tuyos.
+Ese ejemplo sirve para ver la estructura, no para copiarlo: cada hash lleva su propia sal, así que el tuyo será distinto aunque la contraseña sea la misma. En la sesión 37 generarás los tuyos.
 
 1. **`$2a$`:** Versión del algoritmo BCrypt.
 2. **`$12$`:** Factor de coste (*Work Factor*). Significa 2¹² = 4.096 rondas de estiramiento de clave (*Key Stretching*).
 3. **Primeros 22 caracteres:** El *Salt* aleatorio generado automáticamente en el momento del registro.
 4. **Últimos 31 caracteres:** El hash resultante de combinar la contraseña con ese *Salt*.
 
-### Paso a paso guiado · Integrar BCrypt con Spring Security
+#### El cerrojo automático de Spring Security
 
-<p class="stage">Paso 1 · Configurar el Bean PasswordEncoder</p>
+En el instante en que añades esta dependencia a tu `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+Spring Boot activa el principio de **seguridad por defecto (*Secure by Default*)**:
+1. **Todos los endpoints quedan blindados:** Cualquier petición a `/api/v1/proyectos` o a `/swagger-ui.html` es inmediatamente rechazada con código `401 Unauthorized`.
+2. **Genera un usuario provisional:** En la terminal de arranque de la aplicación aparece un mensaje como este:
+   ```text
+   Using generated security password: 4a8b1c2d-9e3f-4123-b890-abcdef123456
+   ```
+   El usuario por defecto es `user` y la contraseña es esa clave aleatoria efímera.
+3. **Inserta la Cadena de Filtros de Seguridad:** Cada petición HTTP entrante es interceptada por una serie de filtros en cascada antes de llegar siquiera al `DispatcherServlet`.
+
+<div class="rule">
+  <p class="rule-label">La arquitectura de filtros</p>
+  <p><strong>Spring Security no vive dentro de tus controladores; vive en la frontera de red.</strong></p>
+  <p>El <code>DelegatingFilterProxy</code> desvía la petición a la <code>SecurityFilterChain</code>. Si un filtro detecta que la petición no aporta credenciales válidas, corta la ejecución de inmediato y responde al cliente sin que tu código de negocio llegue a enterarse.</p>
+</div>
+
+#### La cadena de filtros (SecurityFilterChain) en Spring Security 6
+
+En versiones antiguas de Spring Security se heredaba de `WebSecurityConfigurerAdapter`. En Spring Boot 3 esa clase fue eliminada definitivamente.
+
+La configuración moderna se realiza mediante un `@Bean` que construye un **`SecurityFilterChain`** utilizando programación funcional basada en lambdas:
+
+<figure class="diagram">
+  <figcaption>El flujo de inspección de la SecurityFilterChain</figcaption>
+  <ol class="flow flow--row flow--chain">
+    <li>Petición HTTP entrante</li>
+    <li>Filtro CORS (WebConfig)</li>
+    <li>Filtro CSRF / ExceptionTranslation</li>
+    <li>BasicAuthenticationFilter</li>
+    <li>AuthorizationFilter (requestMatchers)</li>
+    <li>DispatcherServlet / Controller</li>
+  </ol>
+</figure>
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Configurad la cadena de seguridad y el codificador de contraseñas en vuestro backend.
+
+Proteged una operación y comprobad el acceso anónimo, credenciales incorrectas y credenciales válidas.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Contraseñas y hashing</p>
+
+#### Paso 2 · La mayor negligencia de un desarrollador backend
+
+En 2012, una famosa red social profesional sufrió una filtración de su base de datos. Los atacantes extrajeron millones de filas. Para sorpresa y escándalo del mundo tecnológico, las contraseñas estaban almacenadas con el algoritmo **SHA-1 sin sal (*salt*)**.
+
+En menos de 24 horas, los investigadores y atacantes habían recuperado el **90 % de las contraseñas originales** utilizando tablas precalculadas.
+
+<div class="rule">
+  <p class="rule-label">La ley inquebrantable del almacenamiento de contraseñas</p>
+  <p><strong>Las contraseñas NUNCA se almacenan en texto plano y NUNCA se cifran de forma reversible.</strong></p>
+  <p>Si cifras una contraseña con una clave simétrica (AES), quien robe la base de datos y encuentre la clave maestra recuperará todas las contraseñas de tus usuarios. Una contraseña debe transformarse mediante una <strong>función hash criptográfica irreversible y lenta</strong>.</p>
+</div>
+
+#### Paso 3 · Integrar BCrypt con Spring Security
 
 En Spring Boot definimos el codificador de contraseñas oficial como un `@Bean` reutilizable:
 
@@ -588,8 +608,6 @@ public class SecurityBeansConfig {
     }
 }
 ```
-
-<p class="stage">Paso 2 · Test unitario de hashing y verificación con matches()</p>
 
 Creamos una prueba unitaria para experimentar cómo opera `PasswordEncoder`:
 
@@ -630,7 +648,7 @@ class PasswordEncoderTest {
 }
 ```
 
-### La comprobación · Medir el coste computacional del Work Factor
+#### Paso 4 · Medir el coste computacional del Work Factor
 
 Ejecuta este benchmark en terminal para entender cómo cada incremento en el factor de coste duplica el tiempo de cálculo de la CPU:
 
@@ -659,7 +677,7 @@ Observa los resultados típicos en una CPU moderna:
 
 Cada incremento duplica exactamente el coste para el atacante. El coste 12 ofrece una resistencia excepcional sin degradar la experiencia de usuario.
 
-### Ahora tú · Servicio de registro de usuario con hash seguro
+#### Paso 5 · Servicio de registro de usuario con hash seguro
 
 Implementa el método de creación de usuario en tu servicio de negocio:
 
@@ -672,127 +690,11 @@ Implementa el método de creación de usuario en tu servicio de negocio:
 3. Abre pgAdmin o tu cliente de PostgreSQL y haz un `SELECT * FROM usuarios;`.
 4. Comprueba visualmente que la columna `password` almacena una cadena que empieza por `$2a$12$...` y jamás la clave en texto claro.
 
-### Reto · Migración transparente de factores de coste (upgradeEncoding)
+<p class="stage">Spring Security básico</p>
 
-Con el paso de los años las computadoras se vuelven más rápidas y los factores de coste antiguos (ej: coste 10 de hace 5 años) quedan desfasados.
-
-Spring Security proporciona el método:
-`passwordEncoder.upgradeEncoding(hashActual)`
-1. ¿Cómo permite este método detectar si un hash guardado en base de datos se generó con un factor de coste inferior al estándar actual de la empresa?
-2. Diseña el flujo durante el login: si el login tiene éxito y `upgradeEncoding` devuelve `true`, ¿cómo actualiza la aplicación el hash en la base de datos con el nuevo coste sin pedirle al usuario que vuelva a escribir su contraseña?
-
-<div class="rule">
-  <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe de auditoría criptográfica y políticas de contraseñas, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-hashing.pdf</code>), nunca un archivo markdown suelto.</p>
-</div>
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Distinción entre cifrado reversible y hash unidireccional y bean <code>BCryptPasswordEncoder</code> configurado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Registro de usuario en PostgreSQL con contraseña hasheada y test con <code>matches()</code> en verde.</span></div>
-  <div><strong>Reto</strong><span>Benchmark de factores de coste ejecutado y flujo de actualización transparente (<code>upgradeEncoding</code>) diseñado.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 54</p>
-  <ul class="checklist">
-    <li>Se prohíbe terminantemente el almacenamiento de contraseñas en claro o mediante cifrado reversible.</li>
-    <li>Se comprende el principio de las funciones hash lentas frente al uso negligente de algoritmos rápidos (MD5/SHA).</li>
-    <li>La anatomía de un hash BCrypt (versión, factor de coste, salt y digest) se analiza con precisión.</li>
-    <li>El método <code>matches()</code> se utiliza para verificar credenciales sin descifrar nunca la contraseña original.</li>
-    <li>Las contraseñas de los usuarios en PostgreSQL quedan blindadas ante cualquier filtración de datos.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué nunca se debe utilizar cifrado reversible (como AES) para almacenar contraseñas?</li>
-    <li>¿Qué función cumple el Salt aleatorio y qué tipo de ataque previene de raíz?</li>
-    <li>¿Por qué BCrypt es una función hash adecuada para contraseñas mientras que SHA-256 no lo es?</li>
-    <li>¿Cómo sabe el método <code>passwordEncoder.matches()</code> qué Salt se utilizó si solo le pasas la contraseña plana y el hash guardado?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque si la clave de cifrado se ve comprometida o filtrada, todas las contraseñas de todos los usuarios de la plataforma quedan expuestas de forma inmediata.</p>
-  <p>2 · Garantiza que dos contraseñas idénticas generen hashes completamente diferentes, neutralizando los ataques basados en diccionarios y tablas arcoíris precalculadas.</p>
-  <p>3 · Porque SHA-256 fue diseñado para ser extremadamente rápido (vulnerable a fuerza bruta con GPUs), mientras que BCrypt es deliberadamente lento y configurable en coste de CPU.</p>
-  <p>4 · Porque los primeros 22 caracteres del propio hash guardado en base de datos contienen el Salt codificado, extrayéndolo de forma transparente para computar la comparación.</p>
-</details>
-
-
-## Semana 19 · Identidad y permisos persistentes
-
-## Sesión 55 · Spring Security básico
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el impacto inmediato de añadir <code>spring-boot-starter-security</code> al proyecto, la arquitectura de la cadena de filtros de seguridad (<em>SecurityFilterChain</em> y <code>DelegatingFilterProxy</code>), el DSL funcional de configuración en Spring Security 6 y la autenticación HTTP Basic para APIs.</li>
-    <li><strong>2. Haz:</strong> define una clase de configuración con <code>SecurityFilterChain</code>, declara explícitamente qué rutas son públicas (documentación OpenAPI, Swagger UI) y cuáles requieren autenticación obligatoria.</li>
-    <li><strong>3. Comprueba:</strong> lanzas peticiones desde Bruno con y sin cabecera <code>Authorization: Basic</code>, verificando que los accesos anónimos a rutas protegidas se interceptan con código <code>401 Unauthorized</code> y cabecera <code>WWW-Authenticate</code>.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué ocurre con todos los endpoints de una API en el momento en que añades la dependencia de Spring Security sin escribir ninguna configuración?</li>
-    <li>¿Qué clase o bean central de Spring Security se utiliza para definir las reglas de autorización de rutas HTTP en sustitución de la clase obsoleta <code>WebSecurityConfigurerAdapter</code>?</li>
-    <li>¿Cómo viajan las credenciales (usuario y contraseña) en la cabecera <code>Authorization</code> cuando se utiliza el estándar HTTP Basic?</li>
-  </ol>
-</div>
-
-### El cerrojo automático de Spring Security
-
-En el instante en que añades esta dependencia a tu `pom.xml`:
-
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-security</artifactId>
-</dependency>
-```
-
-Spring Boot activa el principio de **seguridad por defecto (*Secure by Default*)**:
-1. **Todos los endpoints quedan blindados:** Cualquier petición a `/api/v1/proyectos` o a `/swagger-ui.html` es inmediatamente rechazada con código `401 Unauthorized`.
-2. **Genera un usuario provisional:** En la terminal de arranque de la aplicación aparece un mensaje como este:
-   ```text
-   Using generated security password: 4a8b1c2d-9e3f-4123-b890-abcdef123456
-   ```
-   El usuario por defecto es `user` y la contraseña es esa clave aleatoria efímera.
-3. **Inserta la Cadena de Filtros de Seguridad:** Cada petición HTTP entrante es interceptada por una serie de filtros en cascada antes de llegar siquiera al `DispatcherServlet`.
-
-<div class="rule">
-  <p class="rule-label">La arquitectura de filtros</p>
-  <p><strong>Spring Security no vive dentro de tus controladores; vive en la frontera de red.</strong></p>
-  <p>El <code>DelegatingFilterProxy</code> desvía la petición a la <code>SecurityFilterChain</code>. Si un filtro detecta que la petición no aporta credenciales válidas, corta la ejecución de inmediato y responde al cliente sin que tu código de negocio llegue a enterarse.</p>
-</div>
-
-### La cadena de filtros (SecurityFilterChain) en Spring Security 6
-
-En versiones antiguas de Spring Security se heredaba de `WebSecurityConfigurerAdapter`. En Spring Boot 3 esa clase fue eliminada definitivamente.
-
-La configuración moderna se realiza mediante un `@Bean` que construye un **`SecurityFilterChain`** utilizando programación funcional basada en lambdas:
-
-<figure class="diagram">
-  <figcaption>El flujo de inspección de la SecurityFilterChain</figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Petición HTTP entrante</li>
-    <li>Filtro CORS (WebConfig)</li>
-    <li>Filtro CSRF / ExceptionTranslation</li>
-    <li>BasicAuthenticationFilter</li>
-    <li>AuthorizationFilter (requestMatchers)</li>
-    <li>DispatcherServlet / Controller</li>
-  </ol>
-</figure>
-
-### Paso a paso guiado · Configurar SecurityConfig con rutas públicas y privadas
+#### Paso 6 · Configurar SecurityConfig con rutas públicas y privadas
 
 Vamos a configurar nuestra primera cadena de seguridad formal. No escribas todavía ninguna clase: el primer paso es **ver el cerrojo funcionando solo**, porque entender qué hace Spring sin que se lo pidas es lo que explica todo lo que viene después.
-
-<p class="stage">Paso 1 · Añadir la dependencia y arrancar sin configurar nada</p>
 
 1. Abre tu `pom.xml` y añade el `starter` de seguridad dentro de `<dependencies>`, junto a los que ya tienes:
    ```xml
@@ -818,8 +720,6 @@ Vamos a configurar nuestra primera cadena de seguridad formal. No escribas todav
   <dt>Por qué esa contraseña no sirve</dt>
   <dd>Cambia en cada arranque, es la misma para todo el mundo y el usuario se llama <code>user</code>. Sirve para comprobar que el cerrojo está puesto y para nada más. Sustituirla es justo el trabajo del paso 3.</dd>
 </dl>
-
-<p class="stage">Paso 2 · Crear la clase SecurityConfig</p>
 
 Crea el archivo `src/main/java/com/ejemplo/gestor/config/SecurityConfig.java`. Es una clase de configuración normal: no hereda de nada y no implementa ninguna interfaz; solo publica un `@Bean`.
 
@@ -850,7 +750,7 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
                 // Todo lo demás exige credenciales, tal y como declara la
-                // matriz de control de acceso de la sesión 53
+                // matriz de control de acceso de la sesión 35
                 .anyRequest().authenticated()
             )
 
@@ -873,9 +773,7 @@ public class SecurityConfig {
   <dd><code>/swagger-ui/*</code> encaja con <code>/swagger-ui/index.html</code> pero no con <code>/swagger-ui/css/tema.css</code>. <code>/**</code> atraviesa cuantos niveles haga falta, y por eso es lo que se usa para árboles de recursos.</dd>
 </dl>
 
-<p class="stage">Paso 3 · Definir usuario temporal en application.properties</p>
-
-Con tu `SecurityFilterChain` publicado ya no hay contraseña generada en la terminal, así que necesitas unas credenciales propias. Para las primeras pruebas, antes de conectar la base de datos en la sesión siguiente, valen unas estáticas en el archivo de propiedades:
+Con tu `SecurityFilterChain` publicado ya no hay contraseña generada en la terminal, así que necesitas unas credenciales propias. Para las primeras pruebas, antes de conectar la base de datos en el trabajo siguiente, valen unas estáticas en el archivo de propiedades:
 
 ```properties
 # Usuario provisional para pruebas iniciales de Spring Security
@@ -885,11 +783,11 @@ spring.security.user.roles=DESARROLLADOR
 ```
 
 <div class="rule">
-  <p class="rule-label">Esto es un andamio, y se cae en la sesión 56</p>
-  <p>Un usuario en un archivo de propiedades no tiene roles múltiples, no se puede dar de alta desde la API, no se puede desactivar y su contraseña viaja en texto plano dentro del repositorio. Está aquí por una única razón: para que puedas probar la cadena de filtros hoy sin arrastrar todavía la base de datos. En la sesión 56 estas tres líneas se borran.</p>
+  <p class="rule-label">Esto es un andamio, y se cae en la sesión 37</p>
+  <p>Un usuario en un archivo de propiedades no tiene roles múltiples, no se puede dar de alta desde la API, no se puede desactivar y su contraseña viaja en texto plano dentro del repositorio. Está aquí por una única razón: para que puedas probar la cadena de filtros hoy sin arrastrar todavía la base de datos. En la sesión 37 estas tres líneas se borran.</p>
 </div>
 
-### La comprobación · Pruebas de autorización con Bruno
+#### Paso 7 · Pruebas de autorización con Bruno
 
 Arranca tu aplicación y ejecuta estas comprobaciones desde tu cliente HTTP (Bruno o Postman):
 
@@ -898,7 +796,7 @@ Arranca tu aplicación y ejecuta estas comprobaciones desde tu cliente HTTP (Bru
    * **Resultado esperado:** Código `200 OK`. La documentación carga sin pedir usuario, que es justo lo que necesita quien todavía no sabe cómo autenticarse.
 2. **Lectura sin credenciales:**
    * Lanza `GET http://localhost:8080/api/v1/proyectos`.
-   * **Resultado esperado:** Código **`401 Unauthorized`**, que es la fila `ANON` de la matriz de la sesión 53. Esta API no publica nada: hasta para leer hay que identificarse.
+   * **Resultado esperado:** Código **`401 Unauthorized`**, que es la fila `ANON` de la matriz de la sesión 35. Esta API no publica nada: hasta para leer hay que identificarse.
    * Revisa la pestaña *Headers*: el servidor ha devuelto la cabecera `WWW-Authenticate: Basic realm="Realm"`.
 3. **Escritura con credenciales válidas:**
    * Abre la pestaña **Auth** de la petición (existe igual en Bruno y en Postman) y selecciona **Basic Auth**.
@@ -908,7 +806,7 @@ Arranca tu aplicación y ejecuta estas comprobaciones desde tu cliente HTTP (Bru
    * Inspecciona en *Headers* enviados cómo viaja:
      `Authorization: Basic ZGVzYXJyb2xsYWRvcjpQYXNzd29yZDEyMyE=` (cadena codificada en Base64).
 
-### Si algo no sale como dice el guion
+#### Paso 8 · Si algo no sale como dice el guion
 
 Los cuatro tropiezos de esta sesión, en orden de frecuencia:
 
@@ -919,14 +817,14 @@ Los cuatro tropiezos de esta sesión, en orden de frecuencia:
 | Con usuario y contraseña correctos sigues recibiendo `401` | El cliente no está enviando la cabecera | Comprueba en la pestaña de cabeceras enviadas que aparece `Authorization: Basic …`; si no está, la pestaña **Auth** no se aplicó a esa petición |
 | La aplicación no arranca: `Cannot configure an AuthenticationProvider` o una regla inalcanzable | Una regla más general tapa a otra más concreta | Reordena: `anyRequest()` siempre al final |
 
-### Ahora tú · Contrastar la configuración con la matriz de permisos
+#### Paso 9 · Contrastar la configuración con la matriz de permisos
 
-Todavía no puedes distinguir un `DESARROLLADOR` de un `ADMINISTRADOR` —eso llega en la sesión 57—, pero la primera columna de la matriz ya la puedes auditar entera:
+Todavía no puedes distinguir un `DESARROLLADOR` de un `ADMINISTRADOR` —eso llega en la sesión 38—, pero la primera columna de la matriz ya la puedes auditar entera:
 
-1. Recorre la tabla de la sesión 53 y comprueba, sin credenciales, que **las nueve filas** de la columna `ANON` responden `401`.
-2. Añade a `SecurityConfig` la única excepción que esta API sí quiere publicar: la ruta de login que construirás en la sesión 59, `POST /api/v1/auth/**`. Déjala escrita con `permitAll()` aunque el endpoint todavía no exista.
+1. Recorre la tabla de la sesión 35 y comprueba, sin credenciales, que **las nueve filas** de la columna `ANON` responden `401`.
+2. Añade a `SecurityConfig` la única excepción que esta API sí quiere publicar: la ruta de login que construirás en la sesión 39, `POST /api/v1/auth/**`. Déjala escrita con `permitAll()` aunque el endpoint todavía no exista.
 3. Repite `GET /api/v1/proyectos` con las credenciales de `application.properties` y comprueba que ahora pasa: la ruta no ha cambiado, lo que ha cambiado es quién la pide.
-4. Guarda las tres peticiones —documentación pública, lectura anónima rechazada, lectura autenticada— como una carpeta **`09-seguridad`** dentro de la colección que arrastras desde la UD2. A partir de aquí cada sesión de esta unidad añade peticiones a esa carpeta, y en la sesión 60 tendrás que poder ejecutarla entera de una pasada.
+4. Guarda las tres peticiones —documentación pública, lectura anónima rechazada, lectura autenticada— como una carpeta **`09-seguridad`** dentro de la colección que arrastras desde la UD2. A partir de aquí cada sesión de esta unidad añade peticiones a esa carpeta, y en la sesión 40 tendrás que poder ejecutarla entera de una pasada.
 5. Documenta en tu cuaderno, en tres líneas, qué ruta has abierto y **por qué esa y no otra**. Es la primera decisión de seguridad que tomas tú y es la que tendrás que defender.
 
 <dl class="worked">
@@ -934,7 +832,46 @@ Todavía no puedes distinguir un `DESARROLLADOR` de un `ADMINISTRADOR` —eso ll
   <dd>Las nueve filas de la columna <code>ANON</code> responden <code>401</code>; <code>/swagger-ui.html</code> responde <code>200</code> sin credenciales; la misma petición que fallaba pasa a <code>200</code> solo añadiendo Basic Auth; y la terminal de arranque ya no imprime ninguna contraseña generada.</dd>
 </dl>
 
-### Reto · Manejo personalizado de respuestas 401 (RFC 7807)
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **configurad credenciales y cadena de seguridad**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Migración transparente de factores de coste (upgradeEncoding)
+
+Con el paso de los años las computadoras se vuelven más rápidas y los factores de coste antiguos (ej: coste 10 de hace 5 años) quedan desfasados.
+
+Spring Security proporciona el método:
+`passwordEncoder.upgradeEncoding(hashActual)`
+1. ¿Cómo permite este método detectar si un hash guardado en base de datos se generó con un factor de coste inferior al estándar actual de la empresa?
+2. Diseña el flujo durante el login: si el login tiene éxito y `upgradeEncoding` devuelve `true`, ¿cómo actualiza la aplicación el hash en la base de datos con el nuevo coste sin pedirle al usuario que vuelva a escribir su contraseña?
+
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un informe de auditoría criptográfica y políticas de contraseñas, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>analisis-hashing.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Distinción entre cifrado reversible y hash unidireccional y bean <code>BCryptPasswordEncoder</code> configurado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Registro de usuario en PostgreSQL con contraseña hasheada y test con <code>matches()</code> en verde.</span></div>
+  <div><strong>Reto</strong><span>Benchmark de factores de coste ejecutado y flujo de actualización transparente (<code>upgradeEncoding</code>) diseñado.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque si la clave de cifrado se ve comprometida o filtrada, todas las contraseñas de todos los usuarios de la plataforma quedan expuestas de forma inmediata.</p>
+  <p>2 · Garantiza que dos contraseñas idénticas generen hashes completamente diferentes, neutralizando los ataques basados en diccionarios y tablas arcoíris precalculadas.</p>
+  <p>3 · Porque SHA-256 fue diseñado para ser extremadamente rápido (vulnerable a fuerza bruta con GPUs), mientras que BCrypt es deliberadamente lento y configurable en coste de CPU.</p>
+  <p>4 · Porque los primeros 22 caracteres del propio hash guardado en base de datos contienen el Salt codificado, extrayéndolo de forma transparente para computar la comparación.</p>
+</details>
+
+##### Reto · Manejo personalizado de respuestas 401 (RFC 7807)
 
 Por defecto, cuando Spring Security rechaza una petición con `401`, emite una respuesta vacía o el error básico de Tomcat.
 
@@ -950,27 +887,6 @@ Investiga la interfaz `AuthenticationEntryPoint`:
   <div><strong>Reto</strong><span>Punto de entrada personalizado (<code>AuthenticationEntryPoint</code>) emitiendo respuestas RFC 7807 ante rechazos 401.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 55</p>
-  <ul class="checklist">
-    <li>Se comprende la arquitectura de la <code>SecurityFilterChain</code> y su ejecución previa al controlador.</li>
-    <li>La configuración moderna sin clases obsoletas se realiza mediante el DSL de Spring Security 6.</li>
-    <li>Las rutas de documentación técnica (OpenAPI/Swagger) quedan explícitamente abiertas al público.</li>
-    <li>Ninguna ruta de negocio responde sin credenciales: la lectura también exige identificarse.</li>
-    <li>Las respuestas de error <code>401 Unauthorized</code> emiten la cabecera estándar <code>WWW-Authenticate</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué Spring Security rechaza todas las peticiones por defecto tras añadir su starter?</li>
-    <li>¿Qué método permite abrir una ruta concreta a visitas anónimas, y por qué la documentación es la única que lo merece aquí?</li>
-    <li>¿Por qué HTTP Basic no es un mecanismo de cifrado seguro por sí mismo si no se transmite sobre HTTPS?</li>
-    <li>¿Qué cabecera HTTP estándar incluye el servidor en una respuesta 401 para indicar qué esquema de autenticación espera?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Por el principio de seguridad por defecto: previene que endpoints sensibles queden expuestos accidentalmente por olvido del desarrollador.</p>
@@ -979,29 +895,47 @@ Investiga la interfaz `AuthenticationEntryPoint`:
   <p>4 · La cabecera WWW-Authenticate (ej: WWW-Authenticate: Basic realm="Realm").</p>
 </details>
 
-## Sesión 56 · Usuarios en base de datos
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el contrato del motor de autenticación de Spring Security, la interfaz fundamental <code>UserDetailsService</code>, el objeto <code>UserDetails</code> y cómo desacoplar la entidad JPA de tu dominio de la representación técnica de seguridad.</li>
-    <li><strong>2. Haz:</strong> implementa <code>CustomUserDetailsService</code> conectado a <code>UsuarioRepository</code> en PostgreSQL y pobla la base de datos con usuarios y hashes BCrypt reales.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas peticiones autenticadas contra la API utilizando identidades almacenadas en PostgreSQL, verificando que la contraseña se valida mediante <code>PasswordEncoder</code> y que usuarios desactivados o con contraseñas erróneas son rechazados.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué interfaz de Spring Security tiene un único método encargado de buscar un usuario por su nombre de acceso?</li>
-    <li>¿Por qué nunca se deben definir usuarios fijos en el archivo <code>application.properties</code> en una aplicación en producción?</li>
-    <li>¿Qué método de <code>UserDetails</code> permite a Spring Security saber si la cuenta de un usuario ha sido dada de baja o bloqueada?</li>
-  </ol>
-</div>
+No se almacenan ni devuelven contraseñas en claro y los rechazos se distinguen de los errores de negocio.
 
-### Cómo busca identidades Spring Security: UserDetailsService
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
 
-En la sesión anterior usamos un usuario temporal configurado en un archivo de texto. En el mundo real, los usuarios se registran en una pantalla, cambian de contraseña, se dan de baja y sus credenciales viven en tablas de **PostgreSQL**.
+
+#### Entrega de la sesión 36 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-36.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-36.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Semana 19 · Usuarios persistentes y roles
+
+## Sesión 37 · Usuarios persistentes y roles
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+La identidad debe proceder de datos persistentes y los roles deben corresponder a responsabilidades del dominio.
+
+#### Cómo busca identidades Spring Security: UserDetailsService
+
+En el trabajo anterior usamos un usuario temporal configurado en un archivo de texto. En el mundo real, los usuarios se registran en una pantalla, cambian de contraseña, se dan de baja y sus credenciales viven en tablas de **PostgreSQL**.
 
 Spring Security no te obliga a usar una estructura de base de datos rígida. En su lugar, define un **contrato funcional mediante una interfaz**:
 
@@ -1023,7 +957,7 @@ public interface UserDetailsService {
   </ol>
 </figure>
 
-### El desacoplamiento entre Usuario (JPA) y UserDetails (Seguridad)
+#### El desacoplamiento entre Usuario (JPA) y UserDetails (Seguridad)
 
 Tu entidad de dominio `Usuario` representa una persona en tu negocio (nombre, email, fecha de alta, departamento).
 
@@ -1036,11 +970,35 @@ Spring Security no sabe qué es un departamento: solo necesita saber qué dice e
 
 Podemos hacer que nuestra entidad `Usuario` implemente directamente `UserDetails`, permitiendo que viaje de forma nativa a través de todo el framework.
 
-### Paso a paso guiado · De la entidad JPA al CustomUserDetailsService
+#### De la cuenta del dominio a la identidad de seguridad
 
-<p class="stage">Paso 1 · Implementar UserDetails en la entidad Usuario</p>
+La entidad que representa a una persona y la identidad que necesita Spring Security tienen responsabilidades distintas. La primera puede contener datos de negocio; la segunda debe proporcionar el identificador de acceso, el hash de contraseña, las autoridades y el estado de la cuenta. Un adaptador permite utilizar esos datos sin devolver toda la entidad como perfil público.
 
-Completamos la entidad `Usuario` que diseñamos en la sesión 53:
+Durante la autenticación se busca la cuenta mediante el identificador acordado y se compara la contraseña recibida con el hash almacenado mediante el PasswordEncoder. No se calcula un hash nuevo para compararlo como una cadena: el algoritmo incorpora parámetros y sal, y su operación de verificación sabe interpretarlos.
+
+El perfil público utiliza un DTO que excluye el hash. Los roles proceden de datos controlados por el servidor; aceptar un rol enviado libremente en el registro permitiría autoconcederse privilegios. La práctica comprueba dos cuentas con roles diferentes, una contraseña incorrecta y la persistencia tras reiniciar.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Integrád los usuarios de la base de datos con la autenticación y asignad los roles de vuestra matriz.
+
+Preparad usuarios de prueba con permisos distintos y comprobad que una petición no puede autoconcederse privilegios.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Usuarios en base de datos</p>
+
+#### Paso 2 · De la entidad JPA al CustomUserDetailsService
+
+Completamos la entidad `Usuario` que diseñamos en la sesión 35:
 
 ```java
 package com.ejemplo.gestor.model;
@@ -1107,8 +1065,6 @@ public class Usuario implements UserDetails {
 }
 ```
 
-<p class="stage">Paso 2 · Crear el repositorio UsuarioRepository</p>
-
 ```java
 package com.ejemplo.gestor.repository;
 
@@ -1121,8 +1077,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByUsername(String username);
 }
 ```
-
-<p class="stage">Paso 3 · Implementar CustomUserDetailsService</p>
 
 Creamos el servicio anotado con `@Service` para que Spring Security lo detecte automáticamente como el proveedor oficial de identidades:
 
@@ -1152,11 +1106,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 }
 ```
 
-<p class="stage">Paso 4 · Generar tus propios hashes BCrypt</p>
-
 Aquí no vale copiar un hash de unos apuntes. BCrypt incorpora una **sal aleatoria** dentro del propio hash, así que el de tu compañero no es el tuyo aunque la contraseña sea la misma, y un hash mal copiado se traduce siempre en un `401` que parece un fallo de configuración y no lo es.
 
-Genera los tuyos reutilizando el `PasswordEncoder` de la sesión 54. Crea `src/test/java/com/ejemplo/gestor/GenerarHashesTest.java`:
+Genera los tuyos reutilizando el `PasswordEncoder` de la sesión 36. Crea `src/test/java/com/ejemplo/gestor/GenerarHashesTest.java`:
 
 ```java
 package com.ejemplo.gestor;
@@ -1178,8 +1130,6 @@ class GenerarHashesTest {
 ```
 
 Ejecútalo con `./mvnw test -Dtest=GenerarHashesTest` y copia de la consola las cadenas que empiezan por `$2a$12$`. Cada una mide exactamente **60 caracteres**: si la tuya mide otra cosa, se ha partido al copiarla.
-
-<p class="stage">Paso 5 · Poblar la tabla con data.sql</p>
 
 Crea `src/main/resources/data.sql` **pegando tus propios hashes**, no los de este guion:
 
@@ -1203,9 +1153,9 @@ spring.jpa.defer-datasource-initialization=true
   <p>El otro efecto que conviene conocer: <code>data.sql</code> se ejecuta en <strong>cada</strong> arranque. Si reinicias dos veces tendrás el error de clave única del <code>username</code>. Empieza el archivo con <code>DELETE FROM usuarios;</code> mientras estés en desarrollo.</p>
 </div>
 
-### La comprobación · Autenticación real contra PostgreSQL
+#### Paso 3 · Autenticación real contra PostgreSQL
 
-Elimina del archivo `application.properties` las tres propiedades fijas `spring.security.user.name`, `.password` y `.roles` de la sesión 55: mientras sigan ahí, Spring Boot registra ese usuario en memoria y no sabrás si estás autenticándote contra PostgreSQL o contra el archivo de texto.
+Elimina del archivo `application.properties` las tres propiedades fijas `spring.security.user.name`, `.password` y `.roles` de la sesión 36: mientras sigan ahí, Spring Boot registra ese usuario en memoria y no sabrás si estás autenticándote contra PostgreSQL o contra el archivo de texto.
 
 Reinicia Spring Boot y prueba en Bruno:
 1. **Login exitoso con usuario de base de datos:**
@@ -1222,7 +1172,7 @@ Reinicia Spring Boot y prueba en Bruno:
    * Lanza la petición con usuario `inactivo` y clave `Password123!`.
    * **Resultado:** Código `401 Unauthorized`. Spring Security lee `isEnabled() == false` y bloquea el acceso de inmediato.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1233,7 +1183,7 @@ Reinicia Spring Boot y prueba en Bruno:
 | `401` siempre, y en los logs no aparece ningún `SELECT ... FROM usuarios` | Tu `CustomUserDetailsService` no se está usando | ¿Tiene `@Service`? ¿Hay algún otro bean `UserDetailsService` (por ejemplo, el de `application.properties`) todavía activo? |
 | `LazyInitializationException` al leer los roles | La colección de roles se carga fuera de la transacción | Con un solo `Rol` mapeado como `@Enumerated` esto no pasa; si has pasado a `Set<Rol>`, necesitarás `FetchType.EAGER` en esa colección |
 
-### Ahora tú · Endpoint de perfil del usuario autenticado (/me)
+#### Paso 5 · Endpoint de perfil del usuario autenticado (/me)
 
 Implementa un endpoint que permita al usuario conocer sus propios datos a partir de su sesión activa:
 
@@ -1252,14 +1202,25 @@ Implementa un endpoint que permita al usuario conocer sus propios datos a partir
 3. Define el `record UsuarioResponse(Long id, String username, String rol)` en `com.ejemplo.gestor.dto`. Fíjate en lo que **no** lleva: la contraseña. Aunque sea un hash, un endpoint de perfil no tiene ninguna razón para publicarla, y este es exactamente el escenario que la UD3 anticipó al separar entidad y DTO.
 4. Prueba la llamada con `admin` y con `dev1` y comprueba que cada uno recibe su propia identidad, sin que el endpoint reciba ningún `id` por parámetro: la identidad no se pide, se deduce del token o de las credenciales.
 5. Lanza `GET /api/v1/usuarios/me` **sin credenciales** y confirma que responde `401` antes de entrar al método. Añade las tres peticiones a la carpeta `09-seguridad` de tu colección.
-6. Añade al `data.sql` un cuarto usuario `jefe1` con rol `ROLE_JEFE_PROYECTO`: lo vas a necesitar en la sesión 57 para probar la fila intermedia de la matriz, y es mejor tener los tres roles poblados desde ya.
+6. Añade al `data.sql` un cuarto usuario `jefe1` con rol `ROLE_JEFE_PROYECTO`: lo vas a necesitar en la sesión 38 para probar la fila intermedia de la matriz, y es mejor tener los tres roles poblados desde ya.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
   <dd>En los logs de Hibernate aparece un <code>select ... from usuarios where username=?</code> por cada intento de autenticación; <code>admin</code> entra, <code>fantasma</code> y <code>inactivo</code> no; <code>/me</code> devuelve identidades distintas para credenciales distintas sin recibir ningún parámetro; y en <code>application.properties</code> ya no queda ni rastro de <code>spring.security.user</code>.</dd>
 </dl>
 
-### Reto · Prevención de ataques de temporización (Timing Attacks)
+#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **autenticad usuarios de postgresql**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Prevención de ataques de temporización (Timing Attacks)
 
 Cuando un atacante intenta adivinar si un nombre de usuario existe en tu base de datos:
 * Si el usuario no existe, la base de datos responde rápido y la petición tarda 10 ms.
@@ -1276,27 +1237,6 @@ Investiga cómo Spring Security mitiga este vector mediante **contraseñas simul
   <div><strong>Reto</strong><span>Protección contra ataques de temporización (*Timing Attacks*) comprendida e inspeccionada en los componentes internos.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 56</p>
-  <ul class="checklist">
-    <li>Las credenciales e identidades residen exclusivamente en tablas de PostgreSQL.</li>
-    <li>La interfaz <code>UserDetailsService</code> carga usuarios reales mediante consultas JPA optimizadas.</li>
-    <li>El objeto <code>UserDetails</code> desacopla la seguridad de la lógica del modelo de dominio.</li>
-    <li>Las cuentas desactivadas (<code>activo = false</code>) son rechazadas automáticamente por <code>isEnabled()</code>.</li>
-    <li>El usuario autenticado se inyecta limpiamente en controladores mediante <code>@AuthenticationPrincipal</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué método define la interfaz <code>UserDetailsService</code> y qué excepción debe lanzar si el usuario no existe?</li>
-    <li>¿Por qué el enum de roles debe mapearse con el prefijo <code>ROLE_</code> al crear instancias de <code>SimpleGrantedAuthority</code>?</li>
-    <li>¿Para qué se utiliza la anotación <code>@AuthenticationPrincipal</code> en un método controlador?</li>
-    <li>¿Cómo impide el método <code>isEnabled()</code> de <code>UserDetails</code> el acceso a usuarios dados de baja sin borrar sus registros?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · El método loadUserByUsername(String username), lanzando UsernameNotFoundException si el registro no se localiza.</p>
@@ -1305,27 +1245,43 @@ Investiga cómo Spring Security mitiga este vector mediante **contraseñas simul
   <p>4 · Spring Security comprueba su valor booleano tras validar la contraseña; si devuelve false, aborta la autenticación con una excepción de cuenta deshabilitada (DisabledException) y responde 401.</p>
 </details>
 
-## Sesión 57 · Roles y permisos
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la diferencia entre Roles (agrupaciones globales con <code>hasRole()</code>) y Autoridades o Permisos atómicos (capacidades específicas con <code>hasAuthority()</code>), la autorización a nivel de ruta en <code>SecurityFilterChain</code> frente a la autorización granular en métodos con <code>@PreAuthorize</code> y <code>@EnableMethodSecurity</code>.</li>
-    <li><strong>2. Haz:</strong> traslada la Matriz de Control de Acceso (RBAC) diseñada en la sesión 53 a tu aplicación, blindando endpoints sensibles según el rol del usuario autenticado.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas peticiones en Bruno alternando entre identidades con rol <code>DESARROLLADOR</code> y <code>ADMINISTRADOR</code>, verificando que los desarrolladores reciben <code>403 Forbidden</code> al intentar borrar proyectos mientras que los administradores completan la acción con <code>204 No Content</code>.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué diferencia sintáctica y conceptual existe entre comprobar <code>hasRole('ADMINISTRADOR')</code> y comprobar <code>hasAuthority('ROLE_ADMINISTRADOR')</code>?</li>
-    <li>¿Qué anotación de configuración es obligatorio activar para poder utilizar <code>@PreAuthorize</code> sobre métodos de controladores o servicios?</li>
-    <li>¿Por qué proteger la seguridad únicamente por rutas URL en <code>SecurityFilterChain</code> es vulnerable si un método de servicio es invocado internamente desde otro flujo?</li>
-  </ol>
-</div>
+Los usuarios sobreviven al reinicio y las operaciones responden de acuerdo con su rol.
 
-### Roles globales frente a Permisos atómicos
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 37 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-37.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-37.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 38 · Permisos sobre cada recurso
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Un rol general no basta para proteger datos ajenos. El servidor comprueba también propiedad o relación con el recurso solicitado.
+
+#### Roles globales frente a Permisos atómicos
 
 En aplicaciones en crecimiento existen dos formas de modelar la autorización:
 
@@ -1344,7 +1300,7 @@ En aplicaciones en crecimiento existen dos formas de modelar la autorización:
 * **Autoridades / Permisos atómicos (`hasAuthority`):** Representan una acción puntual sobre un recurso (`PROYECTO_WRITE`, `TAREA_DELETE`, `INFORME_EXPORTAR`).
   * Permiten construir sistemas de permisos ultra-flexibles donde los roles son agrupaciones de permisos configurables en base de datos.
 
-### Seguridad en rutas URL frente a Seguridad en métodos con @PreAuthorize
+#### Seguridad en rutas URL frente a Seguridad en métodos con @PreAuthorize
 
 Podemos aplicar reglas de autorización en dos capas complementarias:
 
@@ -1353,9 +1309,65 @@ Podemos aplicar reglas de autorización en dos capas complementarias:
 | **Seguridad de Rutas (HTTP Filter)** | En `SecurityConfig` dentro de `SecurityFilterChain`. | `.requestMatchers(HttpMethod.DELETE, "/api/v1/proyectos/**").hasRole("ADMINISTRADOR")` | Primera barrera perimetral: rechaza peticiones no autorizadas antes de que lleguen al controlador. |
 | **Seguridad de Métodos (@PreAuthorize)** | Sobre métodos de controladores o clases `@Service`. | `@PreAuthorize("hasRole('ADMINISTRADOR')")`<br>`@PreAuthorize("hasRole('DEV') and #tarea.autor == authentication.name")` | Seguridad en profundidad: permite evaluar reglas de negocio complejas, parámetros del método (`#id`) y expresiones de propiedad (**SpEL**). |
 
-### Paso a paso guiado · Implementar la Matriz RBAC en la aplicación
+#### La falacia de la seguridad por ocultación
 
-<p class="stage">Paso 1 · Activar la seguridad de métodos en SecurityConfig</p>
+Uno de los errores más peligrosos de los desarrolladores que vienen del mundo frontend es pensar que la seguridad consiste en esto:
+
+```html
+<!-- CUIDADO: Esto es experiencia de usuario, NO es seguridad -->
+<button *ngIf="usuario.rol === 'ADMIN'" (click)="eliminarProyecto(id)">
+  Eliminar proyecto
+</button>
+```
+
+Ocultar ese botón es una buena práctica de diseño de interfaces: a un usuario normal no le muestras botones que no puede usar.
+
+Pero **confundir eso con seguridad es un error catastrófico**:
+* Cualquier usuario puede abrir la consola de DevTools (`F12`), inspeccionar el DOM y eliminar el atributo `disabled` o hacer visible el botón en 3 segundos.
+* Cualquier usuario puede abrir Bruno, Postman o una consola con `curl` y lanzar directamente un `DELETE http://localhost:8080/api/v1/proyectos/1`.
+
+<div class="rule">
+  <p class="rule-label">La ley del servidor como frontera única</p>
+  <p><strong>El cliente web es un entorno bajo el control absoluto del usuario (y del atacante).</strong></p>
+  <p>La única frontera real de seguridad de un sistema es el <strong>backend</strong>. Todo endpoint debe comprobar permisos en el servidor en cada petición, asumiendo siempre que el cliente puede ser malicioso.</p>
+</div>
+
+#### Pruebas de seguridad con MockMvc y @WithMockUser
+
+Para garantizar que nuestros endpoints están blindados y que ningún refactor futuro rompa las reglas de seguridad, escribimos pruebas automáticas con **`@WithMockUser`**:
+
+```java
+@Test
+@WithMockUser(username = "dev1", roles = {"DESARROLLADOR"})
+void eliminarProyecto_conRolDesarrollador_devuelve403Forbidden() throws Exception {
+    mockMvc.perform(delete("/api/v1/proyectos/1"))
+        .andExpect(status().isForbidden());
+}
+```
+
+La anotación `@WithMockUser`:
+* Inyecta un `Authentication` en el `SecurityContextHolder` antes de que el filtro de seguridad ejecute la petición.
+* Permite probar autorizaciones (`hasRole`, `@PreAuthorize`) de forma instantánea sin necesidad de crear usuarios en PostgreSQL ni generar hashes BCrypt.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Aplicad la matriz a listados, detalles y escrituras y evitad que cambiar un identificador permita acceder a otro usuario.
+
+Escribid pruebas con dos usuarios y un administrador para los casos permitidos y denegados.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Roles y permisos</p>
+
+#### Paso 2 · Implementar la Matriz RBAC en la aplicación
 
 Añadimos la anotación `@EnableMethodSecurity` en nuestra clase de configuración:
 
@@ -1411,8 +1423,6 @@ public class SecurityConfig {
   <dd>En la base de datos guardas <code>ROLE_ADMINISTRADOR</code>. En <code>hasRole()</code> escribes <code>'ADMINISTRADOR'</code>, <strong>sin</strong> prefijo, porque el método lo añade solo. Si escribes <code>hasRole('ROLE_ADMINISTRADOR')</code>, Spring buscará <code>ROLE_ROLE_ADMINISTRADOR</code> y nadie pasará nunca. La versión sin magia es <code>hasAuthority('ROLE_ADMINISTRADOR')</code>, que compara literalmente.</dd>
 </dl>
 
-<p class="stage">Paso 2 · Proteger operaciones con @PreAuthorize en ProyectoController</p>
-
 Decoramos los métodos de escritura con anotaciones declarativas:
 
 ```java
@@ -1443,8 +1453,6 @@ public class ProyectoController {
 }
 ```
 
-<p class="stage">Paso 3 · Regla de propiedad con Spring Expression Language (SpEL)</p>
-
 Podemos condicionar la edición de una tarea a que el usuario sea el autor de la misma:
 
 ```java
@@ -1452,7 +1460,7 @@ Podemos condicionar la edición de una tarea a que el usuario sea el autor de la
     @PutMapping("/tareas/{id}")
     @PreAuthorize("hasRole('ADMINISTRADOR') or @tareaSecurityService.esAsignado(#id, authentication.name)")
     public ResponseEntity<TareaResponse> actualizarTarea(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @Valid @RequestBody TareaRequest request) {
         // ...
     }
@@ -1477,7 +1485,7 @@ public class TareaSecurityService {
 }
 ```
 
-### La comprobación · Simulación de matriz de permisos en Bruno
+#### Paso 3 · Simulación de matriz de permisos en Bruno
 
 Con los usuarios cargados en PostgreSQL (`admin` con `ROLE_ADMINISTRADOR` y `dev1` con `ROLE_DESARROLLADOR`), ejecuta estas pruebas en Bruno:
 
@@ -1493,7 +1501,7 @@ Con los usuarios cargados en PostgreSQL (`admin` con `ROLE_ADMINISTRADOR` y `dev
    * Misma petición sin credenciales en la pestaña Auth.
    * **Resultado esperado:** Código **`401 Unauthorized`**.
 
-### Si algo no sale como dice el guion
+#### Paso 4 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1503,139 +1511,27 @@ Con los usuarios cargados en PostgreSQL (`admin` con `ROLE_ADMINISTRADOR` y `dev
 | `EL1008E: Property or field 'tareaSecurityService' cannot be found` | El bean no existe con ese nombre | El nombre en la expresión es el del bean: `@Component` sobre `TareaSecurityService` lo registra como `tareaSecurityService`, con minúscula inicial |
 | El `403` llega, pero el método se ejecutó igualmente | Estás anotando un método privado, o llamándolo desde la misma clase | Las anotaciones de seguridad funcionan por proxy: solo actúan en llamadas públicas que entran desde fuera del bean |
 
-### Ahora tú · Trasladar la matriz entera al código
+#### Paso 5 · Trasladar la matriz entera al código
 
-Hasta ahora la matriz de la sesión 53 era un documento. Aquí se convierte en código ejecutable.
+Hasta ahora la matriz de la sesión 35 era un documento. Aquí se convierte en código ejecutable.
 
 1. Permite que `ROLE_DESARROLLADOR`, `ROLE_JEFE_PROYECTO` y `ROLE_ADMINISTRADOR` puedan crear tareas sobre un proyecto existente (`POST /api/v1/proyectos/{id}/tareas`).
 2. Restringe el borrado de tareas (`DELETE /api/v1/tareas/{id}`) a `ROLE_JEFE_PROYECTO` y `ROLE_ADMINISTRADOR`.
 3. Aplica la fila más incómoda de la matriz: `POST /api/v1/proyectos` es de `JEFE_PROYECTO` y `ADMINISTRADOR`, pero `DELETE /api/v1/proyectos/{id}` es **solo** de `ADMINISTRADOR`. Un `JEFE_PROYECTO` que borra debe recibir `403`, no `204`.
 4. Decide, y anota por qué, **dónde** pones cada una de esas tres reglas: en el `filterChain` o en `@PreAuthorize`. No hay una respuesta única, pero sí tiene que haber un criterio.
 5. Comprueba con tu cliente HTTP la matriz completa: son 9 filas × 4 columnas = **36 comprobaciones**. Guárdalas en la carpeta `09-seguridad` con un nombre que diga qué esperas, del tipo `dev1-borra-proyecto-403`.
-6. Marca en la tabla de la sesión 53, con un ✔, cada casilla que ya devuelve lo que decía. Las que no coincidan son tu lista de tareas: o está mal el código, o está mal la matriz, y decidir cuál de las dos es parte del ejercicio.
+6. Marca en la tabla de la sesión 35, con un ✔, cada casilla que ya devuelve lo que decía. Las que no coincidan son tu lista de tareas: o está mal el código, o está mal la matriz, y decidir cuál de las dos es parte del ejercicio.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
   <dd>Las 36 casillas de la matriz responden lo que la tabla dice. En particular: un <code>DESARROLLADOR</code> nunca ve un <code>401</code> (ya está identificado, sus rechazos son <code>403</code>), y un <code>JEFE_PROYECTO</code> puede crear proyectos pero no borrarlos.</dd>
 </dl>
 
-### Reto · Excepciones de acceso denegado personalizadas
+<p class="stage">Proteger endpoints</p>
 
-Por defecto, cuando un usuario autenticado recibe un `403 Forbidden`, Spring Security no devuelve un formato amigable.
-
-Implementa un `AccessDeniedHandler` personalizado:
-1. Crea la clase `CustomAccessDeniedHandler` que implemente `AccessDeniedHandler`.
-2. Emite una respuesta estándar **RFC 7807** con código `403`, título *"Acceso Denegado"* y detalle indicando que el rol actual no dispone de los privilegios requeridos.
-3. Regístralo en `SecurityConfig` bajo `.exceptionHandling(ex -> ex.accessDeniedHandler(...))`.
-
-<div class="rule">
-  <p class="rule-label">Formato de entrega</p>
-  <p>Si en la evaluación se solicita un informe técnico sobre la jerarquía de roles y auditoría de accesos denegados, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-roles-seguridad.pdf</code>), nunca un archivo markdown suelto.</p>
-</div>
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Reglas de autorización por rol configuradas en <code>SecurityFilterChain</code> y probadas con Bruno.</span></div>
-  <div><strong>Si lo tienes</strong><span>Anotación <code>@PreAuthorize</code> aplicada en controladores con <code>hasRole</code> y <code>hasAnyRole</code> diferenciando 401 y 403.</span></div>
-  <div><strong>Reto</strong><span>Expresiones SpEL para seguridad a nivel de fila y <code>AccessDeniedHandler</code> emitiendo respuestas RFC 7807 ante 403.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 57</p>
-  <ul class="checklist">
-    <li>Se distingue con rigor entre roles generales (<code>hasRole</code>) y autoridades atómicas (<code>hasAuthority</code>).</li>
-    <li>La anotación <code>@EnableMethodSecurity</code> está activada para habilitar autorización declarativa.</li>
-    <li>Las operaciones destructivas (DELETE, PUT) están estrictamente limitadas a roles autorizados.</li>
-    <li>Se comprueba que los intentos no autorizados por usuarios autenticados devuelven <code>403 Forbidden</code>.</li>
-    <li>Se comprende el uso de expresiones SpEL para reglas de control de acceso a nivel de fila (ABAC).</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué <code>hasRole('ADMINISTRADOR')</code> espera encontrar internamente la autoridad <code>ROLE_ADMINISTRADOR</code>?</li>
-    <li>¿Qué ventaja ofrece <code>@PreAuthorize</code> frente a declarar todas las reglas de autorización en el <code>filterChain</code>?</li>
-    <li>¿Qué código HTTP debe devolver la API si un usuario con rol <code>ROLE_DESARROLLADOR</code> intenta invocar un endpoint con <code>@PreAuthorize("hasRole('ADMINISTRADOR')")</code>?</li>
-    <li>¿Para qué se utiliza el prefijo <code>#</code> en una expresión SpEL dentro de <code>@PreAuthorize</code> (ej: <code>#id</code>)?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque Spring Security añade automáticamente el prefijo ROLE_ por convención histórica para diferenciar roles de permisos simples.</p>
-  <p>2 · Permite colocar la regla de seguridad junto al método que ejecuta la acción, facilitando la legibilidad, y permite acceder a los parámetros del método y a la lógica de dominio.</p>
-  <p>3 · Código HTTP 403 Forbidden.</p>
-  <p>4 · Para hacer referencia a un argumento formal que recibe el método anotado (evaluación contextual de parámetros).</p>
-</details>
-
-
-## Semana 20 · Tokens y fronteras web
-
-## Sesión 58 · Proteger endpoints
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la falacia de la seguridad por ocultación en el cliente (<em>Client-side Security vs Server-side Enforcement</em>), por qué ocultar o deshabilitar un botón en el navegador no protege un endpoint, y cómo escribir pruebas de integración web de seguridad con <code>MockMvc</code> y <code>@WithMockUser</code>.</li>
-    <li><strong>2. Haz:</strong> escribe una batería de pruebas de integración con <code>@WebMvcTest</code> que comprueba sistemáticamente el acceso de tres identidades distintas (Anónimo, <code>DESARROLLADOR</code> y <code>ADMINISTRADOR</code>) sobre las operaciones de creación y borrado.</li>
-    <li><strong>3. Comprueba:</strong> ejecutas <code>./mvnw test</code> verificando que las peticiones anónimas reciben <code>401</code>, los roles insuficientes reciben <code>403</code> y los administradores completan la operación con éxito en milisegundos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué ocultar un botón de «Eliminar» en la interfaz web de React o Angular no ofrece ninguna protección real contra un usuario malintencionado?</li>
-    <li>¿Qué anotación de Spring Security Test permite simular que un usuario con un rol específico está autenticado durante una prueba con MockMvc sin necesidad de consultar la base de datos?</li>
-    <li>Si un endpoint devuelve <code>403 Forbidden</code> ante una petición no autorizada, ¿significa que el código del método del controlador llegó a ejecutarse?</li>
-  </ol>
-</div>
-
-### La falacia de la seguridad por ocultación
-
-Uno de los errores más peligrosos de los desarrolladores que vienen del mundo frontend es pensar que la seguridad consiste en esto:
-
-```html
-<!-- CUIDADO: Esto es experiencia de usuario, NO es seguridad -->
-<button *ngIf="usuario.rol === 'ADMIN'" (click)="eliminarProyecto(id)">
-  Eliminar proyecto
-</button>
-```
-
-Ocultar ese botón es una buena práctica de diseño de interfaces: a un usuario normal no le muestras botones que no puede usar.
-
-Pero **confundir eso con seguridad es un error catastrófico**:
-* Cualquier usuario puede abrir la consola de DevTools (`F12`), inspeccionar el DOM y eliminar el atributo `disabled` o hacer visible el botón en 3 segundos.
-* Cualquier usuario puede abrir Bruno, Postman o una consola con `curl` y lanzar directamente un `DELETE http://localhost:8080/api/v1/proyectos/1`.
-
-<div class="rule">
-  <p class="rule-label">La ley del servidor como frontera única</p>
-  <p><strong>El cliente web es un entorno bajo el control absoluto del usuario (y del atacante).</strong></p>
-  <p>La única frontera real de seguridad de un sistema es el <strong>backend</strong>. Todo endpoint debe comprobar permisos en el servidor en cada petición, asumiendo siempre que el cliente puede ser malicioso.</p>
-</div>
-
-### Pruebas de seguridad con MockMvc y @WithMockUser
-
-Para garantizar que nuestros endpoints están blindados y que ningún refactor futuro rompa las reglas de seguridad, escribimos pruebas automáticas con **`@WithMockUser`**:
-
-```java
-@Test
-@WithMockUser(username = "dev1", roles = {"DESARROLLADOR"})
-void eliminarProyecto_conRolDesarrollador_devuelve403Forbidden() throws Exception {
-    mockMvc.perform(delete("/api/v1/proyectos/1"))
-        .andExpect(status().isForbidden());
-}
-```
-
-La anotación `@WithMockUser`:
-* Inyecta un `Authentication` en el `SecurityContextHolder` antes de que el filtro de seguridad ejecute la petición.
-* Permite probar autorizaciones (`hasRole`, `@PreAuthorize`) de forma instantánea sin necesidad de crear usuarios en PostgreSQL ni generar hashes BCrypt.
-
-### Paso a paso guiado · Batería de tests de seguridad para ProyectoController
+#### Paso 6 · Batería de tests de seguridad para ProyectoController
 
 Vamos a crear la suite de pruebas que valida los límites de acceso:
-
-<p class="stage">Paso 1 · Añadir la dependencia de test de Spring Security</p>
 
 `@WithMockUser` no viene con el `starter` de test. Añade a tu `pom.xml`:
 
@@ -1646,8 +1542,6 @@ Vamos a crear la suite de pruebas que valida los límites de acceso:
     <scope>test</scope>
 </dependency>
 ```
-
-<p class="stage">Paso 2 · Configurar la clase de test con tu contexto de seguridad</p>
 
 ```java
 package com.ejemplo.gestor;
@@ -1684,8 +1578,6 @@ class ProyectoSecurityTest {
   <p>El resultado es el peor posible: el test de <code>401</code> pasa igualmente (la cadena por defecto también exige autenticación), pero el de <code>403</code> devuelve <code>204</code> y falla, o peor, pasa por una razón equivocada. Tendrías una suite verde que no está probando tus reglas. <code>@Import(SecurityConfig.class)</code> es lo que hace que el test hable de tu configuración y no de otra.</p>
 </div>
 
-<p class="stage">Paso 3 · Test de rechazo a petición anónima (401)</p>
-
 Verificamos que si no hay identidad en el contexto, el peralte de seguridad intercepta la llamada:
 
 ```java
@@ -1699,8 +1591,6 @@ Verificamos que si no hay identidad en el contexto, el peralte de seguridad inte
     }
 ```
 
-<p class="stage">Paso 4 · Test de acceso denegado por rol insuficiente (403)</p>
-
 Verificamos que un usuario identificado con rol `DESARROLLADOR` recibe `403`:
 
 ```java
@@ -1713,8 +1603,6 @@ Verificamos que un usuario identificado con rol `DESARROLLADOR` recibe `403`:
         verify(proyectoService, never()).eliminarProyecto(anyLong());
     }
 ```
-
-<p class="stage">Paso 5 · Test de acceso autorizado para Administrador (204)</p>
 
 Verificamos que el rol `ADMINISTRADOR` ejecuta la acción con éxito:
 
@@ -1732,7 +1620,7 @@ Verificamos que el rol `ADMINISTRADOR` ejecuta la acción con éxito:
 }
 ```
 
-### La comprobación · Ejecutar la suite de seguridad en terminal
+#### Paso 7 · Ejecutar la suite de seguridad en terminal
 
 Ejecuta las pruebas desde la consola de Maven:
 
@@ -1744,8 +1632,6 @@ Comprueba en la salida:
 * Los 3 tests pasan al 100 % en verde en menos de 1 segundo.
 * Queda demostrado que da igual qué botones oculte el frontend: **un usuario no administrador jamás podrá borrar un proyecto en el servidor**.
 
-<p class="stage">Comprobación 2 · Asegurarte de que el test puede fallar</p>
-
 Un test de seguridad que nunca ha fallado no ha demostrado nada todavía. Rómpelo a propósito y míralo caer:
 
 1. Comenta la línea `@PreAuthorize("hasRole('ADMINISTRADOR')")` del método `eliminar`.
@@ -1754,7 +1640,7 @@ Un test de seguridad que nunca ha fallado no ha demostrado nada todavía. Rómpe
 4. Descomenta la anotación y vuelve a ejecutar. Verde otra vez.
 5. Repite la jugada quitando `@Import(SecurityConfig.class)` de la clase de test. Verás el **mismo** fallo, y esa es la lección: un test verde solo vale si estás seguro de contra qué configuración corre.
 
-### Si algo no sale como dice el guion
+#### Paso 8 · Si algo no sale como dice el guion
 
 | Síntoma | Causa casi segura | Qué mirar |
 | :--- | :--- | :--- |
@@ -1764,7 +1650,7 @@ Un test de seguridad que nunca ha fallado no ha demostrado nada todavía. Rómpe
 | `POST` y `DELETE` reciben `403` en todos los tests | CSRF activo dentro del test | O usas `.with(csrf())` en la petición, o mantienes `csrf.disable()` en la config que importas |
 | `No qualifying bean of type UserDetailsService` | Tu `SecurityConfig` arrastra dependencias que el slice no carga | Añade `@MockBean private CustomUserDetailsService userDetailsService;` a la clase de test |
 
-### Ahora tú · Batería de tests de seguridad para Tareas
+#### Paso 9 · Batería de tests de seguridad para Tareas
 
 Aplica el mismo patrón para proteger la creación y modificación de tareas:
 
@@ -1773,16 +1659,55 @@ Aplica el mismo patrón para proteger la creación y modificación de tareas:
 3. Escribe un test con `@WithMockUser(roles = "DESARROLLADOR")` que confirme que un desarrollador sí puede crear tareas (código `201`).
 4. Escribe un test que verifique que el borrado de tareas devuelve `403` para `@WithMockUser(roles = "DESARROLLADOR")` y `204` para `@WithMockUser(roles = "JEFE_PROYECTO")`.
 5. Añade a **todos** los tests de rechazo la verificación `verify(tareaService, never()).…`. Comprobar el código de estado demuestra que el cliente recibió un `403`; comprobar que el servicio nunca se llamó demuestra que la operación no llegó a ocurrir. No son lo mismo, y solo la segunda descarta un borrado que sucedió y luego respondió mal.
-6. Cuenta cuántas casillas de la matriz de la sesión 53 cubre ya tu suite. Si has hecho los pasos 2 a 4, son 6 de 36. Anota en tu cuaderno cuáles faltan: la sesión 67 va a partir de ese inventario.
+6. Cuenta cuántas casillas de la matriz de la sesión 35 cubre ya tu suite. Si has hecho los pasos 2 a 4, son 6 de 36. Anota en tu cuaderno cuáles faltan: la sesión 45 va a partir de ese inventario.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
   <dd><code>./mvnw test</code> pasa en verde; cada test de rechazo verifica además que el servicio no se invocó; y has visto al menos un test tuyo fallar en rojo al quitarle la anotación de seguridad que protege.</dd>
 </dl>
 
-### Reto · Pruebas de seguridad basadas en atributos con SpEL
+#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
 
-En la sesión anterior definimos que un desarrollador solo puede editar las tareas que tiene asignadas a su nombre.
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **proteged recursos y comprobad los rechazos**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Excepciones de acceso denegado personalizadas
+
+Por defecto, cuando un usuario autenticado recibe un `403 Forbidden`, Spring Security no devuelve un formato amigable.
+
+Implementa un `AccessDeniedHandler` personalizado:
+1. Crea la clase `CustomAccessDeniedHandler` que implemente `AccessDeniedHandler`.
+2. Emite una respuesta estándar **RFC 7807** con código `403`, título *"Acceso Denegado"* y detalle indicando que el rol actual no dispone de los privilegios requeridos.
+3. Regístralo en `SecurityConfig` bajo `.exceptionHandling(ex -> ex.accessDeniedHandler(...))`.
+
+<div class="rule">
+  <p class="rule-label">Formato de entrega</p>
+  <p>Si en la evaluación se solicita un informe técnico sobre la jerarquía de roles y auditoría de accesos denegados, el formato oficial de entrega de texto es siempre un <strong>documento en PDF</strong> (<code>informe-roles-seguridad.pdf</code>), nunca un archivo markdown suelto.</p>
+</div>
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Reglas de autorización por rol configuradas en <code>SecurityFilterChain</code> y probadas con Bruno.</span></div>
+  <div><strong>Si lo tienes</strong><span>Anotación <code>@PreAuthorize</code> aplicada en controladores con <code>hasRole</code> y <code>hasAnyRole</code> diferenciando 401 y 403.</span></div>
+  <div><strong>Reto</strong><span>Expresiones SpEL para seguridad a nivel de fila y <code>AccessDeniedHandler</code> emitiendo respuestas RFC 7807 ante 403.</span></div>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Porque Spring Security añade automáticamente el prefijo ROLE_ por convención histórica para diferenciar roles de permisos simples.</p>
+  <p>2 · Permite colocar la regla de seguridad junto al método que ejecuta la acción, facilitando la legibilidad, y permite acceder a los parámetros del método y a la lógica de dominio.</p>
+  <p>3 · Código HTTP 403 Forbidden.</p>
+  <p>4 · Para hacer referencia a un argumento formal que recibe el método anotado (evaluación contextual de parámetros).</p>
+</details>
+
+##### Reto · Pruebas de seguridad basadas en atributos con SpEL
+
+En el trabajo anterior definimos que un desarrollador solo puede editar las tareas que tiene asignadas a su nombre.
 
 ¿Cómo se prueba esa regla con MockMvc?
 1. Escribe un test simulando a `@WithMockUser(username = "carlos")`.
@@ -1796,27 +1721,6 @@ En la sesión anterior definimos que un desarrollador solo puede editar las tare
   <div><strong>Reto</strong><span>Tests de autorización a nivel de fila (SpEL) con simulación de propiedad de recursos verificados.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 58</p>
-  <ul class="checklist">
-    <li>Se erradica la creencia errónea de que la seguridad de la interfaz sustituye a la del backend.</li>
-    <li>Las reglas de control de acceso están blindadas mediante pruebas automatizadas con <code>MockMvc</code>.</li>
-    <li>Se utiliza <code>@WithMockUser</code> para simular identidades y roles sin coste de base de datos.</li>
-    <li>Se verifica que el servicio de negocio nunca llega a ejecutarse ante accesos no autorizados.</li>
-    <li>La suite completa de tests de seguridad pasa en verde con <code>./mvnw test</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué ocultar o deshabilitar un botón en el cliente web no constituye una medida de seguridad?</li>
-    <li>¿Qué diferencia hay entre lo que comprueba un test de <code>@WebMvcTest</code> normal y uno con <code>@WithMockUser</code>?</li>
-    <li>¿Por qué en los tests de casos 401 y 403 es importante verificar con <code>verify(service, never())</code>?</li>
-    <li>¿Cómo se especifica en <code>@WithMockUser</code> que un usuario tiene varios roles a la vez?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque el cliente corre en el dispositivo del usuario, quien puede inspeccionar el DOM, modificar el script o lanzar peticiones HTTP directas por consola evadiendo cualquier restricción visual.</p>
@@ -1825,27 +1729,45 @@ En la sesión anterior definimos que un desarrollador solo puede editar las tare
   <p>4 · Mediante el atributo roles = {"ROL_A", "ROL_B"} dentro de la anotación.</p>
 </details>
 
-## Sesión 59 · Sesión frente a token: JWT
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> la comparación arquitectónica entre <strong>Sesión con Cookie (con estado)</strong> y <strong>JSON Web Token (JWT, sin estado)</strong>, la anatomía de un token firmado (Header, Payload, Signature), los tipos de <em>Claims</em> y el compromiso de la revocación.</li>
-    <li><strong>2. Haz:</strong> implementa un servicio generador y validador de tokens JWT con una clave secreta segura, y construye un <code>JwtAuthenticationFilter</code> que extrae la cabecera <code>Authorization: Bearer</code> en cada petición.</li>
-    <li><strong>3. Comprueba:</strong> obtienes un token JWT mediante login, lo decodificas e inspeccionas en <code>jwt.io</code> y consumes un endpoint protegido verificando que el servidor valida tu identidad sin almacenar ninguna sesión en memoria.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué tres partes separadas por puntos componen la estructura de un JSON Web Token (JWT)?</li>
-    <li>¿Por qué un JWT se define como un mecanismo de autenticación «sin estado» (<em>stateless</em>)?</li>
-    <li>¿Qué problema fundamental surge si necesitas revocar el acceso a un usuario inmediatamente (por ejemplo, tras un despido) cuando la API utiliza JWT puros sin base de datos centralizada?</li>
-  </ol>
-</div>
+Los tests demuestran que un usuario no lee ni modifica recursos ajenos fuera de la política del producto.
 
-### El gran debate arquitectónico: ¿Sesión o Token?
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 38 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-38.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-38.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Semana 20 · Sesión y token: integrar JWT
+
+## Sesión 39 · Sesión y token: integrar JWT
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Una sesión y un token organizan de forma diferente la continuidad de la identidad. Un JWT debe verificarse y caducar; su contenido no sustituye la autorización.
+
+#### El gran debate arquitectónico: ¿Sesión o Token?
 
 Una de las decisiones técnicas más discutidas en arquitectura web es elegir la estrategia de autenticación:
 
@@ -1864,7 +1786,7 @@ Una de las decisiones técnicas más discutidas en arquitectura web es elegir la
 | **Clientes heterogéneos** | Ideal para aplicaciones web tradicionales en el navegador. | Ideal para aplicaciones móviles (iOS/Android), microservicios y APIs consumidas por terceros. |
 | **Revocación inmediata** | **Trivial:** Basta con ejecutar `session.invalidate()` o borrar la clave en Redis. | **Compleja:** Una vez emitido, el token es válido hasta que expire su fecha `exp`, a menos que mantengas una lista negra en base de datos (reintroduciendo estado). |
 
-### Anatomía de un JSON Web Token (JWT)
+#### Anatomía de un JSON Web Token (JWT)
 
 Un JWT es una cadena de texto compacta dividida en tres partes separadas por puntos:
 
@@ -1885,7 +1807,25 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbCI6IlJPTEVfQURNSU5JU1RSQURPUiIsImV
    ```
    Si un atacante modifica un solo carácter del payload (por ejemplo, cambia su rol de `ROLE_DESARROLLADOR` a `ROLE_ADMINISTRADOR`), la firma deja de coincidir y el backend **rechaza el token de inmediato**.
 
-### Paso a paso guiado · Generación y validación de JWT en Spring Boot
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Comparad ambas estrategias e implementad la emisión y validación de JWT previstas para el proyecto.
+
+Probad firma incorrecta, token ausente y token caducado; documentad cómo lo utiliza el cliente.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">Sesión frente a token: JWT</p>
+
+#### Paso 2 · Generación y validación de JWT en Spring Boot
 
 Para trabajar con JWT en Java utilizamos la librería estándar de la industria `jjwt`:
 
@@ -1908,8 +1848,6 @@ Para trabajar con JWT en Java utilizamos la librería estándar de la industria 
     <scope>runtime</scope>
 </dependency>
 ```
-
-<p class="stage">Paso 1 · Crear el servicio JwtService</p>
 
 Este servicio encapsula la firma y lectura de tokens mediante una clave secreta segura:
 
@@ -1977,8 +1915,6 @@ public class JwtService {
     }
 }
 ```
-
-<p class="stage">Paso 2 · Crear el filtro JwtAuthenticationFilter</p>
 
 Creamos un filtro que intercepta cada petición, extrae la cabecera `Authorization: Bearer <token>` y puebla el contexto de Spring Security:
 
@@ -2057,8 +1993,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 }
 ```
 
-<p class="stage">Paso 3 · Integrar el filtro y establecer SessionCreationPolicy.STATELESS</p>
-
 En `SecurityConfig`, registramos el filtro antes del filtro de usuario/contraseña y declaramos la API como estrictamente sin estado:
 
 ```java
@@ -2077,7 +2011,7 @@ En `SecurityConfig`, registramos el filtro antes del filtro de usuario/contrase�
     }
 ```
 
-### La comprobación · Inspección de token en jwt.io y Bruno
+#### Paso 3 · Inspección de token en jwt.io y Bruno
 
 1. **Crear endpoint de login:** Un endpoint `POST /api/v1/auth/login` que recibe `username` y `password`, valida contra `AuthenticationManager` y responde:
    ```json
@@ -2102,7 +2036,7 @@ En `SecurityConfig`, registramos el filtro antes del filtro de usuario/contrase�
    * **Resultado:** Código `401 Unauthorized`, no `500`. Es exactamente lo que compra el `catch (JwtException ex)` del filtro: sin él, la excepción de jjwt saldría del filtro y el cliente vería un error del servidor en lugar de «tu sesión ha caducado».
    * Devuelve la propiedad a `60` cuando termines.
 
-### Ahora tú · Guardar y usar el token en el cliente de la UD8
+#### Paso 4 · Guardar y usar el token en el cliente de la UD8
 
 Conecta el cliente web `cliente/index.html`:
 1. Añade un formulario de login con usuario y contraseña.
@@ -2117,7 +2051,18 @@ Conecta el cliente web `cliente/index.html`:
    ```
 5. Comprueba que el navegador puede crear y listar recursos sin usar cookies de sesión.
 
-### Reto · El dilema de la revocación de tokens
+#### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **integrad y verificad los tokens**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · El dilema de la revocación de tokens
 
 Un empleado con acceso de Administrador es despedido a las 11:00. Su token JWT expira a las 12:00.
 * Durante 60 minutos, ese token sigue siendo criptográficamente válido ante cualquier servidor del mundo.
@@ -2138,27 +2083,6 @@ Investiga las tres estrategias de la industria para mitigar este problema:
   <div><strong>Reto</strong><span>Estrategia de Access Token + Refresh Token analizada y justificada para mitigar el problema de revocación.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 59</p>
-  <ul class="checklist">
-    <li>Se comprende la diferencia entre autenticación con estado (sesión) y sin estado (JWT).</li>
-    <li>La anatomía de un JWT (Header, Payload y Firma) se identifica y decodifica con soltura.</li>
-    <li>La firma criptográfica garantiza que los claims no pueden ser alterados por el cliente.</li>
-    <li>La API opera en modo estrictamente sin estado (<code>SessionCreationPolicy.STATELESS</code>).</li>
-    <li>Las peticiones autenticadas viajan mediante el estándar <code>Authorization: Bearer &lt;token&gt;</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué es peligroso almacenar datos sensibles como contraseñas en el Payload de un JWT?</li>
-    <li>¿Cómo sabe el servidor si los datos de un JWT fueron alterados durante el tránsito?</li>
-    <li>¿Qué significa que una API opere con <code>SessionCreationPolicy.STATELESS</code>?</li>
-    <li>¿Qué formato exacto debe tener la cabecera HTTP estándar para transmitir un token JWT?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque el Payload no está cifrado, solo está codificado en Base64Url; cualquier intermediario o usuario puede decodificarlo y leer su contenido de inmediato.</p>
@@ -2167,27 +2091,43 @@ Investiga las tres estrategias de la industria para mitigar este problema:
   <p>4 · Authorization: Bearer &lt;cadena-del-token&gt;.</p>
 </details>
 
-## Sesión 60 · CSRF, CORS con credenciales y errores frecuentes
+### Cierre
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> el mecanismo del ataque de falsificación de peticiones en sitios cruzados (<strong>CSRF - Cross-Site Request Forgery</strong>), por qué las APIs con tokens Bearer son inmunes mientras que las basadas en cookies son vulnerables, y la interacción crítica entre CORS y credenciales de usuario.</li>
-    <li><strong>2. Haz:</strong> elabora una configuración de seguridad unificada que integra CORS acotado y reglas de CSRF adecuadas según la estrategia de autenticación elegida.</li>
-    <li><strong>3. Comprueba:</strong> construyes una matriz de diagnóstico de los 4 errores clásicos de Spring Security (401 por falta de cabecera, 403 por token CSRF ausente, bloqueo de CORS por credenciales y token JWT expirado), demostrando cómo resolver cada uno en menos de dos minutos.</li>
-  </ol>
-</div>
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿En qué consiste exactamente un ataque CSRF y por qué depende de que el navegador envíe cookies automáticamente?</li>
-    <li>¿Por qué una API REST que solo se autentica mediante cabeceras <code>Authorization: Bearer &lt;token&gt;</code> puede desactivar la protección CSRF de forma completamente segura?</li>
-    <li>¿Qué sucede si intentas hacer una petición cross-origin con cookies (<code>credentials: 'include'</code>) y el backend tiene configurado <code>allowedOrigins("*")</code>?</li>
-  </ol>
-</div>
+La API rechaza tokens inválidos y conserva las comprobaciones de permisos sobre cada recurso.
 
-### Anatomía de un ataque CSRF (Cross-Site Request Forgery)
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 39 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-39.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-39.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
+
+## Sesión 40 · CSRF, CORS con credenciales y cierre seguro
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+La protección CSRF depende de cómo viajan las credenciales. CORS y autorización resuelven problemas diferentes y deben configurarse de forma coherente.
+
+#### Anatomía de un ataque CSRF (Cross-Site Request Forgery)
 
 Imagina este escenario:
 1. Has iniciado sesión en tu banco (`https://tu-banco.com`). El servidor te asignó una cookie de sesión que tu navegador almacena.
@@ -2211,23 +2151,42 @@ Imagina este escenario:
   </ol>
 </figure>
 
-### ¿Por qué JWT con cabecera Authorization es inmune a CSRF?
+#### Cómo influye el transporte de credenciales en CSRF
 
-El ataque CSRF funciona **exclusivamente porque los navegadores envían las cookies de forma automática e implícita** en peticiones hacia el dominio destino.
+CSRF aprovecha credenciales que el navegador adjunta automáticamente, como una cookie de sesión; también puede afectar a HTTP Basic. Que una API sea stateless o utilice JWT no elimina por sí solo este riesgo.
 
 Cuando usamos tokens JWT transmitidos en la cabecera personalizada:
 `Authorization: Bearer <token>`
 * El navegador **jamás adjunta esa cabecera por su cuenta**.
 * Para enviar esa cabecera, un script JavaScript tiene que leer el token de memoria y colocarlo explícitamente en el objeto `fetch()`.
-* Como una web de terceros no puede leer la memoria ni el almacenamiento de tu origen (gracias a la Política del Mismo Origen), **es matemáticamente imposible ejecutar un ataque CSRF contra una API que use Bearer tokens**.
+* Si la API acepta únicamente ese Bearer añadido explícitamente y ninguna credencial automática alternativa, desaparece el mecanismo habitual de CSRF. Un JWT enviado en una cookie exige otra evaluación. Esto tampoco protege frente a XSS o al robo del token.
 
 <div class="rule">
   <p class="rule-label">La regla de desactivación de CSRF</p>
-  <p><strong>Solo puedes hacer <code>csrf.disable()</code> si tu API no utiliza cookies de sesión implícitas para autorizar mutaciones de datos.</strong></p>
-  <p>Si tu API utiliza sesiones basadas en cookies y navegadores web, debes activar el token sincronizado anti-CSRF (<code>CookieCsrfTokenRepository</code>) de forma obligatoria.</p>
+  <p>Antes de desactivar CSRF, verifica todos los mecanismos de autenticación aceptados. Con credenciales que el navegador envía automáticamente, mantén y configura la protección. Spring permite guardar el token esperado en sesión o usar un repositorio como <code>CookieCsrfTokenRepository</code>; el cliente debe devolver el token de comprobación explícitamente.</p>
 </div>
 
-### Tabla de diagnóstico de los 4 errores clásicos de Spring Security
+Referencia: [protección CSRF de Spring Security](https://docs.spring.io/spring-security/reference/features/exploits/csrf.html) y [configuración para aplicaciones Servlet](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html).
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+
+Revisad almacenamiento y transporte de credenciales, política CSRF y orígenes del cliente.
+
+Conectad el navegador al backend protegido y ejecutad la matriz de accesos desde el cliente HTTP y las pruebas.
+
+Los ejemplos de código usan proyectos y tareas para mostrar el procedimiento. Aplica cada paso a las entidades y reglas del CRUD que elegiste: conserva tu repositorio, cambia los nombres de clases, rutas y campos de forma coherente y adapta las comprobaciones. No crees una segunda aplicación para copiar el ejemplo.
+
+#### Paso 1 · Preparar el punto de partida
+
+1. Abre el repositorio y comprueba qué versión tienes. Arranca la aplicación y ejecuta la colección o las pruebas de la sesión anterior antes de cambiar código; si ya falla, registra y resuelve ese fallo primero.
+2. Localiza las clases, la configuración y las peticiones afectadas por la tarea de hoy. Anota el resultado esperado antes de editar.
+3. Prepara un caso válido y otro que deba rechazarse o no encontrarse. Los usarás para comparar el comportamiento antes y después.
+
+<p class="stage">CSRF, CORS con credenciales y errores frecuentes</p>
+
+#### Paso 2 · Tabla de diagnóstico de los 4 errores clásicos de Spring Security
 
 Durante la integración entre cliente web y backend protegido se presentan siempre los mismos cuatro tropiezos:
 
@@ -2238,11 +2197,9 @@ Durante la integración entre cliente web y backend protegido se presentan siemp
 | **3 · Error de CORS al enviar credenciales** | Consola de JavaScript en rojo. | El cliente usó `credentials: 'include'`, pero el backend configuró `allowedOrigins("*")`. | En Spring Boot `WebConfig`, sustituir el comodín `*` por los orígenes exactos (`allowedOrigins("http://localhost:5500")`). |
 | **4 · Token Expired (401 tras un tiempo)** | Consola de JavaScript. | La fecha `exp` del JWT quedó en el pasado y `JwtService` rechazó la firma. | Redirigir al usuario a la pantalla de login o solicitar un nuevo token mediante el endpoint de refresco (*Refresh Token*). |
 
-### Paso a paso guiado · Configuración final unificada de seguridad y CORS
+#### Paso 3 · Configuración final unificada de seguridad y CORS
 
 En Spring Security la configuración de CORS debe integrarse dentro de la propia `SecurityFilterChain` para que los filtros de seguridad no bloqueen las peticiones previas `OPTIONS`:
-
-<p class="stage">Paso 1 · Integrar CORS formal en SecurityConfig</p>
 
 ```java
 package com.ejemplo.gestor.config;
@@ -2270,7 +2227,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http, 
+            HttpSecurity http,
             JwtAuthenticationFilter jwtAuthFilter) throws Exception {
 
         http
@@ -2315,7 +2272,7 @@ public class SecurityConfig {
 }
 ```
 
-### La comprobación · El flujo de integración completo de cliente a servidor
+#### Paso 4 · El flujo de integración completo de cliente a servidor
 
 Realiza la prueba final de integración entre tu cliente web de la UD8 y la API blindada de la UD9:
 
@@ -2334,17 +2291,13 @@ Realiza la prueba final de integración entre tu cliente web de la UD8 y la API 
    * El nuevo proyecto aparece en pantalla al instante sin recargar la página.
 5. **Verifica la consola:** Cero errores de CORS, cero errores de CSRF, cero fugas de seguridad.
 
-### Ahora tú · La auditoría de cierre de la unidad
+#### Paso 5 · La auditoría de cierre de la unidad
 
 Esta es la última sesión de la UD9: lo que no quede blindado hoy, llega así al proyecto final.
-
-<p class="stage">1 · Cerrar sesión de verdad</p>
 
 1. Añade un botón *«Cerrar sesión»* en la cabecera de tu página, que borre el token del navegador y actualice la pantalla.
 2. Intenta crear un proyecto tras el cierre de sesión y verifica que el servidor responde `401`.
 3. **La pregunta incómoda:** copia el token *antes* de cerrar sesión, ciérrala, y vuelve a lanzar la petición pegando ese token a mano en tu cliente HTTP. Funciona. Acabas de comprobar que en una arquitectura sin estado **el cierre de sesión es un gesto del cliente, no del servidor**: el token sigue siendo válido hasta que caduque. Anota en tu cuaderno las dos formas de resolverlo —tokens de vida corta o una lista negra en base de datos— y cuál de las dos reintroduce estado en el servidor.
-
-<p class="stage">2 · Recorrer la matriz de diagnóstico entera</p>
 
 Provoca a propósito los cuatro fallos de la tabla de esta sesión y, en cada uno, anota qué se ve en la consola del navegador, qué se ve en la pestaña Red y qué se ve en los logs del servidor. Son tres puntos de vista del mismo problema, y saber cuál mirar primero es la competencia que se lleva de aquí:
 
@@ -2352,8 +2305,6 @@ Provoca a propósito los cuatro fallos de la tabla de esta sesión y, en cada un
 2. Activa CSRF (`csrf` sin `.disable()`) y lanza un `POST`.
 3. Quita tu origen de la lista de CORS con `credentials` activadas.
 4. Usa un token caducado (baja `expiration-minutes` a 1 y espera).
-
-<p class="stage">3 · Auditar la unidad completa antes de cerrarla</p>
 
 Recorre esta lista sobre tu propio proyecto. Cada punto que no puedas marcar es trabajo pendiente, no una observación:
 
@@ -2363,7 +2314,7 @@ Recorre esta lista sobre tu propio proyecto. Cada punto que no puedas marcar es 
 * Ningún DTO de respuesta publica la contraseña, ni siquiera su hash.
 * El secreto del JWT no está escrito en el código ni subido al repositorio.
 * Las rutas públicas son exactamente tres y sabes nombrarlas: documentación, login y poco más.
-* Los tests de seguridad de la sesión 58 siguen en verde tras todos los cambios de la semana 20.
+* Los tests de seguridad de la sesión 38 siguen en verde tras todos los cambios de la semana 20.
 * La colección `09-seguridad` ejecuta la matriz completa y todas las peticiones devuelven lo esperado.
 
 <dl class="worked">
@@ -2371,7 +2322,18 @@ Recorre esta lista sobre tu propio proyecto. Cada punto que no puedas marcar es 
   <dd>Sabes reconocer los cuatro fallos por su síntoma sin tener que probar a ciegas; entiendes por qué un token sigue siendo válido después de cerrar sesión y qué harías al respecto; y los ocho puntos de la auditoría están marcados.</dd>
 </dl>
 
-### Reto · Simulación de ataque CSRF y su contramedida
+#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+
+1. Ejecuta el recorrido trabajado con datos de tu dominio. Conserva método, ruta, entrada y resultado esperado en la colección HTTP o en un test.
+2. Ejecuta el caso de rechazo preparado al inicio. Comprueba tanto la respuesta como que el estado de los datos no se haya alterado indebidamente.
+3. Compara el resultado con la tarea de esta sesión: **comprobad csrf, cors y permisos de extremo a extremo**. Explica qué clase o configuración produce el comportamiento observado.
+4. Registra la versión y los defectos pendientes en el mismo repositorio. Usa el workflow aprendido en Intermodular y conserva el enlace al resultado del CI cuando esté disponible.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+
+##### Reto · Simulación de ataque CSRF y su contramedida
 
 Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno controlado:
 1. Diseña una página HTML maliciosa local (`atacante.html`) servida en el puerto 9000 con un formulario oculto que envíe un `POST` automático hacia un endpoint protegido por cookies.
@@ -2389,27 +2351,6 @@ Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno 
   <div><strong>Reto</strong><span>Simulación de ataque CSRF ejecutada en laboratorio y contramedida con tokens sincronizados verificada.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 60</p>
-  <ul class="checklist">
-    <li>Se distingue con precisión por qué las APIs con tokens Bearer son inmunes a ataques CSRF.</li>
-    <li>La configuración de CORS está perfectamente integrada dentro de la <code>SecurityFilterChain</code>.</li>
-    <li>Se aplican las reglas estrictas de incompatibilidad entre comodines (<code>*</code>) y credenciales.</li>
-    <li>Los 4 errores clásicos de Spring Security se diagnostican y corrigen en menos de dos minutos.</li>
-    <li>El cliente web completa el ciclo de login, consulta pública, creación autorizada y logout.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué un ataque CSRF no puede tener éxito contra una API que exige la cabecera <code>Authorization: Bearer</code>?</li>
-    <li>¿Qué configuración de Spring Boot permite que las peticiones previas <code>OPTIONS</code> de CORS no sean bloqueadas por los filtros de autenticación?</li>
-    <li>¿Por qué el cierre de sesión en una arquitectura JWT puramente stateless se realiza habitualmente destruyendo el token en el cliente?</li>
-    <li>¿Cuál es la causa exacta cuando un frontend recibe un código 403 al enviar un formulario POST en una aplicación con sesiones y cookies activas?</li>
-  </ol>
-</div>
-
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque el navegador no añade cabeceras personalizadas de forma automática en peticiones cruzadas; para enviarla se requiere JavaScript explícito del propio origen legítimo.</p>
@@ -2417,6 +2358,34 @@ Para entender la gravedad de CSRF, realiza una prueba de concepto en un entorno 
   <p>3 · Porque el servidor no mantiene ningún registro del token en memoria; al borrar el token del cliente, este pierde la capacidad de firmar y autorizar peticiones futuras.</p>
   <p>4 · Falta del token sincronizado anti-CSRF (la cabecera X-XSRF-TOKEN o parámetro _csrf no fue incluido en la petición).</p>
 </details>
+
+### Cierre
+
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
+
+El cliente autorizado funciona y quedan probados los rechazos por identidad, permisos y configuración web.
+
+Cada integrante explica una decisión del código o reproduce una comprobación. Anotad los defectos pendientes y dejad identificado el commit con el que termináis.
+
+
+#### Entrega de la sesión 40 · Repositorio de GitHub
+
+**Entrega el enlace al mismo repositorio de GitHub del proyecto, actualizado con el trabajo de esta sesión, y el enlace al commit que permite identificar esa versión.** El repositorio acumula el trabajo de todo el módulo.
+
+Antes de entregar:
+
+1. Sube el código realizado y actualiza el README si ha cambiado la forma de arrancar, configurar o utilizar la aplicación. Incluye en el repositorio las pruebas, colecciones HTTP, scripts y demás archivos que hayas trabajado hoy, cuando correspondan.
+2. Crea o actualiza `docs/sesiones/sesion-40.md` con cuatro apartados: **qué has realizado**, **qué archivos has cambiado**, **cómo lo has comprobado y qué resultado has obtenido**, y **qué queda pendiente**. Las tablas, respuestas y observaciones solicitadas en esta página se guardan ahí o se enlazan desde ese archivo a otros archivos del repositorio.
+3. Guarda los cambios en un commit y súbelos a GitHub siguiendo el workflow establecido en Intermodular. Si trabajáis mediante pull request, conserva también su enlace. Un commit que solo está en tu ordenador no constituye la entrega.
+4. Abre GitHub y comprueba que se ven el código, el documento de esta sesión y el commit entregado. Verifica que el profesor puede acceder al repositorio. Si algo no funciona todavía, descríbelo en pendientes y entrega igualmente la versión que has realizado.
+
+| Dato de la entrega | Qué debes facilitar |
+| --- | --- |
+| Repositorio | Enlace a la página del proyecto en GitHub |
+| Versión de esta sesión | Enlace al commit que contiene el trabajo entregado |
+| Registro del trabajo | `docs/sesiones/sesion-40.md`, dentro de ese repositorio |
+
+La comprobación o explicación en clase acompaña a esta entrega. El código y las evidencias de Servidor se evalúan en la versión indicada; el flujo de trabajo se evalúa en Intermodular.
 
 ## Lo que debes recordar
 
