@@ -32,8 +32,8 @@ priorKnowledge:
 </div>
 
 <div class="rule">
-  <p class="rule-label">Un producto de negocio y su presentación</p>
-  <p>El CRUD elegido en Servidor se mantiene durante los dos trimestres. El portfolio es su presentación y un soporte sencillo para aprender el workflow; no sustituye ese producto. Cuando lo inicies en Servidor, conserva su repositorio e historial durante el curso. En diciembre se demuestra una versión común: funcionamiento en Servidor y proceso de revisión, CI y despliegue en Intermodular.</p>
+  <p class="rule-label">Un producto, y el escaparate del producto</p>
+  <p>En Servidor vais a elegir un CRUD, y ese producto os acompaña los dos trimestres enteros. El portfolio que empezáis hoy es su escaparate, y de paso la excusa para aprender a trabajar; no lo sustituye. En cuanto arranquéis el backend allí, quedaos con ese repositorio y con su historial hasta final de curso: no se empieza de cero en enero. En diciembre se enseña una sola cosa entre los dos módulos. En Servidor se mira si funciona. Aquí se mira cómo llegasteis a que funcionara.</p>
 </div>
 
 ## Sesión 1 · Del repositorio vacío a una URL pública
@@ -72,8 +72,8 @@ La consecuencia práctica es que el mismo código puede recibir dos notas muy di
 Se puede tener una web preciosa y suspender aquí. Se puede tener una presentación sencilla y sacar un diez. Si eso no pudiera pasar, os estaríamos evaluando dos veces lo mismo.
 
 <div class="rule">
-  <p class="rule-label">La consecuencia incómoda</p>
-  <p>Un tablero montado entero el domingo anterior a la entrega se ve. Las issues, los commits y las pull requests llevan fecha y hora, y esas fechas deben contrastarse con revisiones y ejecuciones, porque un historial de Git puede reescribirse. La evidencia debe reflejar el trabajo realizado durante las sesiones y la aportación de cada integrante. No se puntúa acumular commits.</p>
+  <p class="rule-label">Las fechas se miran</p>
+  <p>Un tablero montado entero el domingo antes de la entrega se nota. Las issues, los commits y las pull requests llevan fecha y hora, y yo las miro. Un historial de Git se puede reescribir, así que no me fío solo de él: lo cruzo con las revisiones que habéis dejado y con las ejecuciones de Actions, que ésas no se tocan. Y no cuento commits. Miro si hubo trabajo repartido en el tiempo y quién lo hizo.</p>
 </div>
 
 #### El circuito
@@ -95,11 +95,11 @@ Todo lo que hagáis de aquí a diciembre pasa por estos siete pasos. No se monta
 
 <p class="term">Circuito</p>
 
-El camino obligatorio que recorre cualquier cambio desde que se decide hasta que está publicado. Se llama circuito porque no tiene atajos: si un cambio ha llegado a producción sin pasar por él, el circuito no existe, existe una costumbre.
+El camino obligatorio que recorre cualquier cambio desde que se decide hasta que está publicado. Se llama circuito porque no tiene atajos. Si un cambio puede llegar a producción sin pasarlo, lo que tenéis no es un circuito: es una costumbre, y las costumbres se saltan el día que hay prisa.
 
 #### Por qué se despliega hoy, con la web vacía
 
-Lo intuitivo sería construir la web y desplegarla cuando esté presentable. Se hace justo al revés, y por una razón que no es pedagógica sino estadística: **lo que falla en un despliegue casi nunca es el código**. Es una cuenta sin verificar, un permiso que no está, un token mal copiado, un nombre repetido, una región que no admite el plan gratuito.
+Lo intuitivo sería construir la web y desplegarla cuando esté presentable. Aquí se hace al revés, y no por gusto: **lo que falla en un despliegue casi nunca es el código**. Es una cuenta sin verificar. Un permiso que no está. Un nombre ya cogido. Un token mal copiado. Cosas que no tienen nada que ver con lo que habéis programado y que se comen una tarde entera.
 
 Si eso se descubre hoy, con una página de tres líneas, se arregla hoy. Si se descubre en diciembre con el portfolio terminado, se descubre el día de la entrega.
 
@@ -122,7 +122,7 @@ El servicio con el que GitHub publica sitios estáticos —HTML, CSS, JavaScript
 
 <div class="rule">
   <p class="rule-label">Por qué aquí y no en un proveedor de nube</p>
-  <p>Publicar esto mismo en Azure, Cloudflare o Netlify funciona igual de bien y en diciembre podréis hacerlo. Hoy no, por un motivo de método: cada proveedor añade un alta que puede tardar días en verificarse y que no depende de vosotros. Lo que se aprende hoy —que existe una URL, que se actualiza sola y que el despliegue es un fichero que se puede leer— es idéntico en los cuatro. El proveedor es la parte intercambiable.</p>
+  <p>Esto mismo se publica igual de bien en Azure, en Cloudflare o en Netlify, y en diciembre lo haréis. Hoy no, porque todos ellos piden un alta que puede tardar días en verificarse y que no depende de vosotros. Lo que aprendéis hoy es lo mismo en cualquiera de los cuatro: que hay una URL, que se actualiza sola y que el despliegue es un fichero que podéis abrir. Mudarse de sitio, más adelante, es media hora.</p>
 </div>
 
 ---
@@ -170,10 +170,7 @@ cd portfolio
 </html>
 ```
 
-<div class="rule">
-  <p class="rule-label">Resistid la tentación</p>
-  <p>Alguien va a empezar a maquetar aquí. No lo hagáis. Lo que se está probando es la tubería, y una tubería se prueba con agua, no con champán. La web bonita empieza en la sesión 3, cuando cada trozo pueda entrar por su pull request.</p>
-</div>
+Alguien va a empezar a maquetar aquí. No lo hagáis. Lo que estamos probando es que la tubería lleva agua de un lado a otro, y para eso da igual lo que haya dentro. La web de verdad empieza en la sesión 3, cuando cada trozo pueda entrar por su propia pull request.
 
 **4 · Subirlo.**
 
@@ -191,6 +188,8 @@ git push
 | Una línea, menos de 72 caracteres | Un párrafo | Una frase |
 | Un commit, un cambio | «Cabecera, estilos, favicon y arreglos» | Tres commits distintos |
 
+Habréis visto que los ejemplos van sin tildes. No es dejadez mía: algunas consolas de Windows todavía guardan mal los acentos dentro del mensaje del commit, y un historial lleno de «AÃ±adir» no hay quien lo lea. Probad a escribir uno con tilde y mirad cómo queda en GitHub. Si se ve bien, seguid poniéndolas.
+
 <details class="aside aside--help">
   <summary>Si <code>git push</code> pide usuario y contraseña y la contraseña no funciona</summary>
   <p>GitHub no acepta la contraseña de la cuenta desde la línea de comandos. Instalad <strong>Git Credential Manager</strong> (viene con Git para Windows y abre una ventana del navegador la primera vez) o usad un <em>personal access token</em> como contraseña: foto de perfil → Settings → Developer settings → Personal access tokens.</p>
@@ -206,17 +205,14 @@ git push
 
 <div class="rule">
   <p class="rule-label">Los dos modos, y por qué usamos el segundo</p>
-  <p><em>Deploy from a branch</em> coge una carpeta y la publica, sin dejar rastro de cómo lo hace. <strong>GitHub Actions</strong> escribe un fichero dentro de vuestro repositorio y despliega ejecutándolo. Es más trabajo y es exactamente lo que queremos: que el despliegue sea algo que se pueda leer, revisar en una pull request y romper, no un ajuste escondido en un menú.</p>
+  <p><em>Deploy from a branch</em> coge una carpeta y la publica, y no queda constancia de cómo lo ha hecho. <strong>GitHub Actions</strong> escribe un fichero en vuestro repositorio y despliega ejecutándolo. Nos interesa el segundo porque ese fichero se puede abrir, se puede cambiar dentro de una pull request y se puede romper. Con una casilla de un menú no podéis hacer nada de eso.</p>
 </div>
 
 **3 · Coger la plantilla.** Debajo aparecen sugerencias de workflow. Buscad **Static HTML** y pulsad **Configure**. Se abre un editor con un fichero ya escrito, `static.yml`.
 
 **4 · No tocar nada y confirmar.** Botón verde **Commit changes...** → dejad marcado **Commit directly to the `main` branch** → **Commit changes**.
 
-<div class="rule">
-  <p class="rule-label">La plantilla se queda como está</p>
-  <p>Alguien va a querer cambiar algo del YAML ahora mismo. No lo toquéis: la plantilla publica la raíz del repositorio, que es justo donde está vuestro <code>index.html</code>. En la sesión 3 escribiréis un workflow vuestro desde cero y ahí se cambia todo lo que haga falta.</p>
-</div>
+No cambiéis nada del YAML aunque os pique. Esa plantilla publica la raíz del repositorio, que es justo donde está vuestro `index.html`, así que ya hace lo que necesitáis. En la sesión 3 escribiréis uno vuestro y ahí tocaréis lo que queráis.
 
 **5 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a la pestaña **Actions** del repositorio: hay una ejecución con un punto amarillo. Entrad, abridla y ved los pasos en directo. Son cuatro, dentro de un único trabajo llamado `deploy`: coge vuestro repositorio, prepara Pages, empaqueta los ficheros y los publica.
 
@@ -308,8 +304,8 @@ Un fichero que le dice a GitHub qué ejecutar y cuándo. Vive dentro del reposit
 </dl>
 
 <div class="rule">
-  <p class="rule-label">El motivo por el que este bloque existe</p>
-  <p>Un despliegue automático necesita permiso para escribir en algún sitio, y ese permiso es siempre el punto débil. Hay dos maneras de dárselo: guardar una credencial de larga duración —un <em>token</em>— o pedir una autorización temporal que caduca al acabar la ejecución. Este workflow usa la segunda, que es la buena, y por eso no hay ningún secreto que guardar ni que se pueda filtrar. En la segunda evaluación, publicando el backend fuera de GitHub, ya no habrá esa suerte: allí habrá un token, y decidir dónde vive será cosa vuestra.</p>
+  <p class="rule-label">Por qué os hago leer esto</p>
+  <p>Para desplegar solo, una máquina necesita permiso para escribir en algún sitio. Ese permiso es siempre la parte frágil. Se puede dar de dos formas: guardando una credencial que dura para siempre —un <em>token</em>— o pidiendo una autorización que caduca en cuanto acaba la ejecución. Aquí se usa la segunda, y por eso no tenéis ningún secreto guardado que se os pueda escapar. En la segunda evaluación, cuando publiquéis el backend fuera de GitHub, sí habrá un token y tendréis que decidir vosotros dónde vive.</p>
 </div>
 
 <dl class="answer">
@@ -353,10 +349,7 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 
 Vuestro portfolio ya está publicado y no necesita esto para nada. Este bloque existe porque en la segunda evaluación vais a publicar el backend en un proveedor de nube, y la primera vez que se pelea uno con un portal de nube conviene que sea con algo que no importa.
 
-<div class="rule">
-  <p class="rule-label">Si lo hacéis, vais a tener dos despliegues</p>
-  <p>Al terminar tendréis dos workflows publicando lo mismo en dos direcciones distintas, y las dos funcionando. No es un error, pero decidid cuál es la buena y ponedla en el <code>README</code>: es la que se mira en diciembre.</p>
-</div>
+Aviso de lo que os vais a encontrar: al acabar tendréis dos workflows publicando lo mismo en dos direcciones distintas, y las dos funcionando. No está roto. Pero decidid cuál es la buena y dejadla puesta en el `README`, porque es la que voy a abrir en diciembre.
 
 **1 · La cuenta.** Este es el paso que depende de que un tercero os diga que sí, y por eso ya no está al principio de la sesión.
 
@@ -587,7 +580,7 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
 
 <div class="rule">
   <p class="rule-label">Seis, ni una más</p>
-  <p>La tentación es escribir veinte issues hoy y no volver a mirarlas. Un backlog largo escrito el primer día es un backlog inventado: describe una web que todavía no sabéis cómo va a ser. Seis tareas es lo que cabe en las próximas dos semanas, y las siguientes se escriben cuando se sepa más.</p>
+  <p>La tentación es escribir veinte issues hoy y no volver a mirarlas nunca. Pero veinte issues escritas el primer día están inventadas: describen una web que todavía no sabéis cómo va a ser. Seis es más o menos lo que cabe en dos semanas. Las siguientes las escribiréis cuando sepáis algo más que hoy.</p>
 </div>
 
 **4 · Ordenar.** En el tablero, dejad las seis en *Todo* y subid arriba las dos que haríais hoy. Ese orden es una decisión y os la voy a preguntar.
@@ -603,14 +596,9 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
 
 #### Bloque B · Cerrar la rama principal
 
-Aplica el procedimiento al portfolio y también al repositorio de backend que ya utilizas en Servidor. No copies código entre ellos. En el backend todavía no existe el check de Maven: exige PR desde ahora y añade «Compilar y probar» después de su primera ejecución en Intermodular 7. Hasta entonces conserva la comprobación local de Servidor en la descripción de la PR. Comprueba si la regla exige aprobación: para que GitHub la haga obligatoria, la persona revisora necesita los permisos correspondientes.
-
 <p class="stage stage--guided">A la vez, y al final se comprueba rompiéndolo</p>
 
-<div class="rule">
-  <p class="rule-label">Revisión y permisos del repositorio</p>
-  <p>El portfolio conserva la autoría acordada; los permisos de revisión se configuran según la política del grupo. Vuestra pareja puede revisar sin ningún acceso especial, porque el repositorio es público y cualquiera con una cuenta de GitHub puede entrar en una pull request, comentar sobre las líneas y dejar su revisión. Con Required approvals en 0, GitHub exige pull request, pero no bloquea por ausencia de aprobación: la revisión queda registrada, pero no es obligatoria para fusionar. Para que lo sea, configura al menos una aprobación de una persona con permiso de escritura. Conservad la política acordada para la autoría/equipo de Servidor.</p>
-</div>
+Esto que vais a hacer ahora en el portfolio hacedlo también, hoy mismo, en el repositorio del backend que ya tenéis abierto en Servidor. Es la misma pantalla y las mismas casillas. Lo que no hay que hacer nunca es copiar código de un repositorio al otro: son dos proyectos distintos que se llevan bien, no uno partido en dos.
 
 **1 · Crear la regla.** **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
 
@@ -644,7 +632,7 @@ Aplica el procedimiento al portfolio y también al repositorio de backend que ya
 
 <div class="rule">
   <p class="rule-label">Cero aprobaciones no significa que nadie revise</p>
-  <p>Con cero aprobaciones obligatorias podéis fusionar vosotros mismos, pero solo desde una pull request. A partir de la sesión 3, quien vigilará que el trabajo sea técnicamente correcto será una máquina; quien vigila que <em>haga lo que la issue pedía</em> es vuestra pareja, hoy y siempre, y esa revisión no la comprueba GitHub: la comprueba la nota. Cada proyecto se entrega con las revisiones que habéis dejado en el repositorio del otro, y son públicas y llevan fecha.</p>
+  <p>Con cero aprobaciones obligatorias podéis fusionar vosotros mismos, pero solo desde una pull request. Vuestra pareja no necesita ningún permiso para revisaros: el repositorio es público, así que cualquiera con cuenta de GitHub puede entrar, comentar línea a línea y dejar su revisión. Que lo haga o no, GitHub no lo comprueba. Lo compruebo yo. Cada proyecto se entrega con las revisiones que habéis dejado en el repositorio del otro, y ésas son públicas y llevan fecha.</p>
 </div>
 
 **4 · Comprobar que os bloquea a vosotros.** Esto no es opcional: una protección que nadie ha probado no se sabe si está activa.
@@ -662,6 +650,8 @@ Tiene que fallar. Copiad el mensaje de error; lo vais a ver muchas veces y convi
 ```bash
 git reset --hard origin/main
 ```
+
+Cuidado con ese comando, que es de los que hacen daño. Deja vuestra carpeta exactamente como está `main` en GitHub y **tira todo lo que no hayáis subido**, sin preguntar y sin papelera. Aquí es lo que queremos, porque lo único que hay sin subir es el commit de prueba que acabáis de hacer. No lo uséis con trabajo a medias encima de la mesa.
 
 <dl class="answer">
   <dt>Mensaje exacto con el que GitHub os ha rechazado el push</dt>
@@ -777,8 +767,8 @@ git switch 3-cabecera-con-nombre
 Abrid ahora ese `index.html` con doble clic. Lo que veis en el navegador es exactamente lo que esa pull request propone publicar. Al acabar la revisión, `git switch main`.
 
 <div class="rule">
-  <p class="rule-label">Esto no es un rodeo: es lo que hace todo el mundo</p>
-  <p>Algunos servicios publican cada rama en una URL temporal y te ahorran estos dos comandos. Está bien cuando lo hay, pero no siempre lo hay, y una rama que solo se puede revisar si un proveedor la publica es una rama que no sabéis revisar. Bajarse el trabajo de otra persona y ejecutarlo es la operación normal de cualquier equipo, y la vais a repetir todo el curso.</p>
+  <p class="rule-label">Por qué se revisa así</p>
+  <p>Hay servicios que publican cada rama en una URL temporal y os ahorrarían estos dos comandos. Cuando los hay, se usan. Pero no siempre los hay, y bajarse el trabajo de otra persona para ejecutarlo es lo que se hace en cualquier equipo, con o sin URL temporal. Lo vais a repetir todo el curso, así que mejor aprenderlo hoy con dos ficheros que en marzo con un backend entero.</p>
 </div>
 
 En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas y solo tres:
@@ -810,7 +800,7 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 
 <div class="rule">
   <p class="rule-label">Aprobar sin mirar es la falta grave de este módulo</p>
-  <p>Vuestra aprobación ya no bloquea nada, y por eso vale más: es una afirmación de que habéis comprobado algo, sin ninguna máquina detrás obligándoos. Hoy, además, sois la única comprobación que hay: no existe todavía ningún check que pare nada. Si aprobáis sin bajaros la rama y luego lo publicado no cumple la issue, el fallo es de los dos. En la defensa de diciembre voy a abrir una pull request vuestra al azar y voy a preguntar por la revisión que dejasteis.</p>
+  <p>Vuestra aprobación no bloquea nada, y justamente por eso vale: nadie os obliga a darla, así que cuando la dais estáis afirmando que habéis mirado. Hoy además sois lo único que hay mirando, porque todavía no existe ningún check que pare nada. Si aprobáis sin bajaros la rama y luego resulta que lo publicado no cumple la issue, el fallo es de los dos. En la defensa de diciembre voy a abrir una pull request vuestra al azar y os voy a preguntar por la revisión que dejasteis.</p>
 </div>
 
 ---
