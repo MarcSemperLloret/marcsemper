@@ -634,6 +634,12 @@ Aplica el procedimiento al portfolio y también al repositorio de backend que ya
   <p>Así que hoy vuestra rama principal está cerrada, pero <strong>nadie comprueba nada</strong> antes de fusionar. Dejadla sin marcar y no la olvidéis: en la sesión 3 escribís el workflow que valida el HTML, los enlaces y la accesibilidad, y volvéis aquí a marcarla. Vais a ver el agujero de primera mano en el reto del bloque C.</p>
 </div>
 
+<details class="aside aside--extra">
+  <summary>Si hicisteis el bloque E de la sesión 1 y tenéis Azure conectado</summary>
+  <p>Entonces vosotros sí tenéis un check, porque el workflow que escribió Azure sí se dispara con <code>pull_request</code>. Seguirá sin aparecer en la lista ahora mismo, porque todavía no ha corrido nunca sobre una pull request: dejad la regla sin marcar, haced la primera vuelta del bloque C y volved aquí después. Ya estará en la lista, con el nombre del job.</p>
+  <p>Marcadla. Tened claro qué comprueba y qué no: dice que el despliegue subió, no que la página esté bien. Una web rota se despliega perfectamente. El check que mira el contenido lo escribís igual en la sesión 3, y el reto del bloque C lo vais a hacer igual que el resto de la clase.</p>
+</details>
+
 **3 · Guardar** con **Create**.
 
 <div class="rule">
@@ -703,7 +709,12 @@ git push -u origin 3-cabecera-con-nombre
   <p>Escribir <code>Closes #3</code> en la descripción hace que, al fusionar, la issue 3 se cierre sola y su tarjeta pase a <em>Done</em>. Sin esa línea el tablero se convierte en un sitio donde nada se cierra nunca y hay que ir a mano. Cuesta once caracteres.</p>
 </div>
 
-**6 · Avisar a vuestra pareja.** Pasadle el enlace de la pull request. No hay ninguna URL que abrir: lo que hay publicado sigue siendo <code>main</code>, y vuestra rama no está en ningún sitio salvo en GitHub. Para verla hay que traérsela, y eso lo hace quien revisa en el bloque D.
+**6 · Avisar a vuestra pareja.** Pasadle el enlace de la pull request. Salvo que tengáis Azure conectado, no hay ninguna URL que abrir: lo que hay publicado sigue siendo <code>main</code>, y vuestra rama no está en ningún sitio salvo en GitHub. Para verla hay que traérsela, y eso lo hace quien revisa en el bloque D.
+
+<details class="aside aside--extra">
+  <summary>Si tenéis Azure conectado</summary>
+  <p>Abajo del todo aparecen los checks, y en un minuto un comentario automático con un enlace: es <strong>vuestra rama publicada en una URL temporal</strong>, que se borra al cerrar la pull request. Pasádsela a vuestra pareja junto al enlace de la pull request. En el paso 8, además, esperad a que el check esté en verde antes de fusionar.</p>
+</details>
 
 **7 · Revisión.** Vuestra pareja hace el bloque D sobre esta pull request. Mientras tanto, vosotros hacéis lo mismo con la suya.
 
@@ -748,7 +759,7 @@ git branch -d 3-cabecera-con-nombre
 
 Una revisión no es un trámite de cortesía. En un equipo real es el último sitio donde un error cuesta barato.
 
-**Primero, traeros lo que vais a revisar.** La rama de vuestra pareja está en su repositorio, no en el vuestro, y no hay ninguna URL donde esté publicada. La primera vez se clona, en una carpeta aparte y fuera de vuestro proyecto:
+**Primero, traeros lo que vais a revisar.** Mirad la pull request: si tiene un comentario automático con un enlace de vista previa —solo lo tendrá si esa persona conectó Azure en el bloque E—, abridlo y os ahorráis lo que viene ahora. Si no lo tiene, que es lo normal, la rama está en su repositorio y en ningún sitio más. La primera vez se clona, en una carpeta aparte y fuera de vuestro proyecto:
 
 ```bash
 cd ..
@@ -814,7 +825,7 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
   <ul class="checklist">
     <li>URL pública funcionando, y el repositorio público enlazado desde ella.</li>
     <li>Tablero con seis issues, dos de ellas en <em>Done</em> cerradas por su pull request.</li>
-    <li><code>main</code> protegida con las tres reglas, comprobado con un push rechazado.</li>
+    <li><code>main</code> protegida con las tres reglas —cuatro si conectasteis Azure—, comprobado con un push rechazado.</li>
     <li>Dos pull requests fusionadas después de que vuestra pareja las revisara, con comentarios que dicen qué se miró.</li>
     <li>Dos revisiones hechas por vosotros en el repositorio de vuestra pareja.</li>
   </ul>
