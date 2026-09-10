@@ -558,22 +558,59 @@ Cuando `main` está protegida pasan tres cosas a la vez. La primera, que ningún
 
 <p class="stage stage--solo">Individual, y lo primero es decidir qué vais a construir</p>
 
-**0 · Las seis frases.** Cinco minutos, en una nota o en un papel, sin abrir GitHub. Escribid **seis cosas que queréis que tenga vuestro portfolio**: una cabecera con vuestro nombre, una sección de proyectos, un formulario de contacto, lo que sea. Una frase cada una, tal como os salga. Todavía no son issues; son la materia prima del paso 3.
+**0 · Las seis frases.** Cinco minutos, en una nota o en un papel, sin abrir GitHub. Escribid **seis cosas que queréis que tenga vuestro portfolio**: una cabecera con vuestro nombre, una sección de proyectos, un formulario de contacto, lo que sea. Una frase cada una, tal como os salga. Todavía no son issues; son la materia prima del paso 5.
 
-Si os atascáis, mirad dos portfolios de gente que ya terminó el ciclo y quedaos con lo que os parezca imprescindible. Y no os paséis de seis, que el paso 3 explica por qué.
+Si os atascáis, mirad dos portfolios de gente que ya terminó el ciclo y quedaos con lo que os parezca imprescindible. Y no os paséis de seis; el paso 5 explica por qué.
 
-**1 · Crear el tablero.** En vuestro repositorio, pestaña **Projects** → **Link a project** → **New project** → plantilla **Board** → nombre `Portfolio`.
+**1 · Antes de crear nada, qué es esto.**
 
-**2 · Automatizarlo antes de llenarlo.** Dentro del proyecto, arriba a la derecha, menú **···** → **Workflows**. Activad dos:
+<p class="term">Tablero · GitHub Projects</p>
 
-| Workflow | Qué hace |
-| -------- | -------- |
-| **Auto-add to project** | Toda issue nueva del repositorio entra sola en el tablero. Filtro: <code>is:issue is:open</code> |
-| **Item closed** | Al cerrarse la issue, la tarjeta pasa a *Done* sin que la mováis |
+Una vista de vuestras issues repartidas en columnas. La palabra importante es **vista**: el tablero no guarda nada. Las issues viven en el repositorio, y el tablero se limita a enseñarlas colocadas. Si borrarais el tablero, las issues seguirían ahí tan tranquilas.
 
-Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano y pasa a ser un reflejo automático de lo que hay en el repositorio. Un tablero que se mantiene a mano se abandona en tres semanas.
+De eso salen dos cosas que si no despistan bastante. Una: el tablero nace vacío aunque el repositorio ya tenga issues, porque hay que decirle cuáles mirar. Y dos: un tablero no pertenece al repositorio sino a vuestra cuenta, así que puede enseñar issues de varios repositorios a la vez.
 
-**3 · Escribir seis issues.** Pestaña **Issues** → **New issue**. Convertid vuestras seis frases en issues con título y criterio de aceptación. Ejemplo del formato exacto:
+**2 · Crear el tablero.**
+
+1. En vuestro repositorio, pestaña **Projects**.
+2. Botón verde **Link a project** y, en el desplegable que se abre, abajo, **New project**.
+3. Sale un selector de plantillas. Elegid **Board**, la de las columnas. *Table* es la misma información en forma de hoja de cálculo y *Roadmap* en forma de calendario; las tres valen y se puede cambiar de vista cuando queráis, pero hoy vamos con columnas.
+4. Nombre: `Portfolio`. **Create**.
+
+Fijaos en que el botón decía *Link a project* y no *Create project*. Es por lo de antes: el tablero es vuestro, no del repositorio, y lo que habéis hecho es enlazarlo. Si algún día cerráis la pestaña y no sabéis volver, no lo busquéis en el repositorio: está en vuestro perfil de GitHub, pestaña **Projects**.
+
+**3 · Mirar las columnas antes de tocarlas.** El tablero llega con tres: *Todo*, *In Progress* y *Done*. No son carpetas ni sitios donde se guarde nada; son los tres valores de un campo llamado **Status** que la plantilla ha creado por vosotros. Arrastrar una tarjeta de una columna a otra es cambiarle ese campo, y ya está. Se pueden añadir más, pero hoy no: con saber si algo está sin empezar, empezado o hecho, vais servidos.
+
+**4 · Automatizarlo antes de llenarlo.** Abrid el tablero y, arriba a la derecha, el menú **···** → **Workflows**. Hay una lista de automatismos. Nos interesan dos:
+
+| Workflow | Qué hace | Cómo lo dejáis |
+| -------- | -------- | -------------- |
+| **Item closed** | Al cerrarse una issue, su tarjeta pasa a *Done* sin que la toquéis | Ya viene activado. Abridlo y comprobad que es así |
+| **Auto-add to project** | Cualquier issue nueva del repositorio entra sola en el tablero | Hay que encenderlo: **Edit**, elegid vuestro repositorio, dejad el filtro <code>is:issue is:open</code> y **Save and turn on workflow** |
+
+Con esos dos, el tablero deja de ser algo que hay que mantener a mano y pasa a ser un reflejo de lo que hay en el repositorio. Un tablero que se mantiene a mano se abandona en tres semanas.
+
+<div class="rule">
+  <p class="rule-label">Por qué este paso va antes que el siguiente</p>
+  <p>El automatismo recoge lo que se cree <strong>a partir de ahora</strong>, no lo que ya existe. Si escribís las seis issues primero y lo encendéis después, el tablero se queda vacío y tendréis que arrastrarlas una a una. Es el orden, no el invento.</p>
+</div>
+
+<details class="aside aside--help">
+  <summary>Solo os deja un «Auto-add to project», y con un repositorio dentro</summary>
+  <p>Es el límite de las cuentas gratuitas: un automatismo de ese tipo por tablero, y un único repositorio dentro de él. Hoy no molesta, porque solo tenéis el portfolio. Cuando en la UD4 entre en juego el repositorio del backend, o le hacéis su propio tablero o metéis sus issues a mano.</p>
+</details>
+
+**5 · Escribir seis issues.** Pestaña **Issues** del repositorio → botón verde **New issue**. Convertid cada una de vuestras seis frases en una issue. El formulario tiene menos cosas de las que parece:
+
+| Campo | Qué ponéis hoy |
+| ----- | -------------- |
+| **Add a title** | El título: verbo en infinitivo y objeto concreto |
+| **Add a description** | El criterio de aceptación, una o dos frases. Es el cuerpo de la issue |
+| **Assignees** | Vosotros, y solo cuando la empecéis. Hoy se puede dejar vacío |
+| **Labels** | Vacío. Sirven para clasificar, y con seis issues no hay nada que clasificar |
+| **Projects** | No lo toquéis: de eso se encarga el automatismo que acabáis de encender |
+
+Ejemplo del formato exacto:
 
 <dl class="worked">
   <dt>Título</dt>
@@ -587,14 +624,16 @@ Con esos dos activados, el tablero deja de ser algo que hay que mantener a mano 
   <p>La tentación es escribir veinte issues hoy y no volver a mirarlas nunca. Pero veinte issues escritas el primer día están inventadas: describen una web que todavía no sabéis cómo va a ser. Seis es más o menos lo que cabe en dos semanas. Las siguientes las escribiréis cuando sepáis algo más que hoy.</p>
 </div>
 
-**4 · Ordenar.** En el tablero, dejad las seis en *Todo* y subid arriba las dos que haríais hoy. Ese orden es una decisión y os la voy a preguntar.
+Al pulsar **Create** cada issue recibe un **número**, y ese número no cambia nunca ni se reutiliza aunque la borréis. Es el que va a aparecer en el nombre de la rama, en la pull request que la cierre y en el historial del repositorio durante todo el curso. Apuntad los seis, que los vais a usar dentro de un rato.
+
+**6 · Ordenar.** Volved al tablero: las seis tienen que estar ahí solas, en *Todo*. Subid arriba las dos que haríais hoy. Ese orden es una decisión y os la voy a preguntar.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación del bloque A</p>
   <ul class="checklist">
-    <li>Seis issues abiertas, todas con criterio de aceptación.</li>
-    <li>Las seis aparecen solas en el tablero, en la columna <em>Todo</em>.</li>
-    <li>Los dos workflows están activos.</li>
+    <li>Seis issues abiertas, todas con criterio de aceptación y con su número apuntado.</li>
+    <li>Las seis aparecen solas en el tablero, en la columna <em>Todo</em>. Si habéis tenido que arrastrar alguna, el automatismo del paso 4 no está bien puesto.</li>
+    <li>Sabéis volver al tablero desde cero, sin buscarlo a ciegas.</li>
   </ul>
 </div>
 
