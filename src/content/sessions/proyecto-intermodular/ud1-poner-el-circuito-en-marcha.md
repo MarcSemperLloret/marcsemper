@@ -78,7 +78,7 @@ Se puede tener una web preciosa y suspender aquí. Se puede tener una presentaci
 
 #### El circuito
 
-Todo lo que hagáis de aquí a diciembre pasa por estos siete pasos, con comprobaciones automáticas y revisión antes de fusionar. Hoy se prepara el circuito; la semana que viene se recorre entero.
+Todo lo que hagáis de aquí a diciembre pasa por estos siete pasos. No se montan todos hoy: hoy se prepara el despliegue, la semana que viene se cierra la rama principal y se recorre el circuito entero, y en la sesión 3 se añade la comprobación automática, que es el único paso que hoy va a faltar.
 
 <figure class="diagram">
   <figcaption>El circuito, de la tarea a la URL</figcaption>
@@ -87,7 +87,7 @@ Todo lo que hagáis de aquí a diciembre pasa por estos siete pasos, con comprob
     <li><span class="flow-role">Rama</span>Una copia de trabajo donde se puede romper todo sin afectar a lo publicado.</li>
     <li><span class="flow-role">Commit</span>El cambio, con un mensaje que dice qué cambia.</li>
     <li><span class="flow-role">Pull request</span>La propuesta de meter ese cambio en la rama principal.</li>
-    <li><span class="flow-role">Comprobación</span>GitHub Actions construye y publica una vista previa de esa propuesta.</li>
+    <li><span class="flow-role">Comprobación</span>GitHub Actions ejecuta sobre la propuesta las validaciones que hayáis escrito, y dice si pasa o no. <em>Se añade en la sesión 3.</em></li>
     <li><span class="flow-role">Revisión</span>Otra persona la mira y aprueba o pide cambios.</li>
     <li><span class="flow-role">Despliegue</span>Al fusionar, la URL pública se actualiza sola.</li>
   </ol>
@@ -218,7 +218,7 @@ git push
   <p>Alguien va a querer cambiar algo del YAML ahora mismo. No lo toquéis: la plantilla publica la raíz del repositorio, que es justo donde está vuestro <code>index.html</code>. En la sesión 3 escribiréis un workflow vuestro desde cero y ahí se cambia todo lo que haga falta.</p>
 </div>
 
-**5 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a la pestaña **Actions** del repositorio: hay una ejecución con un punto amarillo. Entrad, abridla y ved los pasos en directo. Fijaos en que son dos trabajos encadenados: uno empaqueta vuestros ficheros y el otro los publica.
+**5 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a la pestaña **Actions** del repositorio: hay una ejecución con un punto amarillo. Entrad, abridla y ved los pasos en directo. Son cuatro, dentro de un único trabajo llamado `deploy`: coge vuestro repositorio, prepara Pages, empaqueta los ficheros y los publica.
 
 **6 · Abrir la URL.** Cuando esté en verde, volved a **Settings → Pages**. Arriba aparece un recuadro con **Your site is live at** y la dirección, del estilo `vuestrousuario.github.io/portfolio/`. Abridla. Ahí está vuestra página básica.
 
@@ -285,7 +285,7 @@ jobs:
           path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 ```
 
 <p class="term">Workflow</p>
@@ -609,7 +609,7 @@ Aplica el procedimiento al portfolio y también al repositorio de backend que ya
 
 <div class="rule">
   <p class="rule-label">Revisión y permisos del repositorio</p>
-  <p>El portfolio conserva la autoría acordada; los permisos de revisión se configuran según la política del grupo. Vuestra pareja puede revisar sin ningún acceso especial, porque el repositorio es público y cualquiera con una cuenta de GitHub puede entrar en una pull request, comentar sobre las líneas y dejar su revisión. Con Required approvals en 0, GitHub exige PR y checks, pero no bloquea por ausencia de aprobación: la revisión queda registrada, pero no es obligatoria para fusionar. Para que lo sea, configura al menos una aprobación de una persona con permiso de escritura. Conservad la política acordada para la autoría/equipo de Servidor.</p>
+  <p>El portfolio conserva la autoría acordada; los permisos de revisión se configuran según la política del grupo. Vuestra pareja puede revisar sin ningún acceso especial, porque el repositorio es público y cualquiera con una cuenta de GitHub puede entrar en una pull request, comentar sobre las líneas y dejar su revisión. Con Required approvals en 0, GitHub exige pull request, pero no bloquea por ausencia de aprobación: la revisión queda registrada, pero no es obligatoria para fusionar. Para que lo sea, configura al menos una aprobación de una persona con permiso de escritura. Conservad la política acordada para la autoría/equipo de Servidor.</p>
 </div>
 
 **1 · Crear la regla.** **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
@@ -644,7 +644,7 @@ Aplica el procedimiento al portfolio y también al repositorio de backend que ya
 
 <div class="rule">
   <p class="rule-label">Cero aprobaciones no significa que nadie revise</p>
-  <p>Con cero aprobaciones obligatorias podéis fusionar vosotros mismos, pero solo desde una pull request. Quien vigila que el trabajo sea correcto es la máquina; quien vigila que <em>haga lo que la issue pedía</em> es vuestra pareja, y esa revisión no la comprueba GitHub: la comprueba la nota. Cada proyecto se entrega con las revisiones que habéis dejado en el repositorio del otro, y son públicas y llevan fecha.</p>
+  <p>Con cero aprobaciones obligatorias podéis fusionar vosotros mismos, pero solo desde una pull request. A partir de la sesión 3, quien vigilará que el trabajo sea técnicamente correcto será una máquina; quien vigila que <em>haga lo que la issue pedía</em> es vuestra pareja, hoy y siempre, y esa revisión no la comprueba GitHub: la comprueba la nota. Cada proyecto se entrega con las revisiones que habéis dejado en el repositorio del otro, y son públicas y llevan fecha.</p>
 </div>
 
 **4 · Comprobar que os bloquea a vosotros.** Esto no es opcional: una protección que nadie ha probado no se sabe si está activa.
