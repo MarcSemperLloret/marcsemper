@@ -57,10 +57,9 @@ const t = isSpanish
       heroEyebrow: "Material docente",
       archived: "Curso archivado",
       aboutEyebrow: "Sobre la asignatura",
-      aboutTitle: "Contenido de la asignatura.",
       updated: (date: string) => `Material actualizado el ${date}.`,
-      sectionsNav: "Bloques de la asignatura",
-      onThisPage: "En esta página",
+      routeEyebrow: "Recorrido",
+      routeTitle: "El curso, bloque a bloque.",
       planEyebrow: "Al terminar el módulo",
       planTitle: "Lo que serás capaz de hacer.",
       milestones: "Mapa global del proyecto",
@@ -85,10 +84,9 @@ const t = isSpanish
       heroEyebrow: "Course material",
       archived: "Archived course",
       aboutEyebrow: "About the course",
-      aboutTitle: "What this course covers.",
       updated: (date: string) => `Material last updated on ${date}.`,
-      sectionsNav: "Course sections",
-      onThisPage: "On this page",
+      routeEyebrow: "Route",
+      routeTitle: "The course, block by block.",
       planEyebrow: "By the end of the module",
       planTitle: "What you will be able to do.",
       milestones: "Whole-project roadmap",
@@ -174,52 +172,15 @@ const resourceMeta = (resource: TeachingResource) =>
     </div>
   </header>
 
-  <section class="page-section">
-    <div class="container course-overview">
-      <div>
-        <p class="eyebrow">{t.aboutEyebrow}</p>
-        <h2 class="section-title">{t.aboutTitle}</h2>
-        {course.updatedAt && (
-          <p class="updated">{t.updated(formatTeachingDate(course.updatedAt, lang))}</p>
-        )}
-      </div>
-      <div class="prose">
-        <p>{text.overview}</p>
-        {text.topics.length > 0 && (
-          <ul class="topic-list">
-            {text.topics.map((topic) => <li>{topic}</li>)}
-          </ul>
-        )}
-        {course.sections.length > 1 && (
-          <nav class="section-nav" aria-label={t.sectionsNav}>
-            <p>{t.onThisPage}</p>
-            <ul>
-              {course.sections.map((section) => (
-                <li>
-                  <a href={`#${section.id}`}>
-                    {section.number ? `${section.number} · ` : ""}
-                    {sectionText(section, lang).title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
-      </div>
-    </div>
-  </section>
-
-  {(text.outcomes.length > 0 || route.length > 1) && (
+  {/* The route opens the page and doubles as its table of contents: each step
+      links to its block further down, so the timing and the navigation are one
+      list instead of two. */}
+  {route.length > 1 && (
     <section class="course-plan">
       <div class="container">
-        <p class="eyebrow">{t.planEyebrow}</p>
-        <h2 class="section-title">{t.planTitle}</h2>
-        {text.outcomes.length > 0 && (
-          <ul class="outcome-list">
-            {text.outcomes.map((outcome) => <li>{outcome}</li>)}
-          </ul>
-        )}
-        {route.length > 1 && (
+        <p class="eyebrow">{t.routeEyebrow}</p>
+        <h2 class="section-title">{t.routeTitle}</h2>
+        <nav aria-label={t.routeEyebrow}>
           <ol class="course-route">
             {route.map((step, index) => (
               <Fragment>
@@ -237,7 +198,7 @@ const resourceMeta = (resource: TeachingResource) =>
               </Fragment>
             ))}
           </ol>
-        )}
+        </nav>
         {text.milestones.length > 0 && (
           <div class="course-milestones">
             <p>{t.milestones}</p>
@@ -249,6 +210,39 @@ const resourceMeta = (resource: TeachingResource) =>
       </div>
     </section>
   )}
+
+  {text.outcomes.length > 0 && (
+    <section class="course-outcomes">
+      <div class="container">
+        <p class="eyebrow">{t.planEyebrow}</p>
+        <h2 class="section-title">{t.planTitle}</h2>
+        <ul class="outcome-list">
+          {text.outcomes.map((outcome) => <li>{outcome}</li>)}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {/* The description of the course is context, not navigation. It stays on the
+      page, folded, so it no longer stands between the reader and the route. */}
+  <section class="course-about">
+    <div class="container">
+      <details>
+        <summary>{t.aboutEyebrow}</summary>
+        <div class="about-body">
+          <p>{text.overview}</p>
+          {text.topics.length > 0 && (
+            <ul class="topic-list">
+              {text.topics.map((topic) => <li>{topic}</li>)}
+            </ul>
+          )}
+          {course.updatedAt && (
+            <p class="updated">{t.updated(formatTeachingDate(course.updatedAt, lang))}</p>
+          )}
+        </div>
+      </details>
+    </div>
+  </section>
 
   {announcements.length > 0 && (
     <section class="announcements">
@@ -526,7 +520,11 @@ const resourceMeta = (resource: TeachingResource) =>
   }
 
   .course-plan {
-    padding: 70px 0 10px;
+    padding: 74px 0 0;
+  }
+
+  .course-outcomes {
+    padding: 64px 0 0;
   }
 
   .outcome-list {
@@ -696,10 +694,51 @@ const resourceMeta = (resource: TeachingResource) =>
     }
   }
 
-  .course-overview {
-    display: grid;
-    grid-template-columns: 1fr 0.75fr;
-    gap: 90px;
+  .course-about {
+    padding: 44px 0 78px;
+  }
+
+  .course-about details {
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .course-about summary {
+    padding: 17px 0;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 0.67rem;
+    font-weight: 850;
+    letter-spacing: 0.14em;
+    list-style: none;
+    text-transform: uppercase;
+  }
+
+  .course-about summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .course-about summary::after {
+    margin-left: 9px;
+    content: "+";
+  }
+
+  .course-about details[open] summary::after {
+    content: "–";
+  }
+
+  .course-about summary:hover {
+    color: var(--blue-dark);
+  }
+
+  .about-body {
+    max-width: 720px;
+    padding-bottom: 28px;
+  }
+
+  .about-body > p:first-child {
+    margin-top: 0;
+    color: var(--ink-soft);
   }
 
   .updated {
@@ -725,40 +764,6 @@ const resourceMeta = (resource: TeachingResource) =>
     color: var(--ink);
     font-size: 0.72rem;
     font-weight: 750;
-  }
-
-  .section-nav {
-    margin-top: 34px;
-    padding-top: 22px;
-    border-top: 1px solid var(--line);
-  }
-
-  .section-nav p {
-    margin: 0 0 12px;
-    color: var(--ink-soft);
-    font-size: 0.63rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .section-nav ul {
-    display: grid;
-    gap: 7px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .section-nav a {
-    color: var(--blue-dark);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 700;
-  }
-
-  .section-nav a:hover {
-    text-decoration: underline;
   }
 
   .announcements {
@@ -880,12 +885,19 @@ const resourceMeta = (resource: TeachingResource) =>
     gap: 40px;
     padding: 40px 0;
     border-bottom: 1px solid var(--line-strong);
-    scroll-margin-top: 90px;
+    scroll-margin-top: 124px;
   }
 
+  /* On a page this long the term is the reader's only bearing, so it rides
+     under the site header until the next one pushes it out. */
   .section-phase {
-    padding: 52px 0 16px;
+    position: sticky;
+    top: 78px;
+    z-index: 2;
+    margin-top: 52px;
+    padding: 13px 0;
     border-bottom: 1px solid var(--line-strong);
+    background: var(--paper-deep);
     color: var(--blue-dark);
     font-size: 0.7rem;
     font-weight: 850;
@@ -963,7 +975,6 @@ const resourceMeta = (resource: TeachingResource) =>
   }
 
   @media (max-width: 900px) {
-    .course-overview,
     .footer-grid {
       grid-template-columns: 1fr;
       gap: 50px;
@@ -971,6 +982,10 @@ const resourceMeta = (resource: TeachingResource) =>
   }
 
   @media (max-width: 640px) {
+    .section-phase {
+      top: 68px;
+    }
+
     .section-list article,
     .announcements li {
       grid-template-columns: 1fr;
