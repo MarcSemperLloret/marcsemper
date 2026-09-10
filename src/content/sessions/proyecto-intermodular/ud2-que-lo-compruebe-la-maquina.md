@@ -17,7 +17,7 @@ outcomes:
   - "Leer el registro de una ejecución fallida y localizar la línea que la provocó."
   - "Corregir un fallo de accesibilidad real y demostrar que el pipeline lo confirma."
 requirements:
-  - "El repositorio de la UD1, con la web publicada en Azure y main protegida."
+  - "El repositorio de la UD1, con la web publicada y main protegida."
   - "Vuestra pareja de revisión asignada."
 priorKnowledge:
   - "El circuito de la UD1: issue, rama, pull request, revisión y fusión."
@@ -55,11 +55,11 @@ priorKnowledge:
 
 <p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-#### El check que tenéis no comprueba nada
+#### Ahora mismo nadie vigila la puerta
 
-El workflow que escribió Azure hace una cosa: coge los ficheros y los sube. Si el HTML tiene etiquetas sin cerrar, si falta el texto alternativo de todas las imágenes, si tres enlaces del menú van a páginas que no existen, ese workflow sale **en verde igualmente**, porque la subida ha funcionado.
+Lo único automático que tenéis es el despliegue, y le pasan dos cosas. La primera: se ejecuta **después** de fusionar, cuando el cambio ya está en `main`. Aunque quisiera avisaros, llegaría tarde. La segunda es peor. Coge los ficheros, los sube, y ahí se acaba lo que sabe hacer. Si el HTML tiene etiquetas sin cerrar, si ninguna imagen tiene texto alternativo, si tres enlaces del menú van a páginas que no existen, ese workflow sale **en verde igualmente**, porque la subida ha funcionado.
 
-Es un check de despliegue, no de calidad. Y esa distinción es la que os va a acompañar el resto del ciclo:
+Son dos cosas distintas y conviene separarlas ya, porque la distinción os va a acompañar el resto del ciclo:
 
 <div class="compare-pair">
   <div>
@@ -72,7 +72,7 @@ Es un check de despliegue, no de calidad. Y esa distinción es la que os va a ac
   </div>
 </div>
 
-Hoy escribís la segunda, y a partir de hoy la escribís vosotros: nadie os la va a generar.
+Hoy escribís la segunda. Y la escribís a mano, porque ésta no la genera ningún portal.
 
 #### Qué es un runner, y por qué eso explica casi todo
 
@@ -87,7 +87,7 @@ De ahí salen las dos reglas que evitan el 90 % de los fallos de esta sesión:
 | El runner no tiene vuestro código | El primer paso siempre es descargarlo, y eso es lo que hace <code>actions/checkout</code> |
 | El runner no tiene vuestras herramientas | Todo lo que uséis se instala dentro del workflow. Que funcione en vuestro portátil no significa nada |
 
-Y de ahí sale también la propiedad que hace útil todo esto: como la máquina empieza limpia, **si pasa allí, es reproducible en ese entorno documentado; otros entornos deben comprobarse**. Se acabó el «en mi ordenador funciona».
+Y de ahí sale lo que hace útil todo esto. Como la máquina empieza limpia, **lo que pasa allí le va a pasar a cualquiera que lo ejecute igual**. En vuestro portátil no: ahí tenéis instaladas cosas que ni sabéis que tenéis. De eso iba siempre el «en mi ordenador funciona», y hoy se termina.
 
 #### Anatomía de un workflow
 
@@ -106,7 +106,7 @@ Cuatro palabras y ya sabéis leer cualquiera:
 
 <div class="rule">
   <p class="rule-label">Lo que se delega a una máquina y lo que no</p>
-  <p>A la máquina se le da lo objetivo, lo repetible y lo aburrido: si el HTML es válido, si un enlace responde, si el formato es el acordado, si el contraste llega al mínimo. A la persona se le deja lo que exige criterio: si la sección se entiende, si el texto dice algo, si el cambio hace lo que pedía la issue. Confundir las dos cosas produce, o bien equipos que revisan comas a mano, o bien equipos que creen que un check verde significa que está bien.</p>
+  <p>A la máquina se le da lo objetivo, lo repetible y lo aburrido: si el HTML es válido, si un enlace responde, si el formato es el acordado, si el contraste llega al mínimo. A la persona se le deja lo que hay que juzgar: si la sección se entiende, si el texto dice algo, si el cambio hace lo que pedía la issue. Si se mezclan las dos cosas pasa una de dos: o acabáis revisando comas a mano, o acabáis creyendo que un check en verde quiere decir que está bien.</p>
 </div>
 
 ---
@@ -117,9 +117,9 @@ Cuatro palabras y ya sabéis leer cualquiera:
 
 #### Bloque A · Escribir el workflow
 
-Antes de editar, prepara las herramientas de esta práctica. **Node.js** permite ejecutar herramientas JavaScript fuera del navegador; **npm** gestiona sus paquetes y **npx** ejecuta una herramienta del paquete indicado. Aquí se usan para revisar el HTML, no para implementar el backend. Comprueba `node --version` y `npm --version` en la terminal. Usa Node 22 como el workflow del ejemplo; si faltan, instala la versión preparada para el aula y abre una terminal nueva. En PowerShell, si la política impide ejecutar npm.ps1 o npx.ps1, utiliza `npm.cmd` y `npx.cmd`.
+Antes de abrir el editor, comprobad que tenéis las herramientas. **Node.js** ejecuta programas de JavaScript fuera del navegador, **npm** instala sus paquetes y **npx** lanza uno sin dejarlo instalado para siempre. Aquí solo nos sirven para revisar el HTML; con el backend no tienen nada que ver. Abrid una terminal y probad `node --version` y `npm --version`. Queremos Node 22, la misma versión que va a usar el workflow. Si no los tenéis, instalad la versión del aula y abrid una terminal nueva, porque la que ya tenéis abierta no se va a enterar. Y si PowerShell se niega a ejecutar `npm.ps1`, llamadlos con `npm.cmd` y `npx.cmd`.
 
-Trabaja en la raíz del repositorio del portfolio: allí crearás .htmlvalidate.json y .github/workflows/ci.yml. Los bloques de jobs de las sesiones siguientes se añaden bajo jobs en ese mismo archivo, no como workflows completos separados. Conserva el workflow de despliegue generado por Azure.
+Todo esto va en la raíz del repositorio del portfolio: ahí van a vivir `.htmlvalidate.json` y `.github/workflows/ci.yml`. En las sesiones siguientes iréis añadiendo más jobs dentro de ese mismo `ci.yml`, debajo de `jobs`, y no en ficheros nuevos. Y no borréis el workflow de despliegue de la sesión 1: ése publica y este comprueba, y hacen falta los dos.
 
 <p class="stage stage--solo">Individual, y por el circuito de siempre</p>
 
@@ -141,7 +141,7 @@ git switch -c 7-ci-html
 
 Esa línea elige el conjunto de reglas. Sin ella, la herramienta no sabe con qué criterio juzgar vuestro HTML.
 
-**3 · El workflow.** Cread `.github/workflows/ci.yml`. Junto al de Azure, no en su lugar: son dos cosas distintas y por eso son dos ficheros distintos.
+**3 · El workflow.** Cread `.github/workflows/ci.yml`. Al lado del de despliegue, no encima: son dos cosas distintas y por eso son dos ficheros distintos.
 
 ```yaml
 name: CI
@@ -187,7 +187,7 @@ git commit -m "Anadir un workflow de CI que valida el HTML"
 git push -u origin 7-ci-html
 ```
 
-Abrid la pull request con `Closes #7`. Fijaos en algo que tiene gracia: **la propia pull request que añade el CI ya se comprueba con él**. Abajo aparecen ahora dos checks, el de Azure y el vuestro.
+Abrid la pull request con `Closes #7`. Fijaos en algo que tiene gracia: **la propia pull request que añade el CI ya se comprueba con él**. Y fijaos en otra cosa: abajo aparece un check, uno solo, y es el vuestro. El del despliegue no está porque no se ejecuta sobre pull requests. Esa casilla vacía de la semana pasada la acabáis de llenar vosotros.
 
 <details class="aside aside--help">
   <summary>Si el check aparece en rojo a la primera</summary>
@@ -221,7 +221,7 @@ Un check que informa pero no impide nada acaba ignorado en noviembre. Vamos a ha
 
 1. Fusionad primero la pull request del bloque A, para que el check exista en `main`.
 2. **Settings → Rules → Rulesets → main protegida → Edit**.
-3. En **Require status checks to pass**, botón **Add checks**, y añadid **HTML válido** junto al de Azure que ya estaba.
+3. En **Require status checks to pass** —la regla que la semana pasada tuvisteis que dejar sin marcar porque la lista estaba vacía— pulsad **Add checks** y añadid **HTML válido**. Ahora sí está.
 4. Guardad.
 
 Comprobadlo: abrid una rama nueva con un error de HTML deliberado, abrid la pull request y verificad que el botón de fusionar está bloqueado. Cerrad esa pull request sin fusionar.
@@ -636,7 +636,7 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
   <ul class="checklist">
     <li>Portfolio con cabecera, presentación, proyectos y contacto, publicado y con estilos propios.</li>
     <li>Un <code>ci.yml</code> escrito por vosotros con cuatro jobs: HTML, enlaces, formato y calidad.</li>
-    <li>Los cinco checks —los cuatro vuestros y el de Azure— obligatorios en el ruleset.</li>
+    <li>Los cuatro checks vuestros, obligatorios en el ruleset.</li>
     <li>Accesibilidad por encima de 90, con el umbral del fichero puesto en lo que habéis conseguido.</li>
     <li>Todo el contenido de estas tres semanas entrado por pull request, ninguna fusionada sin revisión de vuestra pareja.</li>
   </ul>
@@ -678,7 +678,7 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Antes de la sesión 6</p>
   <ul class="checklist">
-    <li>Los cinco checks en verde en <code>main</code> y el portfolio publicado con todo lo de esta unidad.</li>
+    <li>Los cuatro checks en verde en <code>main</code> y el portfolio publicado con todo lo de esta unidad.</li>
     <li>Cuatro revisiones vuestras en el repositorio de vuestra pareja a lo largo de estas tres semanas.</li>
     <li>Traéis anotado qué le enseñaríais a alguien que abre vuestro repositorio sin conoceros: en la sesión 6 se escribe el README y se publica la primera versión con nombre.</li>
   </ul>
@@ -691,7 +691,7 @@ Cada arreglo, su commit. Y cuando el informe deje de quejarse, volved a pasar Li
 <figure class="diagram">
   <figcaption>Las puertas del portfolio, y quién las vigila</figcaption>
   <ol class="flow">
-    <li><span class="flow-role">Azure</span>¿Ha subido? Es un check de despliegue, no dice nada de la calidad.</li>
+    <li><span class="flow-role">Despliegue</span>¿Ha subido? Corre después de fusionar y no dice nada de la calidad, así que no es una puerta: es un acuse de recibo.</li>
     <li><span class="flow-role">HTML válido</span>¿El documento está bien construido? Máquina.</li>
     <li><span class="flow-role">Enlaces vivos</span>¿Todos los enlaces llevan a algún sitio? Máquina.</li>
     <li><span class="flow-role">Formato</span>¿El código sigue el formato acordado? Máquina.</li>

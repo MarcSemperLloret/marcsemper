@@ -25,7 +25,7 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">La persistencia llega dentro del trimestre</p>
-  <p>Se despliega el mismo CRUD que elegisteis y estáis construyendo en Servidor. La primera publicación puede guardar datos en memoria: esa limitación se documenta. PostgreSQL llega en la UD5 de Servidor, dentro del <strong>primer trimestre</strong>, y desde entonces se publica la versión persistente por este mismo workflow. No se crea otra API para Intermodular.</p>
+  <p>Lo que vais a desplegar es el mismo CRUD que elegisteis y estáis construyendo en Servidor. La primera publicación puede guardar los datos en memoria, y entonces se reinician cada vez: eso no es un fallo, pero se escribe en el README para que quien lo abra lo sepa. PostgreSQL llega en la UD5 de Servidor, todavía dentro del <strong>primer trimestre</strong>, y a partir de ahí publicáis la versión persistente por este mismo workflow. Aquí no se crea una segunda API.</p>
 </div>
 
 ### Los hitos compartidos del primer trimestre
@@ -37,11 +37,11 @@ priorKnowledge:
 | CRUD con PostgreSQL y tests de repositorio, en la UD5 | Configurar la base de datos del entorno desplegado, sus variables y el entorno de pruebas del CI; publicar la misma API persistente |
 | Versión del primer trimestre revisada y defendida, en la UD6 | Identificar el mismo commit desplegado y conservar las evidencias del workflow, CI, revisiones y puesta en producción |
 
-Los hitos se coordinan por versión disponible: no se exige una funcionalidad antes de trabajarla en Servidor. Las seis sesiones de esta unidad mantienen sus 18 horas. El circuito que queda montado se sigue utilizando con cada avance del backend hasta el cierre del trimestre. Si al terminar la sesión 11 todavía falta parte de la UD5 de Servidor, se publica la versión disponible y sus siguientes mejoras recorren el mismo circuito; la entrega del trimestre sí incluye persistencia en producción.
+Aquí nunca se os va a pedir algo que todavía no hayáis dado en Servidor: cada sesión trabaja con la versión que exista ese día. El circuito que montáis en estas seis sesiones se queda puesto y lo vais a usar con cada avance del backend hasta cerrar el trimestre. Si al llegar a la sesión 11 aún falta parte de la UD5 de Servidor, publicáis lo que haya y las mejoras siguientes entran por el mismo camino. Eso sí: la entrega del trimestre lleva persistencia en producción, así que ese trozo hay que cerrarlo.
 
 ## Sesión 7 · El CI del repositorio de Servidor
 
-**Antes de empezar.** La API de Servidor ya tiene DTO, validaciones y respuestas de error. Hoy configurarás su compilación y pruebas automáticas utilizando el Maven Wrapper del proyecto.
+**Antes de empezar.** La API de Servidor ya tiene DTO, validaciones y respuestas de error. Hoy le montas la compilación y las pruebas automáticas, con el Maven Wrapper que ya trae el proyecto.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -271,12 +271,12 @@ Revisar y crear. Cuando termine, **Ir al recurso** y abrid la URL: veréis la p�
 1. En el recurso, menú lateral → **Centro de implementación** (*Deployment Center*).
 2. Origen: **GitHub**. Autorizad si lo pide.
 3. Organización, repositorio `api-loquesea`, rama `main`.
-4. Elige la identidad federada del entorno de prácticas y comprueba que el workflow declara los permisos y la conexión esperados; no habilites autenticación básica para ocultar un fallo de configuración.
+4. Elegid la identidad federada del entorno de prácticas y comprobad que el workflow declara los permisos y la conexión que esperáis. Si algo falla, no lo tapéis activando la autenticación básica: eso no arregla la configuración, la esconde.
 5. **Guardar**.
 
-<p>Si el centro de implementación intenta escribir en main protegida, prepara el workflow en una rama y revísalo por PR. No desactives las reglas para generar el archivo. Comprueba la identidad de despliegue configurada y guarda las credenciales en Secrets o en la conexión federada, nunca en YAML.</p>
+Puede que el centro de implementación intente escribir directamente en `main` y se dé de bruces con la protección que pusisteis en la UD1. Es buena señal. Preparad el workflow en una rama y que entre por pull request como todo lo demás; lo que no se hace es desactivar las reglas para que le quepa el fichero. Y las credenciales, en Secrets o en la conexión federada. Nunca escritas en el YAML.
 
-Igual que hizo Static Web Apps en la sesión 1, Azure escribe un workflow en vuestro repositorio y guarda las credenciales como secreto. Traedlo y leedlo:
+Fijaos en la diferencia con la sesión 1. Allí la plantilla de GitHub Pages no necesitaba ninguna credencial, porque quien desplegaba y quien alojaba eran la misma casa. Aquí no: Azure es otra empresa, así que hace falta demostrarle quién sois. Ese es el token del que os hablé entonces. Traeos el fichero y leedlo:
 
 ```bash
 git switch main
@@ -298,7 +298,7 @@ Buscad en el fichero nuevo las dos diferencias con el del portfolio: **hay un pa
 
 <div class="rule">
   <p class="rule-label">Ahora tenéis dos workflows, y hacen cosas distintas</p>
-  <p>El vuestro, <code>ci.yml</code>, se ejecuta en cada pull request y su trabajo es <strong>impedir</strong> que entre algo roto. El de Azure se ejecuta cuando algo ya ha entrado en <code>main</code> y su trabajo es <strong>publicar</strong>. Si algún día veís dos ejecuciones por cada cambio, no es un error de configuración: es el circuito funcionando, exactamente igual que en el portfolio.</p>
+  <p>El vuestro, <code>ci.yml</code>, se ejecuta en cada pull request y está para <strong>impedir</strong> que entre algo roto. El de Azure se ejecuta cuando algo ya ha entrado en <code>main</code> y está para <strong>publicar</strong>. Cuando veáis dos ejecuciones por cada cambio no penséis que habéis configurado algo mal: es el circuito funcionando, igual que en el portfolio.</p>
 </div>
 
 #### Bloque D · Que arranque, y si no, por qué

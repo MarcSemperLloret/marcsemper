@@ -26,7 +26,7 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Por qué se defiende el proceso y no el producto</p>
-  <p>Un producto se puede copiar, encargar o improvisar el último fin de semana. El rastro de catorce semanas se contrasta con issues, revisiones y ejecuciones: las fechas de Git por sí solas no demuestran el proceso ni la autoría. Por eso la defensa de hoy va sobre tres cosas que solo existen si de verdad trabajasteis así.</p>
+  <p>Un producto se puede copiar, se puede encargar y se puede improvisar en un fin de semana. Un rastro de catorce semanas, no. Y cuando digo rastro no me refiero a las fechas de los commits, que se reescriben: me refiero a las issues, a las revisiones que dejasteis en el repositorio de otra persona y a las ejecuciones de Actions, que no las toca nadie. La defensa de hoy va sobre tres cosas que solo existen si de verdad trabajasteis así.</p>
 </div>
 
 ## Sesión 14 · La defensa del proceso
@@ -108,7 +108,7 @@ Las preguntas salen del trimestre, y las tenéis todas desde hoy:
 
 <div class="rule">
   <p class="rule-label">La trampa de hoy</p>
-  <p>Prepararse la demostración del producto y no el proceso. Vais a poder enseñar vuestro portfolio y vuestro CRUD funcionando, y va a estar bien, pero ese recorrido se comparte con Servidor y aporta contexto a los criterios de Intermodular. Lo que se puntúa es lo que hay detrás, y para eso hay que haber mirado el propio repositorio antes de entrar.</p>
+  <p>Que os preparéis la demostración del producto y no la del proceso. Vais a enseñar vuestro portfolio y vuestro CRUD funcionando, y estará muy bien, pero esa parte la vemos también en Servidor y allí es donde puntúa. Aquí puntúa lo que hay detrás. Así que abrid vuestro propio repositorio antes de entrar y miradlo como lo miraría alguien de fuera; la mayoría de los sustos de esta sesión se los lleva quien no lo ha hecho.</p>
 </div>
 
 ---
@@ -142,7 +142,7 @@ Antes de defender nada, mirad lo que hay como si fuera de otra persona. Es la mi
 
 <div class="rule">
   <p class="rule-label">Decirlo antes vale más que esconderlo</p>
-  <p>Si hay una semana en blanco, la hay, y yo la voy a ver. Un «esa semana no trabajé y se nota, lo recuperé en la siguiente» cuesta mucho menos que un silencio o una excusa. Lo que se evalúa incluye si sabéis mirar vuestro propio trabajo con criterio.</p>
+  <p>Si hay una semana en blanco, la hay, y yo la voy a ver. Decir «esa semana no trabajé y se nota, lo recuperé en la siguiente» cuesta muchísimo menos que un silencio o una excusa. Saber mirar vuestro propio trabajo y decir qué falla también se puntúa aquí.</p>
 </div>
 
 #### Bloque B · Elegir los tres artefactos
@@ -224,7 +224,7 @@ La defensa se coordina con Servidor 27–28 sobre el mismo commit. Explica aquí
 
 <div class="rule">
   <p class="rule-label">Qué pasa en enero</p>
-  <p>Continúa el mismo producto con la mejora priorizada en la sesión 13. La persistencia ya está publicada; cliente, permisos e integraciones se incorporan después de su explicación en Servidor. Cada sesión de Intermodular mantiene contexto, pasos y comprobaciones, y reutiliza el circuito del primer trimestre.</p>
+  <p>Seguís con el mismo producto y con la mejora que priorizasteis en la sesión 13. La persistencia ya estará publicada, así que en enero se trabaja el cliente, los permisos y las integraciones, siempre después de haberlos dado en Servidor. Y no montaréis nada nuevo: el circuito de este trimestre es el que vais a seguir usando.</p>
 </div>
 
 ## Lo que debes recordar

@@ -16,7 +16,7 @@ outcomes:
   - "Auditar un repositorio ajeno contra la definición de terminado y comunicar los hallazgos por issues."
   - "Reconocer en vuestro propio rastro lo que se va a mirar en la defensa."
 requirements:
-  - "El portfolio de la UD2 publicado, con los cinco checks en verde."
+  - "El portfolio de la UD2 publicado, con los cuatro checks en verde."
 priorKnowledge:
   - "El circuito completo y el pipeline propio de las unidades anteriores."
 ---
@@ -25,12 +25,12 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Lo que queda por hacer no es código</p>
-  <p>Vuestro portfolio funciona, está publicado y tiene cinco puertas vigilándolo. Le faltan las dos cosas que separan un proyecto de clase de un proyecto que se puede enseñar: una puerta de entrada para quien llega sin contexto, y un punto en la historia al que se pueda señalar y decir «esto es la versión 1».</p>
+  <p>Vuestro portfolio funciona, está publicado y tiene cuatro puertas vigilándolo. Le faltan dos cosas, y ninguna se programa: una entrada para quien llega sin saber nada de vosotros, y un punto en la historia al que poder señalar y decir «esto es la versión 1».</p>
 </div>
 
 ## Sesión 6 · Cerrar el primer proyecto
 
-**Antes de empezar.** El portfolio ya pasa las comprobaciones del pipeline. Hoy cerrarás una versión identificada y revisarás si otra persona puede entenderla y utilizarla.
+**Antes de empezar.** El portfolio ya pasa las comprobaciones del pipeline. Hoy cierras una versión con nombre y compruebas si alguien de fuera es capaz de entenderla y usarla.
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
@@ -49,7 +49,7 @@ priorKnowledge:
 
 #### El README es la portada, no la documentación
 
-Un repositorio público recibe dos tipos de visita: quien va a usar el proyecto y quien va a decidir si le interesáis vosotros. Los dos leen lo mismo, los dos dedican menos de un minuto, y los dos se van si en ese minuto no entienden qué están mirando.
+A un repositorio público llegan dos clases de visita: quien va a usar el proyecto y quien está decidiendo si le interesáis vosotros. Leen lo mismo, le dedican menos de un minuto y se van si en ese minuto no entienden qué están mirando. Un minuto es de verdad todo lo que hay.
 
 <div class="compare-pair">
   <div>
@@ -142,7 +142,7 @@ Hoy vais a auditar ese rastro en el repositorio de otra persona, que es la mejor
 
 <details class="aside aside--help">
   <summary>Cómo se escribe el apartado del despliegue sin sonar a manual interno</summary>
-  <p>Mal: «Se ejecuta el workflow de Azure». Bien: «Cada cambio que entra en <code>main</code> se publica automáticamente en Azure Static Web Apps mediante GitHub Actions; las pull requests se publican antes en un entorno temporal para poder revisarlas.» Dos frases, y el lector ya sabe cómo funciona vuestro despliegue sin abrir un solo fichero.</p>
+  <p>Mal: «Se ejecuta el workflow de despliegue». No dice nada. Bien: «Cada cambio que entra en <code>main</code> se publica solo en GitHub Pages con GitHub Actions. Antes de entrar, cada pull request pasa cuatro comprobaciones automáticas y la revisión de otra persona.» Dos frases, y quien lee ya sabe cómo funciona vuestro despliegue sin abrir un solo fichero.</p>
 </details>
 
 **4 · Insignias, si queréis.** Una línea bajo el título que muestra en vivo si el CI está en verde:
@@ -191,7 +191,7 @@ La `-a` crea una etiqueta con autor, fecha y mensaje, no solo un puntero. Y el `
   </div>
   <div>
     <p class="compare-label">Notas escritas</p>
-    <p class="compare-body">«Primera versión pública. Portfolio con presentación, proyectos y contacto, desplegado automáticamente en Azure. Cada cambio pasa por cuatro comprobaciones: HTML válido, enlaces vivos, formato y un mínimo de accesibilidad de 90.»</p>
+    <p class="compare-body">«Primera versión pública. Portfolio con presentación, proyectos y contacto, publicado solo en cada cambio. Todo lo que entra pasa cuatro comprobaciones: HTML válido, enlaces vivos, formato y un mínimo de accesibilidad de 90.»</p>
   </div>
 </div>
 
