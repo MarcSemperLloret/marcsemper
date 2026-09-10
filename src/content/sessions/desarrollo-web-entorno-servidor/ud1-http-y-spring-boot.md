@@ -132,7 +132,7 @@ Al terminar tendrás el tema de tu CRUD, una aplicación que responde a tres rut
 
 **Comprueba:** puedes explicar quién lo usará, qué guardará y qué debe impedir. La matriz de la introducción marca la meta del trimestre; hoy no tienes que saber diseñar sus tablas ni interpretar términos como JPA o transacción.
 
-#### Paso 2 · Comprobar las herramientas del aula · 10 min
+#### Paso 2 · Comprobar las herramientas y preparar el editor · 20 min
 
 1. Abre el IDE preparado para Java en clase. La **terminal** es su panel para escribir comandos; no es la consola del navegador. Abre ese panel desde el menú de terminal del IDE.
 2. Escribe los siguientes comandos, uno cada vez, y pulsa Intro después de cada uno:
@@ -147,6 +147,26 @@ git --version
 4. Crea una carpeta de trabajo, por ejemplo `Documentos/DAW`. Abre GitHub en el navegador e inicia sesión con tu cuenta; todavía no crees otro repositorio si ya tienes uno para este proyecto en Intermodular.
 
 **Comprueba:** funcionan los tres comandos y sabes dónde guardarás el proyecto. No necesitas ejecutar `mvn`: utilizaremos el wrapper que se descargará con él.
+
+##### Si trabajas con Visual Studio Code
+
+Visual Studio Code recién instalado **no sabe nada de Java**. Abre los archivos y los colorea, pero no compila, no te avisa de errores y no tiene ningún botón para arrancar la aplicación. Todo eso lo aportan dos extensiones, y sin ellas los pasos siguientes no te van a funcionar. En los equipos del aula ya están puestas: compruébalo igualmente, que cuesta un minuto. En tu portátil tendrás que instalarlas.
+
+1. Pulsa **Ctrl+Shift+X** (en macOS, Cmd+Shift+X) o el icono de las piezas de puzle en la barra lateral.
+2. Busca **Extension Pack for Java**, de Microsoft, y pulsa **Install**. No es una extensión sino seis: el lenguaje, el depurador, las pruebas, Maven, el explorador de proyectos y las sugerencias de código.
+3. Busca **Spring Boot Extension Pack** y pulsa **Install**. Añade el autocompletado de `application.properties` y el panel desde el que se arrancan las aplicaciones Spring.
+4. Si aparece un aviso pidiendo recargar la ventana, recárgala.
+5. Comprueba que el editor encuentra tu Java. Pulsa **Ctrl+Shift+P**, escribe `Java: Configure Java Runtime` y ábrelo. Se abre una pestaña con las versiones detectadas: tiene que aparecer **21**. Que `java -version` funcione en la terminal no significa que el editor lo use, porque son dos cosas distintas y se configuran por separado.
+
+**Comprueba:** en el explorador de archivos, abajo del todo, ha aparecido una sección nueva llamada **JAVA PROJECTS**. Si no está, las extensiones no han terminado de instalarse; espera y vuelve a mirar.
+
+<details class="aside aside--help">
+  <summary>Lo que te vas a encontrar y qué significa</summary>
+  <p><strong>Abajo a la derecha pone «Java: Lightweight Mode» o sale un rayo.</strong> Es un modo reducido en el que Visual Studio Code lee el código pero no lo compila. Pulsa encima y elige <em>Switch to Standard</em>. Hasta que no esté en modo estándar no vas a tener ni errores marcados ni botón de arrancar.</p>
+  <p><strong>Los <code>import org.springframework...</code> salen subrayados en rojo.</strong> Casi siempre es que todavía está descargando las bibliotecas; abajo verás una barra de progreso. Espera a que termine. Si acaba y siguen en rojo, Ctrl+Shift+P → <code>Java: Clean Java Language Server Workspace</code> y acepta reiniciar.</p>
+  <p><strong>Dice «The JAVA_HOME environment variable is not defined correctly».</strong> El editor no encuentra el JDK. Vuelve al punto 5 de arriba y mira qué versiones detecta.</p>
+  <p><strong>Estoy en IntelliJ.</strong> Entonces sáltate este apartado entero: IntelliJ trae el soporte de Java y de Maven de serie. Solo tendrás que confirmar el JDK 21 al abrir el proyecto.</p>
+</details>
 
 #### Paso 3 · Generar la estructura inicial · 15 min
 
@@ -172,7 +192,12 @@ Usamos `gestor` como nombre técnico para que las rutas de archivos de estos pri
 3. **Extrae** el ZIP del curso en la carpeta de trabajo. No abras el código dentro del ZIP.
 4. En el IDE elige **Abrir carpeta/proyecto** y selecciona la carpeta que contiene `pom.xml`, no la carpeta `src`. Si pregunta cómo importarlo, elige Maven. Espera a que termine la descarga de dependencias.
 
-**Comprueba:** ves `pom.xml`, `src`, `mvnw` y `mvnw.cmd`. Si el IDE muestra otra carpeta `gestor` dentro, entra en ella: la raíz del proyecto es donde está `pom.xml`.
+En Visual Studio Code es **Archivo → Abrir carpeta**, y después pasan dos cosas que conviene no despachar a golpe de Intro:
+
+- Sale un aviso preguntando **si confías en los autores** de los archivos de esa carpeta. Responde que sí. Si dices que no, el editor entra en modo restringido y Java se queda apagado, así que nada de lo que viene después funcionará.
+- Abajo a la derecha aparece un aviso de que está **importando el proyecto Maven**, con una barra de progreso. La primera vez tarda: está descargando Spring entero. Déjalo terminar antes de tocar nada.
+
+**Comprueba:** ves `pom.xml`, `src`, `mvnw` y `mvnw.cmd`. Si el IDE muestra otra carpeta `gestor` dentro, entra en ella: la raíz del proyecto es donde está `pom.xml`. Y en Visual Studio Code, que en la sección **JAVA PROJECTS** del explorador aparezca `gestor`. Si esa sección sigue vacía, has abierto la carpeta equivocada.
 
 #### Paso 4 · Localizar el código y entender el primer arranque · 15 min
 
@@ -222,6 +247,8 @@ En **Linux o macOS**, el mismo paso se escribe:
 ```
 
 El primer fragmento llama al wrapper de Maven de esta carpeta. `spring-boot:run` le pide ejecutar la aplicación. Si Linux o macOS dice que no tienes permiso para ejecutar el archivo, aplica `chmod +x mvnw` y repite el comando.
+
+Con las extensiones puestas habrás visto que hay botones para esto: encima del método `main` aparecen las palabras **Run | Debug**, y el panel de Spring Boot arranca la aplicación con un play. Hacen lo mismo. Hoy lo lanzamos desde la terminal porque así todos veis exactamente la misma salida y aprendéis a leerla; a partir de la sesión 2 usa el botón si prefieres.
 
 3. Espera a que aparezcan mensajes que contengan `Tomcat started on port 8080` y `Started GestorApplication`. El texto alrededor puede variar. La terminal queda ocupada porque el servidor sigue funcionando: no es un bloqueo.
 4. Abre `http://localhost:8080/` en el navegador. Aparecerá una respuesta de error, normalmente una página **Whitelabel Error Page** con estado `404`. Has llegado al servidor, pero todavía no has programado qué debe devolver la ruta `/`.
@@ -309,9 +336,11 @@ public String resumen() {
 
 **Comprueba:** responden tres rutas diferentes y sabes qué método atiende cada una. No copies otra clase completa dentro de `HolaController`: aquí estás añadiendo dos métodos a la clase existente.
 
-#### Paso 9 · Guardar la primera versión en GitHub · 25 min
+#### Paso 9 · Guardar la primera versión en GitHub · 15 min
 
 Un **repositorio** guarda los archivos y su historial. Un **commit** registra una versión local; **push** envía los commits a GitHub. Es el mismo repositorio que utilizaremos en Intermodular para practicar el flujo de trabajo y el despliegue.
+
+Esto lo hiciste el lunes en Intermodular con el portfolio, así que los comandos ya los has visto. Lo único distinto es que aquí el proyecto ya existe en tu ordenador antes que en GitHub, y por eso se empieza con `git init` en vez de con `git clone`.
 
 1. En la carpeta de `pom.xml`, abre el `README.md` de la plantilla. Completa la propuesta del paso 1, revisa el comando de arranque y añade tus tres rutas.
 2. Revisa la tabla de comprobaciones de los pasos 7 y 8. Debe indicar la petición, la respuesta observada y cualquier dificultad pendiente. Explica qué parte de la aplicación produce cada respuesta.
