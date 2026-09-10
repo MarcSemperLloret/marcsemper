@@ -462,17 +462,9 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
   </ul>
 </div>
 
-<div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Para la sesión 2, de casa</p>
-  <ul class="checklist">
-    <li>Traed escritas <strong>seis frases</strong>, una por cada cosa que queráis que tenga el portfolio: una cabecera con vuestro nombre, una sección de proyectos, un formulario de contacto, lo que sea. Frases sueltas, en el móvil o en un papel; no hay que escribir nada en el repositorio.</li>
-    <li>Pensad también con quién vais a trabajar en pareja. En la sesión 2 os vais a revisar el trabajo mutuamente durante todo el trimestre.</li>
-  </ul>
-</div>
-
 <div class="rule">
   <p class="rule-label">Qué pasa en la sesión 2</p>
-  <p>Se cierra <code>main</code>. En la próxima sesión ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request, y ninguna se fusiona sin que vuestra pareja la haya revisado antes. Esas seis frases de arriba se convierten en las seis primeras issues, y dos de ellas las recorreréis enteras en clase.</p>
+  <p>Se cierra <code>main</code>. En la próxima sesión ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request, y ninguna se fusiona sin que vuestra pareja la haya revisado antes. No hay que traer nada preparado: se empieza decidiendo qué va a tener vuestro portfolio y se termina con dos tareas recorridas enteras.</p>
 </div>
 
 ## Sesión 2 · Issues, tablero y la primera pull request
@@ -564,7 +556,11 @@ Cuando `main` está protegida pasan tres cosas a la vez. La primera, que ningún
 
 #### Bloque A · El tablero y seis issues
 
-<p class="stage stage--solo">Individual, con las seis frases que traíais de casa</p>
+<p class="stage stage--solo">Individual, y lo primero es decidir qué vais a construir</p>
+
+**0 · Las seis frases.** Cinco minutos, en una nota o en un papel, sin abrir GitHub. Escribid **seis cosas que queréis que tenga vuestro portfolio**: una cabecera con vuestro nombre, una sección de proyectos, un formulario de contacto, lo que sea. Una frase cada una, tal como os salga. Todavía no son issues; son la materia prima del paso 3.
+
+Si os atascáis, mirad dos portfolios de gente que ya terminó el ciclo y quedaos con lo que os parezca imprescindible. Y no os paséis de seis, que el paso 3 explica por qué.
 
 **1 · Crear el tablero.** En vuestro repositorio, pestaña **Projects** → **Link a project** → **New project** → plantilla **Board** → nombre `Portfolio`.
 
@@ -671,6 +667,8 @@ Cuidado con ese comando, que es de los que hacen daño. Deja vuestra carpeta exa
 #### Bloque C · El circuito entero, dos veces
 
 <p class="stage stage--solo">Individual, pero con vuestra pareja al lado: sus pull requests las revisáis vosotros</p>
+
+**Antes de empezar, las parejas.** Poneos de dos en dos y quedaos así el resto del trimestre: vais a revisaros el trabajo mutuamente hasta diciembre, y cambiar de pareja a mitad rompe el rastro de revisiones que se evalúa en la defensa. Intercambiad las direcciones de vuestros repositorios, que las vais a necesitar en el bloque D. Si sois impares, uno de los grupos será de tres y cada cual revisa al siguiente.
 
 La primera vuelta se hace despacio, mirando los diez pasos. La segunda sale sola.
 

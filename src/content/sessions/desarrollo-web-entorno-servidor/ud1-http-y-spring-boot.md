@@ -132,7 +132,7 @@ Al terminar tendrás el tema de tu CRUD, una aplicación que responde a tres rut
 
 **Comprueba:** puedes explicar quién lo usará, qué guardará y qué debe impedir. La matriz de la introducción marca la meta del trimestre; hoy no tienes que saber diseñar sus tablas ni interpretar términos como JPA o transacción.
 
-#### Paso 2 · Comprobar las herramientas y preparar el editor · 20 min
+#### Paso 2 · Comprobar las herramientas y preparar el editor · 15 min
 
 1. Abre el IDE preparado para Java en clase. La **terminal** es su panel para escribir comandos; no es la consola del navegador. Abre ese panel desde el menú de terminal del IDE.
 2. Escribe los siguientes comandos, uno cada vez, y pulsa Intro después de cada uno:
@@ -150,25 +150,21 @@ git --version
 
 ##### Si trabajas con Visual Studio Code
 
-Visual Studio Code recién instalado **no sabe nada de Java**. Abre los archivos y los colorea, pero no compila, no te avisa de errores y no tiene ningún botón para arrancar la aplicación. Todo eso lo aportan dos extensiones, y sin ellas los pasos siguientes no te van a funcionar. En los equipos del aula ya están puestas: compruébalo igualmente, que cuesta un minuto. En tu portátil tendrás que instalarlas.
+Visual Studio Code recién instalado **no sabe nada de Java**. Abre los archivos y los colorea, pero no compila, no te avisa de errores y no tiene ningún botón para arrancar la aplicación. Todo eso lo aportan dos extensiones, y sin ellas los pasos siguientes no te van a funcionar. Puede que en el equipo del aula ya estén puestas; míralo igualmente, que cuesta un minuto.
 
 1. Pulsa **Ctrl+Shift+X** (en macOS, Cmd+Shift+X) o el icono de las piezas de puzle en la barra lateral.
 2. Busca **Extension Pack for Java**, de Microsoft, y pulsa **Install**. No es una extensión sino seis: el lenguaje, el depurador, las pruebas, Maven, el explorador de proyectos y las sugerencias de código.
 3. Busca **Spring Boot Extension Pack** y pulsa **Install**. Añade el autocompletado de `application.properties` y el panel desde el que se arrancan las aplicaciones Spring.
 4. Si aparece un aviso pidiendo recargar la ventana, recárgala.
-5. Comprueba que el editor encuentra tu Java. Pulsa **Ctrl+Shift+P**, escribe `Java: Configure Java Runtime` y ábrelo. Se abre una pestaña con las versiones detectadas: tiene que aparecer **21**. Que `java -version` funcione en la terminal no significa que el editor lo use, porque son dos cosas distintas y se configuran por separado.
 
-**Comprueba:** en el explorador de archivos, abajo del todo, ha aparecido una sección nueva llamada **JAVA PROJECTS**. Si no está, las extensiones no han terminado de instalarse; espera y vuelve a mirar.
+**Comprueba:** buscando cada uno de los dos en el panel de extensiones, el botón ya no dice *Install* sino que aparecen como instalados. Todavía no vas a ver ningún proyecto Java por ninguna parte, y es normal: aún no has abierto ninguno. Eso llega en el paso 3.
 
-<details class="aside aside--help">
-  <summary>Lo que te vas a encontrar y qué significa</summary>
-  <p><strong>Abajo a la derecha pone «Java: Lightweight Mode» o sale un rayo.</strong> Es un modo reducido en el que Visual Studio Code lee el código pero no lo compila. Pulsa encima y elige <em>Switch to Standard</em>. Hasta que no esté en modo estándar no vas a tener ni errores marcados ni botón de arrancar.</p>
-  <p><strong>Los <code>import org.springframework...</code> salen subrayados en rojo.</strong> Casi siempre es que todavía está descargando las bibliotecas; abajo verás una barra de progreso. Espera a que termine. Si acaba y siguen en rojo, Ctrl+Shift+P → <code>Java: Clean Java Language Server Workspace</code> y acepta reiniciar.</p>
-  <p><strong>Dice «The JAVA_HOME environment variable is not defined correctly».</strong> El editor no encuentra el JDK. Vuelve al punto 5 de arriba y mira qué versiones detecta.</p>
-  <p><strong>Estoy en IntelliJ.</strong> Entonces sáltate este apartado entero: IntelliJ trae el soporte de Java y de Maven de serie. Solo tendrás que confirmar el JDK 21 al abrir el proyecto.</p>
+<details class="aside aside--extra">
+  <summary>Si trabajas con IntelliJ</summary>
+  <p>Sáltate este apartado entero: IntelliJ trae de serie el soporte de Java y de Maven. Lo único que tendrás que hacer es confirmar el JDK 21 cuando abras el proyecto en el paso 3.</p>
 </details>
 
-#### Paso 3 · Generar la estructura inicial · 15 min
+#### Paso 3 · Generar la estructura inicial y abrirla · 20 min
 
 **Spring Initializr** es una web que genera los archivos iniciales de un proyecto Spring Boot. No aloja tu aplicación ni escribe las reglas de tu CRUD.
 
@@ -192,12 +188,23 @@ Usamos `gestor` como nombre técnico para que las rutas de archivos de estos pri
 3. **Extrae** el ZIP del curso en la carpeta de trabajo. No abras el código dentro del ZIP.
 4. En el IDE elige **Abrir carpeta/proyecto** y selecciona la carpeta que contiene `pom.xml`, no la carpeta `src`. Si pregunta cómo importarlo, elige Maven. Espera a que termine la descarga de dependencias.
 
-En Visual Studio Code es **Archivo → Abrir carpeta**, y después pasan dos cosas que conviene no despachar a golpe de Intro:
+En Visual Studio Code es **Archivo → Abrir carpeta**, y después pasan tres cosas que conviene no despachar a golpe de Intro:
 
-- Sale un aviso preguntando **si confías en los autores** de los archivos de esa carpeta. Responde que sí. Si dices que no, el editor entra en modo restringido y Java se queda apagado, así que nada de lo que viene después funcionará.
-- Abajo a la derecha aparece un aviso de que está **importando el proyecto Maven**, con una barra de progreso. La primera vez tarda: está descargando Spring entero. Déjalo terminar antes de tocar nada.
+- Sale un aviso preguntando **si confías en los autores** de los archivos de esa carpeta. Responde que sí. Si dices que no, el editor entra en modo restringido, Java se queda apagado y nada de lo que viene después va a funcionar.
+- Abajo a la derecha aparece un aviso de que está **importando el proyecto Maven**, con una barra de progreso. La primera vez tarda un rato largo: está descargando Spring entero. Déjalo terminar antes de tocar nada.
+- En el explorador de archivos, abajo del todo, aparece una sección nueva, **JAVA PROJECTS**, con `gestor` dentro. Ésa es la señal de que la importación ha ido bien.
 
-**Comprueba:** ves `pom.xml`, `src`, `mvnw` y `mvnw.cmd`. Si el IDE muestra otra carpeta `gestor` dentro, entra en ella: la raíz del proyecto es donde está `pom.xml`. Y en Visual Studio Code, que en la sección **JAVA PROJECTS** del explorador aparezca `gestor`. Si esa sección sigue vacía, has abierto la carpeta equivocada.
+Ahora que el proyecto está abierto, mira qué Java está usando el editor: **Ctrl+Shift+P**, escribe `Java: Configure Java Runtime` y ábrelo. Se abre una pestaña con las versiones detectadas y tiene que aparecer **21**. Que `java -version` funcionara en la terminal del paso 2 no significa que el editor use esa misma; son dos cosas que se configuran por separado, y es el fallo que más tiempo hace perder en esta sesión.
+
+**Comprueba:** ves `pom.xml`, `src`, `mvnw` y `mvnw.cmd`. Si el IDE muestra otra carpeta `gestor` dentro, entra en ella: la raíz del proyecto es donde está `pom.xml`.
+
+<details class="aside aside--help">
+  <summary>Lo que te puedes encontrar en Visual Studio Code, y qué significa</summary>
+  <p><strong>No aparece la sección JAVA PROJECTS, o está vacía.</strong> O has abierto una carpeta que no contiene <code>pom.xml</code>, o dijiste que no confiabas en los autores. Cierra la carpeta, vuelve a abrirla y esta vez confía.</p>
+  <p><strong>Abajo a la derecha pone «Java: Lightweight Mode», o ves un rayo.</strong> Es un modo reducido en el que Visual Studio Code lee el código pero no lo compila. Pulsa encima y elige <em>Switch to Standard</em>. Hasta que no esté en modo estándar no vas a tener ni errores marcados ni botón para arrancar.</p>
+  <p><strong>Los <code>import org.springframework...</code> salen subrayados en rojo.</strong> Casi siempre es que todavía está descargando las bibliotecas; abajo verás la barra de progreso. Espera a que acabe. Si termina y siguen en rojo, Ctrl+Shift+P → <code>Java: Clean Java Language Server Workspace</code> y acepta reiniciar.</p>
+  <p><strong>Dice «The JAVA_HOME environment variable is not defined correctly».</strong> El editor no encuentra el JDK. Abre <code>Java: Configure Java Runtime</code> y mira qué versiones detecta; si no sale ninguna, avisa antes de seguir.</p>
+</details>
 
 #### Paso 4 · Localizar el código y entender el primer arranque · 15 min
 
@@ -336,11 +343,11 @@ public String resumen() {
 
 **Comprueba:** responden tres rutas diferentes y sabes qué método atiende cada una. No copies otra clase completa dentro de `HolaController`: aquí estás añadiendo dos métodos a la clase existente.
 
-#### Paso 9 · Guardar la primera versión en GitHub · 15 min
+#### Paso 9 · Guardar la primera versión en GitHub · 25 min
 
 Un **repositorio** guarda los archivos y su historial. Un **commit** registra una versión local; **push** envía los commits a GitHub. Es el mismo repositorio que utilizaremos en Intermodular para practicar el flujo de trabajo y el despliegue.
 
-Esto lo hiciste el lunes en Intermodular con el portfolio, así que los comandos ya los has visto. Lo único distinto es que aquí el proyecto ya existe en tu ordenador antes que en GitHub, y por eso se empieza con `git init` en vez de con `git clone`.
+Si ya has hecho la primera sesión de Intermodular, estos comandos los has visto con el portfolio. Lo único distinto es que aquí el proyecto ya existe en tu ordenador antes que en GitHub, y por eso se empieza con `git init` en lugar de con `git clone`.
 
 1. En la carpeta de `pom.xml`, abre el `README.md` de la plantilla. Completa la propuesta del paso 1, revisa el comando de arranque y añade tus tres rutas.
 2. Revisa la tabla de comprobaciones de los pasos 7 y 8. Debe indicar la petición, la respuesta observada y cualquier dificultad pendiente. Explica qué parte de la aplicación produce cada respuesta.
