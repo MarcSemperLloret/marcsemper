@@ -512,6 +512,22 @@ Cada issue de este curso lleva tres cosas:
   <p>Se la podéis dar a vuestra pareja y la puede hacer sin hablar con vosotros. Si necesita preguntaros qué querías decir, la issue está a medio escribir y el que va a perder media hora sois vosotros dentro de tres semanas, cuando ya no os acordéis.</p>
 </div>
 
+#### Una rama es una copia con nombre
+
+<p class="term">Rama</p>
+
+Una línea de trabajo paralela dentro del mismo repositorio. Al crear una os lleváis una copia de `main` tal como está en ese momento, y trabajáis encima sin tocar lo publicado. Podéis romperlo todo: la web pública sigue enseñando `main`.
+
+Arriba os he preguntado para qué queréis una rama si trabajáis solos. Por tres cosas:
+
+- **Para poder enseñar un cambio que todavía no está publicado.** Sin rama, o está en la web o no está hecho, y no hay ningún momento intermedio en el que alguien pueda mirarlo. La revisión de la que va esta sesión no cabría en ninguna parte.
+- **Para que lo que está a medias no bloquee lo demás.** Si en mitad de una tarea aparece otra urgente, dejáis la rama como está, volvéis a `main` y abrís otra. Nadie tiene que terminar nada a las prisas.
+- **Para que el historial cuente algo.** Una rama por issue convierte el historial en una lista de tareas hechas, en lugar de un montón de commits sueltos que no se sabe a qué venían.
+
+<p class="term">Pull request</p>
+
+La propuesta de meter una rama dentro de otra. No es un botón de fusionar: es una página donde vuestro cambio queda expuesto —qué líneas cambia, qué comprobaciones ha pasado, qué dice quien lo revisa— antes de que nadie decida nada. Se abre en cuanto la rama está subida, aunque el trabajo no esté terminado, y se puede seguir subiendo commits mientras está abierta: la pull request se actualiza sola.
+
 #### Terminado quiere decir esto
 
 <p class="term">Definición de terminado</p>
@@ -535,7 +551,7 @@ Fijaos en lo que **no** aparece: nada sobre si la web es bonita, si el CSS está
 
 Hasta hoy podíais hacer `git push` a `main` y publicar. A partir de hoy no, y no es por desconfianza: es que **una regla que se puede saltar no es una regla, es una recomendación**.
 
-Cuando `main` está protegida pasan tres cosas a la vez. La primera, que ningún cambio llega a la web sin pasar por una pull request, donde queda a la vista de quien quiera mirarla. La segunda, que nada llega a producción con el pipeline en rojo. Y la tercera, la que os importa para la nota: el historial del repositorio se convierte en **una prueba** de cómo trabajasteis, porque ya no se puede reescribir a posteriori.
+Cuando `main` está protegida pasan tres cosas a la vez. La primera, que ningún cambio llega a la web sin pasar por una pull request, donde queda a la vista de quien quiera mirarla. La segunda, que el historial del repositorio se convierte en **una prueba** de cómo trabajasteis, porque ya no se puede reescribir a posteriori. Y la tercera llegará en la sesión 3: cuando exista un pipeline, esta misma protección impedirá que entre nada con las comprobaciones en rojo.
 
 <div class="compare-pair">
   <div>
@@ -721,6 +737,8 @@ git pull
 git switch -c 3-cabecera-con-nombre
 ```
 
+Los tres en orden: volved a `main`, traeos lo último que haya en GitHub y cread la rama a partir de ahí. La `-c` es de *create*; sin ella `git switch` os lleva a una rama que ya existe, y con ella la crea y os lleva de un golpe. Comprobad abajo a la izquierda del editor, o con `git status`, que estáis dentro de la rama nueva antes de tocar nada.
+
 **3 · Hacer solo eso.** Únicamente lo que pide la issue. Si veis otra cosa que arreglar, se anota como issue nueva y se sigue.
 
 **4 · Commit y subida.**
@@ -730,6 +748,8 @@ git add index.html
 git commit -m "Anadir la cabecera con nombre y titulacion"
 git push -u origin 3-cabecera-con-nombre
 ```
+
+Este `push` lleva más cosas de lo normal porque la rama todavía no existe en GitHub: `origin` es vuestro repositorio de allí y `-u` enlaza la rama de vuestro ordenador con la suya. Solo hace falta la primera vez; a partir de ahí, dentro de esta rama, basta con `git push` a secas.
 
 **5 · Abrir la pull request.** GitHub muestra un aviso amarillo con **Compare & pull request**. Si no aparece: pestaña **Pull requests** → **New pull request** → base `main`, compare vuestra rama.
 
@@ -777,7 +797,7 @@ git branch -d 3-cabecera-con-nombre
 
 <div class="rule">
   <p class="rule-label">El error que va a cometer media clase esta semana</p>
-  <p>Empezar la segunda tarea sin volver a <code>main</code> y sin <code>git pull</code>. La rama nueva sale entonces de la anterior, la pull request incluye cambios que no le tocan y quien revisa ve el doble de lo que esperaba. Los tres comandos de arriba se hacen siempre, juntos, antes de cada rama.</p>
+  <p>El tercer comando borra la copia local de la rama; la de GitHub ya la borrasteis vosotros al fusionar, en el paso 8. El error es otro: empezar la segunda tarea sin volver a <code>main</code> y sin <code>git pull</code>. La rama nueva sale entonces de la anterior, la pull request incluye cambios que no le tocan y quien revisa ve el doble de lo que esperaba. Los tres comandos de arriba se hacen siempre, juntos, antes de cada rama.</p>
 </div>
 
 <p class="stage stage--solo">Segunda vuelta: repetid los diez pasos con la siguiente issue</p>
@@ -802,7 +822,7 @@ git clone https://github.com/USUARIO-DE-VUESTRA-PAREJA/portfolio.git portfolio-p
 cd portfolio-pareja
 ```
 
-A partir de ahí, para cada revisión, con el nombre de rama que aparece en la cabecera de la pull request:
+A partir de ahí, para cada revisión, con el nombre de rama que aparece en la cabecera de la pull request. El primer comando se trae las ramas nuevas del repositorio de esa persona sin tocar nada de lo vuestro, y el segundo os mete dentro de la suya:
 
 ```bash
 git fetch origin
