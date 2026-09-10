@@ -11,7 +11,7 @@ deliverable: "Portfolio publicado y circuito de issues, ramas y revisión de cam
 date: "2026-09-09"
 outcomes:
   - "Explicar qué evalúa este módulo y qué evalúa Desarrollo Web en Entorno Servidor sobre el mismo código."
-  - "Publicar un sitio estático en Azure Static Web Apps conectado a un repositorio de GitHub."
+  - "Publicar un sitio estático con GitHub Pages y el workflow de GitHub Actions que lo despliega."
   - "Leer el workflow de GitHub Actions que genera el despliegue y decir qué lo dispara."
   - "Trabajar el ciclo completo: issue, rama, commit, pull request, revisión, fusión y despliegue."
   - "Proteger la rama principal y demostrar que el circuito no se puede saltar."
@@ -116,11 +116,14 @@ Si eso se descubre hoy, con una página de tres líneas, se arregla hoy. Si se d
 
 #### Dónde va a vivir vuestra web
 
-<p class="term">Azure Static Web Apps</p>
+<p class="term">GitHub Pages</p>
 
-Un servicio de Microsoft que publica sitios estáticos —HTML, CSS, JavaScript— conectándose a un repositorio de GitHub. Tiene un plan gratuito que no consume crédito. Lo importante para nosotros no es Azure: es que al conectarlo **escribe él solo el workflow de GitHub Actions** que despliega en cada cambio, y que publica una vista previa por cada pull request abierta.
+El servicio con el que GitHub publica sitios estáticos —HTML, CSS, JavaScript— desde un repositorio. Es gratuito en repositorios públicos y no hay que dar de alta ninguna cuenta más: ya la tenéis. Lo importante para nosotros no es quién sirve los ficheros: es que al activarlo **se escribe un workflow de GitHub Actions** dentro de vuestro repositorio, y que a partir de ese momento cada cambio que entre en `main` se publica solo.
 
-Esa vista previa es la pieza que hace que la revisión de la semana que viene sea real: quien revisa no lee código imaginándoselo, abre una URL y lo ve.
+<div class="rule">
+  <p class="rule-label">Por qué aquí y no en un proveedor de nube</p>
+  <p>Publicar esto mismo en Azure, Cloudflare o Netlify funciona igual de bien y en diciembre podréis hacerlo. Hoy no, por un motivo de método: cada proveedor añade un alta que puede tardar días en verificarse y que no depende de vosotros. Lo que se aprende hoy —que existe una URL, que se actualiza sola y que el despliegue es un fichero que se puede leer— es idéntico en los cuatro. El proveedor es la parte intercambiable.</p>
+</div>
 
 ---
 
@@ -128,29 +131,7 @@ Esa vista previa es la pieza que hace que la revisión de la semana que viene se
 
 <p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
-#### Bloque A · La cuenta de Azure
-
-<p class="stage stage--solo">Individual, y lo primero de todo</p>
-
-Se hace antes que nada porque es el único paso que depende de que un tercero os diga que sí.
-
-1. Entrad en **azure.microsoft.com/es-es/free/students**.
-2. Pulsad **Empezar gratis** e iniciad sesión con **el correo del centro**, siguiendo los requisitos de elegibilidad de la oferta. Tener ese correo no garantiza por sí solo que la suscripción sea admitida.
-3. Aceptad los términos. **No se pide tarjeta de crédito.** Si en algún momento os la pide, os habéis salido de la oferta de estudiantes: volved atrás y empezad de nuevo desde el enlace anterior.
-4. Cuando termine, entrad en **portal.azure.com** y comprobad que en **Suscripciones** aparece una llamada *Azure for Students*.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Comprobación del bloque A</p>
-  <p>Abrís portal.azure.com y veis una suscripción activa. Si es así, el resto de la sesión va a ir rodado.</p>
-</div>
-
-<details class="aside aside--help">
-  <summary>Si la verificación falla</summary>
-  <p>Tres causas, en orden de frecuencia. <strong>Una:</strong> habéis usado el correo personal. Repetid con el del centro. <strong>Dos:</strong> no cumplís los requisitos de edad o de centro de la oferta; utilizad el entorno de prácticas disponible. <strong>Tres:</strong> el dominio no está reconocido todavía; es cuestión de días y no depende de vosotros.</p>
-  <p>En cualquiera de los tres casos <strong>no se pierde la sesión</strong>: seguid con el bloque B, y en el bloque C usad el plan alternativo con GitHub Pages que está al final de ese bloque. El circuito es el mismo; solo cambia quién sirve los ficheros. Cuando la cuenta esté lista, se migra sin rehacer nada.</p>
-</details>
-
-#### Bloque B · El repositorio y la página básica
+#### Bloque A · El repositorio y la página básica
 
 <p class="stage stage--solo">Individual. Este repositorio es vuestro y os lo lleváis</p>
 
@@ -215,13 +196,184 @@ git push
   <p>GitHub no acepta la contraseña de la cuenta desde la línea de comandos. Instalad <strong>Git Credential Manager</strong> (viene con Git para Windows y abre una ventana del navegador la primera vez) o usad un <em>personal access token</em> como contraseña: foto de perfil → Settings → Developer settings → Personal access tokens.</p>
 </details>
 
-#### Bloque C · Conectar Azure
+#### Bloque B · Publicar con GitHub Pages
 
 <p class="stage stage--guided">Se hace a la vez, paso a paso, todos a la misma pantalla</p>
 
-**1 · Crear el recurso.** En **portal.azure.com**, buscad arriba `Static Web Apps` y pulsad **Crear** (*Create*).
+**1 · Abrir la configuración.** En vuestro repositorio, pestaña **Settings**, arriba del todo a la derecha. En la columna de la izquierda, **Pages**.
 
-**2 · Rellenar la primera pestaña.** Los nombres del portal aparecen en español o en inglés según cómo tengáis la cuenta; van los dos.
+**2 · Elegir quién despliega.** En **Build and deployment**, desplegable **Source**: cambiadlo de *Deploy from a branch* a **GitHub Actions**.
+
+<div class="rule">
+  <p class="rule-label">Los dos modos, y por qué usamos el segundo</p>
+  <p><em>Deploy from a branch</em> coge una carpeta y la publica, sin dejar rastro de cómo lo hace. <strong>GitHub Actions</strong> escribe un fichero dentro de vuestro repositorio y despliega ejecutándolo. Es más trabajo y es exactamente lo que queremos: que el despliegue sea algo que se pueda leer, revisar en una pull request y romper, no un ajuste escondido en un menú.</p>
+</div>
+
+**3 · Coger la plantilla.** Debajo aparecen sugerencias de workflow. Buscad **Static HTML** y pulsad **Configure**. Se abre un editor con un fichero ya escrito, `static.yml`.
+
+**4 · No tocar nada y confirmar.** Botón verde **Commit changes...** → dejad marcado **Commit directly to the `main` branch** → **Commit changes**.
+
+<div class="rule">
+  <p class="rule-label">La plantilla se queda como está</p>
+  <p>Alguien va a querer cambiar algo del YAML ahora mismo. No lo toquéis: la plantilla publica la raíz del repositorio, que es justo donde está vuestro <code>index.html</code>. En la sesión 3 escribiréis un workflow vuestro desde cero y ahí se cambia todo lo que haga falta.</p>
+</div>
+
+**5 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a la pestaña **Actions** del repositorio: hay una ejecución con un punto amarillo. Entrad, abridla y ved los pasos en directo. Fijaos en que son dos trabajos encadenados: uno empaqueta vuestros ficheros y el otro los publica.
+
+**6 · Abrir la URL.** Cuando esté en verde, volved a **Settings → Pages**. Arriba aparece un recuadro con **Your site is live at** y la dirección, del estilo `vuestrousuario.github.io/portfolio/`. Abridla. Ahí está vuestra página básica.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación del bloque B</p>
+  <ul class="checklist">
+    <li>La URL abre y muestra vuestro nombre.</li>
+    <li>En la pestaña Actions del repositorio hay una ejecución en verde.</li>
+    <li>Ha aparecido un fichero nuevo en <code>.github/workflows/</code> que no habéis escrito vosotros.</li>
+  </ul>
+</div>
+
+<details class="aside aside--help">
+  <summary>Los cuatro fallos de este bloque, y qué son</summary>
+  <p><strong>La URL da 404.</strong> Lo normal la primera vez: el despliegue ha terminado pero la dirección tarda un minuto más en responder. Esperad y recargad. Si sigue, comprobad que la dirección acaba en <code>/portfolio/</code> con la barra final.</p>
+  <p><strong>404 y en Actions está todo verde.</strong> El fichero no se llama exactamente <code>index.html</code>, en minúsculas, o no está en la raíz del repositorio sino dentro de una carpeta.</p>
+  <p><strong>No aparece la plantilla Static HTML.</strong> Pulsad <em>browse all workflows</em> y buscad <code>static</code>. Es la que se llama «Deploy static content to Pages».</p>
+  <p><strong>En Actions no hay ninguna ejecución.</strong> El desplegable <em>Source</em> se quedó en <em>Deploy from a branch</em>. Volved al paso 2; hasta que no diga <strong>GitHub Actions</strong> no se escribe ningún workflow.</p>
+</details>
+
+#### Bloque C · Leer el workflow que despliega
+
+<p class="stage stage--solo">Individual, con el fichero abierto</p>
+
+El commit del paso 4 lo hicisteis vosotros, pero el contenido no lo escribisteis vosotros. Traedlo:
+
+```bash
+git pull
+```
+
+Ha aparecido una carpeta `.github/workflows/` con un fichero llamado `static.yml`. Abridlo entero: es corto y hoy se lee entero.
+
+```yaml
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+<p class="term">Workflow</p>
+
+Un fichero que le dice a GitHub qué ejecutar y cuándo. Vive dentro del repositorio, así que va versionado como el resto: se puede leer, revisar en una pull request y romper. Es la diferencia entre un despliegue automático y un despliegue que hace siempre el mismo compañero desde su portátil.
+
+<dl class="worked">
+  <dt><code>on: push: branches: ['main']</code></dt>
+  <dd>Cada vez que algo entra en <code>main</code>, se despliega a la URL pública. Esto es lo que acabáis de ver funcionando.</dd>
+  <dt><code>workflow_dispatch</code></dt>
+  <dd>La segunda forma de dispararlo: un botón <em>Run workflow</em> en la pestaña Actions, para lanzarlo a mano sin cambiar nada. Probadlo ahora y ved que sale un despliegue idéntico.</dd>
+  <dt>Lo que <strong>no</strong> pone: <code>pull_request</code></dt>
+  <dd>Este workflow solo se ejecuta sobre <code>main</code>, es decir, sobre lo que ya ha entrado. Sobre una pull request no corre nada todavía. Retenedlo, porque es el agujero que abre la sesión 3.</dd>
+  <dt><code>permissions: id-token: write</code></dt>
+  <dd>El permiso que le da a esta ejecución, y solo a esta, el derecho a publicar. Id a Settings → Secrets and variables → Actions y comprobadlo: <strong>no hay ningún secreto guardado</strong>. Aquí no hace falta ninguna contraseña porque quien despliega y quien aloja son la misma casa.</dd>
+  <dt><code>path: '.'</code></dt>
+  <dd>Qué se publica: el punto es la raíz del repositorio. Si algún día vuestra web se construyera en una carpeta <code>dist</code>, esta es la línea que cambiaría.</dd>
+  <dt><code>concurrency: group: 'pages'</code></dt>
+  <dd>Si llegan dos cambios seguidos, no se despliegan a la vez. Evita que dos publicaciones se pisen y que la web quede a medias entre las dos.</dd>
+</dl>
+
+<div class="rule">
+  <p class="rule-label">El motivo por el que este bloque existe</p>
+  <p>Un despliegue automático necesita permiso para escribir en algún sitio, y ese permiso es siempre el punto débil. Hay dos maneras de dárselo: guardar una credencial de larga duración —un <em>token</em>— o pedir una autorización temporal que caduca al acabar la ejecución. Este workflow usa la segunda, que es la buena, y por eso no hay ningún secreto que guardar ni que se pueda filtrar. En la segunda evaluación, publicando el backend fuera de GitHub, ya no habrá esa suerte: allí habrá un token, y decidir dónde vive será cosa vuestra.</p>
+</div>
+
+<dl class="answer">
+  <dt>¿Qué dos cosas distintas disparan este workflow?</dt>
+  <dd></dd>
+  <dt>Si cambiáis algo y no hacéis push, ¿se despliega? ¿Por qué?</dt>
+  <dd></dd>
+  <dt>¿Cuántos secretos hay guardados en vuestro repositorio, y por qué?</dt>
+  <dd></dd>
+  <dt>Si abrís una pull request, ¿se ejecuta este workflow? ¿En qué línea se ve?</dt>
+  <dd></dd>
+</dl>
+
+#### Bloque D · Evidencia
+
+<p class="stage stage--solo">Antes de salir del aula</p>
+
+Editad el `README.md` para que tenga estas cuatro cosas y nada más. Se escribe en la rama `main` directamente porque es la última vez que se va a poder hacer: la semana que viene esa rama queda cerrada.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Producto de la sesión 1</p>
+  <ul class="checklist">
+    <li>Título con vuestro nombre y una línea diciendo qué es esto.</li>
+    <li>La URL pública, como enlace, en la segunda línea.</li>
+    <li>Una frase explicando cómo se despliega: qué lo dispara y quién lo hace.</li>
+    <li>El nombre del fichero que despliega y su ruta dentro del repositorio, para saber dónde mirar en diciembre.</li>
+  </ul>
+</div>
+
+```bash
+git add README.md
+git commit -m "Documentar la URL publica y como se despliega"
+git push
+```
+
+Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito funcionando sin que nadie lo empuje.
+
+#### Bloque E · Opcional · Si tenéis cuenta de Azure
+
+<p class="stage stage--solo">Opcional. Solo si os sobra tiempo y el alta de Azure os ha funcionado</p>
+
+Vuestro portfolio ya está publicado y no necesita esto para nada. Este bloque existe porque en la segunda evaluación vais a publicar el backend en un proveedor de nube, y la primera vez que se pelea uno con un portal de nube conviene que sea con algo que no importa.
+
+<div class="rule">
+  <p class="rule-label">Si lo hacéis, vais a tener dos despliegues</p>
+  <p>Al terminar tendréis dos workflows publicando lo mismo en dos direcciones distintas, y las dos funcionando. No es un error, pero decidid cuál es la buena y ponedla en el <code>README</code>: es la que se mira en diciembre.</p>
+</div>
+
+**1 · La cuenta.** Este es el paso que depende de que un tercero os diga que sí, y por eso ya no está al principio de la sesión.
+
+1. Entrad en **azure.microsoft.com/es-es/free/students**.
+2. Pulsad **Empezar gratis** e iniciad sesión con **el correo del centro**, siguiendo los requisitos de elegibilidad de la oferta. Tener ese correo no garantiza por sí solo que la suscripción sea admitida.
+3. Aceptad los términos. **No se pide tarjeta de crédito.** Si en algún momento os la pide, os habéis salido de la oferta de estudiantes: volved atrás y empezad de nuevo desde el enlace anterior.
+4. Entrad en **portal.azure.com** y comprobad que en **Suscripciones** aparece una llamada *Azure for Students*.
+
+<details class="aside aside--help">
+  <summary>Si la verificación falla</summary>
+  <p>Tres causas, en orden de frecuencia. <strong>Una:</strong> habéis usado el correo personal. Repetid con el del centro. <strong>Dos:</strong> la oferta exige ser estudiante a tiempo completo de un centro reconocido por Microsoft, y no todos los centros lo están. <strong>Tres:</strong> el dominio no está reconocido todavía; es cuestión de días y no depende de vosotros.</p>
+  <p>No perdéis nada: vuestro portfolio ya está publicado desde el bloque B y el circuito de la sesión 2 funciona igual. Este bloque es una práctica de portal de nube, no un requisito.</p>
+</details>
+
+**2 · Crear el recurso.** En **portal.azure.com**, buscad arriba `Static Web Apps` y pulsad **Crear** (*Create*).
+
+**3 · Rellenar la primera pestaña.** Los nombres del portal aparecen en español o en inglés según cómo tengáis la cuenta; van los dos.
 
 | Campo | Valor |
 | ----- | ----- |
@@ -237,7 +389,7 @@ git push
   <p>Si el plan no dice <strong>Gratuito</strong>, paradlo. El plan Standard consume crédito de la suscripción, y ese crédito lo vais a necesitar en la segunda evaluación. No hay nada en este curso que necesite el plan de pago.</p>
 </div>
 
-**3 · Conectar GitHub.** Pulsad **Iniciar sesión con GitHub** y autorizad a Azure. Después se rellenan tres desplegables:
+**4 · Conectar GitHub.** Pulsad **Iniciar sesión con GitHub** y autorizad a Azure. Después se rellenan tres desplegables:
 
 | Campo | Valor |
 | ----- | ----- |
@@ -245,7 +397,7 @@ git push
 | Repositorio (*Repository*) | <code>portfolio</code> |
 | Rama (*Branch*) | <code>main</code> |
 
-**4 · Detalles de compilación.** Es donde falla la mitad de la clase, así que copiadlo literal:
+**5 · Detalles de compilación.** Es donde falla la mitad de la clase, así que copiadlo literal:
 
 | Campo | Valor |
 | ----- | ----- |
@@ -256,14 +408,14 @@ git push
 
 Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son exactamente los que se publican. Cualquier otro preajuste esperaría encontrar una carpeta construida que no existe, y el despliegue fallaría diciendo que no encuentra nada que subir.
 
-**5 · Revisar y crear.** Pestaña **Revisar y crear** → **Crear**. Tarda entre uno y tres minutos. Cuando acabe, **Ir al recurso**.
+**6 · Revisar y crear.** Pestaña **Revisar y crear** → **Crear**. Tarda entre uno y tres minutos. Cuando acabe, **Ir al recurso**.
 
-**6 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a vuestro repositorio en GitHub, pestaña **Actions**. Hay un workflow ejecutándose con un punto amarillo: es Azure desplegando. Entrad, abrid el job y ved los pasos en directo.
+**7 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a vuestro repositorio en GitHub, pestaña **Actions**. Hay un workflow ejecutándose con un punto amarillo: es Azure desplegando. Entrad, abrid el job y ved los pasos en directo.
 
-**7 · Abrir la URL.** Cuando el punto se ponga verde, volved al portal de Azure: en la vista general del recurso está la **URL** (algo como `nombre-aleatorio.azurestaticapps.net`). Abridla. Ahí está vuestra página básica.
+**8 · Abrir la URL.** Cuando el punto se ponga verde, volved al portal de Azure: en la vista general del recurso está la **URL** (algo como `nombre-aleatorio.azurestaticapps.net`). Abridla. Ahí está vuestra página básica.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación del bloque C</p>
+  <p class="checkpoint-label">Comprobación del bloque E</p>
   <ul class="checklist">
     <li>La URL abre y muestra vuestro nombre.</li>
     <li>En la pestaña Actions del repositorio hay una ejecución en verde.</li>
@@ -274,111 +426,11 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
 <details class="aside aside--help">
   <summary>Los cinco fallos de este bloque, y qué son</summary>
   <p><strong>La URL da 404 o una página de bienvenida de Azure.</strong> El despliegue todavía no ha terminado, o terminó antes de que existiera el <code>index.html</code>. Mirad Actions: si está en verde y sigue mal, comprobad que el fichero se llama exactamente <code>index.html</code>, en minúsculas y en la raíz.</p>
-  <p><strong>El repositorio no aparece en el desplegable.</strong> Azure no tiene permiso sobre él. Abrid github.com → Settings → Applications → Authorized OAuth Apps y revisad el acceso concedido a Azure, o repetid el paso 3.</p>
-  <p><strong>El workflow sale en rojo.</strong> Abrid la ejecución y leed el paso que falló, no el resumen. Casi siempre dice que no encuentra el contenido: revisad la ubicación de la aplicación y la de salida del paso 4.</p>
+  <p><strong>El repositorio no aparece en el desplegable.</strong> Azure no tiene permiso sobre él. Abrid github.com → Settings → Applications → Authorized OAuth Apps y revisad el acceso concedido a Azure, o repetid el paso 4.</p>
+  <p><strong>El workflow sale en rojo.</strong> Abrid la ejecución y leed el paso que falló, no el resumen. Casi siempre dice que no encuentra el contenido: revisad la ubicación de la aplicación y la de salida del paso 5.</p>
   <p><strong>El nombre del recurso está cogido.</strong> El nombre forma parte de una dirección pública, así que es único en todo Azure. Añadid algo vuestro al final.</p>
-  <p><strong>No hay ninguna ejecución en Actions.</strong> Azure no llegó a escribir el workflow: el recurso se creó sin conectar el repositorio. Borrad el recurso y repetid desde el paso 1.</p>
+  <p><strong>No hay ninguna ejecución en Actions.</strong> Azure no llegó a escribir el workflow: el recurso se creó sin conectar el repositorio. Borrad el recurso y repetid desde el paso 2.</p>
 </details>
-
-<details class="aside aside--extra">
-  <summary>Plan alternativo si Azure no está disponible todavía</summary>
-  <p>En vuestro repositorio: <strong>Settings → Pages → Build and deployment → Source: GitHub Actions</strong>, y elegid la plantilla <em>Static HTML</em>. GitHub escribe un workflow equivalente y publica en <code>vuestrousuario.github.io/portfolio</code>. El circuito de la sesión 2 funciona igual; lo único que pierde es la vista previa por pull request, así que en cuanto tengáis Azure hay que migrar.</p>
-</details>
-
-#### Bloque D · Leer lo que Azure ha escrito
-
-<p class="stage stage--solo">Individual, con el fichero abierto</p>
-
-Azure ha hecho un commit en vuestro repositorio. Traedlo:
-
-```bash
-git pull
-```
-
-Ha aparecido una carpeta `.github/workflows/` con un fichero llamado `azure-static-web-apps-algo-aleatorio.yml`. Abridlo. Es largo; interesan estos trozos.
-
-```yaml
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
-
-jobs:
-  build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build And Deploy
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_... }}
-          action: "upload"
-          app_location: "/"
-          api_location: ""
-          output_location: ""
-```
-
-<p class="term">Workflow</p>
-
-Un fichero que le dice a GitHub qué ejecutar y cuándo. Vive dentro del repositorio, así que va versionado como el resto: se puede leer, revisar en una pull request y romper. Es la diferencia entre un despliegue automático y un despliegue que hace siempre el mismo compañero desde su portátil.
-
-<dl class="worked">
-  <dt><code>on: push: branches: main</code></dt>
-  <dd>Cada vez que algo entra en <code>main</code>, se despliega a la URL pública. Esto es lo que acabáis de ver funcionando.</dd>
-  <dt><code>on: pull_request</code></dt>
-  <dd>Cada vez que se abre o se actualiza una pull request también se ejecuta, pero publica en una URL temporal aparte. Esta es la línea que hace posible la revisión de la semana que viene.</dd>
-  <dt><code>types: [... closed]</code> y el <code>if</code></dt>
-  <dd>Cuando la pull request se cierra hay un segundo job que borra esa URL temporal. Por eso el primero pregunta si la acción no es <em>closed</em>: para no desplegar lo que se está retirando.</dd>
-  <dt><code>${{ secrets.AZURE_... }}</code></dt>
-  <dd>La credencial que permite subir a vuestro Azure. No está en el fichero: está guardada en el repositorio, en Settings → Secrets and variables → Actions. Comprobadlo ahora. Se ve el nombre y no se puede ver el valor, ni siquiera siendo el dueño.</dd>
-  <dt><code>app_location</code> y <code>output_location</code></dt>
-  <dd>Los dos valores del paso 4 del bloque anterior, escritos aquí. Si os equivocasteis en el portal, se corrigen editando este fichero, no volviendo a Azure.</dd>
-</dl>
-
-<div class="rule">
-  <p class="rule-label">El motivo por el que este bloque existe</p>
-  <p>Un token en un fichero del repositorio es una credencial pública para siempre, aunque luego se borre el fichero. Que Azure lo haya guardado como secreto y no escrito en el YAML es la primera decisión de seguridad del curso, y la tomó una máquina por vosotros. La segunda vez no habrá nadie tomándola.</p>
-</div>
-
-<dl class="answer">
-  <dt>¿Qué dos cosas distintas disparan este workflow?</dt>
-  <dd></dd>
-  <dt>Si cambiáis algo y no hacéis push, ¿se despliega? ¿Por qué?</dt>
-  <dd></dd>
-  <dt>¿Dónde está el token y por qué no está en el fichero?</dt>
-  <dd></dd>
-  <dt>Nombre exacto del secreto de vuestro repositorio</dt>
-  <dd></dd>
-</dl>
-
-#### Bloque E · Evidencia
-
-<p class="stage stage--solo">Antes de salir del aula</p>
-
-Editad el `README.md` para que tenga estas cuatro cosas y nada más. Se escribe en la rama `main` directamente porque es la última vez que se va a poder hacer: la semana que viene esa rama queda cerrada.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Producto de la sesión 1</p>
-  <ul class="checklist">
-    <li>Título con vuestro nombre y una línea diciendo qué es esto.</li>
-    <li>La URL pública, como enlace, en la segunda línea.</li>
-    <li>Una frase explicando cómo se despliega: qué lo dispara y quién lo hace.</li>
-    <li>El nombre del recurso de Azure y el del grupo de recursos, para saber dónde mirar en diciembre.</li>
-  </ul>
-</div>
-
-```bash
-git add README.md
-git commit -m "Documentar la URL publica y como se despliega"
-git push
-```
-
-Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito funcionando sin que nadie lo empuje.
 
 ---
 
@@ -401,16 +453,16 @@ Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito fun
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Porque lo que falla en un despliegue no suele ser el código, sino cuentas, permisos y configuración. Cuanto antes falle y menos importe lo que hay dentro, más barato es.</p>
-  <p>2 · Azure, al crear el recurso conectado al repositorio, con un commit propio en <code>main</code>.</p>
-  <p>3 · GitHub ve un push a <code>main</code>, arranca el workflow, este coge los ficheros de la raíz y los sube a Azure con el token guardado como secreto.</p>
+  <p>2 · Lo escribió GitHub, como plantilla, al elegir <em>Static HTML</em>; el commit que lo metió en <code>main</code> lo hicisteis vosotros desde el navegador.</p>
+  <p>3 · GitHub ve un push a <code>main</code>, arranca el workflow, este empaqueta los ficheros de la raíz y los publica, con un permiso temporal y sin ninguna credencial guardada.</p>
   <p>4 · Porque las reglas de protección de rama que vamos a poner la semana que viene solo son gratuitas en repositorios públicos. Y porque un portfolio que no se puede enseñar no es un portfolio.</p>
-  <p>5 · Sí: en una URL temporal e independiente, que se borra al cerrar la pull request.</p>
+  <p>5 · No. El workflow solo se dispara con un push a <code>main</code>, y una pull request abierta todavía no ha entrado en <code>main</code>. Hoy no hay nada que compruebe una pull request antes de fusionarla: ese hueco es el trabajo de la sesión 3.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Al terminar la sesión</p>
   <ul class="checklist">
-    <li>La URL de Azure abre y muestra vuestra página; si hay un fallo, podéis identificar el paso y el mensaje de error.</li>
+    <li>La URL pública abre y muestra vuestra página; si hay un fallo, podéis identificar el paso y el mensaje de error.</li>
     <li>El README tiene la URL y las cuatro cosas del bloque E.</li>
     <li>Podéis localizar el workflow y explicar qué cambio dispara una publicación.</li>
     <li>Habéis comprobado que un segundo cambio actualiza la página mediante el mismo circuito.</li>
@@ -568,25 +620,25 @@ Aplica el procedimiento al portfolio y también al repositorio de backend que ya
 | Enforcement status | **Active** |
 | Target branches | **Add target → Include default branch** |
 
-**2 · Marcar estas cuatro reglas**, y solo estas:
+**2 · Marcar estas tres reglas**, y solo estas:
 
 | Regla | Qué impide |
 | ----- | ---------- |
 | **Restrict deletions** | Que alguien borre <code>main</code> |
 | **Block force pushes** | Que se reescriba el historial y desaparezcan las pruebas de vuestro trabajo |
 | **Require a pull request before merging** → *Required approvals:* **0** | Que entre nada sin pasar por una pull request, ni siquiera vuestro |
-| **Require status checks to pass** → añadid el check de Azure | Que entre nada con el despliegue en rojo |
 
-<details class="aside aside--help">
-  <summary>Si el check de Azure no aparece en la lista para añadirlo</summary>
-  <p>GitHub solo ofrece los checks que ha visto ejecutarse al menos una vez, y el vuestro solo ha corrido sobre <code>main</code>. Dejad la regla sin marcar de momento, haced la primera pull request del bloque C y volved aquí después: ya estará en la lista, con el nombre del job del workflow.</p>
-</details>
+<div class="rule">
+  <p class="rule-label">Falta una cuarta regla, y hoy no se puede poner</p>
+  <p>Hay una regla más, <strong>Require status checks to pass</strong>, que impide fusionar si una comprobación automática está en rojo. Abridla y mirad la lista: está vacía. GitHub solo ofrece checks que haya visto ejecutarse sobre una pull request, y el workflow que os despliega solo se dispara con un push a <code>main</code> —lo leísteis la semana pasada, en la línea que <em>no</em> ponía <code>pull_request</code>.</p>
+  <p>Así que hoy vuestra rama principal está cerrada, pero <strong>nadie comprueba nada</strong> antes de fusionar. Dejadla sin marcar y no la olvidéis: en la sesión 3 escribís el workflow que valida el HTML, los enlaces y la accesibilidad, y volvéis aquí a marcarla. Vais a ver el agujero de primera mano en el reto del bloque C.</p>
+</div>
 
 **3 · Guardar** con **Create**.
 
 <div class="rule">
   <p class="rule-label">Cero aprobaciones no significa que nadie revise</p>
-  <p>Con cero aprobaciones obligatorias podéis fusionar vosotros mismos, pero solo desde una pull request y solo con los checks en verde. Quien vigila que el trabajo sea correcto es la máquina; quien vigila que <em>haga lo que la issue pedía</em> es vuestra pareja, y esa revisión no la comprueba GitHub: la comprueba la nota. Cada proyecto se entrega con las revisiones que habéis dejado en el repositorio del otro, y son públicas y llevan fecha.</p>
+  <p>Con cero aprobaciones obligatorias podéis fusionar vosotros mismos, pero solo desde una pull request. Quien vigila que el trabajo sea correcto es la máquina; quien vigila que <em>haga lo que la issue pedía</em> es vuestra pareja, y esa revisión no la comprueba GitHub: la comprueba la nota. Cada proyecto se entrega con las revisiones que habéis dejado en el repositorio del otro, y son públicas y llevan fecha.</p>
 </div>
 
 **4 · Comprobar que os bloquea a vosotros.** Esto no es opcional: una protección que nadie ha probado no se sabe si está activa.
@@ -651,11 +703,11 @@ git push -u origin 3-cabecera-con-nombre
   <p>Escribir <code>Closes #3</code> en la descripción hace que, al fusionar, la issue 3 se cierre sola y su tarjeta pase a <em>Done</em>. Sin esa línea el tablero se convierte en un sitio donde nada se cierra nunca y hay que ir a mano. Cuesta once caracteres.</p>
 </div>
 
-**6 · Esperar a las comprobaciones.** Abajo del todo aparecen los checks. En un minuto, un comentario automático de Azure con un enlace: es **vuestra rama publicada en una URL temporal**. Abridla. Eso es lo que va a revisar vuestra pareja.
+**6 · Avisar a vuestra pareja.** Pasadle el enlace de la pull request. No hay ninguna URL que abrir: lo que hay publicado sigue siendo <code>main</code>, y vuestra rama no está en ningún sitio salvo en GitHub. Para verla hay que traérsela, y eso lo hace quien revisa en el bloque D.
 
 **7 · Revisión.** Vuestra pareja hace el bloque D sobre esta pull request. Mientras tanto, vosotros hacéis lo mismo con la suya.
 
-**8 · Fusionar.** Con la revisión hecha y los checks en verde, **Merge pull request**. Fusionar antes de que vuestra pareja haya respondido es saltarse el circuito aunque GitHub os deje. Elegid **Squash and merge**: los commits de la rama se resumen en uno solo en `main`, y el historial de la rama principal queda con una entrada por tarea. Después, **Delete branch**.
+**8 · Fusionar.** Con la revisión hecha, **Merge pull request**. Fusionar antes de que vuestra pareja haya respondido es saltarse el circuito aunque GitHub os deje. Elegid **Squash and merge**: los commits de la rama se resumen en uno solo en `main`, y el historial de la rama principal queda con una entrada por tarea. Después, **Delete branch**.
 
 **9 · Comprobar los cuatro efectos.** Sin tocar nada más:
 
@@ -665,7 +717,7 @@ git push -u origin 3-cabecera-con-nombre
     <li>La issue 3 se ha cerrado.</li>
     <li>Su tarjeta ha pasado a <em>Done</em> en el tablero.</li>
     <li>En Actions hay un despliegue nuevo a producción.</li>
-    <li>La URL pública ya muestra el cambio, y la URL temporal ha dejado de existir.</li>
+    <li>La URL pública ya muestra el cambio, en cuanto termine el despliegue de Actions.</li>
   </ul>
 </div>
 
@@ -687,7 +739,7 @@ git branch -d 3-cabecera-con-nombre
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Una issue recorrida entera, con revisión de vuestra pareja y visible en la URL pública.</span></div>
   <div><strong>Si lo tenéis</strong><span>La segunda vuelta completa, y las dos issues cerradas por su pull request y no a mano.</span></div>
-  <div><strong>Reto</strong><span>Provocad un fallo a propósito: abrid una pull request que rompa el despliegue, comprobad que el check sale en rojo y que GitHub no os deja fusionar. Después arregladlo en la misma rama y ved cómo el check se pone verde solo.</span></div>
+  <div><strong>Reto</strong><span>Romped la web a propósito: en una rama, cambiad <code>index.html</code> por algo inservible, abrid la pull request y fusionadla. Nadie os lo va a impedir, y la URL pública se rompe. Anotad cuántos minutos pasan hasta que os dais cuenta y quién debería haberlo parado. Arregladlo con otra issue y guardad las dos pull requests: son el argumento de la sesión 3.</span></div>
 </div>
 
 #### Bloque D · Revisar sin escribir «ok»
@@ -696,21 +748,43 @@ git branch -d 3-cabecera-con-nombre
 
 Una revisión no es un trámite de cortesía. En un equipo real es el último sitio donde un error cuesta barato.
 
+**Primero, traeros lo que vais a revisar.** La rama de vuestra pareja está en su repositorio, no en el vuestro, y no hay ninguna URL donde esté publicada. La primera vez se clona, en una carpeta aparte y fuera de vuestro proyecto:
+
+```bash
+cd ..
+git clone https://github.com/USUARIO-DE-VUESTRA-PAREJA/portfolio.git portfolio-pareja
+cd portfolio-pareja
+```
+
+A partir de ahí, para cada revisión, con el nombre de rama que aparece en la cabecera de la pull request:
+
+```bash
+git fetch origin
+git switch 3-cabecera-con-nombre
+```
+
+Abrid ahora ese `index.html` con doble clic. Lo que veis en el navegador es exactamente lo que esa pull request propone publicar. Al acabar la revisión, `git switch main`.
+
+<div class="rule">
+  <p class="rule-label">Esto no es un rodeo: es lo que hace todo el mundo</p>
+  <p>Algunos servicios publican cada rama en una URL temporal y te ahorran estos dos comandos. Está bien cuando lo hay, pero no siempre lo hay, y una rama que solo se puede revisar si un proveedor la publica es una rama que no sabéis revisar. Bajarse el trabajo de otra persona y ejecutarlo es la operación normal de cualquier equipo, y la vais a repetir todo el curso.</p>
+</div>
+
 En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas y solo tres:
 
 | Se comprueba | Cómo |
 | ------------ | ---- |
 | **Que se entiende qué hace** | Leyendo el título y la descripción, sin abrir el código. Si no se entiende, ya hay algo que comentar |
-| **Que hace lo que la issue pedía** | Abriendo la URL temporal y comparándola con el criterio de aceptación. No se lee el código imaginándoselo: se mira |
+| **Que hace lo que la issue pedía** | Con su rama abierta en vuestro navegador, comparándola con el criterio de aceptación. No se lee el código imaginándoselo: se mira |
 | **Que hace solo eso** | En la pestaña *Files changed*. Un cambio que toca cinco ficheros para una tarea de uno trae cosas de más |
 
 <dl class="worked">
   <dt>Comentario inútil</dt>
   <dd>«Ok, todo bien 👍»</dd>
   <dt>Comentario útil, pidiendo cambios</dt>
-  <dd>«La issue dice que el enlace abre en pestaña nueva y en la vista previa se abre en la misma. Falta ese detalle.»</dd>
+  <dd>«La issue dice que el enlace abre en pestaña nueva y en tu rama se abre en la misma. Falta ese detalle.»</dd>
   <dt>Comentario útil, aprobando</dt>
-  <dd>«Comprobado en la vista previa: nombre, titulación y enlace están, y el enlace abre fuera. Apruebo.»</dd>
+  <dd>«Bajada la rama 3 y abierta: nombre, titulación y enlace están, y el enlace abre fuera. Apruebo.»</dd>
   <dt>Qué los diferencia</dt>
   <dd>Los dos últimos dicen <strong>qué se ha mirado</strong>. Eso es lo que convierte una aprobación en una comprobación y no en una firma.</dd>
 </dl>
@@ -720,12 +794,12 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 | Opción | Cuándo |
 | ------ | ------ |
 | **Comment** | Tenéis una duda pero no bloqueáis |
-| **Approve** | Habéis abierto la vista previa y cumple el criterio |
+| **Approve** | Habéis abierto su rama en el navegador y cumple el criterio |
 | **Request changes** | Falta algo del criterio. No bloquea técnicamente, pero queda escrito: fusionar con cambios pedidos sin contestarlos se ve, y se pregunta en diciembre |
 
 <div class="rule">
   <p class="rule-label">Aprobar sin mirar es la falta grave de este módulo</p>
-  <p>Vuestra aprobación ya no bloquea nada, y por eso vale más: es una afirmación de que habéis comprobado algo, sin ninguna máquina detrás obligándoos. Si aprobáis sin abrir la vista previa y luego lo publicado no cumple la issue, el fallo es de los dos. En la defensa de diciembre voy a abrir una pull request vuestra al azar y voy a preguntar por la revisión que dejasteis.</p>
+  <p>Vuestra aprobación ya no bloquea nada, y por eso vale más: es una afirmación de que habéis comprobado algo, sin ninguna máquina detrás obligándoos. Hoy, además, sois la única comprobación que hay: no existe todavía ningún check que pare nada. Si aprobáis sin bajaros la rama y luego lo publicado no cumple la issue, el fallo es de los dos. En la defensa de diciembre voy a abrir una pull request vuestra al azar y voy a preguntar por la revisión que dejasteis.</p>
 </div>
 
 ---
@@ -738,9 +812,9 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 <div class="checkpoint">
   <p class="checkpoint-label">Trabajo esperado de la unidad</p>
   <ul class="checklist">
-    <li>URL pública en Azure funcionando, y el repositorio público enlazado desde ella.</li>
+    <li>URL pública funcionando, y el repositorio público enlazado desde ella.</li>
     <li>Tablero con seis issues, dos de ellas en <em>Done</em> cerradas por su pull request.</li>
-    <li><code>main</code> protegida con las cuatro reglas, comprobado con un push rechazado.</li>
+    <li><code>main</code> protegida con las tres reglas, comprobado con un push rechazado.</li>
     <li>Dos pull requests fusionadas después de que vuestra pareja las revisara, con comentarios que dicen qué se miró.</li>
     <li>Dos revisiones hechas por vosotros en el repositorio de vuestra pareja.</li>
   </ul>
@@ -751,9 +825,9 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
   <ol>
     <li>¿Qué le falta a la tarea «mejorar la página de inicio» para ser una issue?</li>
     <li>¿Qué hace exactamente <code>Closes #7</code> y dónde se escribe?</li>
-    <li>Vuestra pareja ha revisado y aprobado, pero el check está en rojo. ¿Podéis fusionar?</li>
+    <li>Hoy podéis fusionar una pull request que rompe la web publicada. ¿Qué regla falta y por qué no se ha podido activar?</li>
     <li>¿Por qué se vuelve a <code>main</code> y se hace <code>pull</code> antes de crear cada rama?</li>
-    <li>¿En qué se diferencia la URL que aparece en el comentario de una pull request de la URL del README?</li>
+    <li>Vuestra pareja quiere ver su cambio funcionando antes de aprobarlo. ¿Qué dos comandos necesita?</li>
   </ol>
 </div>
 
@@ -761,9 +835,9 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
   <summary>Ver respuestas</summary>
   <p>1 · Un criterio de aceptación: qué se tiene que ver en pantalla para darla por hecha. Sin eso no se puede terminar ni revisar.</p>
   <p>2 · En la descripción de la pull request. Al fusionar, cierra la issue 7 y su tarjeta pasa a <em>Done</em> sola.</p>
-  <p>3 · No. La regla de <em>status checks</em> lo impide, y esa es justamente su función: la revisión humana y la comprobación automática son dos condiciones distintas, y esta segunda no se negocia.</p>
+  <p>3 · Falta <em>Require status checks to pass</em>. No se ha podido activar porque no existe todavía ninguna comprobación que se ejecute sobre una pull request: el workflow de despliegue solo corre sobre <code>main</code>. Hoy la única condición para fusionar es que haya una pull request; que lo que entra funcione depende únicamente de la revisión humana.</p>
   <p>4 · Para que la rama nueva salga de lo último publicado. Si sale de la rama anterior, la pull request arrastra cambios que no le corresponden.</p>
-  <p>5 · La del README es producción y refleja <code>main</code>. La de la pull request es temporal, refleja solo esa rama y desaparece al cerrarla.</p>
+  <p>5 · <code>git fetch origin</code> y <code>git switch nombre-de-la-rama</code>, en su copia del repositorio de quien abrió la pull request. Después abre el <code>index.html</code> en el navegador.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -771,14 +845,14 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
   <ul class="checklist">
     <li>Una tercera issue recorrida entera <strong>fuera de clase</strong>, con su pull request revisada. El historial tiene que enseñar trabajo en más de un día.</li>
     <li>Ninguna rama vieja abierta en vuestro repositorio: lo fusionado se borra.</li>
-    <li>La regla del check de Azure marcada, si os la dejasteis pendiente en el bloque B.</li>
+    <li>Vuestra pareja clonada en una carpeta aparte, y las dos revisiones hechas con su rama abierta delante, no leyendo el diff a ojo.</li>
     <li>Traéis una idea de qué secciones va a tener el portfolio. En la sesión 3 empieza la web de verdad y se le añade un pipeline que la comprueba.</li>
   </ul>
 </div>
 
 <div class="rule">
   <p class="rule-label">Qué pasa en la sesión 3</p>
-  <p>Hasta ahora el único check que teníais es el de Azure, que solo dice si el despliegue subió. En la sesión 3 se escribe un workflow propio que valida el HTML, busca enlaces rotos y mide accesibilidad, y se añade a las reglas de <code>main</code>. A partir de ahí una pull request puede quedar bloqueada por algo que ni vosotros ni vuestra pareja habíais visto.</p>
+  <p>Hasta ahora no tenéis ningún check: <code>main</code> está cerrada, pero lo que entra por la pull request no lo comprueba nadie salvo vuestra pareja. En la sesión 3 se escribe un workflow propio que valida el HTML, busca enlaces rotos y mide accesibilidad, se ejecuta <strong>sobre cada pull request</strong> y se añade a las reglas de <code>main</code> como cuarta regla. A partir de ahí una pull request puede quedar bloqueada por algo que ni vosotros ni vuestra pareja habíais visto, y el reto del bloque C deja de poder repetirse.</p>
 </div>
 
 ## Lo que debes recordar
@@ -792,8 +866,8 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
     <li><span class="flow-role">Rama</span><code>numero-descripcion-corta</code>, sacada siempre de <code>main</code> actualizada.</li>
     <li><span class="flow-role">Commit</span>Un cambio, un mensaje en imperativo, una línea.</li>
     <li><span class="flow-role">Pull request</span>Con <code>Closes #n</code> y una persona asignada para revisar.</li>
-    <li><span class="flow-role">Checks</span>Verde no es una formalidad: es la condición para poder fusionar.</li>
-    <li><span class="flow-role">Revisión</span>Se abre la vista previa y se dice qué se ha comprobado.</li>
+    <li><span class="flow-role">Checks</span>Cuando existan, verde no será una formalidad: será la condición para poder fusionar.</li>
+    <li><span class="flow-role">Revisión</span>Se baja la rama, se abre, y se dice qué se ha comprobado.</li>
     <li><span class="flow-role">Merge</span>Squash, borrar rama, y el despliegue sale solo.</li>
   </ol>
 </figure>
@@ -815,7 +889,7 @@ Tres ideas que sostienen todo lo demás:
 | Pull request | Propuesta de incorporar una rama a otra. Es donde ocurren la comprobación automática y la revisión humana |
 | Workflow | Fichero en <code>.github/workflows/</code> que dice qué ejecuta GitHub y cuándo. Va versionado con el proyecto |
 | Check | Resultado de una comprobación automática sobre una pull request. Puede bloquear la fusión |
-| Entorno de vista previa | URL temporal donde se publica una rama mientras su pull request está abierta. Desaparece al cerrarla |
-| Secreto | Credencial guardada en el repositorio, legible por los workflows y por nadie más. Nunca se escribe en un fichero |
+| Entorno de vista previa | URL temporal donde algunos proveedores publican una rama mientras su pull request está abierta. GitHub Pages no lo hace: aquí una rama se revisa trayéndosela con <code>git fetch</code> y <code>git switch</code> |
+| Secreto | Credencial guardada en el repositorio, legible por los workflows y por nadie más. Nunca se escribe en un fichero. El despliegue de esta unidad no necesita ninguno: usa un permiso temporal que caduca al acabar la ejecución |
 | Ruleset | Conjunto de reglas que GitHub aplica sobre una rama. Es lo que convierte el circuito en obligatorio |
 | Definición de terminado | Las cinco condiciones que cumple cualquier trabajo de este módulo antes de darse por hecho |

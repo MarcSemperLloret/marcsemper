@@ -395,7 +395,7 @@ export const teachingCourses: TeachingCourse[] = [
     overviewEs: "26 talleres de tres horas, uno al principio de cada semana, sobre el trabajo de Servidor de la semana anterior: 14 en el primer trimestre y 12 en el segundo. Se mantienen el producto elegido, su autoría/equipo y el repositorio del backend. El primero termina con el backend persistente publicado; el segundo coordina cliente, seguridad, integraciones y entrega final después de su explicación en Servidor. La demostración y las evidencias se comparten, con criterios diferenciados de implementación y proceso. Cada taller dedica 25 minutos a explicación, 140 a trabajo guiado y 15 a cierre.",
     outcomes: [
       "Turn work into issues with checkable acceptance criteria.",
-      "Publish a static site on Azure with continuous deployment from GitHub.",
+      "Publish a static site with continuous deployment from GitHub.",
       "Take every change through a branch and a reviewed pull request.",
       "Protect the main branch and show that the circuit cannot be bypassed.",
       "Write a verification pipeline that can block a merge.",
@@ -405,7 +405,7 @@ export const teachingCourses: TeachingCourse[] = [
     ],
     outcomesEs: [
       "Convertir el trabajo en issues con criterios de aceptación comprobables.",
-      "Publicar un sitio estático en Azure con despliegue continuo desde GitHub.",
+      "Publicar un sitio estático con despliegue continuo desde GitHub.",
       "Hacer pasar cada cambio por una rama y una pull request revisada.",
       "Proteger la rama principal y demostrar que el circuito no se puede saltar.",
       "Escribir un pipeline de comprobación capaz de bloquear una fusión.",
