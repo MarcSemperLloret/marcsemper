@@ -456,15 +456,23 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
   <p class="checkpoint-label">Al terminar la sesión</p>
   <ul class="checklist">
     <li>La URL pública abre y muestra vuestra página; si hay un fallo, podéis identificar el paso y el mensaje de error.</li>
-    <li>El README tiene la URL y las cuatro cosas del bloque E.</li>
+    <li>El README tiene la URL y las cuatro cosas del bloque D.</li>
     <li>Podéis localizar el workflow y explicar qué cambio dispara una publicación.</li>
     <li>Habéis comprobado que un segundo cambio actualiza la página mediante el mismo circuito.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--weekly">
+  <p class="checkpoint-label">Para la sesión 2, de casa</p>
+  <ul class="checklist">
+    <li>Traed escritas <strong>seis frases</strong>, una por cada cosa que queráis que tenga el portfolio: una cabecera con vuestro nombre, una sección de proyectos, un formulario de contacto, lo que sea. Frases sueltas, en el móvil o en un papel; no hay que escribir nada en el repositorio.</li>
+    <li>Pensad también con quién vais a trabajar en pareja. En la sesión 2 os vais a revisar el trabajo mutuamente durante todo el trimestre.</li>
+  </ul>
+</div>
+
 <div class="rule">
   <p class="rule-label">Qué pasa en la sesión 2</p>
-  <p>Se cierra <code>main</code>. En la próxima sesión ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request, y ninguna se fusiona sin que vuestra pareja la haya revisado antes. La sesión consiste en montar eso y recorrerlo dos veces.</p>
+  <p>Se cierra <code>main</code>. En la próxima sesión ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request, y ninguna se fusiona sin que vuestra pareja la haya revisado antes. Esas seis frases de arriba se convierten en las seis primeras issues, y dos de ellas las recorreréis enteras en clase.</p>
 </div>
 
 ## Sesión 2 · Issues, tablero y la primera pull request
