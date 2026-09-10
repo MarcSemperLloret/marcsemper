@@ -670,7 +670,7 @@ git reset --hard origin/main
 
 La primera vuelta se hace despacio, mirando los diez pasos. La segunda sale sola.
 
-**1 · Coger una tarea.** En el tablero, la primera issue de *Todo*: movedla a *In Progress* y asignáosla (campo *Assignees*). Apuntad su número; supongamos que es la 3.
+**1 · Coger una tarea.** En el tablero, coged la primera issue de la columna *Todo*: movedla a *In Progress* y asignáosla (campo *Assignees*). Apuntad su número; supongamos que es la 3.
 
 **2 · Crear la rama.** El nombre lleva el número de la issue delante. Es lo que permite, dentro de un mes, saber por qué existe una rama.
 
