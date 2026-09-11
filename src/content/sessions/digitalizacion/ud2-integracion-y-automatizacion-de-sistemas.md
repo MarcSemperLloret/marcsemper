@@ -85,7 +85,7 @@ En Reparaciones Rápidas, terminar una reparación puede iniciar la preparación
 
 #### API: una puerta para comunicarse con una aplicación
 
-Ya conocéis las APIs desde el punto de vista de programación.
+Las APIs ya se han estudiado desde la perspectiva de la programación.
 
 Aquí nos interesa entender **para qué sirven dentro de una empresa**.
 
@@ -160,7 +160,7 @@ El funcionamiento puede representarse así:
 
 Es sencillo de implementar.
 
-Pero puede ser poco eficiente.
+Su eficiencia, sin embargo, es reducida.
 
 Imaginemos que preguntamos cada minuto y el estado cambia una vez al día.
 
@@ -224,7 +224,7 @@ Una forma sencilla de recordarlo:
 
 ##### Polling
 
-> Yo te pregunto periódicamente si ha ocurrido algo.
+> El sistema consulta periódicamente si ha ocurrido algo.
 
 ##### Webhook
 
@@ -422,7 +422,7 @@ Estas herramientas son especialmente útiles para:
 * prototipos;
 * tareas internas.
 
-Pero tampoco sustituyen siempre al desarrollo tradicional.
+Tampoco sustituyen en todos los casos al desarrollo tradicional.
 
 Cuando necesitamos:
 
@@ -439,7 +439,7 @@ puede ser mejor desarrollar la solución mediante código.
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Abre la ficha de Reparaciones Rápidas y crea el registro de la UD2. Copia únicamente el fragmento de vuestro proceso que empieza cuando un técnico termina una reparación.
+1. Abre la ficha de Reparaciones Rápidas y crea el registro de la UD2. Copia únicamente el fragmento del proceso que comienza cuando un técnico termina una reparación.
 2. Escribe el evento en pasado y enumera sus datos mínimos: identificador de reparación, fecha de cierre y referencia del cliente. Explica por qué cada dato resulta necesario.
 3. Dibuja tres participantes: gestión de reparaciones, facturación y servicio de avisos. Asigna a cada uno una responsabilidad; evita que dos piezas mantengan estados contradictorios sin explicarlo.
 4. Simula un intercambio: una persona prepara una tarjeta con la petición de factura y otra responde «creada» con su identificador. Si falta un dato, devuelve «petición incompleta» e indica cuál.

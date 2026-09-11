@@ -14,7 +14,7 @@ outcomes:
   - "Convertir una pregunta de negocio en un análisis."
   - "Distinguir hecho, interpretación, recomendación y supuesto."
   - "Auditar una conclusión generada por IA."
-  - "Decir qué NO pueden responder los datos que tenéis."
+  - "Determinar qué preguntas NO puede responder el conjunto de datos disponible."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
   - "Materiales del caso y herramientas indicadas en la unidad."
@@ -126,7 +126,7 @@ Por ejemplo:
 
 Queremos analizar cuánto dinero genera cada operación.
 
-Pero no tenemos una columna `Revenue`.
+El conjunto de datos, sin embargo, no incluye una columna `Revenue`.
 
 Podemos calcularla:
 
@@ -136,7 +136,7 @@ Este tipo de columna calculada aparece constantemente en análisis de datos.
 
 La IA puede ayudarnos a crearla.
 
-Pero primero tendremos que comprobar si podemos utilizar directamente todos los registros.
+Antes conviene comprobar si todos los registros son utilizables de forma directa.
 
 #### Un dato extraño no siempre es un error
 
@@ -148,7 +148,7 @@ Podríamos pensar:
 
 > Eso es imposible. Lo eliminamos.
 
-Pero quizá representa una devolución, una cancelación o un ajuste.
+Ese valor puede representar, no obstante, una devolución, una cancelación o un ajuste contable.
 
 Los datos necesitan **contexto**.
 
@@ -221,7 +221,7 @@ Los datos deben decirnos qué ocurre realmente.
 ---
 
 
-Sin guion. Formulad vuestra propia pregunta de negocio, decidid qué métrica la responde y comprobad qué podría estar engañándoos.
+Sin guion. Formula una pregunta de negocio propia, determina qué métrica la responde y comprueba qué podría estar engañándoos.
 
 </details>
 
@@ -273,7 +273,7 @@ Algunas reglas básicas:
 
 La IA puede recomendar un gráfico.
 
-Pero debemos comprobar que sea adecuado.
+La adecuación de esa recomendación debe comprobarse.
 
 #### Correlación no significa causalidad
 
@@ -283,7 +283,7 @@ Supongamos que descubrimos:
 
 Eso parece razonable.
 
-Pero imaginemos otro resultado:
+Consideremos ahora un resultado distinto:
 
 > Los martes tienen mayor facturación.
 
@@ -303,7 +303,7 @@ No significa que conozca su causa.
 
 Nuestro dataset es real.
 
-Pero eso no significa que podamos responder cualquier pregunta.
+Eso no implica, sin embargo, que permita responder cualquier pregunta.
 
 Por ejemplo, no conocemos necesariamente el coste del producto, el margen, los gastos de envío, las campañas publicitarias, la satisfacción, la competencia ni el stock disponible.
 

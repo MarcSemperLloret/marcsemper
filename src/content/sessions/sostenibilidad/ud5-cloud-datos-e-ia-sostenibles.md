@@ -73,7 +73,7 @@ Usar recursos adecuados a la carga real de la aplicación. Ni demasiado pocos, n
 
 Un ejemplo típico: una aplicación que usa de media un 15 % de CPU y un 25 % de RAM, sobre una máquina virtual de 16 CPU y 64 GB. Eso significa mayor coste, más recursos reservados e infraestructura infrautilizada.
 
-Pero cuidado con la conclusión fácil:
+Conviene evitar, no obstante, la conclusión inmediata:
 
 <div class="compare-pair">
   <div>
@@ -157,7 +157,7 @@ Logs y copias tienen finalidades distintas. Un backup sirve para recuperar; los 
   </ol>
 </figure>
 
-Y no todos se usan igual:
+Su uso tampoco es homogéneo:
 
 <div class="compare-pair">
   <div>
@@ -184,7 +184,7 @@ Responde a una pregunta por cada tipo de dato: ¿cuánto tiempo lo conservamos, 
 
 Las cifras dependen del contexto. Lo que no depende del contexto es que **exista la decisión y esté escrita**.
 
-Y no se decide solo por sostenibilidad: hay datos que deben conservarse por legislación, contratos, seguridad, auditorías o necesidades del negocio. La política equilibra las cuatro cosas.
+La decisión no responde únicamente a criterios de sostenibilidad: hay datos que deben conservarse por legislación, contratos, seguridad, auditorías o necesidades del negocio. La política equilibra las cuatro cosas.
 
 </details>
 
@@ -224,7 +224,7 @@ Un **token** es una unidad de texto que utiliza un modelo; su número no equival
 
 #### El tamaño del modelo también cuenta
 
-Si dos modelos resuelven la tarea y uno es mucho más pequeño, conviene preguntarse si de verdad hace falta el grande. Pero no hay regla universal: uno mayor puede funcionar mejor, cometer menos errores o habilitar funciones que el pequeño no da. La pregunta sigue siendo qué necesita **esta** aplicación.
+Si dos modelos resuelven la tarea y uno es mucho más pequeño, conviene preguntarse si el mayor resulta necesario. No existe, sin embargo, una regla universal: uno mayor puede funcionar mejor, cometer menos errores o habilitar funciones que el pequeño no da. La pregunta sigue siendo qué necesita **esta** aplicación.
 
 #### Tokens
 
@@ -236,7 +236,7 @@ Más texto enviado significa más procesamiento. Enviar información innecesaria
 
 Si tenemos un documento de 500 páginas y queremos el número de factura de la página 3, mandar las 500 páginas es la versión moderna del mismo error. Primero se busca lo relevante, después se pregunta.
 
-Y lo mismo con lo que pedimos de vuelta: generar veinte alternativas cuando necesitamos una, o una imagen 4K para mostrarla a 300 × 200 px. Vuelve el principio de la unidad anterior:
+El mismo criterio se aplica a lo que solicitamos de vuelta: generar veinte alternativas cuando necesitamos una, o una imagen 4K para mostrarla a 300 × 200 px. Vuelve el principio de la unidad anterior:
 
 > **No procesar lo que no necesitamos.**
 

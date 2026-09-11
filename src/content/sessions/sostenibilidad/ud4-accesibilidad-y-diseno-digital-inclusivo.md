@@ -150,7 +150,7 @@ Esto puede parecer un botón:
 <div onclick="comprar()">Comprar</div>
 ```
 
-Pero semánticamente sigue siendo un `div`: no recibe foco, no responde a `Enter`, y un lector de pantalla no lo anuncia como botón. Lo correcto es:
+Semánticamente, sin embargo, sigue siendo un `div`: no recibe foco, no responde a `Enter`, y un lector de pantalla no lo anuncia como botón. Lo correcto es:
 
 ```html
 <button onclick="comprar()">Comprar</button>
@@ -177,7 +177,7 @@ Usar el elemento correcto casi siempre es mejor que reconstruirlo todo a base de
   </div>
 </div>
 
-El `placeholder` desaparece en cuanto se empieza a escribir. La etiqueta no. Y la relación entre etiqueta y campo queda declarada, no sugerida visualmente.
+El `placeholder` desaparece en cuanto se empieza a escribir; la etiqueta permanece. La relación entre etiqueta y campo queda declarada, no sugerida visualmente.
 
 ##### Jerarquía de títulos
 
@@ -197,9 +197,9 @@ Un usuario de lector de pantalla navega saltando entre encabezados. Si la jerarq
 
 #### ARIA
 
-Quizá encontréis atributos como `aria-label`, `aria-expanded` o `role`. ARIA sirve para dar información adicional sobre componentes que HTML no cubre.
+Es posible que aparezcan atributos como `aria-label`, `aria-expanded` o `role`. ARIA sirve para dar información adicional sobre componentes que HTML no cubre.
 
-Pero hay una regla que ahorra muchos problemas:
+Existe una regla que evita la mayoría de los problemas:
 
 > **Si existe un elemento HTML nativo que hace el trabajo, úsalo antes que ARIA.**
 
@@ -287,7 +287,7 @@ button:focus-visible {
 
 Lo importante no es copiar ese CSS: es que el usuario pueda ver dónde está.
 
-**Formularios.** Cada campo con su `label` asociado por `for` e `id`. Y los errores, así:
+**Formularios.** Cada campo con su `label` asociado mediante `for` e `id`. Los errores se declaran así:
 
 <div class="compare-pair">
   <div>

@@ -223,7 +223,7 @@ El **PUE** relaciona energía total del centro con energía de sus equipos infor
 
 Aquí hay que separar dos ideas que suelen confundirse.
 
-La **energía consumida** se mide, por ejemplo, en kWh. Pero consumir 1 kWh no tiene el mismo impacto en todos los lugares ni en todos los momentos: depende de cómo se haya generado esa electricidad.
+La **energía consumida** se mide, por ejemplo, en kWh. Ahora bien, consumir 1 kWh no tiene el mismo impacto en todos los lugares ni en todos los momentos: depende de cómo se haya generado esa electricidad.
 
 Eso es la:
 
@@ -254,7 +254,7 @@ En centros de datos aparece una métrica:
 
 No hacen falta cálculos complejos. Basta con recordar que **un centro de datos consume más energía que la que usan sus servidores**.
 
-Y no todo es electricidad: algunos centros de datos usan agua en sus sistemas de refrigeración.
+El consumo no se limita a la electricidad: algunos centros de datos emplean agua en sus sistemas de refrigeración.
 
 </details>
 

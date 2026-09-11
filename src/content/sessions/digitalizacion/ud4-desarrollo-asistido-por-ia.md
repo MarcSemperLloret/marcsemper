@@ -11,7 +11,7 @@ deliverable: "Mejora del sitio asistida por IA. Una actividad acumulativa por un
 date: "2026-09-09"
 outcomes:
   - "Escribir una petición con objetivo, contexto, restricciones y criterios de aceptación."
-  - "Configurar las instrucciones del repositorio para que el agente conozca vuestro proyecto."
+  - "Configurar las instrucciones del repositorio para que el agente disponga del contexto del proyecto."
   - "Crear una skill reutilizable para una tarea que repetís."
   - "Explicar qué son las tools y MCP, y por qué no se da acceso a todo."
   - "Revisar plan, diff y tests antes de aceptar un cambio."

@@ -70,21 +70,21 @@ En PixelStore, reducir papel puede disminuir un consumo, pero no describe el imp
 
 Cuando pensamos en sostenibilidad solemos imaginar contaminación, cambio climático, reciclaje, energía o residuos. Todo eso es importante.
 
-Pero una empresa también afecta a sus trabajadores, a sus clientes, a sus proveedores, a las comunidades donde opera, a los usuarios y a las administraciones.
+Una empresa afecta además a sus trabajadores, a sus clientes, a sus proveedores, a las comunidades donde opera, a los usuarios y a las administraciones.
 
-Y además importa cómo toma decisiones, cómo protege los datos, cómo gestiona sus riesgos y si es transparente.
+Importa asimismo cómo toma decisiones, cómo protege los datos, cómo gestiona sus riesgos y en qué grado es transparente.
 
 Por eso analizamos tres grandes dimensiones:
 
 <p class="term">ASG</p>
 
-También las encontraréis con las siglas inglesas **ESG**.
+También se designan mediante las siglas inglesas **ESG**.
 
 ##### A · Ambiental
 
 La dimensión **ambiental** analiza cómo afecta una organización al medio ambiente: consumo de electricidad, emisiones, consumo de agua, residuos, uso de materiales, transporte, fabricación de dispositivos y residuos electrónicos.
 
-Podríamos pensar que una empresa de software tiene poco impacto porque «solo fabrica cosas digitales». Pero una aplicación necesita esto por debajo:
+Cabría suponer que una empresa de software tiene un impacto reducido por operar únicamente sobre productos digitales. Sin embargo, toda aplicación requiere la siguiente infraestructura:
 
 <figure class="diagram">
   <figcaption>Lo que hay debajo de una aplicación</figcaption>
@@ -207,7 +207,7 @@ Clientes, inversores y reguladores pueden pedir información con finalidades dif
 
 #### De reto a riesgo y a oportunidad
 
-Aquí hay un giro que cambia la conversación. Hasta ahora hemos mirado **de dentro hacia fuera**: cómo afecta la empresa a las personas y al entorno. Pero también existe la dirección contraria.
+El análisis admite una segunda perspectiva. Hasta este punto se ha examinado la dirección **de dentro hacia fuera**: cómo afecta la empresa a las personas y al entorno. Existe también la dirección inversa.
 
 <div class="compare-pair">
   <div>
@@ -220,7 +220,7 @@ Aquí hay un giro que cambia la conversación. Hasta ahora hemos mirado **de den
   </div>
 </div>
 
-Y no son la misma pregunta. Un ejemplo con algo que ya conocéis:
+No se trata de la misma pregunta. Un ejemplo sobre un caso ya conocido:
 
 <dl class="worked">
   <dt>El asunto</dt>
@@ -233,7 +233,7 @@ Y no son la misma pregunta. Un ejemplo con algo que ya conocéis:
   <dd>Un mercado que ahora mismo no se está atendiendo, y un argumento comercial cuando el cliente sea una administración que lo exija en el pliego.</dd>
 </dl>
 
-Fijaos en que el impacto y el riesgo **no siempre van juntos**. Puede haber un impacto grande que a la empresa no le cueste nada, y un riesgo enorme por algo cuyo impacto real es pequeño. Un análisis honesto mira las dos direcciones y dice cuál está mirando.
+Conviene observar que el impacto y el riesgo **no siempre coinciden**. Puede haber un impacto grande que a la empresa no le cueste nada, y un riesgo enorme por algo cuyo impacto real es pequeño. Un análisis honesto mira las dos direcciones y dice cuál está mirando.
 
 </details>
 
@@ -286,7 +286,7 @@ Imaginad una gran empresa tecnológica. Detectamos dos problemas ambientales:
   </div>
 </div>
 
-Los dos son problemas ambientales, pero no tienen el mismo impacto. Y una empresa tiene recursos limitados, así que hay que decidir qué se resuelve primero.
+Ambos son problemas ambientales, pero su impacto no es equivalente. Dado que los recursos de una empresa son limitados, resulta necesario establecer una prioridad de resolución.
 
 Para eso existe el concepto de:
 
@@ -294,7 +294,7 @@ Para eso existe el concepto de:
 
 No hace falta una definición complicada. Podemos entenderlo como **identificar qué aspectos son lo bastante importantes como para merecer atención y recursos**.
 
-Y para decidirlo hacen falta las dos preguntas de la sesión anterior, no una:
+Esa decisión requiere las dos preguntas de la sesión anterior, no una sola:
 
 <div class="compare-pair">
   <div>
@@ -346,14 +346,14 @@ Vamos a convertir tres afirmaciones en datos. La primera la hacemos juntos.
   <dd>8,2 MB → 2,1 MB. Ahora la mejora se puede comprobar, y también discutir.</dd>
 </dl>
 
-Fijaos en el paso intermedio. La afirmación no se convierte en indicador de golpe: primero hay que decidir **qué se puede observar**. Ahí es donde se cae la mayoría de las promesas de sostenibilidad.
+Conviene detenerse en el paso intermedio. Una afirmación no se transforma en indicador de forma directa: antes es necesario determinar **qué resulta observable**. Ahí es donde se cae la mayoría de las promesas de sostenibilidad.
 
 
 Ahora esta:
 
 > Nuestros equipos duran más.
 
-Hay al menos tres cosas observables: la vida media de cada ordenador, el porcentaje de equipos reparados y el porcentaje de equipos reutilizados. Elegid una y decid qué mide exactamente y qué se le escapa.
+Hay al menos tres cosas observables: la vida media de cada ordenador, el porcentaje de equipos reparados y el porcentaje de equipos reutilizados. Elige una y determina qué mide con exactitud y qué queda fuera de su alcance.
 
 <dl class="answer">
   <dt>Indicador elegido</dt>

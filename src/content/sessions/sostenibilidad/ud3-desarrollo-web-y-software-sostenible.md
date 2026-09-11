@@ -92,7 +92,7 @@ Muchas optimizaciones que reducen recursos mejoran a la vez la velocidad, la exp
   </ol>
 </figure>
 
-Por eso **rendimiento y sostenibilidad suelen apuntar en la misma dirección**. Pero no son lo mismo, y conviene no confundirlos: una web puede ser rapidísima porque tiene un servidor enorme detrás.
+Por eso **rendimiento y sostenibilidad suelen apuntar en la misma dirección**, aunque no son lo mismo, y conviene no confundirlos: una web puede ser rapidísima porque tiene un servidor enorme detrás.
 
 </details>
 
@@ -132,7 +132,7 @@ Una medida de partida permite comparar un cambio. Si medimos una vez con caché 
 
 #### Chrome DevTools
 
-Abrid la web y pulsad **F12**, o entrad por Herramientas de desarrollador. Nos interesa sobre todo el panel **Network**.
+Abre la web y pulsa **F12**, o accede por Herramientas de desarrollador. Interesa sobre todo el panel **Network**.
 
 Cada vez que se carga una página el navegador pide recursos, y ahí vemos el nombre, el tipo, el tamaño, el tiempo, el servidor y el número de peticiones:
 
@@ -154,7 +154,7 @@ Lighthouse es una herramienta automatizada integrada en Chrome que audita rendim
 
 No usaremos su puntuación como una verdad. Es una **herramienta de diagnóstico**: sirve para saber dónde mirar, no para saber si hemos acabado.
 
-Un *Performance* de 92 no significa que la web sea «un 92 % sostenible». Y un 100 tampoco significa que no quede nada por mejorar: significa que esa herramienta, con esos criterios, no ha encontrado nada. Lo que importa es lo que hay detrás del número.
+Un *Performance* de 92 no significa que la web sea «un 92 % sostenible», del mismo modo que un 100 tampoco significa que no quede nada por mejorar: significa que esa herramienta, con esos criterios, no ha encontrado nada. Lo que importa es lo que hay detrás del número.
 
 </details>
 
@@ -278,7 +278,7 @@ Guardar temporalmente un recurso para reutilizarlo sin volver a pedirlo.
   </div>
 </div>
 
-Esto reduce peticiones, transferencia y latencia. Pero trae su propio problema: si modificamos `style.css` y el navegador conserva la versión antigua, el usuario ve una web rota. Por eso hay que gestionar cuándo un recurso deja de ser válido.
+Esto reduce peticiones, transferencia y latencia, a costa de un problema propio: si modificamos `style.css` y el navegador conserva la versión antigua, el usuario ve una web rota. Por eso hay que gestionar cuándo un recurso deja de ser válido.
 
 No entraremos en configuración avanzada. Basta con entender **qué problema resuelve la caché y qué problema crea**.
 
@@ -296,7 +296,7 @@ Los recursos de texto —HTML, CSS, JavaScript, JSON— pueden comprimirse duran
   </ol>
 </figure>
 
-Pero no todo se comprime otra vez: un AVIF ya viene fuertemente comprimido, y volver a comprimirlo apenas aporta nada mientras consume tiempo de CPU en los dos extremos.
+No todo admite una segunda compresión: un AVIF llega ya fuertemente comprimido, y volver a comprimirlo apenas aporta nada mientras consume tiempo de CPU en los dos extremos.
 
 > **La optimización también tiene coste.** No hacemos trabajo que no produce un beneficio razonable.
 
@@ -314,7 +314,7 @@ Una solución es la **paginación**: pedir solo lo que hace falta ahora.
 GET /productos?page=1&size=20
 ```
 
-Y lo mismo con las columnas. Si necesitamos nombre, precio e imagen, quizá no hacía falta:
+El mismo criterio se aplica a las columnas. Si necesitamos nombre, precio e imagen, quizá no hacía falta:
 
 ```sql
 SELECT *

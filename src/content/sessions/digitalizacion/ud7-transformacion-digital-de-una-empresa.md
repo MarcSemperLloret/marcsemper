@@ -81,7 +81,7 @@ La tecnología es un medio. El objetivo es **mejorar cómo funciona la organizac
 1. Abre la ficha de TecnoClima del paquete de casos y crea el documento de UD7. Esta es una propuesta empresarial; no se pide programar una aplicación nueva.
 2. Dibuja solicitud, asignación, visita, cierre y facturación. Indica persona responsable y lugar donde se guarda la información en cada paso.
 3. Marca tres problemas respaldados por la ficha. Separa hechos, consecuencias plausibles y datos que faltan. Elige uno como prioridad inicial y justifica a quién afecta.
-4. Escribe cinco preguntas para la dirección que puedan cambiar vuestra propuesta: acceso, conectividad, volumen, formación o restricciones económicas.
+4. Escribe cinco preguntas dirigidas a la dirección que puedan modificar la propuesta: acceso, conectividad, volumen, formación o restricciones económicas.
 5. Intercambia el proceso con otra pareja y comprueba si puede seguir una intervención completa. Corrige omisiones y guarda las preguntas pendientes sin inventar respuestas.
 
 ### Cierre
@@ -129,7 +129,7 @@ Podemos conseguir que, cuando ocurre A, automáticamente ocurra B:
 
 Podemos tener aplicaciones y datos disponibles mediante infraestructura cloud, lo que facilita el acceso remoto, el despliegue, la escalabilidad y la disponibilidad.
 
-Pero cloud no es automáticamente mejor para todo.
+El modelo cloud no resulta, sin embargo, preferible en todos los casos.
 
 ##### Datos
 
@@ -149,7 +149,7 @@ Podemos pasar de simplemente guardar información a recorrer el camino completo:
 
 Podría ayudarnos a resumir informes, clasificar incidencias, buscar información, detectar patrones, asistir a los trabajadores o analizar datos.
 
-Pero antes debemos preguntar: ¿existe realmente un problema que justifique utilizar IA?
+Antes conviene formular la pregunta previa: ¿existe un problema que justifique el uso de IA?
 
 ##### Ciberseguridad
 
@@ -164,7 +164,7 @@ Una empresa digital también tiene nuevos riesgos. Debemos pensar quién accede,
 1. Duplica el diagrama actual en una sección TO-BE y modifica solo los pasos relacionados con la prioridad elegida. Conserva el original para comparar.
 2. Para cada cambio escribe problema resuelto, responsable y dato afectado. Comprueba qué ocurre si el técnico no tiene conexión durante la visita.
 3. Dibuja interfaz, registro de intervenciones, facturación y avisos como piezas separadas. Etiqueta cada flecha con información concreta y evita copiar todo en todas partes.
-4. Compara dos alternativas para la pieza principal: servicio existente o desarrollo propio. Anota ventajas, mantenimiento y una condición que os haría cambiar la elección.
+4. Compara dos alternativas para la pieza principal: servicio existente o desarrollo propio. Anota ventajas, mantenimiento y una condición que obligaría a modificar la elección.
 5. Sigue un caso normal y una incidencia sobre el diagrama. Si falta una responsabilidad o se pierde un dato, corrige el flujo antes de incorporar más tecnología.
 
 ### Cierre
@@ -230,7 +230,7 @@ Decir «hemos digitalizado la empresa» no significa que la empresa haya mejorad
 
 Indicadores que permiten comprobar el resultado. Por ejemplo: tiempo medio de asignación, número de llamadas preguntando por el estado, tiempo administrativo por reparación, duración media de la intervención o satisfacción del cliente.
 
-Elegid **tres indicadores**, y comprobad que se pueden medir:
+Selecciona **tres indicadores** y comprueba que resultan medibles:
 
 <div class="compare-pair">
   <div>

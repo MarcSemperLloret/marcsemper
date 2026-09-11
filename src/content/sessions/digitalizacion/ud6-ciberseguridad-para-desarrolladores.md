@@ -193,7 +193,7 @@ const query =
     "'";
 ```
 
-Parece funcionar. Pero estamos construyendo una consulta mezclando código SQL con entrada del usuario, lo que puede permitir una vulnerabilidad de:
+El resultado es aparentemente correcto, pero la consulta se construye concatenando código SQL con entrada del usuario, lo que puede permitir una vulnerabilidad de:
 
 <p class="term">SQL Injection</p>
 
@@ -263,7 +263,7 @@ Normalmente almacenamos un resultado derivado mediante una función apropiada pa
 
 Para passwords se utilizan algoritmos específicamente diseñados para ello: Argon2, bcrypt, scrypt o PBKDF2. No inventamos nuestro propio sistema criptográfico.
 
-##### ¿Cifrar y hacer hash es lo mismo?
+##### Cifrado y funciones hash: dos operaciones distintas
 
 No.
 
@@ -311,7 +311,7 @@ El error clásico es este:
   </ol>
 </figure>
 
-El secreto puede quedar en el historial del repositorio aunque después lo borréis del código.
+El secreto permanece en el historial del repositorio aunque se elimine posteriormente del código.
 
 #### 4 · Dependencias y configuración
 
@@ -359,7 +359,7 @@ Una aplicación puede tener código correcto y estar mal configurada. Por ejempl
 * una base de datos accesible públicamente;
 * puertos abiertos innecesariamente.
 
-Recordad lo aprendido en Azure:
+Conviene recuperar lo estudiado sobre Azure:
 
 <figure class="diagram">
   <figcaption>La seguridad está presente en todas las capas</figcaption>
@@ -400,7 +400,7 @@ Ocultar los errores al usuario no significa no registrarlos. Necesitamos saber q
   </div>
 </div>
 
-Pero tampoco debemos guardar alegremente contraseñas, tokens, números de tarjeta o secretos.
+Tampoco procede almacenar sin criterio contraseñas, tokens, números de tarjeta ni secretos.
 
 ##### HTTPS
 

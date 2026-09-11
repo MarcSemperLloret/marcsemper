@@ -14,7 +14,7 @@ outcomes:
   - "Explicar la diferencia entre IaaS, PaaS y SaaS con un ejemplo propio."
   - "Abrir un puerto en el firewall de la nube y en el del sistema, y saber por qué son dos."
   - "Asociar un nombre DNS y servir la web por HTTPS."
-  - "Dibujar y defender la arquitectura que habéis montado."
+  - "Representar y justificar la arquitectura construida."
 requirements:
   - "Guía de arranque y materiales de esta unidad, enlazados en la página."
   - "Materiales del caso y herramientas indicadas en la unidad."
@@ -128,7 +128,7 @@ La raíz del sitio es la carpeta donde Nginx busca los archivos. Si sirve su bie
 
 **Al terminar la sesión:**
 
-La IP sirve vuestro sitio y el mapa identifica sus dos niveles de control de red. Se evalúa la arquitectura y su comprobación, no un workflow de CI.
+La IP sirve el sitio y el mapa identifica sus dos niveles de control de red. Se evalúa la arquitectura y su comprobación, no un workflow de CI.
 
 
 ## Sesión 3 · Un nombre propio y HTTPS
@@ -209,7 +209,7 @@ Después de montar una VM podemos comparar su coste de administración con un se
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Dibuja el recorrido completo usando los nombres reales de vuestro entorno. Separa la ruta del visitante de la ruta que seguisteis para actualizar el código.
+1. Representa el recorrido completo empleando los nombres reales del entorno propio. Separa la ruta del visitante de la ruta que seguisteis para actualizar el código.
 2. Para cada pieza añade una responsabilidad: resolver nombre, filtrar tráfico, servir archivo, cifrar conexión o conservar versión. Elimina las flechas cuyo significado no puedas explicar.
 3. Completa una tabla IaaS/PaaS/SaaS con qué administraríais en cada modelo y un uso posible para la empresa. No hace falta contratar otras opciones.
 4. Pide a otra pareja que explique qué comprobaría si el sitio responde por IP pero no por nombre. Utiliza su respuesta para detectar y corregir huecos del diagrama.

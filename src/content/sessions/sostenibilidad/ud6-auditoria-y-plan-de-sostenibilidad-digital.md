@@ -151,7 +151,7 @@ El mapa actualizado utiliza resultados del módulo y hace visibles compromisos e
 
 Auditar aquí significa ordenar evidencias y límites para saber de qué partimos. Una **medición** registra una magnitud observada; una **estimación** depende de supuestos; una **propuesta** describe algo que todavía no se ha realizado. Mezclarlas haría que el plan pareciera más demostrado de lo que está.
 
-Las actividades del laboratorio no equivalen automáticamente a datos de toda la empresa. Una reducción de transferencia en vuestra copia de PixelStore es evidencia de esa prueba; extrapolarla a todas las visitas necesita supuestos adicionales.
+Las actividades del laboratorio no equivalen automáticamente a datos de toda la empresa. Una reducción de transferencia en la copia de PixelStore del laboratorio es evidencia de esa prueba; extrapolarla a todas las visitas necesita supuestos adicionales.
 
 ### Se trabaja
 
@@ -189,7 +189,7 @@ Elegir solo mejoras fáciles puede dejar fuera un bloqueo grave. También sería
 
 #### La matriz
 
-Puntuad cada aspecto de 1 (baja) a 3 (alta) en las dos direcciones, y anotad de qué riesgo u oportunidad concreta habláis:
+Puntúa cada aspecto de 1 (baja) a 3 (alta) en las dos direcciones y registra a qué riesgo u oportunidad concreta corresponde:
 
 | Aspecto          | Impacto | Riesgo / oportunidad | ¿Cuál, concretamente? |
 | ---------------- | ------: | -------------------: | --------------------- |
@@ -198,7 +198,7 @@ Puntuad cada aspecto de 1 (baja) a 3 (alta) en las dos direcciones, y anotad de 
 | Privacidad       |       3 |                    3 | Sanción, pérdida de confianza |
 | Optimización web |       2 |                    2 | Coste de infraestructura, conversión |
 
-La última columna es la que evita que esto se convierta en poner números. Si no sabéis nombrar el riesgo, probablemente el 3 era un 1.
+La última columna es la que impide que el ejercicio se reduzca a asignar cifras. Si no es posible nombrar el riesgo, probablemente el 3 era un 1.
 
 No pretendemos hacer una evaluación profesional. Queremos aprender a **justificar prioridades**.
 
@@ -240,11 +240,11 @@ Los objetivos pueden generar incentivos equivocados. Medir solo tamaño podría 
 
 #### Cuidado con lo que premia un objetivo
 
-«Usar todos los ordenadores durante 15 años» es medible, alcanzable y temporal. Y es una mala idea: genera problemas de seguridad, de productividad y de compatibilidad.
+«Usar todos los ordenadores durante 15 años» es medible, alcanzable y temporal, y sin embargo constituye una mala decisión: genera problemas de seguridad, de productividad y de compatibilidad.
 
 > **Un indicador se interpreta con criterio, no se persigue a ciegas.**
 
-Cuando escribáis cada objetivo, preguntaos qué comportamiento absurdo permitiría si alguien solo quisiera cumplirlo.
+Al redactar cada objetivo, conviene preguntarse qué comportamiento inadecuado permitiría si alguien solo quisiera cumplirlo.
 
 </details>
 
@@ -292,9 +292,9 @@ Para decidir obligaciones reales hay que comprobar la normativa vigente, el ámb
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
 1. Para cada objetivo completa acción, responsable propuesto, recursos necesarios y dependencia. Distingue ejecutar la acción de revisar si ha funcionado.
-2. Crea una ficha de indicador con nombre, unidad, fuente, cálculo, frecuencia y limitación. Resuelve primero el de transferencia utilizando vuestra tabla de UD3.
+2. Crea una ficha de indicador con nombre, unidad, fuente, cálculo, frecuencia y limitación. Resuelve primero el de transferencia utilizando la tabla elaborada en la UD3.
 3. Reproduce ese indicador con los datos disponibles y comprueba la operación. Para los indicadores sin datos, describe cómo se recogerían y marca el valor como pendiente.
-4. Selecciona una referencia del material de consulta que ayude a definir un criterio. Escribe qué aporta y qué no permite afirmar sobre vuestro trabajo.
+4. Selecciona una referencia del material de consulta que ayude a definir un criterio. Escribe qué aporta y qué no permite afirmar sobre el trabajo realizado.
 5. Pide a otra persona que siga una ficha de indicador. Si necesita preguntarte dónde están los datos o qué significa la unidad, completa las instrucciones.
 
 ### Cierre

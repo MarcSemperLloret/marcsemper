@@ -91,7 +91,7 @@ Si sustituimos la libreta por un Excel:
 
 **hemos digitalizado información.**
 
-Pero el proceso sigue siendo prácticamente el mismo.
+El proceso, sin embargo, permanece prácticamente inalterado.
 
 <figure class="diagram">
   <figcaption>Antes · el proceso con la libreta</figcaption>
@@ -293,7 +293,7 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 1. Abre la [ficha de Reparaciones Rápidas](/teaching/transversales/casos.pdf). Identifica el objetivo del trabajo: mejorar la gestión de reparaciones.
 2. Lee la entrada, asignación y cierre de una reparación. Dibuja una caja por acción y une las cajas con flechas; escribe encima quién realiza cada acción. No añadas todavía aplicaciones nuevas.
 3. Marca tres dificultades que aparezcan en la ficha. Para cada una anota el hecho, a quién afecta y su consecuencia. Ejemplo: las fotos quedan en el móvil del técnico; administración no puede consultarlas al preparar la factura.
-4. Elige un problema y conviértelo en una necesidad sin nombrar marcas: «la información de una reparación debe estar disponible para quien la tramita». Distingue el dato del caso de una suposición vuestra.
+4. Elige un problema y formúlalo como necesidad sin mencionar marcas: «la información de una reparación debe estar disponible para quien la tramita». Distingue el dato que aporta el caso de una suposición propia.
 5. Intercambia el dibujo con otra pareja. Pídele que siga una reparación desde la llegada hasta el aviso al cliente. Corrige una flecha o un responsable que no pueda explicar.
 
 ### Cierre
