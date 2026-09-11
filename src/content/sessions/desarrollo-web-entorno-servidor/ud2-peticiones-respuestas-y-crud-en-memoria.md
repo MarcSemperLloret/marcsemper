@@ -31,7 +31,7 @@ priorKnowledge:
 
 ## Sesión 5 · De la petición al objeto Java
 
-**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [vuestro primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). En Servidor continúas la implementación del mismo producto.
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -101,7 +101,7 @@ Es un buen momento para entender algo: **el servidor sabe bastante más de quien
 
 <details class="aside aside--extra">
   <summary>Cabeceras que no siempre vienen</summary>
-  <p>Si pides una cabecera que no llega, obtienes un <code>400</code>, igual que con un <code>@RequestParam</code> obligatorio. Y se arregla igual:</p>
+  <p>Si pides una cabecera que no llega, obtienes un <code>400</code>, igual que con un <code>@RequestParam</code> obligatorio. La corrección es la misma:</p>
   <p><code>@RequestHeader(name = "X-Origen", required = false) String origen</code></p>
   <p>Las cabeceras que empiezan por <code>X-</code> son, por convención, las que se inventa cada aplicación para sus propias necesidades.</p>
 </details>
@@ -153,7 +153,7 @@ Un cuerpo que llega puede estar en tres situaciones muy distintas, y Spring las 
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -312,7 +312,7 @@ Los resultados que sorprenden son estos cuatro, y conviene mirarlos despacio:
   <dt>3 · el objeto vacío</dt>
   <dd><code>200</code>. Se crea una tarea con título <code>null</code>, prioridad <code>null</code> y <code>completada=false</code>. Tu API acaba de aceptar una tarea que no es nada.</dd>
   <dt>5 y 6 · claves que no existen</dt>
-  <dd><code>200</code> las dos, y en silencio. Spring Boot configura Jackson para <strong>ignorar las claves desconocidas</strong>. Da igual que sea una errata tuya o un campo que el cliente se ha inventado: se descarta sin avisar.</dd>
+  <dd><code>200</code> las dos, y en silencio. Spring Boot configura Jackson para <strong>ignorar las claves desconocidas</strong>. Resulta indiferente que se trate de una errata propia o de un campo que el cliente se ha inventado: se descarta sin avisar.</dd>
   <dt>7 · un tipo que no convierte</dt>
   <dd><code>400</code>. <code>"quizás"</code> no es un booleano y Jackson no se lo inventa. Aquí sí protesta, porque es un problema de sintaxis.</dd>
   <dt>8 · un tipo que sí convierte</dt>
@@ -333,7 +333,7 @@ Te dice **la excepción, el motivo y la posición exacta**. Acostúmbrate a leer
 
 #### Paso 9 · Configurar el rechazo de campos JSON desconocidos
 
-Que las claves desconocidas se ignoren no es una ley de la naturaleza: es un ajuste que Spring Boot elige por ti. Puedes darle la vuelta:
+Que las claves desconocidas se ignoren responde a una configuración que Spring Boot aplica por defecto, no a un comportamiento inherente al protocolo. Puedes darle la vuelta:
 
 ```properties
 spring.jackson.deserialization.fail-on-unknown-properties=true
@@ -417,7 +417,7 @@ Sobre tu proyecto:
 4. Activa `fail-on-unknown-properties` y repite los seis. Anota cuáles cambian de resultado y cuáles no.
 5. Escribe en dos frases qué configuración dejarías puesta en tu proyecto y por qué.
 
-#### Paso 12 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 12 · Comprobar y registrar el resultado del proyecto
 
 1. Envía cada variación por separado y relaciona estado, mensaje de la consola y fase de procesamiento. Comprueba si llegó a ejecutarse el método del controlador.
 2. Compara un JSON válido completo, uno con una clave equivocada y otro mal formado. Documenta cuándo hay rechazo y cuándo se construye un objeto con valores por defecto.
@@ -536,14 +536,14 @@ Cuando lo tengas escrito, cópialo al proyecto y compruébalo.
 
 **Al terminar la sesión:**
 
-Podéis explicar de dónde procede cada argumento y conservar peticiones que reproducen los tres casos.
+Debe ser posible explicar de dónde procede cada argumento y conservar peticiones que reproduzcan los tres casos.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 ## Sesión 6 · Escrituras y respuestas HTTP
 
-**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [vuestro primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). En Servidor continúas la implementación del mismo producto.
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). En Servidor continúas la implementación del mismo producto.
 
 
 ### Se explica
@@ -554,9 +554,9 @@ Ya sabes cómo llegan los datos al controlador. Hoy precisarás qué significa r
 
 #### Lo que ya haces y todavía no sabes justificar
 
-En la UD1 escribiste `POST`, `PUT` y `DELETE`. Funcionan. Pero si alguien te pregunta por qué modificar es `PUT` y no `POST`, la respuesta honesta hoy sería «porque lo pone en los apuntes».
+En la UD1 se escribieron `POST`, `PUT` y `DELETE`, y funcionan. Ante la pregunta de por qué modificar corresponde a `PUT` y no a `POST`, sin embargo, la respuesta honesta hoy sería «porque lo indican los apuntes».
 
-Hoy pasamos de la mecánica al criterio. Y el criterio se apoya en dos propiedades que no son opinables: están definidas en la especificación de HTTP y **el resto de Internet cuenta con ellas**.
+Esta sesión pasa de la mecánica al criterio, que se apoya en dos propiedades no opinables: están definidas en la especificación de HTTP y **el resto de Internet cuenta con ellas**.
 
 #### Seguro e idempotente
 
@@ -601,7 +601,7 @@ Ahí está todo el asunto. Si la operación era un `PUT`, reintentar **es seguro
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -626,7 +626,7 @@ PUT /tareas/1
 }
 ```
 
-Mira la tarea después con un `GET /tareas/1`. La prioridad ha desaparecido. Y ha desaparecido **correctamente**: has dicho que la tarea, entera, es solo eso.
+Mira la tarea después con un `GET /tareas/1`. La prioridad ha desaparecido, y lo ha hecho **correctamente**: has dicho que la tarea, entera, es solo eso.
 
 Casi nadie quiere eso. Lo que casi todo el mundo quiere es cambiar un campo y dejar el resto en paz. Para eso existe el otro método.
 
@@ -731,7 +731,7 @@ En el controlador de tu segunda entidad, implementa primero PUT copiando el reco
 4. Demuestra con dos peticiones consecutivas que `PUT` deja el recurso igual y que `POST` no.
 5. Escribe un comentario en el código explicando qué campo de tu modelo **no puedes modificar** con `PATCH` y por qué.
 
-#### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 7 · Comprobar y registrar el resultado del proyecto
 
 1. Envía dos veces el mismo PUT y consulta el recurso después de cada envío. El estado final debe ser el mismo.
 2. Envía un PATCH que cambie un único campo y verifica que conserva los demás. Repite un DELETE y explica por qué el recurso sigue ausente aunque pueda cambiar el código de respuesta.
@@ -836,7 +836,7 @@ Hoy le ponemos remedio con la herramienta que ya tienes instalada.
 
 <p class="term">Colección</p>
 
-Un conjunto de peticiones guardadas, con nombre, organizadas en carpetas y **en un orden**. No es un cajón: es un guion que se puede ejecutar de principio a fin.
+Un conjunto de peticiones guardadas, con nombre, organizadas en carpetas y **en un orden**. No constituye un repositorio desordenado, sino un guion ejecutable de principio a fin.
 
 <p class="term">Variable</p>
 
@@ -848,7 +848,7 @@ Un juego de valores para esas variables. El entorno «local» dice que `baseUrl`
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -876,7 +876,7 @@ public ResponseEntity<Tarea> detalle(@PathVariable(name = "id") int id) {
 
 <dl class="worked">
   <dt>El tipo devuelto</dt>
-  <dd><code>ResponseEntity&lt;Tarea&gt;</code> significa «una respuesta HTTP completa cuyo cuerpo, si lo hay, es una tarea». El objeto ya no es la respuesta: es una parte de ella.</dd>
+  <dd><code>ResponseEntity&lt;Tarea&gt;</code> significa «una respuesta HTTP completa cuyo cuerpo, si lo hay, es una tarea». El objeto deja de ser la respuesta para pasar a ser una parte de ella.</dd>
   <dt><code>ResponseEntity.ok(tarea)</code></dt>
   <dd>Código 200 y la tarea como cuerpo. Es exactamente lo que hacía Spring solo, escrito a mano.</dd>
   <dt><code>ResponseEntity.notFound().build()</code></dt>
@@ -923,7 +923,7 @@ Comprueba en Postman que `PUT /tareas/999` ahora responde `404` y no `200`.
 
 #### Paso 4 · Crear devuelve 201, y dice dónde
 
-Una creación correcta responde `201 Created`. Y hay una segunda parte que casi todo el mundo se salta:
+Una creación correcta responde `201 Created`. Existe una segunda parte que suele omitirse:
 
 <p class="term">Cabecera Location</p>
 
@@ -966,7 +966,7 @@ public ResponseEntity<Void> eliminar(@PathVariable(name = "id") int id) {
 
 <p class="term">204 No Content</p>
 
-«Ha ido bien y no tengo nada que devolverte.» No es un error ni una respuesta vacía por descuido: es la forma correcta de responder a una operación que no produce contenido.
+«Ha ido bien y no tengo nada que devolverte.» No constituye un error ni una respuesta vacía por omisión, sino la forma correcta de responder a una operación que no produce contenido.
 
 Fíjate en `ResponseEntity<Void>`: el tipo declara que esta respuesta **nunca** lleva cuerpo. Es documentación que además comprueba el compilador.
 
@@ -1082,7 +1082,7 @@ A partir de ahí, en las peticiones siguientes:
 <div class="rule">
   <p class="rule-label">Por qué esto lo cambia todo</p>
   <p>Con las peticiones encadenadas, tu colección deja de ser una lista de cosas sueltas y pasa a ser <strong>un escenario completo</strong>: crear, consultar lo creado, modificarlo, borrarlo y comprobar que ya no está.</p>
-  <p>Ese escenario se ejecuta entero con un botón y sin intervención humana. Y eso es exactamente lo que hace un test automático, que es a donde vamos en la UD4.</p>
+  <p>Ese escenario se ejecuta completo con una sola acción y sin intervención humana, que es exactamente lo que realiza un test automático, que es a donde vamos en la UD4.</p>
 </div>
 
 #### Paso 12 · Comprobaciones automáticas
@@ -1165,7 +1165,7 @@ Repítelo con otras dos averías a tu elección: por ejemplo, que el borrado no 
 
 Escribe después una frase por avería: **¿cuánto habrías tardado en darte cuenta sin la colección?**
 
-#### Paso 17 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 17 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta la colección completa desde un estado conocido. Debe crear su propio registro, recoger su id y usarlo en las peticiones siguientes, sin ids copiados manualmente.
 2. Comprueba 201 y Location al crear, 404 al consultar un recurso ausente y 204 sin cuerpo al borrar. Cambia únicamente la variable de dirección para repetir el recorrido en otro entorno disponible.
@@ -1273,7 +1273,7 @@ Si falla una petición, se distingue el contrato de su implementación: una ruta
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1328,7 +1328,7 @@ Las dos últimas filas son las únicas que no has hecho nunca. Piensa antes de e
 <details class="aside aside--help">
   <summary>Estoy atascado · la ruta anidada</summary>
   <p>Fíjate en qué identifica y qué filtra. El <code>{id}</code> del proyecto <strong>identifica</strong>, así que va en la ruta; eso ya lo decidiste en la UD1.</p>
-  <p>Para saber qué tareas son suyas necesitas recorrer la lista de tareas comparando su <code>proyectoId</code>. Y antes de eso, comprobar que el proyecto existe: si no existe, la respuesta no es una lista vacía.</p>
+  <p>Para saber qué tareas son suyas necesitas recorrer la lista de tareas comparando su <code>proyectoId</code>. Antes de eso debe comprobarse que el proyecto existe: si no existe, la respuesta no es una lista vacía.</p>
 </details>
 
 #### Paso 3 · La prueba de aceptación
@@ -1399,7 +1399,7 @@ Fíjate en la tercera fila: tu API acepta tareas que pertenecen a proyectos que 
   <p>4 · Porque no hay validación: nadie ha escrito todavía qué condiciones debe cumplir una tarea para ser válida, así que Jackson construye el objeto y el controlador lo guarda.</p>
 </details>
 
-#### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 7 · Comprobar y registrar el resultado del proyecto
 
 1. Reproduce el ciclo CRUD de la entidad principal y de las relacionadas previstas hasta ahora. Cada operación debe coincidir con su contrato documentado.
 2. Reinicia, recrea los datos mediante la colección y ejecútala de nuevo. Deja registrado que perder datos al reiniciar sigue siendo una limitación conocida de esta versión.
@@ -1436,7 +1436,7 @@ El paso cuatro es la unidad entera resumida en una línea: **una operación no t
 
 ### La idea más importante
 
-> **El código de estado no es un detalle de la respuesta: es la parte sobre la que el cliente decide. Un `200` es una afirmación, y afirmar que todo ha ido bien cuando no has encontrado nada es mentir con buena sintaxis.**
+> **El código de estado no constituye un detalle de la respuesta, sino la parte sobre la que el cliente decide. Un `200` es una afirmación, y afirmar que todo ha ido bien cuando no has encontrado nada es mentir con buena sintaxis.**
 
 De ahí sale el resto de la unidad. Por eso un recurso ausente es `404` y una lista vacía no lo es, por eso crear devuelve `201` y dice dónde, por eso borrar devuelve `204`, y por eso hoy sabes que un cuerpo incompleto que devuelve `200` es un problema aunque no lance ninguna excepción.
 
@@ -1554,15 +1554,15 @@ En la UD1 preguntábamos cómo conseguir que la aplicación respondiera. En esta
   </ol>
 </figure>
 
-Y tienes los seis motivos delante, todos comprobados por ti en la sesión 8:
+Los seis motivos están documentados, todos ellos comprobados en la sesión 8:
 
 | Lo que tu API sigue haciendo mal | Se arregla en |
 | :--- | :--- |
 | Acepta una tarea sin título, sin prioridad y sin nada | UD3, con validación |
 | Acepta una tarea de un proyecto que no existe | UD3 |
 | Sus errores no explican qué hay que corregir | UD3, con errores coherentes |
-| Publica el modelo interno entero, tal cual está escrito | UD3, con DTO |
+| Publica el modelo interno íntegro, en su forma interna | UD3, con DTO |
 | Sus rutas las has ido nombrando por intuición | UD3, con diseño orientado a recursos |
 | Al reiniciar se pierde todo | UD5, con PostgreSQL |
 
-Y aquí se cobra el trabajo de estas dos semanas: cuando en la UD3 aparezcan los DTO, las anotaciones de validación y el manejador de errores, **no serán temas nuevos**. Serán las respuestas a seis problemas que ya has visto fallar, con una colección lista para demostrar que se han arreglado.
+El trabajo de estas dos semanas se rentabiliza aquí: cuando en la UD3 aparezcan los DTO, las anotaciones de validación y el manejador de errores, **no serán temas nuevos**. Serán las respuestas a seis problemas que ya has visto fallar, con una colección lista para demostrar que se han arreglado.

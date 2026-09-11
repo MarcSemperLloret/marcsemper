@@ -106,7 +106,7 @@ private static final Logger log = LoggerFactory.getLogger(MiServicio.class);
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -206,7 +206,7 @@ Cuando alguien dice «no sé qué más probar», casi siempre es porque solo ha 
   <dt>1 · Los bordes de un rango</dt>
   <dd>Si el presupuesto máximo son 150.000 €, hay que probar <strong>149.999, 150.000 y 150.001</strong>. El error de programación más común del mundo es confundir <code>&gt;</code> con <code>&gt;=</code>, y solo el valor exacto del borde lo detecta. Lo mismo con longitudes: un campo de 3 a 80 caracteres se prueba con 2, 3, 80 y 81.</dd>
   <dt>2 · El vacío y la ausencia</dt>
-  <dd>No son lo mismo y se comportan distinto: una cadena vacía, una cadena de espacios, un <code>null</code> y un campo que ni siquiera viene en el JSON. Y en las colecciones: la lista vacía, que es el caso que revienta cualquier cálculo de media o de máximo.</dd>
+  <dd>No son lo mismo y se comportan distinto: una cadena vacía, una cadena de espacios, un <code>null</code> y un campo que ni siquiera consta en el JSON. En las colecciones, el caso equivalente es la lista vacía, que invalida cualquier cálculo de media o de máximo.</dd>
   <dt>3 · Lo que rompe el formato</dt>
   <dd>Acentos y eñes, emojis, comillas simples dentro de un texto, cadenas de 10.000 caracteres, números negativos donde esperas positivos, y una fecha de fin anterior a la de inicio. Ninguno es rebuscado: todos llegan de usuarios reales.</dd>
   <dt>4 · El orden y la repetición</dt>
@@ -401,7 +401,7 @@ public class ProyectoService {
 
 Abre el manejador creado en la UD3, aunque en otros ejemplos se llame GlobalExceptionHandler: no crees un segundo manejador. En el auxiliar que construye ProblemDetail añade `problem.setProperty("correlationId", MDC.get("correlationId"))`, utilizando el nombre real de tu variable e importando `org.slf4j.MDC`. Reproduce un 409 y comprueba que el id del cuerpo coincide con el de la cabecera y los logs. Si el fallo ocurre en un filtro de seguridad, deberá utilizar su propio manejador de respuesta.
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Añade pruebas para los casos ausentes y verifica que fallan al introducir temporalmente el defecto que deberían detectar; restaura después el código correcto.
 2. Reproduce las dos peticiones y localiza cada una por su identificador. El mensaje público debe permitir relacionar el fallo sin revelar trazas internas ni datos sensibles.
@@ -535,7 +535,7 @@ Utiliza esta lista de comprobación para auditar la aplicación:
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -651,7 +651,7 @@ Utiliza un clon y una configuración de desarrollo separados. Para cada dimensi�
   <dd>Has arrancado el proyecto de otro equipo sin ayuda; tu informe tiene hallazgos en las cinco dimensiones, etiquetados por gravedad y con su razón; has respondido a todos los que te hicieron; los bloqueantes están corregidos y la suite sigue verde.</dd>
 </dl>
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta desde la documentación los casos válidos y rechazados y contrasta estados, campos, ejemplos y requisitos de acceso.
 2. Intercambia la revisión con otra persona, corrige discrepancias reproducibles y registra qué cambió en código o documentación y cómo se verificó.

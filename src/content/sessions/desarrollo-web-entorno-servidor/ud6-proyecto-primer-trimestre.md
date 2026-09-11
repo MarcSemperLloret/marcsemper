@@ -64,7 +64,7 @@ El error más destructivo cuando el plazo es corto es organizar el trabajo por �
 * **Tercer tramo:** escribir todos los servicios.
 * **Último tramo:** escribir los controladores e intentar arrancar por primera vez.
 
-¿Qué ocurre el jueves por la tarde? La aplicación arroja 35 errores en cascada: tipos de datos incompatibles, dependencias circulares, mapeos erróneos de Hibernate y excepciones `PropertyReferenceException`. Como has tocado 40 archivos de golpe, **es imposible saber qué línea originó el desastre**.
+¿Qué ocurre el jueves por la tarde? La aplicación arroja 35 errores en cascada: tipos de datos incompatibles, dependencias circulares, mapeos erróneos de Hibernate y excepciones `PropertyReferenceException`. Al haberse modificado 40 archivos en una sola operación, **resulta imposible determinar qué línea originó el fallo**.
 
 En ingeniería de software profesional utilizamos **cortes verticales** (*Vertical Slices* o *Tracer Bullets*):
 
@@ -96,7 +96,7 @@ Ahora tu aplicación ya hace algo real, está probada, compila y no se romperá 
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -286,7 +286,7 @@ Elige el primer requisito pendiente de la matriz y reproduce su fallo. Localiza 
    * Sustitúyela por una consulta con `JOIN FETCH` o paginación con `Pageable`.
 3. Ejecuta la suite completa: `./mvnw test` debe pasar al 100 % en verde.
 
-#### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 9 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta de nuevo cada comprobación que antes fallaba y registra qué cambio la ha corregido.
 2. Repite el recorrido completo del producto y confirma que el repositorio contiene instrucciones suficientes para arrancar esa versión con su base de datos.
@@ -421,7 +421,7 @@ Ejemplo de observación técnica bien formulada:
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -485,7 +485,7 @@ Las tres preguntas que caen casi siempre en esta primera defensa, y que conviene
   <dd>Tu proyecto arranca desde cero en la máquina del equipo revisor; has dejado y recibido observaciones categorizadas por severidad; las bloqueantes están corregidas y la suite sigue en verde; y has ensayado la defensa entera con el cronómetro delante al menos una vez.</dd>
 </dl>
 
-#### Paso 4 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 4 · Comprobar y registrar el resultado del proyecto
 
 1. Reproduce el caso permitido y el rechazado, y explica qué capa decide cada resultado y qué datos quedan almacenados.
 2. Haz que otra persona siga el README y registre cualquier paso que falte. Incorpora la corrección y deja el commit final de la revisión identificado.

@@ -117,7 +117,7 @@ En la demostración el profesor arrancará el programa, abrirá `/hola` y señal
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 Al terminar tendrás el tema de tu CRUD, una aplicación que responde a tres rutas y su primera versión en GitHub. **CRUD** significa crear, consultar, modificar y borrar información: lo construiremos progresivamente en este mismo proyecto. Los tiempos de los pasos orientan el taller; si una comprobación falla, utiliza la ayuda de ese paso antes de continuar.
 
@@ -255,7 +255,7 @@ En **Linux o macOS**, el mismo paso se escribe:
 
 El primer fragmento llama al wrapper de Maven de esta carpeta. `spring-boot:run` le pide ejecutar la aplicación. Si Linux o macOS dice que no tienes permiso para ejecutar el archivo, aplica `chmod +x mvnw` y repite el comando.
 
-Con las extensiones puestas habrás visto que hay botones para esto: encima del método `main` aparecen las palabras **Run | Debug**, y el panel de Spring Boot arranca la aplicación con un play. Hacen lo mismo. Hoy lo lanzamos desde la terminal porque así todos veis exactamente la misma salida y aprendéis a leerla; a partir de la sesión 2 usa el botón si prefieres.
+Con las extensiones instaladas aparecen controles para esta operación: encima del método `main` aparecen las palabras **Run | Debug**, y el panel de Spring Boot arranca la aplicación con un play. Hacen lo mismo. En esta sesión se lanza desde la terminal para que la salida sea idéntica para todo el grupo y pueda aprenderse a interpretarla; a partir de la sesión 2 usa el botón si prefieres.
 
 3. Espera a que aparezcan mensajes que contengan `Tomcat started on port 8080` y `Started GestorApplication`. El texto alrededor puede variar. La terminal queda ocupada porque el servidor sigue funcionando: no es un bloqueo.
 4. Abre `http://localhost:8080/` en el navegador. Aparecerá una respuesta de error, normalmente una página **Whitelabel Error Page** con estado `404`. Has llegado al servidor, pero todavía no has programado qué debe devolver la ruta `/`.
@@ -379,7 +379,7 @@ git push -u origin main
 
 Completa el inicio de sesión que solicite Git. La [guía de GitHub para subir código local](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github) desarrolla este procedimiento.
 
-**Si ya hay repositorio en Intermodular**, utiliza su carpeta clonada. Coloca allí el proyecto sin copiar otra carpeta `.git`; conserva el README existente y complétalo. No repitas `git init` ni `git remote add`: guarda y sube los cambios con las ramas y revisiones que estéis usando allí.
+**Si ya hay repositorio en Intermodular**, utiliza su carpeta clonada. Sitúa allí el proyecto sin copiar otra carpeta `.git`; conserva el README existente y complétalo. No repitas `git init` ni `git remote add`: guarda y publica los cambios mediante las ramas y revisiones establecidas en ese módulo.
 
 **Comprueba en GitHub:** abre el README y el controlador. Contrasta su contenido con tu copia local y localiza en el historial el cambio que acabas de guardar. Debes poder recuperar esa versión del proyecto.
 
@@ -448,7 +448,7 @@ pagina=2       tercer par
 Tres cosas que conviene saber desde hoy:
 
 * El **orden no importa**: `?a=1&b=2` y `?b=2&a=1` son la misma petición.
-* Todo llega como **texto**. `pagina=2` no es un número: es la cadena `"2"`. Que acabe siendo un `int` en tu método es trabajo de Spring, no del navegador.
+* Todo llega como **texto**. `pagina=2` no constituye un número, sino la cadena `"2"`. Que acabe siendo un `int` en tu método es trabajo de Spring, no del navegador.
 * Los caracteres raros se codifican. Un espacio viaja como `%20` o como `+`, y una `ñ` como `%C3%B1`. Lo verás en el panel de red y no debe alarmarte.
 
 #### La regla para decidir dónde va cada dato
@@ -472,7 +472,7 @@ Esa última fila combina las dos ideas, y es la forma que tendrá casi toda tu A
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -537,7 +537,7 @@ Ahora pide la ruta **sin el parámetro**:
 http://localhost:8080/saludo
 ```
 
-Y observa:
+Observa a continuación:
 
 ```json
 {
@@ -593,7 +593,7 @@ Pruébalo con `/incidencias?estado=abierta&pagina=3`, y también sin ningún par
 
 Fíjate en `int pagina`. Por la URL llegó el texto `"3"` y en tu método hay un entero: **Spring ha convertido el tipo por ti**. Lo hace con `int`, `long`, `boolean`, `LocalDate` y muchos más.
 
-Y ahora rómpelo otra vez:
+Rómpelo de nuevo:
 
 ```text
 http://localhost:8080/incidencias?pagina=abc
@@ -682,7 +682,7 @@ La ruta final es la del `@RequestMapping` de la clase más la del método:
 | `lista` | `/usuarios` |
 | `detalle` | `/usuarios/3` |
 
-Un `@GetMapping` sin argumento significa «la ruta de la clase, tal cual».
+Un `@GetMapping` sin argumento designa la ruta declarada en la clase, sin segmento adicional.
 
 <details class="aside aside--extra">
   <summary>Curiosidad · qué pasa si dos rutas encajan a la vez</summary>
@@ -717,7 +717,7 @@ Amplía tu controlador con dos rutas más, decidiendo tú dónde va cada dato:
 
 Para cada una, escribe en un comentario del código la respuesta a esto: qué datos has puesto en la ruta, cuáles en la query string, y qué prueba de la regla has aplicado para decidirlo.
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Prueba el saludo con el parámetro ausente, vacío y con un nombre. Con `defaultValue="mundo"`, los dos primeros deben devolver `Hola, mundo.`.
 2. Consulta el detalle con `7` y con `abc`: el primero devuelve el texto que has programado y el segundo produce 400 al no poder convertirse a entero. Un número como `999` todavía no permite saber si existe un registro: esa búsqueda aún no está implementada.
@@ -753,7 +753,7 @@ Predice, **antes de probarlo**, qué devuelve cada petición: el código de esta
 4. `GET /tareas`
 5. `POST /tareas/5`
 
-Después copia el controlador en tu proyecto y compruébalas una a una. **De las cinco, dos suelen fallarse.** Cuando encuentres una predicción equivocada, no la corrijas y ya está: escribe qué regla habías aplicado mal.
+Después copia el controlador en tu proyecto y compruébalas una a una. **De las cinco, dos suelen fallarse.** Cuando una predicción resulte equivocada, no basta con corregirla: escribe qué regla habías aplicado mal.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Las rutas <code>/saludo</code>, <code>/saludo?nombre=Marc</code> y <code>/usuarios/3</code> funcionando, y sabes provocar el 400.</span></div>
@@ -775,7 +775,7 @@ Después copia el controlador en tu proyecto y compruébalas una a una. **De las
 
 **Al terminar la sesión:**
 
-Las rutas de listado y detalle devuelven textos que incorporan los parámetros recibidos. Podéis localizar el método que atendió cada petición; la consulta de objetos reales comienza en la sesión 3.
+Las rutas de listado y detalle devuelven textos que incorporan los parámetros recibidos. Debe ser posible localizar el método que atendió cada petición; la consulta de objetos reales comienza en la sesión 3.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
@@ -809,7 +809,7 @@ Tarea 3: Revisar el login, prioridad alta, sin terminar
 
 Para saber la prioridad tendría que buscar la palabra «prioridad», contar comas y confiar en que nadie cambie nunca la redacción. El día que alguien escriba «Prioridad: alta» en lugar de «prioridad alta», el programa que lo lee se rompe.
 
-Un backend no habla con personas: **habla con programas**. Y los programas necesitan datos con forma, no frases.
+Un backend no habla con personas: **habla con programas**, y los programas requieren datos estructurados, no frases.
 
 ```json
 {
@@ -842,7 +842,7 @@ Un **objeto**: llaves, y dentro pares de clave y valor separados por comas. Las 
 
 Un **array**: corchetes y valores separados por comas.
 
-Y los valores pueden ser de seis tipos, incluidos otro objeto y otro array, que es lo que permite anidar cuanto haga falta:
+Los valores admiten seis tipos, incluidos otro objeto y otro array, que es lo que permite anidar cuanto haga falta:
 
 | Valor JSON | Ejemplo | Equivalente en Java |
 | :--- | :--- | :--- |
@@ -884,7 +884,7 @@ Al abrir `http://localhost:8080/tareas` en la barra del navegador, se envía GET
 
 `405 Method Not Allowed`. La ruta existe, pero no con ese método.
 
-Y aquí está el problema, que conviene ver con claridad: **no hay ninguna forma de escribir una URL que provoque un POST**. La barra de direcciones siempre hace `GET`. Siempre. No es una limitación que se pueda rodear con un truco.
+El problema conviene enunciarlo con claridad: **no existe forma de escribir una URL que provoque un POST**. La barra de direcciones siempre hace `GET`. Siempre. No es una limitación que se pueda rodear con un truco.
 
 Si existe también un método GET para esa ruta, el navegador ejecutará ese GET y no aparecerá el 405. Para elegir POST y enviar un cuerpo utilizaremos el cliente HTTP de la práctica.
 
@@ -907,7 +907,7 @@ No hay contradicción. Lo que no recuerda nada es **el protocolo**: la petición
 <div class="rule">
   <p class="rule-label">Compruébalo de la peor manera posible</p>
   <p>Crea dos o tres tareas. Después <strong>para la aplicación y vuelve a arrancarla</strong>. Pide <code>GET /tareas</code>.</p>
-  <p>Vacío. Todo perdido. La memoria es del proceso, y el proceso ha muerto. Esto no es un defecto de lo que has hecho hoy: es exactamente el problema que resuelve una base de datos, y por eso existe la UD5.</p>
+  <p>Vacío. Todo perdido. La memoria es del proceso, y el proceso ha muerto. El comportamiento no constituye un defecto del trabajo realizado, sino exactamente el problema que resuelve una base de datos, y por eso existe la UD5.</p>
 </div>
 
 ##### ¿Por qué `GET /tareas/999` no da error?
@@ -918,7 +918,7 @@ Está mal, y conviene que sepas por qué: **le estás diciendo al cliente que to
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1076,7 +1076,7 @@ Deja `getTitulo()` como estaba antes de seguir.
 <details class="aside aside--help">
   <summary>Y si quiero que la clave se llame distinta al getter</summary>
   <p>Se puede, con <code>@JsonProperty("titulo_tarea")</code> sobre el <em>getter</em>. Hoy no lo usamos y conviene saber por qué: retocar el modelo para que el JSON salga bonito acaba mezclando dos cosas distintas —cómo guardas los datos y cómo los publicas—.</p>
-  <p>La solución buena es tener una clase aparte para lo que se publica. Se llama DTO y es el contenido central de la UD2. Hasta entonces, el modelo se devuelve tal cual.</p>
+  <p>La solución adecuada consiste en declarar una clase independiente para lo que se publica. Se denomina DTO y constituye el contenido central de la UD2. Hasta entonces el modelo se devuelve sin transformación.</p>
 </details>
 
 #### Paso 5 · Devolver varias tareas
@@ -1102,7 +1102,7 @@ Recuerda importar `java.util.List`.
  {"id":2,"titulo":"Actualizar dependencias","prioridad":"baja","completada":true}]
 ```
 
-El navegador lo mostrará todo seguido en una línea. No es un problema: es que nadie ha pedido que se formatee. En Chrome y Firefox tienes una pestaña de visualización de JSON que lo ordena, y en el trabajo siguiente Postman te lo dará indentado y coloreado.
+El navegador lo mostrará todo seguido en una línea. No se trata de un defecto: nadie ha solicitado que la salida se formatee. En Chrome y Firefox tienes una pestaña de visualización de JSON que lo ordena, y en el trabajo siguiente Postman te lo dará indentado y coloreado.
 
 <div class="rule">
   <p class="rule-label">Objeto o array: la decisión importa</p>
@@ -1211,7 +1211,7 @@ Lo contrario de la serialización que acabas de observar: convertir el texto JSO
 
 En este modelo con constructor vacío y setters, **para esto hacía falta el constructor vacío**. Jackson necesita poder crear el objeto antes de saber qué valores va a ponerle. Si borras ese constructor, este endpoint deja de funcionar.
 
-Y por la misma razón hacen falta los *setters*: al serializar, Jackson lee con los *getters*; al deserializar, escribe con los *setters*.
+Por la misma razón resultan necesarios los *setters*: al serializar, Jackson lee con los *getters*; al deserializar, escribe con los *setters*.
 
 1. Método `POST`, URL `http://localhost:8080/tareas`.
 2. Abre la pestaña **Body**, debajo de la URL.
@@ -1250,7 +1250,7 @@ Pruébalas las tres. Anota el código y quédate con el patrón.
 
 La tercera merece detenerse. `color` no existe en la clase `Tarea`, y aun así la petición **funciona**: Spring Boot está configurado para **ignorar en silencio las claves que no reconoce**.
 
-Y lo mismo pasa con una errata. Envía esto:
+El mismo comportamiento se produce ante una errata. Envía esto:
 
 ```json
 {
@@ -1336,7 +1336,7 @@ Retoma el controlador de la otra entidad que preparaste en la sesión 2, por eje
 3. Comprueba las tres en Postman siguiendo la misma secuencia de cuatro pasos de antes, y anota el código de estado de cada una.
 4. Envía un POST con **un campo mal escrito a propósito** y anota qué llega y qué responde.
 
-#### Paso 13 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 13 · Comprobar y registrar el resultado del proyecto
 
 1. Envía un POST con un objeto JSON válido y consulta el listado con GET sin reiniciar. Debe aparecer el objeto; en esta primera versión el identificador aún puede venir del cliente.
 2. Reinicia y vuelve a consultar: los datos añadidos desaparecen porque estaban en memoria. Conserva la petición válida y otra con JSON mal formado, que debe producir 400.
@@ -1431,7 +1431,7 @@ Después provoca las tres en tu proyecto para confirmar tus hipótesis. La terce
 
 **Al terminar la sesión:**
 
-Las peticiones de alta y consulta funcionan sin editar el código entre envíos. Podéis explicar la conversión entre JSON y Java y por qué los datos se pierden al reiniciar. En la sesión 4 el servidor pasará a asignar el identificador.
+Las peticiones de alta y consulta funcionan sin editar el código entre envíos. Debe ser posible explicar la conversión entre JSON y Java, y por qué los datos se pierden al reiniciar. En la sesión 4 el servidor pasará a asignar el identificador.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
@@ -1471,7 +1471,7 @@ Hoy la colección vive en el proceso Java. El reinicio elimina sus datos y es un
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1605,7 +1605,7 @@ El paso 10 es el que suspende a más gente. Si tu contador vuelve a repartir el 
 
 #### Paso 6 · Lo que tu API todavía hace mal
 
-Esto no es un apartado de autocrítica: es el índice de las cuatro unidades siguientes. Comprueba tú mismo cada punto y anota qué responde.
+Este apartado no constituye un ejercicio de autocrítica, sino el índice de las cuatro unidades siguientes. Comprueba tú mismo cada punto y anota qué responde.
 
 | Prueba esto | Lo que pasa | Lo correcto | Dónde se arregla |
 | :--- | :--- | :--- | :--- |
@@ -1645,7 +1645,7 @@ Ese tercer apartado no resta nota. Se lee en la primera sesión de la UD2.
   <p>4 · Porque utiliza una consulta GET para cambiar datos. Los clientes pueden repetir o precargar consultas suponiendo que no modifican el estado; reserva las escrituras para los métodos HTTP correspondientes.</p>
 </details>
 
-#### Paso 8 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 8 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta en orden crear, listar, consultar por id, modificar, consultar de nuevo y borrar. Comprueba los datos después de cada escritura, no solo el estado HTTP.
 2. Crea dos registros sin elegir sus ids: el servidor debe asignar valores diferentes. Consulta un id ausente y anota la limitación que aún tenga la respuesta; los estados se ajustarán en la UD2.
@@ -1819,9 +1819,9 @@ Partiremos exactamente del proyecto que has construido aquí, y de su lista de d
 | :--- | :--- |
 | Un recurso que no existe responde `200` con el cuerpo vacío | UD2, con `ResponseEntity` |
 | Crear algo responde `200` en lugar de `201` | UD2 |
-| El modelo interno se publica entero, tal cual | UD3, con DTO |
+| El modelo interno se publica íntegro y sin transformación | UD3, con DTO |
 | Una tarea sin título se acepta sin protestar | UD3, con validación |
 | Los errores no explican qué corregir | UD3 |
 | Al reiniciar se pierde todo | UD5, con PostgreSQL |
 
-Y aquí se cobra el trabajo de estas dos semanas: cuando en la UD2 aparezcan `ResponseEntity`, los códigos de estado y la colección de pruebas, no será material nuevo cayendo del cielo. Será la respuesta a problemas que **ya has visto fallar en tu propio proyecto**.
+El trabajo de estas dos semanas se rentabiliza aquí: cuando en la UD2 aparezcan `ResponseEntity`, los códigos de estado y la colección de pruebas, no será material nuevo cayendo del cielo. Será la respuesta a problemas que **ya has visto fallar en tu propio proyecto**.

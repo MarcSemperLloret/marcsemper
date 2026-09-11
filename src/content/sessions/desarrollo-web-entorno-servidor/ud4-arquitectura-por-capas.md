@@ -45,7 +45,7 @@ Quieres comprobar que una tarea nueva nace sin completar. Hoy, para comprobarlo,
 
 Todo eso **para comprobar un `false`**.
 
-Y no es solo que sea lento: es que si falla, no sabes si ha fallado la regla, la ruta, el mapper, la validación o el JSON que escribiste. La prueba no señala el culpable.
+El problema no es solo su lentitud: ante un fallo resulta imposible determinar si el defecto está en la regla, en la ruta, en el mapper, en la validación o en el JSON escrito. La prueba no señala el culpable.
 
 Imagina tres peticiones perfectamente razonables:
 
@@ -63,7 +63,7 @@ Todos los que mencionen `tareas`. Es decir, todos. Un cambio de almacenamiento a
 
 #### Adónde vamos
 
-La solución no es un truco de Spring: es una idea vieja y sencilla. Separar por **motivo de cambio**.
+La solución no procede de ninguna característica de Spring, sino de un principio anterior y sencillo: separar por **motivo de cambio**.
 
 <figure class="diagram">
   <figcaption>Tres capas, tres motivos de cambio</figcaption>
@@ -82,12 +82,12 @@ La solución no es un truco de Spring: es una idea vieja y sencilla. Separar por
 
 Fíjate en la columna de la derecha, que es la que de verdad importa: **el service no sabrá que existe HTTP**. Por eso se podrá probar sin arrancar un servidor, y por eso el CSV y la tarea programada podrán reutilizarlo.
 
-Primero identificaremos esas responsabilidades en vuestro controlador; después las separaremos en repositorio, servicio y controlador, comprobando que las peticiones siguen dando el mismo resultado.
+Primero identificaremos esas responsabilidades en el controlador actual; después las separaremos en repositorio, servicio y controlador, comprobando que las peticiones siguen dando el mismo resultado.
 
 #### Las tres capas, sin misticismo
 
 <figure class="diagram">
-  <figcaption>Quién llama a quién. Y solo en esa dirección</figcaption>
+  <figcaption>Quién llama a quién, y únicamente en esa dirección</figcaption>
   <ol class="flow flow--row flow--chain">
     <li>Controller</li>
     <li>Service</li>
@@ -111,7 +111,7 @@ La consecuencia más útil, y la que hay que retener: **el service no sabe que e
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -123,7 +123,7 @@ La consecuencia más útil, y la que hay que retener: **el service no sabe que e
 
 Esta unidad **no añade ni una funcionalidad**. Al terminar, tu API responderá exactamente lo mismo que hoy: mismas rutas, mismos códigos, mismo JSON. Tu colección de Postman seguirá en verde sin tocar una sola petición.
 
-Y aun así es de las más importantes, porque lo que cambia es **quién puede seguir tocando ese código dentro de seis meses**.
+Aun así se encuentra entre las más importantes, porque determina **quién podrá seguir interviniendo sobre ese código dentro de seis meses**.
 
 <div class="rule">
   <p class="rule-label">Qué es una refactorización</p>
@@ -133,7 +133,7 @@ Y aun así es de las más importantes, porque lo que cambia es **quién puede se
 
 #### Paso 3 · Medir las responsabilidades y dependencias del controlador
 
-«Este código es un desastre» no es un diagnóstico: es una impresión. Vamos a sustituirla por números y por hechos.
+«Este código es un desastre» constituye una impresión y no un diagnóstico. A continuación se sustituye por magnitudes y hechos verificables.
 
 Abre tu `TareaController` y clasifica **cada línea** en una de estas categorías:
 
@@ -440,7 +440,7 @@ Déjalas así hoy. Mañana desaparecen, y entenderás qué se gana porque habrá
 4. Mueve al service la regla del `409` de la UD3 —el nombre repetido— y explica en un comentario por qué es una regla y no una validación de formato.
 5. Ejecuta la colección entera y comprueba que sigue verde.
 
-#### Paso 12 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 12 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta la misma colección después de cada extracción. Sus resultados deben mantenerse sin modificar las peticiones para ocultar un fallo.
 2. Sigue una creación en el código: controller recibe, service decide y repository almacena. Comprueba que otra entidad de tu proyecto sigue la misma distribución.
@@ -506,7 +506,7 @@ La pregunta 4 no la vamos a resolver hoy, pero tienes que saber verla venir.
 
 **Al terminar la sesión:**
 
-El contrato público no cambia y podéis seguir una petición a través de las tres capas.
+El contrato público no cambia y resulta posible seguir una petición a través de las tres capas.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
@@ -535,11 +535,11 @@ Esa línea dice tres cosas a la vez, y solo una es asunto del service:
   <ol class="flow flow--before">
     <li><strong>Necesito un repositorio.</strong> Esto sí es asunto suyo</li>
     <li>Y va a ser <strong>exactamente este</strong>, nunca otro</li>
-    <li>Y lo construyo yo, <strong>ahora</strong>, sin que nadie pueda intervenir</li>
+    <li>Lo construye esta clase, <strong>en este punto</strong>, sin que nadie pueda intervenir</li>
   </ol>
 </figure>
 
-Las dos últimas son decisiones que el service no debería estar tomando. Y tienen consecuencias concretas: en la UD5 habrá que abrirlo para cambiar el repositorio, y en la sesión 17 no se podrá probar sin arrastrar el almacenamiento de verdad.
+Las dos últimas son decisiones que el service no debería tomar, con consecuencias concretas: en la UD5 habrá que abrirlo para cambiar el repositorio, y en la sesión 17 no se podrá probar sin arrastrar el almacenamiento de verdad.
 
 <p class="term">Inversión de control</p>
 
@@ -590,16 +590,16 @@ Verás una alternativa muy extendida:
 private TareaRepository repositorio;
 ```
 
-Funciona. Y es peor, por tres motivos que conviene saber defender:
+El resultado funciona, pero es inferior por tres motivos que conviene saber defender:
 
 <div class="compare-pair">
   <div>
     <p class="compare-label">Por campo</p>
-    <p class="compare-body">El campo no puede ser <code>final</code>. Las dependencias quedan escondidas en mitad de la clase. Y para probarla sin Spring hay que recurrir a reflexión.</p>
+    <p class="compare-body">El campo no puede ser <code>final</code>. Las dependencias quedan ocultas en el cuerpo de la clase, y probarla sin Spring exige recurrir a la reflexión.</p>
   </div>
   <div>
     <p class="compare-label">Por constructor</p>
-    <p class="compare-body">Los campos son <code>final</code>. El constructor enumera todo lo que la clase necesita. Y se puede construir a mano en un test, pasándole lo que quieras.</p>
+    <p class="compare-body">Los campos son <code>final</code>. El constructor enumera todo lo que la clase necesita, de modo que puede instanciarse manualmente en un test con las dependencias que se decidan.</p>
   </div>
 </div>
 
@@ -607,7 +607,7 @@ Hay un cuarto motivo, y es el mejor: **un constructor con seis parámetros se ve
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -714,7 +714,7 @@ public interface TareaRepository {
 }
 ```
 
-Y la implementación de hoy:
+La implementación correspondiente a esta sesión es esta:
 
 ```java
 package com.ejemplo.gestor.repository;
@@ -783,7 +783,7 @@ La primera fila enlaza directamente con la UD1: si tu clase no cuelga del paquet
 4. Comprueba que no queda ningún `new` de un colaborador en controladores ni servicios. El `new Tarea()` de un mapper sí puede quedarse: eso no es un colaborador, es un dato.
 5. Ejecuta la colección: verde otra vez, sin tocar nada.
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Arranca la aplicación y comprueba que Spring puede construir las capas sin dependencias ausentes, ambiguas o circulares.
 2. Ejecuta el CRUD completo y revisa que el servicio depende de la interfaz. Crear objetos de dominio con `new` sigue siendo correcto; lo que cambia es la construcción de colaboradores gestionados por Spring.
@@ -815,7 +815,7 @@ Deja los tres arreglados antes de terminar.
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · Que necesita un colaborador, cuál exactamente y quién lo construye. Solo la primera le corresponde: las otras dos las decide ahora el contenedor.</p>
-  <p>2 · Los campos pueden ser <code>final</code> y el constructor enumera todas las dependencias a la vista; además la clase se puede construir a mano en un test. Y un constructor con demasiados parámetros avisa de que la clase depende de demasiadas cosas.</p>
+  <p>2 · Los campos pueden ser <code>final</code> y el constructor enumera todas las dependencias a la vista; además la clase se puede construir a mano en un test. Un constructor con demasiados parámetros advierte, por su parte, de que la clase depende de demasiadas cosas.</p>
   <p>3 · Porque hay una sola instancia atendiendo a todas las peticiones, así que dos usuarios simultáneos se pisarían los datos.</p>
   <p>4 · Que dos clases se necesitan mutuamente y ninguna se puede construir primero. Casi siempre indica que las responsabilidades están mal repartidas y falta un concepto por nombrar.</p>
 </details>
@@ -890,7 +890,7 @@ Aquellas dos decisiones de la sesión 16 parecían burocracia. Hoy se ve para qu
 <figure class="diagram">
   <figcaption>Por qué se puede probar tu service</figcaption>
   <ol class="flow flow--before">
-    <li>Pide sus dependencias <strong>por constructor</strong>, así que puedo construirlo yo</li>
+    <li>Declara sus dependencias <strong>por constructor</strong>, de modo que el test puede instanciarlo</li>
     <li>Pide una <strong>interfaz</strong>, así que puedo darle lo que quiera que la cumpla</li>
     <li>No sabe nada de HTTP, así que <strong>no hace falta arrancar nada</strong></li>
   </ol>
@@ -921,7 +921,7 @@ Los dos hacen falta: la colección comprueba **el contrato HTTP**, y los tests c
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -958,7 +958,7 @@ public class TareaService {
 }
 ```
 
-Y la excepción, junto a las de la UD3:
+La excepción se declara junto a las de la UD3:
 
 ```java
 package com.ejemplo.gestor.error;
@@ -1055,7 +1055,7 @@ Hay una familia entera que solo aparece cuando algo puede estar en varias situac
 
 De ahí salen reglas que ninguna anotación puede expresar: «una incidencia cerrada no se puede editar», «no se puede cerrar dos veces», «solo se reabre lo que está cerrado».
 
-Y llevan a una pregunta que conviene hacerse pronto: si alguien envía un `PATCH` cambiando el estado de `abierta` a `cerrada`, ¿es eso una modificación cualquiera o **es un caso de uso propio**? Casi siempre lo segundo, y por eso `POST /incidencias/41/cierre` de la sesión 9 tenía sentido: porque detrás hay reglas que un cambio de campo genérico se salta.
+De ahí se deriva una pregunta que conviene plantear pronto: si alguien envía un `PATCH` cambiando el estado de `abierta` a `cerrada`, ¿es eso una modificación cualquiera o **es un caso de uso propio**? Casi siempre lo segundo, y por eso `POST /incidencias/41/cierre` de la sesión 9 tenía sentido: porque detrás hay reglas que un cambio de campo genérico se salta.
 
 #### Paso 5 · El inventario de reglas
 
@@ -1078,7 +1078,7 @@ Y llevan a una pregunta que conviene hacerse pronto: si alguien envía un `PATCH
 
 Mira el `pom.xml`: `spring-boot-starter-test` está desde el primer día, porque lo puso `start.spring.io`. Trae JUnit 5 y todo lo necesario.
 
-Y mira `src/test/java`: existe desde la UD1, con una clase generada dentro. Es la carpeta gemela de `src/main/java`, y **el código de tests no se empaqueta con la aplicación**.
+Conviene examinar `src/test/java`: existe desde la UD1, con una clase generada en su interior. Es la carpeta gemela de `src/main/java`, y **el código de tests no se empaqueta con la aplicación**.
 
 <div class="rule">
   <p class="rule-label">La estructura se copia, no se inventa</p>
@@ -1147,7 +1147,7 @@ Vive en `src/test/java`, así que no se publica con la aplicación.
 
 <details class="aside aside--extra">
   <summary>Existen librerías que generan estos dobles</summary>
-  <p>La más usada se llama <strong>Mockito</strong>, y ya está en tu proyecto dentro de <code>spring-boot-starter-test</code>. Con ella, lo de arriba se escribe en una línea por comportamiento.</p>
+  <p>La más extendida es <strong>Mockito</strong>, ya incluida en el proyecto dentro de <code>spring-boot-starter-test</code>. Con ella, lo de arriba se escribe en una línea por comportamiento.</p>
   <p>Lo hacemos a mano primero porque un doble escrito por ti se entiende sin aprender una sintaxis nueva, y porque así ves que no hay magia: es una clase normal que implementa la misma interfaz. Cuando en la UD11 se ordene la estrategia de pruebas, sabrás qué te está generando la librería.</p>
 </details>
 
@@ -1262,7 +1262,7 @@ El nombre te dice qué regla se ha roto, y el mensaje qué valor esperaba. Sin a
 4. Al menos dos deben usar `assertThrows` y comprobar el mensaje.
 5. Ejecuta `./mvnw test` y deja todo en verde.
 
-#### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 11 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta los tests con el wrapper de Maven usando el objetivo `test`. Deben poder probar el servicio sin escuchar en el puerto 8080.
 2. Comprueba que un caso rechazado conserva el estado previo y que el permitido lo cambia correctamente. Ejecuta además la colección para comprobar que las capas siguen conectadas.
@@ -1281,7 +1281,7 @@ Tienes la regla «un proyecto inactivo no admite tareas nuevas» implementada en
 4. Decide qué hacer con cada uno: ¿se prohíbe, se permite, se avisa? No todas las respuestas tienen que ser «prohibir».
 5. Implementa tu decisión y añade una prueba por camino.
 
-Y la pregunta de fondo, que se responde en dos frases:
+La pregunta de fondo se responde en dos frases:
 
 > Cuando una regla hay que repetirla en tres métodos distintos, ¿es que la regla está mal puesta, o es que falta un concepto en tu modelo?
 
@@ -1314,7 +1314,7 @@ Este reto mide si tus tests valen algo.
 5. Toda fila con un «no» en la primera columna es **un agujero en tu suite**. Escribe el test que falta.
 6. Restaura el código y comprueba que todo vuelve a verde.
 
-Y una reflexión final, para escribir:
+Una reflexión final, que debe redactarse:
 
 > Si un compañero entra mañana en tu proyecto, cambia una línea y ejecuta los tests, ¿qué le protegería y qué no?
 
@@ -1381,7 +1381,7 @@ Las pruebas de servicio completan la colección HTTP: permiten provocar un confl
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1441,7 +1441,7 @@ Ejecuta primero los tests del servicio con el backend detenido; su resultado deb
   </div>
 </div>
 
-Las dos tienen que estar en verde. Y hay una tercera comprobación, la más honesta:
+Ambas deben superarse. Existe una tercera comprobación, la más exigente:
 
 <div class="rule">
   <p class="rule-label">La prueba del cambio pequeño</p>
@@ -1489,7 +1489,7 @@ La cuarta pregunta es la mejor: si tu compañero puede enumerar tus reglas de ne
 | No hay forma de relacionar datos más allá de guardar un id | UD5, con relaciones |
 | Nadie garantiza que dos operaciones simultáneas no se pisen | UD5, con transacciones |
 
-Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, ni la estructura. Eso ya está.
+Conviene observar lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, ni la estructura. Eso ya está.
 
 <div class="rule">
   <p class="rule-label">Por qué la UD5 va a ser más fácil de lo que parece</p>
@@ -1511,7 +1511,7 @@ Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, 
   <p>4 · El coste real de mantener el código: cuántos archivos hay que abrir y cuánto se tarda en un cambio pequeño, comparado con lo que costaba antes.</p>
 </details>
 
-#### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 7 · Comprobar y registrar el resultado del proyecto
 
 1. Los tests del servicio y la colección deben pasar después de la revisión sin cambiar el contrato acordado.
 2. Pide a otra persona que localice almacenamiento, regla y respuesta de una operación. Registra cualquier dependencia entre capas que aún debas corregir.
@@ -1522,7 +1522,7 @@ Y fíjate en lo que **no** aparece en esa tabla: ni el contrato, ni las reglas, 
 
 **Al terminar la sesión:**
 
-La versión en capas supera las comprobaciones anteriores y podéis justificar dónde está cada regla.
+La versión en capas supera las comprobaciones anteriores y permite justificar la ubicación de cada regla.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
@@ -1675,6 +1675,6 @@ Cada vez que has reiniciado la aplicación se ha perdido todo. Lo has anotado co
 | Las relaciones son un `id` suelto que nadie garantiza | UD5, con integridad referencial |
 | Dos operaciones simultáneas pueden pisarse | UD5, con transacciones |
 
-Y aquí se cobra el trabajo de estas dos semanas: **cambiar de almacenamiento va a ser un cambio localizado**. Se borra la implementación en memoria, aparece una interfaz que extiende `JpaRepository`, y el service, el controller, los DTO, el mapper y los tests se quedan exactamente como están.
+El trabajo de estas dos semanas se rentabiliza aquí: **cambiar de almacenamiento será un cambio localizado**. Se borra la implementación en memoria, aparece una interfaz que extiende `JpaRepository`, y el service, el controller, los DTO, el mapper y los tests se quedan exactamente como están.
 
 Si al terminar la UD5 has tenido que abrir el controlador, algo se colocó mal aquí.

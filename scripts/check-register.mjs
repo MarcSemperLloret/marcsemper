@@ -31,7 +31,8 @@ const IMPERATIVE_PL =
 
 const RULES = [
   ["persona: vosotros", w(`vuestr[oa]s?|os|${IMPERATIVE_PL}`)],
-  ["persona: vosotros", new RegExp(`(?<![${L}])[${L}]+(?:áis|éis)(?![${L}])`, "g")],
+  // Los numerales "seis", "dieciséis" y "veintiséis" terminan en -éis sin ser verbos.
+  ["persona: vosotros", new RegExp(`(?<![${L}])(?!(?:dieci|veinti)?séis(?![${L}]))[${L}]+(?:áis|éis)(?![${L}])`, "g")],
   ["persona: yo del profesor", w("yo|miro|no cuento")],
   ["persona: yo del profesor", /\b(me f[ií]o|os (hago|pido|aviso|dejo|cuento)|no me lo he inventado)\b/gi],
   ["coloquialismo", w("da igual|no pasa nada|sale gratis|y ya está|de sobra|tal cual|un montón|se nota|a las prisas|media tarde|a ojo|sin más|de golpe")],

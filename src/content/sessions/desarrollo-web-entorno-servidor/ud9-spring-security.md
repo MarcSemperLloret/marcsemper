@@ -123,7 +123,7 @@ Para que el desarrollo de la seguridad no sea caótico, el equipo de ingeniería
 
 Definimos los 4 roles del sistema. Son los nombres que usará el resto del curso, del `enum Rol` que escribes dentro de un momento hasta el proyecto final, así que conviene fijarlos aquí y no volver a tocarlos:
 
-1. **`ANON`:** visitante sin autenticar. No es un rol de la aplicación: es la ausencia de credenciales.
+1. **`ANON`:** visitante sin autenticar. No constituye un rol de la aplicación, sino la ausencia de credenciales.
 2. **`DESARROLLADOR`:** miembro técnico del equipo.
 3. **`JEFE_PROYECTO`:** responsable de planificación y asignación.
 4. **`ADMINISTRADOR`:** administrador global de la plataforma.
@@ -142,7 +142,7 @@ Definimos los 4 roles del sistema. Son los nombres que usará el resto del curso
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -256,7 +256,7 @@ Vuelve a tu página `cliente/index.html` de la UD8:
 4. **Localiza la cookie con tus ojos.** DevTools → pestaña *Application* (o *Almacenamiento*) → *Cookies* → `http://localhost:8080`. Ahí está `JSESSIONID` con su valor. Anótalo.
 5. **Comprueba que la cookie es la sesión, y no otra cosa.** Bórrala desde ese mismo panel y vuelve a lanzar la petición: el contador empieza de cero y aparece un `JSESSIONID` nuevo. El servidor no te ha reconocido, aunque eres la misma persona en el mismo ordenador. Eso es lo que significa que HTTP no tiene memoria.
 6. **Comprueba que la sesión vive en el servidor.** Con el contador en 5, reinicia Spring Boot sin tocar el navegador y vuelve a pedir. Vuelve a 1: la cookie sigue en tu navegador, pero los datos que apuntaba estaban en la memoria del proceso, y el proceso ha muerto. Es el mismo hecho que descubriste en la sesión 1 con las tareas en memoria, aplicado ahora a la identidad.
-7. Escribe en tres líneas la diferencia entre lo que guarda el navegador (un identificador opaco) y lo que guarda el servidor (los datos asociados). Esa distinción es lo que hará que en la sesión 39 entiendas de golpe qué cambia con un JWT.
+7. Escribe en tres líneas la diferencia entre lo que guarda el navegador (un identificador opaco) y lo que guarda el servidor (los datos asociados). Esa distinción es la que permitirá comprender en la sesión 39 qué cambia al introducir un JWT.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
@@ -347,7 +347,7 @@ Diseña la regla de negocio para el control de acceso a nivel de fila (*Row-Leve
   <dd>Tienes una tabla con todas las casillas rellenas, sin ninguna «depende»; las cuatro decisiones polémicas están tomadas y justificadas por escrito; y has elegido entre <code>403</code> y <code>404</code> con un criterio que puedes defender.</dd>
 </dl>
 
-#### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 9 · Comprobar y registrar el resultado del proyecto
 
 1. Observa cuándo se crea y envía la cookie de sesión y qué ocurre al iniciar otro contexto de navegador sin esa cookie.
 2. Revisa la matriz con otra persona: debe decidir para cada acción si requiere identidad, rol y propiedad, sin dejar casos ambiguos.
@@ -537,7 +537,7 @@ La configuración moderna se realiza mediante un `@Bean` que construye un **`Sec
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -735,7 +735,7 @@ public class SecurityConfig {
   <dt><code>@EnableWebSecurity</code></dt>
   <dd>Le dice a Spring que tú te haces cargo de la configuración de seguridad. En cuanto publicas tu propio <code>SecurityFilterChain</code>, la configuración automática se retira: ya no hay usuario <code>user</code> ni contraseña generada en la terminal.</dd>
   <dt><code>http</code> y el punto al final de cada línea</dt>
-  <dd><code>HttpSecurity</code> es un constructor encadenado: cada método devuelve el mismo objeto, así que se leen en cascada. El orden entre bloques (<code>csrf</code>, <code>authorizeHttpRequests</code>, <code>httpBasic</code>) da igual; el orden <strong>dentro</strong> de <code>authorizeHttpRequests</code> es crítico.</dd>
+  <dd><code>HttpSecurity</code> aplica un patrón de construcción encadenada: cada método devuelve el mismo objeto, de modo que las llamadas se leen en cascada. El orden entre bloques (<code>csrf</code>, <code>authorizeHttpRequests</code>, <code>httpBasic</code>) es indiferente; el orden <strong>dentro</strong> de <code>authorizeHttpRequests</code> es crítico.</dd>
   <dt>Por qué <code>anyRequest()</code> va siempre la última</dt>
   <dd>Las reglas se evalúan de arriba abajo y gana la primera que encaje. Si pusieras <code>anyRequest().authenticated()</code> arriba, engulliría todas las peticiones y las reglas de debajo no se aplicarían nunca. Spring, de hecho, se niega a arrancar si detecta una regla inalcanzable.</dd>
   <dt><code>/**</code> frente a <code>/*</code></dt>
@@ -801,7 +801,7 @@ Todavía no puedes distinguir un `DESARROLLADOR` de un `ADMINISTRADOR` —eso ll
   <dd>Las nueve filas de la columna <code>ANON</code> responden <code>401</code>; <code>/swagger-ui.html</code> responde <code>200</code> sin credenciales; la misma petición que fallaba pasa a <code>200</code> solo añadiendo Basic Auth; y la terminal de arranque ya no imprime ninguna contraseña generada.</dd>
 </dl>
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Comprueba con PasswordEncoder que una contraseña correcta coincide con su hash y otra no. Verifica que nunca se devuelve el hash en el DTO público.
 2. Prueba ruta pública, ruta protegida sin identidad y acceso permitido. Contrasta el resultado con la matriz y no resuelvas un rechazo abriendo todas las rutas.
@@ -933,7 +933,7 @@ El perfil público utiliza un DTO que excluye el hash. Los roles proceden de dat
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1085,7 +1085,7 @@ INSERT INTO usuarios (username, password, rol, activo) VALUES
 ('inactivo', '<pega aquí tu hash de Dev2026!>',     'ROLE_DESARROLLADOR', false);
 ```
 
-Y añade esta línea a `application.properties`:
+Añade esta línea a `application.properties`:
 
 ```properties
 # Sin esto, data.sql se ejecuta ANTES de que Hibernate cree la tabla usuarios
@@ -1154,7 +1154,7 @@ Crea `UsuarioResponse` con id, username y rol si todavía no existe. En `Usuario
   <dd>En los logs de Hibernate aparece un <code>select ... from usuarios where username=?</code> por cada intento de autenticación; <code>admin</code> entra, <code>fantasma</code> y <code>inactivo</code> no; <code>/me</code> devuelve identidades distintas para credenciales distintas sin recibir ningún parámetro; y en <code>application.properties</code> ya no queda ni rastro de <code>spring.security.user</code>.</dd>
 </dl>
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Autentica un usuario guardado, rechaza una contraseña incorrecta y comprueba que una cuenta inexistente tampoco accede.
 2. Consulta `/me`: debe representar al usuario autenticado sin exponer su contraseña ni su hash. Reinicia y confirma que las cuentas siguen disponibles.
@@ -1280,7 +1280,7 @@ La anotación `@WithMockUser`:
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1351,7 +1351,7 @@ public class SecurityConfig {
   <dt>Cuál usar</dt>
   <dd>Todo lo que se pueda expresar como «esta ruta con este verbo es solo para este rol» va en el <code>filterChain</code>: se rechaza antes y en un solo sitio. En cuanto la regla necesita mirar <strong>el dato concreto</strong> —«solo si esta tarea es tuya»— no hay ruta que la exprese y hace falta <code>@PreAuthorize</code>.</dd>
   <dt>Qué pasa si las dos hablan de lo mismo</dt>
-  <dd>Se aplican las dos, y gana la más restrictiva, porque la del filtro se evalúa primero y corta. No es un error tener las dos: es defensa en profundidad. Pero mantén una sola como fuente de verdad para cada regla, o acabarás cambiando una y no la otra.</dd>
+  <dd>Se aplican las dos, y gana la más restrictiva, porque la del filtro se evalúa primero e interrumpe la cadena. Mantener ambas no constituye un error, sino defensa en profundidad; conserva no obstante una sola como fuente de verdad para cada regla, o acabarás cambiando una y no la otra.</dd>
   <dt>El prefijo <code>ROLE_</code>, de una vez</dt>
   <dd>En la base de datos guardas <code>ROLE_ADMINISTRADOR</code>. En <code>hasRole()</code> escribes <code>'ADMINISTRADOR'</code>, <strong>sin</strong> prefijo, porque el método lo añade solo. Si escribes <code>hasRole('ROLE_ADMINISTRADOR')</code>, Spring buscará <code>ROLE_ROLE_ADMINISTRADOR</code> y nadie pasará nunca. La versión sin magia es <code>hasAuthority('ROLE_ADMINISTRADOR')</code>, que compara literalmente.</dd>
 </dl>
@@ -1563,7 +1563,7 @@ Ejecuta las pruebas desde la consola de Maven:
 
 Comprueba en la salida:
 * Los 3 tests pasan al 100 % en verde en menos de 1 segundo.
-* Queda demostrado que da igual qué botones oculte el frontend: **un usuario no administrador jamás podrá borrar un proyecto en el servidor**.
+* Queda demostrado que la interfaz de cliente no condiciona la autorización: **un usuario no administrador no puede borrar un proyecto en el servidor**.
 
 Un test de seguridad que nunca ha fallado no ha demostrado nada todavía. Rómpelo a propósito y míralo caer:
 
@@ -1599,7 +1599,7 @@ Aplica el mismo patrón para proteger la creación y modificación de tareas:
   <dd><code>./mvnw test</code> pasa en verde; cada test de rechazo verifica además que el servicio no se invocó; y has visto al menos un test tuyo fallar en rojo al quitarle la anotación de seguridad que protege.</dd>
 </dl>
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Prueba una acción como propietario y como otro usuario del mismo rol. Comprueba tanto lectura como modificación y que los rechazos no alteran datos.
 2. Ejecuta los tests de identidad ausente, rol insuficiente y acceso permitido; sus expectativas deben reflejar tu matriz y la política de errores documentada.
@@ -1726,7 +1726,7 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbCI6IlJPTEVfQURNSU5JU1RSQURPUiIsImV
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -2067,7 +2067,7 @@ Localiza `sub` (identidad), `iat` (emisión) y `exp` (caducidad). Modifica un ca
 
 Añade el formulario de acceso al cliente y, en su evento submit, envía username y contraseña al login. Comprueba el estado antes de leer el token y guarda solo una respuesta correcta. Centraliza las peticiones protegidas en una función que añada Authorization cuando exista token; no envíes `Bearer null`. Al recibir 401, muestra que debe iniciar sesión otra vez; un 403 indica que la identidad no tiene permiso. El botón de salida elimina el token del cliente, pero no invalida por sí mismo una copia que conserve otro cliente.
 
-#### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 5 · Comprobar y registrar el resultado del proyecto
 
 1. Obtén un token válido y úsalo en una ruta protegida. Prueba después uno alterado, otro caducado y la ausencia de token; ninguno debe dar acceso.
 2. Repite los casos de roles y propiedad. Cambiar el mecanismo de autenticación no debe ampliar los permisos de ningún usuario.
@@ -2170,7 +2170,7 @@ Referencia: [protección CSRF de Spring Security](https://docs.spring.io/spring-
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -2326,7 +2326,7 @@ Recorre esta lista sobre tu propio proyecto. Cada punto que no puedas marcar es 
   <dd>Sabes reconocer los cuatro fallos por su síntoma sin tener que probar a ciegas; entiendes por qué un token sigue siendo válido después de cerrar sesión y qué harías al respecto; y los ocho puntos de la auditoría están marcados.</dd>
 </dl>
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Distingue cada fallo por su petición y respuesta, y comprueba que corregir CORS no elimina controles de identidad o permisos.
 2. Repite el flujo completo desde el navegador y documenta cómo se envían las credenciales y qué protección CSRF requiere esa decisión.

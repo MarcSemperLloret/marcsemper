@@ -45,7 +45,7 @@ El almacenamiento actual desaparece al reiniciar. PostgreSQL es un servidor de b
 
 Durante cuatro unidades hemos fingido que un `ArrayList` dentro de una clase de repositorio era suficiente. Servía para validar los endpoints HTTP, comprobar los códigos de estado en Postman y escribir tests unitarios de las reglas de negocio.
 
-Pero tenía un defecto conocido que llevamos arrastrando desde la UD1: **cada vez que el servidor se reinicia, el estado se evapora por completo**.
+Arrastraba, sin embargo, un defecto conocido desde la UD1: **cada vez que el servidor se reinicia, el estado se evapora por completo**.
 
 La solución inmediata que a todo programador principiante se le pasa por la cabeza es volcar los objetos en un archivo JSON o en un fichero binario en el disco. Parece sencillo hasta que te haces tres preguntas:
 
@@ -113,7 +113,7 @@ Como cada fabricante de ORM inventaba sus propias anotaciones y métodos, la com
 
 <p class="term">Especificación frente a implementación</p>
 
-**JPA no es una librería ejecutable: es un documento de especificación**. Define interfaces (`EntityManager`, `EntityTransaction`) y anotaciones (`@Entity`, `@Table`, `@Id`, `@Column`).
+**JPA constituye una especificación, no una librería ejecutable**. Define interfaces (`EntityManager`, `EntityTransaction`) y anotaciones (`@Entity`, `@Table`, `@Id`, `@Column`).
 
 **Hibernate es la implementación real** que contiene el código que ejecuta esas interfaces. Si usas JPA, tu código depende de la norma estándar, no de una librería particular, aunque por debajo el motor que haga el trabajo pesado sea Hibernate.
 
@@ -155,7 +155,7 @@ Para que un método de tu repositorio pueda enviar una sentencia SQL y recibir r
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -210,7 +210,7 @@ Para cada atributo debemos tomar tres decisiones:
   <dt>Por qué <code>Long</code> y <code>BIGINT</code> en lugar de <code>int</code></dt>
   <dd>Un <code>INTEGER</code> de 32 bits permite unos dos mil millones de identificadores positivos. En aplicaciones reales con alto volumen de registros esa cifra se alcanza antes de lo que parece. Pasar de <code>INTEGER</code> a <code>BIGINT</code> en una base de datos en producción con millones de filas exige reconstruir índices y tablas enteras con cortes de servicio. Usar <code>BIGINT</code> desde el primer día cuesta cero y previene una migración traumática.</dd>
   <dt>Por qué la restricción vive en la base de datos y no solo en el DTO</dt>
-  <dd>En la UD3 validamos en el DTO con <code>@NotBlank</code> y <code>@Size</code>. Esa es la aduana de entrada HTTP. Pero la base de datos es la última línea de defensa: si mañana entra un script de migración, una carga desde CSV o una consulta manual por consola SQL, las restricciones de la tabla garantizan que ningún dato corrupto quede almacenado.</dd>
+  <dd>En la UD3 validamos en el DTO con <code>@NotBlank</code> y <code>@Size</code>. Ese es el control de entrada en la capa HTTP. La base de datos constituye la última línea de defensa: si mañana entra un script de migración, una carga desde CSV o una consulta manual por consola SQL, las restricciones de la tabla garantizan que ningún dato corrupto quede almacenado.</dd>
 </dl>
 
 #### Paso 4 · El esquema de proyectos y usuarios
@@ -435,7 +435,7 @@ SELECT current_database(), current_user, version();
 
 Comprueba que devuelve una fila con el nombre de tu base de datos y la versión del motor. Esta consola será tu ventana de verificación durante las próximas tres semanas para comprobar qué hace Hibernate por debajo.
 
-#### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 11 · Comprobar y registrar el resultado del proyecto
 
 1. Arranca el backend y verifica en los logs que se conecta a la base de datos elegida. Confirma la misma conexión desde el cliente SQL.
 2. Provoca por separado un puerto incorrecto y unas credenciales incorrectas en tu entorno local; identifica sus mensajes y restaura la configuración válida antes de terminar.
@@ -524,7 +524,7 @@ La aplicación ya se conecta a PostgreSQL. Hoy mapearás una clase a una tabla y
 
 Al final de la UD4 dejamos escrita una promesa formal:
 
-> *«En la UD5, `TareaRepositorioEnMemoria` se borra y en su lugar aparece una interfaz que extiende `JpaRepository`. Spring la implementa solo. Y el service, que ya depende de una interfaz con esos mismos nombres de método, no se entera. Cambias dónde se guardan los datos sin abrir la capa que decide las reglas.»*
+> *«En la UD5, `TareaRepositorioEnMemoria` se borra y en su lugar aparece una interfaz que extiende `JpaRepository`. Spring la implementa automáticamente. El service, que ya depende de una interfaz con esos mismos nombres de método, no se entera. Cambias dónde se guardan los datos sin abrir la capa que decide las reglas.»*
 
 Hoy es el día de cobrar esa promesa.
 
@@ -552,7 +552,7 @@ La comprobación decisiva no es ver una fila mientras la aplicación está arran
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -695,7 +695,7 @@ Cuando Spring Boot arranca y encuentra una interfaz que extiende `JpaRepository`
 
 Esa clase generada internamente por Spring inyecta el `EntityManager` de JPA y traduce cada llamada a operaciones de base de datos dentro de una transacción.
 
-Y mira qué métodos hereda gratis nuestra interfaz:
+Conviene observar qué métodos hereda la interfaz sin declararlos:
 
 | Método heredado de JpaRepository | Lo que hace en PostgreSQL | Lo que teníamos en la UD4 |
 | :--- | :--- | :--- |
@@ -786,7 +786,7 @@ Hibernate:
         (?, ?, ?)
 ```
 
-Y la respuesta HTTP devolverá el JSON con `id: 1` asignado por PostgreSQL:
+La respuesta HTTP devolverá el JSON con `id: 1` asignado por PostgreSQL:
 
 ```json
 {
@@ -852,7 +852,7 @@ Aplica de forma autónoma el mismo procedimiento para migrar la entidad `Proyect
 7. Borra `ProyectoRepositorioEnMemoria`.
 8. Arranca la aplicación, inserta dos proyectos mediante `POST /proyectos`, reinicia el servidor y comprueba con `GET /proyectos` que ambos persisten en PostgreSQL.
 
-#### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 7 · Comprobar y registrar el resultado del proyecto
 
 1. Crea un registro, detén solo el backend, vuelve a arrancarlo y consulta el mismo id: debe conservarse.
 2. Consulta la tabla desde el cliente SQL y relaciona fila, objeto y DTO. Comprueba que el servicio ya utiliza el repositorio persistente y no una lista paralela.
@@ -1007,7 +1007,7 @@ public List<Tarea> buscarUrgentes() {
 }
 ```
 
-Con cincuenta tareas en una lista de pruebas no notas nada raro. Pero analicemos qué ocurre en un entorno real con 200.000 tareas registradas:
+Con cincuenta tareas en una lista de pruebas el comportamiento no resulta perceptible. Conviene analizar qué ocurre en un entorno real con 200.000 tareas registradas:
 
 1. **Tráfico de red masivo:** la base de datos lee 200.000 filas de disco y las envía completas por el cable TCP hasta tu aplicación Spring Boot (decenas de megabytes innecesarios).
 2. **Desperdicio de memoria RAM:** Hibernate construye 200.000 instancias completas de `Tarea` en el *heap* de la JVM, saturando el recolector de basura (*Garbage Collector*).
@@ -1039,7 +1039,7 @@ Al ver ese método, Spring Data descompone el nombre:
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1172,7 +1172,7 @@ Content-Type: application/json
 }
 ```
 
-Y luego:
+A continuación:
 
 ```http
 POST http://localhost:8080/tareas
@@ -1196,7 +1196,7 @@ Hibernate:
         (?, ?, ?)
 ```
 
-Y las respuestas HTTP recibirán `id: 1` e `id: 2` respectivamente, con cabeceras `Location: http://localhost:8080/tareas/1` y `Location: http://localhost:8080/tareas/2`.
+Las respuestas HTTP recibirán `id: 1` e `id: 2` respectivamente, con cabeceras `Location: http://localhost:8080/tareas/1` y `Location: http://localhost:8080/tareas/2`.
 
 Abre tu cliente de base de datos (DBeaver o `psql`) y consulta qué ha ocurrido por debajo:
 
@@ -1204,7 +1204,7 @@ Abre tu cliente de base de datos (DBeaver o `psql`) y consulta qué ha ocurrido 
 SELECT * FROM tareas;
 ```
 
-Y ahora consulta la secuencia que PostgreSQL creó automáticamente para la columna `id`:
+Consulta ahora la secuencia que PostgreSQL creó automáticamente para la columna `id`:
 
 ```sql
 SELECT sequencename, last_value FROM pg_sequences
@@ -1597,7 +1597,7 @@ Comprueba que solo retorna tareas pendientes y que en la consulta aparece `where
 
 #### Paso 16 · Los límites de las consultas derivadas
 
-Las consultas derivadas son perfectas para búsquedas directas sobre uno, dos o tres campos. Pero tienen un límite claro de legibilidad.
+Las consultas derivadas resultan adecuadas para búsquedas directas sobre uno, dos o tres campos, si bien presentan un límite claro de legibilidad.
 
 Mira este nombre de método hipotético:
 ```java
@@ -1628,7 +1628,7 @@ Aplica las consultas derivadas a la entidad `Proyecto`:
    * `GET /proyectos?texto=portal`
 4. Comprueba en la consola de Spring Boot que las consultas SQL generadas aplican las cláusulas `WHERE activo = true` y `LOWER(nombre) LIKE LOWER(?)`.
 
-#### Paso 18 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 18 · Comprobar y registrar el resultado del proyecto
 
 1. Repite el ciclo de alta, modificación parcial, sustitución y borrado y contrasta los cambios con las filas de PostgreSQL.
 2. Ejecuta cada filtro con coincidencias y sin ellas; comprueba datos y SQL generado. Un listado vacío es una respuesta válida, no un fallo del servidor.
@@ -1770,7 +1770,7 @@ Las búsquedas y escrituras ya funcionan manualmente. Hoy las comprobarás con t
 
 En la sesión 17 aprendiste a probar la capa de servicio sustituyendo sus colaboradores por dobles de prueba. Tenía todo el sentido del mundo: queríamos comprobar las reglas de negocio aisladas de cualquier infraestructura.
 
-Pero en la capa de acceso a datos, la situación es exactamente la contraria. **La única responsabilidad de un repositorio es comunicarse con la base de datos.**
+En la capa de acceso a datos, sin embargo, la situación es exactamente la contraria. **La única responsabilidad de un repositorio es comunicarse con la base de datos.**
 
 Si escribes un test de repositorio usando un mock:
 ```java
@@ -1850,7 +1850,7 @@ Usaremos **`TestEntityManager`** para controlar ese recorrido:
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -2040,7 +2040,7 @@ Copia la estructura de anotaciones y configuración de `TareaRepositoryTest` a `
 4. Escribe un test que intente persistir una entidad con un campo no nulo vacío (o nombre duplicado si configuraste `@Column(unique = true)`):
    * Comprueba que al ejecutar `em.flush()` se lanza una excepción de integridad de datos (`DataIntegrityViolationException` o `ConstraintViolationException`).
 
-#### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 5 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta los tests dos veces y comprueba que producen el mismo resultado sin depender del orden de ejecución.
 2. Incluye una consulta con coincidencias, otra sin ellas y una operación de escritura. Explica qué demuestra cada aserción y qué base de datos se ha utilizado.
@@ -2065,7 +2065,7 @@ void tareaSinTitulo_debeFallar_malEscrito() {
 ```
 
 * Ejecuta ese test sin llamar a `em.flush()`. **El test pasa en verde sin lanzar ninguna excepción.**
-* ¿Por qué? Porque Hibernate retrasa (*defers*) las sentencias de inserción hasta el último momento posible antes de confirmar la transacción. Como el método termina sin forzar el envío, la transacción se cancela (rollback) y la sentencia `INSERT` jamás llega a viajar a PostgreSQL.
+* La causa es que Hibernate retrasa (*defers*) las sentencias de inserción hasta el último momento previo a la confirmación de la transacción. Como el método termina sin forzar el envío, la transacción se cancela (rollback) y la sentencia `INSERT` jamás llega a viajar a PostgreSQL.
 * Ahora añade `em.flush()` y envuélvelo en `assertThrows(ConstraintViolationException.class, () -> em.flush());`.
 * Explica con tus palabras por qué `flush()` es la única instrucción que convierte un deseo en memoria en una sentencia SQL física verificable.
 
@@ -2170,13 +2170,13 @@ private List<Tarea> tareas = new ArrayList<>();
 
 <div class="rule">
   <p class="rule-label">El significado exacto de mappedBy</p>
-  <p>El parámetro <code>mappedBy = "proyecto"</code> le dice a Hibernate: <em>«Yo soy el lado inverso. La clave foránea física no está en mi tabla; la gestiona el atributo llamado <code>proyecto</code> dentro de la clase <code>Tarea</code>»</em>.</p>
+  <p>El parámetro <code>mappedBy = "proyecto"</code> le dice a Hibernate: <em>«Esta entidad es el lado inverso. La clave foránea física no reside en su tabla; la gestiona el atributo denominado <code>proyecto</code> dentro de la clase <code>Tarea</code>»</em>.</p>
   <p>Cualquier modificación que hagas sobre la lista <code>tareas</code> de un proyecto será <strong>ignorada por la base de datos</strong> a menos que también se actualice la referencia <code>tarea.setProyecto(...)</code>.</p>
 </div>
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -2427,7 +2427,7 @@ tarea.setProyecto(proyecto);
 // ¡Olvidamos añadirla a la lista: proyecto.getTareas().add(tarea)!
 ```
 
-Al terminar la transacción, Hibernate guardará la tarea en PostgreSQL porque el lado propietario (`tarea.setProyecto`) se actualizó. Pero si en esa misma transacción de negocio alguien consulta `proyecto.getTareas()`, **la nueva tarea no estará en la lista**. Tu aplicación dirá que el proyecto tiene 0 tareas cuando en la base de datos ya hay 1.
+Al terminar la transacción, Hibernate guardará la tarea en PostgreSQL porque el lado propietario (`tarea.setProyecto`) se actualizó. Ahora bien, si en esa misma transacción de negocio alguien consulta `proyecto.getTareas()`, **la nueva tarea no estará en la lista**. Tu aplicación dirá que el proyecto tiene 0 tareas cuando en la base de datos ya hay 1.
 
 Para blindar nuestra entidad contra este fallo, **prohibimos manipular la lista directamente** e implementamos **métodos de sincronización (*Helper Methods*)**:
 
@@ -2657,7 +2657,7 @@ Implementa en `ProyectoService` y `ProyectoController` un caso de uso para crear
    * Gracias a `cascade = CascadeType.ALL`, comprueba que Hibernate genera el `INSERT` del proyecto y a continuación todos los `INSERT` de las tareas asociadas.
 3. Expón el endpoint `POST /proyectos/con-tareas` devolviendo `201 Created` y verifica en PostgreSQL que todas las filas se han insertado en una única transacción atómica.
 
-#### Paso 13 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 13 · Comprobar y registrar el resultado del proyecto
 
 1. Asocia y consulta registros por HTTP y comprueba la clave foránea en SQL. Prueba también un id relacionado inexistente y verifica que se rechaza sin guardar una asociación inválida.
 2. Consulta el detalle de ambos lados y comprueba que el JSON termina y no repite objetos indefinidamente. Revisa expresamente qué ocurre al desasociar o borrar.
@@ -2798,7 +2798,7 @@ Si tu tabla puente necesita columnas como `creado_en`, `prioridad_etiqueta` o `a
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -2892,7 +2892,7 @@ private List<Etiqueta> etiquetas = new ArrayList<>();
 Si usas `List`, la especificación de Hibernate no puede saber qué fila concreta ha cambiado porque una lista permite elementos repetidos y depende de índices posicionales.
 
 ¿Qué hace Hibernate cuando tienes 20 etiquetas en una tarea y eliminas una?
-1. Ejecuta: `DELETE FROM tareas_etiquetas WHERE tarea_id = 5;` (¡borra todas las 20 filas de golpe!).
+1. Ejecuta: `DELETE FROM tareas_etiquetas WHERE tarea_id = 5;`, que elimina las veinte filas en una sola sentencia.
 2. A continuación, ejecuta 19 sentencias `INSERT` una a una para reinsertar las que quedaban.
 
 Al cambiar a `Set<Etiqueta>`, Hibernate sabe que los elementos son matemáticamente únicos y emite únicamente:
@@ -3126,7 +3126,7 @@ Implementa la búsqueda de tareas asociadas a una etiqueta concreta:
 3. Conéctalo al endpoint `GET /tareas?etiqueta=urgente`.
 4. Comprueba en la consola SQL que Hibernate genera una sentencia `INNER JOIN tareas_etiquetas` y `INNER JOIN etiquetas` con la condición `WHERE LOWER(etiquetas.nombre) = LOWER(?)`.
 
-#### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 9 · Comprobar y registrar el resultado del proyecto
 
 1. Asocia el mismo elemento a dos registros y comprueba las filas intermedias. Repetir una asociación no debe crear un vínculo duplicado.
 2. Desasocia o elimina uno de los registros y verifica que el elemento compartido sigue existiendo y asociado al otro.
@@ -3247,7 +3247,7 @@ public class ProyectoService {
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -3395,7 +3395,7 @@ Prepara dos proyectos distintos y tareas solo en el origen. Comprueba primero ex
 4. Expón el endpoint `POST /proyectos/{origenId}/transferir-a/{destinoId}`.
 5. Haz una prueba transfiriendo tareas hacia un proyecto inactivo: comprueba que responde con error y que en PostgreSQL ninguna tarea cambió de proyecto.
 
-#### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 7 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta el caso válido y verifica todos los cambios. Después provoca el fallo previsto y comprueba que no quedan cambios parciales.
 2. Retira el fallo artificial, repite y explica dónde está el límite de la transacción y qué excepción activa el rollback en tu implementación.
@@ -3518,7 +3518,7 @@ En producción, la aplicación y la base de datos están en servidores o contene
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -3653,7 +3653,7 @@ En la sesión 23 creamos `GET /proyectos/{id}/detalle` que cargaba el proyecto y
 2. Actualiza `ProyectoService.obtenerConDetalle(id)` para utilizar este nuevo método.
 3. Comprueba en la terminal que la consulta del detalle de un proyecto se resuelve ahora en una sola sentencia SQL en lugar de dos.
 
-#### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 7 · Comprobar y registrar el resultado del proyecto
 
 1. Compara el resultado y el número de consultas antes y después de optimizar. Los datos deben ser equivalentes; comprueba también los límites y el orden de las páginas.
 2. Verifica la misma versión persistente en el entorno publicado mediante el flujo de Intermodular. Registra URL y commit, y comprueba con datos de prueba que un reinicio del backend conserva la información.

@@ -99,7 +99,7 @@ En un proyecto profesional, delegar el esquema en Hibernate es una **receta para
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -161,7 +161,7 @@ Antes de redactar la tuya, aprende a reconocer lo que la invalida. Los tres apar
 
 <dl class="worked">
   <dt>1 · El requisito que no se puede comprobar</dt>
-  <dd><em>«El sistema debe ser rápido.»</em> ¿Cuánto es rápido? Nadie puede decir si eso se ha cumplido, así que no es un requisito: es un deseo. La versión utilizable es <em>«el listado de proyectos responde en menos de 300 ms con 500 proyectos en la base de datos»</em>. Ahora se puede medir, y por tanto se puede aprobar o suspender.</dd>
+  <dd><em>«El sistema debe ser rápido.»</em> ¿Cuánto es rápido? Nadie puede determinar si se ha cumplido, de modo que no constituye un requisito, sino una aspiración. La versión utilizable es <em>«el listado de proyectos responde en menos de 300 ms con 500 proyectos en la base de datos»</em>. Ahora se puede medir, y por tanto se puede aprobar o suspender.</dd>
   <dt>2 · El requisito que esconde una decisión</dt>
   <dd><em>«Un proyecto no puede cerrarse si tiene tareas pendientes.»</em> Parece cerrado y no lo está: ¿qué es «pendiente»? ¿Cuenta una tarea bloqueada? ¿Y una cancelada? Enumera los estados concretos, o descubrirás la ambigüedad el día de la demostración.</dd>
   <dt>3 · El requisito que solo describe el camino feliz</dt>
@@ -327,7 +327,7 @@ Además de mover paquetes, completa estas cuatro decisiones de modelo y anota la
 3. **Qué se borra en cascada y qué no.** Borrar un proyecto, ¿borra sus tareas? ¿Y sus incidencias con adjuntos en disco? Decídelo explícitamente: por omisión, PostgreSQL rechazará el borrado y te encontrarás un `500` que en realidad era una regla de negocio sin declarar.
 4. **Qué índices necesitas.** Todo campo por el que filtres o busques (el `codigo` del proyecto, la clave ajena de tarea a proyecto, el `username`) merece un índice. Sin ellos, la paginación de la UD7 hace un recorrido completo de la tabla en cada página.
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Revisa cada criterio con un ejemplo permitido y otro rechazado. Otra persona debe poder entender cómo comprobarlo.
 2. Ensaya cualquier cambio de esquema sobre una copia de desarrollo y confirma que conserva los registros existentes y aplica las nuevas restricciones.
@@ -436,11 +436,11 @@ Un corte vertical añade una operación que puede ejecutarse de extremo a extrem
 
 El punto de partida es el producto del trimestre, no un esqueleto vacío. Se elige una ampliación pendiente, se identifica qué clases existentes deben cambiar y se conserva el contrato de las operaciones que ya funcionan. Si una regla cambia, se actualiza expresamente su criterio de aceptación y su prueba.
 
-La operación termina cuando hay una petición válida comprobada, un rechazo relevante y una prueba que reproduce el resultado. Solo entonces se replica el patrón en la siguiente ampliación. El ejemplo de alta que aparece en la práctica sirve para seguir todas las piezas; en vuestro proyecto aplicadlo al caso de uso pendiente, sin volver a implementar un alta que ya esté terminada.
+La operación termina cuando hay una petición válida comprobada, un rechazo relevante y una prueba que reproduce el resultado. Únicamente entonces se replica el patrón en la siguiente ampliación. El ejemplo de alta que aparece en la práctica sirve para seguir todas las piezas; en el proyecto propio debe aplicarse al caso de uso pendiente, sin volver a implementar un alta que ya esté terminada.
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -767,7 +767,7 @@ Construye el corte vertical simétrico de lectura:
 3. Si no existe, lanza una excepción de recurso no encontrado capturada por el `GlobalExceptionHandler` devolviendo `404 Not Found` en formato Problem Details RFC 7807.
 4. Añade el test correspondiente en MockMvc verificando tanto el caso de éxito (`200`) como el de recurso inexistente (`404`).
 
-#### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 5 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta el caso desde HTTP y comprueba tanto la respuesta como el dato persistido, con autenticación y validación aplicadas.
 2. Implementa y comprueba la consulta que permite observar su resultado. Ejecuta también las pruebas anteriores para detectar cambios involuntarios.
@@ -870,7 +870,7 @@ Comprobar roles (`ADMINISTRADOR`, `JEFE_PROYECTO`, `DESARROLLADOR`) es solo la p
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1236,11 +1236,11 @@ Implementa la regla de propiedad para tareas:
 | `EL1008E: Property or field 'seguridadService' cannot be found` | El nombre del bean no coincide | El de `@Service("seguridadService")` debe ser idéntico al de la expresión |
 | Todos reciben `403`, incluso el responsable | La comparación falla | ¿`getResponsable()` llega `null` por carga perezosa? Compara `username`, no objetos `Usuario` |
 | `LazyInitializationException` dentro de `SeguridadService` | Se accede al responsable fuera de la transacción | Anota el método con `@Transactional(readOnly = true)`, o usa una consulta con `JOIN FETCH` |
-| El administrador recibe `403` | La condición del atajo no encaja | La autoridad guardada es `ROLE_ADMINISTRADOR` con prefijo; compárala tal cual |
+| El administrador recibe `403` | La condición del atajo no encaja | La autoridad almacenada es `ROLE_ADMINISTRADOR`, con prefijo; la comparación debe incluirlo |
 | La regla no se aplica en absoluto | Falta `@EnableMethodSecurity` | Igual que en la sesión 38: sin esa anotación, `@PreAuthorize` es decoración |
 | La incidencia se guarda sin adjunto cuando cae Open-Meteo | Orden de operaciones equivocado | Guarda el fichero y la fila antes de enriquecer con el clima, no al revés |
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Comprueba las reglas nuevas, sus cambios atómicos y los rechazos por estado o propiedad. No debe quedar una operación parcialmente aplicada.
 2. Simula el fallo externo previsto y verifica que seguridad, persistencia y respuesta pública mantienen la política acordada para esa ampliación.
@@ -1342,7 +1342,7 @@ La práctica conecta el cliente de Desarrollo Web en Entorno Cliente al mismo ba
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1489,7 +1489,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   <dt><code>setExposedHeaders</code>: la que se olvida siempre</dt>
   <dd>Por defecto, JavaScript solo puede leer un puñado de cabeceras de la respuesta. Tu <code>Location</code> del <code>201 Created</code> <strong>llega</strong>, pero el navegador se la esconde a Angular salvo que la declares aquí. El síntoma es desconcertante: la petición sale bien y aun así el cliente no encuentra la cabecera.</dd>
   <dt><code>allowCredentials(true)</code> y el comodín</dt>
-  <dd>Con credenciales activadas, el estándar prohíbe <code>setAllowedOrigins(List.of("*"))</code>. Spring lanza una excepción al arrancar. Si necesitas varios orígenes, enuméralos, o usa <code>setAllowedOriginPatterns</code>. Y en producción, jamás el comodín.</dd>
+  <dd>Con credenciales activadas, el estándar prohíbe <code>setAllowedOrigins(List.of("*"))</code>. Spring lanza una excepción al arrancar. Si se requieren varios orígenes, enuméralos o emplea <code>setAllowedOriginPatterns</code>. En producción, el comodín queda descartado en todo caso.</dd>
 </dl>
 
 #### Paso 3 · Inspección de red en DevTools
@@ -1534,7 +1534,7 @@ Conecta una operación del cliente cada vez: consulta de detalle, modificación,
   <dd>En DevTools ves el par <code>OPTIONS 200</code> + <code>POST 201</code>; Angular lee la cabecera <code>Location</code>; los errores del backend llegan a la pantalla como texto legible y no como una pantalla en blanco; ninguna operación depende del cliente para poder comprobarse; y sabes reconocer un fallo de CORS por el hecho de que tu cliente HTTP sí funciona.</dd>
 </dl>
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta desde Angular el recorrido de la ampliación y contrasta URL, método, cuerpo, identidad y respuesta con la colección.
 2. Prueba un dato inválido y un usuario sin permiso: la interfaz debe mostrar el error correspondiente y el backend debe conservar el estado correcto.
@@ -1672,7 +1672,7 @@ En la carpeta `/bruno` se incluye la colección completa exportada para verifica
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1843,7 +1843,7 @@ if (proyecto.getPresupuestoTotal().compareTo(PRESUPUESTO_MAXIMO_SIN_APROBACION) 
 }
 ```
 
-Si el valor puede cambiar sin recompilar —un límite de tamaño de fichero, una URL, un tiempo de expiración—, no es una constante: es una propiedad. Sácalo a `application.properties` e inyéctalo con `@Value`.
+Si el valor puede cambiar sin recompilar —un límite de tamaño de fichero, una URL, un tiempo de expiración—, deja de ser una constante para ser una propiedad de configuración. Sácalo a `application.properties` e inyéctalo con `@Value`.
 
 Recorre tus controladores y comprueba que **ningún método contiene**: un `if` de negocio, una cuenta, una llamada a un repositorio o un `try/catch`. Un método de controlador tiene tres líneas: recibe, delega, responde.
 
@@ -1905,7 +1905,7 @@ Entra en `http://localhost:8080/swagger-ui.html` y haz la última pasada de cont
   <dd>La suite sigue verde después de refactorizar; no queda ningún literal numérico de negocio suelto en el código; ningún controlador contiene un <code>if</code>; una persona ajena ha levantado tu proyecto siguiendo solo el <code>README</code>, y otra ha usado tu API entera desde Swagger sin preguntarte nada.</dd>
 </dl>
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Sigue el README desde ese entorno y ejecuta el recorrido principal y sus rechazos sin completar pasos de memoria.
 2. Después de cualquier refactorización repite las pruebas afectadas. Identifica la versión final y deja documentadas las limitaciones que sigan abiertas.
@@ -2026,7 +2026,7 @@ Distribuye tu exposición con rigor profesional siguiendo este minutaje:
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -2070,7 +2070,7 @@ Una demostración se cae por logística, no por código. Prepara esto **antes** 
 
 1. Intercambia proyectos con otro equipo.
 2. Cada uno prepara **cinco preguntas** sobre el proyecto ajeno, mirando el código, no la memoria.
-3. Haced la defensa completa cronometrada, con preguntas al final.
+3. Realiza la defensa completa cronometrada, con turno de preguntas al final.
 4. Anota las preguntas que no supiste contestar: esa lista es tu única tarea pendiente hasta el día de la defensa.
 
 #### Paso 3 · Ensayo general cronometrado
@@ -2118,7 +2118,7 @@ Prepara una explicación técnica del proyecto. Para cada apartado sigue requisi
   <p>Guarda la memoria y el guion de defensa en la explicación técnica del proyecto y enlázalos desde el README. </p>
 </div>
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Ensaya la demostración y explica el camino de una petición desde el cliente hasta el dato persistido, incluyendo identidad y reglas.
 2. Entrega la memoria y los enlaces dentro del repositorio; deben permitir revisar los mismos resultados aunque se termine la demostración en clase.

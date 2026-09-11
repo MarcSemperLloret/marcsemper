@@ -92,7 +92,7 @@ En el trabajo anterior devolvimos un `String` con el JSON crudo de Open-Meteo. A
 }
 ```
 
-Si devuelves este JSON a tu cliente web o lo guardas tal cual en tu base de datos:
+Si este JSON se devuelve al cliente web o se almacena sin transformar en la base de datos:
 1. **Tu frontend se acopla a las decisiones de un tercero:** Si Open-Meteo cambia `windspeed` por `wind_speed_kmh`, tu pantalla de React/Angular deja de mostrar el viento.
 2. **Contaminas tu arquitectura con ruido:** A tu gestor de proyectos no le importa `generationtime_ms` ni `utc_offset_seconds`.
 3. **Pérdida de semántica de negocio:** El código `weathercode: 0` es un número incomprensible; tu usuario necesita ver *"Cielo despejado"*.
@@ -118,7 +118,7 @@ Si devuelves este JSON a tu cliente web o lo guardas tal cual en tu base de dato
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -274,7 +274,7 @@ public class ProyectoClimaController {
   <dt>Por qué el <code>RestClient</code> es un <code>@Bean</code> y no un <code>new</code></dt>
   <dd>Por lo mismo por lo que en la UD4 dejaste de hacer <code>new TareaRepositorio()</code>: el destino, las cabeceras y —en la sesión 42— los timeouts son configuración, y la configuración se declara una vez en un sitio y se inyecta. Además te permitirá sustituirlo por un doble en los tests sin tocar el servicio.</dd>
   <dt>Por qué de momento devolvemos <code>String</code></dt>
-  <dd>Es deliberado y dura una sola sesión. Hoy interesa ver el JSON ajeno tal cual llega, con todos sus campos y sus nombres raros. En la sesión 41 ese <code>String</code> se convierte en un DTO propio, y entenderás la diferencia mucho mejor habiendo visto antes el volcado crudo.</dd>
+  <dd>Es deliberado y dura una sola sesión. En esta sesión interesa observar el JSON externo en su forma original, con todos sus campos y su nomenclatura propia. En la sesión 41 ese <code>String</code> se convierte en un DTO propio, y entenderás la diferencia mucho mejor habiendo visto antes el volcado crudo.</dd>
   <dt><code>.retrieve().body(...)</code></dt>
   <dd><code>retrieve()</code> ejecuta la petición y <code>body()</code> deserializa la respuesta al tipo que le pidas. Con <code>String</code> no deserializa nada: te entrega el texto. Ojo, <code>retrieve()</code> lanza excepción ante un <code>4xx</code> o <code>5xx</code> remoto, y eso hoy todavía no lo estamos tratando: es justo el tema de la sesión 42.</dd>
   <dt>La cabecera <code>User-Agent</code></dt>
@@ -342,7 +342,7 @@ public record OpenMeteoResponse(
 ) {}
 ```
 
-Y el objeto anidado `CurrentWeatherExternal`:
+El objeto anidado `CurrentWeatherExternal` se declara así:
 
 ```java
 package com.ejemplo.gestor.integration.dto;
@@ -362,7 +362,7 @@ public record CurrentWeatherExternal(
 
 <dl class="worked">
   <dt><code>@JsonIgnoreProperties(ignoreUnknown = true)</code>, la anotación que evita que te rompan la aplicación desde fuera</dt>
-  <dd>Sin ella, Jackson lanza <code>UnrecognizedPropertyException</code> en cuanto el JSON trae un campo que tu <code>record</code> no declara. Y ese campo lo añade el proveedor cuando quiere, sin avisarte. Con ella, tu integración sobrevive a que Open-Meteo publique diez campos nuevos mañana.</dd>
+  <dd>Sin ella, Jackson lanza <code>UnrecognizedPropertyException</code> en cuanto el JSON trae un campo que el <code>record</code> no declara, y la incorporación de ese campo depende del proveedor, sin notificación previa. Con ella, tu integración sobrevive a que Open-Meteo publique diez campos nuevos mañana.</dd>
   <dt><code>@JsonProperty</code>: dónde muere el <code>snake_case</code> ajeno</dt>
   <dd><code>current_weather</code> no es un nombre válido en tu código Java. <code>@JsonProperty("current_weather")</code> hace la traducción <strong>una sola vez, en la frontera</strong>. A partir de ahí, dentro de tu aplicación, el campo se llama <code>current</code> y nadie tiene que recordar cómo lo llamaba el proveedor.</dd>
   <dt>Por qué estos DTO viven en <code>integration.dto</code> y no en <code>dto</code></dt>
@@ -523,7 +523,7 @@ Antes de ampliar ProyectoResponse, decide dónde se incluye el clima: aquí se c
   <dd>El JSON que devuelve tu API no contiene ni un solo nombre de campo de Open-Meteo; ningún <code>OpenMeteoResponse</code> sale del paquete <code>integration</code>; has decidido y justificado qué pasa con el listado paginado; y borrar un campo del DTO externo no rompe nada.</dd>
 </dl>
 
-#### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 11 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta la consulta a través de tu backend y comprueba que el DTO público usa nombres y unidades propios, sin reenviar toda la respuesta del proveedor.
 2. Cambia un parámetro permitido y verifica que llega correctamente al proveedor. Los errores y reglas del contrato público siguen siendo responsabilidad de tu API.
@@ -637,7 +637,7 @@ Debemos configurar dos límites independientes en la factoría de conexiones HTT
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -852,7 +852,7 @@ spring.cache.caffeine.spec=maximumSize=500,expireAfterWrite=10m
 
 Registra el timeout de conexión, el de lectura y el tiempo de caché elegidos, junto a estas comprobaciones. La caché no elimina la necesidad de manejar fallos del proveedor.
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Provoca el fallo y verifica que la operación termina dentro del límite configurado y devuelve el resultado alternativo documentado.
 2. Repite consultas para comprobar cuándo se utiliza la caché, cuándo caduca y cómo se distingue un dato no disponible de un dato válido.
@@ -991,7 +991,7 @@ Para resolver este problema con elegancia, Spring proporciona un bus de eventos 
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1470,7 +1470,7 @@ Añade un segundo listener que simule el envío de un correo de alerta:
   <dd>Un evento dispara dos listeners independientes; un fallo en uno no afecta al otro ni al alta; el tiempo de respuesta del endpoint no cambia al añadirlos; y sabes explicar en qué caso concreto una notificación se perdería.</dd>
 </dl>
 
-#### Paso 9 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 9 · Comprobar y registrar el resultado del proyecto
 
 1. Sube, lista y descarga un archivo autorizado; compara su contenido y prueba tamaño, tipo e identidad no permitidos.
 2. Simula un fallo del receptor externo y verifica la política prevista: el dato confirmado no debe desaparecer porque un aviso posterior haya fallado. Registra ese fallo de forma comprobable.
@@ -1544,7 +1544,7 @@ Cada integrante explica una decisión del código apoyándose en una de las comp
 
 <p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-El backend ya sabe gestionar tareas, guardar adjuntos, consultar el clima y publicar un aviso tras crear una tarea importante. Hoy conectaremos esas piezas sobre vuestro producto. El alta de tarea conserva su endpoint y reglas; la operación integrada añade a esa tarea un adjunto y devuelve también el clima de su proyecto.
+El backend ya sabe gestionar tareas, guardar adjuntos, consultar el clima y publicar un aviso tras crear una tarea importante. En esta sesión se conectan esas piezas sobre el producto propio. El alta de tarea conserva su endpoint y reglas; la operación integrada añade a esa tarea un adjunto y devuelve también el clima de su proyecto.
 
 **Seguir un dato de extremo a extremo.** El cliente envía el id de tarea y un archivo. Seguridad comprueba la identidad y el rol antes del controlador. El servicio carga la tarea, consulta el clima, guarda el archivo y registra sus metadatos. La respuesta incluye ids reales y una URL que debe permitir descargar el mismo contenido. En la demostración seguiremos ese recorrido en Red, en los logs, en la tabla adjuntos y en la carpeta de almacenamiento.
 
@@ -1556,7 +1556,7 @@ El backend ya sabe gestionar tareas, guardar adjuntos, consultar el clima y publ
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1739,7 +1739,7 @@ Utiliza una copia de prueba y datos ficticios; no necesitas desconectar toda la 
 4. Documenta el endpoint y sus permisos en OpenAPI, usando el patrón multipart de la sesión 43. Ejecútalo también desde Swagger.
 5. Guarda en el registro de la sesión el recorrido crear tarea → registrar adjunto → descargar, con sus ids y resultados. Anota la latencia con proveedor disponible y caído, distinguiendo timeout y tiempo total de la petición. No prometas que ambos tiempos son exactamente iguales.
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta el recorrido correcto y comprueba datos persistidos, permisos, adjuntos y respuesta pública.
 2. Repite con una validación fallida, otro usuario y el proveedor caído. Comprueba tanto lo que se devuelve como los efectos que sí o no deben haberse producido.

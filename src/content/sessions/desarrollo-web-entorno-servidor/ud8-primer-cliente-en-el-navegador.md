@@ -149,7 +149,7 @@ Para relajar esta restricción de forma segura cuando el frontend y el backend e
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -270,7 +270,7 @@ Añade al elemento de cada proyecto un botón creado con `document.createElement
 3. Inspecciona en DevTools cómo se suceden ambas peticiones en cascada, y fíjate en el *Initiator* de la segunda: apunta a la línea de tu código que la disparó.
 4. **Trata los tres estados de una petición**, que es lo que separa una página que funciona de una que parece rota: mientras carga, muestra un texto de espera; si responde bien pero la lista viene vacía, di «este proyecto no tiene tareas» en vez de dejar el hueco en blanco; si falla, muestra el código de estado.
 5. Pide un proyecto que no exista (`/api/v1/proyectos/9999/tareas`) y comprueba que tu página muestra el `404` en lugar de quedarse pensando. Ese `404` es la regla que implementaste en la sesión 29: ahora la estás viendo desde el otro lado.
-6. Anota en tu cuaderno cuántas peticiones lanza tu página al mostrar cinco proyectos con sus tareas. Si has puesto un botón por proyecto son seis, y bajo demanda. Si las cargaras todas de golpe serían seis siempre. Ese es el mismo N+1 de la UD5, ahora sobre la red.
+6. Anota en tu cuaderno cuántas peticiones lanza tu página al mostrar cinco proyectos con sus tareas. Con un botón por proyecto son seis, y además bajo demanda. Cargándolas todas de una vez serían seis en cualquier caso. Ese es el mismo N+1 de la UD5, ahora sobre la red.
 
 <dl class="worked">
   <dt>Cómo saber que lo has terminado</dt>
@@ -379,7 +379,7 @@ Un `GET` sencillo no dispara *preflight*: el navegador lo considera una «petici
    | 2 | `POST` | `/api/v1/proyectos` | `201` | La petición de verdad, ya autorizada |
 
 4. Pincha la primera y busca en *Request Headers* la cabecera `Access-Control-Request-Method: POST`, y en *Response Headers* la respuesta de Spring: `Access-Control-Allow-Methods`.
-5. **Lo importante:** ese `OPTIONS` lo envía el navegador solo. Tú no lo has programado y tu controlador no lo atiende. Y tu backend nunca ejecutó la lógica del `POST` hasta que el navegador dio el visto bueno.
+5. **Lo importante:** ese `OPTIONS` lo envía el navegador solo. No está programado en el cliente y el controlador no lo atiende. El backend no llegó a ejecutar la lógica del `POST` hasta que el navegador obtuvo la autorización previa.
 
 <div class="rule">
   <p class="rule-label">Qué convierte una petición en «no simple»</p>
@@ -396,7 +396,7 @@ Un `GET` sencillo no dispara *preflight*: el navegador lo considera una «petici
 | El `OPTIONS` responde `403` | La ruta del *preflight* no está permitida | Con Spring Security aún sin instalar esto no debería pasar; si pasa, revisa el `addMapping` |
 | Cambias la configuración y no surte efecto | La caché del *preflight* | `maxAge` es de una hora: recarga con `Ctrl+Shift+R` o desmarca la caché en DevTools |
 | Funciona en tu cliente HTTP y falla en el navegador | Es CORS, por definición | Postman y Bruno no aplican la política de mismo origen: esa asimetría es el diagnóstico |
-| `Failed to fetch` sin más detalle | El servidor no llegó a responder | Comprueba que la aplicación está arrancada y que el puerto es el correcto: esto no es CORS |
+| `Failed to fetch` sin información adicional | El servidor no llegó a responder | Comprueba que la aplicación está arrancada y que el puerto es el correcto: esto no es CORS |
 
 #### Paso 10 · Consumir y comprobar la API desde el cliente del proyecto
 
@@ -415,7 +415,7 @@ Un `GET` sencillo no dispara *preflight*: el navegador lo considera una «petici
   <dd>Has visto el par <code>OPTIONS</code> + <code>POST</code> en DevTools con tus propios ojos; sabes provocar y reconocer un bloqueo de CORS; tu página lee la cabecera <code>Location</code>; y puedes explicar por qué la misma petición pasa desde tu cliente HTTP y no desde el navegador.</dd>
 </dl>
 
-#### Paso 11 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 11 · Comprobar y registrar el resultado del proyecto
 
 1. Repite la misma consulta desde el cliente HTTP y desde el navegador, y distingue respuesta del servidor de bloqueo de lectura por CORS.
 2. Comprueba la petición OPTIONS cuando exista preflight y verifica que un origen permitido funciona y uno no autorizado no recibe permiso de lectura.
@@ -482,7 +482,7 @@ Investiga y responde con criterio técnico:
 
 **Al terminar la sesión:**
 
-Podéis distinguir un fallo de red, de CORS y una respuesta de error de la API.
+Debe ser posible distinguir un fallo de red, uno de CORS y una respuesta de error de la API.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
@@ -534,7 +534,7 @@ Hoy se utiliza el portfolio que ya está publicado. Tras una escritura se vuelve
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -657,7 +657,7 @@ Para dominar el diagnóstico de integración, vamos a **provocar intencionadamen
 | Síntoma | Dónde está el problema | Qué mirar |
 | :--- | :--- | :--- |
 | `415 Unsupported Media Type` | Cliente | Falta la cabecera `Content-Type: application/json` en las opciones del `fetch` |
-| `400` con `JSON parse error` | Cliente | Estás enviando el objeto tal cual en lugar de convertirlo a texto JSON |
+| `400` con `JSON parse error` | Cliente | Se envía el objeto sin serializar en lugar de convertirlo a texto JSON |
 | `400` con la lista de campos inválidos | Servidor, y funcionando bien | Es tu Bean Validation de la UD3 haciendo su trabajo: muestra el `detail` en pantalla |
 | El `POST` responde `201` pero la lista no cambia | Cliente | Has creado el recurso pero no has vuelto a pintar la lista |
 | `204` y el elemento sigue en pantalla | Cliente | El `204` no trae cuerpo: no intentes hacer `res.json()` con él, reventaría |
@@ -682,7 +682,7 @@ Para editar, selecciona un registro del listado, carga sus valores en el formula
   <dd>Una sola pantalla ejecuta <code>GET</code>, <code>POST</code>, <code>DELETE</code> y el subrecurso de tareas sin recargarse; los tres tipos de error se distinguen a simple vista; y sabes decir, ante cualquiera de ellos, en qué capa está el problema y con qué evidencia lo has determinado.</dd>
 </dl>
 
-#### Paso 6 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 6 · Comprobar y registrar el resultado del proyecto
 
 1. Completa alta, consulta, modificación y borrado desde el navegador y verifica los cambios en la API.
 2. Provoca validación y fallo de conexión por separado: el cliente debe explicar cada caso y no mostrar éxito ni perder innecesariamente lo escrito.

@@ -4,7 +4,7 @@ label: "UD3 · Diseñar"
 section: "ud-03"
 order: 3
 lang: "es"
-summary: "Las reglas de diseño que convierten un montón de endpoints en una API defendible: recursos, representaciones, DTO, entrada validada y errores coherentes."
+summary: "Las reglas de diseño que convierten un conjunto disperso de endpoints en una API defendible: recursos, representaciones, DTO, entrada validada y errores coherentes."
 duration: "18 horas · 3 semanas · 6 sesiones de 3 h"
 modality: "Taller de proyecto · 25 min de explicación, 140 min de trabajo y 15 min de cierre"
 deliverable: "API con DTO, validaciones y errores coherentes, acompañada de sus comprobaciones."
@@ -40,9 +40,9 @@ El CRUD ya se puede comprobar. Hoy revisarás cómo nombra sus recursos y utiliz
 
 #### Tu API funciona. Eso no la hace REST
 
-En la sesión 8 entregaste dieciséis endpoints con sus códigos correctos y una colección que los comprueba. Funciona, es verificable y otra persona puede usarla.
+En la sesión 8 se entregaron dieciséis endpoints con sus códigos correctos y una colección que los verifica. El resultado funciona, es comprobable y resulta utilizable por otra persona.
 
-Y aun así, si mañana en una entrevista te preguntan «¿es una API REST?», la respuesta honesta hoy sería: *en parte, y no sabría decir en qué parte*.
+Aun así, ante la pregunta «¿es una API REST?» en una entrevista, la respuesta honesta hoy sería: *en parte, y no sabría decir en qué parte*.
 
 Eso es lo que arreglamos esta semana. No porque la palabra sea importante, sino porque detrás de ella hay un conjunto de decisiones de diseño que hacen que una API se pueda usar sin manual, crecer sin romperse y entender sin preguntar.
 
@@ -93,7 +93,7 @@ La segunda idea es la de la sesión 10 y la que más cuesta al principio. La pri
 
 Cualquier cosa de la que tu API pueda hablar y a la que se pueda dar una dirección: un proyecto, una tarea, un usuario, un comentario. También una colección de ellas.
 
-Esa es toda la definición, y la consecuencia práctica es enorme: **si tu URL contiene un verbo, no estás nombrando una cosa, estás dando una orden**. Y las órdenes no se pueden identificar, ni cachear, ni relacionar entre sí.
+Esa es toda la definición, y la consecuencia práctica es enorme: **si la URL contiene un verbo, no nombra un recurso, sino que emite una orden**. Las órdenes no se pueden identificar, ni cachear, ni relacionar entre sí.
 
 <div class="compare-pair">
   <div>
@@ -106,7 +106,7 @@ Esa es toda la definición, y la consecuencia práctica es enorme: **si tu URL c
   </div>
 </div>
 
-Esa es la ganancia real. No es elegancia: es que **una API de nivel 2 con veinte recursos se aprende una vez**, mientras que una de nivel 1 con veinte recursos son cien rutas distintas que hay que consultar.
+Esa es la ganancia real, y no es estética: **una API de nivel 2 con veinte recursos se aprende una sola vez**, mientras que una de nivel 1 con veinte recursos son cien rutas distintas que hay que consultar.
 
 #### Las siete reglas de nombrado
 
@@ -128,10 +128,10 @@ Las dos que de verdad se piensan son la 5 y la 6, porque son la misma decisión 
   <p class="rule-label">La pregunta que lo resuelve</p>
   <p><strong>¿El recurso existe por sí solo, o solo tiene sentido dentro de otro?</strong></p>
   <p>Una tarea existe por sí sola: tiene su id y se puede consultar directamente en <code>/tareas/41</code>. Que además pertenezca a un proyecto es una <em>relación</em>, y <code>/proyectos/7/tareas</code> es una forma cómoda de recorrerla.</p>
-  <p>Un comentario de una incidencia, en cambio, no significa nada fuera de ella. Ahí la jerarquía no es una comodidad: es la única dirección que tiene sentido.</p>
+  <p>Un comentario de una incidencia, en cambio, no significa nada fuera de ella. Ahí la jerarquía constituye la única estructura con sentido, y no una comodidad de diseño.</p>
 </div>
 
-Y un límite práctico:
+Existe además un límite práctico:
 
 ```text
 /proyectos/7/tareas/41/comentarios/5/respuestas/2
@@ -145,7 +145,7 @@ Nadie escribe eso, nadie lo lee y nadie lo mantiene. **Dos niveles de profundida
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -189,7 +189,7 @@ POST /tareas/borrar
 POST /tareas/3/marcar-completada
 ```
 
-Ya hay URLs distintas para cosas distintas: es un avance real. Pero la acción sigue estando en la ruta, y todo se hace con `POST`.
+Existen ya URLs distintas para recursos distintos, lo que constituye un avance real, si bien la acción permanece en la ruta y toda operación emplea `POST`.
 
 Reconoce esto, porque **es exactamente lo que escribe todo el mundo la primera vez**, y es lo que la UD1 te prohibió sin explicarte del todo por qué.
 
@@ -306,7 +306,7 @@ Guarda esta auditoría: en la sesión 14 volverás a pasarla y la diferencia ent
 
 Aquí está la parte difícil y la que separa una API pensada de una API copiada. ¿Qué haces con «archivar un proyecto», «cerrar una incidencia», «enviar un aviso» o «iniciar sesión»?
 
-Ninguna es crear, leer, actualizar ni borrar. Y sin embargo hay que exponerlas. Hay tres estrategias, en este orden de preferencia:
+Ninguna consiste en crear, leer, actualizar ni borrar, y sin embargo deben exponerse. Hay tres estrategias, en este orden de preferencia:
 
 La mayoría de las «acciones» son en realidad un campo que cambia de valor.
 
@@ -315,7 +315,7 @@ PATCH /incidencias/41
 { "estado": "cerrada" }
 ```
 
-«Cerrar» no es una operación: es poner el estado a `cerrada`. Si el dominio ya tiene ese campo, no hace falta inventar nada.
+«Cerrar» consiste en asignar el valor `cerrada` al estado, y no constituye una operación independiente. Si el dominio ya tiene ese campo, no hace falta inventar nada.
 
 A veces la acción esconde una cosa que merece existir por sí misma.
 
@@ -324,7 +324,7 @@ POST /incidencias/41/comentarios
 POST /proyectos/7/miembros
 ```
 
-«Comentar» no es un verbo que colgar de la incidencia: es **crear un comentario**. En cuanto lo ves así, aparece una colección que además se puede listar, paginar y borrar.
+«Comentar» equivale a **crear un comentario**, y no a un verbo que se cuelga de la incidencia. En cuanto lo ves así, aparece una colección que además se puede listar, paginar y borrar.
 
 Cuando lo anterior no encaja, se expone la acción como un recurso propio y se documenta:
 
@@ -334,7 +334,7 @@ POST /pedidos/12/reembolso
 POST /sesiones
 ```
 
-Fíjate en que siguen siendo sustantivos: el *cierre*, el *reembolso*, la *sesión*. Y en que se hacen con `POST`, porque no son idempotentes.
+Conviene observar que siguen siendo sustantivos —el *cierre*, el *reembolso*, la *sesión*— y que se ejecutan con `POST`, por no ser idempotentes.
 
 <div class="rule">
   <p class="rule-label">Cuándo está bien salirse de la norma</p>
@@ -407,7 +407,7 @@ Haz el cambio ruta por ruta: modifica la anotación del controlador, reinicia, a
 3. Añade el recurso `Comentario` a la API, anidado donde corresponda, con al menos listar y crear.
 4. Anota en las decisiones técnicas qué rutas cambiaron y por qué.
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Compara el inventario anterior con el nuevo y justifica cada cambio por su significado, sin basarte solo en preferencias de nombres.
 2. Actualiza y ejecuta la colección con las nuevas rutas. Si Intermodular ya utiliza alguna, registra y coordina el cambio de contrato con ese cliente.
@@ -501,7 +501,7 @@ Las rutas ya están revisadas, pero devolver directamente tu modelo permite que 
 
 <p class="term">Representación</p>
 
-Lo que viaja por la red cuando alguien pide un recurso. **No es el recurso**: es una descripción suya, en un formato concreto, con los datos que se ha decidido incluir.
+Lo que viaja por la red cuando alguien pide un recurso. **No constituye el recurso**, sino una descripción suya en un formato concreto, con los datos que se ha decidido incluir.
 
 Es la segunda idea de la interfaz uniforme que viste en la sesión 9, y ahora se puede decir con precisión:
 
@@ -514,7 +514,7 @@ Es la segunda idea de la interfaz uniforme que viste en la sesión 9, y ahora se
   </ol>
 </figure>
 
-Ahora mismo tienes las dos últimas pegadas: tu representación **es** tu modelo. Y cada vez que tocas uno, cambias el otro sin querer.
+En el estado actual las dos últimas están acopladas: la representación **es** el modelo, de modo que cada modificación de uno altera el otro de forma involuntaria.
 
 #### Los tres daños concretos
 
@@ -537,7 +537,7 @@ No es una cuestión de pureza. Son tres problemas que vas a sufrir:
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -547,7 +547,7 @@ No es una cuestión de pureza. Son tres problemas que vas a sufrir:
 
 #### Paso 2 · Observar qué campos internos se exponen al devolver el modelo
 
-Abre tu clase `Tarea` y añade esto, tal cual:
+Abre la clase `Tarea` y añade lo siguiente:
 
 ```java
 private String notaInterna = "revisar con el jefe de proyecto";
@@ -587,7 +587,7 @@ public record TareaResponse(
 }
 ```
 
-Cuatro líneas. Y esta vez **sí es un `record`**, al revés que el modelo. La diferencia importa y conviene entenderla:
+Cuatro líneas. En este caso **sí corresponde un `record`**, a diferencia del modelo. La diferencia importa y conviene entenderla:
 
 <div class="compare-pair">
   <div>
@@ -625,7 +625,7 @@ public record TareaResponse(
 }
 ```
 
-Y el controlador cambia lo justo:
+El controlador cambia lo mínimo:
 
 ```java
 @GetMapping("/{id}")
@@ -691,12 +691,12 @@ Sería deshonesto vendértelo como gratis:
 | Puedes refactorizar el modelo sin miedo | Código de conversión que mantener |
 | Puedes dar vistas distintas del mismo recurso | Un sitio más que tocar al añadir un campo |
 
-En una aplicación de tres clases, el coste se nota y la ganancia no. En una de treinta, es al revés, y para entonces separarlo ya es carísimo.
+En una aplicación de tres clases el coste resulta perceptible y la ganancia no. En una de treinta sucede lo contrario, y para entonces la separación tiene un coste muy superior.
 
 <div class="rule">
   <p class="rule-label">Y todavía falta la mitad</p>
   <p>Hoy solo has separado <strong>la salida</strong>. La entrada sigue recibiendo el modelo directamente con <code>@RequestBody Tarea</code>, con todo lo que eso implica: el cliente todavía puede mandarte el <code>id</code>, o campos que no debería poder tocar.</p>
-  <p>Esa es la sesión 11. Y el código de conversión, que hoy has escrito a mano y que crecerá, se ordena en la 17.</p>
+  <p>Esa es la sesión 11. El código de conversión, escrito aquí a mano y destinado a crecer, se ordena en la 17.</p>
 </div>
 
 #### Paso 7 · La representación de proyectos
@@ -708,7 +708,7 @@ En `dto/ProyectoResponse.java`, declara primero los componentes que utiliza el c
 3. Añade a `Proyecto` un campo interno que no deba publicarse —por ejemplo `presupuestoInterno`— y comprueba que no aparece.
 4. Repite el paso 2 de la comprobación: renombra un campo del modelo y verifica que la colección de Postman sigue en verde.
 
-#### Paso 8 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 8 · Comprobar y registrar el resultado del proyecto
 
 1. Añade el dato interno al modelo y verifica que el JSON público sigue conteniendo solo los campos del DTO.
 2. Comprueba listado y detalle, tanto para la entidad del ejemplo adaptada como para otra de tu dominio. Actualiza la colección si has decidido cambiar el contrato.
@@ -842,7 +842,7 @@ Abre tu controlador de tareas y busca todas las líneas que pasan datos de una c
   </ol>
 </figure>
 
-Tres estilos distintos para el mismo trabajo, en dos archivos. Y ninguno lo eligió nadie: han ido apareciendo.
+Tres estilos distintos para el mismo trabajo, en dos archivos. Ninguno responde a una decisión: han ido apareciendo.
 
 #### La dirección de las dependencias
 
@@ -863,7 +863,7 @@ Si mañana publicas la misma aplicación por otro canal, el modelo se reutiliza 
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -913,7 +913,7 @@ public class TareaRequest {
 }
 ```
 
-Fíjate en lo que **no** está: no hay `id` y no hay `completada`. Y ahí está el truco elegante:
+Conviene observar lo que **no** aparece: no hay `id` ni `completada`. En esa ausencia está la decisión de diseño:
 
 <div class="rule">
   <p class="rule-label">Lo que no existe no se puede asignar</p>
@@ -921,7 +921,7 @@ Fíjate en lo que **no** está: no hay `id` y no hay `completada`. Y ahí está 
   <p>Ese silencio que en la UD2 era un peligro, aquí es exactamente la protección que necesitas. <strong>El DTO de entrada define qué campos existen para el cliente</strong>, y todo lo demás deja de ser un problema, sin escribir una sola comprobación.</p>
 </div>
 
-Y otro detalle que no es casual: es una **clase**, no un `record`. Jackson necesita construirla vacía y rellenarla con los *setters*, y en la sesión 12 le colgaremos anotaciones de validación campo a campo.
+Otro detalle tampoco es casual: se trata de una **clase**, no de un `record`. Jackson necesita construirla vacía y rellenarla con los *setters*, y en la sesión 12 le colgaremos anotaciones de validación campo a campo.
 
 ##### El controlador
 
@@ -1024,7 +1024,7 @@ No es un problema estético. Vamos a producirlo a propósito para que lo veas.
 
 Añade `proyectoId` a `Tarea` y a `TareaResponse`, con sus accesos.
 
-Actualiza `TareaResponse.desde()` para que lo incluya. Y ahora **haz como si se te olvidara** el listado: deja el `GET /tareas` construyendo la respuesta a mano con `null` en el nuevo componente. Omitir el quinto argumento impediría compilar; el fallo que vamos a observar es pasar un valor incorrecto:
+Actualiza `TareaResponse.desde()` para que lo incluya. A continuación, **omite deliberadamente** el listado: deja el `GET /tareas` construyendo la respuesta a mano con `null` en el nuevo componente. Omitir el quinto argumento impediría compilar; el fallo que vamos a observar es pasar un valor incorrecto:
 
 ```java
 @GetMapping
@@ -1047,12 +1047,12 @@ GET /tareas      → [{"id":1,"titulo":"Revisar","prioridad":"alta","completada"
 GET /tareas/1    → {"id":1,"titulo":"Revisar","prioridad":"alta","completada":false,"proyectoId":7}
 ```
 
-**El mismo recurso, dos representaciones distintas.** El cliente que pinta la lista no ve el proyecto; el que abre el detalle sí. Y nada falla, nada avisa: los dos endpoints responden `200`.
+**El mismo recurso, dos representaciones distintas.** El cliente que pinta la lista no ve el proyecto; el que abre el detalle sí. Ningún mecanismo falla ni advierte del problema: los dos endpoints responden `200`.
 
 <div class="rule">
   <p class="rule-label">Por qué este fallo es de los peores</p>
   <p>No lo detecta el compilador, no lo detecta el linter y no lo detecta tu colección, porque las dos respuestas son válidas. Lo detecta un cliente, semanas después, preguntando «¿por qué a veces viene el proyecto y a veces no?».</p>
-  <p>Y la causa no es un descuido: es que <strong>había dos sitios donde hacer el mismo cambio</strong> y solo uno era obligatorio.</p>
+  <p>La causa no es un descuido: <strong>existían dos lugares donde aplicar el mismo cambio</strong> y solo uno era obligatorio.</p>
 </div>
 
 #### Paso 6 · Reunir la conversión de objetos en un mapper
@@ -1061,7 +1061,7 @@ Crea `mapper/TareaMapper.java` con el bloque completo y revisa los imports de lo
 
 <p class="term">Mapper</p>
 
-Una clase cuyo único trabajo es convertir entre representaciones y modelo. Ni valida, ni guarda, ni decide: traduce. Y es **el único sitio del proyecto donde se traduce**.
+Una clase cuyo único trabajo es convertir entre representaciones y modelo. Ni valida, ni guarda, ni decide: traduce. Constituye además **el único punto del proyecto donde se traduce**.
 
 Crea el paquete `com.ejemplo.gestor.mapper`:
 
@@ -1219,7 +1219,7 @@ pm.test("El proyecto sobrevive al viaje", function () {
 4. Añade a la colección la prueba de ida y vuelta para proyectos, con una comprobación por campo.
 5. Comprueba que la colección entera sigue en verde.
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Intenta enviar un campo que solo pueda asignar el servidor y comprueba que no modifica ese dato interno.
 2. Prueba creación, lectura y modificación parcial: las conversiones deben conservar los datos esperados y el PATCH no debe borrar los campos omitidos.
@@ -1249,7 +1249,7 @@ Entrega una tabla con **una fila por campo** y una columna por clase, marcando d
 | Campo | `UsuarioRequest` | `Usuario` | `UsuarioResponse` | `UsuarioPublico` |
 | :--- | :---: | :---: | :---: | :---: |
 
-Y responde a dos preguntas:
+Responde a dos preguntas:
 
 1. Hay un campo que aparece en la entrada y **no existe** en el modelo con ese nombre. ¿Cuál, y qué pasa con él entre una clase y otra?
 2. ¿Qué habría ocurrido con el campo `rol` si hubieras usado el modelo como cuerpo de la petición?
@@ -1277,7 +1277,7 @@ Haz este ejercicio en pareja, y hazlo en las dos direcciones.
 3. Si sale verde, **su colección tiene un agujero**: apunta cuál es el campo y qué prueba le faltaba.
 4. Que la amplíe hasta detectarlo, y que después restaure la línea y compruebe que vuelve a verde.
 
-Y responde por escrito:
+Responde por escrito:
 
 * ¿Cuántos campos de tu API están hoy comprobados de verdad, y cuántos solo aparecen en respuestas que nadie verifica?
 * ¿Qué te costaría más: mantener la prueba de ida y vuelta al añadir cada campo, o descubrir el fallo en producción?
@@ -1360,7 +1360,7 @@ La consecuencia práctica es la buena noticia del día: **dentro de tu método y
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1543,7 +1543,7 @@ Las dos interesantes son la **4** y la **9**:
 
 La pregunta 3 es la que se piensa. Un `PATCH` recibe campos ausentes por definición, así que `@NotNull` ahí sería un error. Pero `@Size` sí tiene sentido: *si* llega, que tenga la longitud correcta.
 
-#### Paso 8 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 8 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta la tabla de rechazos y verifica que cada entrada inválida produce 400 sin crear ni modificar el registro.
 2. Repite una entrada válida después de los rechazos. Debe seguir funcionando; comprueba que la validación se activa en todos los métodos que reciben el DTO.
@@ -1628,7 +1628,7 @@ Los mensajes por defecto están en inglés y describen la restricción, no el pr
   </div>
   <div>
     <p class="compare-label">Dice qué corregir</p>
-    <p class="compare-body">«El título es obligatorio», «El título debe tener entre 3 y 120 caracteres». Se puede enseñar tal cual al usuario final.</p>
+    <p class="compare-body">«El título es obligatorio», «El título debe tener entre 3 y 120 caracteres». Ambos mensajes son presentables al usuario final sin reformular.</p>
   </div>
 </div>
 
@@ -1733,7 +1733,7 @@ public record ErrorResponse(
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1821,7 +1821,7 @@ public @interface PrioridadValida {
   <dt><code>@Constraint(validatedBy = ...)</code></dt>
   <dd>Qué clase contiene la comprobación de verdad. La anotación solo es la etiqueta.</dd>
   <dt><code>groups</code> y <code>payload</code></dt>
-  <dd>Los exige la especificación de Bean Validation y casi nunca se usan. Se copian tal cual.</dd>
+  <dd>La especificación de Bean Validation los exige, aunque su uso es infrecuente. Se reproducen sin modificación.</dd>
 </dl>
 
 ```java
@@ -1945,7 +1945,7 @@ Se escribe igual que la de antes, cambiando dos cosas: `@Target(TYPE)` en la ano
 1. Activa las dos propiedades y comprueba que ves los mensajes.
 2. Recorre todos tus DTO de entrada y pon un `message` en **cada** restricción, aplicando las cuatro reglas.
 3. Envía `{}` a la creación de tareas y de proyectos, y lee el resultado como si fueras el cliente.
-4. Para cada mensaje, pregúntate: **¿podría enseñárselo tal cual a un usuario final?** Si la respuesta es no, reescríbelo.
+4. Para cada mensaje, pregúntate: **¿podría mostrarlo literalmente a un usuario final?** Si la respuesta es no, reescríbelo.
 
 #### Paso 6 · Tu propia anotación
 
@@ -1973,7 +1973,7 @@ public class RecursoNoEncontradoException extends RuntimeException {
 }
 ```
 
-Extiende `RuntimeException` para no tener que declararla en cada firma ni envolverla en `try`. Y el mensaje se construye en un solo sitio, así que todos los «no encontrado» de la API se redactan igual.
+Extiende `RuntimeException` para no tener que declararla en cada firma ni envolverla en `try`. El mensaje se construye además en un solo lugar, de modo que todos los «no encontrado» de la API se redactan igual.
 
 Con ella, el controlador se limita a decir la verdad y seguir:
 
@@ -2220,7 +2220,7 @@ Fíjate en dos cosas que no estaban:
 
 <div class="rule">
   <p class="rule-label">Por qué hemos hecho el rodeo</p>
-  <p>Podríamos haber empezado por <code>ProblemDetail</code> y ahorrarnos la clase propia. Pero entonces habrías copiado un formato sin saber por qué tiene esos campos y no otros.</p>
+  <p>Cabría haber empezado por <code>ProblemDetail</code>, evitando la clase propia. Esa vía habría supuesto, sin embargo, adoptar un formato sin conocer por qué define esos campos y no otros.</p>
   <p>Haberlo diseñado tú primero es lo que hace que ahora reconozcas <code>detail</code> como «qué ha ocurrido» y <code>instance</code> como «qué se estaba pidiendo», en lugar de memorizar cinco nombres en inglés. <strong>El estándar se entiende mejor después de haber tenido el problema que resuelve.</strong></p>
   <p>A partir de aquí, todo el curso usa este formato: los tests de la UD7 comprobarán <code>$.title</code> y <code>$.status</code>, la seguridad de la UD9 devolverá <code>401</code> y <code>403</code> con esta forma, y el cliente Angular de la UD12 leerá <code>detail</code> para mostrarlo en pantalla.</p>
 </div>
@@ -2269,7 +2269,7 @@ Añade su manejador con `HttpStatus.CONFLICT` y úsalo, por ejemplo, para impedi
 6. Provoca los cinco errores del principio y comprueba que los cinco tienen la misma forma.
 7. Haz la migración a `ProblemDetail` del apartado anterior y vuelve a provocarlos: los cinco deben seguir teniendo la misma forma, ahora con los nombres del estándar y la cabecera `Content-Type: application/problem+json`. Guarda las cinco peticiones en tu colección: son las que la UD7 convertirá en tests automáticos.
 
-#### Paso 13 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 13 · Comprobar y registrar el resultado del proyecto
 
 1. Comprueba regla propia, comparación entre campos, recurso ausente y conflicto. Deben devolver estados adecuados y la misma estructura de error, con mensajes que permitan corregir la petición.
 2. Provoca una entrada mal formada y verifica que también se presenta de forma coherente. No expongas detalles internos ni la traza de Java en el contrato público.
@@ -2295,7 +2295,7 @@ Este reto no tiene una solución cerrada y es el que más se parece a una discus
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Que se puede actuar sobre él sin consultar nada más, e incluso enseñárselo tal cual al usuario final. Decir «longitud inválida» obliga a buscar cuál es la longitud correcta.</p>
+  <p>1 · Que permite actuar sin consultar información adicional e incluso mostrarse literalmente al usuario final. Decir «longitud inválida» obliga a buscar cuál es la longitud correcta.</p>
   <p>2 · Porque cada restricción comprueba una sola cosa: la obligatoriedad es trabajo de <code>@NotNull</code>. Si además rechazara los nulos, no podría usarse en un campo opcional como los del <code>PATCH</code>.</p>
   <p>3 · Sobre la clase, con <code>@Target(TYPE)</code>, porque necesita ver el objeto completo para comparar sus campos.</p>
   <p>4 · Porque el valor incorrecto deja de ser representable: no hace falta escribir ni mantener una regla para algo que el tipo ya impide.</p>
@@ -2357,7 +2357,7 @@ La API ya tiene rutas, DTO, validaciones y errores definidos. Hoy consolidarás 
 
 #### Correcto no es lo mismo que coherente
 
-Cada endpoint que has escrito estas tres semanas está bien por separado. Y aun así, una API puede fallar en el conjunto de una forma que ninguna prueba individual detecta:
+Cada endpoint escrito en estas tres semanas es correcto por separado. Aun así, una API puede fallar en su conjunto de una forma que ninguna prueba individual detecta:
 
 <figure class="diagram">
   <figcaption>Incoherencias que solo se ven mirando el conjunto</figcaption>
@@ -2382,7 +2382,7 @@ Intermodular consumirá esta misma API. Por eso se entregan una URL base configu
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -2538,7 +2538,7 @@ Esa cuarta fila viene de la sesión 13: la encontraste, viste por qué una anota
   <p>4 · Porque la hipermedia añade complejidad al servidor que muy pocos clientes aprovechan, y es una decisión de coste y beneficio tomada a conciencia.</p>
 </details>
 
-#### Paso 8 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 8 · Comprobar y registrar el resultado del proyecto
 
 1. Otra persona debe poder ejecutar la colección y obtener las respuestas documentadas sin preguntarte qué campos o ids escribir.
 2. Deja enlazados la versión del contrato y los cambios que afecten al cliente. El backend continúa en memoria hasta la UD5; documenta esa limitación.
@@ -2696,7 +2696,7 @@ Tres unidades, tres preguntas. Ya están las tres respondidas:
   </ol>
 </figure>
 
-Y hay una cuarta que no se ha tocado todavía:
+Existe una cuarta que no se ha abordado todavía:
 
 > **¿Y esto quién lo mantiene?**
 
@@ -2712,4 +2712,4 @@ Porque el contrato de tu API está bien, y detrás de él hay un controlador que
 
 Fíjate en la cuarta fila. Esa regla la encontraste tú en la sesión 13, viste por qué una anotación de validación no podía resolverla y la dejaste apuntada. Lleva dos sesiones esperando un sitio donde vivir, y en la unidad siguiente lo encontrará.
 
-Y aquí se cobra el trabajo de estas tres semanas: la UD4 **no va a cambiar ni una ruta, ni un DTO, ni un código de estado**. Va a reorganizar lo que hay detrás sin tocar el contrato. Tu colección de pruebas, que ya cubre la API entera, será exactamente lo que demuestre que no has roto nada por el camino.
+El trabajo de estas tres semanas se rentabiliza aquí: la UD4 **no cambiará ninguna ruta, ni un DTO, ni un código de estado**. Va a reorganizar lo que hay detrás sin tocar el contrato. Tu colección de pruebas, que ya cubre la API entera, será exactamente lo que demuestre que no has roto nada por el camino.

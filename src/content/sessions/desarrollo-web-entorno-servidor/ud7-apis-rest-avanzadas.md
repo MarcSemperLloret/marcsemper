@@ -112,7 +112,7 @@ Para resolver consultas con parámetros opcionales en Spring Data existen tres e
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -418,7 +418,7 @@ Aplica el patrón de filtrado a la entidad `Proyecto`:
   <dd>Las cuatro combinaciones de filtros devuelven lo que deben; una petición sin parámetros devuelve la lista completa y no una vacía; un valor no booleano devuelve <code>400</code>; y la búsqueda encuentra igual escribiendo en mayúsculas o en minúsculas.</dd>
 </dl>
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Prueba cada filtro aislado y combinado y contrasta los ids devueltos con los datos preparados.
 2. Consulta un subrecurso desde dos recursos principales distintos: no debe mezclar registros ajenos ni exponer campos internos de las entidades.
@@ -570,7 +570,7 @@ De esta forma, la memoria de la máquina virtual solo almacena 10 objetos, con i
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -709,7 +709,7 @@ En la consulta paginada de tareas añade una `countQuery` equivalente, con los m
   <dd>Filtros y paginación funcionan combinados; <code>totalElements</code> cuenta lo filtrado; una página fuera de rango devuelve <code>200</code> con lista vacía; hay un tamaño máximo de página configurado; y has identificado el SELECT paginado y cuándo se ejecuta el recuento.</dd>
 </dl>
 
-#### Paso 5 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 5 · Comprobar y registrar el resultado del proyecto
 
 1. Recorre al menos dos páginas y comprueba sus contenidos, totales y orden. Añade un criterio de desempate cuando el campo elegido tenga valores iguales.
 2. Prueba filtro más paginación, página sin resultados y tamaño inválido. Verifica la política documentada para cada caso y adapta el cliente si cambia el formato.
@@ -846,7 +846,7 @@ Conviene distinguir con precisión ambos términos:
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -860,7 +860,7 @@ Crea primero el archivo de test con imports, anotaciones y campos. `@MockBean` s
 
 Crea `src/test/java/com/ejemplo/gestor/controller/ProyectoControllerTest.java`. Aislamos el controlador inyectando `MockMvc` y simulando el colaborador de negocio con `@MockBean`.
 
-Los `import` estáticos del final son la parte que más se atasca, porque sin ellos `post(...)`, `status()` o `jsonPath(...)` no compilan. Cópialos tal cual:
+Los `import` estáticos del final son la parte que más se atasca, porque sin ellos `post(...)`, `status()` o `jsonPath(...)` no compilan. Reprodúcelos literalmente:
 
 ```java
 package com.ejemplo.gestor.controller;
@@ -1183,7 +1183,7 @@ Documenta el controlador de tareas aplicando las anotaciones correspondientes:
   <dd>Los dos bloques se llaman «Proyectos» y «Tareas», no <code>proyecto-controller</code>; cada endpoint declara sus códigos de error además del feliz; todos los campos de los DTO traen ejemplo; y un compañero ha conseguido usar tu API entera desde Swagger sin preguntarte nada.</dd>
 </dl>
 
-#### Paso 10 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 10 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta los tests HTTP con un caso válido, uno rechazado y uno ausente. Comprueba estado y contenido significativo, no solo que la petición termine.
 2. Abre Swagger UI y compara sus parámetros, ejemplos y estados con las respuestas reales de la colección.
@@ -1312,7 +1312,7 @@ Cuando un cambio incompatible es estrictamente necesario, la API debe ofrecer **
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre vuestro proyecto</p>
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -1419,7 +1419,7 @@ Haz inventario de todos los prefijos actuales, añade `/api/v1` de manera consis
   <dd>No queda ninguna ruta sin el prefijo <code>/api/v1</code>; la colección entera vuelve a pasar; los tests están corregidos y en verde; la cabecera <code>Location</code> apunta a una URL que existe; y Swagger muestra las rutas nuevas.</dd>
 </dl>
 
-#### Paso 7 · Comprobar y registrar el resultado de vuestro proyecto
+#### Paso 7 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta la colección del cliente anterior contra las rutas mantenidas y verifica que sigue funcionando durante la transición.
 2. Prueba también el contrato nuevo y comprueba los avisos de obsolescencia previstos. Actualiza documentación y consumidor antes de retirar una ruta antigua.
