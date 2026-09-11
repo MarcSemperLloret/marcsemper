@@ -445,7 +445,7 @@ a[href^="http"] {     /* enlaces cuyo href empieza por http: los externos */
 }
 ```
 
-Aquí se comprueba el efecto del trabajo de la UD1: si el campo se declaró como `type="email"` en lugar de `type="text"`, ahora existe un selector para él. **El HTML bien marcado te devuelve selectores.**
+Aquí se comprueba el efecto de lo que hiciste en la UD1: si escribiste `type="email"` en lugar de `type="text"`, ahora tienes un selector. **El HTML bien marcado te devuelve selectores.**
 
 #### Pseudo-clases
 
@@ -2581,7 +2581,7 @@ ease         cómo acelera
 <div class="rule">
   <p class="rule-label">No animes <code>all</code></p>
   <p><code>transition: all 300ms</code> parece cómodo y anima también cosas que no querías, incluidas propiedades que obligan al navegador a recalcular el layout entero. El resultado es una interfaz que va a tirones sin que se sepa por qué.</p>
-  <p>Nombra las propiedades. Siempre que sea posible, anima <code>transform</code> y <code>opacity</code>: son las dos que el navegador resuelve sin rehacer el layout, y por eso van suaves.</p>
+  <p>Nombra las propiedades. Si puedes elegir, anima <code>transform</code> y <code>opacity</code>: son las dos que el navegador resuelve sin rehacer el layout, y por eso van suaves.</p>
 </div>
 
 ### Transformaciones

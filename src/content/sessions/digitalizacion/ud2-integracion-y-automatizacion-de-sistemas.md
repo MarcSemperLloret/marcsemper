@@ -160,7 +160,7 @@ El funcionamiento puede representarse así:
 
 Es sencillo de implementar.
 
-Su eficiencia, sin embargo, es reducida.
+Su eficiencia, sin embargo, puede ser reducida.
 
 Imaginemos que preguntamos cada minuto y el estado cambia una vez al día.
 
@@ -224,11 +224,11 @@ Una forma sencilla de recordarlo:
 
 ##### Polling
 
-> El sistema consulta periódicamente si ha ocurrido algo.
+> El interesado pregunta periódicamente si ha ocurrido algo.
 
 ##### Webhook
 
-> Tú me avisas cuando ocurra.
+> El sistema donde ocurre el evento avisa en cuanto sucede.
 
 Comparación:
 

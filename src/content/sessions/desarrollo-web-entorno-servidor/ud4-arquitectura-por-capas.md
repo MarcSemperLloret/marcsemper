@@ -45,7 +45,7 @@ Quieres comprobar que una tarea nueva nace sin completar. Hoy, para comprobarlo,
 
 Todo eso **para comprobar un `false`**.
 
-El problema no es solo su lentitud: ante un fallo resulta imposible determinar si el defecto está en la regla, en la ruta, en el mapper, en la validación o en el JSON escrito. La prueba no señala el culpable.
+El problema no es solo su lentitud: ante un fallo no sabes si el defecto está en la regla, en la ruta, en el mapper, en la validación o en el JSON que escribiste. La prueba no señala el culpable.
 
 Imagina tres peticiones perfectamente razonables:
 

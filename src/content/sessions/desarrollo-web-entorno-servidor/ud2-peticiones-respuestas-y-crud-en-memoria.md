@@ -554,7 +554,7 @@ Ya sabes cómo llegan los datos al controlador. Hoy precisarás qué significa r
 
 #### Lo que ya haces y todavía no sabes justificar
 
-En la UD1 se escribieron `POST`, `PUT` y `DELETE`, y funcionan. Ante la pregunta de por qué modificar corresponde a `PUT` y no a `POST`, sin embargo, la respuesta honesta hoy sería «porque lo indican los apuntes».
+En la UD1 escribiste `POST`, `PUT` y `DELETE`, y funcionan. Ante la pregunta de por qué modificar corresponde a `PUT` y no a `POST`, sin embargo, la respuesta honesta hoy sería «porque lo indican los apuntes».
 
 Esta sesión pasa de la mecánica al criterio, que se apoya en dos propiedades no opinables: están definidas en la especificación de HTTP y **el resto de Internet cuenta con ellas**.
 
@@ -1082,7 +1082,7 @@ A partir de ahí, en las peticiones siguientes:
 <div class="rule">
   <p class="rule-label">Por qué esto lo cambia todo</p>
   <p>Con las peticiones encadenadas, tu colección deja de ser una lista de cosas sueltas y pasa a ser <strong>un escenario completo</strong>: crear, consultar lo creado, modificarlo, borrarlo y comprobar que ya no está.</p>
-  <p>Ese escenario se ejecuta completo con una sola acción y sin intervención humana, que es exactamente lo que realiza un test automático, que es a donde vamos en la UD4.</p>
+  <p>Ese escenario se ejecuta completo con una sola acción y sin intervención humana. Eso es exactamente lo que hace un test automático, que es a donde vamos en la UD4.</p>
 </div>
 
 #### Paso 12 · Comprobaciones automáticas
@@ -1554,14 +1554,14 @@ En la UD1 preguntábamos cómo conseguir que la aplicación respondiera. En esta
   </ol>
 </figure>
 
-Los seis motivos están documentados, todos ellos comprobados en la sesión 8:
+Tienes los seis motivos delante, todos comprobados por ti en la sesión 8:
 
 | Lo que tu API sigue haciendo mal | Se arregla en |
 | :--- | :--- |
 | Acepta una tarea sin título, sin prioridad y sin nada | UD3, con validación |
 | Acepta una tarea de un proyecto que no existe | UD3 |
 | Sus errores no explican qué hay que corregir | UD3, con errores coherentes |
-| Publica el modelo interno íntegro, en su forma interna | UD3, con DTO |
+| Publica el modelo interno íntegro, sin decidir qué campos salen | UD3, con DTO |
 | Sus rutas las has ido nombrando por intuición | UD3, con diseño orientado a recursos |
 | Al reiniciar se pierde todo | UD5, con PostgreSQL |
 

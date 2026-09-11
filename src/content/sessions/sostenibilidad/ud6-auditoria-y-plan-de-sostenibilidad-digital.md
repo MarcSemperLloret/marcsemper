@@ -151,7 +151,7 @@ El mapa actualizado utiliza resultados del módulo y hace visibles compromisos e
 
 Auditar aquí significa ordenar evidencias y límites para saber de qué partimos. Una **medición** registra una magnitud observada; una **estimación** depende de supuestos; una **propuesta** describe algo que todavía no se ha realizado. Mezclarlas haría que el plan pareciera más demostrado de lo que está.
 
-Las actividades del laboratorio no equivalen automáticamente a datos de toda la empresa. Una reducción de transferencia en la copia de PixelStore del laboratorio es evidencia de esa prueba; extrapolarla a todas las visitas necesita supuestos adicionales.
+Las actividades del laboratorio no equivalen automáticamente a datos de toda la empresa. Una reducción de transferencia en la copia de PixelStore es evidencia de esa prueba; extrapolarla a todas las visitas necesita supuestos adicionales.
 
 ### Se trabaja
 

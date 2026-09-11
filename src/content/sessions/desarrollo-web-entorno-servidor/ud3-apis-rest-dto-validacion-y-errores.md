@@ -40,7 +40,7 @@ El CRUD ya se puede comprobar. Hoy revisarás cómo nombra sus recursos y utiliz
 
 #### Tu API funciona. Eso no la hace REST
 
-En la sesión 8 se entregaron dieciséis endpoints con sus códigos correctos y una colección que los verifica. El resultado funciona, es comprobable y resulta utilizable por otra persona.
+En la sesión 8 entregaste dieciséis endpoints con sus códigos correctos y una colección que los verifica. El resultado funciona, es comprobable y resulta utilizable por otra persona.
 
 Aun así, ante la pregunta «¿es una API REST?» en una entrevista, la respuesta honesta hoy sería: *en parte, y no sabría decir en qué parte*.
 
@@ -514,7 +514,7 @@ Es la segunda idea de la interfaz uniforme que viste en la sesión 9, y ahora se
   </ol>
 </figure>
 
-En el estado actual las dos últimas están acopladas: la representación **es** el modelo, de modo que cada modificación de uno altera el otro de forma involuntaria.
+Ahora mismo tienes las dos últimas acopladas: tu representación **es** tu modelo, de modo que al modificar una de las dos cambias la otra sin advertirlo.
 
 #### Los tres daños concretos
 

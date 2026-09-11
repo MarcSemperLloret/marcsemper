@@ -99,7 +99,7 @@ mi-web/
 └── img/
 ```
 
-Conviene observar un detalle relevante: `catalogo.js` apenas se modifica. Las funciones escritas en la UD3 siguen siendo válidas sin cambio alguno, porque devuelven datos en lugar de imprimirlos. Esa es la consecuencia de haberlas diseñado así.
+Conviene observar un detalle relevante: `catalogo.js` apenas se modifica. Las funciones que escribiste en la UD3 siguen siendo válidas sin cambio alguno, porque devuelven datos en lugar de imprimirlos. Esa es la consecuencia de haberlas diseñado así.
 
 <div class="unit-deliverable">
   <p>Una página de productos que se genera desde datos, con búsqueda en vivo, dos filtros y una ordenación; un formulario de contacto validado y accesible; las preferencias del usuario recordadas entre visitas; y el catálogo cargado desde una API con sus tres estados: cargando, error y sin resultados.</p>
