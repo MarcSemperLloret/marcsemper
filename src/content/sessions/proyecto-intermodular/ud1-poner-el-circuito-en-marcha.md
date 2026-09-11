@@ -17,7 +17,7 @@ outcomes:
   - "Proteger la rama principal y demostrar que el circuito no se puede saltar."
 requirements:
   - "Cuenta de GitHub con el correo del centro añadido."
-  - "Git instalado y configurado con vuestro nombre y correo."
+  - "Git instalado y configurado con tu nombre y tu correo."
   - "Un editor de código."
 priorKnowledge:
   - "Fundamentos de Git: clonar, hacer commit y subir cambios."
@@ -869,7 +869,7 @@ git reset --hard origin/main
 
 <p class="stage stage--solo">Práctica individual con revisión cruzada por pares</p>
 
-**Organización para la revisión por pares (*Peer Code Review*).** Trabaja en pareja estable durante el módulo: la revisión cruzada de código audita la calidad técnica y simula la dinámica de un equipo de desarrollo profesional; la trazabilidad de estas revisiones en GitHub forma parte de las evidencias evaluables. Intercambiad los enlaces a vuestros respectivos repositorios públicos para habilitar la inspección en local durante el Bloque D. En caso de número impar, se establece una rotación circular donde cada participante revisa al siguiente.
+**Organización para la revisión por pares (*Peer Code Review*).** Trabaja en pareja estable durante el módulo: la revisión cruzada de código audita la calidad técnica y simula la dinámica de un equipo de desarrollo profesional; la trazabilidad de estas revisiones en GitHub forma parte de las evidencias evaluables. Intercambia con tu pareja el enlace al repositorio público para habilitar la inspección en local durante el Bloque D. En caso de número impar, se establece una rotación circular donde cada participante revisa al siguiente.
 
 Sigue con atención el protocolo completo de diez pasos en la primera iteración. En la segunda, aplica el flujo asegurando cada comprobación técnica.
 
