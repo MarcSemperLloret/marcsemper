@@ -36,16 +36,16 @@ priorKnowledge:
   <p>Con una excepción, y es deliberada: la accesibilidad. No porque sea bonita, sino porque es lo único de la interfaz que se puede medir con un número, sin depender de mi gusto ni del vuestro. Todo lo demás —la tipografía, los colores, la composición— se evalúa donde se enseña.</p>
 </div>
 
-## Sesión 3 · Vuestro primer workflow
+## Sesión 3 · El primer flujo de integración continua
 
-**Antes de empezar.** Ya has practicado issues y revisión de cambios. Hoy el portfolio incorporará su primera comprobación automática; el backend sigue desarrollándose en su propio repositorio.
+**Antes de empezar.** Ya has trabajado con issues, ramas de funcionalidad y revisión por pares. En esta sesión el portfolio incorpora su primera validación automatizada, ejecutada sobre cada propuesta de integración antes de que el código alcance la rama principal. El backend continúa su desarrollo en el repositorio del módulo de Servidor.
 
 <div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
+  <p class="checkpoint-label">Evaluación inicial · sin apuntes</p>
   <ol>
-    <li>Vuestra página se despliega en verde. ¿Qué significa exactamente ese verde?</li>
-    <li>Si os dejáis una etiqueta sin cerrar, ¿quién os avisa hoy?</li>
-    <li>¿Dónde se ejecuta un workflow de GitHub Actions: en vuestro ordenador o en otro sitio?</li>
+    <li>Tu página se publica con estado de éxito en GitHub Actions. ¿Qué certifica exactamente ese estado y qué queda fuera de su alcance?</li>
+    <li>Si integras un documento HTML con una etiqueta sin cerrar, ¿qué mecanismo lo detecta actualmente?</li>
+    <li>¿En qué máquina se ejecuta un workflow de GitHub Actions y qué implica eso sobre las herramientas disponibles durante la ejecución?</li>
   </ol>
 </div>
 
@@ -53,60 +53,60 @@ priorKnowledge:
 
 ### Se explica
 
-<p class="stage stage--brief">25 minutos · explicación y demostración</p>
+<p class="stage stage--brief">25 minutos · explicación conceptual y demostración técnica</p>
 
-#### Ahora mismo nadie vigila la puerta
+#### Ausencia de validación previa a la integración
 
-Lo único automático que tenéis es el despliegue, y le pasan dos cosas. La primera: se ejecuta **después** de fusionar, cuando el cambio ya está en `main`. Aunque quisiera avisaros, llegaría tarde. La segunda es peor. Coge los ficheros, los sube, y ahí se acaba lo que sabe hacer. Si el HTML tiene etiquetas sin cerrar, si ninguna imagen tiene texto alternativo, si tres enlaces del menú van a páginas que no existen, ese workflow sale **en verde igualmente**, porque la subida ha funcionado.
+El único proceso automatizado disponible hasta ahora es el despliegue, que presenta dos limitaciones estructurales. La primera afecta a su posición en el ciclo de vida: se ejecuta **después** de la fusión, cuando el cambio ya forma parte de `main`, de modo que cualquier diagnóstico que emitiera llegaría con el defecto ya publicado. La segunda afecta a su alcance: el flujo de publicación empaqueta los archivos del repositorio y los transfiere al servidor. Un documento con etiquetas sin cerrar, imágenes sin texto alternativo o enlaces internos no resolubles supera ese proceso con estado de éxito, porque la operación de transferencia se ha completado correctamente.
 
-Son dos cosas distintas y conviene separarlas ya, porque la distinción os va a acompañar el resto del ciclo:
+Conviene formalizar la distinción, dado que estructura el resto del ciclo de vida del software:
 
 <div class="compare-pair">
   <div>
-    <p class="compare-label">Comprobación de despliegue</p>
-    <p class="compare-body">¿Ha llegado el código a producción? Responde sí o no. No opina sobre lo que ha llegado.</p>
+    <p class="compare-label">Despliegue continuo (CD)</p>
+    <p class="compare-body">Verifica la entrega del artefacto al entorno de producción. Emite un resultado binario sobre la operación de publicación y no evalúa las propiedades del contenido entregado.</p>
   </div>
   <div>
-    <p class="compare-label">Comprobación de calidad</p>
-    <p class="compare-body">¿Lo que va a llegar cumple lo que acordamos? Se ejecuta antes de fusionar, y su trabajo es impedir el paso.</p>
+    <p class="compare-label">Integración continua (CI)</p>
+    <p class="compare-body">Verifica que el incremento propuesto satisface los criterios de calidad acordados. Se ejecuta sobre la <em>pull request</em>, con anterioridad a la fusión, y su función es impedir la integración cuando el resultado es negativo.</p>
   </div>
 </div>
 
-Hoy escribís la segunda. Y la escribís a mano, porque ésta no la genera ningún portal.
+En esta sesión se implementa la segunda mediante un workflow redactado manualmente: a diferencia del flujo de publicación, esta definición no la genera ningún asistente del portal.
 
-#### Qué es un runner, y por qué eso explica casi todo
+#### El entorno de ejecución: runners efímeros y reproducibilidad
 
 <p class="term">Runner</p>
 
-Una máquina virtual limpia que GitHub crea para ejecutar vuestro workflow y destruye al terminar. No tiene vuestro proyecto, ni vuestras herramientas, ni vuestra configuración: empieza vacía cada vez.
+Máquina virtual que GitHub aprovisiona para ejecutar un workflow y destruye al finalizar. Su sistema de archivos parte de una imagen base estandarizada: no contiene el proyecto, ni las dependencias instaladas en la estación de trabajo local, ni la configuración personal de quien desarrolla. Cada ejecución parte del mismo estado inicial conocido.
 
-De ahí salen las dos reglas que evitan el 90 % de los fallos de esta sesión:
+Esta naturaleza efímera determina las dos reglas que previenen la mayoría de los errores de esta sesión:
 
-| Regla | Consecuencia práctica |
-| ----- | --------------------- |
-| El runner no tiene vuestro código | El primer paso siempre es descargarlo, y eso es lo que hace <code>actions/checkout</code> |
-| El runner no tiene vuestras herramientas | Todo lo que uséis se instala dentro del workflow. Que funcione en vuestro portátil no significa nada |
+| Propiedad del entorno de ejecución | Consecuencia en la definición del workflow |
+| ---------------------------------- | ------------------------------------------ |
+| El runner no dispone del código fuente | La primera etapa debe clonar el repositorio, función que cumple la acción <code>actions/checkout</code> |
+| El runner no dispone de las herramientas del proyecto | Toda dependencia debe declararse e instalarse de forma explícita dentro del propio flujo |
 
-Y de ahí sale lo que hace útil todo esto. Como la máquina empieza limpia, **lo que pasa allí le va a pasar a cualquiera que lo ejecute igual**. En vuestro portátil no: ahí tenéis instaladas cosas que ni sabéis que tenéis. De eso iba siempre el «en mi ordenador funciona», y hoy se termina.
+La consecuencia metodológica es la **reproducibilidad**: al partir de un estado inicial conocido, el resultado obtenido en el runner es reproducible por cualquier persona o sistema que ejecute la misma definición. Un entorno local, por el contrario, acumula dependencias globales, variables de entorno y versiones no declaradas. Esa divergencia progresiva entre entornos (*configuration drift*) constituye el origen técnico del argumento «en mi equipo funciona», que un pipeline de integración continua invalida como criterio de aceptación.
 
-#### Anatomía de un workflow
+#### Estructura declarativa de un workflow
 
-Cuatro palabras y ya sabéis leer cualquiera:
+La especificación de GitHub Actions se articula en torno a cuatro elementos:
 
 <dl class="worked">
   <dt><code>on</code></dt>
-  <dd>Qué lo dispara. En el vuestro va a ser: cada pull request, y cada cambio que entre en <code>main</code>.</dd>
+  <dd>Declara los eventos que desencadenan la ejecución. En esta implementación serán la apertura o actualización de una <em>pull request</em> y la integración de cambios en <code>main</code>.</dd>
   <dt><code>jobs</code></dt>
-  <dd>Los trabajos que se hacen. Cada job corre en su propia máquina y, salvo que digáis lo contrario, todos a la vez. Cada job aparece como un check independiente en la pull request.</dd>
+  <dd>Unidades de trabajo independientes. Cada job se aprovisiona en su propia máquina virtual y se ejecuta en paralelo, salvo que se declare una dependencia explícita mediante <code>needs</code>. Cada job se publica como un <em>check</em> verificable en la pull request.</dd>
   <dt><code>steps</code></dt>
-  <dd>Los pasos de un job, en orden. Si uno falla, el job se detiene ahí.</dd>
+  <dd>Secuencia ordenada de etapas dentro de un job. El fallo de una etapa interrumpe la ejecución de las restantes.</dd>
   <dt><code>uses</code> frente a <code>run</code></dt>
-  <dd><code>uses</code> ejecuta una acción que ya existe, escrita por otra persona. <code>run</code> ejecuta un comando de terminal, exactamente el mismo que escribiríais vosotros.</dd>
+  <dd><code>uses</code> invoca una acción reutilizable publicada por terceros; <code>run</code> ejecuta una instrucción en el intérprete de comandos del runner.</dd>
 </dl>
 
 <div class="rule">
-  <p class="rule-label">Lo que se delega a una máquina y lo que no</p>
-  <p>A la máquina se le da lo objetivo, lo repetible y lo aburrido: si el HTML es válido, si un enlace responde, si el formato es el acordado, si el contraste llega al mínimo. A la persona se le deja lo que hay que juzgar: si la sección se entiende, si el texto dice algo, si el cambio hace lo que pedía la issue. Si se mezclan las dos cosas pasa una de dos: o acabáis revisando comas a mano, o acabáis creyendo que un check en verde quiere decir que está bien.</p>
+  <p class="rule-label">Delimitación entre validación automatizada y revisión humana</p>
+  <p>La automatización asume los criterios objetivos, deterministas y repetibles: validez sintáctica del marcado, disponibilidad de los recursos enlazados, conformidad con el formato acordado y ratio de contraste mínimo. La revisión por pares asume los criterios que requieren juicio profesional: la claridad de la exposición, la pertinencia del contenido y la correspondencia entre el cambio propuesto y el requisito formulado en la issue. La confusión entre ambos planos produce dos disfunciones habituales: destinar la revisión humana a detectar defectos de formato que un analizador estático resuelve en segundos, o atribuir al estado verde del pipeline una garantía de corrección funcional que no posee.</p>
 </div>
 
 ---
