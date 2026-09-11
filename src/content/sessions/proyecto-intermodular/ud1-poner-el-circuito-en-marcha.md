@@ -24,28 +24,28 @@ priorKnowledge:
   - "HTML mínimo: un documento que abre en el navegador."
 ---
 
-<p class="lead">Objetivo de la unidad: que exista una URL pública con vuestro nombre y que el único camino para cambiar lo que hay en ella pase por una pull request revisada por otra persona.</p>
+<p class="lead">Objetivo de la unidad: publicar un portfolio web accesible bajo una URL pública y establecer un flujo de trabajo profesional donde cualquier cambio deba superar un pipeline de integración continua y una revisión de código por pares antes de incorporarse a producción.</p>
 
 <div class="rule">
-  <p class="rule-label">Lo que se evalúa aquí no es vuestra web</p>
-  <p>La web de estas primeras semanas va a ser fea, y da igual. Lo que se mira en este módulo es <strong>cómo trabajáis</strong>: si el trabajo está troceado en issues, si entra por ramas, si alguien lo revisa, si el despliegue es automático y si el historial cuenta una semana de trabajo en lugar de una noche. La calidad del código y el diseño se evalúan en los módulos que los enseñan.</p>
+  <p class="rule-label">Enfoque de evaluación: metodología sobre diseño</p>
+  <p>Durante estas primeras semanas el contenido y la maquetación visual del portfolio se mantendrán deliberadamente mínimos. La evaluación de este módulo no juzga el diseño gráfico ni la estética de la interfaz (aspectos evaluados en Lenguaje de Marcas y Diseño de Interfaces Web), sino <strong>el rigor metodológico y la ingeniería del proceso</strong>: la descomposición de requisitos en <em>issues</em> atómicas, la gestión de ramas de funcionalidad, la revisión formal de cambios mediante <em>pull requests</em>, la automatización del despliegue y la trazabilidad de un historial de desarrollo constante y verificable.</p>
 </div>
 
 <div class="rule">
-  <p class="rule-label">Un producto, y el escaparate del producto</p>
-  <p>En Servidor vais a elegir un CRUD, y ese producto os acompaña los dos trimestres enteros. El portfolio que empezáis hoy es su escaparate, y de paso la excusa para aprender a trabajar; no lo sustituye. En cuanto arranquéis el backend allí, quedaos con ese repositorio y con su historial hasta final de curso: no se empieza de cero en enero. En diciembre se enseña una sola cosa entre los dos módulos. En Servidor se mira si funciona. Aquí se mira cómo llegasteis a que funcionara.</p>
+  <p class="rule-label">Coordinación intermodular: producto y escaparate</p>
+  <p>En Desarrollo Web en Entorno Servidor diseñarás e implementarás una aplicación backend completa orientada a un servicio CRUD, cuyo repositorio mantendrás a lo largo de todo el curso académico. El portfolio que inicias en este módulo constituye el escaparate público y la plataforma de despliegue de ese producto. A final del trimestre se presentará una entrega integrada entre ambos módulos: en Servidor se evaluará la arquitectura, la persistencia y la corrección técnica del código; en Proyecto Intermodular se evaluará el ciclo de vida, la calidad del flujo de integración y la reproducibilidad del despliegue.</p>
 </div>
 
 ## Sesión 1 · Del repositorio vacío a una URL pública
 
-**Antes de empezar.** Hoy empiezas preparando un portfolio y su publicación automática. Necesitas tu cuenta de GitHub, Git y un editor. El backend se iniciará después en Servidor; para este taller basta una página HTML.
+**Antes de empezar.** En esta primera sesión crearás la estructura inicial del portfolio profesional y configurarás su flujo de despliegue automatizado. Para ello necesitarás tu cuenta de GitHub institucional, el cliente de Git configurado en tu entorno local y un editor de código. El backend se desarrollará en paralelo en el módulo de Servidor; para este taller basta con un documento HTML base que permita validar el canal de entrega continua.
 
 <div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
+  <p class="checkpoint-label">Evaluación inicial · sin apuntes</p>
   <ol>
-    <li>Cuando subís un cambio a GitHub, ¿quién lo comprueba antes de que quede publicado?</li>
-    <li>Habéis abierto alguna web y visto que está «en una URL». ¿Dónde está guardado ese HTML?</li>
-    <li>Si mañana borrarais por error un fichero de vuestro proyecto y lo subierais, ¿qué lo pararía?</li>
+    <li>Cuando envías un cambio mediante <code>git push</code> a un repositorio remoto, ¿qué mecanismo comprueba la integridad del código antes de que quede publicado en producción?</li>
+    <li>¿Qué infraestructura y protocolo hacen posible que un documento HTML almacenado en un repositorio se sirva públicamente a través de una URL?</li>
+    <li>Si eliminas o corrompes por error un archivo imprescindible en tu proyecto y subes el cambio, ¿qué barrera técnica impide que la versión pública quede inutilizada?</li>
   </ol>
 </div>
 
@@ -53,107 +53,109 @@ priorKnowledge:
 
 ### Se explica
 
-<p class="stage stage--brief">25 minutos · explicación y demostración</p>
+<p class="stage stage--brief">25 minutos · explicación conceptual y demostración técnica</p>
 
-#### Cómo se evalúa el mismo producto en ambos módulos
+#### Criterios de evaluación técnica entre módulos
 
-Los dos módulos se imparten al mismo grupo. Servidor explica e implementa el backend; aquí se aprende a organizar, revisar, comprobar y publicar ese trabajo. Cada herramienta de workflow se introduce antes de utilizarla.
+Ambos módulos se imparten de forma coordinada. En Desarrollo Web en Entorno Servidor se diseña, implementa y prueba la lógica de negocio y los servicios de la aplicación; en Proyecto Intermodular se aprende a planificar, revisar, validar y desplegar ese trabajo siguiendo metodologías profesionales de ingeniería del software. Cada herramienta del flujo de automatización se introduce y analiza antes de su aplicación práctica.
 
-La consecuencia práctica es que el mismo código puede recibir dos notas muy distintas.
+La consecuencia directa es que el mismo proyecto es auditado desde dos dimensiones complementarias:
 
-| Lo evalúa **Servidor** | Lo evalúa **este módulo** |
-| ---------------------- | ------------------------- |
-| Que el código esté bien construido por dentro | Que el trabajo esté troceado en tareas comprobables |
-| El modelo de datos y las consultas | Que cada cambio entre por una rama y una pull request |
-| La validación y el manejo de errores | Que otra persona lo haya revisado antes de fusionar |
-| Que la funcionalidad haga lo que dice | Que el despliegue sea automático y repetible |
-| La calidad del código | Que el historial demuestre trabajo repartido en el tiempo |
+| Dimensión evaluada en **Servidor** | Dimensión evaluada en **Proyecto Intermodular** |
+| ---------------------------------- | ----------------------------------------------- |
+| Arquitectura interna y separación de responsabilidades | Descomposición del trabajo en tareas técnicas comprobables (<em>issues</em>) |
+| Modelo relacional, persistencia y consultas eficientes | Gestión de ramas de funcionalidad y trazabilidad de cambios |
+| Validación de entradas y gestión coherente de excepciones | Revisión formal por pares (<em>code review</em>) previa a la fusión |
+| Cobertura de pruebas unitarias y de integración | Automatización del pipeline de integración y despliegue continuo (CI/CD) |
+| Cumplimiento de especificaciones y lógica de negocio | Registro histórico de trabajo continuo y distribuido en el tiempo |
 
-Se puede tener una web preciosa y suspender aquí. Se puede tener una presentación sencilla y sacar un diez. Si eso no pudiera pasar, os estaríamos evaluando dos veces lo mismo.
+Un proyecto puede presentar una interfaz atractiva o un backend avanzado y, sin embargo, no superar este módulo si carece de metodología, control de versiones o revisiones de código. De igual forma, una implementación inicial sencilla con un flujo de integración impecable y rigurosamente documentado obtiene la máxima calificación.
 
 <div class="rule">
-  <p class="rule-label">Las fechas se miran</p>
-  <p>Un tablero montado entero el domingo antes de la entrega se nota. Las issues, los commits y las pull requests llevan fecha y hora, y yo las miro. Un historial de Git se puede reescribir, así que no me fío solo de él: lo cruzo con las revisiones que habéis dejado y con las ejecuciones de Actions, que ésas no se tocan. Y no cuento commits. Miro si hubo trabajo repartido en el tiempo y quién lo hizo.</p>
+  <p class="rule-label">Trazabilidad y constancia en el desarrollo</p>
+  <p>En el desarrollo profesional de software, el valor del repositorio reside en la trazabilidad inmutable de su evolución temporal. La planificación y el avance no pueden concentrarse de manera artificial antes de una entrega. Los registros de <em>issues</em>, <em>commits</em>, revisiones y ejecuciones de GitHub Actions incorporan marcas temporales auditables que certifican la constancia del trabajo. No se evalúa el volumen bruto de <em>commits</em>, sino la distribución temporal del esfuerzo, la coherencia de las iteraciones y la autoría de cada aportación.</p>
 </div>
 
-#### El circuito
+#### El flujo de trabajo profesional: del requisito a producción
 
-Todo lo que hagáis de aquí a diciembre pasa por estos siete pasos. No se montan todos hoy: hoy se prepara el despliegue, la semana que viene se cierra la rama principal y se recorre el circuito entero, y en la sesión 3 se añade la comprobación automática, que es el único paso que hoy va a faltar.
+Durante todo el ciclo de desarrollo, cualquier modificación en el software debe seguir un flujo riguroso compuesto por siete etapas secuenciales. En esta sesión se establece la base del despliegue automatizado; en la siguiente se protegerá la rama principal y se practicará el flujo colaborativo, y en la sesión 3 se incorporarán las pruebas automatizadas de validación estática:
 
 <figure class="diagram">
-  <figcaption>El circuito, de la tarea a la URL</figcaption>
+  <figcaption>Flujo de integración y entrega continua (Feature Branch Workflow)</figcaption>
   <ol class="flow">
-    <li><span class="flow-role">Issue</span>Una tarea escrita, con un criterio para saber cuándo está hecha.</li>
-    <li><span class="flow-role">Rama</span>Una copia de trabajo donde se puede romper todo sin afectar a lo publicado.</li>
-    <li><span class="flow-role">Commit</span>El cambio, con un mensaje que dice qué cambia.</li>
-    <li><span class="flow-role">Pull request</span>La propuesta de meter ese cambio en la rama principal.</li>
-    <li><span class="flow-role">Comprobación</span>GitHub Actions ejecuta sobre la propuesta las validaciones que hayáis escrito, y dice si pasa o no. <em>Se añade en la sesión 3.</em></li>
-    <li><span class="flow-role">Revisión</span>Otra persona la mira y aprueba o pide cambios.</li>
-    <li><span class="flow-role">Despliegue</span>Al fusionar, la URL pública se actualiza sola.</li>
+    <li><span class="flow-role">Issue</span>Definición clara de un requisito o tarea técnica con criterios de aceptación explícitos.</li>
+    <li><span class="flow-role">Rama de funcionalidad</span>Línea de desarrollo aislada que permite trabajar y experimentar sin alterar la versión estable de producción.</li>
+    <li><span class="flow-role">Commit atómico</span>Registro de un cambio autocontenido y justificado mediante un mensaje descriptivo en modo imperativo.</li>
+    <li><span class="flow-role">Pull request</span>Propuesta formal de integración para auditar las diferencias de código e iniciar el proceso de validación.</li>
+    <li><span class="flow-role">Validación automática (CI)</span>Ejecución desasistida de pruebas, analizadores de código y comprobaciones de integridad en GitHub Actions. <em>(Se incorpora en la sesión 3).</em></li>
+    <li><span class="flow-role">Revisión por pares</span>Inspección manual del código por parte de otro miembro del equipo, quien aprueba o solicita modificaciones.</li>
+    <li><span class="flow-role">Despliegue continuo (CD)</span>Tras la fusión autorizada en la rama principal, el pipeline publica automáticamente la nueva versión en el entorno público.</li>
   </ol>
 </figure>
 
-<p class="term">Circuito</p>
+<p class="term">Flujo de integración continua (Pipeline)</p>
 
-El camino obligatorio que recorre cualquier cambio desde que se decide hasta que está publicado. Se llama circuito porque no tiene atajos. Si un cambio puede llegar a producción sin pasarlo, lo que tenéis no es un circuito: es una costumbre, y las costumbres se saltan el día que hay prisa.
+El protocolo estandarizado e inmutable que recorre cualquier cambio de código desde su formulación hasta su puesta en producción. Se define como un proceso cerrado porque no admite excepciones manuales ni atajos: si un cambio pudiera llegar a producción sin superar las validaciones y revisiones establecidas, el equipo carecería de una política de calidad real, dependiendo de la falibilidad de la intervención humana.
 
-#### Por qué se despliega hoy, con la web vacía
+#### Justificación del despliegue temprano: patrón Walking Skeleton
 
-Lo intuitivo sería construir la web y desplegarla cuando esté presentable. Aquí se hace al revés, y no por gusto: **lo que falla en un despliegue casi nunca es el código**. Es una cuenta sin verificar. Un permiso que no está. Un nombre ya cogido. Un token mal copiado. Cosas que no tienen nada que ver con lo que habéis programado y que se comen una tarde entera.
+Un enfoque intuitivo pero erróneo consiste en postergar el despliegue del software hasta disponer de una interfaz avanzada y un backend completo. En ingeniería del software se adopta el principio contrario: la implantación temprana de un **Walking Skeleton** (esqueleto funcional mínimo).
 
-Si eso se descubre hoy, con una página de tres líneas, se arregla hoy. Si se descubre en diciembre con el portfolio terminado, se descubre el día de la entrega.
+La experiencia demuestra que la mayoría de incidencias críticas en un despliegue no proceden de la lógica del código fuente, sino de la infraestructura subyacente: errores de configuración de red, permisos de acceso insuficientes, variables de entorno mal declaradas, conflictos de nombres de dominio o directivas de empaquetado incorrectas.
+
+Resolver estas fricciones de infraestructura desde la primera sesión con un documento elemental garantiza aislar los problemas de configuración de los problemas de lógica de aplicación, aplicando el principio fundamental de **fallo temprano (fail-early)**.
 
 <div class="compare-pair">
   <div>
-    <p class="compare-label">Desplegar al final</p>
-    <p class="compare-body">Todos los problemas aparecen a la vez, mezclados con los del código, cuando ya no hay margen. Es el patrón que hace que un proyecto terminado no se pueda enseñar.</p>
+    <p class="compare-label">Despliegue diferido al final</p>
+    <p class="compare-body">Los fallos de infraestructura, credenciales y empaquetado emergen simultáneamente junto con las incidencias propias del código, en una fase avanzada y con escaso margen de resolución. Este patrón suele comprometer la entrega final del proyecto.</p>
   </div>
   <div>
-    <p class="compare-label">Desplegar el primer día</p>
-    <p class="compare-body">Los problemas aparecen de uno en uno y sobre algo que no importa. A partir de ahí, cada cambio se publica solo y desplegar deja de ser un evento.</p>
+    <p class="compare-label">Despliegue continuo desde el inicio (Walking Skeleton)</p>
+    <p class="compare-body">Las incidencias de configuración y entorno se aíslan, diagnostican y resuelven sobre una base controlada. A partir de ese momento, cada integración avanza de forma predecible y el despliegue se convierte en un proceso rutinario y desatendido.</p>
   </div>
 </div>
 
-#### Dónde va a vivir vuestra web
+#### Infraestructura de alojamiento y automatización con GitHub Pages
 
-<p class="term">GitHub Pages</p>
+<p class="term">GitHub Pages y Actions</p>
 
-El servicio con el que GitHub publica sitios estáticos —HTML, CSS, JavaScript— desde un repositorio. Es gratuito en repositorios públicos y no hay que dar de alta ninguna cuenta más: ya la tenéis. Lo importante para nosotros no es quién sirve los ficheros: es que al activarlo **se escribe un workflow de GitHub Actions** dentro de vuestro repositorio, y que a partir de ese momento cada cambio que entre en `main` se publica solo.
+GitHub Pages es un servicio de alojamiento para sitios web estáticos (HTML, CSS y JavaScript) que se sirve directamente desde un repositorio de Git. En lugar de limitarse a una copia pasiva de archivos, la configuración profesional de GitHub Pages se gestiona mediante <strong>GitHub Actions</strong>, integrando Infraestructura como Código (IaC). Cada evento de integración en la rama principal desencadena la ejecución de un flujo de trabajo declarativo que empaqueta y publica el contenido de forma automatizada.
 
 <div class="rule">
-  <p class="rule-label">Por qué aquí y no en un proveedor de nube</p>
-  <p>Esto mismo se publica igual de bien en Azure, en Cloudflare o en Netlify, y en diciembre lo haréis. Hoy no, porque todos ellos piden un alta que puede tardar días en verificarse y que no depende de vosotros. Lo que aprendéis hoy es lo mismo en cualquiera de los cuatro: que hay una URL, que se actualiza sola y que el despliegue es un fichero que podéis abrir. Mudarse de sitio, más adelante, es media hora.</p>
+  <p class="rule-label">Selección de plataforma e independencia tecnológica</p>
+  <p>Este mismo flujo de publicación declarativa es extrapolable a plataformas como Microsoft Azure Static Web Apps, Cloudflare Pages o AWS S3/CloudFront. Se utiliza GitHub Pages en esta fase introductoria para operar de forma inmediata en el mismo entorno de control de versiones sin introducir demoras administrativas en la provisión de cuentas de terceros. Los principios arquitectónicos aprendidos (definición declarativa de despliegue, eventos de disparo y automatización por pipeline) son idénticos en cualquier proveedor <em>cloud</em> profesional.</p>
 </div>
 
 ---
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+<p class="stage stage--guided">140 minutos · trabajo práctico guiado sobre el proyecto base</p>
 
-#### Bloque A · El repositorio y la página básica
+#### Bloque A · Creación del repositorio y estructura inicial
 
-<p class="stage stage--solo">Individual. Este repositorio es vuestro y os lo lleváis</p>
+<p class="stage stage--solo">Trabajo individual. Este repositorio constituirá la base permanente de tu portfolio profesional.</p>
 
-**1 · Crear el repositorio.** En github.com, botón **New** (o el «+» arriba a la derecha, *New repository*).
+**1 · Creación del repositorio en GitHub.** Accede a github.com y selecciona **New repository** (o el icono «+» superior derecho).
 
-| Campo | Qué poner | Por qué |
-| ----- | --------- | ------- |
-| Repository name | <code>portfolio</code> | Corto y sin vuestro nombre dentro: la URL ya lo lleva |
-| Description | Una línea | Se ve en vuestro perfil de GitHub |
-| Visibilidad | **Public** | Obligatorio: las protecciones de rama que usaremos son de pago en repositorios privados |
-| Add a README file | Sí | Para que el repositorio nazca con algo dentro y se pueda clonar |
-| .gitignore | Ninguno | Todavía no hay nada que ignorar |
-| License | MIT | Es vuestro trabajo y vais a enseñarlo |
+| Parámetro | Valor requerido | Justificación técnica |
+| --------- | --------------- | --------------------- |
+| Repository name | <code>portfolio</code> | Nombre conciso y semántico. La dirección final ya contendrá tu nombre de usuario. |
+| Description | Descripción profesional breve | Visible en el perfil de GitHub y metadatos del proyecto. |
+| Visibilidad | **Public** | Requisito técnico: las políticas de protección de ramas y reglas de CI son gratuitas en repositorios públicos. |
+| Add a README file | **Activado** | Inicializa la rama principal con un commit base para permitir la clonación inmediata. |
+| .gitignore | Ninguno | En esta fase no se generan artefactos ni binarios que requieran ser ignorados. |
+| License | **MIT License** | Licencia de código abierto estándar para proyectos académicos y profesionales abiertos. |
 
-**2 · Clonarlo.** En la página del repositorio, botón verde **Code**, pestaña HTTPS, copiad la dirección. En vuestra carpeta de trabajo:
+**2 · Clonación en el entorno local.** En la interfaz del repositorio, pulsa el botón **Code**, copia la URL bajo la pestaña HTTPS y ejecuta en tu terminal de trabajo:
 
 ```bash
-git clone https://github.com/VUESTRO-USUARIO/portfolio.git
+git clone https://github.com/TU-USUARIO/portfolio.git
 cd portfolio
 ```
 
-**3 · Escribir la página más fea posible.** Cread un fichero `index.html` con esto y nada más. Sin CSS, sin imágenes, sin fuentes.
+**3 · Creación del documento HTML inicial de verificación.** Crea el archivo `index.html` en la raíz del repositorio con una estructura HTML5 válida y mínima. Su función técnica es servir de comprobante para certificar que el servidor web entrega correctamente los archivos:
 
 ```html
 <!doctype html>
@@ -165,87 +167,90 @@ cd portfolio
   </head>
   <body>
     <h1>Nombre Apellido</h1>
-    <p>Esta pagina existe para comprobar que el despliegue funciona.</p>
+    <p>Documento inicial para verificar la automatización del despliegue continuo.</p>
   </body>
 </html>
 ```
 
-Alguien va a empezar a maquetar aquí. No lo hagáis. Lo que estamos probando es que la tubería lleva agua de un lado a otro, y para eso da igual lo que haya dentro. La web de verdad empieza en la sesión 3, cuando cada trozo pueda entrar por su propia pull request.
+En esta fase inicial es prioritario no añadir hojas de estilo ni scripts complejos. El propósito exclusivo del ejercicio es validar la conectividad de extremo a extremo del canal de entrega continua. La maquetación semántica y los componentes visuales se incorporarán progresivamente a partir de la sesión 3, canalizando cada incremento mediante ramas y revisiones formales.
 
-**4 · Subirlo.**
+**4 · Registro y envío del cambio al repositorio remoto.**
 
 ```bash
 git add index.html
-git commit -m "Anadir la pagina inicial del portfolio"
+git commit -m "Anadir estructura inicial del documento index.html"
 git push
 ```
 
-**5 · El mensaje de commit.** A partir de hoy los mensajes siguen tres reglas, y se corrigen:
+**5 · Estándares profesionales para mensajes de commit.** A partir de este momento, los mensajes de confirmación deben ajustarse rigurosamente a las convenciones estándar de la industria:
 
-| Regla | Mal | Bien |
-| ----- | --- | ---- |
-| En imperativo, describiendo el cambio | «cambios», «update», «asdf» | «Anadir la cabecera con el nombre» |
-| Una línea, menos de 72 caracteres | Un párrafo | Una frase |
-| Un commit, un cambio | «Cabecera, estilos, favicon y arreglos» | Tres commits distintos |
-
-Habréis visto que los ejemplos van sin tildes. No es dejadez mía: algunas consolas de Windows todavía guardan mal los acentos dentro del mensaje del commit, y un historial lleno de «AÃ±adir» no hay quien lo lea. Probad a escribir uno con tilde y mirad cómo queda en GitHub. Si se ve bien, seguid poniéndolas.
-
-<details class="aside aside--help">
-  <summary>Si <code>git push</code> pide usuario y contraseña y la contraseña no funciona</summary>
-  <p>GitHub no acepta la contraseña de la cuenta desde la línea de comandos. Instalad <strong>Git Credential Manager</strong> (viene con Git para Windows y abre una ventana del navegador la primera vez) o usad un <em>personal access token</em> como contraseña: foto de perfil → Settings → Developer settings → Personal access tokens.</p>
-</details>
-
-#### Bloque B · Publicar con GitHub Pages
-
-<p class="stage stage--guided">Se hace a la vez, paso a paso, todos a la misma pantalla</p>
-
-**1 · Abrir la configuración.** En vuestro repositorio, pestaña **Settings**, arriba del todo a la derecha. En la columna de la izquierda, **Pages**.
-
-**2 · Elegir quién despliega.** En **Build and deployment**, desplegable **Source**: cambiadlo de *Deploy from a branch* a **GitHub Actions**.
+| Criterio | Práctica incorrecta | Estándar recomendado |
+| -------- | ------------------- | -------------------- |
+| **Modo imperativo** | «cambios», «actualizado», «subiendo código» | «Anadir seccion de proyectos en el inicio» |
+| **Longitud máxima (72 caracteres)** | Descripciones excesivamente extensas en una sola línea | Una frase breve, clara y sintética |
+| **Atomicidad (un cambio lógico)** | «Cabecera, estilos, enlaces y correcciones varias» | Dividir en confirmaciones independientes y específicas |
 
 <div class="rule">
-  <p class="rule-label">Los dos modos, y por qué usamos el segundo</p>
-  <p><em>Deploy from a branch</em> coge una carpeta y la publica, y no queda constancia de cómo lo ha hecho. <strong>GitHub Actions</strong> escribe un fichero en vuestro repositorio y despliega ejecutándolo. Nos interesa el segundo porque ese fichero se puede abrir, se puede cambiar dentro de una pull request y se puede romper. Con una casilla de un menú no podéis hacer nada de eso.</p>
+  <p class="rule-label">Codificación de caracteres en mensajes de Git</p>
+  <p>Por compatibilidad multiplataforma y para prevenir discrepancias de codificación entre terminales locales (donde configuraciones como CP850 o Windows-1252 pueden generar caracteres corruptos o <em>mojibake</em> en interfaces remotas como GitHub), es habitual redactar mensajes breves sin caracteres diacríticos o bien asegurarse de que el cliente de Git tenga configurada la codificación UTF-8 de forma global mediante <code>git config --global i18n.commitEncoding utf-8</code>.</p>
 </div>
 
-**3 · Coger la plantilla.** Debajo aparecen sugerencias de workflow. Buscad **Static HTML** y pulsad **Configure**. Se abre un editor con un fichero ya escrito, `static.yml`.
+<details class="aside aside--help">
+  <summary>Resolución de incidencias de autenticación en <code>git push</code></summary>
+  <p>GitHub no admite contraseñas de cuenta convencionales para operaciones remotas por HTTPS. Si el comando solicita credenciales y falla, debe utilizarse <strong>Git Credential Manager</strong> (integrado de forma nativa en Git para Windows, que autentica mediante el navegador) o generar un <em>Personal Access Token</em> (PAT) con permisos de lectura y escritura en repositorios desde <strong>Settings → Developer settings → Personal access tokens</strong>.</p>
+</details>
 
-**4 · No tocar nada y confirmar.** Botón verde **Commit changes...** → dejad marcado **Commit directly to the `main` branch** → **Commit changes**.
+#### Bloque B · Automatización del despliegue con GitHub Pages
 
-No cambiéis nada del YAML aunque os pique. Esa plantilla publica la raíz del repositorio, que es justo donde está vuestro `index.html`, así que ya hace lo que necesitáis. En la sesión 3 escribiréis uno vuestro y ahí tocaréis lo que queráis.
+<p class="stage stage--guided">Procedimiento guiado · Configuración del origen de integración continua</p>
 
-**5 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a la pestaña **Actions** del repositorio: hay una ejecución con un punto amarillo. Entrad, abridla y ved los pasos en directo. Son cuatro, dentro de un único trabajo llamado `deploy`: coge vuestro repositorio, prepara Pages, empaqueta los ficheros y los publica.
+**1 · Acceso a la configuración del servicio.** En la interfaz del repositorio en GitHub, accede a la pestaña **Settings** (en la barra superior). En el menú lateral izquierdo, dentro de la sección *Code and automation*, selecciona **Pages**.
 
-**6 · Abrir la URL.** Cuando esté en verde, volved a **Settings → Pages**. Arriba aparece un recuadro con **Your site is live at** y la dirección, del estilo `vuestrousuario.github.io/portfolio/`. Abridla. Ahí está vuestra página básica.
+**2 · Configuración del origen de compilación (Build and deployment).** En el selector desplegable **Source**, modifica la opción por defecto (*Deploy from a branch*) y selecciona **GitHub Actions**.
+
+<div class="rule">
+  <p class="rule-label">Infraestructura declarativa frente a publicación opaca</p>
+  <p>La modalidad tradicional <em>Deploy from a branch</em> delega la publicación a un proceso interno de GitHub que no deja registro auditable de su ejecución. Por el contrario, seleccionar <strong>GitHub Actions</strong> implementa el principio de Infraestructura como Código (IaC): genera un archivo de flujo de trabajo versionado en el repositorio, permitiendo auditar, versionar, modificar y validar en pull requests cada fase del proceso de despliegue.</p>
+</div>
+
+**3 · Selección de la plantilla de flujo de trabajo.** En las sugerencias presentadas bajo *Suggested workflows*, localiza la plantilla **Static HTML** y pulsa **Configure**. Se abrirá el editor web mostrando el archivo de definición `static.yml`.
+
+**4 · Confirmación e integración del workflow.** Pulsa el botón superior **Commit changes...**, selecciona la opción **Commit directly to the `main` branch** y confirma pulsando **Commit changes**.
+
+En este primer paso no debe alterarse la configuración predeterminada del YAML. Dicha plantilla está preconfigurada para empaquetar y publicar la raíz del repositorio, que es donde se encuentra el archivo `index.html`. En la sesión 3 se profundizará en la edición y personalización de flujos de trabajo propios.
+
+**5 · Monitorización de la ejecución en GitHub Actions.** Accede a la pestaña **Actions** del repositorio. Observarás una ejecución en curso identificada con un indicador amarillo. Al hacer clic sobre ella y acceder al trabajo (*job*) denominado `deploy`, podrás inspeccionar en tiempo real los cuatro pasos que componen el pipeline: checkout del código, configuración del entorno de Pages, empaquetado de artefactos y publicación.
+
+**6 · Verificación del entorno de producción.** Una vez que la ejecución finalice con estado de éxito (indicador verde), regresa a **Settings → Pages**. En el panel superior se indicará la dirección pública bajo la leyenda **Your site is live at**, con un formato similar a `https://tu-usuario.github.io/portfolio/`. Accede a dicha URL para verificar que el documento HTML se visualiza en el navegador.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación del bloque B</p>
+  <p class="checkpoint-label">Lista de verificación del bloque B</p>
   <ul class="checklist">
-    <li>La URL abre y muestra vuestro nombre.</li>
-    <li>En la pestaña Actions del repositorio hay una ejecución en verde.</li>
-    <li>Ha aparecido un fichero nuevo en <code>.github/workflows/</code> que no habéis escrito vosotros.</li>
+    <li>La URL pública responde correctamente y visualiza el documento HTML inicial con tu nombre.</li>
+    <li>La pestaña Actions registra una ejecución completada con éxito (icono verde).</li>
+    <li>Se ha incorporado al repositorio el archivo de definición en la ruta <code>.github/workflows/static.yml</code>.</li>
   </ul>
 </div>
 
 <details class="aside aside--help">
-  <summary>Los cuatro fallos de este bloque, y qué son</summary>
-  <p><strong>La URL da 404.</strong> Lo normal la primera vez: el despliegue ha terminado pero la dirección tarda un minuto más en responder. Esperad y recargad. Si sigue, comprobad que la dirección acaba en <code>/portfolio/</code> con la barra final.</p>
-  <p><strong>404 y en Actions está todo verde.</strong> El fichero no se llama exactamente <code>index.html</code>, en minúsculas, o no está en la raíz del repositorio sino dentro de una carpeta.</p>
-  <p><strong>No aparece la plantilla Static HTML.</strong> Pulsad <em>browse all workflows</em> y buscad <code>static</code>. Es la que se llama «Deploy static content to Pages».</p>
-  <p><strong>En Actions no hay ninguna ejecución.</strong> El desplegable <em>Source</em> se quedó en <em>Deploy from a branch</em>. Volved al paso 2; hasta que no diga <strong>GitHub Actions</strong> no se escribe ningún workflow.</p>
+  <summary>Diagnóstico de errores habituales en el despliegue</summary>
+  <p><strong>La URL responde con código de estado HTTP 404.</strong> En una primera publicación, el enrutamiento DNS y el aprovisionamiento de certificados SSL pueden requerir entre uno y dos minutos tras la finalización del workflow. Si el error persiste, comprueba que la ruta en el navegador incluye la barra final requerida (<code>/portfolio/</code>).</p>
+  <p><strong>HTTP 404 pese a que Actions finalizó en verde.</strong> El archivo de entrada debe llamarse con exactitud <code>index.html</code> (en minúsculas y sin tildes) y encontrarse estrictamente en la raíz del repositorio, no dentro de un subdirectorio.</p>
+  <p><strong>No se muestra la sugerencia de plantilla Static HTML.</strong> Haz clic en <em>browse all workflows</em> y utiliza el campo de búsqueda escribiendo <code>static</code>. Selecciona la opción oficial denominada «Deploy static content to Pages».</p>
+  <p><strong>No se inicia ninguna ejecución en Actions.</strong> El origen de implementación no se guardó correctamente. Vuelve al paso 2 y asegúrate de que el selector <em>Source</em> indica <strong>GitHub Actions</strong>.</p>
 </details>
 
-#### Bloque C · Leer el workflow que despliega
+#### Bloque C · Análisis técnico del workflow de despliegue
 
-<p class="stage stage--solo">Individual, con el fichero abierto</p>
+<p class="stage stage--solo">Trabajo individual · Inspección de la infraestructura como código</p>
 
-El commit del paso 4 lo hicisteis vosotros, pero el contenido no lo escribisteis vosotros. Traedlo:
+El archivo generado en el paso anterior se ha confirmado remotamente en la rama principal. Para sincronizar tu espacio de trabajo local con el repositorio remoto, ejecuta:
 
 ```bash
 git pull
 ```
 
-Ha aparecido una carpeta `.github/workflows/` con un fichero llamado `static.yml`. Abridlo entero: es corto y hoy se lee entero.
+Examina el nuevo archivo ubicado en `.github/workflows/static.yml`:
 
 ```yaml
 name: Deploy static content to Pages
@@ -284,50 +289,48 @@ jobs:
         uses: actions/deploy-pages@v5
 ```
 
-<p class="term">Workflow</p>
+<p class="term">Flujo de trabajo (Workflow)</p>
 
-Un fichero que le dice a GitHub qué ejecutar y cuándo. Vive dentro del repositorio, así que va versionado como el resto: se puede leer, revisar en una pull request y romper. Es la diferencia entre un despliegue automático y un despliegue que hace siempre el mismo compañero desde su portátil.
+Un descriptor declarativo en formato YAML que define qué procesos automatizados debe ejecutar GitHub Actions, bajo qué circunstancias de disparo y con qué permisos y dependencias. Al residir dentro del sistema de control de versiones, la configuración de despliegue goza de trazabilidad, puede auditarse en revisiones de código y evoluciona al mismo ritmo que la aplicación.
 
 <dl class="worked">
   <dt><code>on: push: branches: ['main']</code></dt>
-  <dd>Cada vez que algo entra en <code>main</code>, se despliega a la URL pública. Esto es lo que acabáis de ver funcionando.</dd>
+  <dd>Disparador por evento de código. Cualquier incorporación o fusión confirmada en la rama <code>main</code> activa automáticamente el proceso de compilación y despliegue.</dd>
   <dt><code>workflow_dispatch</code></dt>
-  <dd>La segunda forma de dispararlo: un botón <em>Run workflow</em> en la pestaña Actions, para lanzarlo a mano sin cambiar nada. Probadlo ahora y ved que sale un despliegue idéntico.</dd>
-  <dt>Lo que <strong>no</strong> pone: <code>pull_request</code></dt>
-  <dd>Este workflow solo se ejecuta sobre <code>main</code>, es decir, sobre lo que ya ha entrado. Sobre una pull request no corre nada todavía. Retenedlo, porque es el agujero que abre la sesión 3.</dd>
-  <dt><code>permissions: id-token: write</code></dt>
-  <dd>El permiso que le da a esta ejecución, y solo a esta, el derecho a publicar. Id a Settings → Secrets and variables → Actions y comprobadlo: <strong>no hay ningún secreto guardado</strong>. Aquí no hace falta ninguna contraseña porque quien despliega y quien aloja son la misma casa.</dd>
+  <dd>Disparador manual. Habilita la interfaz interactiva con el botón <em>Run workflow</em> en GitHub Actions para ejecutar el despliegue bajo demanda sin necesidad de realizar modificaciones en el código.</dd>
+  <dt>Ausencia de la directiva <code>pull_request</code></dt>
+  <dd>Este flujo se ejecuta exclusivamente sobre el código ya integrado en la rama principal. Las pull requests aún no disponen de validaciones previas a la fusión; dicha protección constituirá el núcleo de la Unidad 2.</dd>
+  <dt><code>permissions: id-token: write</code> y <code>pages: write</code></dt>
+  <dd>Asignación de privilegios de ejecución mediante autenticación OIDC (OpenID Connect). El runner obtiene un token efímero de corta duración con privilegios acotados exclusivamente a la publicación en Pages. No se requieren secretos estáticos de larga duración (PAT) almacenados en el repositorio.</dd>
   <dt><code>path: '.'</code></dt>
-  <dd>Qué se publica: el punto es la raíz del repositorio. Si algún día vuestra web se construyera en una carpeta <code>dist</code>, esta es la línea que cambiaría.</dd>
+  <dd>Ruta del directorio que se empaqueta como artefacto publicable. En este proyecto corresponde a la raíz (<code>.</code>). En aplicaciones que incorporan empaquetadores o compiladores, esta directiva apuntaría al directorio de distribución (por ejemplo, <code>./dist</code>).</dd>
   <dt><code>concurrency: group: 'pages'</code></dt>
-  <dd>Si llegan dos cambios seguidos, no se despliegan a la vez. Evita que dos publicaciones se pisen y que la web quede a medias entre las dos.</dd>
+  <dd>Control de concurrencia para evitar condiciones de carrera (<em>race conditions</em>). Si se suceden varias confirmaciones consecutivas, se serializa su ejecución para garantizar que los despliegues se apliquen en estricto orden cronológico sin corromper el estado del sitio.</dd>
 </dl>
 
 <div class="rule">
-  <p class="rule-label">Por qué os hago leer esto</p>
-  <p>Para desplegar solo, una máquina necesita permiso para escribir en algún sitio. Ese permiso es siempre la parte frágil. Se puede dar de dos formas: guardando una credencial que dura para siempre —un <em>token</em>— o pidiendo una autorización que caduca en cuanto acaba la ejecución. Aquí se usa la segunda, y por eso no tenéis ningún secreto guardado que se os pueda escapar. En la segunda evaluación, cuando publiquéis el backend fuera de GitHub, sí habrá un token y tendréis que decidir vosotros dónde vive.</p>
+  <p class="rule-label">Seguridad en CI/CD: credenciales efímeras frente a secretos estáticos</p>
+  <p>La concesión de permisos de escritura a una máquina de automatización representa uno de los vectores más sensibles en seguridad informática. Existen dos estrategias: almacenar credenciales de larga duración (contraseñas o tokens personales como secretos del repositorio) o utilizar autorización federada de corta duración (OIDC). GitHub Actions emplea esta segunda vía para GitHub Pages: un token efímero generado al iniciar el trabajo que caduca de forma automática tras concluir la ejecución, eliminando el riesgo de filtración de claves estáticas.</p>
 </div>
 
 <dl class="answer">
-  <dt>¿Qué dos cosas distintas disparan este workflow?</dt>
+  <dt>¿Qué dos eventos distintos pueden activar la ejecución de este workflow?</dt>
   <dd></dd>
-  <dt>Si cambiáis algo y no hacéis push, ¿se despliega? ¿Por qué?</dt>
+  <dt>Si se confirma un commit en local sin ejecutar <code>git push</code>, ¿se desencadena el despliegue? Justifica técnicamente la respuesta.</dt>
   <dd></dd>
-  <dt>¿Cuántos secretos hay guardados en vuestro repositorio, y por qué?</dt>
+  <dt>¿Por qué no es necesario configurar un secreto de repositorio en Settings para que este workflow pueda publicar?</dt>
   <dd></dd>
-  <dt>Si abrís una pull request, ¿se ejecuta este workflow? ¿En qué línea se ve?</dt>
+  <dt>Si se abre una pull request, ¿se ejecuta este workflow? ¿En qué directiva del archivo se evidencia?</dt>
   <dd></dd>
 </dl>
 
-#### Bloque C-bis · Romperlo a propósito
+#### Bloque C-bis · Diagnóstico de fallos: error de pipeline frente a fallo funcional
 
-<p class="stage stage--solo">Individual. Si vais justos de tiempo, haced antes el bloque D y volved aquí</p>
+<p class="stage stage--solo">Trabajo individual · Práctica de diagnóstico y observabilidad</p>
 
-Acabáis de leer el fichero que despliega. Ahora rompedlo. Hoy sale gratis: `main` todavía está abierta y lo único que hay publicado es una página de tres líneas. Dentro de dos semanas, con la rama cerrada y algo que enseñar dentro, este experimento ya no es tan barato.
+Una vez comprendida la estructura del archivo de automatización, provocaremos deliberadamente dos fallos de distinta naturaleza técnica para analizar la diferencia entre un fallo en la infraestructura del pipeline y un fallo funcional del servicio.
 
-Son dos averías distintas, y la diferencia entre ellas es la lección del bloque.
-
-**Avería 1 · El despliegue falla.** Abrid `.github/workflows/static.yml` y cambiad la ruta del artefacto:
+**Caso 1 · Fallo de infraestructura en el pipeline (Ruta de artefacto inexistente).** Modifica `.github/workflows/static.yml` alterando la ruta del paso de empaquetado:
 
 ```yaml
       - name: Upload artifact
@@ -336,286 +339,283 @@ Son dos averías distintas, y la diferencia entre ellas es la lección del bloqu
           path: './dist'
 ```
 
-```bash
-git add .github/workflows/static.yml
-git commit -m "Romper a proposito la ruta de publicacion"
-git push
-```
-
-Id a **Actions**. La ejecución termina con un aspa roja. Abridla, entrad en el trabajo `deploy` y buscad el paso que ha fallado: es **Upload artifact**, y los que venían detrás ni siquiera se han intentado. Leed el mensaje entero, no el resumen, y copiadlo tal cual abajo. Lo que dice es literalmente que le habéis pedido publicar una carpeta que no existe.
-
-Ahora, **sin arreglar nada todavía, abrid vuestra URL pública**. Sigue funcionando. Vuestra página está donde estaba, porque el despliegue que falló nunca llegó a sustituirla: un despliegue roto no tumba lo que ya había publicado, se queda fuera y deja lo anterior en su sitio.
-
-Arregladlo devolviendo la línea a `path: '.'`.
+Envía la modificación a la rama principal:
 
 ```bash
 git add .github/workflows/static.yml
-git commit -m "Revertir la ruta de publicacion a la raiz"
+git commit -m "Simular error de infraestructura en la ruta del artefacto"
 git push
 ```
 
-Verde otra vez.
+Accede a la pestaña **Actions**. La ejecución concluirá con un indicador de error (aspa roja). Al inspeccionar el trabajo `deploy`, observarás que el paso **Upload artifact** ha fallado y que los pasos sucesivos han cancelado su ejecución. El registro técnico explicita que el directorio especificado no existe en el sistema de archivos del *runner*.
 
-**Avería 2 · El despliegue funciona y la web no.** Ahora al revés. Cambiad el nombre del fichero de la página:
+A continuación, **sin modificar el código, accede a la URL pública de tu portfolio**. El sitio continuará respondiendo con la versión anterior. En entornos de entrega continua, los despliegues son operaciones **atómicas**: si una fase del pipeline falla antes de la publicación, la versión estable previa permanece inalterada en producción.
+
+Restaura el archivo devolviendo la directiva a `path: '.'` y confirma el cambio:
+
+```bash
+git add .github/workflows/static.yml
+git commit -m "Restaurar ruta raiz para empaquetado de artefactos"
+git push
+```
+
+La nueva ejecución volverá a completarse con éxito.
+
+**Caso 2 · Fallo semántico con pipeline exitoso (Ausencia del archivo de entrada).** Modifica ahora el nombre del documento principal mediante Git:
 
 ```bash
 git mv index.html inicio.html
-git commit -m "Renombrar la pagina inicial"
+git commit -m "Renombrar documento principal a inicio.html"
 git push
 ```
 
-Esta ejecución **termina en verde**. Los cuatro pasos en orden, sin una sola advertencia. Abrid la URL: **404**. Si todavía veis vuestra página, forzad la recarga con `Ctrl+Shift+R` y esperad un minuto.
+Esta ejecución **concluye con estado de éxito (verde)**. Los cuatro pasos se completan sin advertencias técnicas. Sin embargo, al abrir la URL pública en el navegador, el servidor web responderá con un error **HTTP 404**. (Si el navegador muestra la versión en caché, fuerza la recarga sin caché mediante `Ctrl+Shift+R`).
 
-No hay ninguna contradicción. GitHub ha hecho exactamente lo que le pedisteis —coger los ficheros de la raíz y publicarlos— y lo ha hecho bien. Lo que nadie comprobó fue si el resultado servía para algo, porque a nadie se le había encargado comprobarlo.
+No existe contradicción técnica: el pipeline ejecutó fielmente las instrucciones declaradas (empaquetar el contenido del repositorio y desplegarlo). Lo que ha fallado es el cumplimiento de los estándares del servidor web, el cual requiere un archivo de entrada predeterminado denominado `index.html`. Este ejercicio evidencia por qué **un estado verde en el pipeline certifica la ejecución de los comandos, pero no valida por sí solo la corrección funcional del producto**.
 
-Dejadlo como estaba:
+Restablece el nombre correcto del archivo y confirma el cambio:
 
 ```bash
 git mv inicio.html index.html
-git commit -m "Devolver el nombre index.html a la pagina inicial"
+git commit -m "Restablecer index.html como punto de entrada de la aplicacion"
 git push
 ```
 
 <div class="rule">
-  <p class="rule-label">Verde no significa que funcione</p>
-  <p>Un punto verde en Actions dice una sola cosa: que los pasos que pedisteis se ejecutaron sin error. No dice que la web se vea, ni que los enlaces lleven a alguna parte, ni que lo publicado sea lo que queríais publicar. Un despliegue automático no os protege de equivocaros: garantiza que vuestra equivocación llegue a producción deprisa y siempre igual. Lo que convierte ese verde en una afirmación con contenido es que alguien escriba comprobaciones capaces de decir que no, y ese es justamente el trabajo de la sesión 3.</p>
+  <p class="rule-label">La limitación de un pipeline sin validación automatizada</p>
+  <p>Un indicador verde en GitHub Actions certifica exclusivamente que los comandos del flujo de trabajo concluyeron con código de salida 0 (sin excepciones a nivel de proceso). No verifica que los hipervínculos sean válidos, que el marcado HTML cumpla con los estándares W3C ni que la página sea accesible. Un despliegue continuo sin pruebas de validación automatizadas únicamente acelera la publicación de errores a producción. En la Unidad 2 se abordará la solución a este problema mediante la incorporación de suites de prueba y linters en el pipeline.</p>
 </div>
 
 <dl class="answer">
-  <dt>¿En qué paso falló la avería 1 y qué decía exactamente el mensaje?</dt>
+  <dt>¿En qué paso concreto falló el Caso 1 y cuál fue el mensaje exacto registrado en el log?</dt>
   <dd></dd>
-  <dt>Mientras la ejecución estaba en rojo, ¿qué mostraba la URL pública? ¿Por qué?</dt>
+  <dt>Mientras la ejecución del Caso 1 permanecía en error, ¿qué mostraba la URL pública y qué principio de despliegue justifica ese comportamiento?</dt>
   <dd></dd>
-  <dt>En la avería 2 Actions terminó en verde. ¿Qué comprobó GitHub para ponerlo en verde?</dt>
+  <dt>En el Caso 2 GitHub Actions finalizó en verde pese al error 404. ¿Qué validó la máquina y qué quedó sin comprobar?</dt>
   <dd></dd>
-  <dt>De las dos averías, ¿cuál da más miedo en diciembre, y por qué?</dt>
+  <dt>¿Cuál de los dos escenarios representa un mayor riesgo en un entorno de producción profesional y por qué motivos de observabilidad?</dt>
   <dd></dd>
 </dl>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación del bloque C-bis</p>
+  <p class="checkpoint-label">Lista de verificación del bloque C-bis</p>
   <ul class="checklist">
-    <li>En vuestro historial hay un commit que rompió el despliegue y otro que lo arregló.</li>
-    <li>La última ejecución de Actions está en verde y la URL vuelve a mostrar vuestra página.</li>
-    <li>Sabéis abrir una ejecución fallida y decir en qué paso murió, sin preguntarle a nadie.</li>
+    <li>El historial del repositorio registra una confirmación que reprodujo un fallo en el pipeline y otra que lo subsanó.</li>
+    <li>La ejecución más reciente en Actions concluye en verde y la URL pública muestra el contenido correcto.</li>
+    <li>Sabes localizar e interpretar el registro de errores de un paso fallido en GitHub Actions.</li>
   </ul>
 </div>
 
 <details class="aside aside--help">
-  <summary>Si algo no vuelve a su sitio</summary>
-  <p><strong>La URL sigue dando 404 después de arreglarlo.</strong> Mirad Actions: cada arreglo dispara un despliegue nuevo y tarda su minuto largo. Si la ejecución ya está verde y terminada, forzad la recarga del navegador.</p>
-  <p><strong>Os habéis perdido entre commits.</strong> <code>git log --oneline</code> enseña por dónde vais. Para anular un commit concreto sin reescribir nada, <code>git revert HASH</code> crea uno nuevo que lo deshace.</p>
-  <p><strong>Habéis probado a renombrar solo cambiando mayúsculas y no pasa nada.</strong> Windows y macOS no distinguen <code>index.html</code> de <code>Index.html</code>, pero el servidor que publica vuestra web sí. Por eso aquí se renombra a <code>inicio.html</code>: se ve el mismo efecto sin pelearse con eso. Retenedlo igualmente, porque ese fallo existe y es de los que cuestan media tarde de encontrar.</p>
+  <summary>Pautas de resolución ante discrepancias en el estado</summary>
+  <p><strong>La URL pública persiste con error 404 tras corregir el código.</strong> Consulta la pestaña Actions: cada corrección inicia una nueva ejecución que requiere tiempo de compilación y distribución en red. Una vez finalizada en verde, limpia la caché del navegador recargando la página.</p>
+  <p><strong>Desorientación en el árbol de confirmaciones.</strong> Ejecuta <code>git log --oneline --graph</code> para inspeccionar el historial cronológico. Para deshacer un commit sin alterar el historial, <code>git revert HASH</code> genera una confirmación inversa limpia.</p>
+  <p><strong>Comportamiento del sistema de archivos según el sistema operativo.</strong> Los sistemas de archivos en Windows y macOS son a menudo insensibles a mayúsculas y minúsculas (<em>case-insensitive</em>), mientras que los servidores de producción basados en Linux distinguen estrictamente entre <code>index.html</code> e <code>Index.html</code>. Se recomienda utilizar siempre nombres en minúsculas para prevenir discrepancias de despliegue.</p>
 </details>
 
-#### Bloque D · Evidencia
+#### Bloque D · Documentación técnica del proyecto en README
 
-<p class="stage stage--solo">Antes de salir del aula</p>
+<p class="stage stage--solo">Fase de consolidación · Documentación técnica del repositorio</p>
 
-Editad el `README.md` para que tenga estas cuatro cosas y nada más. Se escribe en la rama `main` directamente porque es la última vez que se va a poder hacer: la semana que viene esa rama queda cerrada.
+Actualiza el archivo `README.md` incorporando la información técnica esencial del proyecto. En esta primera sesión se realiza la modificación directamente sobre la rama `main`; a partir de la próxima sesión la rama principal quedará protegida y cualquier cambio deberá canalizarse mediante ramas de funcionalidad y pull requests.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto de la sesión 1</p>
+  <p class="checkpoint-label">Especificaciones del archivo README.md</p>
   <ul class="checklist">
-    <li>Título con vuestro nombre y una línea diciendo qué es esto.</li>
-    <li>La URL pública, como enlace, en la segunda línea.</li>
-    <li>Una frase explicando cómo se despliega: qué lo dispara y quién lo hace.</li>
-    <li>El nombre del fichero que despliega y su ruta dentro del repositorio, para saber dónde mirar en diciembre.</li>
+    <li>Título del proyecto junto con tu nombre completo y una descripción concisa de su propósito.</li>
+    <li>Enlace directo a la URL pública del entorno de producción.</li>
+    <li>Explicación técnica de la arquitectura de despliegue: evento disparador y servicio ejecutor.</li>
+    <li>Ruta relativa del archivo de definición del workflow dentro del repositorio (<code>.github/workflows/static.yml</code>).</li>
   </ul>
 </div>
 
 ```bash
 git add README.md
-git commit -m "Documentar la URL publica y como se despliega"
+git commit -m "Documentar arquitectura de despliegue y URL publica en README"
 git push
 ```
 
-Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito funcionando sin que nadie lo empuje.
+Al inspeccionar la pestaña Actions se verificará una nueva ejecución desatendida provocada por el evento de actualización de la rama `main`.
 
-#### Bloque E · Cómo trabaja un equipo de verdad
+#### Bloque E · Modelos de flujo de trabajo y colaboración en la industria
 
-<p class="stage stage--solo">Individual. Tarea: se empieza aquí si os sobra tiempo y se termina fuera de clase</p>
+<p class="stage stage--solo">Trabajo de investigación y síntesis técnica · Tarea individual</p>
 
-Nada de lo que estáis montando —issues, ramas, revisión, despliegue automático— me lo he inventado para la asignatura. Es, con variaciones, lo que hace la mayoría de equipos que publican software. Pero «la mayoría» no es «todos», y conviene que veáis de dónde sale esto antes de pasaros tres meses obedeciéndolo.
+Los procedimientos adoptados en este módulo (descomposición en *issues*, ramificación, revisión por pares y despliegue automatizado) se corresponden con los estándares metodológicos de la ingeniería de software actual. Sin embargo, los equipos profesionales adaptan estas prácticas a su arquitectura y cadencia de entrega.
 
-Elegid **una** de estas referencias y leedla con calma. No hace falta mirarlas todas: media hora en una fuente entendida vale más que veinte minutos saltando entre cinco.
+Selecciona **una** de las siguientes referencias de la industria para analizarla en detalle:
 
-| Referencia | Qué describe | Qué buscar |
-| --- | --- | --- |
-| [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow) | El modelo que vamos a seguir aquí | Cuántas ramas hay vivas a la vez y cuánto dura cada una |
-| [Trunk-based development](https://trunkbaseddevelopment.com/) | El extremo contrario: ramas de horas | Por qué sostienen que una rama larga es un problema y no una comodidad |
-| [El modelo de ramas de Vincent Driessen](https://nvie.com/posts/a-successful-git-branching-model/) | «Git flow», el modelo clásico de 2010 | La nota que el propio autor añadió diez años después, arriba del todo |
-| [Guía de revisión de código de Google](https://google.github.io/eng-practices/review/) | Cómo se revisa y en cuánto se responde | Qué se le exige a quien revisa y qué a quien pide la revisión |
-| [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/) | Una convención muy extendida para los mensajes | En qué coincide con nuestras tres reglas y en qué se pasa de frenada |
+| Referencia | Enfoque metodológico | Cuestiones clave para el análisis |
+| ---------- | -------------------- | --------------------------------- |
+| [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow) | Modelo ágil basado en ramas de corta duración y despliegue continuo | Cantidad de ramas simultáneas y tiempo de vida promedio de cada una. |
+| [Trunk-based development](https://trunkbaseddevelopment.com/) | Integración continua directa en la línea principal | Argumentos contra las ramas de larga duración y gestión de riesgos mediante feature flags. |
+| [Git branching model (Vincent Driessen)](https://nvie.com/posts/a-successful-git-branching-model/) | «Git flow», el modelo clásico para ciclos de entrega empaquetados | La nota retrospectiva añadida por el autor analizando la evolución del desarrollo web. |
+| [Guía de revisión de código de Google](https://google.github.io/eng-practices/review/) | Estándar corporativo de inspección y aprobación por pares | Expectativas de velocidad de respuesta y responsabilidades de revisor y autor. |
+| [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/) | Especificación semántica formal para mensajes de confirmación | Puntos de convergencia con las reglas del módulo y automatización de versionado semántico. |
 
 <div class="compare-pair">
   <div>
-    <p class="compare-label">Ramas que duran horas</p>
-    <p class="compare-body">Cada cambio es pequeño y entra enseguida, así que los conflictos son diminutos y siempre hay algo publicable. Exige trocear el trabajo antes de empezarlo, que es la parte difícil.</p>
+    <p class="compare-label">Ramas de ciclo corto (horas/días)</p>
+    <p class="compare-body">Los incrementos son reducidos y se integran con frecuencia, minimizando los conflictos de fusión y manteniendo la rama principal en estado desplegable. Requiere una descomposición rigurosa de las tareas técnicas.</p>
   </div>
   <div>
-    <p class="compare-label">Ramas que duran semanas</p>
-    <p class="compare-body">Cada uno trabaja tranquilo en lo suyo sin pisar a nadie. El día que hay que juntarlo todo, nadie recuerda por qué cambió aquello y la fusión se come dos tardes.</p>
+    <p class="compare-label">Ramas de ciclo largo (semanas/meses)</p>
+    <p class="compare-body">Aíslan el desarrollo individual durante períodos extensos, pero incrementan exponencialmente la complejidad de integración, generando conflictos de fusión costosos y demorando la detección de incompatibilidades.</p>
   </div>
 </div>
 
-**Lo que hay que subir.** Un **PDF** en vuestro repositorio, `docs/flujo-de-trabajo.pdf`, de una página y escrito por vosotros. Redactadlo donde queráis y exportadlo a PDF; lo que se sube es el PDF, no el documento del procesador de textos.
+**Entregable técnico.** Genera un documento en formato **PDF** de una página y almacénalo en el repositorio bajo la ruta `docs/flujo-de-trabajo.pdf`. Debe recoger un análisis personal estructurado:
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Producto del bloque E</p>
+  <p class="checkpoint-label">Estructura del entregable del bloque E</p>
   <ul class="checklist">
-    <li>Qué referencia habéis leído, con el enlace.</li>
-    <li>Quién decide en ese modelo que un cambio entra, y qué se comprueba antes de que entre.</li>
-    <li>Cada cuánto se publica: si publicar allí es un acontecimiento o un trámite.</li>
-    <li>Una cosa de ese modelo que sí encaja en un trabajo de dos personas y otra que no, con el porqué.</li>
+    <li>Identificación de la referencia seleccionada e hipervínculo correspondiente.</li>
+    <li>Modelo de gobernanza: qué perfiles autorizan la integración de cambios y qué validaciones automáticas se exigen.</li>
+    <li>Cadencia de despliegue: periodicidad de publicación a producción y grado de automatización.</li>
+    <li>Análisis de aplicabilidad: un aspecto del modelo que resulte idóneo para un equipo de dos desarrolladores y otro que resulte desproporcionado, justificando técnicamente la respuesta.</li>
   </ul>
 </div>
 
 ```bash
 git add docs/flujo-de-trabajo.pdf
-git commit -m "Anadir notas sobre flujos de trabajo de equipo"
+git commit -m "Anadir analisis tecnico sobre modelos de flujo de trabajo"
 git push
 ```
 
 <div class="rule">
-  <p class="rule-label">Pegar no cuenta, y se nota</p>
-  <p>Ninguna de esas cuatro cosas se puede copiar de las páginas de arriba: hay que leerlas y decidir. Ocho líneas vuestras valen más aquí que tres pantallas pegadas, vengan de una web o de un modelo de lenguaje. Y si usáis uno, que sea para entender lo que no habéis pillado, no para redactar lo que no habéis leído: la diferencia entre esas dos cosas se ve en cuatro frases.</p>
+  <p class="rule-label">Rigor y análisis crítico en los entregables</p>
+  <p>El análisis debe reflejar tu propia comprensión y criterio técnico tras la lectura del documento original. En el ejercicio profesional se valora la capacidad de sintetizar cómo se aplican los principios de integración continua y control de versiones a un contexto productivo real, evitando reproducciones literales o superficiales.</p>
 </div>
 
 <div class="rule">
-  <p class="rule-label">Ninguna empresa trabaja exactamente como su documentación</p>
-  <p>Lo que vais a leer es el modelo ideal, contado por quien lo defiende. La realidad de cada equipo la fijan su producto y sus prisas: quien despliega treinta veces al día no puede permitirse una revisión de dos días, y quien actualiza el firmware de un aparato médico no publica un viernes por la tarde. Cambia cuánto se revisa, cuánto se automatiza y cuánto se tarda; lo que casi no cambia es el esqueleto, que es el que estáis montando hoy. Cuando salgáis a prácticas, preguntad esto el primer día: cómo entra un cambio y quién lo aprueba. Entenderéis más con esa pregunta que con el organigrama.</p>
+  <p class="rule-label">Adaptación del flujo de trabajo al contexto productivo</p>
+  <p>Ningún modelo metodológico se implementa de manera idéntica en todas las organizaciones. La arquitectura del producto y los requisitos del negocio determinan la cadencia: un servicio web con millones de usuarios puede realizar decenas de despliegues diarios con integración continua estricta, mientras que el firmware de un dispositivo médico o un sistema aeroespacial exige ciclos de auditoría exhaustivos y despliegues espaciados. Sin embargo, los pilares esenciales se mantienen universales: trazabilidad, automatización y revisión colegiada.</p>
 </div>
 
 <details class="aside aside--extra">
-  <summary>Si esto os ha interesado</summary>
-  <p>Hay un informe anual, <a href="https://dora.dev/">DORA</a>, que lleva más de una década midiendo qué distingue a los equipos que entregan bien. Sus cuatro medidas son cada cuánto se despliega, cuánto tarda un cambio en llegar a producción, con qué frecuencia un despliegue provoca un fallo y cuánto se tarda en recuperarse de él. Fijaos en que ninguna de las cuatro mide líneas de código ni horas de silla.</p>
+  <summary>Ampliación conceptual: Métricas DORA</summary>
+  <p>El consorcio de investigación <a href="https://dora.dev/">DORA (DevOps Research and Assessment)</a> analiza anualmente los factores que determinan el rendimiento de los equipos de ingeniería de software. Sus cuatro métricas clave son: la frecuencia de despliegue (<em>deployment frequency</em>), el tiempo de entrega de cambios (<em>lead time for changes</em>), la tasa de fallos en producción (<em>change failure rate</em>) y el tiempo medio de recuperación (<em>time to restore service</em>). Ninguna de estas métricas evalúa líneas de código brutas ni horas de presencia, sino la agilidad y estabilidad del proceso de entrega continua.</p>
 </details>
 
-#### Bloque F · Opcional · Si tenéis cuenta de Azure
+#### Bloque F · Práctica complementaria: Despliegue en Microsoft Azure
 
-<p class="stage stage--solo">Opcional. Solo si os sobra tiempo y el alta de Azure os ha funcionado</p>
+<p class="stage stage--solo">Opcional · Exploración práctica de provisión cloud</p>
 
-Vuestro portfolio ya está publicado y no necesita esto para nada. Este bloque existe porque en la segunda evaluación vais a publicar el backend en un proveedor de nube, y la primera vez que se pelea uno con un portal de nube conviene que sea con algo que no importa.
+El portfolio ya dispone de un entorno de producción activo en GitHub Pages. Este bloque complementario introduce el aprovisionamiento en un proveedor de infraestructura en la nube (*cloud provider*) comercial como Microsoft Azure, anticipando la arquitectura requerida para el backend en evaluaciones posteriores.
 
-Aviso de lo que os vais a encontrar: al acabar tendréis dos workflows publicando lo mismo en dos direcciones distintas, y las dos funcionando. No está roto. Pero decidid cuál es la buena y dejadla puesta en el `README`, porque es la que voy a abrir en diciembre.
+Al concluir este bloque dispondrás de dos pipelines independientes publicando concurrentemente el mismo repositorio en dos plataformas distintas. Ambas URLs serán plenamente funcionales.
 
-**1 · La cuenta.** Este es el paso que depende de que un tercero os diga que sí, y por eso ya no está al principio de la sesión.
+**1 · Aprovisionamiento de la suscripción académica.**
 
-1. Entrad en **azure.microsoft.com/es-es/free/students**.
-2. Pulsad **Empezar gratis** e iniciad sesión con **el correo del centro**, siguiendo los requisitos de elegibilidad de la oferta. Tener ese correo no garantiza por sí solo que la suscripción sea admitida.
-3. Aceptad los términos. **No se pide tarjeta de crédito.** Si en algún momento os la pide, os habéis salido de la oferta de estudiantes: volved atrás y empezad de nuevo desde el enlace anterior.
-4. Entrad en **portal.azure.com** y comprobad que en **Suscripciones** aparece una llamada *Azure for Students*.
+1. Accede a **azure.microsoft.com/es-es/free/students**.
+2. Selecciona **Empezar gratis** e inicia sesión con las credenciales de tu **correo institucional**, acreditando la condición de estudiante.
+3. Acepta las condiciones del servicio. Esta modalidad no requiere tarjeta de crédito.
+4. Accede a **portal.azure.com** y verifica en la sección **Suscripciones** (*Subscriptions*) la presencia activa de la suscripción *Azure for Students*.
 
 <details class="aside aside--help">
-  <summary>Si la verificación falla</summary>
-  <p>Tres causas, en orden de frecuencia. <strong>Una:</strong> habéis usado el correo personal. Repetid con el del centro. <strong>Dos:</strong> la oferta exige ser estudiante a tiempo completo de un centro reconocido por Microsoft, y no todos los centros lo están. <strong>Tres:</strong> el dominio no está reconocido todavía; es cuestión de días y no depende de vosotros.</p>
-  <p>No perdéis nada: vuestro portfolio ya está publicado desde el bloque B y el circuito de la sesión 2 funciona igual. Este bloque es una práctica de portal de nube, no un requisito.</p>
+  <summary>Incidencias en la validación de la cuenta educativa</summary>
+  <p>Si la verificación académica no se completa inmediatamente, comprueba haber utilizado la cuenta institucional del centro educativo. Si el dominio requiere validación adicional por parte del proveedor, no interrumpe el desarrollo del curso, ya que el flujo principal de CI/CD opera sobre GitHub Pages.</p>
 </details>
 
-**2 · Crear el recurso.** En **portal.azure.com**, buscad arriba `Static Web Apps` y pulsad **Crear** (*Create*).
+**2 · Creación del recurso en Azure.** En la barra superior del portal de Azure, busca `Static Web Apps` y pulsa **Crear** (*Create*).
 
-**3 · Rellenar la primera pestaña.** Los nombres del portal aparecen en español o en inglés según cómo tengáis la cuenta; van los dos.
+**3 · Configuración de parámetros básicos.** Cumplimenta el formulario con los siguientes valores:
 
-| Campo | Valor |
-| ----- | ----- |
+| Campo | Valor requerido |
+| ----- | --------------- |
 | Suscripción (*Subscription*) | Azure for Students |
 | Grupo de recursos (*Resource group*) | **Crear nuevo** → <code>rg-portfolio</code> |
-| Nombre (*Name*) | <code>swa-portfolio-VUESTROUSUARIO</code> |
+| Nombre (*Name*) | <code>swa-portfolio-TUUSUARIO</code> |
 | Tipo de plan (*Hosting plan*) | **Gratuito (Free)** |
 | Región (*Region*) | West Europe |
 | Origen de la implementación (*Deployment source*) | **GitHub** |
 
 <div class="rule">
-  <p class="rule-label">El plan, mirado dos veces</p>
-  <p>Si el plan no dice <strong>Gratuito</strong>, paradlo. El plan Standard consume crédito de la suscripción, y ese crédito lo vais a necesitar en la segunda evaluación. No hay nada en este curso que necesite el plan de pago.</p>
+  <p class="rule-label">Gestión de costes y planes en plataformas cloud</p>
+  <p>Asegúrate de seleccionar la modalidad <strong>Gratuito (Free)</strong>. El plan Standard aplica cargos recurrentes que consumirían el crédito asignado a la suscripción estudiantil, el cual se reservará para el aprovisionamiento de bases de datos relacionales y servicios de backend en la segunda evaluación.</p>
 </div>
 
-**4 · Conectar GitHub.** Pulsad **Iniciar sesión con GitHub** y autorizad a Azure. Después se rellenan tres desplegables:
+**4 · Vinculación con GitHub.** Pulsa **Iniciar sesión con GitHub** y concede los permisos de autorización a Azure. A continuación, selecciona en los menús desplegables:
 
-| Campo | Valor |
-| ----- | ----- |
-| Organización (*Organization*) | Vuestro usuario de GitHub |
+| Parámetro | Valor |
+| --------- | ----- |
+| Organización (*Organization*) | Tu cuenta de usuario de GitHub |
 | Repositorio (*Repository*) | <code>portfolio</code> |
 | Rama (*Branch*) | <code>main</code> |
 
-**5 · Detalles de compilación.** Es donde falla la mitad de la clase, así que copiadlo literal:
+**5 · Parámetros de compilación (Build Presets).** Especifica la configuración técnica para sitios estáticos sin paso de empaquetado intermedio:
 
-| Campo | Valor |
-| ----- | ----- |
-| Preajustes de compilación (*Build presets*) | **Custom** |
-| Ubicación de la aplicación (*App location*) | <code>/</code> |
-| Ubicación de la API (*Api location*) | *vacío* |
-| Ubicación de salida (*Output location*) | *vacío* |
+| Parámetro | Valor requerido | Justificación técnica |
+| --------- | --------------- | --------------------- |
+| Preajustes de compilación (*Build presets*) | **Custom** | Define manualmente las rutas del proyecto. |
+| Ubicación de la aplicación (*App location*) | <code>/</code> | Los archivos fuente residen directamente en la raíz del repositorio. |
+| Ubicación de la API (*Api location*) | *vacío* | El proyecto actual carece de funciones serverless de backend. |
+| Ubicación de salida (*Output location*) | *vacío* | Al no requerir compilación (Vite, Webpack), no existe una carpeta de salida intermediaria (como <code>dist</code>). |
 
-Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son exactamente los que se publican. Cualquier otro preajuste esperaría encontrar una carpeta construida que no existe, y el despliegue fallaría diciendo que no encuentra nada que subir.
+**6 · Revisión y provisión.** Accede a la pestaña **Revisar y crear** y confirma pulsando **Crear**. El aprovisionamiento de la infraestructura tomará entre uno y dos minutos. Al finalizar, pulsa **Ir al recurso**.
 
-**6 · Revisar y crear.** Pestaña **Revisar y crear** → **Crear**. Tarda entre uno y tres minutos. Cuando acabe, **Ir al recurso**.
+**7 · Monitorización del despliegue.** Regresa a tu repositorio en GitHub y accede a la pestaña **Actions**. Observarás un nuevo flujo de trabajo generado automáticamente por Azure en ejecución.
 
-**7 · Mirar el despliegue mientras ocurre.** No abráis todavía la URL. Id a vuestro repositorio en GitHub, pestaña **Actions**. Hay un workflow ejecutándose con un punto amarillo: es Azure desplegando. Entrad, abrid el job y ved los pasos en directo.
-
-**8 · Abrir la URL.** Cuando el punto se ponga verde, volved al portal de Azure: en la vista general del recurso está la **URL** (algo como `nombre-aleatorio.azurestaticapps.net`). Abridla. Ahí está vuestra página básica.
+**8 · Comprobación de la URL pública.** Tras completarse la ejecución con éxito, regresa a la vista general del recurso en el portal de Azure. En el campo **URL** figurará el dominio asignado (con formato `nombre-aleatorio.azurestaticapps.net`). Accede a dicho enlace para comprobar que el sitio web se encuentra en línea.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación del bloque F</p>
+  <p class="checkpoint-label">Lista de verificación del bloque F</p>
   <ul class="checklist">
-    <li>La URL abre y muestra vuestro nombre.</li>
-    <li>En la pestaña Actions del repositorio hay una ejecución en verde.</li>
-    <li>Habéis abierto la URL publicada y comprobado su contenido.</li>
+    <li>La URL asignada por Azure carga y muestra el documento HTML correctamente.</li>
+    <li>La pestaña Actions en GitHub registra el workflow de Azure con estado completado en verde.</li>
+    <li>Ambos proveedores (GitHub Pages y Azure Static Web Apps) publican concurrentemente el repositorio.</li>
   </ul>
 </div>
 
 <details class="aside aside--help">
-  <summary>Los cinco fallos de este bloque, y qué son</summary>
-  <p><strong>La URL da 404 o una página de bienvenida de Azure.</strong> El despliegue todavía no ha terminado, o terminó antes de que existiera el <code>index.html</code>. Mirad Actions: si está en verde y sigue mal, comprobad que el fichero se llama exactamente <code>index.html</code>, en minúsculas y en la raíz.</p>
-  <p><strong>El repositorio no aparece en el desplegable.</strong> Azure no tiene permiso sobre él. Abrid github.com → Settings → Applications → Authorized OAuth Apps y revisad el acceso concedido a Azure, o repetid el paso 4.</p>
-  <p><strong>El workflow sale en rojo.</strong> Abrid la ejecución y leed el paso que falló, no el resumen. Casi siempre dice que no encuentra el contenido: revisad la ubicación de la aplicación y la de salida del paso 5.</p>
-  <p><strong>El nombre del recurso está cogido.</strong> El nombre forma parte de una dirección pública, así que es único en todo Azure. Añadid algo vuestro al final.</p>
-  <p><strong>No hay ninguna ejecución en Actions.</strong> Azure no llegó a escribir el workflow: el recurso se creó sin conectar el repositorio. Borrad el recurso y repetid desde el paso 2.</p>
+  <summary>Diagnóstico de incidencias en Azure Static Web Apps</summary>
+  <p><strong>La URL muestra una página de bienvenida de Azure o código 404.</strong> El despliegue inicial puede requerir unos instantes adicionales para propagar el contenido a través de la red perimetral (CDN). Comprueba en Actions que el workflow ha finalizado satisfactoriamente.</p>
+  <p><strong>El repositorio no aparece en la selección de GitHub.</strong> La aplicación OAuth de Azure requiere autorización de lectura sobre tu cuenta de GitHub. Comprueba los permisos concedidos en GitHub bajo <strong>Settings → Applications → Authorized OAuth Apps</strong>.</p>
+  <p><strong>El workflow finaliza en error.</strong> Revisa el registro de ejecución en GitHub Actions. La causa habitual se debe a rutas incorrectas en <em>App location</em> u <em>Output location</em> en el paso 5.</p>
+  <p><strong>Conflicto con el nombre del recurso.</strong> Los nombres de los recursos deben ser globalmente únicos en el espacio de nombres de Azure. Añade un sufijo numérico o tus iniciales al nombre.</p>
 </details>
 
 ---
 
 ### Cierre
 
-<p class="stage">15 minutos · comprobación del resultado</p>
-
+<p class="stage">15 minutos · evaluación y consolidación de competencias</p>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
+  <p class="checkpoint-label">Autoevaluación conceptual · sin consulta de apuntes</p>
   <ol>
-    <li>¿Por qué se despliega una página vacía el primer día en lugar de esperar a tener contenido?</li>
-    <li>¿Quién ha escrito el fichero de <code>.github/workflows/</code> y cuándo?</li>
-    <li>¿Qué pasa exactamente entre que hacéis <code>git push</code> y la URL cambia?</li>
-    <li>¿Por qué el repositorio tiene que ser público en este curso?</li>
-    <li>Un compañero abre una pull request. ¿Se despliega algo? ¿Dónde?</li>
-    <li>El despliegue termina en verde y la URL da 404. ¿Qué ha comprobado GitHub y qué no?</li>
+    <li>¿Por qué es preferible validar el flujo de despliegue continuo desde la primera sesión con un documento mínimo en lugar de postergarlo hasta disponer del diseño final?</li>
+    <li>¿Qué entidad genera el archivo <code>.github/workflows/static.yml</code> y mediante qué acción se incorpora a la rama principal?</li>
+    <li>¿Qué secuencia de eventos técnicos se produce entre la ejecución de <code>git push</code> y la actualización del contenido en el entorno de producción?</li>
+    <li>¿Qué justificación técnica exige que el repositorio sea público en este módulo?</li>
+    <li>Si un desarrollador abre una pull request, ¿se ejecuta el workflow configurado hoy en GitHub Actions? Justifica por qué.</li>
+    <li>Si el pipeline finaliza con indicador verde pero la URL pública devuelve un código HTTP 404, ¿qué aspectos ha certificado la máquina y qué fallos no han sido detectados?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque lo que falla en un despliegue no suele ser el código, sino cuentas, permisos y configuración. Cuanto antes falle y menos importe lo que hay dentro, más barato es.</p>
-  <p>2 · Lo escribió GitHub, como plantilla, al elegir <em>Static HTML</em>; el commit que lo metió en <code>main</code> lo hicisteis vosotros desde el navegador.</p>
-  <p>3 · GitHub ve un push a <code>main</code>, arranca el workflow, este empaqueta los ficheros de la raíz y los publica, con un permiso temporal y sin ninguna credencial guardada.</p>
-  <p>4 · Porque las reglas de protección de rama que vamos a poner la semana que viene solo son gratuitas en repositorios públicos. Y porque un portfolio que no se puede enseñar no es un portfolio.</p>
-  <p>5 · No. El workflow solo se dispara con un push a <code>main</code>, y una pull request abierta todavía no ha entrado en <code>main</code>. Hoy no hay nada que compruebe una pull request antes de fusionarla: ese hueco es el trabajo de la sesión 3.</p>
-  <p>6 · Ha comprobado que sus pasos se ejecutaron sin error: coger los ficheros de la raíz, empaquetarlos y publicarlos. No ha comprobado nada del resultado, porque nadie se lo encargó. El verde habla del proceso, no de la web.</p>
+  <summary>Respuestas a la autoevaluación</summary>
+  <p>1 · Porque la mayor parte de las incidencias críticas en un despliegue corresponden a la configuración de infraestructura, permisos y dominios, y no al código. Resolver estos aspectos tempranamente sobre un Walking Skeleton evita acumular problemas en fases avanzadas del desarrollo.</p>
+  <p>2 · El archivo es proporcionado como plantilla oficial por GitHub al configurar la opción <em>Static HTML</em>, y se incorpora al repositorio mediante una confirmación directa en la rama <code>main</code> realizada desde la interfaz web.</p>
+  <p>3 · GitHub detecta el evento <code>push</code> en la rama <code>main</code>, inicializa un runner limpio en un contenedor Linux, descarga el repositorio, empaqueta los archivos como artefacto de Pages y los publica mediante credenciales efímeras OIDC.</p>
+  <p>4 · Porque las directivas de protección de ramas y reglas avanzadas de pull request en GitHub son gratuitas exclusivamente en repositorios públicos en cuentas personales, y porque un portfolio profesional está destinado a ser público.</p>
+  <p>5 · No. El descriptor actual restringe el disparador exclusivamente al evento <code>push</code> en la rama <code>main</code>. Una pull request no fusionada no altera dicha rama; las validaciones automáticas sobre pull requests se implementarán en la Unidad 2.</p>
+  <p>6 · Ha verificado que todos los comandos declarados concluyeron con código de salida 0 (sin excepciones de infraestructura). No ha verificado la existencia del punto de entrada requerido por el servidor web (<code>index.html</code>) ni la corrección funcional del contenido.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Al terminar la sesión</p>
+  <p class="checkpoint-label">Criterios de logro de la sesión</p>
   <ul class="checklist">
-    <li>La URL pública abre y muestra vuestra página; si hay un fallo, podéis identificar el paso y el mensaje de error.</li>
-    <li>El README tiene la URL y las cuatro cosas del bloque D.</li>
-    <li>Podéis localizar el workflow y explicar qué cambio dispara una publicación.</li>
-    <li>Habéis comprobado que un segundo cambio actualiza la página mediante el mismo circuito.</li>
+    <li>La URL pública responde con éxito y muestra el documento HTML con tu nombre; en caso de incidencia, puedes identificar el paso y el registro de error en el pipeline.</li>
+    <li>El archivo README.md documenta la URL pública, el evento de disparo del pipeline y la ruta del workflow.</li>
+    <li>Puedes identificar el descriptor de GitHub Actions y explicar qué directiva controla su ejecución.</li>
+    <li>Has comprobado que una nueva confirmación en la rama principal actualiza la versión pública a través del pipeline.</li>
   </ul>
 </div>
 
 <div class="rule">
-  <p class="rule-label">Qué pasa en la sesión 2</p>
-  <p>Se cierra <code>main</code>. En la próxima sesión ninguno vais a poder subir un cambio directamente a la rama principal, ni siquiera siendo los dueños del repositorio. Todo entrará por pull request, y ninguna se fusiona sin que vuestra pareja la haya revisado antes. No hay que traer nada preparado: se empieza decidiendo qué va a tener vuestro portfolio y se termina con dos tareas recorridas enteras.</p>
+  <p class="rule-label">Anticipación de la sesión 2</p>
+  <p>En la siguiente sesión se establecerán las directivas de protección sobre la rama <code>main</code>. A partir de ese momento quedará bloqueada cualquier confirmación directa sobre la rama principal, requiriendo de forma estricta que cualquier cambio se canalice a través de una rama de funcionalidad, una <em>pull request</em> documentada y una revisión por pares aprobada por tu compañero de equipo.</p>
 </div>
 
 ## Sesión 2 · Issues, tablero y la primera pull request
