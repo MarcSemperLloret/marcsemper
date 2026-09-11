@@ -50,7 +50,7 @@ Para eso hace falta un lenguaje de programación, y en la web ese lenguaje es **
 
 ### Por qué esta unidad casi no toca la página
 
-Cuando alguien empieza con JavaScript, la tentación es ir directamente a lo vistoso: que este botón abra ese menú. Y funciona, hasta el día en que deja de funcionar. Entonces aparece la escena de siempre: se mira el botón, se cambia el nombre de la clase, se prueba otro evento, se copia otro fragmento, y sigue sin funcionar.
+Cuando alguien empieza con JavaScript, la tentación es ir directamente a lo vistoso: que este botón abra ese menú. El resultado funciona hasta el día en que deja de funcionar. Entonces aparece la escena de siempre: se mira el botón, se cambia el nombre de la clase, se prueba otro evento, se copia otro fragmento, y sigue sin funcionar.
 
 El problema casi nunca está en el botón.
 
@@ -249,7 +249,7 @@ Escribir en la consola sirve para probar; lo que se conserva va en un fichero. C
 console.log("El código se está ejecutando");
 ```
 
-Y enlázalo desde el `head` de tu página, con `defer`:
+Enlázalo después desde el `head` de tu página, con `defer`:
 
 ```html
 <script src="js/main.js" defer></script>
@@ -304,7 +304,7 @@ Tiene tres partes y las tres importan: el **tipo** de error (`ReferenceError`), 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>El código se ejecuta en las cuatro páginas y sabes demostrarlo.</span></div>
   <div><strong>Si lo tienes</strong><span>Cambia la ruta del <code>src</code> y diagnostica el 404 desde la pestaña Network.</span></div>
-  <div><strong>Reto</strong><span>Quita <code>defer</code>, mueve el enlace y explica en qué se nota el cambio de orden.</span></div>
+  <div><strong>Reto</strong><span>Suprime <code>defer</code>, desplaza el enlace y explica qué consecuencia tiene el cambio de orden.</span></div>
 </div>
 
 <div class="checkpoint">
@@ -421,7 +421,7 @@ JavaScript tiene un único tipo numérico, en coma flotante. Eso trae una sorpre
 0.1 + 0.2        // 0.30000000000000004
 ```
 
-No es un fallo de JavaScript: es cómo se representan los decimales en binario. Con dinero se trabaja en céntimos, con enteros, o se redondea al presentar:
+El comportamiento no constituye un defecto de JavaScript, sino una consecuencia de la representación binaria de los decimales. Con dinero se trabaja en céntimos, con enteros, o se redondea al presentar:
 
 ```javascript
 const total = 0.1 + 0.2;
@@ -515,7 +515,7 @@ En `js/main.js`, con datos de **tu** tema:
 
 El resto, `%`, parece anecdótico y no lo es: es como se detecta un número par (`n % 2 === 0`) o se recorre algo en ciclo.
 
-Y los de asignación abreviada:
+Estos son los de asignación abreviada:
 
 ```javascript
 let stock = 10;
@@ -595,7 +595,7 @@ if (unidades !== undefined) {
 }
 ```
 
-Y los operadores lógicos:
+Estos son los operadores lógicos:
 
 ```javascript
 true && false     // false   y
@@ -713,7 +713,7 @@ if (total >= 50) {
 }
 ```
 
-Y con varios casos:
+Con varios casos:
 
 ```javascript
 if (stock === 0) {
@@ -742,7 +742,7 @@ Casi todos los errores de condicionales están en la frontera. Para la regla «e
 | Hasta 50 | `total <= 50` |
 | Entre 10 y 20, incluidos | `n >= 10 && n <= 20` |
 
-Y un aviso: `10 <= n <= 20` **no** hace lo que parece. Se evalúa por partes y acaba comparando un booleano con un número.
+Una advertencia: `10 <= n <= 20` **no** hace lo que parece. Se evalúa por partes y acaba comparando un booleano con un número.
 
 ### El ternario, para elegir un valor
 
@@ -768,7 +768,7 @@ switch (categoria) {
 }
 ```
 
-Compara con el triple igual, así que `"3"` no coincide con `3`. Y si olvidas un `break`, la ejecución sigue cayendo al caso siguiente: es la fuente de errores clásica de esta estructura.
+Compara con el triple igual, así que `"3"` no coincide con `3`. Si se omite un `break`, la ejecución continúa en el caso siguiente: es la fuente de errores clásica de esta estructura.
 
 ### Tarea 4 · Las reglas de tu proyecto
 
@@ -875,7 +875,7 @@ for (const precio of precios) {
 console.log(total.toFixed(2));   // "326.15"
 ```
 
-Y el recuento con condición:
+El recuento con condición se escribe así:
 
 ```javascript
 let baratos = 0;
@@ -1130,7 +1130,7 @@ function total(base) {
 console.log(impuestos);           // ReferenceError: no existe aquí
 ```
 
-Lo declarado dentro de una función solo existe dentro. Lo de fuera se ve desde dentro. Y eso es bueno: si todo fuera global, dos funciones que usan `i` se pisarían.
+Lo declarado dentro de una función solo existe dentro. Lo de fuera se ve desde dentro. Esa restricción es deseable: si todo fuera global, dos funciones que emplean `i` interferirían entre sí.
 
 <p class="term">Ámbito de bloque</p>
 
@@ -1253,7 +1253,7 @@ const operaciones = {
 operaciones.suma(2, 3);    // 5
 ```
 
-Y puede pasarse como argumento:
+También puede pasarse como argumento:
 
 ```javascript
 function aplicarATodos(lista, transformar) {
@@ -1620,7 +1620,7 @@ const todosBaratos = productos.every((p) => p.precio < 500);
 [10, 9, 100].sort((a, b) => a - b);   // [9, 10, 100]
 ```
 
-Sin función de comparación, `sort` convierte a texto. Con números hay que pasarla siempre: `a - b` ascendente, `b - a` descendente. Y para textos con acentos y mayúsculas:
+Sin función de comparación, `sort` convierte a texto. Con números hay que pasarla siempre: `a - b` ascendente, `b - a` descendente. Para textos con acentos y mayúsculas:
 
 ```javascript
 productos.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -1729,7 +1729,7 @@ producto["precio"]        // 89.9, útil cuando la clave es una variable
 producto.color            // undefined
 ```
 
-Y un catálogo es un array de objetos:
+Un catálogo, por tanto, es un array de objetos:
 
 ```javascript
 const catalogo = [
@@ -1913,19 +1913,19 @@ console.table(disponibles());
 console.log(valorAlmacen().toFixed(2));
 ```
 
-Y en el documento, un único enlace, con el tipo declarado:
+En el documento se declara un único enlace, con su tipo:
 
 ```html
 <script type="module" src="js/main.js"></script>
 ```
 
-Con `type="module"` no hace falta `defer`: los módulos ya se ejecutan al final. Y solo se enlaza el principal: los demás llegan por sus `import`.
+Con `type="module"` no hace falta `defer`: los módulos ya se ejecutan al final. Solo se enlaza el principal: los demás llegan por sus `import`.
 
 ### Dos detalles que hacen perder una tarde
 
 <div class="rule">
   <p class="rule-label">La extensión se escribe, y hace falta un servidor</p>
-  <p>En el navegador, la ruta del <code>import</code> lleva su <code>.js</code>: <code>"./catalogo.js"</code>, no <code>"./catalogo"</code>. Y empieza por <code>./</code> o por <code>/</code>.</p>
+  <p>En el navegador, la ruta del <code>import</code> lleva su <code>.js</code>: <code>"./catalogo.js"</code>, no <code>"./catalogo"</code>. Además debe comenzar por <code>./</code> o por <code>/</code>.</p>
   <p>Además, los módulos <strong>no funcionan abriendo el fichero con doble clic</strong>. Verás un error de CORS con el esquema <code>file://</code>. Hay que servir la carpeta: la extensión Live Server de VS Code, o el servidor que montarás tú mismo en la UD5.</p>
 </div>
 
@@ -1954,7 +1954,7 @@ Un módulo puede tener una exportación por defecto y muchas con nombre. En este
   </ol>
 </figure>
 
-Es el mismo criterio de siempre: cada fichero responde a una pregunta. Y anticipa la separación en capas que verás en la UD6 y en el módulo de servidor.
+Es el mismo criterio de siempre: cada fichero responde a una pregunta. El criterio anticipa la separación en capas que verás en la UD6 y en el módulo de servidor.
 
 ### Tarea 13 · Tres módulos
 
@@ -2075,7 +2075,7 @@ export function crearProducto(datos) {
 }
 ```
 
-Fíjate en dos decisiones. Primero, se recogen **todos** los errores y no solo el primero: en la UD4 querrás enseñárselos todos al usuario a la vez. Y segundo, la función devuelve un resultado que describe qué pasó, en lugar de lanzar: para una validación esperable, un error no es excepcional.
+Fíjate en dos decisiones. Primero, se recogen **todos** los errores y no solo el primero: en la UD4 querrás mostrarlos todos al usuario a la vez. Segundo, la función devuelve un resultado que describe qué pasó, en lugar de lanzar: para una validación esperable, un error no es excepcional.
 
 <p class="term">Validar en el borde</p>
 
@@ -2188,7 +2188,7 @@ const alta = new Date("2026-09-04");
 const dias = (ahora - alta) / (1000 * 60 * 60 * 24);
 ```
 
-Que los meses empiecen en cero es la trampa histórica de las fechas en JavaScript. Y restar dos fechas da milisegundos, no días: hay que dividir.
+Que los meses empiecen en cero es la trampa histórica de las fechas en JavaScript. Restar dos fechas, por su parte, produce milisegundos y no días: el resultado debe dividirse.
 
 ### Formato local
 
@@ -2358,7 +2358,7 @@ Un módulo con los datos, otro con las consultas, y un principal que responda po
 
 <p class="term">Refactorizar</p>
 
-Cambiar cómo está escrito un programa sin cambiar lo que hace. Si el comportamiento cambia, no es una refactorización: es una modificación, y hay que probarla como tal.
+Cambiar cómo está escrito un programa sin cambiar lo que hace. Si el comportamiento cambia, la operación deja de ser una refactorización y pasa a ser una modificación, que debe probarse como tal.
 
 ### Salidas tempranas
 
@@ -2530,7 +2530,7 @@ Ante cualquier problema de programación, esta secuencia:
     <li>¿Qué datos entran y de qué tipo son de verdad?</li>
     <li>¿Qué reglas se aplican y en qué orden?</li>
     <li>¿Qué debe devolver, y qué debe devolver en los casos raros?</li>
-    <li>Si no sale lo esperado: ¿dónde deja de coincidir con lo que yo creía?</li>
+    <li>Si el resultado no es el esperado: ¿en qué punto deja de coincidir con lo previsto?</li>
   </ol>
 </figure>
 
@@ -2546,7 +2546,7 @@ De ahí sale todo lo demás: por eso convertimos los datos en el borde, por eso 
 
 No necesitas recordar todos los métodos. Tienes autocompletado, documentación e IA. Lo que necesitas es saber plantearte esto:
 
-* ¿De qué tipo es este valor **de verdad**, no el que yo esperaba?
+* ¿De qué tipo es este valor **realmente**, con independencia del tipo previsto?
 * ¿Qué quiero recibir: una lista, un elemento, un booleano o un número?
 * ¿Esta función devuelve algo, o solo hace algo?
 * ¿Qué pasa si la lista está vacía?
@@ -2632,4 +2632,4 @@ Ya sabes razonar con datos, escribir reglas, descomponer en funciones y encontra
   </ol>
 </figure>
 
-En la UD4 conectaremos las dos cosas: tu catálogo pintado en el documento, tus filtros manejados desde un formulario y tus datos llegando desde un servidor. Y ahí se cobrará el trabajo de estas seis semanas: cuando el filtro no filtre, no mirarás el botón. Mirarás la función.
+En la UD4 conectaremos las dos cosas: tu catálogo pintado en el documento, tus filtros manejados desde un formulario y tus datos llegando desde un servidor. El trabajo de estas seis semanas se rentabilizará entonces: cuando el filtro no filtre, no mirarás el botón. Mirarás la función.

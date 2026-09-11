@@ -33,7 +33,7 @@ date: "2026-09-04"
 
 ## ¿Qué vas a aprender?
 
-En la UD5 conseguiste algo importante: un servidor tuyo, que responde. Pero responde a un puñado de rutas que fueron apareciendo según hacían falta.
+En la UD5 conseguiste algo importante: un servidor propio que responde, aunque únicamente a un conjunto reducido de rutas incorporadas conforme fueron necesitándose.
 
 Esta unidad convierte eso en un **diseño**.
 
@@ -47,7 +47,7 @@ Esta unidad convierte eso en un **diseño**.
   </ol>
 </figure>
 
-Y cierra el módulo entero. Al terminar habrás recorrido el camino completo: un documento con significado, un diseño que se adapta, una lógica que decide, una interfaz que reacciona, un servidor que responde y una aplicación que se publica.
+Esta unidad cierra además el módulo completo. Al terminar habrás recorrido el recorrido íntegro: un documento con significado, un diseño que se adapta, una lógica que decide, una interfaz que reacciona, un servidor que responde y una aplicación que se publica.
 
 ### La idea que gobierna la unidad
 
@@ -110,7 +110,7 @@ mi-api/
 
 <div class="rule">
   <p class="rule-label">Condición 2 · nada llega al cliente sin validar, nada sale sin decidir</p>
-  <p>Todo lo que entra se valida en el servidor. Y todo lo que sale es una decisión: qué campos se devuelven, qué se oculta y qué se registra. Un objeto entero volcado en una respuesta acaba enseñando cosas que no debía.</p>
+  <p>Todo lo que entra se valida en el servidor, y todo lo que sale constituye una decisión explícita: qué campos se devuelven, qué se oculta y qué se registra. Un objeto entero volcado en una respuesta acaba enseñando cosas que no debía.</p>
 </div>
 
 ---
@@ -600,7 +600,7 @@ function aRespuesta({ id, nombre, precio, categoria, stock }) {
 }
 ```
 
-Devolver el objeto tal cual está guardado es cómodo y expone lo que no toca: notas internas, márgenes, el propio stock. Una función que decide la forma pública del recurso deja explícito qué sale, y evita que añadir un campo interno lo publique sin querer.
+Devolver el objeto en su forma almacenada resulta inmediato y expone información que no corresponde publicar: notas internas, márgenes o el propio stock. Una función que decide la forma pública del recurso deja explícito qué sale, y evita que añadir un campo interno lo publique sin querer.
 
 ### Tarea 4 · Las lecturas completas
 
@@ -812,7 +812,7 @@ if (!borrado) throw new ErrorNoEncontrado("Producto no encontrado");
 respuesta.status(204).end();
 ```
 
-Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. Y sobre el segundo borrado hay dos posturas defendibles —404 porque ya no está, o 204 porque el resultado deseado se cumple— pero elige una **y escríbela en el contrato**.
+Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. Sobre el segundo borrado existen dos posturas defendibles —404 porque ya no está, o 204 porque el resultado deseado se cumple— pero elige una **y escríbela en el contrato**.
 
 ### Modificaciones que se pisan
 
@@ -1123,7 +1123,7 @@ export function manejadorDeErrores(error, peticion, respuesta, next) {
 }
 ```
 
-Añadir un tipo de error nuevo es añadir una línea a la tabla. Y ninguna ruta necesita ya saber qué número le corresponde a su fallo.
+Añadir un tipo de error nuevo se reduce a añadir una línea a la tabla, sin que ninguna ruta necesite conocer qué código corresponde a su fallo.
 
 ### El identificador de petición
 
@@ -1277,7 +1277,7 @@ export function escapar(valor) {
 
 <div class="rule">
   <p class="rule-label">Todo dato que entra en el HTML se escapa</p>
-  <p>Si un producto se llama <code>Teclado &lt;script&gt;…&lt;/script&gt;</code> y lo insertas tal cual, ese código se ejecuta en el navegador de quien visite tu página, con sus permisos y sus datos de sesión. Se llama <em>cross-site scripting</em>, y es la vulnerabilidad más extendida de la web.</p>
+  <p>Si un producto se llama <code>Teclado &lt;script&gt;…&lt;/script&gt;</code> y se inserta sin escapar, ese código se ejecuta en el navegador de quien visite tu página, con sus permisos y sus datos de sesión. Esa vulnerabilidad se denomina <em>cross-site scripting</em> y es la vulnerabilidad más extendida de la web.</p>
   <p>Es el mismo problema del <code>innerHTML</code> de la UD4, ahora del lado del servidor y peor: allí afectaba a quien lo escribía, aquí a todo el que visite la página.</p>
   <p>Y ojo con el sitio donde insertas: escapar sirve para el contenido y para los atributos entrecomillados. Meter datos de fuera dentro de un bloque de código de la página o en una URL requiere reglas distintas; lo sensato es no hacerlo.</p>
 </div>
@@ -1497,7 +1497,7 @@ function mostrarErroresDeCampo(detalles) {
 
 ### Dos detalles que se olvidan siempre
 
-Deshabilitar el botón mientras se envía evita el doble envío, que con POST crea dos productos. Y anunciar el resultado en la región activa de la UD4 hace que el éxito no sea solo un cambio visual que algunas personas no perciben.
+Deshabilitar el botón mientras se envía evita el doble envío, que con POST crea dos productos. Anunciar además el resultado en la región activa de la UD4 consigue que el éxito no sea solo un cambio visual que algunas personas no perciben.
 
 ### Tarea 12 · El formulario real
 
@@ -1614,7 +1614,7 @@ app.use((peticion, respuesta, next) => {
 ```
 
 <div class="rule">
-  <p class="rule-label">El comodín no es la solución: es rendirse</p>
+  <p class="rule-label">El comodín como renuncia a la configuración</p>
   <p>Poner <code>*</code> permite que cualquier página de internet llame a tu API desde el navegador de sus visitantes. Para una API pública de solo lectura puede ser aceptable; para una que modifica datos, no.</p>
   <p>Y recuerda qué es CORS y qué no: una protección del <strong>navegador</strong>. No impide que alguien llame a tu API con un cliente HTTP. La autorización de verdad es otra cosa, y es lo de mañana.</p>
 </div>
@@ -1739,7 +1739,7 @@ router.delete("/:id", requiereClave, borrarProducto);
   <p>Lo que sí enseña es dónde se pone la comprobación —en el servidor, antes del manejador— y la diferencia entre 401 y 403: la primera es «no sé quién eres», la segunda «sé quién eres y no puedes».</p>
 </div>
 
-Y una regla que no se negocia: si algún día guardas contraseñas, se guardan cifradas con una función pensada para eso, nunca en claro ni con un resumen sin sal. En este módulo directamente no guardamos ninguna.
+Una regla no admite excepción: si algún día almacenas contraseñas, se guardan cifradas con una función pensada para eso, nunca en claro ni con un resumen sin sal. En este módulo directamente no guardamos ninguna.
 
 ### Tarea 14 · Blindar
 
@@ -1843,7 +1843,7 @@ describe("API de productos", () => {
 { "scripts": { "test": "node --env-file=.env.pruebas --test pruebas/" } }
 ```
 
-Sin instalar nada: el ejecutor y las aserciones vienen con Node. Y fíjate en tres detalles que deciden si esto funciona:
+Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene observar tres detalles que determinan su funcionamiento:
 
 * El `listen(0)` pide un puerto libre cualquiera, así que las pruebas no chocan con tu servidor de desarrollo. Ahí se cobra haber separado la aplicación del arranque en la sesión 3.
 * El `after` cierra el servidor. Sin él, el proceso se queda vivo cuando las pruebas ya han terminado y `npm test` no vuelve nunca.
@@ -2166,7 +2166,7 @@ No puntúa el tamaño del proyecto. Puntúa que **el contrato se sostenga**: que
 ### Entrega final del módulo
 
 <div class="unit-deliverable">
-  <p>El repositorio con la aplicación completa: cliente y API servidos juntos, capas separadas, contrato documentado, configuración por entorno, seguridad mínima y pruebas en verde. La URL del despliegue. El README con sus siete apartados. Las tres listas de auditoría marcadas. La revisión del compañero por escrito. Y un documento de una página con las tres decisiones técnicas de las que estés más satisfecho y las tres que cambiarías.</p>
+  <p>El repositorio con la aplicación completa: cliente y API servidos juntos, capas separadas, contrato documentado, configuración por entorno, seguridad mínima y pruebas en verde. La URL del despliegue. El README con sus siete apartados. Las tres listas de auditoría marcadas. La revisión del compañero por escrito. Finalmente, un documento de una página con las tres decisiones técnicas de las que estés más satisfecho y las tres que cambiarías.</p>
 </div>
 
 
@@ -2216,7 +2216,7 @@ De ahí sale todo lo demás: por eso las rutas hablan de recursos, por eso los e
   </ol>
 </figure>
 
-Y una idea que ha aparecido en las seis unidades con distinta ropa: **separa lo que cambia por razones distintas**. Estructura de presentación, lógica de interfaz, reglas de almacén, contrato de implementación. Cada vez que lo hiciste, la unidad siguiente te costó menos.
+Una idea ha aparecido en las seis unidades bajo formulaciones distintas: **separa lo que cambia por razones distintas**. Estructura de presentación, lógica de interfaz, reglas de almacén, contrato de implementación. Cada vez que lo hiciste, la unidad siguiente te costó menos.
 
 ### Al terminar deberías poder responder
 
@@ -2279,7 +2279,7 @@ Y una idea que ha aparecido en las seis unidades con distinta ropa: **separa lo 
 
 Has terminado el módulo. Empezaste escribiendo un encabezado y terminas con una aplicación publicada en internet, con su cliente, su API, sus pruebas y su documentación.
 
-Lo que viene después ya no es lenguaje de marcas: es un backend con base de datos, seguridad, transacciones y despliegue serio, y un cliente construido con framework. Pero las preguntas van a ser las mismas que llevas seis unidades haciéndote.
+Lo que viene después ya no es lenguaje de marcas: es un backend con base de datos, seguridad, transacciones y despliegue serio, y un cliente construido con framework. Las preguntas, sin embargo, serán las mismas que vienes formulándote durante seis unidades.
 
 <figure class="diagram">
   <figcaption>Lo que te llevas</figcaption>

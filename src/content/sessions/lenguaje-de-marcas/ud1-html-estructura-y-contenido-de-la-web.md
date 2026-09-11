@@ -32,7 +32,7 @@ date: "2026-08-30"
 
 ## ¿Qué vas a aprender?
 
-Cuando usamos una web vemos textos, imágenes, menús, formularios, botones o tablas. Pero el navegador necesita saber algo más importante que cómo se ven:
+Al usar una web percibimos textos, imágenes, menús, formularios, botones o tablas. El navegador, sin embargo, necesita una información más determinante que su apariencia:
 
 > **¿Qué representa cada elemento?**
 
@@ -42,7 +42,7 @@ HTML es el lenguaje con el que **describimos la estructura y el significado del 
 
 Todavía no vamos a preocuparnos de que sean bonitos. Eso llega con CSS, en la unidad siguiente. Primero hay que construir bien la estructura.
 
-Y aprender HTML no consiste en memorizar cien etiquetas: la lista está publicada y se consulta. Consiste en **decidir qué significa cada trozo de información**. Por eso la unidad no avanza recitando etiquetas, sino planteando decisiones: ¿esto es una lista o un párrafo?, ¿esta imagen informa o decora?, ¿esto es una tabla o solo lo parece?
+Aprender HTML no consiste en memorizar cien etiquetas, dado que la lista está publicada y se consulta. Consiste en **decidir qué significa cada trozo de información**. Por eso la unidad no avanza recitando etiquetas, sino planteando decisiones: ¿esto es una lista o un párrafo?, ¿esta imagen informa o decora?, ¿esto es una tabla o solo lo parece?
 
 ### Cómo es cada sesión
 
@@ -173,13 +173,13 @@ No son dieciocho horas explicando etiquetas.
 
 Durante el módulo usaremos **Visual Studio Code**. Nos ayuda a organizar proyectos, detectar errores, navegar entre archivos, completar y formatear código, buscar información y ejecutar herramientas.
 
-Si nunca lo has usado, no pasa nada: aprender a manejar herramientas nuevas también es parte del trabajo.
+Su desconocimiento previo no supone ningún obstáculo: aprender a manejar herramientas nuevas forma parte del trabajo.
 
 VS Code ya trae de serie todo lo que necesitamos para HTML: resaltado de sintaxis, sugerencias, cierre automático de etiquetas, documentación al pasar el ratón, formateo, Emmet y previsualización. **No hace falta instalar diez extensiones para empezar.**
 
 #### Por qué una carpeta de proyecto y no archivos sueltos
 
-Un sitio web no es un archivo: es un conjunto de archivos que se referencian entre sí. Si abres archivos sueltos, el editor no sabe dónde está la raíz del sitio.
+Un sitio web está formado por un conjunto de archivos que se referencian entre sí, y no por un archivo aislado. Si abres archivos sueltos, el editor no sabe dónde está la raíz del sitio.
 
 | Si abres... | El editor puede... |
 | ----------- | ------------------ |
@@ -682,7 +682,7 @@ Crea `index.html` en la raíz de tu carpeta y constrúyela con:
 * Al menos tres `<h2>` que dividan la portada en áreas temáticas.
 * Párrafos descriptivos reales, con una descripción del proyecto.
 
-Este archivo no es un ejercicio desechable: es la primera página del sitio que entregarás dentro de seis semanas.
+Este archivo constituye la primera página del sitio que se entregará dentro de seis semanas, y no un ejercicio desechable.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación · dos pruebas de un minuto</p>
@@ -871,7 +871,7 @@ Eso describe su apariencia habitual, no su significado. Con CSS podrías hacer q
 | `&nbsp;` | Un espacio que no se parte al final de línea |
 | `&copy;` | © |
 
-Esto es imprescindible cuando quieres **mostrar código HTML dentro de una página**, que es justo lo que hacen estos apuntes. Si escribieras `<p>` tal cual, el navegador lo interpretaría como un párrafo en lugar de mostrarlo.
+Esto es imprescindible cuando quieres **mostrar código HTML dentro de una página**, que es precisamente lo que hacen estos apuntes. Si `<p>` se escribiera sin escapar, el navegador lo interpretaría como un párrafo en lugar de mostrarlo.
 
 ### Reto 1 · ¿Qué está mal aquí? (10 min)
 
@@ -901,7 +901,7 @@ Esto es imprescindible cuando quieres **mostrar código HTML dentro de una pági
   <ol>
     <li>¿Por qué está mal pasar de <code>h2</code> a <code>h4</code>?</li>
     <li>¿Cuál es la diferencia de significado entre <code>strong</code> y <code>em</code>?</li>
-    <li>¿Cómo escribirías «&lt;p&gt;» para que se vea tal cual en la página?</li>
+    <li>¿Cómo se escribe «&lt;p&gt;» para que aparezca literalmente en la página?</li>
   </ol>
 </div>
 
@@ -1065,7 +1065,7 @@ Esto no es «escribir etiquetas»: es **interpretar la información**. Tu trabaj
 
 <details class="aside aside--help">
   <summary>Estoy atascado · no sé si los componentes van ordenados</summary>
-  <p>Aplica literalmente la prueba. Si escribes «Memoria RAM, Almacenamiento SSD, Procesador», ¿sigue siendo verdad que esos son los componentes de un ordenador? Sí. ¿Y si escribes «Reiniciar, Descargar la imagen, Arrancar desde el USB»? Ya no describe una instalación posible.</p>
+  <p>Aplica la prueba de forma literal. Con «Memoria RAM, Almacenamiento SSD, Procesador», la afirmación de que esos son los componentes de un ordenador se mantiene con independencia del orden. Con «Reiniciar, Descargar la imagen, Arrancar desde el USB», en cambio, ya no describe una instalación posible.</p>
 </details>
 
 ### Reto 2 · Los módulos de DAW (10 min)
@@ -1327,7 +1327,7 @@ web/
   <dd><code>../img/logo.webp</code></dd>
 </dl>
 
-No intentes verlo de golpe. Se resuelve en tres pasos: dónde estoy, dónde voy, cuántos niveles subo antes de empezar a bajar.
+No conviene resolverlo de una sola vez. El procedimiento tiene tres pasos: dónde estoy, dónde voy y cuántos niveles subo antes de empezar a bajar.
 
 <p class="stage stage--solo">Paso 2 · Ahora tú</p>
 
@@ -1470,7 +1470,7 @@ Un texto alternativo vacío puede ser exactamente la decisión correcta.
 alt="foto"
 ```
 
-No aporta nada. Y esto tampoco:
+No aporta información alguna. Tampoco la aporta esto:
 
 ```html
 alt="ordenador portátil barato comprar ordenador portátil
@@ -1623,7 +1623,7 @@ Crea la carpeta `img/` y añade al menos tres imágenes a tu sitio: una informat
 
 ### Podríamos construir una web con cientos de `div`
 
-Y funcionaría. Pero un `<div>` no significa nada: es una caja. HTML tiene elementos que explican **qué representa cada parte**, y eso permite que un lector de pantalla ofrezca una lista de zonas y salte directamente a la que interese.
+El resultado funcionaría, pero un `<div>` no aporta significado alguno: es únicamente un contenedor. HTML tiene elementos que explican **qué representa cada parte**, y eso permite que un lector de pantalla ofrezca una lista de zonas y salte directamente a la que interese.
 
 #### `<header>`
 
@@ -1708,7 +1708,7 @@ La regla que resuelve casi todos los casos:
 
 Una ficha de producto se entiende sola: aparece en un buscador, se comparte por mensaje, tiene su propio título. Es un `article`. El catálogo que agrupa veinte fichas solo tiene sentido dentro de la tienda: es una `section`.
 
-### Y entonces, ¿`div` está mal?
+### El uso legítimo de `div`
 
 No. `<div>` es un contenedor genérico perfectamente válido. La pregunta es:
 
@@ -2100,7 +2100,7 @@ Funciona, pero le falta casi todo. Vamos a ver por qué.
 
 Cuando tú miras una tabla, lees una celda y **subes con la vista** hasta el encabezado de su columna para saber qué significa ese número. Es tan automático que no lo notas.
 
-Quien no ve la tabla no puede hacer eso. Va celda por celda y, sin más información, escucha: «899». Nada más. Necesita que el documento diga a qué encabezado pertenece cada celda.
+Quien no percibe la tabla visualmente no puede hacer eso. Recorre las celdas una a una y, sin información adicional, escucha «899» y nada más. Necesita que el documento diga a qué encabezado pertenece cada celda.
 
 ### Una estructura completa
 
@@ -2489,7 +2489,7 @@ Pruébalo: haz clic sobre la palabra **Nombre**. El navegador coloca el foco en 
 
 <p class="term">Etiqueta asociada</p>
 
-Un `<label for="x">` unido a un `<input id="x">`. No es un texto que está al lado del campo: es un texto que **pertenece** al campo.
+Un `<label for="x">` unido a un `<input id="x">`. El texto no queda simplemente situado junto al campo, sino que **pertenece** a él.
 
 Qué se gana asociándola:
 
@@ -2522,7 +2522,7 @@ No conviertas un texto o una imagen en un falso botón. Si algo es una acción, 
 
 <div class="rule">
   <p class="rule-label">El <code>placeholder</code> no es una etiqueta</p>
-  <p>El texto gris dentro de un campo <strong>desaparece en cuanto empiezas a escribir</strong>. Quien se distrae a mitad de un formulario largo se queda con un campo lleno y sin ninguna indicación de qué contenía. Y quien usa un lector de pantalla puede no oírlo nunca.</p>
+  <p>El texto gris dentro de un campo <strong>desaparece en cuanto empiezas a escribir</strong>. Quien interrumpe la cumplimentación de un formulario largo encuentra un campo relleno sin indicación de qué contenía. Quien emplea un lector de pantalla puede no oírlo nunca.</p>
   <p>Sirve para dar un ejemplo de formato <em>junto a</em> una etiqueta —<code>placeholder="nombre@example.com"</code>—, nunca para sustituirla.</p>
 </div>
 
@@ -2538,7 +2538,7 @@ En `contacto.html`, escribe un formulario con:
 
 Cada campo con su `id` y su `name`, y cada `label` con su `for`.
 
-**La comprobación de un minuto:** haz clic sobre el *texto* de cada etiqueta, no sobre el campo. Si el cursor salta al campo correcto, la asociación está bien. Si no pasa nada, ese `for` no coincide con ningún `id`.
+**Comprobación inmediata:** haz clic sobre el *texto* de cada etiqueta, no sobre el campo. Si el cursor se desplaza al campo correspondiente, la asociación es correcta. Si no se produce ningún efecto, ese `for` no coincide con ningún `id`.
 
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
@@ -2601,7 +2601,7 @@ Todos estos campos aceptan texto. La diferencia está en lo que el navegador hac
 | `url` | Comprueba que sea una dirección web |
 | `tel` | Teclado numérico de teléfono en el móvil |
 
-Ese teclado adaptado no es un detalle menor: es la diferencia entre rellenar un formulario cómodamente en el móvil y abandonarlo.
+Ese teclado adaptado determina la diferencia entre completar un formulario con comodidad en el móvil y abandonarlo, de modo que no constituye un detalle menor.
 
 <div class="rule">
   <p class="rule-label">La pregunta antes de escribir JavaScript</p>
@@ -2731,7 +2731,7 @@ Amplía tu formulario:
 </fieldset>
 ```
 
-Lo que hace que dos botones de opción se excluyan **no es el `fieldset`**: es compartir exactamente el mismo `name`. Si puedes marcar los dos a la vez, tienen `name` distinto.
+La exclusión mutua entre dos botones de opción la produce **compartir exactamente el mismo `name`**, no el `fieldset`. Si puedes marcar los dos a la vez, tienen `name` distinto.
 
 Fíjate también en otra forma de asociar la etiqueta: aquí el `input` está **dentro** del `label`, y entonces no hace falta `for`. Las dos formas son válidas.
 
@@ -2747,7 +2747,7 @@ Fíjate también en otra forma de asociar la etiqueta: aquí el `input` está **
 </fieldset>
 ```
 
-Y una casilla suelta, obligatoria:
+Una casilla independiente y obligatoria se declara así:
 
 ```html
 <label>
@@ -2760,7 +2760,7 @@ Y una casilla suelta, obligatoria:
 
 Agrupan controles que forman una misma pregunta y le ponen nombre al grupo. En un formulario de tres campos sobran; en uno de quince son lo que lo hace navegable, porque cada campo se anuncia precedido del nombre de su grupo.
 
-Y en los botones de opción no son opcionales en la práctica: el `legend` es lo único que dice **de qué** se está eligiendo. No todo tiene que ser un `div`.
+En los botones de opción no resultan prescindibles en la práctica: el `legend` es lo único que indica **sobre qué** se está eligiendo. No todo tiene que ser un `div`.
 
 ### Autocompletado
 
@@ -2788,7 +2788,7 @@ Termina tu formulario con:
 
 <details class="aside aside--help">
   <summary>Estoy atascado · los radio no funcionan como espero</summary>
-  <p>Si puedes marcar los dos a la vez, es que tienen <code>name</code> distinto. Lo que agrupa unos botones de opción no es el <code>fieldset</code>: es <strong>compartir exactamente el mismo <code>name</code></strong>. Lo que sí debe ser distinto en cada uno es el <code>value</code>, que es el dato que se envía, y el <code>id</code> si los asocias con <code>for</code>.</p>
+  <p>Si puedes marcar los dos a la vez, es que tienen <code>name</code> distinto. Lo que agrupa unos botones de opción es <strong>compartir exactamente el mismo <code>name</code></strong>, y no el <code>fieldset</code>. Lo que sí debe ser distinto en cada uno es el <code>value</code>, que es el dato que se envía, y el <code>id</code> si los asocias con <code>for</code>.</p>
 </details>
 
 ### Los seis fallos de siempre
@@ -2914,7 +2914,7 @@ Una web no debería funcionar únicamente para:
 
 > una persona que ve perfectamente, usa ratón, tiene una pantalla grande y navega exactamente como nosotros.
 
-La buena noticia es que **HTML bien utilizado proporciona buena parte de la accesibilidad automáticamente**. No es una capa que se añade al final: es lo que llevas haciendo quince sesiones.
+La buena noticia es que **HTML bien utilizado proporciona buena parte de la accesibilidad automáticamente**. No constituye una capa que se incorpore al final, sino el resultado del trabajo de quince sesiones.
 
 #### 1 · Usa el elemento correcto
 
@@ -2965,7 +2965,7 @@ Encontrarás código como este:
 
 Un conjunto de atributos para describir el papel, el estado y las propiedades de un elemento cuando HTML no llega. Puede ser necesaria en componentes complejos.
 
-Pero no debería usarse para recrear a mano algo que HTML ya proporciona. Ese `div` con `role="button"` necesita además que le programes la activación con `Enter` y con espacio, el foco, y el estado. Un `<button>` trae todo eso.
+No debe emplearse, sin embargo, para reconstruir manualmente algo que HTML ya proporciona. Ese `div` con `role="button"` necesita además que le programes la activación con `Enter` y con espacio, el foco, y el estado. Un `<button>` trae todo eso.
 
 El orden es siempre:
 
@@ -2993,7 +2993,7 @@ Enter        activar
 Espacio      marcar casillas y pulsar botones
 ```
 
-Y responde:
+Responde a continuación:
 
 | Pregunta | Página donde falla |
 | -------- | ------------------ |
@@ -3338,7 +3338,7 @@ Una revisión útil no dice «está mal». Dice tres cosas: **qué**, **por qué
 | «La tabla está mal» | «Faltan los `scope` en los `th`: sin ellos cada celda se anuncia sin su encabezado. Añadiría `scope="col"` arriba y `scope="row"` en la primera columna» |
 | «Los alt no valen» | «El `alt` del gráfico dice “gráfico”: quien no lo vea pierde los datos. Pondría los tres valores que compara» |
 
-Y una regla que vale para toda tu vida profesional: **se revisa el código, no a la persona**. «Este enlace apunta a tu disco» y «no sabes hacer enlaces» describen el mismo hecho, y solo uno sirve para algo.
+Una regla mantiene su validez durante toda la vida profesional: **se revisa el código, no a la persona**. «Este enlace apunta a tu disco» y «no sabes hacer enlaces» describen el mismo hecho, y solo uno sirve para algo.
 
 ### Tarea 16 · Matriz de coevaluación
 
@@ -3533,5 +3533,5 @@ En la siguiente empezamos a responder la otra:
 
 Partiremos exactamente del sitio que has construido aquí, y trabajaremos selectores, cascada, especificidad, box model, tipografía, unidades, colores, Flexbox, Grid, diseño adaptable, media queries, variables, estados y transiciones.
 
-Y aquí se cobra el trabajo de estas seis semanas: sobre una estructura semántica, dar estilo es cuestión de escribir selectores. Sobre una sopa de `div`, es cuestión de adivinar cuál era cuál.
+El trabajo de estas seis semanas se rentabiliza aquí: sobre una estructura semántica, dar estilo se reduce a escribir selectores. Sobre una sopa de `div`, es cuestión de adivinar cuál era cuál.
 

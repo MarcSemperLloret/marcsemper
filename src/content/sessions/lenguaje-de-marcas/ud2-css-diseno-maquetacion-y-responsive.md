@@ -4,7 +4,7 @@ label: "UD2 · Guía y taller práctico"
 section: "ud-02"
 order: 2
 lang: "es"
-summary: "El mismo sitio de la UD1, ahora con presentación. CSS no es un catálogo de propiedades que memorizar: es decidir de qué tipo es cada problema —tamaño, espacio o distribución— y saber diagnosticar qué regla está actuando cuando el resultado no es el esperado."
+summary: "El mismo sitio de la UD1, ahora con presentación. CSS exige decidir de qué tipo es cada problema —tamaño, espacio o distribución— y saber diagnosticar qué regla está actuando cuando el resultado no es el esperado."
 duration: "18 sesiones · 6 semanas"
 modality: "Individual, con retos y revisión en pareja"
 deliverable: "El sitio HTML de la UD1 convertido en una web completa: sistema visual con variables, layout con Flexbox y Grid, responsive sin plantillas y estados de foco visibles."
@@ -41,7 +41,7 @@ En la unidad anterior construimos una web solo con HTML. Nuestra preocupación e
 
 El resultado es un sitio con estructura y significado, y prácticamente sin diseño. Ahora le toca a CSS.
 
-Y aquí se cobra el trabajo de las seis semanas anteriores. Terminamos la UD1 con esta promesa:
+El trabajo de las seis semanas anteriores se rentabiliza aquí. La UD1 terminó con esta promesa:
 
 > Si tu estructura dice lo que las cosas son, el CSS podrá cambiar por completo su apariencia sin tocar una línea de tu HTML.
 
@@ -55,7 +55,7 @@ Vas a pasarte seis semanas viendo cosas que no se ven como esperabas. La diferen
 
 <div class="rule">
   <p class="rule-label">Cuando algo no se ve como esperabas, no añadas CSS</p>
-  <p>La reacción natural es escribir otra propiedad a ver si esta sí. Y si tampoco, otra. Y al final, <code>!important</code>. Así se acumula una hoja de estilos que nadie entiende, ni siquiera quien la escribió.</p>
+  <p>La reacción natural consiste en escribir otra propiedad por si esta sí funciona, después otra, y finalmente <code>!important</code>. Así se acumula una hoja de estilos que nadie entiende, ni siquiera quien la escribió.</p>
   <p>Lo que haremos en su lugar es <strong>diagnosticar</strong>: inspeccionar el elemento, ver qué regla está actuando de verdad, entender por qué gana, y entonces corregir. CSS también se depura.</p>
 </div>
 
@@ -111,7 +111,7 @@ mi-web/
 
 <div class="rule">
   <p class="rule-label">Condición 1 · el HTML no se retuerce para conseguir un efecto visual</p>
-  <p>Vas a tener la tentación de meter un <code>div</code> de más, o de cambiar un <code>section</code> por otra cosa, porque así el CSS sale antes. A veces añadir un contenedor es legítimo y lo veremos. Pero si el cambio <strong>empeora lo que el documento significa</strong>, el problema es del CSS y hay que resolverlo en el CSS.</p>
+  <p>Vas a tener la tentación de meter un <code>div</code> de más, o de cambiar un <code>section</code> por otra cosa, porque así el CSS sale antes. Añadir un contenedor es a veces legítimo y se tratará más adelante; ahora bien, si el cambio <strong>empeora lo que el documento significa</strong>, el problema es del CSS y hay que resolverlo en el CSS.</p>
   <p>Al terminar deberías poder responder a la pregunta de la defensa de la UD1 —«si mañana llega el CSS, ¿qué HTML tendrías que tocar?»— y que la respuesta siga siendo «ninguno».</p>
 </div>
 
@@ -266,7 +266,7 @@ color    propiedad     qué característica cambio
 navy     valor         qué valor le doy
 ```
 
-Y se lee así: «selecciona todos los `h1` y cambia su propiedad `color`». Al conjunto de propiedad y valor se le llama **declaración**, y van separadas por punto y coma:
+La regla se lee así: «selecciona todos los `h1` y cambia su propiedad `color`». Al conjunto de propiedad y valor se le llama **declaración**, y van separadas por punto y coma:
 
 ```css
 body {
@@ -445,7 +445,7 @@ a[href^="http"] {     /* enlaces cuyo href empieza por http: los externos */
 }
 ```
 
-Aquí se nota lo que hiciste en la UD1: si escribiste `type="email"` en lugar de `type="text"`, ahora tienes un selector. **El HTML bien marcado te devuelve selectores.**
+Aquí se comprueba el efecto del trabajo de la UD1: si el campo se declaró como `type="email"` en lugar de `type="text"`, ahora existe un selector para él. **El HTML bien marcado te devuelve selectores.**
 
 #### Pseudo-clases
 
@@ -569,7 +569,7 @@ p          { color: blue; }
 <p class="destacado">Hola</p>
 ```
 
-¿De qué color se ve? Rojo. Y ahora la pregunta que importa: **¿por qué?**
+¿De qué color se ve? Rojo. La pregunta relevante es **por qué**.
 
 ### Lo que decide, en orden
 
@@ -584,7 +584,7 @@ p          { color: blue; }
 
 <p class="term">Especificidad</p>
 
-Una medida de cuán concreto es un selector. No es una nota que haya que calcular a mano: es un orden de importancia que basta con conocer.
+Una medida de cuán concreto es un selector. Funciona como un orden de prioridad que basta con conocer, sin necesidad de calcularlo manualmente.
 
 | De menos a más específico | Ejemplo |
 | ------------------------- | ------- |
@@ -592,7 +592,7 @@ Una medida de cuán concreto es un selector. No es una nota que haya que calcula
 | Clase, atributo y pseudo-clase | `.destacado`, `[type="email"]`, `:hover` |
 | `id` | `#productos` |
 
-Y una regla práctica que te ahorra la aritmética: **una clase gana a cualquier cantidad de elementos, y un `id` gana a cualquier cantidad de clases**. Por eso `#productos p` gana a `body main section article p`, aunque el segundo parezca más trabajado.
+Una regla práctica evita la aritmética: **una clase gana a cualquier cantidad de elementos, y un `id` gana a cualquier cantidad de clases**. Por eso `#productos p` gana a `body main section article p`, aunque el segundo parezca más trabajado.
 
 De ahí sale el consejo de ayer: si das estilo con `id`, cualquier ajuste posterior con clases no podrá corregirlo, y acabarás escalando la pelea.
 
@@ -644,7 +644,7 @@ Existe, gana casi siempre, y **no es el botón de arreglar CSS**.
 
 Selecciona un elemento e id a la pestaña **Styles**. Verás las reglas que le afectan, **ordenadas de la que gana a la que pierde**, y las declaraciones derrotadas aparecen **tachadas**. A la derecha de cada bloque está el archivo y la línea donde se escribió.
 
-Eso responde a las tres preguntas de golpe: qué se está aplicando, qué se ha descartado y dónde está escrito. La pestaña **Computed** da el siguiente paso: el valor final de cada propiedad, ya resuelto el conflicto.
+Eso responde simultáneamente a las tres preguntas: qué se está aplicando, qué se ha descartado y dónde está escrito. La pestaña **Computed** da el siguiente paso: el valor final de cada propiedad, ya resuelto el conflicto.
 
 ### Tarea 3 · ¿Quién está ganando?
 
@@ -677,7 +677,7 @@ main section p.aviso   { color: teal; }
   <dt>¿Importa el orden?</dt>
   <dd>Aquí no, porque no hay empate en especificidad. El orden solo decide entre iguales.</dd>
   <dt>Resultado</dt>
-  <dd><code>navy</code>. Y si borras la regla del <code>id</code>, ganaría <code>main section p.aviso</code>, que es <code>teal</code>.</dd>
+  <dd><code>navy</code>. Al eliminar la regla del <code>id</code>, prevalecería <code>main section p.aviso</code>, que es <code>teal</code>.</dd>
 </dl>
 
 <p class="stage stage--solo">Paso 2 · Ahora tú</p>
@@ -978,7 +978,7 @@ En `productos.html` tienes `article` con el marcado de cada producto. Dales form
 
 Ahí está la diferencia importante con `px`: un `font-size: 16px` ignora la preferencia de quien necesita la letra más grande. Un `1rem` la respeta.
 
-Y el contraste entre `rem` y `em`:
+El contraste entre `rem` y `em` es este:
 
 ```css
 .card       { font-size: 1.25rem; padding: 1em; }  /* padding = 1.25 × 20px */
@@ -990,7 +990,7 @@ Y el contraste entre `rem` y `em`:
 <div class="rule">
   <p class="rule-label">Las unidades de viewport tienen una trampa</p>
   <p><code>100vh</code> parece «la altura de la pantalla», y en un móvil no lo es: las barras del navegador aparecen y desaparecen al hacer scroll, así que el valor cambia bajo tus pies y el contenido salta.</p>
-  <p>Existen <code>svh</code>, <code>lvh</code> y <code>dvh</code> para las variantes pequeña, grande y dinámica. Pero la regla que te va a servir hoy es más simple: <strong>no uses una unidad porque sea moderna, úsala cuando sepas respecto a qué se calcula</strong>.</p>
+  <p>Existen <code>svh</code>, <code>lvh</code> y <code>dvh</code> para las variantes pequeña, grande y dinámica. La regla aplicable hoy es más simple: <strong>no uses una unidad porque sea moderna, úsala cuando sepas respecto a qué se calcula</strong>.</p>
 </div>
 
 ### Colores
@@ -1008,7 +1008,7 @@ VS Code te muestra un cuadradito junto a cada color y te abre un selector al pul
 <div class="rule">
   <p class="rule-label">El contraste no es una cuestión de gusto</p>
   <p>Un texto gris claro sobre fondo blanco puede parecerte elegante y ser ilegible para bastante gente. El criterio está medido: el texto normal necesita una relación de contraste de al menos <strong>4.5:1</strong> con su fondo, y el texto grande, 3:1.</p>
-  <p>DevTools te lo dice: al abrir el selector de color de una declaración, muestra la relación de contraste calculada y avisa si no llega. No hay que estimarlo a ojo.</p>
+  <p>DevTools lo calcula: al abrir el selector de color de una declaración muestra la relación de contraste y advierte si no alcanza el mínimo. No es necesario estimarlo visualmente.</p>
 </div>
 
 ### Tipografía
@@ -1044,7 +1044,7 @@ No elijas cada tamaño por separado. Elige un paso y multiplica:
 | h2 | 1.75rem |
 | h1 | 2.5rem |
 
-Y una advertencia: no hace falta una tipografía distinta para cada zona. Una interfaz coherente usa **una o dos familias** y una escala corta. La variedad tipográfica no es riqueza: casi siempre es falta de decisión.
+Conviene una advertencia: no hace falta una tipografía distinta para cada zona. Una interfaz coherente usa **una o dos familias** y una escala corta. La variedad tipográfica no es riqueza: casi siempre es falta de decisión.
 
 ### Tarea 5 · Tu sistema visual mínimo
 
@@ -1310,7 +1310,7 @@ display: grid;
 <div class="rule">
   <p class="rule-label"><code>display: none</code> no es «invisible»</p>
   <p>Elimina el elemento del documento: no ocupa espacio y <strong>tampoco existe para un lector de pantalla ni para el recorrido con <code>Tab</code></strong>. Eso es correcto cuando quieres ocultar algo de verdad, y es un error cuando solo querías que no se viera.</p>
-  <p>Si necesitas que algo siga estando disponible para quien no ve la pantalla, existen otras técnicas. Y si solo querías que ocupara su hueco sin verse, eso es <code>visibility: hidden</code> o una opacidad, no <code>display: none</code>.</p>
+  <p>Si necesitas que algo siga estando disponible para quien no ve la pantalla, existen otras técnicas. Si la intención era únicamente que ocupara su hueco sin verse, eso es <code>visibility: hidden</code> o una opacidad, no <code>display: none</code>.</p>
 </div>
 
 ### `position`
@@ -1641,7 +1641,7 @@ Aquí hay **dos Flexbox anidados**, y verlo es media solución:
 
 1. Uno exterior en fila: imagen a un lado, información al otro.
 2. Uno interior en columna dentro de la información: título, descripción y la línea del precio.
-3. Y un tercero en fila para esa última línea, con el precio a la izquierda y el botón a la derecha.
+3. Un tercero en fila para esa última línea, con el precio a la izquierda y el botón a la derecha.
 
 ```css
 .producto        { display: flex; gap: var(--space-md); }
@@ -1690,7 +1690,7 @@ Intercambia con un compañero únicamente una sección que ya hayas maquetado. E
 2. **Qué regla actúa:** compruébala en DevTools.
 3. **Qué duda queda:** por qué Flexbox, Grid o el flujo normal podrían encajar mejor.
 
-El autor decide si cambia el código o conserva la decisión y la justifica. No se valora que ambos tengáis el mismo gusto visual.
+El autor decide si cambia el código o conserva la decisión y la justifica. No se valora la coincidencia de criterio estético entre ambas partes.
 
 ### Tarea 9 · Flexbox Challenge
 
@@ -1783,7 +1783,7 @@ Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla so
 
 ### Dos dimensiones a la vez
 
-Flexbox coloca en una línea. Pero mira este problema:
+Flexbox coloca en una línea. Considera ahora este problema:
 
 ```text
 Producto  Producto  Producto
@@ -1980,7 +1980,7 @@ main   { grid-area: principal; }
 footer { grid-area: pie; }
 ```
 
-El dibujo entre comillas **es** el layout. Se ve de un vistazo que la cabecera ocupa las dos columnas y que el lateral está a la izquierda del contenido. Y para cambiarlo en móvil basta con redibujarlo:
+El dibujo entre comillas **es** el layout. Se ve de un vistazo que la cabecera ocupa las dos columnas y que el lateral está a la izquierda del contenido. Para modificarlo en móvil basta con redibujarlo:
 
 ```css
 @media (width < 48rem) {
@@ -2015,7 +2015,7 @@ No compiten. Una regla inicial que funciona:
   </ol>
 </figure>
 
-Y una segunda pregunta que afina más: **¿quién debería decidir el tamaño, el contenedor o el contenido?** Grid define la cuadrícula desde fuera y el contenido se acomoda; Flexbox parte de los elementos y reparte lo que sobra. Un menú cuyos enlaces miden cada uno lo suyo es Flexbox. Un catálogo cuyas tarjetas deben coincidir es Grid.
+Una segunda pregunta afina la decisión: **¿quién debería decidir el tamaño, el contenedor o el contenido?** Grid define la cuadrícula desde fuera y el contenido se acomoda; Flexbox parte de los elementos y reparte lo que sobra. Un menú cuyos enlaces miden cada uno lo suyo es Flexbox. Un catálogo cuyas tarjetas deben coincidir es Grid.
 
 Lo más habitual en código real es que convivan:
 
@@ -2206,7 +2206,7 @@ Con DevTools en modo dispositivo, recorre tu sitio a estas anchuras:
 1440 px   escritorio
 ```
 
-Y busca, en las cuatro páginas:
+Busca a continuación, en las cuatro páginas:
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Prueba las cinco anchuras, elimina el scroll horizontal y documenta cada causa.</span></div>
@@ -2345,7 +2345,7 @@ Cómo se acomoda el contenido de una imagen dentro de la caja que se le ha dado.
 | `cover` | Llena el hueco y recorta. La opción de un catálogo |
 | `contain` | Cabe entera, con huecos a los lados |
 
-Y si el recorte de `cover` corta lo importante, `object-position` decide qué zona se conserva:
+Si el recorte de `cover` elimina la parte relevante, `object-position` determina qué zona se conserva:
 
 ```css
 .card img { object-fit: cover; object-position: top; }
@@ -2431,7 +2431,7 @@ a:focus-visible{ outline: 3px solid currentColor; outline-offset: 3px; }
 a:active       { color: #b91c1c; }
 ```
 
-Y en formularios, los que preparaste en la UD1 ya te dan selectores:
+En formularios, los campos preparados en la UD1 proporcionan ya sus propios selectores:
 
 ```css
 input:focus     { }
@@ -2447,7 +2447,7 @@ input:checked   { }
 
 <div class="rule">
   <p class="rule-label">Nunca <code>outline: none</code> a secas</p>
-  <p>El contorno del foco es feo y es la única pista que tiene quien navega con teclado para saber dónde está. Quitarlo deja la web inutilizable para esas personas: pulsan <code>Tab</code> y no pasa nada visible.</p>
+  <p>El contorno del foco resulta visualmente poco atractivo y constituye la única indicación de posición para quien navega con teclado. Su supresión deja la web inutilizable para esas personas: al pulsar <code>Tab</code> no se produce ningún cambio perceptible.</p>
   <p>Si no te gusta el contorno por defecto, <strong>sustitúyelo por otro igual de claro</strong>: un contorno propio, un cambio de fondo, un borde. Lo que no vale es dejarlo sin ninguna indicación.</p>
 </div>
 
@@ -2522,7 +2522,7 @@ Después:
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué no se escribe <code>outline: none</code> sin más?</li>
+    <li>¿Por qué no procede escribir <code>outline: none</code> sin una alternativa que lo sustituya?</li>
     <li>¿Qué hace <code>:focus-visible</code> que no hace <code>:focus</code>?</li>
     <li>¿Para qué sirve <code>:where()</code>?</li>
   </ol>
@@ -2581,7 +2581,7 @@ ease         cómo acelera
 <div class="rule">
   <p class="rule-label">No animes <code>all</code></p>
   <p><code>transition: all 300ms</code> parece cómodo y anima también cosas que no querías, incluidas propiedades que obligan al navegador a recalcular el layout entero. El resultado es una interfaz que va a tirones sin que se sepa por qué.</p>
-  <p>Nombra las propiedades. Y si puedes elegir, anima <code>transform</code> y <code>opacity</code>: son las dos que el navegador resuelve sin rehacer el layout, y por eso van suaves.</p>
+  <p>Nombra las propiedades. Siempre que sea posible, anima <code>transform</code> y <code>opacity</code>: son las dos que el navegador resuelve sin rehacer el layout, y por eso van suaves.</p>
 </div>
 
 ### Transformaciones
@@ -2633,7 +2633,7 @@ Una media query que no pregunta por el tamaño de la pantalla sino por **una pre
 1. Añade una transición a tus botones y otra a tus tarjetas o enlaces.
 2. Asegúrate de que los estados de `:hover` y `:focus-visible` son claros y distintos entre sí.
 3. Añade el bloque de `prefers-reduced-motion`.
-4. Y después, la parte importante: **recorre tu sitio y elimina cualquier efecto que no comunique nada**. Por cada uno que dejes, escribe en un comentario qué informa.
+4. Después, la parte determinante: **recorre tu sitio y elimina cualquier efecto que no comunique nada**. Por cada uno que dejes, escribe en un comentario qué informa.
 
 Es la única tarea de la unidad en la que se puntúa quitar cosas.
 
@@ -2835,7 +2835,7 @@ El paso 4 es el que ahorra tiempo. Los cuatro tipos de problema se buscan en sit
 | **Computed** | El valor final de cada propiedad, ya resuelto todo |
 | **Layout** | El box model dibujado, y los inspectores de Grid y Flexbox |
 
-Y un truco que resuelve la mitad de los casos: en Styles, las casillas junto a cada declaración la **desactivan en vivo**. Desactivar propiedades una a una hasta que el problema desaparece te dice cuál era la culpable en veinte segundos, sin tocar el archivo.
+Un procedimiento resuelve la mitad de los casos: en Styles, las casillas contiguas a cada declaración la **desactivan en vivo**. Desactivar propiedades una a una hasta que el problema desaparece te dice cuál era la culpable en veinte segundos, sin tocar el archivo.
 
 ### Reto 4 · Quita el `!important` (10 min)
 
@@ -2851,7 +2851,7 @@ Esta regla funciona. Di tres cosas que están mal en ella, y cómo quedaría bie
   <summary>Ver respuesta del Reto 4</summary>
   <p><strong>1 · El <code>!important</code>.</strong> Esconde un conflicto en vez de resolverlo, y obliga a que cualquier ajuste futuro sea otro <code>!important</code>.</p>
   <p><strong>2 · La especificidad.</strong> Un <code>id</code>, dos clases, dos elementos y una clase más: ese selector no se puede sobrescribir con nada razonable. Con <code>.producto</code> bastaría.</p>
-  <p><strong>3 · El número mágico.</strong> <code>37px</code> no sale de ninguna decisión: sale de mirar una pantalla. Y colocar con <code>margin-left</code> es síntoma de que falta un sistema de layout: si es separación entre elementos de una lista, es <code>gap</code>.</p>
+  <p><strong>3 · El número mágico.</strong> <code>37px</code> no sale de ninguna decisión: sale de mirar una pantalla. Colocar mediante <code>margin-left</code> es además síntoma de que falta un sistema de layout: si es separación entre elementos de una lista, es <code>gap</code>.</p>
   <p>Quedaría en algo así como <code>.producto { }</code> sin margen, y un <code>gap</code> en el contenedor.</p>
 </details>
 
@@ -2887,7 +2887,7 @@ Tu trabajo:
 <details class="aside aside--help">
   <summary>Estoy atascado · no sé por dónde empezar</summary>
   <p>Por lo que afecta a más cosas. Si la hoja no carga en una página, todo lo demás que veas ahí es ruido: arréglalo primero y vuelve a mirar.</p>
-  <p>Después, los desbordamientos, porque suelen tener una única causa que produce muchos síntomas. Y al final, los detalles de cascada, que son locales.</p>
+  <p>Después, los desbordamientos, porque suelen tener una única causa que produce muchos síntomas. En último lugar, los detalles de cascada, que son locales.</p>
   <p>Regla general de la sesión: <strong>si la regla no aparece en Styles es de selector; si aparece tachada es de cascada</strong>. Esa distinción te ahorra la mitad del trabajo.</p>
 </details>
 
@@ -2904,7 +2904,7 @@ Tu trabajo:
   <summary>Ver respuestas</summary>
   <p>1 · Si la regla no aparece en Styles, no ha seleccionado nada: es de selector o de sintaxis. Si aparece tachada, sí seleccionó y perdió: es de cascada.</p>
   <p>2 · Para desactivar propiedades en vivo y localizar cuál causa el problema sin tocar el archivo.</p>
-  <p>3 · Porque en un trabajo real el CSS es de otro, tiene años y funciona en sitios que no puedes romper. Y porque rehacer no enseña dónde estaba el fallo.</p>
+  <p>3 · Porque en un trabajo real el CSS es de otro, tiene años y funciona en sitios que no puedes romper. El segundo motivo es que rehacer el código no identifica dónde estaba el defecto.</p>
 </details>
 
 ---
@@ -3013,7 +3013,7 @@ Un compañero revisará tu proyecto. **No evaluará si le gustan tus colores**: 
 
 Después recibirás la revisión y decidirás qué cambias. **No todas las sugerencias tienen por qué ser correctas**: aprender a evaluar una revisión también forma parte del ejercicio, y rechazar una observación justificándola bien puntúa igual que aceptarla.
 
-Y la regla de la UD1 sigue valiendo: se revisa el código, no a la persona.
+La regla de la UD1 sigue vigente: se revisa el código, no a la persona.
 
 ### Producto final
 
@@ -3047,7 +3047,7 @@ Tres minutos y cuatro preguntas:
 * Enséñanos un sitio donde dudaste entre Flexbox y Grid, y por qué elegiste lo que elegiste.
 * ¿Has tenido que tocar el HTML de la UD1? Si sí, ¿dónde y por qué?
 
-Y una prueba en vivo: se te pedirá **un cambio pequeño sobre tu propio CSS**. Convertir un Grid de tres columnas en dos, cambiar el eje de un Flexbox, hacer que el menú funcione a 360 px, o quitar un `!important` sin romper nada. Si no puedes hacerlo, no controlas el código que has entregado.
+La defensa incluye una prueba en vivo: se te pedirá **un cambio pequeño sobre tu propio CSS**. Convertir un Grid de tres columnas en dos, cambiar el eje de un Flexbox, hacer que el menú funcione a 360 px, o quitar un `!important` sin romper nada. Si no puedes hacerlo, no controlas el código que has entregado.
 
 ### Evaluación
 
@@ -3111,7 +3111,7 @@ Si dentro de un año has olvidado las propiedades, que quede esta:
 
 De ahí sale todo lo demás: por eso no usamos `!important`, por eso los selectores no se hacen más específicos «por si acaso», por eso DevTools está siempre abierto, y por eso distinguimos una regla tachada de una regla ausente.
 
-Y su pareja, la que gobierna el layout:
+Su propiedad complementaria, la que gobierna el layout:
 
 <p class="term">Describe límites, no medidas</p>
 
@@ -3206,6 +3206,6 @@ Lo que todavía no sabe es **reaccionar con lógica**.
   </ol>
 </figure>
 
-En la siguiente unidad empezamos a programar. Y lo haremos, a propósito, casi sin tocar la página: primero el lenguaje —datos, decisiones, funciones y estructuras— porque un filtro que no filtra casi nunca es un problema del botón, sino de una lógica que todavía no se sabe leer. La interfaz que reacciona llega justo después, en la UD4.
+En la siguiente unidad empieza la programación, y lo hará, de forma deliberada, casi sin modificar la página: primero el lenguaje —datos, decisiones, funciones y estructuras— porque un filtro que no filtra casi nunca es un problema del botón, sino de una lógica que todavía no se sabe leer. La interfaz que reacciona llega justo después, en la UD4.
 
-Y ahí se cobrará otra vez el trabajo de estas semanas: sobre un documento semántico y un CSS que separa estructura de presentación, añadir comportamiento es añadir una capa. Sobre lo otro, es empezar de nuevo.
+El trabajo de estas semanas se rentabilizará de nuevo entonces: sobre un documento semántico y un CSS que separa estructura de presentación, añadir comportamiento es añadir una capa. Sobre lo otro, es empezar de nuevo.

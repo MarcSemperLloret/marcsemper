@@ -34,7 +34,7 @@ date: "2026-09-04"
 
 ## ¿Qué vas a aprender?
 
-En la UD3 escribiste un catálogo que funciona, filtra, ordena y busca. Y solo lo has visto en la consola.
+En la UD3 escribiste un catálogo que funciona, filtra, ordena y busca, pero su resultado solo se ha observado en la consola.
 
 Esta unidad conecta ese código con la página. Al terminarla, escribir en un campo filtrará el catálogo mientras escribes, pulsar un botón cambiará el orden, enviar un formulario mostrará errores útiles, y los productos llegarán desde un servidor en vez de estar escritos a mano.
 
@@ -99,7 +99,7 @@ mi-web/
 └── img/
 ```
 
-Fíjate en algo importante: `catalogo.js` apenas se toca. Las funciones que escribiste en la UD3 siguen sirviendo tal cual, porque devuelven datos y no imprimen nada. Ese es el premio de haberlas escrito así.
+Conviene observar un detalle relevante: `catalogo.js` apenas se modifica. Las funciones escritas en la UD3 siguen siendo válidas sin cambio alguno, porque devuelven datos en lugar de imprimirlos. Esa es la consecuencia de haberlas diseñado así.
 
 <div class="unit-deliverable">
   <p>Una página de productos que se genera desde datos, con búsqueda en vivo, dos filtros y una ordenación; un formulario de contacto validado y accesible; las preferencias del usuario recordadas entre visitas; y el catálogo cargado desde una API con sus tres estados: cargando, error y sin resultados.</p>
@@ -226,7 +226,7 @@ La representación en memoria del documento. Tu fichero `.html` es el punto de p
 
 Compruébalo: en la pestaña Elements borra un párrafo; desaparece de la pantalla, pero tu fichero sigue intacto. Recarga y vuelve. Lo que ves en Elements no es tu código, es el DOM.
 
-Y al revés: si tu código crea diez artículos, aparecerán en Elements y no estarán en el fichero. Por eso, cuando en la semana 3 pintes el catálogo, «ver código fuente» no te servirá de nada: hay que mirar Elements.
+En sentido inverso: si tu código crea diez artículos, aparecerán en Elements y no constarán en el archivo. Por eso, cuando en la semana 3 pintes el catálogo, «ver código fuente» no te servirá de nada: hay que mirar Elements.
 
 ### El árbol y sus nodos
 
@@ -353,7 +353,7 @@ tarjetas.map(...)        // TypeError: no es una función
 
 Es una `NodeList`. Tiene `length` y `forEach`, pero no los métodos de la UD3. Los tres puntos la convierten en un array de verdad.
 
-Y una lista vacía **no es null**: si el selector no encuentra nada, `querySelectorAll` devuelve una lista de longitud cero, mientras que `querySelector` devuelve `null`. Confundir esos dos casos es el segundo error más común de la unidad.
+Una lista vacía, además, **no es null**: si el selector no encuentra nada, `querySelectorAll` devuelve una lista de longitud cero, mientras que `querySelector` devuelve `null`. Confundir esos dos casos es el segundo error más común de la unidad.
 
 ### Anclajes pensados para el código
 
@@ -468,7 +468,7 @@ titulo.innerHTML = "Catálogo <strong>2026</strong>";  // interpreta etiquetas
 <div class="rule">
   <p class="rule-label">Por defecto, <code>textContent</code></p>
   <p>Insertar con <code>innerHTML</code> un texto que venga de fuera —lo que alguien escribió en un campo, lo que devolvió una API— permite colar etiquetas y código en tu página. Es la vía de entrada de los ataques de inyección.</p>
-  <p><code>textContent</code> escribe texto y solo texto: lo que llegue se ve tal cual, sin ejecutarse. Usa <code>innerHTML</code> únicamente con marcado que hayas escrito tú, y nunca con datos del usuario.</p>
+  <p><code>textContent</code> escribe texto y solo texto: el contenido se muestra literalmente, sin interpretarse ni ejecutarse. Usa <code>innerHTML</code> únicamente con marcado que hayas escrito tú, y nunca con datos del usuario.</p>
 </div>
 
 ### Clases: el puente con el CSS
@@ -505,7 +505,7 @@ Number(tarjeta.dataset.id);    // 7
 tarjeta.dataset.categoria = "teclados";
 ```
 
-`dataset` será la forma de saber, en la semana 2, a qué producto corresponde el botón que se acaba de pulsar. Y fíjate otra vez en lo mismo: llega como **texto**.
+`dataset` será la forma de saber, en la semana 2, a qué producto corresponde el botón que se acaba de pulsar. Conviene observar de nuevo el mismo detalle: el valor llega como **texto**.
 
 ### Estilos, y el caso en que sí valen
 
@@ -743,7 +743,7 @@ Un clic no ocurre solo en un elemento: recorre el árbol.
   </ol>
 </figure>
 
-El burbujeo es lo que hace posible la delegación. Y también explica un fallo típico: pulsar en un botón dentro de una tarjeta que también escucha el clic dispara los dos manejadores.
+El burbujeo es lo que hace posible la delegación y explica además un fallo característico: pulsar en un botón dentro de una tarjeta que también escucha el clic dispara los dos manejadores.
 
 <div class="rule">
   <p class="rule-label"><code>stopPropagation</code> es el último recurso</p>
@@ -863,7 +863,7 @@ catalogo.prepend(item);         // al principio
 | `prepend` | Añade al principio |
 | `before` / `after` | Inserta como hermano |
 | `remove` | Se elimina a sí mismo |
-| `replaceChildren` | Sustituye todo el contenido de golpe |
+| `replaceChildren` | Sustituye la totalidad del contenido en una sola operación |
 
 ### Vaciar un contenedor
 
@@ -893,7 +893,7 @@ catalogo.replaceChildren(fragmento);
 <div class="rule">
   <p class="rule-label">Lo que genera tu código pasa las mismas normas de la UD1</p>
   <p>Es fácil que la lista de productos acabe siendo una pila de contenedores genéricos con clases. Si al escribirlo a mano usabas una lista de artículos con su encabezado, su imagen con texto alternativo y su precio, el código tiene que generar exactamente eso.</p>
-  <p>La comprobación: abre Elements, copia el marcado generado, pégalo en el validador del W3C. Y recuerda que la jerarquía de encabezados sigue contando.</p>
+  <p>La comprobación: abre Elements, copia el marcado generado, pégalo en el validador del W3C. La jerarquía de encabezados sigue siendo exigible sobre ese marcado generado.</p>
 </div>
 
 ### Una función por tarjeta
@@ -1022,7 +1022,7 @@ Que ejecutarla dos veces con los mismos datos deje el mismo resultado. Sin esa p
 
 ### El estado vacío no es un detalle
 
-Una lista vacía sin mensaje parece una web rota. Y no basta con «No hay resultados»:
+Una lista vacía sin mensaje se percibe como un error de la aplicación. Tampoco basta con «No hay resultados»:
 
 ```javascript
 function mensajeVacio() {
@@ -1548,7 +1548,7 @@ elementos.buscador.addEventListener("input", retrasar((evento) => {
 
 <p class="term">Debounce</p>
 
-Agrupar una ráfaga de eventos en una sola ejecución, la última. Con un buscador local se nota poco; en la semana 5, cuando cada pulsación sea una petición al servidor, será obligatorio.
+Agrupar una ráfaga de eventos en una sola ejecución, la última. Con un buscador local su efecto es reducido; en la semana 5, cuando cada pulsación implique una petición al servidor, resultará obligatorio.
 
 Fíjate en que `retrasar` es una función que devuelve otra función: exactamente lo que practicaste en la sesión 8 de la UD3.
 
@@ -1871,7 +1871,7 @@ Guarda siempre el identificador: un intervalo que nadie detiene sigue corriendo 
 
 <p class="term">Promesa</p>
 
-Un objeto que representa un resultado que todavía no está: puede quedar <em>cumplida</em> con un valor, o <em>rechazada</em> con un error. No es el dato: es el compromiso de que habrá uno.
+Un objeto que representa un resultado que todavía no está: puede quedar <em>cumplida</em> con un valor o <em>rechazada</em> con un error. No contiene el dato, sino el compromiso de proporcionarlo.
 
 ```javascript
 const promesa = new Promise((resolver, rechazar) => {
@@ -2054,7 +2054,7 @@ Comprueba las cuatro situaciones: carga normal, red lenta, sin red y respuesta c
 
 ### CORS, el error que verás
 
-Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la respuesta y la consola habla de CORS. No es un fallo de tu código: es una política de seguridad del navegador, y se resuelve **en el servidor**. Lo harás tú mismo en la UD6.
+Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la respuesta y la consola informa de un error de CORS. No se trata de un defecto del código propio, sino de una política de seguridad del navegador que se resuelve **en el servidor**. Lo harás tú mismo en la UD6.
 
 ### Tarea 15 · Catálogo desde la red
 
@@ -2179,7 +2179,7 @@ const alturas = tarjetas.map((t) => t.offsetHeight);
 tarjetas.forEach((t, i) => t.style.setProperty("--alto", `${alturas[i]}px`));
 ```
 
-Con doscientas tarjetas la diferencia se nota, y con dos mil es la diferencia entre una web fluida y una que se arrastra.
+Con doscientas tarjetas la diferencia es perceptible; con dos mil, separa una interfaz fluida de una inutilizable.
 
 ### Tarea 16 · Auditoría de accesibilidad
 
@@ -2391,7 +2391,7 @@ No puntúa que la interfaz sea vistosa. Puntúa que **aguante**: contenido que c
   </ol>
 </figure>
 
-Y para depurar:
+Para depurar:
 
 <figure class="diagram">
   <figcaption>Cuando algo no responde</figcaption>

@@ -46,7 +46,7 @@ En esta unidad cruzas al otro lado.
   </ol>
 </figure>
 
-Y lo haces sin cambiar de lenguaje. Node.js es JavaScript ejecutándose fuera del navegador: el mismo `const`, las mismas funciones, los mismos arrays de objetos, los mismos `async/await`. Lo que cambia es lo que hay alrededor.
+Todo ello sin cambiar de lenguaje. Node.js es JavaScript ejecutándose fuera del navegador: el mismo `const`, las mismas funciones, los mismos arrays de objetos, los mismos `async/await`. Lo que cambia es lo que hay alrededor.
 
 ### Qué cambia al salir del navegador
 
@@ -111,7 +111,7 @@ mi-api/
 
 <div class="rule">
   <p class="rule-label">Condición 2 · nada de secretos en el repositorio</p>
-  <p>Un puerto, una ruta de fichero o una clave de API se leen del entorno, no se escriben en el código. Y el fichero con los valores reales no se sube nunca. Esto no es una manía: es la causa más común de credenciales filtradas en repositorios públicos.</p>
+  <p>Un puerto, una ruta de fichero o una clave de API se leen del entorno, no se escriben en el código, y el archivo con los valores reales no se incorpora nunca al repositorio. No se trata de una preferencia de estilo: es la causa más común de credenciales filtradas en repositorios públicos.</p>
 </div>
 
 <div class="rule">
@@ -212,7 +212,7 @@ node -e "console.log('Hola desde Node')"
 node src/hola.js
 ```
 
-También hay un modo interactivo, como la consola del navegador: escribiendo `node` sin más se abre y se escriben expresiones.
+Existe también un modo interactivo, equivalente a la consola del navegador: la orden `node` sin argumentos abre un intérprete donde se evalúan expresiones.
 
 ### Lo que ya no existe
 
@@ -234,7 +234,7 @@ process.cwd();             // desde dónde se ejecutó
 console.log(import.meta.url);   // el fichero actual
 ```
 
-Y los módulos del sistema, que se importan con el prefijo `node:`:
+Los módulos del sistema se importan con el prefijo `node:`:
 
 ```javascript
 import { readFile } from "node:fs/promises";
@@ -341,7 +341,7 @@ const puerto = Number(process.env.PUERTO ?? 3000);
 const entorno = process.env.NODE_ENV ?? "development";
 ```
 
-Y se les da valor al arrancar. La forma de hacerlo **depende de la terminal**, y es una de las cosas que más tiempo hacen perder en clase:
+Sus valores se asignan en el arranque. El procedimiento **depende de la terminal**, y es una de las cosas que más tiempo hacen perder en clase:
 
 ```bash
 PUERTO=4000 node src/servidor.js          # Git Bash, macOS, Linux
@@ -364,7 +364,7 @@ Por eso, en cuanto haya más de una variable, se pasan por fichero. Desde Node 2
 node --env-file=.env src/servidor.js
 ```
 
-Y en el repositorio se sube `.env.example`, con las claves y sin los valores. El `.env` real va al `.gitignore`.
+Al repositorio se incorpora `.env.example`, con las claves y sin los valores. El `.env` real va al `.gitignore`.
 
 ### Entrada y salida
 
@@ -605,7 +605,7 @@ npm run cli -- listar
 
 El `--watch` de Node reinicia el programa solo cuando cambia un fichero. Antes hacía falta una dependencia para eso; ahora viene incluido.
 
-Y los dos guiones sueltos de `npm run cli -- listar` separan los argumentos del script de los de npm.
+Los dos guiones de `npm run cli -- listar` separan los argumentos del script de los de npm.
 
 ### Tarea 4 · La interfaz del proyecto
 
@@ -922,7 +922,7 @@ await mkdir(carpeta, { recursive: true });
 
 Node ofrece tres formas de trabajar con ficheros: con callbacks, síncrona y con promesas. Usamos la de promesas, porque encaja con el `async/await` de la UD4 y porque la síncrona **bloquea el proceso entero**: en un servidor, leer un fichero de forma síncrona deja a todas las peticiones esperando.
 
-Y el `"utf8"` no es opcional: sin él recibes datos en bruto en lugar de texto, y los acentos aparecen rotos.
+El `"utf8"` no es opcional: sin él se reciben datos en bruto en lugar de texto y los acentos se representan de forma incorrecta.
 
 ### Rutas portables
 
@@ -1062,7 +1062,7 @@ Fíjate en dos cosas. El identificador **no** es la longitud del array, porque t
 
 <div class="rule">
   <p class="rule-label">Escribe en un temporal y renombra</p>
-  <p>Si el proceso muere a mitad de un <code>writeFile</code>, el fichero queda cortado: un JSON inválido, es decir, todos tus datos perdidos. Y la reescritura completa es exactamente lo que hace este almacén en cada operación.</p>
+  <p>Si el proceso muere a mitad de un <code>writeFile</code>, el fichero queda cortado: un JSON inválido, es decir, la pérdida completa de los datos. La reescritura íntegra es precisamente lo que realiza este almacén en cada operación.</p>
   <p>La solución estándar: escribir en un fichero temporal y renombrarlo encima del bueno. Renombrar dentro del mismo disco es una operación indivisible, así que el fichero de datos siempre está completo, con el contenido viejo o con el nuevo.</p>
 </div>
 
@@ -1080,8 +1080,8 @@ export async function guardarProductos(productos) {
 
 <div class="rule">
   <p class="rule-label">Esto no es una base de datos, y hay que saber por qué</p>
-  <p>Cada operación lee el fichero entero y lo reescribe entero. Con doscientos productos va sobrado; con doscientos mil, no. Y si dos peticiones escriben a la vez, la segunda pisa lo que hizo la primera, porque ambas leyeron la misma versión.</p>
-  <p>Para lo que hacemos aquí es suficiente, y evita instalar y configurar un motor de base de datos. Pero conviene que sepas nombrar sus dos límites —tamaño y concurrencia— porque son exactamente los problemas que resuelve la base de datos del módulo de servidor.</p>
+  <p>Cada operación lee el fichero entero y lo reescribe entero. Con doscientos productos resulta suficiente; con doscientos mil, no. Si además dos peticiones escriben de forma simultánea, la segunda sobrescribe el resultado de la primera, porque ambas leyeron la misma versión.</p>
+  <p>Para lo que hacemos aquí es suficiente, y evita instalar y configurar un motor de base de datos. Conviene, no obstante, saber nombrar sus dos límites —tamaño y concurrencia— porque son exactamente los problemas que resuelve la base de datos del módulo de servidor.</p>
 </div>
 
 ### Tarea 8 · El almacén completo
@@ -1156,7 +1156,7 @@ export async function guardarProductos(productos) {
 
 <div class="rule">
   <p class="rule-label">Un error esperable no es una excepción</p>
-  <p>Que alguien pida un producto que no existe no es un fallo del sistema: es un resultado posible. Devuélvelo como dato —<code>null</code>, o un resultado que lo describa— y deja las excepciones para lo que de verdad no debería pasar.</p>
+  <p>La solicitud de un producto inexistente no constituye un fallo del sistema, sino un resultado previsto. Devuélvelo como dato —<code>null</code>, o un resultado que lo describa— y deja las excepciones para lo que de verdad no debería pasar.</p>
   <p>Esa distinción es la que en la UD6 se convierte en la diferencia entre responder 404 y responder 500.</p>
 </div>
 
@@ -1213,7 +1213,7 @@ console.error(`[${new Date().toISOString()}] crear producto falló: ${error.mess
 | `info` | Hitos: arranque, apagado, configuración cargada |
 | `debug` | Detalle, solo mientras se investiga |
 
-Y una regla que no se rompe: **en los registros no se escriben contraseñas, tokens ni datos personales**. Un fichero de log acaba copiado, enviado y guardado en sitios que nadie previó.
+Una regla no admite excepción: **en los registros no se escriben contraseñas, tokens ni datos personales**. Un fichero de log acaba copiado, enviado y guardado en sitios que nadie previó.
 
 ### Tarea 9 · Errores coherentes
 
@@ -1335,7 +1335,7 @@ respuesta.end(JSON.stringify({ error: "No encontrado" }));
 
 <div class="rule">
   <p class="rule-label">Toda respuesta se cierra, y solo una vez</p>
-  <p>Si tu función termina sin llamar a <code>end</code>, el navegador se queda esperando hasta que agota el tiempo. Y si lo llamas dos veces —típico de un <code>if</code> sin <code>return</code>— Node lanza un error de cabeceras ya enviadas.</p>
+  <p>Si tu función termina sin llamar a <code>end</code>, el navegador permanece a la espera hasta agotar el tiempo límite. Si se invoca dos veces —típico de un <code>if</code> sin <code>return</code>— Node lanza un error de cabeceras ya enviadas.</p>
   <p>Escribe siempre <code>return</code> después de responder. Es la costumbre que te ahorrará las dos caras del mismo problema.</p>
 </div>
 
@@ -1447,7 +1447,7 @@ async function leerCuerpo(peticion) {
 
 <div class="rule">
   <p class="rule-label">El cuerpo llega a trozos</p>
-  <p>No es una propiedad que se lea: es un flujo que va llegando. Por eso hay que acumular los trozos y solo entonces convertirlos a texto y analizarlos.</p>
+  <p>El cuerpo no es una propiedad legible de una sola vez, sino un flujo que llega por fragmentos. Por eso hay que acumular los trozos y solo entonces convertirlos a texto y analizarlos.</p>
   <p>Y ese <code>JSON.parse</code> es un dato de fuera: un cuerpo mal formado lanza una excepción que, sin capturar, tumba la petición con un 500 cuando en realidad el fallo es del cliente y merece un 400.</p>
 </div>
 
@@ -1597,7 +1597,7 @@ if (ruta.startsWith("/api/")) return atenderApi(peticion, respuesta, url);
 return servirEstatico(ruta, respuesta);
 ```
 
-Con esto, tu proyecto entero se sirve desde un solo sitio: la web en `/` y los datos en `/api/`. Y como todo llega del mismo origen, **desaparece el problema de CORS** que viste en la UD4.
+Con esto, tu proyecto entero se sirve desde un solo sitio: la web en `/` y los datos en `/api/`. Al proceder todo del mismo origen, **desaparece el problema de CORS** que viste en la UD4.
 
 ### Tarea 12 · Tu web, servida por ti
 
@@ -1889,7 +1889,7 @@ function registrar(peticion, respuesta, next) {
 app.use(registrar);
 ```
 
-Lo que hace útil este ejemplo es dónde se registra: al **terminar** la respuesta, así que ya se conoce el estado y el tiempo. Y con una sola declaración cubre todas las rutas, presentes y futuras.
+Lo que hace útil este ejemplo es dónde se registra: al **terminar** la respuesta, de modo que el estado y el tiempo ya son conocidos. Una sola declaración cubre además todas las rutas, presentes y futuras.
 
 <div class="rule">
   <p class="rule-label">Un middleware que no responde ni llama a <code>next</code> cuelga la petición</p>
@@ -1927,7 +1927,7 @@ Los **cuatro** parámetros son lo que distingue a un manejador de errores de un 
 
 <div class="rule">
   <p class="rule-label">La traza es para ti; el mensaje, para quien llama</p>
-  <p>Devolver al cliente el error completo revela rutas de ficheros, versiones y estructura interna, que es justo lo que busca quien intenta atacar un sistema. Y tampoco le sirve de nada a quien solo quería consultar un producto.</p>
+  <p>Devolver al cliente el error completo revela rutas de ficheros, versiones y estructura interna, que es precisamente la información que busca quien intenta atacar un sistema. Tampoco aporta nada a quien solo pretendía consultar un producto.</p>
   <p>Registra el detalle en el servidor y responde un mensaje genérico con el estado correcto. Esa es la razón de que el manejador tenga la última palabra sobre qué sale.</p>
 </div>
 
@@ -2001,7 +2001,7 @@ Los **cuatro** parámetros son lo que distingue a un manejador de errores de un 
 
 ### El encargo
 
-Un dominio distinto del tuyo —reservas de aulas, préstamos de una biblioteca, incidencias de un taller— con sus reglas propias, al menos una de las cuales no se resuelve con un CRUD sin más: no se puede reservar un aula ocupada, no se presta un ejemplar ya prestado.
+Un dominio distinto del tuyo —reservas de aulas, préstamos de una biblioteca, incidencias de un taller— con sus reglas propias, al menos una de las cuales no se resuelve con un CRUD elemental: no se puede reservar un aula ocupada, no se presta un ejemplar ya prestado.
 
 En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los datos y a dejar funcionando las dos primeras rutas, que es donde se ve si el método es tuyo. El resto se termina como trabajo personal y se entrega con la unidad.
 
@@ -2260,7 +2260,7 @@ No puntúa la cantidad de rutas. Puntúa que sepas decir **qué hace por ti cada
 
 Vale para Express hoy y para Spring Boot el año que viene. Un framework es un conjunto de respuestas a problemas concretos; si no conoces los problemas, sus respuestas son magia, y la magia no se puede depurar.
 
-Y su pareja, la que gobierna todo lo que viene:
+Su elemento complementario, el que gobierna todo lo que viene, es este:
 
 <p class="term">El servidor no se fía de nadie</p>
 
@@ -2329,7 +2329,7 @@ Todo lo que llega de fuera —el cuerpo de una petición, un parámetro, una rut
 | Puerto | El número por el que un servidor escucha |
 | Petición / respuesta | Lo que envía el cliente / lo que devuelve el servidor |
 | Código de estado | El número que resume qué ha pasado con la petición |
-| Estático | Fichero servido tal cual desde el disco |
+| Estático | Archivo servido sin transformación desde el disco |
 | Tipo de contenido | La cabecera que dice qué es lo que se envía |
 | *Path traversal* | Salirse de la carpeta permitida con tramos de ruta |
 | Framework | Un conjunto de soluciones a problemas repetidos |
