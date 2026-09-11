@@ -1565,4 +1565,4 @@ Tienes los seis motivos delante, todos comprobados por ti en la sesión 8:
 | Sus rutas las has ido nombrando por intuición | UD3, con diseño orientado a recursos |
 | Al reiniciar se pierde todo | UD5, con PostgreSQL |
 
-El trabajo de estas dos semanas se rentabiliza aquí: cuando en la UD3 aparezcan los DTO, las anotaciones de validación y el manejador de errores, **no serán temas nuevos**. Serán las respuestas a seis problemas que ya has visto fallar, con una colección lista para demostrar que se han arreglado.
+El trabajo de estas dos semanas demuestra aquí su utilidad: cuando en la UD3 aparezcan los DTO, las anotaciones de validación y el manejador de errores, **no serán temas nuevos**. Serán las respuestas a seis problemas que ya has visto fallar, con una colección lista para demostrar que se han arreglado.

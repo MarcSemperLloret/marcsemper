@@ -2712,4 +2712,4 @@ Porque el contrato de tu API está bien, y detrás de él hay un controlador que
 
 Fíjate en la cuarta fila. Esa regla la encontraste tú en la sesión 13, viste por qué una anotación de validación no podía resolverla y la dejaste apuntada. Lleva dos sesiones esperando un sitio donde vivir, y en la unidad siguiente lo encontrará.
 
-El trabajo de estas tres semanas se rentabiliza aquí: la UD4 **no cambiará ninguna ruta, ni un DTO, ni un código de estado**. Va a reorganizar lo que hay detrás sin tocar el contrato. Tu colección de pruebas, que ya cubre la API entera, será exactamente lo que demuestre que no has roto nada por el camino.
+El trabajo de estas tres semanas demuestra aquí su utilidad: la UD4 **no cambiará ninguna ruta, ni un DTO, ni un código de estado**. Va a reorganizar lo que hay detrás sin tocar el contrato. Tu colección de pruebas, que ya cubre la API entera, será exactamente lo que demuestre que no has roto nada por el camino.

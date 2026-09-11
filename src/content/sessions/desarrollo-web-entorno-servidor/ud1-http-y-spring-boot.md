@@ -1824,4 +1824,4 @@ Partiremos exactamente del proyecto que has construido aquí, y de su lista de d
 | Los errores no explican qué corregir | UD3 |
 | Al reiniciar se pierde todo | UD5, con PostgreSQL |
 
-El trabajo de estas dos semanas se rentabiliza aquí: cuando en la UD2 aparezcan `ResponseEntity`, los códigos de estado y la colección de pruebas, no será material nuevo cayendo del cielo. Será la respuesta a problemas que **ya has visto fallar en tu propio proyecto**.
+El trabajo de estas dos semanas demuestra aquí su utilidad: cuando en la UD2 aparezcan `ResponseEntity`, los códigos de estado y la colección de pruebas, no será material nuevo cayendo del cielo. Será la respuesta a problemas que **ya has visto fallar en tu propio proyecto**.

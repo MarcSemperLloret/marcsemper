@@ -3533,5 +3533,5 @@ En la siguiente empezamos a responder la otra:
 
 Partiremos exactamente del sitio que has construido aquí, y trabajaremos selectores, cascada, especificidad, box model, tipografía, unidades, colores, Flexbox, Grid, diseño adaptable, media queries, variables, estados y transiciones.
 
-El trabajo de estas seis semanas se rentabiliza aquí: sobre una estructura semántica, dar estilo se reduce a escribir selectores. Sobre una sopa de `div`, es cuestión de adivinar cuál era cuál.
+El trabajo de estas seis semanas demuestra aquí su utilidad: sobre una estructura semántica, dar estilo se reduce a escribir selectores. Sobre una sopa de `div`, es cuestión de adivinar cuál era cuál.
 

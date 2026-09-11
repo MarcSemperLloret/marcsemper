@@ -1675,6 +1675,6 @@ Cada vez que has reiniciado la aplicación se ha perdido todo. Lo has anotado co
 | Las relaciones son un `id` suelto que nadie garantiza | UD5, con integridad referencial |
 | Dos operaciones simultáneas pueden pisarse | UD5, con transacciones |
 
-El trabajo de estas dos semanas se rentabiliza aquí: **cambiar de almacenamiento será un cambio localizado**. Se borra la implementación en memoria, aparece una interfaz que extiende `JpaRepository`, y el service, el controller, los DTO, el mapper y los tests se quedan exactamente como están.
+El trabajo de estas dos semanas demuestra aquí su utilidad: **cambiar de almacenamiento será un cambio localizado**. Se borra la implementación en memoria, aparece una interfaz que extiende `JpaRepository`, y el service, el controller, los DTO, el mapper y los tests se quedan exactamente como están.
 
 Si al terminar la UD5 has tenido que abrir el controlador, algo se colocó mal aquí.

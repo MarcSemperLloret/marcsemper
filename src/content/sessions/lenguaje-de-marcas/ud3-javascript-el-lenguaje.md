@@ -2632,4 +2632,4 @@ Ya sabes razonar con datos, escribir reglas, descomponer en funciones y encontra
   </ol>
 </figure>
 
-En la UD4 conectaremos las dos cosas: tu catálogo pintado en el documento, tus filtros manejados desde un formulario y tus datos llegando desde un servidor. El trabajo de estas seis semanas se rentabilizará entonces: cuando el filtro no filtre, no mirarás el botón. Mirarás la función.
+En la UD4 conectaremos las dos cosas: tu catálogo pintado en el documento, tus filtros manejados desde un formulario y tus datos llegando desde un servidor. El trabajo de estas seis semanas demostrará entonces su utilidad: cuando el filtro no filtre, no mirarás el botón. Mirarás la función.

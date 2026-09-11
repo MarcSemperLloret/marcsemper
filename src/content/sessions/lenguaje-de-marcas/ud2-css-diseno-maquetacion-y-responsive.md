@@ -41,7 +41,7 @@ En la unidad anterior construimos una web solo con HTML. Nuestra preocupación e
 
 El resultado es un sitio con estructura y significado, y prácticamente sin diseño. Ahora le toca a CSS.
 
-El trabajo de las seis semanas anteriores se rentabiliza aquí. La UD1 terminó con esta promesa:
+El trabajo de las seis semanas anteriores demuestra aquí su utilidad. La UD1 terminó con esta promesa:
 
 > Si tu estructura dice lo que las cosas son, el CSS podrá cambiar por completo su apariencia sin tocar una línea de tu HTML.
 
@@ -3208,4 +3208,4 @@ Lo que todavía no sabe es **reaccionar con lógica**.
 
 En la siguiente unidad empieza la programación, y lo hará, de forma deliberada, casi sin modificar la página: primero el lenguaje —datos, decisiones, funciones y estructuras— porque un filtro que no filtra casi nunca es un problema del botón, sino de una lógica que todavía no se sabe leer. La interfaz que reacciona llega justo después, en la UD4.
 
-El trabajo de estas semanas se rentabilizará de nuevo entonces: sobre un documento semántico y un CSS que separa estructura de presentación, añadir comportamiento es añadir una capa. Sobre lo otro, es empezar de nuevo.
+El trabajo de estas semanas demostrará entonces de nuevo su utilidad: sobre un documento semántico y un CSS que separa estructura de presentación, añadir comportamiento es añadir una capa. Sobre lo otro, es empezar de nuevo.
