@@ -319,6 +319,95 @@ Un fichero que le dice a GitHub qué ejecutar y cuándo. Vive dentro del reposit
   <dd></dd>
 </dl>
 
+#### Bloque C-bis · Romperlo a propósito
+
+<p class="stage stage--solo">Individual. Si vais justos de tiempo, haced antes el bloque D y volved aquí</p>
+
+Acabáis de leer el fichero que despliega. Ahora rompedlo. Hoy sale gratis: `main` todavía está abierta y lo único que hay publicado es una página de tres líneas. Dentro de dos semanas, con la rama cerrada y algo que enseñar dentro, este experimento ya no es tan barato.
+
+Son dos averías distintas, y la diferencia entre ellas es la lección del bloque.
+
+**Avería 1 · El despliegue falla.** Abrid `.github/workflows/static.yml` y cambiad la ruta del artefacto:
+
+```yaml
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+```
+
+```bash
+git add .github/workflows/static.yml
+git commit -m "Romper a proposito la ruta de publicacion"
+git push
+```
+
+Id a **Actions**. La ejecución termina con un aspa roja. Abridla, entrad en el trabajo `deploy` y buscad el paso que ha fallado: es **Upload artifact**, y los que venían detrás ni siquiera se han intentado. Leed el mensaje entero, no el resumen, y copiadlo tal cual abajo. Lo que dice es literalmente que le habéis pedido publicar una carpeta que no existe.
+
+Ahora, **sin arreglar nada todavía, abrid vuestra URL pública**. Sigue funcionando. Vuestra página está donde estaba, porque el despliegue que falló nunca llegó a sustituirla: un despliegue roto no tumba lo que ya había publicado, se queda fuera y deja lo anterior en su sitio.
+
+Arregladlo devolviendo la línea a `path: '.'`.
+
+```bash
+git add .github/workflows/static.yml
+git commit -m "Revertir la ruta de publicacion a la raiz"
+git push
+```
+
+Verde otra vez.
+
+**Avería 2 · El despliegue funciona y la web no.** Ahora al revés. Cambiad el nombre del fichero de la página:
+
+```bash
+git mv index.html inicio.html
+git commit -m "Renombrar la pagina inicial"
+git push
+```
+
+Esta ejecución **termina en verde**. Los cuatro pasos en orden, sin una sola advertencia. Abrid la URL: **404**. Si todavía veis vuestra página, forzad la recarga con `Ctrl+Shift+R` y esperad un minuto.
+
+No hay ninguna contradicción. GitHub ha hecho exactamente lo que le pedisteis —coger los ficheros de la raíz y publicarlos— y lo ha hecho bien. Lo que nadie comprobó fue si el resultado servía para algo, porque a nadie se le había encargado comprobarlo.
+
+Dejadlo como estaba:
+
+```bash
+git mv inicio.html index.html
+git commit -m "Devolver el nombre index.html a la pagina inicial"
+git push
+```
+
+<div class="rule">
+  <p class="rule-label">Verde no significa que funcione</p>
+  <p>Un punto verde en Actions dice una sola cosa: que los pasos que pedisteis se ejecutaron sin error. No dice que la web se vea, ni que los enlaces lleven a alguna parte, ni que lo publicado sea lo que queríais publicar. Un despliegue automático no os protege de equivocaros: garantiza que vuestra equivocación llegue a producción deprisa y siempre igual. Lo que convierte ese verde en una afirmación con contenido es que alguien escriba comprobaciones capaces de decir que no, y ese es justamente el trabajo de la sesión 3.</p>
+</div>
+
+<dl class="answer">
+  <dt>¿En qué paso falló la avería 1 y qué decía exactamente el mensaje?</dt>
+  <dd></dd>
+  <dt>Mientras la ejecución estaba en rojo, ¿qué mostraba la URL pública? ¿Por qué?</dt>
+  <dd></dd>
+  <dt>En la avería 2 Actions terminó en verde. ¿Qué comprobó GitHub para ponerlo en verde?</dt>
+  <dd></dd>
+  <dt>De las dos averías, ¿cuál da más miedo en diciembre, y por qué?</dt>
+  <dd></dd>
+</dl>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación del bloque C-bis</p>
+  <ul class="checklist">
+    <li>En vuestro historial hay un commit que rompió el despliegue y otro que lo arregló.</li>
+    <li>La última ejecución de Actions está en verde y la URL vuelve a mostrar vuestra página.</li>
+    <li>Sabéis abrir una ejecución fallida y decir en qué paso murió, sin preguntarle a nadie.</li>
+  </ul>
+</div>
+
+<details class="aside aside--help">
+  <summary>Si algo no vuelve a su sitio</summary>
+  <p><strong>La URL sigue dando 404 después de arreglarlo.</strong> Mirad Actions: cada arreglo dispara un despliegue nuevo y tarda su minuto largo. Si la ejecución ya está verde y terminada, forzad la recarga del navegador.</p>
+  <p><strong>Os habéis perdido entre commits.</strong> <code>git log --oneline</code> enseña por dónde vais. Para anular un commit concreto sin reescribir nada, <code>git revert HASH</code> crea uno nuevo que lo deshace.</p>
+  <p><strong>Habéis probado a renombrar solo cambiando mayúsculas y no pasa nada.</strong> Windows y macOS no distinguen <code>index.html</code> de <code>Index.html</code>, pero el servidor que publica vuestra web sí. Por eso aquí se renombra a <code>inicio.html</code>: se ve el mismo efecto sin pelearse con eso. Retenedlo igualmente, porque ese fallo existe y es de los que cuestan media tarde de encontrar.</p>
+</details>
+
 #### Bloque D · Evidencia
 
 <p class="stage stage--solo">Antes de salir del aula</p>
@@ -343,7 +432,67 @@ git push
 
 Volved a Actions: hay una segunda ejecución. Ese punto verde es el circuito funcionando sin que nadie lo empuje.
 
-#### Bloque E · Opcional · Si tenéis cuenta de Azure
+#### Bloque E · Cómo trabaja un equipo de verdad
+
+<p class="stage stage--solo">Individual. Tarea: se empieza aquí si os sobra tiempo y se termina fuera de clase</p>
+
+Nada de lo que estáis montando —issues, ramas, revisión, despliegue automático— me lo he inventado para la asignatura. Es, con variaciones, lo que hace la mayoría de equipos que publican software. Pero «la mayoría» no es «todos», y conviene que veáis de dónde sale esto antes de pasaros tres meses obedeciéndolo.
+
+Elegid **una** de estas referencias y leedla con calma. No hace falta mirarlas todas: media hora en una fuente entendida vale más que veinte minutos saltando entre cinco.
+
+| Referencia | Qué describe | Qué buscar |
+| --- | --- | --- |
+| [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow) | El modelo que vamos a seguir aquí | Cuántas ramas hay vivas a la vez y cuánto dura cada una |
+| [Trunk-based development](https://trunkbaseddevelopment.com/) | El extremo contrario: ramas de horas | Por qué sostienen que una rama larga es un problema y no una comodidad |
+| [El modelo de ramas de Vincent Driessen](https://nvie.com/posts/a-successful-git-branching-model/) | «Git flow», el modelo clásico de 2010 | La nota que el propio autor añadió diez años después, arriba del todo |
+| [Guía de revisión de código de Google](https://google.github.io/eng-practices/review/) | Cómo se revisa y en cuánto se responde | Qué se le exige a quien revisa y qué a quien pide la revisión |
+| [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/) | Una convención muy extendida para los mensajes | En qué coincide con nuestras tres reglas y en qué se pasa de frenada |
+
+<div class="compare-pair">
+  <div>
+    <p class="compare-label">Ramas que duran horas</p>
+    <p class="compare-body">Cada cambio es pequeño y entra enseguida, así que los conflictos son diminutos y siempre hay algo publicable. Exige trocear el trabajo antes de empezarlo, que es la parte difícil.</p>
+  </div>
+  <div>
+    <p class="compare-label">Ramas que duran semanas</p>
+    <p class="compare-body">Cada uno trabaja tranquilo en lo suyo sin pisar a nadie. El día que hay que juntarlo todo, nadie recuerda por qué cambió aquello y la fusión se come dos tardes.</p>
+  </div>
+</div>
+
+**Lo que hay que subir.** Un **PDF** en vuestro repositorio, `docs/flujo-de-trabajo.pdf`, de una página y escrito por vosotros. Redactadlo donde queráis y exportadlo a PDF; lo que se sube es el PDF, no el documento del procesador de textos.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Producto del bloque E</p>
+  <ul class="checklist">
+    <li>Qué referencia habéis leído, con el enlace.</li>
+    <li>Quién decide en ese modelo que un cambio entra, y qué se comprueba antes de que entre.</li>
+    <li>Cada cuánto se publica: si publicar allí es un acontecimiento o un trámite.</li>
+    <li>Una cosa de ese modelo que sí encaja en un trabajo de dos personas y otra que no, con el porqué.</li>
+  </ul>
+</div>
+
+```bash
+git add docs/flujo-de-trabajo.pdf
+git commit -m "Anadir notas sobre flujos de trabajo de equipo"
+git push
+```
+
+<div class="rule">
+  <p class="rule-label">Pegar no cuenta, y se nota</p>
+  <p>Ninguna de esas cuatro cosas se puede copiar de las páginas de arriba: hay que leerlas y decidir. Ocho líneas vuestras valen más aquí que tres pantallas pegadas, vengan de una web o de un modelo de lenguaje. Y si usáis uno, que sea para entender lo que no habéis pillado, no para redactar lo que no habéis leído: la diferencia entre esas dos cosas se ve en cuatro frases.</p>
+</div>
+
+<div class="rule">
+  <p class="rule-label">Ninguna empresa trabaja exactamente como su documentación</p>
+  <p>Lo que vais a leer es el modelo ideal, contado por quien lo defiende. La realidad de cada equipo la fijan su producto y sus prisas: quien despliega treinta veces al día no puede permitirse una revisión de dos días, y quien actualiza el firmware de un aparato médico no publica un viernes por la tarde. Cambia cuánto se revisa, cuánto se automatiza y cuánto se tarda; lo que casi no cambia es el esqueleto, que es el que estáis montando hoy. Cuando salgáis a prácticas, preguntad esto el primer día: cómo entra un cambio y quién lo aprueba. Entenderéis más con esa pregunta que con el organigrama.</p>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Si esto os ha interesado</summary>
+  <p>Hay un informe anual, <a href="https://dora.dev/">DORA</a>, que lleva más de una década midiendo qué distingue a los equipos que entregan bien. Sus cuatro medidas son cada cuánto se despliega, cuánto tarda un cambio en llegar a producción, con qué frecuencia un despliegue provoca un fallo y cuánto se tarda en recuperarse de él. Fijaos en que ninguna de las cuatro mide líneas de código ni horas de silla.</p>
+</details>
+
+#### Bloque F · Opcional · Si tenéis cuenta de Azure
 
 <p class="stage stage--solo">Opcional. Solo si os sobra tiempo y el alta de Azure os ha funcionado</p>
 
@@ -408,7 +557,7 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
 **8 · Abrir la URL.** Cuando el punto se ponga verde, volved al portal de Azure: en la vista general del recurso está la **URL** (algo como `nombre-aleatorio.azurestaticapps.net`). Abridla. Ahí está vuestra página básica.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación del bloque E</p>
+  <p class="checkpoint-label">Comprobación del bloque F</p>
   <ul class="checklist">
     <li>La URL abre y muestra vuestro nombre.</li>
     <li>En la pestaña Actions del repositorio hay una ejecución en verde.</li>
@@ -440,6 +589,7 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
     <li>¿Qué pasa exactamente entre que hacéis <code>git push</code> y la URL cambia?</li>
     <li>¿Por qué el repositorio tiene que ser público en este curso?</li>
     <li>Un compañero abre una pull request. ¿Se despliega algo? ¿Dónde?</li>
+    <li>El despliegue termina en verde y la URL da 404. ¿Qué ha comprobado GitHub y qué no?</li>
   </ol>
 </div>
 
@@ -450,6 +600,7 @@ Vuestra web no se compila: los ficheros que hay en la raíz del repositorio son 
   <p>3 · GitHub ve un push a <code>main</code>, arranca el workflow, este empaqueta los ficheros de la raíz y los publica, con un permiso temporal y sin ninguna credencial guardada.</p>
   <p>4 · Porque las reglas de protección de rama que vamos a poner la semana que viene solo son gratuitas en repositorios públicos. Y porque un portfolio que no se puede enseñar no es un portfolio.</p>
   <p>5 · No. El workflow solo se dispara con un push a <code>main</code>, y una pull request abierta todavía no ha entrado en <code>main</code>. Hoy no hay nada que compruebe una pull request antes de fusionarla: ese hueco es el trabajo de la sesión 3.</p>
+  <p>6 · Ha comprobado que sus pasos se ejecutaron sin error: coger los ficheros de la raíz, empaquetarlos y publicarlos. No ha comprobado nada del resultado, porque nadie se lo encargó. El verde habla del proceso, no de la web.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -682,7 +833,7 @@ Esto que vais a hacer ahora en el portfolio hacedlo también, hoy mismo, en el r
 </div>
 
 <details class="aside aside--extra">
-  <summary>Si hicisteis el bloque E de la sesión 1 y tenéis Azure conectado</summary>
+  <summary>Si hicisteis el bloque F de la sesión 1 y tenéis Azure conectado</summary>
   <p>Entonces vosotros sí tenéis un check, porque el workflow que escribió Azure sí se dispara con <code>pull_request</code>. Seguirá sin aparecer en la lista ahora mismo, porque todavía no ha corrido nunca sobre una pull request: dejad la regla sin marcar, haced la primera vuelta del bloque C y volved aquí después. Ya estará en la lista, con el nombre del job.</p>
   <p>Marcadla. Tened claro qué comprueba y qué no: dice que el despliegue subió, no que la página esté bien. Una web rota se despliega perfectamente. El check que mira el contenido lo escribís igual en la sesión 3, y el reto del bloque C lo vais a hacer igual que el resto de la clase.</p>
 </details>
