@@ -54,6 +54,12 @@ en lenguaje llano algo que ya tiene término propio:
 Los términos ingleses aceptados por la industria van en cursiva la primera vez (*issue*,
 *pull request*, *runner*, *code review*) y no se traducen a media frase.
 
+El recorrido obligatorio issue → rama → pull request → revisión → despliegue se denomina
+**flujo de integración continua**, nunca «circuito». La única excepción es el sentido corriente
+de la palabra en Servidor —«el circuito completo de conversiones», el viaje de ida y vuelta de
+un dato—, que no designa el flujo de trabajo y se conserva. El título de la UD1 de Proyecto
+Intermodular mantiene «circuito» porque de su nombre de fichero sale la URL pública.
+
 ### 4. Etiquetas y encabezados
 
 `rule-label`, `checkpoint-label` y `compare-label` llevan **sintagma nominal descriptivo**, nunca

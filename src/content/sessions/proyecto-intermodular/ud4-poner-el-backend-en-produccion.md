@@ -12,7 +12,7 @@ date: "2026-09-09"
 outcomes: ["Configurar el CI de Java sobre el repositorio existente.", "Desplegar el artefacto y diagnosticar su arranque.", "Comprobar el contrato publicado con la colección de Servidor.", "Preparar PostgreSQL aislado para CI y persistente en producción.", "Identificar versión, configuración y evidencias del producto compartido."]
 requirements: ["Portfolio publicado con pipeline.", "Repositorio de Spring Boot creado en Servidor y su wrapper de Maven.", "Java 21 y colección de peticiones existente."]
 priorKnowledge:
-  - "El circuito completo: issue, rama, pull request, revisión, fusión y despliegue."
+  - "El flujo de integración completo: issue, rama, pull request, revisión, fusión y despliegue."
   - "De Servidor: controladores REST, DTO, validación y manejo de errores."
 ---
 
@@ -151,7 +151,7 @@ jobs:
 
 El segundo caso constituye la diferencia sustancial entre este pipeline y el del portfolio: la validación no se limita a la corrección sintáctica del artefacto, sino que verifica su comportamiento.
 
-#### Bloque C · Convertirlo en puerta y estrenar el circuito
+#### Bloque C · Comprobación obligatoria y primer recorrido del flujo
 
 <p class="stage stage--solo">Trabajo individual</p>
 

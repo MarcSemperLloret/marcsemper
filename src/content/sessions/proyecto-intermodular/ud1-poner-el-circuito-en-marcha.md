@@ -4,17 +4,17 @@ label: "UD1 · Arrancar"
 section: "ud-01"
 order: 1
 lang: "es"
-summary: "Preparar una URL de presentación y el circuito de issues, ramas, revisión y despliegue, preparando el método que aplicarás al backend de Servidor."
+summary: "Preparar una URL de presentación y el flujo de integración continua de issues, ramas, revisión y despliegue, preparando el método que aplicarás al backend de Servidor."
 duration: "6 horas · 2 semanas · 2 sesiones de 3 h"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
-deliverable: "Portfolio publicado y circuito de issues, ramas y revisión de cambios funcionando."
+deliverable: "Portfolio publicado y flujo de integración continua de issues, ramas y revisión de cambios en funcionamiento."
 date: "2026-09-09"
 outcomes:
   - "Explicar qué evalúa este módulo y qué evalúa Desarrollo Web en Entorno Servidor sobre el mismo código."
   - "Publicar un sitio estático con GitHub Pages y el workflow de GitHub Actions que lo despliega."
   - "Leer el workflow de GitHub Actions que genera el despliegue y decir qué lo dispara."
   - "Trabajar el ciclo completo: issue, rama, commit, pull request, revisión, fusión y despliegue."
-  - "Proteger la rama principal y demostrar que el circuito no se puede saltar."
+  - "Proteger la rama principal y demostrar que el flujo de integración no se puede eludir."
 requirements:
   - "Cuenta de GitHub con el correo del centro añadido."
   - "Git instalado y configurado con tu nombre y tu correo."
@@ -715,7 +715,7 @@ Al activar la protección de `main` se aseguran tres garantías críticas:
   </div>
   <div>
     <p class="compare-label">Rama principal protegida (Branch Rulesets)</p>
-    <p class="compare-body">La plataforma impone el cumplimiento estricto del circuito de forma programática. Cualquier intento de confirmación directa o reescritura del historial es rechazado en el servidor remoto, garantizando que todo cambio en producción quede registrado y auditado.</p>
+    <p class="compare-body">La plataforma impone el cumplimiento estricto del flujo de integración de forma programática. Cualquier intento de confirmación directa o reescritura del historial es rechazado en el servidor remoto, garantizando que todo cambio en producción quede registrado y auditado.</p>
   </div>
 </div>
 
@@ -865,7 +865,7 @@ git reset --hard origin/main
   <dd></dd>
 </dl>
 
-#### Bloque C · El circuito entero, dos veces
+#### Bloque C · Recorrido completo del flujo de integración, dos veces
 
 <p class="stage stage--solo">Práctica individual con revisión cruzada por pares</p>
 

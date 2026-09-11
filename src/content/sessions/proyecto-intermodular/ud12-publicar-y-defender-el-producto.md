@@ -11,7 +11,7 @@ deliverable: "Ensayar la recuperación y publicar el incremento; Defender el pro
 date: "2026-09-09"
 outcomes: ["Ensayar la recuperación y publicar el incremento con resultados comprobados.", "Defender el producto y el proceso sobre la misma versión con resultados comprobados."]
 requirements: ["Repositorio del backend y, desde la sesión 18, cliente desarrollado en Servidor.", "Colección de peticiones, acceso a CI y al entorno de pruebas."]
-priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Circuito de revisión y despliegue del primer trimestre."]
+priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Flujo de revisión y despliegue del primer trimestre."]
 ---
 
 El producto, su autoría/equipo y su repositorio de backend continúan desde el primer trimestre. Consulta la [secuencia conjunta y los criterios de evaluación](/es/docencia/coordinacion-servidor-intermodular/).

@@ -11,7 +11,7 @@ deliverable: "Verificar archivos y efectos externos; Cerrar una candidata con ev
 date: "2026-09-09"
 outcomes: ["Verificar archivos y efectos externos con resultados comprobados.", "Cerrar una candidata con evidencias de calidad con resultados comprobados."]
 requirements: ["Repositorio del backend y, desde la sesión 18, cliente desarrollado en Servidor.", "Colección de peticiones, acceso a CI y al entorno de pruebas."]
-priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Circuito de revisión y despliegue del primer trimestre."]
+priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Flujo de revisión y despliegue del primer trimestre."]
 ---
 
 El producto, su autoría/equipo y su repositorio de backend continúan desde el primer trimestre. Consulta la [secuencia conjunta y los criterios de evaluación](/es/docencia/coordinacion-servidor-intermodular/).

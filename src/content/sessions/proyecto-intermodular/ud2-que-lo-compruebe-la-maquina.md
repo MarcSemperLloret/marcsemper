@@ -20,7 +20,7 @@ requirements:
   - "El repositorio de la UD1, con la web publicada y main protegida."
   - "La pareja de revisión asignada."
 priorKnowledge:
-  - "El circuito de la UD1: issue, rama, pull request, revisión y fusión."
+  - "El flujo de integración de la UD1: issue, rama, pull request, revisión y fusión."
   - "HTML y CSS del módulo de Lenguaje de Marcas."
 ---
 

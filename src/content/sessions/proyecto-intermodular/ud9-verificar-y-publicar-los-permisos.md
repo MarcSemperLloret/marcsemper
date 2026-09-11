@@ -11,7 +11,7 @@ deliverable: "Planificar permisos y preparar el entorno de seguridad; Comprobar 
 date: "2026-09-09"
 outcomes: ["Planificar permisos y preparar el entorno de seguridad con resultados comprobados.", "Comprobar roles y propiedad en el proceso de revisión con resultados comprobados."]
 requirements: ["Repositorio del backend y, desde la sesión 18, cliente desarrollado en Servidor.", "Colección de peticiones, acceso a CI y al entorno de pruebas."]
-priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Circuito de revisión y despliegue del primer trimestre."]
+priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Flujo de revisión y despliegue del primer trimestre."]
 ---
 
 El producto, su autoría/equipo y su repositorio de backend continúan desde el primer trimestre. Consulta la [secuencia conjunta y los criterios de evaluación](/es/docencia/coordinacion-servidor-intermodular/).

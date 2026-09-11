@@ -11,7 +11,7 @@ deliverable: "Revisar y publicar un contrato compatible; Integrar el cliente ya 
 date: "2026-09-09"
 outcomes: ["Revisar y publicar un contrato compatible con resultados comprobados.", "Integrar el cliente ya construido en Servidor con resultados comprobados."]
 requirements: ["Repositorio del backend y, desde la sesión 18, cliente desarrollado en Servidor.", "Colección de peticiones, acceso a CI y al entorno de pruebas."]
-priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Circuito de revisión y despliegue del primer trimestre."]
+priorKnowledge: ["Hitos de Servidor indicados al comienzo de cada sesión.", "Flujo de revisión y despliegue del primer trimestre."]
 ---
 
 El producto, su autoría/equipo y su repositorio de backend continúan desde el primer trimestre. Consulta la [secuencia conjunta y los criterios de evaluación](/es/docencia/coordinacion-servidor-intermodular/).
@@ -94,7 +94,7 @@ Abre la PR con las URL de prueba y los SHA de cliente y backend. La persona revi
 
 #### Bloque E · Publicar y enlazar
 
-Después de las comprobaciones, despliega por el circuito habitual y repite un recorrido breve contra la URL pública. Actualiza la ficha del portfolio para enlazar la aplicación y documenta qué dos versiones se probaron juntas. Conserva las evidencias en las comprobaciones de la sesión.
+Después de las comprobaciones, despliega por el flujo habitual y repite un recorrido breve contra la URL pública. Actualiza la ficha del portfolio para enlazar la aplicación y documenta qué dos versiones se probaron juntas. Conserva las evidencias en las comprobaciones de la sesión.
 
 ### Cierre
 
