@@ -620,14 +620,14 @@ Al concluir este bloque dispondrás de dos pipelines independientes publicando c
 
 ## Sesión 2 · Issues, tablero y la primera pull request
 
-**Antes de empezar.** Ya tienes el portfolio publicado y has iniciado el backend en Servidor. Hoy aprenderás a organizar tareas y revisar cambios mediante ramas y pull requests.
+**Antes de empezar.** Con el portfolio publicado y el backend en desarrollo en Servidor, en esta sesión aprenderás a planificar requisitos técnicos mediante tareas (*issues*), estructurar el desarrollo mediante ramas de funcionalidad y validar los cambios a través de revisiones formales de código (*code review*) en *pull requests*.
 
 <div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
+  <p class="checkpoint-label">Evaluación inicial · sin apuntes</p>
   <ol>
-    <li>«Mejorar el portfolio». ¿Cómo sabríais que esa tarea está terminada?</li>
-    <li>Si trabajáis solos en vuestro repositorio, ¿para qué querríais una rama?</li>
-    <li>¿Qué creéis que impide, técnicamente, subir algo roto a una web publicada?</li>
+    <li>Ante un requisito formulado como «mejorar el portfolio», ¿qué elementos técnicos faltan para determinar con certeza objetiva cuándo se encuentra finalizado?</li>
+    <li>En un proyecto individual, ¿qué ventajas metodológicas y de seguridad aporta aislar cada modificación en una rama independiente en lugar de trabajar directamente sobre <code>main</code>?</li>
+    <li>¿Qué mecanismos de gobernanza en Git y en las plataformas de alojamiento impiden que código defectuoso o no auditado se integre en la rama de producción?</li>
   </ol>
 </div>
 
@@ -635,83 +635,87 @@ Al concluir este bloque dispondrás de dos pipelines independientes publicando c
 
 ### Se explica
 
-<p class="stage stage--brief">25 minutos · explicación y demostración</p>
+<p class="stage stage--brief">25 minutos · fundamentación metodológica y demostración técnica</p>
 
-#### Una issue no es un recordatorio
+#### Especificación de requisitos: estructura de una issue y criterios de aceptación
 
-La diferencia entre un tablero que sirve y una lista de la compra está en una sola pregunta: **¿cómo sabemos que esto está hecho?** Si la respuesta es «cuando me parezca», no es una tarea.
+En ingeniería de software, la gestión eficaz de un proyecto depende de formular tareas con un alcance preciso y comprobable. Una tarea ambigua carece de valor operativo si no define con exactitud las condiciones que certifican su conclusión:
 
 <dl class="worked">
-  <dt>Lista de deseos</dt>
-  <dd>«Mejorar la parte de arriba». «Estilos». «Sección de proyectos». «Revisar cosas».</dd>
-  <dt>Issues</dt>
-  <dd>«Añadir una cabecera con nombre, titulación y enlace al repositorio». «Publicar la ficha del proyecto CRUD con título, tres líneas de descripción y enlace a la demo».</dd>
-  <dt>Qué cambia</dt>
-  <dd>La segunda se puede terminar. Se sabe qué hay que ver en pantalla para cerrarla, cabe en una sesión y quien la revise puede comprobarla sin preguntaros.</dd>
+  <dt>Formulación informal o ambigua</dt>
+  <dd>«Mejorar la cabecera», «Estilos generales», «Añadir proyectos», «Revisar detalles pendientes».</dd>
+  <dt>Especificación técnica como issue</dt>
+  <dd>«Añadir cabecera accesible con datos personales, titulación y enlace al repositorio». «Publicar sección de proyectos con ficha descriptiva del servicio CRUD y enlace a la demo».</dd>
+  <dt>Criterio diferencial</dt>
+  <dd>La especificación técnica define un alcance acotado y observable. Cualquier evaluador o miembro del equipo puede contrastar el resultado de forma independiente sin requerir aclaraciones adicionales del autor.</dd>
 </dl>
 
-Cada issue de este curso lleva tres cosas:
+Cada *issue* técnica debe estructurarse atendiendo a tres directrices:
 
-| Parte | Cómo se escribe |
-| ----- | --------------- |
-| **Título** | Un verbo en infinitivo y un objeto concreto. «Añadir…», «Corregir…», «Publicar…» |
-| **Criterio de aceptación** | Una o dos frases que empiezan por «Se ve…» o «Al pulsar…». Es lo que mira quien revisa |
-| **Tamaño** | Si no cabe en una sesión de clase, no es una issue: son dos |
+| Componente | Directriz de redacción técnica |
+| ---------- | ------------------------------ |
+| **Título** | Modo imperativo o infinitivo junto con el objeto específico del cambio («Añadir cabecera...», «Configurar enrutamiento...»). |
+| **Criterios de aceptación** | Condiciones objetivas y comprobables que describen el estado observable («Se muestra en la zona superior...», «Al accionar el enlace se abre en nueva pestaña...»). |
+| **Dimensión (Scope)** | La tarea debe ser atómica y asumible dentro de una sesión de trabajo. Si abarca múltiples componentes no relacionados, debe descomponerse en varias tareas independientes. |
 
 <div class="rule">
-  <p class="rule-label">La prueba de que una issue está bien escrita</p>
-  <p>Se la podéis dar a vuestra pareja y la puede hacer sin hablar con vosotros. Si necesita preguntaros qué querías decir, la issue está a medio escribir y el que va a perder media hora sois vosotros dentro de tres semanas, cuando ya no os acordéis.</p>
+  <p class="rule-label">Validación de la especificación de un requisito</p>
+  <p>Un requisito técnico está correctamente formulado cuando cualquier desarrollador del equipo puede implementar y verificar la solución ateniéndose exclusivamente a su descripción y criterios de aceptación, sin necesidad de consultar al autor para descifrar el alcance esperado.</p>
 </div>
 
-#### Una rama es una copia con nombre
+#### Ramas de funcionalidad (Feature Branches) en Git
 
-<p class="term">Rama</p>
+<p class="term">Rama de funcionalidad (Feature branch)</p>
 
-Una línea de trabajo paralela dentro del mismo repositorio. Al crear una os lleváis una copia de `main` tal como está en ese momento, y trabajáis encima sin tocar lo publicado. Podéis romperlo todo: la web pública sigue enseñando `main`.
+En Git, una rama no es una duplicación física de archivos, sino una referencia ligera y móvil (un puntero de 41 bytes) hacia un commit específico dentro del grafo de historial (DAG). Al derivar una rama a partir de `main`, se crea una línea de desarrollo aislada que preserva intacta la versión de producción.
 
-Arriba os he preguntado para qué queréis una rama si trabajáis solos. Por tres cosas:
+El desarrollo basado en ramas de funcionalidad (*Feature Branch Workflow*) aporta tres ventajas críticas:
 
-- **Para poder enseñar un cambio que todavía no está publicado.** Sin rama, o está en la web o no está hecho, y no hay ningún momento intermedio en el que alguien pueda mirarlo. La revisión de la que va esta sesión no cabría en ninguna parte.
-- **Para que lo que está a medias no bloquee lo demás.** Si en mitad de una tarea aparece otra urgente, dejáis la rama como está, volvéis a `main` y abrís otra. Nadie tiene que terminar nada a las prisas.
-- **Para que el historial cuente algo.** Una rama por issue convierte el historial en una lista de tareas hechas, en lugar de un montón de commits sueltos que no se sabe a qué venían.
+- **Aislamiento y estabilidad del entorno productivo**: Cualquier cambio en curso, fallo temporal o refactorización permanece encapsulado sin alterar la versión estable publicada en `main`.
+- **Independencia y no bloqueo entre tareas**: Si surge una corrección prioritaria o una tarea queda temporalmente bloqueada, es posible alternar a otra rama limpia derivada de `main` sin mezclar código incompleto.
+- **Trazabilidad semántica y auditoría**: Cada rama vinculada a una issue convierte el historial de Git en una secuencia estructurada de aportaciones lógicas, facilitando el análisis retrospectivo y el mantenimiento.
 
-<p class="term">Pull request</p>
+<p class="term">Pull Request</p>
 
-La propuesta de meter una rama dentro de otra. No es un botón de fusionar: es una página donde vuestro cambio queda expuesto —qué líneas cambia, qué comprobaciones ha pasado, qué dice quien lo revisa— antes de que nadie decida nada. Se abre en cuanto la rama está subida, aunque el trabajo no esté terminado, y se puede seguir subiendo commits mientras está abierta: la pull request se actualiza sola.
+Una solicitud formal de integración de una rama secundaria en la rama principal. No es una simple operación de fusión: constituye un espacio colaborativo y auditable donde se exponen las diferencias de código (*diff*), se ejecutan los pipelines de integración continua y se documenta la discusión técnica y la aprobación entre pares antes de autorizar la incorporación definitiva.
 
-#### Terminado quiere decir esto
+#### Definición de terminado (Definition of Done)
 
-<p class="term">Definición de terminado</p>
+<p class="term">Definición de terminado (Definition of Done - DoD)</p>
 
-La lista de condiciones que cumple cualquier trabajo antes de considerarse hecho. Es la misma para todas las tareas del curso, se acuerda una vez y no se negocia tarea a tarea. En este módulo son cinco, y cuatro de ellas las comprueba GitHub por su cuenta:
+El conjunto explícito de condiciones de calidad que cualquier incremento de software debe satisfacer rigurosamente antes de ser considerado apto para producción. En este módulo se establecen cinco condiciones innegociables:
 
 <figure class="diagram">
-  <figcaption>Terminado, en este módulo</figcaption>
+  <figcaption>Definición de terminado en el flujo de entrega</figcaption>
   <ol class="flow">
-    <li>El cambio está en una rama con el número de su issue.</li>
-    <li>Ha entrado por una pull request que dice qué issue cierra.</li>
-    <li>La comprobación automática está en verde.</li>
-    <li>Otra persona la ha revisado. Esta es la única que no comprueba ninguna máquina.</li>
-    <li>Está visible en la URL pública.</li>
+    <li>El desarrollo reside en una rama de funcionalidad identificada con el número de su issue correspondiente.</li>
+    <li>Se ha canalizado mediante una pull request que vincula formalmente el cierre de la tarea.</li>
+    <li>Todas las comprobaciones automáticas del pipeline de CI concluyen con estado favorable (verde).</li>
+    <li>Se cuenta con la aprobación formal de al menos un revisor por pares tras la inspección del código.</li>
+    <li>El cambio se encuentra efectivamente desplegado y operativo en la URL del entorno de producción.</li>
   </ol>
 </figure>
 
-Fijaos en lo que **no** aparece: nada sobre si la web es bonita, si el CSS está bien escrito o si el diseño gusta. Eso se evalúa donde se enseña.
+La evaluación se focaliza en el cumplimiento de estas garantías metodológicas del ciclo de vida del software, con independencia de la complejidad visual del frontend en esta etapa inicial.
 
-#### Por qué se cierra la rama principal
+#### Gobernanza y protección de la rama principal (Branch Protection)
 
-Hasta hoy podíais hacer `git push` a `main` y publicar. A partir de hoy no, y no es por desconfianza: es que **una regla que se puede saltar no es una regla, es una recomendación**.
+En desarrollo profesional, la integridad de la rama principal no se delega en la memoria o en acuerdos informales: se garantiza mediante directivas técnicas de la plataforma (**Branch Rulesets**).
 
-Cuando `main` está protegida pasan tres cosas a la vez. La primera, que ningún cambio llega a la web sin pasar por una pull request, donde queda a la vista de quien quiera mirarla. La segunda, que el historial del repositorio se convierte en **una prueba** de cómo trabajasteis, porque ya no se puede reescribir a posteriori. Y la tercera llegará en la sesión 3: cuando exista un pipeline, esta misma protección impedirá que entre nada con las comprobaciones en rojo.
+Al activar la protección de `main` se aseguran tres garantías críticas:
+
+1. **Imposibilidad de alteración no auditada**: Ninguna modificación puede incorporarse sin haber pasado por una pull request con su correspondiente revisión.
+2. **Inmutabilidad y preservación de la historia**: Se bloquea la reescritura del historial (`git push --force`) y el borrado de la rama, protegiendo las evidencias temporales del proyecto.
+3. **Puerta de enlace para validación continua (CI)**: Establece la infraestructura técnica necesaria para supeditar la fusión a la superación de análisis de calidad y pruebas automatizadas (incorporados en la sesión 3).
 
 <div class="compare-pair">
   <div>
-    <p class="compare-label">Sin protección</p>
-    <p class="compare-body">El circuito depende de que os acordéis. En noviembre, con prisa, nadie se acuerda, y el tablero deja de reflejar lo que pasa en el código.</p>
+    <p class="compare-label">Rama principal desprotegida</p>
+    <p class="compare-body">El cumplimiento del flujo depende de la disciplina voluntaria. Ante situaciones de urgencia o descuido, es habitual omitir revisiones y realizar confirmaciones directas, desalineando el código de los requisitos planificados y arriesgando caídas de servicio en producción.</p>
   </div>
   <div>
-    <p class="compare-label">Con protección</p>
-    <p class="compare-body">El circuito es el único camino posible. No hay que acordarse: GitHub rechaza cualquier otra cosa, incluso si sois los dueños del repositorio.</p>
+    <p class="compare-label">Rama principal protegida (Branch Rulesets)</p>
+    <p class="compare-body">La plataforma impone el cumplimiento estricto del circuito de forma programática. Cualquier intento de confirmación directa o reescritura del historial es rechazado en el servidor remoto, garantizando que todo cambio en producción quede registrado y auditado.</p>
   </div>
 </div>
 
@@ -719,168 +723,159 @@ Cuando `main` está protegida pasan tres cosas a la vez. La primera, que ningún
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el proyecto base</p>
 
-#### Bloque A · El tablero y seis issues
+#### Bloque A · Planificación en GitHub Projects y especificación de issues
 
-<p class="stage stage--solo">Individual, y lo primero es decidir qué vais a construir</p>
+<p class="stage stage--solo">Trabajo individual · Definición del alcance y backlog inicial</p>
 
-**0 · Las seis frases.** Cinco minutos, en una nota o en un papel, sin abrir GitHub. Escribid **seis cosas que queréis que tenga vuestro portfolio**: una cabecera con vuestro nombre, una sección de proyectos, un formulario de contacto, lo que sea. Una frase cada una, tal como os salga. Todavía no son issues; son la materia prima del paso 5.
+**0 · Formulación preliminar de requisitos.** Antes de abrir la plataforma, redacta de forma sintética **seis requisitos funcionales** que compondrán las primeras versiones de tu portfolio profesional (por ejemplo: cabecera semántica con datos personales, sección de proyectos vinculada al servicio backend de Servidor, listado de competencias técnicas o enlaces a perfiles profesionales). Cada requisito debe constituir una unidad de entrega independiente.
 
-Si os atascáis, mirad dos portfolios de gente que ya terminó el ciclo y quedaos con lo que os parezca imprescindible. Y no os paséis de seis; el paso 5 explica por qué.
+**1 · Arquitectura de datos de GitHub Projects.**
 
-**1 · Antes de crear nada, qué es esto.**
+<p class="term">Tablero (GitHub Projects)</p>
 
-<p class="term">Tablero · GitHub Projects</p>
+Una herramienta de gestión y seguimiento basada en metodologías ágiles (Kanban) que actúa como una capa de visualización sobre las tareas del repositorio. Es fundamental distinguir que los datos (las *issues*) residen en el repositorio Git; el tablero proporciona una vista estructurada según el ciclo de vida de cada elemento. Al ser una entidad asociada a la cuenta u organización, un mismo tablero puede sincronizar y proyectar tareas procedentes de múltiples repositorios.
 
-Una vista de vuestras issues repartidas en columnas. La palabra importante es **vista**: el tablero no guarda nada. Las issues viven en el repositorio, y el tablero se limita a enseñarlas colocadas. Si borrarais el tablero, las issues seguirían ahí tan tranquilas.
+**2 · Creación y vinculación del tablero.**
 
-De eso salen dos cosas que si no despistan bastante. Una: el tablero nace vacío aunque el repositorio ya tenga issues, porque hay que decirle cuáles mirar. Y dos: un tablero no pertenece al repositorio sino a vuestra cuenta, así que puede enseñar issues de varios repositorios a la vez.
+1. En la interfaz del repositorio, accede a la pestaña **Projects**.
+2. Selecciona **Link a project** y, en el menú inferior desplegable, pulsa **New project**.
+3. En el asistente de selección de plantillas, escoge la modalidad **Board** (visualización Kanban por columnas).
+4. Asigna como nombre `Portfolio` y confirma mediante **Create**.
 
-**2 · Crear el tablero.**
+**3 · Estructura de estados del ciclo de trabajo.** El tablero se inicializa con tres columnas predeterminadas: *Todo* (pendiente), *In Progress* (en desarrollo) y *Done* (completado y verificado). Estas columnas representan los posibles valores del campo de estado (**Status**), permitiendo monitorizar visualmente el flujo de entrega de cada tarea.
 
-1. En vuestro repositorio, pestaña **Projects**.
-2. Botón verde **Link a project** y, en el desplegable que se abre, abajo, **New project**.
-3. Sale un selector de plantillas. Elegid **Board**, la de las columnas. *Table* es la misma información en forma de hoja de cálculo y *Roadmap* en forma de calendario; las tres valen y se puede cambiar de vista cuando queráis, pero hoy vamos con columnas.
-4. Nombre: `Portfolio`. **Create**.
+**4 · Automatización de transiciones de estado.** Para sincronizar automáticamente el tablero con la actividad de Git: accede al menú de configuración del tablero (**···** superior derecho) → **Workflows** y configura:
 
-Fijaos en que el botón decía *Link a project* y no *Create project*. Es por lo de antes: el tablero es vuestro, no del repositorio, y lo que habéis hecho es enlazarlo. Si algún día cerráis la pestaña y no sabéis volver, no lo busquéis en el repositorio: está en vuestro perfil de GitHub, pestaña **Projects**.
-
-**3 · Mirar las columnas antes de tocarlas.** El tablero llega con tres: *Todo*, *In Progress* y *Done*. No son carpetas ni sitios donde se guarde nada; son los tres valores de un campo llamado **Status** que la plantilla ha creado por vosotros. Arrastrar una tarjeta de una columna a otra es cambiarle ese campo, y ya está. Se pueden añadir más, pero hoy no: con saber si algo está sin empezar, empezado o hecho, vais servidos.
-
-**4 · Automatizarlo antes de llenarlo.** Abrid el tablero y, arriba a la derecha, el menú **···** → **Workflows**. Hay una lista de automatismos. Nos interesan dos:
-
-| Workflow | Qué hace | Cómo lo dejáis |
-| -------- | -------- | -------------- |
-| **Item closed** | Al cerrarse una issue, su tarjeta pasa a *Done* sin que la toquéis | Ya viene activado. Abridlo y comprobad que es así |
-| **Auto-add to project** | Cualquier issue nueva del repositorio entra sola en el tablero | Hay que encenderlo: **Edit**, elegid vuestro repositorio, dejad el filtro <code>is:issue is:open</code> y **Save and turn on workflow** |
-
-Con esos dos, el tablero deja de ser algo que hay que mantener a mano y pasa a ser un reflejo de lo que hay en el repositorio. Un tablero que se mantiene a mano se abandona en tres semanas.
+| Flujo automatizado | Acción técnica | Configuración requerida |
+| ------------------ | -------------- | ----------------------- |
+| **Item closed** | Al cerrarse una issue mediante una pull request o commit, su tarjeta transiciona automáticamente a *Done*. | Activado de forma predeterminada. |
+| **Auto-add to project** | Cualquier nueva issue creada en el repositorio se vincula e inserta automáticamente en la columna *Todo*. | Seleccionar **Edit**, vincular el repositorio <code>portfolio</code>, establecer el filtro <code>is:issue is:open</code> y confirmar con **Save and turn on workflow**. |
 
 <div class="rule">
-  <p class="rule-label">Por qué este paso va antes que el siguiente</p>
-  <p>El automatismo recoge lo que se cree <strong>a partir de ahora</strong>, no lo que ya existe. Si escribís las seis issues primero y lo encendéis después, el tablero se queda vacío y tendréis que arrastrarlas una a una. Es el orden, no el invento.</p>
+  <p class="rule-label">Secuencia de activación de flujos automatizados</p>
+  <p>La regla de incorporación automática opera sobre eventos generados a partir de su activación. Configurar este automatismo antes de redactar las tareas garantiza que todas las <em>issues</em> ingresen directamente en el tablero sin necesidad de vinculación manual.</p>
 </div>
 
 <details class="aside aside--help">
-  <summary>Solo os deja un «Auto-add to project», y con un repositorio dentro</summary>
-  <p>Es el límite de las cuentas gratuitas: un automatismo de ese tipo por tablero, y un único repositorio dentro de él. Hoy no molesta, porque solo tenéis el portfolio. Cuando en la UD4 entre en juego el repositorio del backend, o le hacéis su propio tablero o metéis sus issues a mano.</p>
+  <summary>Límites de automatización en cuentas estándar de GitHub</summary>
+  <p>Las cuentas individuales permiten un automatismo de adición automática por tablero. Esta restricción cubre adecuadamente las necesidades del portfolio. Cuando se integre el repositorio del backend en unidades posteriores, se valorará la creación de un tablero de coordinación global o la asignación de flujos específicos.</p>
 </details>
 
-**5 · Escribir seis issues.** Pestaña **Issues** del repositorio → botón verde **New issue**. Convertid cada una de vuestras seis frases en una issue. El formulario tiene menos cosas de las que parece:
+**5 · Registro formal de issues en el repositorio.** Accede a la pestaña **Issues** del repositorio y pulsa **New issue**. Registra cada uno de los seis requisitos planificados siguiendo la estructura estándar:
 
-| Campo | Qué ponéis hoy |
-| ----- | -------------- |
-| **Add a title** | El título: verbo en infinitivo y objeto concreto |
-| **Add a description** | El criterio de aceptación, una o dos frases. Es el cuerpo de la issue |
-| **Assignees** | Vosotros, y solo cuando la empecéis. Hoy se puede dejar vacío |
-| **Labels** | Vacío. Sirven para clasificar, y con seis issues no hay nada que clasificar |
-| **Projects** | No lo toquéis: de eso se encarga el automatismo que acabáis de encender |
+| Campo | Contenido requerido |
+| ----- | ------------------- |
+| **Add a title** | Modo imperativo o infinitivo junto al componente («Añadir cabecera con perfil profesional»). |
+| **Add a description** | Criterios de aceptación observables que determinen las condiciones de entrega del requisito. |
+| **Assignees** | Asignación personal al iniciar la tarea; puede mantenerse sin asignar en esta fase de definición. |
+| **Labels** | Opcional en esta fase introductoria. |
+| **Projects** | No requiere intervención manual: el workflow automatizado se encarga de la vinculación. |
 
-Ejemplo del formato exacto:
+Ejemplo de especificación de issue:
 
 <dl class="worked">
   <dt>Título</dt>
-  <dd>Añadir la cabecera con nombre y titulación</dd>
-  <dt>Cuerpo</dt>
-  <dd>Se ve, en la parte superior de la página, el nombre completo, el ciclo que se está cursando y un enlace al perfil de GitHub. El enlace abre en una pestaña nueva.</dd>
+  <dd>Añadir cabecera semántica con datos profesionales</dd>
+  <dt>Descripción y criterios de aceptación</dt>
+  <dd>Se muestra en la zona superior del documento el nombre completo, titulación académica y un hipervínculo funcional al repositorio de GitHub configurado para abrirse en una nueva pestaña (<code>target="_blank" rel="noopener noreferrer"</code>).</dd>
 </dl>
 
 <div class="rule">
-  <p class="rule-label">Seis, ni una más</p>
-  <p>La tentación es escribir veinte issues hoy y no volver a mirarlas nunca. Pero veinte issues escritas el primer día están inventadas: describen una web que todavía no sabéis cómo va a ser. Seis es más o menos lo que cabe en dos semanas. Las siguientes las escribiréis cuando sepáis algo más que hoy.</p>
+  <p class="rule-label">Dimensionamiento y granularidad de las tareas</p>
+  <p>En metodologías iterativas, definir un backlog inicial acotado a seis tareas evita la sobreplanificación de requisitos inciertos. Cada issue recibe un identificador numérico correlativo e inmutable (<code>#id</code>), el cual se utilizará para trazar las ramas de Git, las pull requests y el historial de commits.</p>
 </div>
 
-Al pulsar **Create** cada issue recibe un **número**, y ese número no cambia nunca ni se reutiliza aunque la borréis. Es el que va a aparecer en el nombre de la rama, en la pull request que la cierre y en el historial del repositorio durante todo el curso. Apuntad los seis, que los vais a usar dentro de un rato.
-
-**6 · Ordenar.** Volved al tablero: las seis tienen que estar ahí solas, en *Todo*. Subid arriba las dos que haríais hoy. Ese orden es una decisión y os la voy a preguntar.
+**6 · Priorización en el tablero.** Regresa al tablero de Projects. Las seis *issues* deben figurar automáticamente en la columna *Todo*. Reordena las tarjetas verticalmente situando en primer lugar las dos tareas prioritarias que abordarás en esta sesión.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación del bloque A</p>
+  <p class="checkpoint-label">Lista de verificación del bloque A</p>
   <ul class="checklist">
-    <li>Seis issues abiertas, todas con criterio de aceptación y con su número apuntado.</li>
-    <li>Las seis aparecen solas en el tablero, en la columna <em>Todo</em>. Si habéis tenido que arrastrar alguna, el automatismo del paso 4 no está bien puesto.</li>
-    <li>Sabéis volver al tablero desde cero, sin buscarlo a ciegas.</li>
+    <li>Seis issues registradas formalmente con criterios de aceptación explícitos e identificadores asignados.</li>
+    <li>Las seis tareas se muestran sincronizadas en la columna <em>Todo</em> del tablero sin intervención manual.</li>
+    <li>El orden de las tareas en el tablero refleja una priorización funcional coherente.</li>
   </ul>
 </div>
 
-#### Bloque B · Cerrar la rama principal
+#### Bloque B · Configuración de directivas de protección en la rama principal
 
-<p class="stage stage--guided">A la vez, y al final se comprueba rompiéndolo</p>
+<p class="stage stage--guided">Procedimiento guiado · Implantación de políticas de gobernanza en Git</p>
 
-Esto que vais a hacer ahora en el portfolio hacedlo también, hoy mismo, en el repositorio del backend que ya tenéis abierto en Servidor. Es la misma pantalla y las mismas casillas. Lo que no hay que hacer nunca es copiar código de un repositorio al otro: son dos proyectos distintos que se llevan bien, no uno partido en dos.
+Las políticas de protección que se configuran a continuación en el repositorio del portfolio deben replicarse igualmente en el repositorio del backend desarrollado en Servidor, asegurando un estándar homogéneo de calidad.
 
-**1 · Crear la regla.** **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
+**1 · Definición del conjunto de reglas (Branch Ruleset).** En GitHub, accede a **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
 
-| Campo | Valor |
-| ----- | ----- |
+| Campo | Configuración requerida |
+| ----- | ----------------------- |
 | Ruleset Name | <code>main protegida</code> |
 | Enforcement status | **Active** |
 | Target branches | **Add target → Include default branch** |
 
-**2 · Marcar estas tres reglas**, y solo estas:
+**2 · Configuración de directivas de seguridad.** Activa estrictamente las siguientes directivas:
 
-| Regla | Qué impide |
-| ----- | ---------- |
-| **Restrict deletions** | Que alguien borre <code>main</code> |
-| **Block force pushes** | Que se reescriba el historial y desaparezcan las pruebas de vuestro trabajo |
-| **Require a pull request before merging** → *Required approvals:* **0** | Que entre nada sin pasar por una pull request, ni siquiera vuestro |
+| Directiva | Finalidad técnica |
+| --------- | ----------------- |
+| **Restrict deletions** | Impide el borrado accidental o deliberado de la rama principal <code>main</code>. |
+| **Block force pushes** | Deshabilita la reescritura forzada del historial (<code>git push --force</code>), protegiendo la inmutabilidad de los registros de auditoría. |
+| **Require a pull request before merging** | Bloquea confirmaciones directas en <code>main</code>, obligando a canalizar todo cambio mediante una pull request. Se configura inicialmente con <em>Required approvals:</em> **0** para permitir la integración tras la revisión entre pares. |
 
 <div class="rule">
-  <p class="rule-label">Falta una cuarta regla, y hoy no se puede poner</p>
-  <p>Hay una regla más, <strong>Require status checks to pass</strong>, que impide fusionar si una comprobación automática está en rojo. Abridla y mirad la lista: está vacía. GitHub solo ofrece checks que haya visto ejecutarse sobre una pull request, y el workflow que os despliega solo se dispara con un push a <code>main</code> —lo leísteis la semana pasada, en la línea que <em>no</em> ponía <code>pull_request</code>.</p>
-  <p>Así que hoy vuestra rama principal está cerrada, pero <strong>nadie comprueba nada</strong> antes de fusionar. Dejadla sin marcar y no la olvidéis: en la sesión 3 escribís el workflow que valida el HTML, los enlaces y la accesibilidad, y volvéis aquí a marcarla. Vais a ver el agujero de primera mano en el reto del bloque C.</p>
+  <p class="rule-label">Integración de verificaciones de estado (Status Checks)</p>
+  <p>La directiva <strong>Require status checks to pass</strong> permite supeditar la fusión a la superación de pipelines de CI. En esta fase se mantiene desactivada porque GitHub exige que un workflow se haya ejecutado al menos una vez en el contexto de una pull request para poder seleccionarlo como verificación obligatoria. En la sesión 3 se incorporará el pipeline de validación estática y se activará esta directiva.</p>
 </div>
 
 <details class="aside aside--extra">
-  <summary>Si hicisteis el bloque F de la sesión 1 y tenéis Azure conectado</summary>
-  <p>Entonces vosotros sí tenéis un check, porque el workflow que escribió Azure sí se dispara con <code>pull_request</code>. Seguirá sin aparecer en la lista ahora mismo, porque todavía no ha corrido nunca sobre una pull request: dejad la regla sin marcar, haced la primera vuelta del bloque C y volved aquí después. Ya estará en la lista, con el nombre del job.</p>
-  <p>Marcadla. Tened claro qué comprueba y qué no: dice que el despliegue subió, no que la página esté bien. Una web rota se despliega perfectamente. El check que mira el contenido lo escribís igual en la sesión 3, y el reto del bloque C lo vais a hacer igual que el resto de la clase.</p>
+  <summary>Repositorios con despliegue en Azure Static Web Apps</summary>
+  <p>Si se completó el bloque opcional de Azure en la sesión 1, el workflow generado por dicha plataforma ya incluye el evento <code>pull_request</code>. Una vez ejecutada la primera pull request del bloque C, su job de comprobación podrá ser seleccionado dentro de las comprobaciones requeridas del ruleset.</p>
 </details>
 
-**3 · Guardar** con **Create**.
+**3 · Activación de la directiva.** Pulsa **Create** para persistir el conjunto de reglas.
 
 <div class="rule">
-  <p class="rule-label">Cero aprobaciones no significa que nadie revise</p>
-  <p>Con cero aprobaciones obligatorias podéis fusionar vosotros mismos, pero solo desde una pull request. Vuestra pareja no necesita ningún permiso para revisaros: el repositorio es público, así que cualquiera con cuenta de GitHub puede entrar, comentar línea a línea y dejar su revisión. Que lo haga o no, GitHub no lo comprueba. Lo compruebo yo. Cada proyecto se entrega con las revisiones que habéis dejado en el repositorio del otro, y ésas son públicas y llevan fecha.</p>
+  <p class="rule-label">Políticas de revisión por pares en repositorios públicos</p>
+  <p>La configuración con cero aprobaciones técnicas obligatorias en el ruleset permite al autor completar la fusión tras recibir el visto bueno de su revisor. En repositorios públicos, cualquier miembro del equipo puede auditar el código, añadir anotaciones en líneas específicas y emitir una revisión formal con fecha y autoría verificables.</p>
 </div>
 
-**4 · Comprobar que os bloquea a vosotros.** Esto no es opcional: una protección que nadie ha probado no se sabe si está activa.
+**4 · Verificación técnica del bloqueo en el entorno local.** Comprueba empíricamente que la política de protección rechaza los intentos de subida directa a la rama principal:
 
 ```bash
 git switch main
 git pull
-echo "prueba" >> README.md
-git commit -am "Probar que main esta protegida"
+echo "prueba de proteccion" >> README.md
+git commit -am "Verificar politica de proteccion en main"
 git push
 ```
 
-Tiene que fallar. Copiad el mensaje de error; lo vais a ver muchas veces y conviene reconocerlo de un vistazo. Después deshaced el intento:
+El servidor remoto de GitHub debe rechazar la operación con un error de protección de rama (`GH006: Protected branch hook declined`). Una vez constatado el rechazo, descarta el commit local y sincroniza el espacio de trabajo con el estado remoto:
 
 ```bash
 git reset --hard origin/main
 ```
 
-Cuidado con ese comando, que es de los que hacen daño. Deja vuestra carpeta exactamente como está `main` en GitHub y **tira todo lo que no hayáis subido**, sin preguntar y sin papelera. Aquí es lo que queremos, porque lo único que hay sin subir es el commit de prueba que acabáis de hacer. No lo uséis con trabajo a medias encima de la mesa.
+<div class="rule">
+  <p class="rule-label">Operación atómica de sincronización con git reset</p>
+  <p>El comando <code>git reset --hard origin/main</code> es una operación destructiva que descarta de forma inmediata todos los commits locales no sincronizados y devuelve el árbol de trabajo (<em>working tree</em>) y el índice (<em>index</em>) al estado exacto del commit remoto. Se utiliza en este paso exclusivamente para eliminar la confirmación de prueba local.</p>
+</div>
 
 <dl class="answer">
-  <dt>Mensaje exacto con el que GitHub os ha rechazado el push</dt>
+  <dt>¿Cuál es el código de error y mensaje exacto devuelto por GitHub al rechazar el push?</dt>
   <dd></dd>
-  <dt>¿Por qué os rechaza a vosotros, siendo los dueños del repositorio?</dt>
+  <dt>¿Por qué el servidor rechaza la operación incluso tratándose del propietario del repositorio?</dt>
   <dd></dd>
 </dl>
 
 #### Bloque C · El circuito entero, dos veces
 
-<p class="stage stage--solo">Individual, pero con vuestra pareja al lado: sus pull requests las revisáis vosotros</p>
+<p class="stage stage--solo">Práctica individual con revisión cruzada por pares</p>
 
-**Antes de empezar, las parejas.** Poneos de dos en dos y quedaos así el resto del trimestre: vais a revisaros el trabajo mutuamente hasta diciembre, y cambiar de pareja a mitad rompe el rastro de revisiones que se evalúa en la defensa. Intercambiad las direcciones de vuestros repositorios, que las vais a necesitar en el bloque D. Si sois impares, uno de los grupos será de tres y cada cual revisa al siguiente.
+**Organización para la revisión por pares (*Peer Code Review*).** Trabaja en pareja estable durante el módulo: la revisión cruzada de código audita la calidad técnica y simula la dinámica de un equipo de desarrollo profesional; la trazabilidad de estas revisiones en GitHub forma parte de las evidencias evaluables. Intercambiad los enlaces a vuestros respectivos repositorios públicos para habilitar la inspección en local durante el Bloque D. En caso de número impar, se establece una rotación circular donde cada participante revisa al siguiente.
 
-La primera vuelta se hace despacio, mirando los diez pasos. La segunda sale sola.
+Sigue con atención el protocolo completo de diez pasos en la primera iteración. En la segunda, aplica el flujo asegurando cada comprobación técnica.
 
-**1 · Coger una tarea.** En el tablero, coged la primera issue de la columna *Todo*: movedla a *In Progress* y asignáosla (campo *Assignees*). Apuntad su número; supongamos que es la 3.
+**1 · Selección y asignación de la tarea.** En el tablero del proyecto, selecciona la primera issue de la columna *Todo*. Desplázala a *In Progress* y asígnatela en el campo *Assignees* para reflejar la autoría. Anota el identificador numérico de la issue (por ejemplo, `#3`).
 
-**2 · Crear la rama.** El nombre lleva el número de la issue delante. Es lo que permite, dentro de un mes, saber por qué existe una rama.
+**2 · Creación de la rama de característica (*feature branch*).** El nombre de la rama debe incorporar como prefijo el número de la issue correspondiente para garantizar la trazabilidad entre el gestor de tareas y el historial de Git:
 
 ```bash
 git switch main
@@ -888,57 +883,57 @@ git pull
 git switch -c 3-cabecera-con-nombre
 ```
 
-Los tres en orden: volved a `main`, traeos lo último que haya en GitHub y cread la rama a partir de ahí. La `-c` es de *create*; sin ella `git switch` os lleva a una rama que ya existe, y con ella la crea y os lleva de un golpe. Comprobad abajo a la izquierda del editor, o con `git status`, que estáis dentro de la rama nueva antes de tocar nada.
+Ejecuta siempre esta secuencia estricta: sitúate en `main`, descarga la última versión sincronizada desde el remoto con `git pull` y bifurca la rama a partir de dicho estado. El modificador `-c` (abreviatura de *create*) instruye a `git switch` para crear la rama y cambiar el puntero activo a ella en una única operación. Verifica mediante `git status` o en la barra de estado del editor que te encuentras en la nueva rama antes de realizar cualquier modificación.
 
-**3 · Hacer solo eso.** Únicamente lo que pide la issue. Si veis otra cosa que arreglar, se anota como issue nueva y se sigue.
+**3 · Desarrollo atómico.** Implementa con precisión técnica exclusivamente lo estipulado en los criterios de aceptación de la issue. Si identificas anomalías secundarias o posibles mejoras accesorias, no las incorpores en este cambio: regístralas como nuevas issues en el tablero para mantener la atomicidad del cambio.
 
-**4 · Commit y subida.**
+**4 · Confirmación y publicación en el remoto.** Registra los ficheros modificados y redacta un mensaje de confirmación descriptivo en modo imperativo:
 
 ```bash
 git add index.html
-git commit -m "Anadir la cabecera con nombre y titulacion"
+git commit -m "Anadir cabecera semantica con nombre y titulacion"
 git push -u origin 3-cabecera-con-nombre
 ```
 
-Este `push` lleva más cosas de lo normal porque la rama todavía no existe en GitHub: `origin` es vuestro repositorio de allí y `-u` enlaza la rama de vuestro ordenador con la suya. Solo hace falta la primera vez; a partir de ahí, dentro de esta rama, basta con `git push` a secas.
+El argumento `-u` (equivalente a `--set-upstream`) vincula la rama local con la rama homónima en el repositorio remoto `origin`. Este enlace de seguimiento sólo debe configurarse en la primera publicación; en envíos sucesivos sobre esta rama, bastará ejecutar `git push`.
 
-**5 · Abrir la pull request.** GitHub muestra un aviso amarillo con **Compare & pull request**. Si no aparece: pestaña **Pull requests** → **New pull request** → base `main`, compare vuestra rama.
+**5 · Apertura de la pull request.** Tras el empuje, la interfaz de GitHub mostrará la sugerencia **Compare & pull request**. Si no se visualiza, navega a la pestaña **Pull requests** → **New pull request**, seleccionando base `main` y compare `3-cabecera-con-nombre`.
 
-| Campo | Qué poner |
-| ----- | --------- |
-| Título | El mismo que la issue |
-| Descripción | Qué habéis hecho, en dos líneas, y en una línea aparte: <code>Closes #3</code> |
-| Reviewers | Vuestra pareja. Si GitHub no la ofrece en la lista, por no ser colaboradora, le pasáis el enlace de la pull request y revisa igual |
+| Campo | Contenido técnico requerido |
+| ----- | --------------------------- |
+| Título | Equivalente al título de la issue para mantener coherencia en el registro |
+| Descripción | Resumen del cambio técnico implementado y vinculación formal: <code>Closes #3</code> |
+| Reviewers | Asigna a tu compañero/a de revisión por pares. Si no cuenta con permisos directos de colaboración, comparte el enlace directo para que realice la revisión formal |
 
 <div class="rule">
-  <p class="rule-label">La línea que ata el código a la tarea</p>
-  <p>Escribir <code>Closes #3</code> en la descripción hace que, al fusionar, la issue 3 se cierre sola y su tarjeta pase a <em>Done</em>. Sin esa línea el tablero se convierte en un sitio donde nada se cierra nunca y hay que ir a mano. Cuesta once caracteres.</p>
+  <p class="rule-label">Cierre automático mediante directivas en Git y GitHub</p>
+  <p>Incluir la directiva <code>Closes #3</code> (o <code>Fixes #3</code>) en el cuerpo de la pull request establece un vínculo transaccional en el motor de GitHub: cuando la solicitud se fusiona en la rama predeterminada, la issue referenciada se clausura de forma automática y su correspondiente tarjeta en GitHub Projects transiciona a <em>Done</em> sin requerir intervención manual.</p>
 </div>
 
-**6 · Avisar a vuestra pareja.** Pasadle el enlace de la pull request. Salvo que tengáis Azure conectado, no hay ninguna URL que abrir: lo que hay publicado sigue siendo <code>main</code>, y vuestra rama no está en ningún sitio salvo en GitHub. Para verla hay que traérsela, y eso lo hace quien revisa en el bloque D.
+**6 · Notificación y solicitud de revisión.** Proporciona a tu evaluador el enlace directo a la pull request. En flujos de trabajo sin despliegues efímeros automáticos, el código en revisión reside únicamente en la rama remota de GitHub y la producción continúa sirviendo la rama `main`; el revisor deberá sincronizar la rama en su entorno local para inspeccionarla (procedimiento detallado en el Bloque D).
 
 <details class="aside aside--extra">
-  <summary>Si tenéis Azure conectado</summary>
-  <p>Abajo del todo aparecen los checks, y en un minuto un comentario automático con un enlace: es <strong>vuestra rama publicada en una URL temporal</strong>, que se borra al cerrar la pull request. Pasádsela a vuestra pareja junto al enlace de la pull request. En el paso 8, además, esperad a que el check esté en verde antes de fusionar.</p>
+  <summary>Despliegues de previsualización efímeros (Preview Deployments)</summary>
+  <p>En plataformas de alojamiento avanzadas (o entornos como Azure Static Web Apps o Vercel), la apertura de una pull request desencadena un pipeline CI/CD que aprovisiona una <strong>URL de previsualización temporal</strong>. Dicho entorno efímero se destruye automáticamente al cerrar o fusionar la PR, permitiendo la verificación funcional sin descargas locales previas.</p>
 </details>
 
-**7 · Revisión.** Vuestra pareja hace el bloque D sobre esta pull request. Mientras tanto, vosotros hacéis lo mismo con la suya.
+**7 · Ejecución de la revisión por pares.** Tu evaluador ejecuta el protocolo de inspección del Bloque D sobre la solicitud. De forma paralela, procede a auditar la suya.
 
-**8 · Fusionar.** Con la revisión hecha, **Merge pull request**. Fusionar antes de que vuestra pareja haya respondido es saltarse el circuito aunque GitHub os deje. Elegid **Squash and merge**: los commits de la rama se resumen en uno solo en `main`, y el historial de la rama principal queda con una entrada por tarea. Después, **Delete branch**.
+**8 · Fusión mediante *Squash and merge*.** Tras obtener la aprobación formal en la revisión, pulsa **Merge pull request**. Selecciona rigurosamente la estrategia **Squash and merge**: esta operación condensa la totalidad de confirmaciones de la rama de característica en una única confirmación atómica en `main`, preservando un historial lineal, legible y bisectable en la rama principal. A continuación, pulsa **Delete branch** para depurar la referencia remota ya integrada.
 
-**9 · Comprobar los cuatro efectos.** Sin tocar nada más:
+**9 · Verificación de efectos secundarios automáticos.** Inspecciona que se desencadenen los cuatro eventos sistémicos esperados:
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Lo que ocurre solo al fusionar</p>
+  <p class="checkpoint-label">Efectos transaccionales tras la fusión</p>
   <ul class="checklist">
-    <li>La issue 3 se ha cerrado.</li>
-    <li>Su tarjeta ha pasado a <em>Done</em> en el tablero.</li>
-    <li>En Actions hay un despliegue nuevo a producción.</li>
-    <li>La URL pública ya muestra el cambio, en cuanto termine el despliegue de Actions.</li>
+    <li>La issue vinculada ha quedado clausurada automáticamente.</li>
+    <li>La tarjeta asociada ha transicionado a <em>Done</em> en el tablero de proyecto.</li>
+    <li>GitHub Actions ha iniciado una ejecución automática del pipeline de despliegue sobre <code>main</code>.</li>
+    <li>El entorno de producción refleja las modificaciones en cuanto concluye la ejecución del workflow.</li>
   </ul>
 </div>
 
-**10 · Volver al punto de partida.** Antes de empezar la segunda vuelta:
+**10 · Limpieza y sincronización local.** Antes de iniciar una nueva iteración de desarrollo, restablece el entorno local:
 
 ```bash
 git switch main
@@ -947,76 +942,76 @@ git branch -d 3-cabecera-con-nombre
 ```
 
 <div class="rule">
-  <p class="rule-label">El error que va a cometer media clase esta semana</p>
-  <p>El tercer comando borra la copia local de la rama; la de GitHub ya la borrasteis vosotros al fusionar, en el paso 8. El error es otro: empezar la segunda tarea sin volver a <code>main</code> y sin <code>git pull</code>. La rama nueva sale entonces de la anterior, la pull request incluye cambios que no le tocan y quien revisa ve el doble de lo que esperaba. Los tres comandos de arriba se hacen siempre, juntos, antes de cada rama.</p>
+  <p class="rule-label">Higiene de ramas y prevención de bifurcaciones espurias</p>
+  <p>El comando <code>git branch -d</code> elimina la rama local cuya integración ya ha sido completada en el repositorio remoto. Omitir el retorno a <code>main</code> y la ejecución de <code>git pull</code> previo a crear una nueva rama provocará que la siguiente tarea se bifurque a partir de una rama obsoleta o no sincronizada, arrastrando confirmaciones no deseadas a la subsiguiente pull request y dificultando la auditoría de código.</p>
 </div>
 
-<p class="stage stage--solo">Segunda vuelta: repetid los diez pasos con la siguiente issue</p>
+<p class="stage stage--solo">Segunda iteración: ejecuta el ciclo completo para una nueva issue</p>
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Una issue recorrida entera, con revisión de vuestra pareja y visible en la URL pública.</span></div>
-  <div><strong>Si lo tenéis</strong><span>La segunda vuelta completa, y las dos issues cerradas por su pull request y no a mano.</span></div>
-  <div><strong>Reto</strong><span>Romped la web a propósito: en una rama, cambiad <code>index.html</code> por algo inservible, abrid la pull request y fusionadla. Nadie os lo va a impedir, y la URL pública se rompe. Anotad cuántos minutos pasan hasta que os dais cuenta y quién debería haberlo parado. Arregladlo con otra issue y guardad las dos pull requests: son el argumento de la sesión 3.</span></div>
+  <div><strong>Objetivo esencial</strong><span>Completar el ciclo de vida íntegro de una issue con trazabilidad, revisión por pares y despliegue exitoso en producción.</span></div>
+  <div><strong>Consolidación</strong><span>Culminar una segunda iteración completa, asegurando el cierre automático de las dos issues mediante sus respectivas pull requests.</span></div>
+  <div><strong>Caso de estudio</strong><span>Simula un fallo de regresión introduciendo sintaxis HTML no válida en una rama y procediendo a su fusión. Observa cómo la ausencia de validación automatizada permite que el defecto alcance el entorno de producción. Este escenario fundamentará la implementación de pipelines de integración continua en la Sesión 3.</span></div>
 </div>
 
-#### Bloque D · Revisar sin escribir «ok»
+#### Bloque D · Auditoría técnica y revisión de código (*Code Review*)
 
-<p class="stage stage--guided">Por parejas, sobre la pull request del otro</p>
+<p class="stage stage--guided">Actividad colaborativa: auditoría cruzada de solicitudes de incorporación</p>
 
-Una revisión no es un trámite de cortesía. En un equipo real es el último sitio donde un error cuesta barato.
+La revisión de código por pares (*Peer Code Review*) constituye un filtro de calidad esencial en el ciclo de vida del software, cuyo propósito es garantizar el cumplimiento de los requisitos técnicos, evitar la propagación de defectos a ramas productivas y fomentar la transferencia de conocimiento entre miembros del equipo.
 
-**Primero, traeros lo que vais a revisar.** Mirad la pull request: si tiene un comentario automático con un enlace de vista previa —solo lo tendrá si esa persona conectó Azure en el bloque E—, abridlo y os ahorráis lo que viene ahora. Si no lo tiene, que es lo normal, la rama está en su repositorio y en ningún sitio más. La primera vez se clona, en una carpeta aparte y fuera de vuestro proyecto:
+**Descarga y verificación en el entorno local.** Si el repositorio no dispone de entornos de despliegue efímeros con URL de previsualización, es imperativo inspeccionar el artefacto en local. En la primera ocasión, clona el repositorio del autor en un directorio independiente ajeno a tu espacio de trabajo principal:
 
 ```bash
 cd ..
-git clone https://github.com/USUARIO-DE-VUESTRA-PAREJA/portfolio.git portfolio-pareja
-cd portfolio-pareja
+git clone https://github.com/USUARIO-DEL-AUTOR/portfolio.git portfolio-auditoria
+cd portfolio-auditoria
 ```
 
-A partir de ahí, para cada revisión, con el nombre de rama que aparece en la cabecera de la pull request. El primer comando se trae las ramas nuevas del repositorio de esa persona sin tocar nada de lo vuestro, y el segundo os mete dentro de la suya:
+Posteriormente, para inspeccionar cualquier rama sometida a revisión, sincroniza las referencias remotas y conmuta a la rama indicada en la pull request:
 
 ```bash
 git fetch origin
 git switch 3-cabecera-con-nombre
 ```
 
-Abrid ahora ese `index.html` con doble clic. Lo que veis en el navegador es exactamente lo que esa pull request propone publicar. Al acabar la revisión, `git switch main`.
+Abre a continuación el fichero `index.html` en el navegador web local para contrastar visualmente el comportamiento frente a los criterios de aceptación. Una vez finalizada la verificación, regresa a la rama principal con `git switch main`.
 
 <div class="rule">
-  <p class="rule-label">Por qué se revisa así</p>
-  <p>Hay servicios que publican cada rama en una URL temporal y os ahorrarían estos dos comandos. Cuando los hay, se usan. Pero no siempre los hay, y bajarse el trabajo de otra persona para ejecutarlo es lo que se hace en cualquier equipo, con o sin URL temporal. Lo vais a repetir todo el curso, así que mejor aprenderlo hoy con dos ficheros que en marzo con un backend entero.</p>
+  <p class="rule-label">Rigor metodológico en la verificación</p>
+  <p>Inspeccionar el código en ejecución en local complementa el análisis estático del diff. Validar que la interfaz se renderiza conforme a la especificación antes de emitir un veredicto formal previene sorpresas y fallos de integración en el entorno de despliegue final.</p>
 </div>
 
-En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas y solo tres:
+Durante la auditoría de una pull request se evalúan sistemáticamente tres dimensiones técnicas:
 
-| Se comprueba | Cómo |
-| ------------ | ---- |
-| **Que se entiende qué hace** | Leyendo el título y la descripción, sin abrir el código. Si no se entiende, ya hay algo que comentar |
-| **Que hace lo que la issue pedía** | Con su rama abierta en vuestro navegador, comparándola con el criterio de aceptación. No se lee el código imaginándoselo: se mira |
-| **Que hace solo eso** | En la pestaña *Files changed*. Un cambio que toca cinco ficheros para una tarea de uno trae cosas de más |
+| Dimensión evaluada | Procedimiento de verificación |
+| ------------------ | ----------------------------- |
+| **Claridad y contexto** | Evaluar el título y la descripción técnica de la PR sin examinar aún el diff. Si el propósito no resulta nítido, debe requerirse mayor documentación. |
+| **Fidelidad funcional** | Contrastar el comportamiento de la rama en ejecución contra los criterios de aceptación estipulados en la issue original. |
+| **Principio de responsabilidad única (Atomicidad)** | Inspeccionar la pestaña *Files changed*. Una pull request debe restringir sus modificaciones estrictamente al alcance definido, sin incluir refactorizaciones accesorias ni ficheros ajenos. |
 
 <dl class="worked">
-  <dt>Comentario inútil</dt>
-  <dd>«Ok, todo bien 👍»</dd>
-  <dt>Comentario útil, pidiendo cambios</dt>
-  <dd>«La issue dice que el enlace abre en pestaña nueva y en tu rama se abre en la misma. Falta ese detalle.»</dd>
-  <dt>Comentario útil, aprobando</dt>
-  <dd>«Bajada la rama 3 y abierta: nombre, titulación y enlace están, y el enlace abre fuera. Apruebo.»</dd>
-  <dt>Qué los diferencia</dt>
-  <dd>Los dos últimos dicen <strong>qué se ha mirado</strong>. Eso es lo que convierte una aprobación en una comprobación y no en una firma.</dd>
+  <dt>Aprobación deficiente</dt>
+  <dd>«Revisado y conforme 👍»</dd>
+  <dt>Petición formal de modificaciones (Request changes)</dt>
+  <dd>«El criterio de aceptación exige que el enlace externo se abra en una nueva pestaña mediante <code>target="_blank"</code> y <code>rel="noopener"</code>. La implementación actual navega en el mismo contexto. Se requieren cambios.»</dd>
+  <dt>Aprobación técnica documentada (Approve)</dt>
+  <dd>«Rama <code>3-cabecera-con-nombre</code> descargada y validada en local. La cabecera semántica incorpora correctamente la identidad y la titulación académica requeridas. Criterios de aceptación satisfechos.»</dd>
+  <dt>Criterio diferenciador</dt>
+  <dd>Una revisión profesional explicita <strong>qué elementos técnicos han sido auditados</strong> y valida el cumplimiento de las condiciones pactadas, aportando valor al ciclo de entrega.</dd>
 </dl>
 
-**Cómo se deja la revisión.** En la pestaña **Files changed**, botón **Review changes** arriba a la derecha:
+**Emisión formal del veredicto.** En la pestaña **Files changed**, selecciona el botón **Review changes** situado en el extremo superior derecho:
 
-| Opción | Cuándo |
-| ------ | ------ |
-| **Comment** | Tenéis una duda pero no bloqueáis |
-| **Approve** | Habéis abierto su rama en el navegador y cumple el criterio |
-| **Request changes** | Falta algo del criterio. No bloquea técnicamente, pero queda escrito: fusionar con cambios pedidos sin contestarlos se ve, y se pregunta en diciembre |
+| Veredicto | Escenario de aplicación |
+| --------- | ----------------------- |
+| **Comment** | Dudas metodológicas, sugerencias menores no vinculantes o solicitud de aclaraciones que no impiden la integración |
+| **Approve** | Verificación local completada y conformidad total con los criterios de aceptación técnicos |
+| **Request changes** | Discrepancia con los criterios de aceptación o presencia de defectos que deben corregirse antes de autorizar la fusión en <code>main</code> |
 
 <div class="rule">
-  <p class="rule-label">Aprobar sin mirar es la falta grave de este módulo</p>
-  <p>Vuestra aprobación no bloquea nada, y justamente por eso vale: nadie os obliga a darla, así que cuando la dais estáis afirmando que habéis mirado. Hoy además sois lo único que hay mirando, porque todavía no existe ningún check que pare nada. Si aprobáis sin bajaros la rama y luego resulta que lo publicado no cumple la issue, el fallo es de los dos. En la defensa de diciembre voy a abrir una pull request vuestra al azar y os voy a preguntar por la revisión que dejasteis.</p>
+  <p class="rule-label">Responsabilidad compartida en la calidad del código</p>
+  <p>La aprobación técnica de una solicitud de incorporación no constituye un mero trámite administrativo, sino una asunción de corresponsabilidad sobre la estabilidad del código que se integra en <code>main</code>. Dado que en este estadio aún no existen comprobaciones de análisis estático automatizadas, el rigor en la revisión humana representa la única barrera de contención frente a regresiones.</p>
 </div>
 
 ---
@@ -1025,88 +1020,88 @@ En este módulo, y sobre una web cuyo diseño no se evalúa, se miran tres cosas
 
 <p class="stage">15 minutos · comprobación del resultado</p>
 
-
 <div class="checkpoint">
-  <p class="checkpoint-label">Trabajo esperado de la unidad</p>
+  <p class="checkpoint-label">Resultados esperados de la unidad</p>
   <ul class="checklist">
-    <li>URL pública funcionando, y el repositorio público enlazado desde ella.</li>
-    <li>Tablero con seis issues, dos de ellas en <em>Done</em> cerradas por su pull request.</li>
-    <li><code>main</code> protegida con las tres reglas —cuatro si conectasteis Azure—, comprobado con un push rechazado.</li>
-    <li>Dos pull requests fusionadas después de que vuestra pareja las revisara, con comentarios que dicen qué se miró.</li>
-    <li>Dos revisiones hechas por vosotros en el repositorio de vuestra pareja.</li>
+    <li>Entorno de producción operativo en la URL pública con enlace al repositorio de código fuente.</li>
+    <li>Tablero Kanban con seis issues registradas, de las cuales al menos dos se encuentren en estado <em>Done</em> tras su integración por pull request.</li>
+    <li>Rama <code>main</code> formalmente protegida mediante ruleset en GitHub, verificada mediante rechazo de envíos directos.</li>
+    <li>Al menos dos pull requests integradas mediante <em>Squash and merge</em> tras recibir revisiones por pares documentadas.</li>
+    <li>Registro de dos auditorías de código completadas en el repositorio de otro desarrollador.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
+  <p class="checkpoint-label">Preguntas de autoevaluación conceptual</p>
   <ol>
-    <li>¿Qué le falta a la tarea «mejorar la página de inicio» para ser una issue?</li>
-    <li>¿Qué hace exactamente <code>Closes #7</code> y dónde se escribe?</li>
-    <li>Hoy podéis fusionar una pull request que rompe la web publicada. ¿Qué regla falta y por qué no se ha podido activar?</li>
-    <li>¿Por qué se vuelve a <code>main</code> y se hace <code>pull</code> antes de crear cada rama?</li>
-    <li>Vuestra pareja quiere ver su cambio funcionando antes de aprobarlo. ¿Qué dos comandos necesita?</li>
+    <li>¿Por qué un enunciado genérico como «mejorar el diseño» no califica como una issue viable en ingeniería de software?</li>
+    <li>¿Cuál es la función técnica de la directiva <code>Closes #id</code> en la descripción de una pull request?</li>
+    <li>En la configuración actual del repositorio, ¿por qué un cambio defectuoso podría integrarse en producción a pesar de haber protegido la rama?</li>
+    <li>¿Qué anomalías en el historial de Git se previenen al regresar a <code>main</code> y sincronizar con <code>git pull</code> antes de crear una nueva rama?</li>
+    <li>¿Qué secuencia de comandos Git permite a un revisor descargar e inspeccionar una rama remota en su entorno local?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Un criterio de aceptación: qué se tiene que ver en pantalla para darla por hecha. Sin eso no se puede terminar ni revisar.</p>
-  <p>2 · En la descripción de la pull request. Al fusionar, cierra la issue 7 y su tarjeta pasa a <em>Done</em> sola.</p>
-  <p>3 · Falta <em>Require status checks to pass</em>. No se ha podido activar porque no existe todavía ninguna comprobación que se ejecute sobre una pull request: el workflow de despliegue solo corre sobre <code>main</code>. Hoy la única condición para fusionar es que haya una pull request; que lo que entra funcione depende únicamente de la revisión humana.</p>
-  <p>4 · Para que la rama nueva salga de lo último publicado. Si sale de la rama anterior, la pull request arrastra cambios que no le corresponden.</p>
-  <p>5 · <code>git fetch origin</code> y <code>git switch nombre-de-la-rama</code>, en su copia del repositorio de quien abrió la pull request. Después abre el <code>index.html</code> en el navegador.</p>
+  <summary>Soluciones de autoevaluación</summary>
+  <p>1 · Carece de criterios de aceptación verificables: sin una definición precisa del estado final esperado, la tarea no es estimable ni auditable en una revisión de código.</p>
+  <p>2 · Se ubica en el cuerpo de la pull request e instruye al motor de GitHub para clausurar automáticamente la issue correspondiente y transicionar su estado a <em>Done</em> una vez formalizada la fusión.</p>
+  <p>3 · Porque la regla <em>Require status checks to pass</em> no puede activarse hasta disponer de un pipeline de CI (integración continua) que valide las pull requests. La integridad actual del código recae exclusivamente en la auditoría humana.</p>
+  <p>4 · Garantiza que la nueva rama derive del último estado estable desplegado en producción, evitando arrastrar confirmaciones espurias de ramas de trabajo precedentes.</p>
+  <p>5 · <code>git fetch origin</code> para actualizar el catálogo de ramas remotas y <code>git switch nombre-de-rama</code> para posicionar el entorno local en dicha rama antes de examinarla en el navegador.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 3</p>
+  <p class="checkpoint-label">Tareas de consolidación autónoma</p>
   <ul class="checklist">
-    <li>Una tercera issue recorrida entera <strong>fuera de clase</strong>, con su pull request revisada. El historial tiene que enseñar trabajo en más de un día.</li>
-    <li>Ninguna rama vieja abierta en vuestro repositorio: lo fusionado se borra.</li>
-    <li>Vuestra pareja clonada en una carpeta aparte, y las dos revisiones hechas con su rama abierta delante, no leyendo el diff a ojo.</li>
-    <li>Traéis una idea de qué secciones va a tener el portfolio. En la sesión 3 empieza la web de verdad y se le añade un pipeline que la comprueba.</li>
+    <li>Implementar una tercera issue completa de forma autónoma, con su correspondiente pull request y auditoría técnica documentada.</li>
+    <li>Depurar las ramas de características locales ya integradas mediante <code>git branch -d</code>.</li>
+    <li>Mantener el repositorio local del evaluador sincronizado para futuras auditorías de código.</li>
+    <li>Planificar la estructura de contenido del portfolio profesional de cara a la incorporación de comprobaciones automatizadas.</li>
   </ul>
 </div>
 
 <div class="rule">
-  <p class="rule-label">Qué pasa en la sesión 3</p>
-  <p>Hasta ahora no tenéis ningún check: <code>main</code> está cerrada, pero lo que entra por la pull request no lo comprueba nadie salvo vuestra pareja. En la sesión 3 se escribe un workflow propio que valida el HTML, busca enlaces rotos y mide accesibilidad, se ejecuta <strong>sobre cada pull request</strong> y se añade a las reglas de <code>main</code> como cuarta regla. A partir de ahí una pull request puede quedar bloqueada por algo que ni vosotros ni vuestra pareja habíais visto, y el reto del bloque C deja de poder repetirse.</p>
+  <p class="rule-label">Avance: Integración continua en la Sesión 3</p>
+  <p>En la actualidad, la protección de <code>main</code> exige la apertura de pull requests pero depende exclusivamente de la auditoría humana. En la Sesión 3 diseñaremos workflows automatizados en GitHub Actions para validar sintaxis HTML, verificar enlaces rotos y auditar directrices de accesibilidad sobre cada pull request, configurando el estado de estos análisis como requisito indispensable para autorizar la integración del código.</p>
 </div>
 
 ## Lo que debes recordar
 
-### El método
+### El flujo de trabajo profesional
 
 <figure class="diagram">
-  <figcaption>De la tarea a la URL, sin atajos</figcaption>
+  <figcaption>Ciclo de vida de un cambio: de la issue a producción</figcaption>
   <ol class="flow">
-    <li><span class="flow-role">Issue</span>Título con verbo y criterio de aceptación. Si no cabe en una sesión, son dos.</li>
-    <li><span class="flow-role">Rama</span><code>numero-descripcion-corta</code>, sacada siempre de <code>main</code> actualizada.</li>
-    <li><span class="flow-role">Commit</span>Un cambio, un mensaje en imperativo, una línea.</li>
-    <li><span class="flow-role">Pull request</span>Con <code>Closes #n</code> y una persona asignada para revisar.</li>
-    <li><span class="flow-role">Checks</span>Cuando existan, verde no será una formalidad: será la condición para poder fusionar.</li>
-    <li><span class="flow-role">Revisión</span>Se baja la rama, se abre, y se dice qué se ha comprobado.</li>
-    <li><span class="flow-role">Merge</span>Squash, borrar rama, y el despliegue sale solo.</li>
+    <li><span class="flow-role">Issue</span>Definición atómica con título explícito y criterios de aceptación verificables.</li>
+    <li><span class="flow-role">Rama</span>Nomenclatura <code>id-descripcion-corta</code>, bifurcada a partir de <code>main</code> sincronizada.</li>
+    <li><span class="flow-role">Commit</span>Confirmación atómica con mensaje claro en modo imperativo.</li>
+    <li><span class="flow-role">Pull request</span>Documentación del cambio técnico y vinculación formal con <code>Closes #id</code>.</li>
+    <li><span class="flow-role">Checks</span>Comprobaciones automatizadas que deben culminar en estado favorable previo a la integración.</li>
+    <li><span class="flow-role">Revisión</span>Auditoría por pares basada en la ejecución local y la verificación de criterios.</li>
+    <li><span class="flow-role">Merge</span>Fusión mediante <em>Squash and merge</em>, eliminación de la rama y despliegue automático.</li>
   </ol>
 </figure>
 
-Tres ideas que sostienen todo lo demás:
+Principios metodológicos fundamentales:
 
-| Idea | Por qué |
-| ---- | ------- |
-| **Se despliega antes de tener contenido** | Los fallos de despliegue son de cuentas y permisos, no de código. Cuanto antes aparezcan, más baratos son |
-| **Una regla que se puede saltar no es una regla** | Por eso <code>main</code> se protege en lugar de acordar que no se toca |
-| **El historial es la prueba** | Fechas de issues, commits, pull requests y revisiones. Es lo que se evalúa aquí, y no se puede reconstruir la última semana |
+| Principio de ingeniería | Justificación metodológica |
+| ----------------------- | -------------------------- |
+| **Despliegue continuo desde el inicio del proyecto** | Los defectos de configuración e infraestructura deben detectarse de forma temprana, cuando el coste de corrección es mínimo. |
+| **Restricciones formales y reglas de protección** | La calidad del software debe garantizarse mediante políticas del sistema (rulesets y checks) y no mediante acuerdos informales. |
+| **Trazabilidad integral del historial** | El registro temporal de issues, confirmaciones, revisiones e integraciones constituye la evidencia auditable del trabajo desarrollado. |
 
-### El vocabulario de la unidad
+### Glosario técnico de la unidad
 
-| Concepto | Significa |
-| -------- | --------- |
-| Issue | Una tarea con criterio de aceptación. Se cierra sola desde la pull request que la resuelve |
-| Rama | Línea de trabajo paralela donde se puede romper todo sin tocar lo publicado |
-| Pull request | Propuesta de incorporar una rama a otra. Es donde ocurren la comprobación automática y la revisión humana |
-| Workflow | Fichero en <code>.github/workflows/</code> que dice qué ejecuta GitHub y cuándo. Va versionado con el proyecto |
-| Check | Resultado de una comprobación automática sobre una pull request. Puede bloquear la fusión |
-| Entorno de vista previa | URL temporal donde algunos proveedores publican una rama mientras su pull request está abierta. GitHub Pages no lo hace: aquí una rama se revisa trayéndosela con <code>git fetch</code> y <code>git switch</code> |
-| Secreto | Credencial guardada en el repositorio, legible por los workflows y por nadie más. Nunca se escribe en un fichero. El despliegue de esta unidad no necesita ninguno: usa un permiso temporal que caduca al acabar la ejecución |
-| Ruleset | Conjunto de reglas que GitHub aplica sobre una rama. Es lo que convierte el circuito en obligatorio |
-| Definición de terminado | Las cinco condiciones que cumple cualquier trabajo de este módulo antes de darse por hecho |
+| Concepto | Significado |
+| -------- | ----------- |
+| Issue | Unidad de trabajo atómica con criterios de aceptación verificables. Se clausura de forma automática desde la pull request vinculada. |
+| Rama (*Branch*) | Línea de desarrollo independiente que aísla los cambios de código respecto a la rama principal productiva. |
+| Pull request | Solicitud formal de integración de una rama secundaria en una base. Espacio central donde concurren la validación automatizada y la revisión humana. |
+| Workflow | Archivo de configuración YAML ubicado en <code>.github/workflows/</code> que define tareas automatizadas en GitHub Actions, versionado conjuntamente con el código. |
+| Check | Estado resultante de una comprobación automatizada en CI ejecutada sobre una pull request, configurable como condición de bloqueo de fusión. |
+| Entorno de vista previa (*Preview Deployment*) | Instancia efímera generada automáticamente para evaluar una rama en un entorno idéntico a producción durante la vigencia de una pull request. En entornos estáticos estándar, se replica localmente mediante <code>git fetch</code> y <code>git switch</code>. |
+| Secreto (*Secret*) | Parámetro confidencial almacenado de forma segura en el repositorio, accesible únicamente durante la ejecución de workflows autenticados. |
+| Ruleset | Conjunto normativo aplicado a ramas en GitHub para hacer cumplir de manera ineludible las políticas de integración del proyecto. |
+| Definición de terminado (*Definition of Done*) | Conjunto de criterios de calidad objetivos y estandarizados que todo entregable debe satisfacer antes de considerarse completado. |
+
