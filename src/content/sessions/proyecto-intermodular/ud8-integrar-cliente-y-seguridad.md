@@ -38,7 +38,7 @@ Arranca el backend actual y abre Swagger. Ejecuta una lectura y una escritura co
 
 #### Bloque B · Comparar con la versión anterior
 
-Conserva una exportación de la colección del primer trimestre. Señala un cambio compatible y uno incompatible de vuestra evolución. Escribe qué petición lo detecta. No renombres un campo en producción para demostrar que se rompe: utiliza una rama o entorno de prueba.
+Conserva una exportación de la colección del primer trimestre. Identifica un cambio compatible y uno incompatible de la evolución prevista. Escribe qué petición lo detecta. No renombres un campo en producción para demostrar que se rompe: utiliza una rama o entorno de prueba.
 
 #### Bloque C · Coordinar la transición
 
@@ -50,7 +50,7 @@ La persona revisora ejecuta la colección sobre la versión propuesta, comprueba
 
 #### Bloque E · Identificar la versión publicable
 
-Añade a las notas de versión cambios del contrato, consumidores comprobados, compatibilidad y pendientes. Registra SHA y ejecución CI. No declares compatible una versión que solo habéis probado con el consumidor nuevo.
+Añade a las notas de versión cambios del contrato, consumidores comprobados, compatibilidad y pendientes. Registra SHA y ejecución CI. No declares compatible una versión verificada únicamente con el consumidor nuevo.
 
 ### Cierre
 
@@ -82,7 +82,7 @@ Abre el cliente utilizado en Servidor 33–34 y ejecuta el comando de arranque d
 
 #### Bloque B · Preparar los entornos
 
-Escribe las URL local y pública en la configuración prevista por vuestro cliente. Comprueba el origen completo del navegador, incluido esquema y puerto. Reutiliza la configuración CORS del backend de Servidor: actualiza sus orígenes, no añadas otra clase que se contradiga con la anterior.
+Declara las URL local y pública en la configuración prevista por el cliente. Comprueba el origen completo del navegador, incluido esquema y puerto. Reutiliza la configuración CORS del backend de Servidor: actualiza sus orígenes en lugar de añadir otra clase que entre en contradicción con la anterior.
 
 #### Bloque C · Ejecutar un recorrido completo
 

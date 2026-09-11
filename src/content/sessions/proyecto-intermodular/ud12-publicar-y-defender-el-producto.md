@@ -84,7 +84,7 @@ Elige un recorrido que muestre una regla del producto y un rechazo previsto. Loc
 
 #### Bloque C · Ensayar por parejas
 
-Una persona sigue el recorrido y otra pide justificar dos decisiones. Cambiad los papeles. Registrad dónde falta un dato, un permiso de acceso al repositorio o una instrucción del README. Corrigid los documentos mediante PR y ejecutad de nuevo cualquier comprobación afectada.
+Una persona sigue el recorrido y otra solicita la justificación de dos decisiones. A continuación se invierten los papeles. Registra dónde falta un dato, un permiso de acceso al repositorio o una instrucción del README. Corrige los documentos mediante pull request y vuelve a ejecutar cualquier comprobación afectada.
 
 #### Bloque D · Realizar la defensa coordinada
 

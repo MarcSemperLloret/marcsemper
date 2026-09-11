@@ -38,11 +38,11 @@ Abre la release del primer trimestre, copia su SHA al registro de hoy y ejecuta 
 
 #### Bloque B · Concretar el incremento
 
-Abre la propuesta de evolución, elige la mejora priorizada y añade una tabla de comportamiento anterior, comportamiento previsto y consumidor afectado. Para una búsqueda paginada, escribe un ejemplo con más resultados que el tamaño de página y el orden esperado. Usa campos de vuestro modelo.
+Abre la propuesta de evolución, elige la mejora priorizada y añade una tabla de comportamiento anterior, comportamiento previsto y consumidor afectado. Para una búsqueda paginada, escribe un ejemplo con más resultados que el tamaño de página y el orden esperado. Emplea campos del modelo propio.
 
 #### Bloque C · Dividir el trabajo sin duplicarlo
 
-Crea o enlaza las issues de implementación que ya usáis en Servidor. Añade tareas de coordinación únicamente cuando aporten algo distinto: actualizar un consumidor, configurar una comprobación o preparar una release. En cada tarjeta indica dependencia, responsable y criterio de aceptación. No crees otra issue con el mismo cambio solo para que aparezca en dos asignaturas.
+Crea o enlaza las issues de implementación ya empleadas en Servidor. Añade tareas de coordinación únicamente cuando aporten algo distinto: actualizar un consumidor, configurar una comprobación o preparar una release. En cada tarjeta indica dependencia, responsable y criterio de aceptación. No crees otra issue con el mismo cambio solo para que aparezca en dos asignaturas.
 
 #### Bloque D · Revisar el orden
 
