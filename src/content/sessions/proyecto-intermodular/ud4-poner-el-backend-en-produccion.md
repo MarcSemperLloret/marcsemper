@@ -16,16 +16,16 @@ priorKnowledge:
   - "De Servidor: controladores REST, DTO, validación y manejo de errores."
 ---
 
-<p class="lead">Vuestra API funciona en el portátil de quien la escribió. Este proyecto consiste en que funcione en una URL, con el mismo circuito que el portfolio, y en que el portfolio la use.</p>
+<p class="lead">La API desarrollada en Servidor se ejecuta actualmente en la estación de trabajo de quien la programó. El objeto de esta unidad es su puesta en producción bajo una URL pública, sometida al mismo flujo de integración que el portfolio y consumida desde él.</p>
 
 <div class="rule">
-  <p class="rule-label">Quién evalúa qué, otra vez</p>
-  <p>El código de la API es de <strong>Servidor</strong>: sus capas, sus validaciones, sus errores y sus tests. Los defectos técnicos se corrigen en el mismo repositorio y su criterio de evaluación pertenece a Servidor. Lo que se evalúa aquí es que ese código viva en un repositorio con su circuito, que un pipeline lo compile y lo pruebe antes de dejarlo entrar, que esté desplegado y que la colección compruebe su contrato; el cliente completo llega tras Servidor 33–34. Podéis tener la mejor API de la clase y suspender esta unidad si solo existe en vuestro ordenador.</p>
+  <p class="rule-label">Delimitación de competencias evaluativas</p>
+  <p>El código de la API corresponde al módulo de <strong>Servidor</strong>: su arquitectura por capas, sus validaciones, su tratamiento de errores y sus pruebas. Los defectos técnicos se corrigen en ese mismo repositorio y su evaluación pertenece a dicho módulo. En Proyecto Intermodular se evalúa que ese código resida en un repositorio sometido a un flujo de integración, que un pipeline lo compile y ejecute sus pruebas antes de autorizar la fusión, que se encuentre desplegado y que una colección de peticiones verifique su contrato; el cliente completo se aborda tras las unidades 33 y 34 de Servidor. Una implementación técnicamente excelente que solo se ejecute en un entorno local no supera los criterios de esta unidad.</p>
 </div>
 
 <div class="rule">
-  <p class="rule-label">La persistencia llega dentro del trimestre</p>
-  <p>Lo que vais a desplegar es el mismo CRUD que elegisteis y estáis construyendo en Servidor. La primera publicación puede guardar los datos en memoria, y entonces se reinician cada vez: eso no es un fallo, pero se escribe en el README para que quien lo abra lo sepa. PostgreSQL llega en la UD5 de Servidor, todavía dentro del <strong>primer trimestre</strong>, y a partir de ahí publicáis la versión persistente por este mismo workflow. Aquí no se crea una segunda API.</p>
+  <p class="rule-label">Incorporación de la persistencia dentro del trimestre</p>
+  <p>El artefacto desplegado es el mismo CRUD seleccionado y desarrollado en Servidor. La primera publicación puede mantener el estado en memoria, con la consiguiente pérdida de los datos en cada reinicio del proceso: no constituye un defecto, pero debe documentarse en el README para conocimiento de quien consulte el proyecto. PostgreSQL se incorpora en la UD5 de Servidor, dentro todavía del <strong>primer trimestre</strong>, y a partir de ese momento la versión persistente se publica mediante este mismo workflow. En ningún caso se crea una segunda API.</p>
 </div>
 
 ### Los hitos compartidos del primer trimestre
@@ -37,7 +37,7 @@ priorKnowledge:
 | CRUD con PostgreSQL y tests de repositorio, en la UD5 | Configurar la base de datos del entorno desplegado, sus variables y el entorno de pruebas del CI; publicar la misma API persistente |
 | Versión del primer trimestre revisada y defendida, en la UD6 | Identificar el mismo commit desplegado y conservar las evidencias del workflow, CI, revisiones y puesta en producción |
 
-Aquí nunca se os va a pedir algo que todavía no hayáis dado en Servidor: cada sesión trabaja con la versión que exista ese día. El circuito que montáis en estas seis sesiones se queda puesto y lo vais a usar con cada avance del backend hasta cerrar el trimestre. Si al llegar a la sesión 11 aún falta parte de la UD5 de Servidor, publicáis lo que haya y las mejoras siguientes entran por el mismo camino. Eso sí: la entrega del trimestre lleva persistencia en producción, así que ese trozo hay que cerrarlo.
+La secuencia está coordinada con Servidor: ninguna sesión exige contenidos que no se hayan impartido allí previamente, y cada una opera sobre la versión del backend disponible en esa fecha. El flujo de integración construido en estas seis sesiones permanece operativo y se aplica a cada incremento del backend hasta el cierre del trimestre. Si al llegar a la sesión 11 la UD5 de Servidor no estuviera completa, se publica el estado disponible y las mejoras posteriores se incorporan por el mismo procedimiento. La entrega del trimestre sí requiere, en todo caso, persistencia en producción.
 
 ## Sesión 7 · El CI del repositorio de Servidor
 
@@ -46,9 +46,9 @@ Aquí nunca se os va a pedir algo que todavía no hayáis dado en Servidor: cada
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
-    <li>Vuestra API arranca en local. ¿Qué haría falta para que la usara alguien que no está en esta aula?</li>
+    <li>La API se ejecuta en el entorno local. ¿Qué condiciones serían necesarias para que la consumiera una persona ajena al aula?</li>
     <li>El pipeline del portfolio comprueba HTML, enlaces, formato y accesibilidad. ¿Qué tendría que comprobar el de una API?</li>
-    <li>¿Qué carpetas de vuestro proyecto de Java no deberían subirse nunca a un repositorio?</li>
+    <li>¿Qué directorios de un proyecto Java no deben incorporarse nunca a un repositorio de código, y por qué?</li>
   </ol>
 </div>
 
@@ -86,9 +86,9 @@ Primero se reproduce verify en local y después en CI. Un fallo local se registr
 
 #### Bloque B · El CI que compila
 
-<p class="stage stage--solo">Individual, por el circuito: issue, rama, pull request</p>
+<p class="stage stage--solo">Trabajo individual, por el flujo establecido: issue, rama, pull request</p>
 
-Cread `.github/workflows/ci.yml`:
+Crea el archivo `.github/workflows/ci.yml`:
 
 ```yaml
 name: CI
@@ -119,52 +119,52 @@ jobs:
 
 <dl class="worked">
   <dt><code>distribution</code> y <code>java-version</code></dt>
-  <dd><strong>Poned aquí la versión que anotasteis en el paso 2</strong>, no el 21 del ejemplo. El runner no trae Java preparado para vosotros: se le dice qué distribución y qué versión, y si no coincide con la que declara el <code>pom.xml</code> la compilación falla con un error que no menciona ninguna de las dos.</dd>
+  <dd><strong>Debe declararse la versión registrada en el paso 2</strong>, no el valor 21 del ejemplo. El runner no aprovisiona ningún JDK por defecto: la distribución y la versión se declaran de forma explícita. Si el valor declarado no coincide con el que especifica el <code>pom.xml</code>, la compilación falla con un mensaje que no menciona ninguna de las dos versiones.</dd>
   <dt><code>cache: maven</code></dt>
-  <dd>Guarda las dependencias descargadas entre ejecuciones. Sin esto, cada pull request se baja medio internet y tarda el triple.</dd>
+  <dd>Conserva entre ejecuciones el repositorio local de dependencias. Sin esta directiva, cada pull request vuelve a descargar el árbol completo de dependencias, con el consiguiente incremento de la duración del job.</dd>
   <dt><code>./mvnw</code></dt>
-  <dd>El wrapper de Maven que viene con el proyecto. Usa la versión de Maven que el proyecto declara, no la que tenga instalada la máquina, así que compila igual en el runner que en vuestro portátil.</dd>
+  <dd>El <em>Maven Wrapper</em> incluido en el proyecto. Utiliza la versión de Maven declarada por el propio proyecto y no la instalada en la máquina anfitriona, lo que garantiza una construcción equivalente en el runner y en cualquier entorno local.</dd>
   <dt><code>-B</code></dt>
-  <dd>Modo por lotes: sin colores ni barras de progreso. El registro queda legible en vez de lleno de basura.</dd>
+  <dd>Modo por lotes (<em>batch</em>): suprime el coloreado y los indicadores de progreso, que en un registro no interactivo generan ruido y dificultan el diagnóstico.</dd>
   <dt><code>verify</code></dt>
-  <dd>Compila, ejecuta los tests y construye el artefacto. Si cualquiera de las tres cosas falla, el job falla.</dd>
+  <dd>Fase del ciclo de vida de Maven que compila el código, ejecuta las pruebas y construye el artefacto empaquetado. El fallo de cualquiera de las tres etapas determina el fallo del job.</dd>
 </dl>
 
 <details class="aside aside--help">
   <summary>Si el job falla con «permission denied» al ejecutar <code>./mvnw</code></summary>
-  <p>Es el fallo más común de esta sesión y no tiene nada que ver con vuestro código. El runner es Linux y en Linux un fichero necesita permiso de ejecución; Windows no guarda ese permiso, así que el wrapper llegó al repositorio sin él. Se arregla marcándolo en el índice de Git y subiéndolo:</p>
+  <p>Es la incidencia más frecuente de esta sesión y no guarda relación con el código de la aplicación. El runner ejecuta Linux, donde un archivo requiere el bit de permiso de ejecución; el sistema de archivos de Windows no conserva ese atributo, de modo que el wrapper se incorporó al repositorio sin él. Se corrige registrando el permiso en el índice de Git y publicando el cambio:</p>
   <p><code>git update-index --chmod=+x mvnw</code>, después commit y push.</p>
-  <p>Merece la pena entender por qué pasa: es la primera vez que os choca que la máquina donde se construye no es la vuestra, y no va a ser la última.</p>
+  <p>Conviene retener la causa: es la primera manifestación práctica de que el entorno de construcción no coincide con el entorno de desarrollo, diferencia que reaparecerá en otros contextos.</p>
 </details>
 
 <details class="aside aside--help">
-  <summary>Si no tenéis <code>mvnw</code> en el proyecto</summary>
-  <p>Usad <code>mvn -B verify</code> sin el <code>./</code>: los runners traen Maven instalado. Funciona, pero es peor, porque la versión de Maven la elige la máquina y no vosotros. Recuperad los archivos del wrapper desde el historial o la plantilla de Servidor, conservando vuestro código y repositorio.</p>
+  <summary>Si el proyecto no incorpora <code>mvnw</code></summary>
+  <p>Utiliza <code>mvn -B verify</code>, sin el prefijo <code>./</code>: los runners incorporan Maven preinstalado. La construcción se completa, pero la solución es inferior, dado que la versión de la herramienta la determina la máquina y no el proyecto. Restaura los archivos del wrapper desde el historial o desde la plantilla de Servidor, conservando el código y el repositorio actuales.</p>
 </details>
 
-**Romperlo a propósito, como siempre.** Provocad estos dos fallos en una rama de diagnóstico, sin fusionarlos, y restauradla antes de aprobar:
+**Provocación controlada de fallos.** Introduce las dos alteraciones siguientes en una rama de diagnóstico, sin fusionarlas, y restaura su estado antes de aprobar la pull request:
 
-| Qué rompéis | Qué demuestra |
-| ----------- | ------------- |
-| Un punto y coma que falta en una clase | El CI no deja pasar código que ni siquiera compila |
-| Una aserción invertida temporalmente en una rama de diagnóstico | El CI no deja pasar código que compila pero está mal |
+| Alteración introducida | Propiedad que demuestra |
+| ---------------------- | ----------------------- |
+| Supresión de un punto y coma en una clase | El pipeline impide la integración de código que no compila |
+| Inversión temporal de una aserción de prueba | El pipeline impide la integración de código que compila pero incumple su especificación |
 
-Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y conviene verla una vez con los ojos.
+El segundo caso constituye la diferencia sustancial entre este pipeline y el del portfolio: la validación no se limita a la corrección sintáctica del artefacto, sino que verifica su comportamiento.
 
 #### Bloque C · Convertirlo en puerta y estrenar el circuito
 
-<p class="stage stage--solo">Individual</p>
+<p class="stage stage--solo">Trabajo individual</p>
 
-1. Fusionad la pull request del CI.
-2. **Settings → Rules → Rulesets → main protegida → Edit → Require status checks**, y añadid **Compilar y probar**.
-3. Abrid tres issues con lo siguiente que vayáis a tocar de la API, y recorred al menos una entera por el circuito.
+1. Fusiona la pull request que incorpora el CI.
+2. Accede a **Settings → Rules → Rulesets → main protegida → Edit → Require status checks** e incorpora **Compilar y probar**.
+3. Abre tres issues correspondientes a los siguientes incrementos previstos de la API y recorre al menos una de forma completa por el flujo de integración.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación de la sesión 7</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión 7</p>
   <ul class="checklist">
     <li>El repositorio de la API existe, es público y no contiene la carpeta de construcción.</li>
     <li>Cada pull request muestra el check «Compilar y probar».</li>
-    <li>El check es obligatorio y habéis visto una pull request bloqueada por un test en rojo.</li>
+    <li>La comprobación es obligatoria y se ha verificado una pull request bloqueada por una prueba fallida.</li>
     <li>Una issue de la API recorrida entera.</li>
   </ul>
 </div>
@@ -179,10 +179,10 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
-    <li>¿Por qué la carpeta de construcción no va al repositorio?</li>
+    <li>¿Por qué el directorio de construcción no se incorpora al repositorio?</li>
     <li>¿Qué hace <code>verify</code> que no haría solo compilar?</li>
     <li>¿Para qué sirve <code>cache: maven</code>?</li>
-    <li>¿Por qué el wrapper compila igual en el runner que en vuestro portátil?</li>
+    <li>¿Por qué el wrapper produce una construcción equivalente en el runner y en el entorno local?</li>
   </ol>
 </div>
 
@@ -197,8 +197,8 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Antes de la sesión 8</p>
   <ul class="checklist">
-    <li>La API arranca en vuestro ordenador y responde a una petición desde el navegador.</li>
-    <li>Sabéis decir en qué puerto escucha —lo dice al arrancar— y qué ruta devuelve la lista de vuestros datos.</li>
+    <li>La API se ejecuta en el entorno local y responde a una petición efectuada desde el navegador.</li>
+    <li>Es posible identificar el puerto en el que escucha —el proceso lo indica al arrancar— y la ruta que devuelve la colección de datos.</li>
     <li>El check de compilación está en verde en <code>main</code>.</li>
   </ul>
 </div>
@@ -210,7 +210,7 @@ Ese segundo fallo es la diferencia entre este pipeline y el del portfolio, y con
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
-    <li>Vuestra API escucha en un puerto concreto de vuestro ordenador. ¿Quién decide ese número?</li>
+    <li>La API escucha en un puerto determinado del entorno local. ¿Qué elemento del sistema establece ese número?</li>
     <li>En producción no hay nadie mirando la consola. Si la aplicación no arranca, ¿dónde se lee el motivo?</li>
     <li>¿Qué diferencia hay entre desplegar unos ficheros HTML y desplegar un programa que se ejecuta?</li>
   </ol>
@@ -228,17 +228,17 @@ Una web estática publica archivos; una aplicación Java necesita además un pro
 
 #### Puerto y configuración del runtime elegido
 
-Este taller utiliza App Service con publicación Código y runtime Java SE. No es un contenedor personalizado. El entorno Java proporciona SERVER_PORT, que Spring Boot puede leer; mantened la configuración compatible con ese entorno y comprobad el puerto efectivo en los logs. WEBSITES_PORT pertenece a la configuración de contenedores personalizados y no se añade aquí como solución genérica. [Referencia oficial de App Service](https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings).
+Este taller emplea App Service con publicación de tipo Código y runtime Java SE, no un contenedor personalizado. El entorno Java expone la variable SERVER_PORT, cuyo valor Spring Boot puede resolver; la configuración debe mantenerse compatible con ese entorno y el puerto efectivo debe verificarse en el registro del servicio. WEBSITES_PORT pertenece a la configuración de contenedores personalizados y no se añade aquí como solución genérica. [Referencia oficial de App Service](https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings).
 
 #### Entorno de aula
 
-Antes de crear recursos comprobad la oferta y los límites que muestra vuestra suscripción. El plan F1, cuando esté disponible para la combinación elegida, tiene cuotas y puede suspender la aplicación por inactividad. La primera respuesta puede tardar más que las siguientes. Utiliza el entorno de prácticas disponible conservando el mismo repositorio y artefacto.
+Antes de aprovisionar recursos conviene verificar la oferta y los límites que declara la suscripción. El plan F1, cuando esté disponible para la combinación seleccionada, impone cuotas y puede suspender la aplicación por inactividad. La primera respuesta puede tardar más que las siguientes. Utiliza el entorno de prácticas disponible conservando el mismo repositorio y artefacto.
 
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
-#### Bloque A · Comprobar en qué puerto escucháis
+#### Bloque A · Verificación del puerto de escucha
 
 Abre application.properties y revisa si existe una propiedad server.port. En este taller puede escribirse `server.port=${SERVER_PORT:8080}`: usa el puerto del entorno cuando esté definido y 8080 en local. Conserva el resto de configuración. Arranca la API, anota el puerto de los logs y prueba una ruta conocida. Más adelante repetirás esa comprobación en el runtime Java SE del proveedor.
 
@@ -246,44 +246,44 @@ Abre application.properties y revisa si existe una propiedad server.port. En est
 
 <p class="stage stage--guided">Todos a la vez, a la misma pantalla</p>
 
-En **portal.azure.com**, buscad `App Services` y pulsad **Crear** → **Aplicación web**.
+En **portal.azure.com**, localiza `App Services` y selecciona **Crear** → **Aplicación web**.
 
 | Campo | Valor |
 | ----- | ----- |
 | Suscripción | Azure for Students |
 | Grupo de recursos | El mismo del portfolio, o uno nuevo |
-| Nombre | <code>api-</code> y algo vuestro: forma parte de la URL pública |
+| Nombre | Prefijo <code>api-</code> seguido de un identificador propio: forma parte de la URL pública |
 | Publicar | **Código** |
-| Pila del entorno de ejecución | **La versión de Java que anotasteis en la sesión 7**, no la que venga sugerida |
+| Pila del entorno de ejecución | **La versión de Java registrada en la sesión 7**, no la propuesta por defecto |
 | Servidor web de Java | **Java SE (servidor web integrado)** |
 | Sistema operativo | **Linux** |
 | Región | West Europe |
 | Plan de precios | **F1 gratuito** |
 
-Revisar y crear. Cuando termine, **Ir al recurso** y abrid la URL: veréis la página por defecto de App Service, porque todavía no hay nada vuestro dentro.
+Revisar y crear. Al finalizar el aprovisionamiento, accede mediante **Ir al recurso** y abre la URL: el servicio devuelve la página predeterminada de App Service, dado que aún no se ha desplegado ningún artefacto.
 
 **Verificar el runtime.** Confirma Código, Java SE y la misma versión de Java del pom. No añadas WEBSITES_PORT: no estamos publicando una imagen propia. Después del despliegue comprueba SERVER_PORT y el puerto de arranque en el registro del servicio. Si no coincide, revisa la propiedad server.port y los argumentos de arranque antes de cambiar otras opciones.
 
-#### Bloque C · Conectarlo con GitHub
+#### Bloque C · Conexión del servicio con el repositorio
 
-<p class="stage stage--guided">A la vez</p>
+<p class="stage stage--guided">Ejecución simultánea</p>
 
 1. En el recurso, menú lateral → **Centro de implementación** (*Deployment Center*).
-2. Origen: **GitHub**. Autorizad si lo pide.
+2. Origen: **GitHub**. Autoriza el acceso si el portal lo solicita.
 3. Organización, repositorio `api-loquesea`, rama `main`.
-4. Elegid la identidad federada del entorno de prácticas y comprobad que el workflow declara los permisos y la conexión que esperáis. Si algo falla, no lo tapéis activando la autenticación básica: eso no arregla la configuración, la esconde.
+4. Selecciona la identidad federada del entorno de prácticas y verifica que el workflow declara los permisos y la conexión previstos. Ante un fallo de configuración, la activación de la autenticación básica no constituye una solución: sustituye un mecanismo de credenciales efímeras por uno de credenciales permanentes y oculta el defecto en lugar de corregirlo.
 5. **Guardar**.
 
-Puede que el centro de implementación intente escribir directamente en `main` y se dé de bruces con la protección que pusisteis en la UD1. Es buena señal. Preparad el workflow en una rama y que entre por pull request como todo lo demás; lo que no se hace es desactivar las reglas para que le quepa el fichero. Y las credenciales, en Secrets o en la conexión federada. Nunca escritas en el YAML.
+Es previsible que el centro de implementación intente escribir directamente sobre `main` y sea rechazado por la protección configurada en la UD1. El comportamiento esperado es precisamente ese. El workflow se prepara en una rama y se incorpora mediante pull request, como cualquier otro cambio; la desactivación de las reglas de protección para permitir esa escritura no es un procedimiento admisible. Las credenciales residen en Secrets o en la conexión federada, nunca en el propio archivo YAML.
 
-Fijaos en la diferencia con la sesión 1. Allí la plantilla de GitHub Pages no necesitaba ninguna credencial, porque quien desplegaba y quien alojaba eran la misma casa. Aquí no: Azure es otra empresa, así que hace falta demostrarle quién sois. Ese es el token del que os hablé entonces. Traeos el fichero y leedlo:
+Conviene contrastar esta configuración con la de la sesión 1. La plantilla de GitHub Pages no requería credencial alguna porque el sistema que despliega y el que aloja pertenecen al mismo proveedor, lo que permite emitir un token efímero de ámbito interno. Aquí intervienen dos proveedores distintos, de modo que resulta necesario acreditar la identidad de uno ante el otro: es el caso de credenciales al que se aludió entonces. Obtén el archivo generado y analízalo:
 
 ```bash
 git switch main
 git pull
 ```
 
-Buscad en el fichero nuevo las dos diferencias con el del portfolio: **hay un paso que compila** antes de desplegar, y **hay dos jobs**, uno que construye y otro que despliega, con el segundo esperando al primero.
+Localiza en el archivo las dos diferencias respecto al del portfolio: **existe una etapa de compilación** previa al despliegue, y **existen dos jobs**, uno de construcción y otro de publicación, declarando el segundo una dependencia sobre el primero.
 
 <dl class="answer">
   <dt>¿Qué comando de construcción usa el workflow que ha escrito Azure?</dt>
@@ -292,48 +292,48 @@ Buscad en el fichero nuevo las dos diferencias con el del portfolio: **hay un pa
   <dd></dd>
   <dt>¿Cómo se llama el secreto que ha creado?</dt>
   <dd></dd>
-  <dt>¿Qué versión de Java usa, y coincide con la vuestra?</dt>
+  <dt>¿Qué versión de Java declara, y coincide con la del proyecto?</dt>
   <dd></dd>
 </dl>
 
 <div class="rule">
-  <p class="rule-label">Ahora tenéis dos workflows, y hacen cosas distintas</p>
-  <p>El vuestro, <code>ci.yml</code>, se ejecuta en cada pull request y está para <strong>impedir</strong> que entre algo roto. El de Azure se ejecuta cuando algo ya ha entrado en <code>main</code> y está para <strong>publicar</strong>. Cuando veáis dos ejecuciones por cada cambio no penséis que habéis configurado algo mal: es el circuito funcionando, igual que en el portfolio.</p>
+  <p class="rule-label">Dos workflows con responsabilidades diferenciadas</p>
+  <p>El workflow propio, <code>ci.yml</code>, se ejecuta sobre cada pull request y su función es <strong>impedir</strong> la integración de un cambio defectuoso. El generado por Azure se ejecuta una vez el cambio se ha incorporado a <code>main</code> y su función es <strong>publicar</strong>. La aparición de dos ejecuciones por cada cambio no indica un error de configuración: corresponde a la separación entre integración continua y despliegue continuo ya establecida en el portfolio.</p>
 </div>
 
-#### Bloque D · Que arranque, y si no, por qué
+#### Bloque D · Verificación del arranque y diagnóstico
 
-<p class="stage stage--solo">Individual, y aquí se separa quien sabe diagnosticar de quien adivina</p>
+<p class="stage stage--solo">Trabajo individual · práctica de diagnóstico en producción</p>
 
-Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que devuelve datos. Hay dos finales posibles y los dos enseñan algo.
+Una vez el workflow concluya con éxito, accede a la URL de la API por la ruta que devuelve datos. Los dos resultados posibles requieren actuaciones distintas.
 
-**Si responde:** abridla también con la misma ruta desde el móvil, con los datos móviles y sin la wifi del centro. Eso es lo que significa «está en producción».
+**Si responde:** repite la petición desde un dispositivo móvil con la red del operador y sin la red del centro. Esa comprobación acredita la accesibilidad pública efectiva del servicio.
 
-**Si no responde:** no toquéis nada todavía. Id al recurso en el portal, menú lateral → **Flujo de registro** (*Log stream*), y mirad lo que la aplicación está escribiendo. Es la consola que teníais en el portátil, ahora en producción.
+**Si no responde:** no modifiques todavía la configuración. Accede al recurso en el portal, menú lateral → **Flujo de registro** (*Log stream*), y examina la salida que emite la aplicación. Corresponde a la salida de consola del entorno local, ahora en el entorno de producción.
 
-| Lo que veis en el registro | Qué significa |
-| -------------------------- | ------------- |
-| La aplicación arranca y dice el puerto | Arrancó bien: el problema es de ruta, probad otra vez la URL completa |
-| Una excepción al arrancar | Es vuestro código o vuestra configuración: mismo error que veríais en local |
-| Nada, y la URL da error de aplicación | Revisad artefacto, comando de arranque, runtime Java SE y variables; activad los logs si todavía no muestran información |
+| Salida observada en el registro | Diagnóstico |
+| ------------------------------- | ----------- |
+| La aplicación arranca e indica el puerto | El proceso se ha iniciado correctamente: el defecto está en la ruta solicitada. Verifica la URL completa |
+| Excepción durante el arranque | El defecto reside en el código o en la configuración: es el mismo error que se produciría en el entorno local |
+| Ausencia de salida y error de aplicación en la URL | Revisa el artefacto, el comando de arranque, el runtime Java SE y las variables de entorno; habilita el registro si todavía no emite información |
 
 <div class="rule">
-  <p class="rule-label">El registro es la primera herramienta, no la última</p>
-  <p>La reacción habitual ante una URL que no responde es volver a desplegar por si acaso. Desplegar otra vez tarda cinco minutos y no os dice nada; abrir el registro tarda diez segundos y os dice exactamente qué pasó. Este orden —leer antes que tocar— es la mitad de lo que separa a alguien que arregla cosas de alguien que las prueba a ver.</p>
+  <p class="rule-label">El registro como primera herramienta de diagnóstico</p>
+  <p>La reacción habitual ante un servicio que no responde consiste en repetir el despliegue. Esa operación consume varios minutos y no aporta información diagnóstica; la consulta del registro requiere segundos y determina la causa con precisión. El principio aplicable —obtener evidencia antes de modificar el sistema— distingue la corrección fundamentada de la prueba por tanteo.</p>
 </div>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>La API responde en su URL pública desde una red que no es la del aula.</span></div>
-  <div><strong>Si lo tenéis</strong><span>Sabéis abrir el registro y explicar qué escribe vuestra aplicación al arrancar.</span></div>
-  <div><strong>Reto</strong><span>Añadid una ruta de estado que devuelva simplemente que la aplicación está viva, y comprobadla con <code>curl</code> desde vuestra terminal.</span></div>
+  <div><strong>Ampliación</strong><span>Capacidad de consultar el registro e interpretar la salida que emite la aplicación durante el arranque.</span></div>
+  <div><strong>Reto</strong><span>Implementar un <em>endpoint</em> de estado que acredite que la aplicación se encuentra operativa y verificarlo mediante <code>curl</code> desde la terminal.</span></div>
 </div>
 
 <details class="aside aside--extra">
   <summary>Plan alternativo si el plan gratuito no da de sí</summary>
-  <p>El F1 tiene dos límites que pueden apretar. Uno es 1 GB de memoria. El otro son <strong>60 minutos de CPU al día</strong>, contados por región y por suscripción y compartidos entre todas vuestras aplicaciones gratuitas de esa región: si se agotan, el servicio se para y todo responde 403 hasta la medianoche UTC. Una aplicación que arranca y muere en bucle se los come en una mañana.</p>
+  <p>El plan F1 impone dos límites relevantes. El primero es 1 GB de memoria. El segundo son <strong>60 minutos de CPU diarios</strong>, contabilizados por región y suscripción y compartidos entre todas las aplicaciones gratuitas de esa región: al agotarse, el servicio se detiene y responde con código 403 hasta la medianoche UTC. Una aplicación que entra en un ciclo de arranque y terminación consume esa cuota en pocas horas.</p>
   <p>La alternativa es <strong>Azure Container Apps</strong>, que tiene franja mensual gratuita —180.000 segundos de vCPU, 360.000 de memoria y dos millones de peticiones— y que <em>escala a cero</em>: mientras nadie la usa no consume nada.</p>
-  <p>Lo importante es lo que <strong>no</strong> cambia: el repositorio, el circuito, el CI, el ajuste del puerto, CORS y la coordinación entre las dos piezas son idénticos. Lo único distinto es que allí se despliega una imagen en lugar de un artefacto, y Spring Boot la construye solo con <code>./mvnw spring-boot:build-image</code>, sin que tengáis que escribir un Dockerfile.</p>
-  <p>Esto se decide en clase y para todo el grupo. No os cambiéis por vuestra cuenta.</p>
+  <p>Los elementos que <strong>no</strong> varían son los determinantes: el repositorio, el flujo de integración, el CI, la resolución del puerto, la configuración de CORS y la coordinación entre ambos componentes son idénticos. La única diferencia consiste en desplegar una imagen de contenedor en lugar de un artefacto, imagen que Spring Boot construye mediante <code>./mvnw spring-boot:build-image</code> sin necesidad de redactar un Dockerfile.</p>
+  <p>La elección de plataforma se acuerda en clase y para el conjunto del grupo; no procede modificarla de forma individual.</p>
 </details>
 
 ---
@@ -346,9 +346,9 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 <div class="checkpoint checkpoint--recall">
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
-    <li>¿Qué runtime habéis elegido y cómo comprobáis el puerto efectivo?</li>
+    <li>¿Qué runtime se ha seleccionado y mediante qué procedimiento se verifica el puerto efectivo?</li>
     <li>¿Por qué el workflow de la API tiene dos jobs y el del portfolio uno?</li>
-    <li>La URL da error y el despliegue está en verde. ¿Cuál es vuestro primer movimiento?</li>
+    <li>La URL devuelve un error y el despliegue ha concluido con éxito. ¿Cuál es la primera actuación?</li>
     <li>¿Por qué la primera petición del día tarda tanto?</li>
   </ol>
 </div>
@@ -365,8 +365,8 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
   <p class="checkpoint-label">Antes de la sesión 9</p>
   <ul class="checklist">
     <li>La API responde en su URL pública, comprobado fuera de la red del centro.</li>
-    <li>Tenéis anotadas la URL de la API y la ruta que devuelve la lista de datos.</li>
-    <li>Traéis dibujado, en papel, cómo va a ser la pantalla del portfolio que muestre esos datos.</li>
+    <li>Constan registradas la URL de la API y la ruta que devuelve la colección de datos.</li>
+    <li>Consta un esquema de la interfaz del portfolio que mostrará esos datos.</li>
   </ul>
 </div>
 
@@ -378,11 +378,11 @@ Cuando el workflow termine en verde, abrid la URL de vuestra API con la ruta que
 
 <p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-Un **contrato de API** describe lo que otro programa puede pedir y lo que recibirá: método, ruta, campos y estados HTTP. Ya habéis construido esas respuestas en Servidor. Hoy comprobaremos que la versión publicada cumple el mismo contrato que la local, sin volver a implementar sus controladores.
+Un **contrato de API** especifica qué puede solicitar un programa consumidor y qué obtendrá a cambio: método, ruta, campos y códigos de estado HTTP. Esas respuestas ya están implementadas en Servidor. En esta sesión se verifica que la versión publicada cumple el mismo contrato que la local, sin reimplementar sus controladores.
 
 El consumidor puede ser Bruno, una prueba o un navegador. Para detectar un cambio incompatible no hace falta haber programado todavía una interfaz. El cliente completo con fetch y CORS se trabajará después de las sesiones 33–34 de Servidor, en Intermodular 18. Ahora utilizamos la colección que ya conoce el grupo.
 
-**Una base URL cambia el destino, no el contrato.** La ruta `/tareas` debe seguir llamándose igual en local y en producción. El prefijo `/api/v1` llegará en Servidor 32; no lo añadáis por copiar un tutorial. Un 404 puede indicar una ruta equivocada, aunque el programa haya arrancado correctamente.
+**La URL base determina el destino, no el contrato.** La ruta `/tareas` debe mantener su denominación en el entorno local y en producción. El prefijo de versión `/api/v1` se introduce en Servidor 32 y no procede incorporarlo antes por analogía con otras fuentes. Un código 404 puede indicar una ruta incorrecta aunque el proceso haya arrancado sin incidencias.
 
 La demostración consiste en enviar la misma petición a dos entornos, comparar sus estados y campos y localizar el commit que produjo la respuesta pública. El resultado se documenta una vez y sirve a los dos módulos.
 
@@ -489,7 +489,7 @@ El trabajo de Servidor es escribir pruebas que verifiquen las reglas y, en su se
 
 #### Bloque B · Preparar PostgreSQL en el job
 
-En `.github/workflows/ci.yml`, añade `services` y `env` dentro del job `build`, al mismo nivel que `runs-on` y `steps`. Conserva checkout, Java y verify de la sesión 7. Usa la misma versión mayor de PostgreSQL que en vuestro proyecto; 16 es el ejemplo.
+En `.github/workflows/ci.yml`, añade `services` y `env` dentro del job `build`, al mismo nivel que `runs-on` y `steps`. Conserva las etapas de checkout, Java y verify de la sesión 7. Declara la misma versión mayor de PostgreSQL que emplea el proyecto; 16 es el valor del ejemplo.
 
 ```yaml
     services:
@@ -542,9 +542,9 @@ En las comprobaciones de la sesión enlaza la ejecución correcta y el fallo con
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
   <ol>
-    <li>Vuestra API se reinicia. ¿Qué pasa hoy con lo que habíais guardado?</li>
-    <li>La contraseña de vuestra base de datos local, ¿dónde está escrita ahora mismo?</li>
-    <li>Añadís un campo a una entidad y desplegáis. ¿Quién cambia la tabla?</li>
+    <li>El proceso de la API se reinicia. ¿Qué ocurre en el estado actual con los datos almacenados?</li>
+    <li>¿En qué ubicación está registrada actualmente la contraseña de la base de datos local?</li>
+    <li>Se añade un campo a una entidad y se despliega. ¿Qué elemento del sistema modifica la tabla?</li>
   </ol>
 </div>
 
@@ -562,7 +562,7 @@ Distinguimos desarrollo, prueba/CI y producción. Cada uno tiene su propia base 
 
 #### Comprobar la oferta antes de crear
 
-La oferta de Azure for Students tiene requisitos de elegibilidad y límites por servicio. La página oficial incluye una cantidad gratuita de PostgreSQL durante un periodo limitado para cuentas elegibles; no garantiza que toda cuenta del alumnado tenga activada esa oferta. Revisad suscripción, región, tamaño, almacenamiento y coste estimado. Si no encaja, utilizad el recurso de aula acordado: no es necesario contratar un plan para superar la sesión. [Condiciones y servicios de Azure for Students](https://azure.microsoft.com/en-us/free/students/).
+La oferta de Azure for Students establece requisitos de elegibilidad y límites por servicio. La documentación oficial contempla una cantidad gratuita de PostgreSQL durante un periodo limitado para las cuentas elegibles, sin garantizar que toda cuenta del alumnado tenga esa oferta activada. Debe verificarse la suscripción, la región, el tamaño, el almacenamiento y el coste estimado. Si la configuración no encaja, se emplea el recurso de aula acordado: la superación de la sesión no requiere la contratación de ningún plan. [Condiciones y servicios de Azure for Students](https://azure.microsoft.com/en-us/free/students/).
 
 #### Configuración y esquema
 
@@ -576,47 +576,47 @@ Las credenciales reales se configuran en el proveedor; los nombres de variables 
 
 <p class="stage stage--guided">Todos a la vez, a la misma pantalla</p>
 
-En **portal.azure.com**, buscad `Azure Database for PostgreSQL` y elegid **Servidor flexible** (*Flexible server*) → **Crear**.
+En **portal.azure.com**, localiza `Azure Database for PostgreSQL` y selecciona **Servidor flexible** (*Flexible server*) → **Crear**.
 
 | Campo | Valor |
 | ----- | ----- |
 | Suscripción y grupo de recursos | Los mismos que la API |
-| Nombre del servidor | <code>db-</code> y algo vuestro: forma parte de una dirección pública |
-| Región | La misma que vuestro App Service |
+| Nombre del servidor | Prefijo <code>db-</code> seguido de un identificador propio: forma parte de una dirección pública |
+| Región | La misma en la que se aprovisionó el App Service |
 | Tipo de carga de trabajo | **Desarrollo** |
 | Proceso y almacenamiento | **Burstable B1ms**, 32 GB |
-| Nombre de usuario administrador | Uno vuestro, y **no** <code>admin</code> |
-| Contraseña | Larga, y guardada donde podáis recuperarla |
+| Nombre de usuario administrador | Un identificador propio; **no** <code>admin</code> |
+| Contraseña | De longitud suficiente y almacenada en un medio recuperable |
 
 <div class="rule">
-  <p class="rule-label">Comprobad el tamaño antes de crear</p>
-  <p>Si el proceso no dice <strong>B1ms</strong>, paradlo. Es el tamaño de referencia de esta práctica; comprobad que está cubierto por vuestra oferta antes de crear el recurso, y un servidor de base de datos encendido gasta esté o no atendiendo peticiones.</p>
+  <p class="rule-label">Verificación del dimensionamiento previa al aprovisionamiento</p>
+  <p>Si la configuración no indica <strong>B1ms</strong>, debe interrumpirse el proceso. Ese es el dimensionamiento de referencia de la práctica; conviene comprobar que está cubierto por la oferta antes de crear el recurso. A diferencia de un plan de cómputo con escalado a cero, un servidor de base de datos consume recursos de forma continua, con independencia de que esté atendiendo peticiones.</p>
 </div>
 
-**La red.** En la pestaña de conectividad, acceso **público**, y permitid las direcciones de salida del App Service y la IP del aula que necesite acceso. Revisad la conectividad elegida; no asumáis que abrir el acceso a todos los servicios de Azure limita las conexiones a vuestra suscripción.
+**Configuración de red.** En la pestaña de conectividad, selecciona acceso **público** y autoriza las direcciones de salida del App Service y la dirección IP del aula que requiera acceso. Revisa la conectividad configurada: habilitar el acceso a todos los servicios de Azure no restringe las conexiones a la propia suscripción.
 
-**La base de datos.** Cuando el servidor exista, cread dentro una base de datos con el nombre de vuestro proyecto. Un servidor puede contener varias; la aplicación se conecta a una.
+**Creación de la base de datos.** Una vez aprovisionado el servidor, crea en él una base de datos con el nombre del proyecto. Una instancia de servidor puede alojar varias bases de datos; la aplicación establece la conexión con una de ellas.
 
-#### Bloque B · La conexión, como secreto
+#### Bloque B · La cadena de conexión como configuración externa
 
-<p class="stage stage--solo">Individual, sin escribir nada en el código</p>
+<p class="stage stage--solo">Trabajo individual, sin incorporar ningún valor al código fuente</p>
 
-En vuestro App Service: **Configuración → Variables de entorno**, y tres nuevas:
+En el App Service: **Configuración → Variables de entorno**. Declara tres variables nuevas:
 
 | Nombre | Valor |
 | ------ | ----- |
-| <code>SPRING_DATASOURCE_URL</code> | <code>jdbc:postgresql://VUESTRO-SERVIDOR.postgres.database.azure.com:5432/VUESTRA-BD?sslmode=require</code> |
-| <code>SPRING_DATASOURCE_USERNAME</code> | El usuario administrador que creasteis |
+| <code>SPRING_DATASOURCE_URL</code> | <code>jdbc:postgresql://TU-SERVIDOR.postgres.database.azure.com:5432/TU-BD?sslmode=require</code> |
+| <code>SPRING_DATASOURCE_USERNAME</code> | El usuario administrador declarado en el bloque A |
 | <code>SPRING_DATASOURCE_PASSWORD</code> | Su contraseña |
 
 <details class="aside aside--help">
   <summary>Por qué <code>sslmode=require</code> no es opcional</summary>
-  <p>El servidor rechaza las conexiones sin cifrar. Si lo omitís, el fallo que veréis no dice «falta SSL»: dice que no se puede conectar, y os pasaréis media sesión mirando el cortafuegos. Es de los errores que solo se reconocen una vez.</p>
+  <p>El servidor rechaza las conexiones no cifradas. Si el parámetro se omite, el mensaje de error no identifica la ausencia de TLS como causa: informa únicamente de que la conexión no ha podido establecerse, lo que orienta el diagnóstico hacia la configuración del cortafuegos. Conviene retener este caso, porque el síntoma no señala la causa.</p>
 </details>
 
-**Lo que va al repositorio.** Nada de lo anterior. Lo que sí va es un fichero de ejemplo con los nombres de las variables y valores inventados, para que quien clone el proyecto sepa qué tiene que rellenar. Esa es la diferencia entre un proyecto que otra persona puede arrancar y uno que solo funciona en vuestro ordenador.
+**Contenido versionable.** Ninguno de los valores anteriores se incorpora al repositorio. Sí se incorpora un archivo de ejemplo con los nombres de las variables y valores ficticios, de modo que quien clone el proyecto conozca qué configuración debe aportar. Esa distinción separa un proyecto reproducible por terceros de uno que solo se ejecuta en el entorno de su autor.
 
-#### Bloque C · Que las tablas existan, y sepáis quién las creó
+#### Bloque C · Creación controlada del esquema
 
 1. En la base local de ensayo, comprueba que el esquema coincide con las entidades y que los tests de Servidor 22 pasan. Genera un script de esquema a partir de esa versión, por ejemplo con pg_dump, instalado con las herramientas de PostgreSQL. En PowerShell ajusta usuario, base y ruta del ejecutable a tu instalación:
 
@@ -631,39 +631,39 @@ El comando pide la contraseña si la conexión lo necesita; no la escribas en el
 4. Arranca el backend y comprueba que valida el esquema. Si falta una columna, revisa la versión de script y JAR; no cambies validate por update para ocultar la discrepancia.
 5. Carga datos ficticios mediante la colección. En las siguientes semanas los cambios de relaciones de Servidor 23–26 requieren scripts incrementales revisados y una prueba sobre copia de datos; no se vuelve a aplicar el esquema completo.
 
-#### Bloque D · La comprobación que importa
+#### Bloque D · Verificación de la persistencia
 
-<p class="stage stage--solo">Individual, y esta es la que decide si la sesión ha salido</p>
+<p class="stage stage--solo">Trabajo individual · comprobación determinante de la sesión</p>
 
-1. Cread un elemento con la colección contra la URL pública.
-2. En el portal, **reiniciad** vuestro App Service.
-3. Esperad a que arranque y consultad el mismo id desde la colección.
-4. El elemento sigue ahí.
+1. Crea un elemento mediante la colección de peticiones contra la URL pública.
+2. En el portal, **reinicia** el App Service.
+3. Espera a que el proceso arranque y consulta el mismo identificador desde la colección.
+4. El elemento debe persistir.
 
-La comprobación demuestra que ese registro sobrevive al reinicio del backend. Completadla verificando que está en la base pública y en la versión identificada.
+La comprobación acredita que el registro sobrevive al reinicio del proceso, esto es, que el estado reside en el sistema gestor de base de datos y no en la memoria de la aplicación. Complétala verificando que el dato consta en la base pública y bajo la versión identificada.
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación de la sesión</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>El servidor de base de datos existe, es B1ms y está en la misma región que la API.</li>
     <li>Las tres variables están en el App Service y ninguna en el repositorio.</li>
     <li>Hay datos de ejemplo cargados.</li>
-    <li>Los datos sobreviven a un reinicio del servicio, comprobado por vosotros.</li>
+    <li>Los datos sobreviven al reinicio del servicio, con la comprobación realizada de forma directa.</li>
   </ul>
 </div>
 
 <details class="aside aside--help">
-  <summary>Si en Servidor todavía no habéis terminado la persistencia</summary>
-  <p>Haced igualmente los bloques A y B: el servidor y las variables son trabajo de esta asignatura y no dependen de que vuestra aplicación sepa usarlos todavía. En cuanto la versión con persistencia esté lista, entra por el circuito de siempre y el bloque D se hace entonces. Lo que no vale es llegar a la entrega del trimestre sin haberlo comprobado nunca.</p>
+  <summary>Si la persistencia no está terminada todavía en Servidor</summary>
+  <p>Los bloques A y B se realizan igualmente: el aprovisionamiento del servidor y la configuración de las variables corresponden a este módulo y no dependen de que la aplicación las consuma todavía. Cuando la versión con persistencia esté disponible, se incorpora por el flujo de integración habitual y el bloque D se ejecuta en ese momento. Lo que no resulta admisible es alcanzar la entrega del trimestre sin haber verificado nunca la persistencia.</p>
 </details>
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Servidor creado, conexión por variables de entorno y datos que sobreviven a un reinicio.</span></div>
-  <div><strong>Si lo tenéis</strong><span>El fichero de ejemplo en el repositorio, con los nombres de las variables y ningún valor real.</span></div>
-  <div><strong>Reto</strong><span>Comprobad que los tests de repositorio de Servidor 22 pasan en la base aislada configurada en Intermodular 11.</span></div>
+  <div><strong>Ampliación</strong><span>El archivo de ejemplo incorporado al repositorio, con los nombres de las variables y ningún valor real.</span></div>
+  <div><strong>Reto</strong><span>Verificar que las pruebas de repositorio de Servidor 22 se superan sobre la base aislada configurada en Intermodular 11.</span></div>
 </div>
 
-<p>El servicio PostgreSQL del CI se configuró en Intermodular 11. Reutilizad ese job y verificad ahora que ejecuta los tests de repositorio de Servidor 22.</p>
+<p>El servicio PostgreSQL del CI se configuró en Intermodular 11. Reutiliza ese job y verifica que ejecuta las pruebas de repositorio de Servidor 22.</p>
 
 ---
 
@@ -676,9 +676,9 @@ La comprobación demuestra que ese registro sobrevive al reinicio del backend. C
   <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
   <ol>
     <li>¿Por qué la contraseña de la base de datos no puede estar en <code>application.properties</code>?</li>
-    <li>Subís una credencial por error y la quitáis en el commit siguiente. ¿Está resuelto?</li>
-    <li>Quitáis un campo de una entidad y desplegáis. ¿Qué le pasa a la columna?</li>
-    <li>¿Por qué el servidor rechaza vuestra conexión si no pedís SSL?</li>
+    <li>Se incorpora una credencial por error y se elimina en el commit siguiente. ¿Queda resuelta la incidencia?</li>
+    <li>Se suprime un campo de una entidad y se despliega. ¿Qué ocurre con la columna correspondiente?</li>
+    <li>¿Por qué el servidor rechaza la conexión si no se solicita cifrado TLS?</li>
     <li>¿Qué demuestra reiniciar el servicio y volver a mirar?</li>
   </ol>
 </div>
@@ -695,9 +695,9 @@ La comprobación demuestra que ese registro sobrevive al reinicio del backend. C
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Antes de la sesión 13</p>
   <ul class="checklist">
-    <li>Los datos de vuestra API sobreviven a un reinicio, comprobado.</li>
-    <li>Ninguna credencial en ninguno de vuestros dos repositorios, revisado mirando el historial y no solo los ficheros de hoy.</li>
-    <li>Traéis anotado qué pasaría si mañana cambiarais el nombre de un campo en la API.</li>
+    <li>Los datos de la API sobreviven al reinicio del servicio, con la comprobación realizada.</li>
+    <li>Ninguna credencial presente en ninguno de los dos repositorios, verificado sobre el historial completo y no solo sobre el estado actual de los archivos.</li>
+    <li>Un análisis escrito de las consecuencias de renombrar un campo de la API.</li>
   </ul>
 </div>
 
