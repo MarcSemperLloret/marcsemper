@@ -380,13 +380,42 @@ public String resumen() {
 
 **Comprueba:** responden tres rutas diferentes y sabes qué método atiende cada una. No copies otra clase completa dentro de `HolaController`: aquí estás añadiendo dos métodos a la clase existente.
 
+#### Paso 8-bis · Comprobar lo que la sesión afirma · opcional
+
+Este paso no introduce contenido nuevo: comprueba con evidencia cuatro afirmaciones que la sesión ha hecho sin demostrar. Está previsto para quien termine antes de tiempo; la prioridad es el paso 9, que cierra la sesión con la primera versión publicada. Deshaz cada alteración antes de continuar.
+
+| Alteración | Resultado esperado | Qué demuestra |
+| --- | --- | --- |
+| Renombra el método `hola()` como `saluda()`, sin tocar su `@GetMapping` | `/hola` responde igual que antes | El nombre del método Java no determina la URL |
+| Comenta la línea `@RestController` y reinicia | `/hola` devuelve 404 | Sin esa anotación la clase compila igual, pero el escaneo de componentes no la registra como controlador y su ruta no existe |
+| Añade un segundo método, con otro nombre, anotado también con `@GetMapping("/hola")` | La aplicación no llega a arrancar: el registro informa de `Ambiguous mapping` | La correspondencia entre rutas y métodos se resuelve durante el arranque, no al recibir la petición |
+| Añade el método de abajo y compara las cabeceras de ambas rutas | Cada una declara un `Content-Type` distinto | El tipo que devuelve el método determina cómo se escribe la respuesta |
+
+```java
+@GetMapping("/anyo")
+public int anyo() {
+    return 2026;
+}
+```
+
+Para la última comprobación, abre las herramientas de desarrollo del navegador en la pestaña **Red** y contrasta la cabecera `Content-Type` de las dos respuestas:
+
+| Ruta | Tipo devuelto | Cabecera `Content-Type` |
+| --- | --- | --- |
+| `/hola` | `String` | `text/plain;charset=UTF-8` |
+| `/anyo` | `int` | `application/json` |
+
+Ninguna de las dos ha necesitado configuración alguna: el servidor decide cómo escribir el cuerpo a partir del tipo declarado en el método. Qué componente toma esa decisión, y cómo se gobierna cuando lo que se devuelve es un objeto de tu dominio, es el contenido de la sesión 3.
+
+**Comprueba:** las cuatro alteraciones están deshechas, `/hola` devuelve su texto y la aplicación arranca sin errores en el registro.
+
 #### Paso 9 · Guardar la primera versión en GitHub · 25 min
 
 Un **repositorio** guarda los archivos y su historial. Un **commit** registra una versión local; **push** envía los commits a GitHub. Es el mismo repositorio que utilizaremos en Intermodular para practicar el flujo de trabajo y el despliegue.
 
 Si ya has hecho la primera sesión de Intermodular, estos comandos los has visto con el portfolio. Lo único distinto es que aquí el proyecto ya existe en tu ordenador antes que en GitHub, y por eso se empieza con `git init` en lugar de con `git clone`.
 
-1. En la carpeta de `pom.xml`, abre el `README.md` de la plantilla. Completa la propuesta del paso 1, revisa el comando de arranque y añade tus tres rutas.
+1. En la carpeta de `pom.xml`, crea el archivo `README.md`. El generador no lo incluye: entrega un `HELP.md` con enlaces a la documentación que su propio `.gitignore` excluye del repositorio. Escribe en el README la propuesta del paso 1, el comando de arranque y tus tres rutas.
 2. Revisa la tabla de comprobaciones de los pasos 7 y 8. Debe indicar la petición, la respuesta observada y cualquier dificultad pendiente. Explica qué parte de la aplicación produce cada respuesta.
 3. Abre `.gitignore`, el archivo que indica a Git qué no debe subir. Comprueba que excluye `target/` (archivos generados al compilar), la configuración local del IDE y `.env` si lo utilizas más adelante. Conserva los archivos del wrapper, incluidos `.mvn/`, `mvnw` y `mvnw.cmd`.
 
