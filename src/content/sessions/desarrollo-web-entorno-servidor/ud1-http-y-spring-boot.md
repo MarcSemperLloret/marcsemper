@@ -217,11 +217,35 @@ Antes de editar, comprueba que el IDE utiliza el JDK 21 también para este proye
 
 | Archivo o carpeta | Qué contiene y qué haces ahora |
 | --- | --- |
-| `pom.xml` | Configuración de Maven. Localiza `dependencies` y `spring-boot-starter-webmvc`, el conjunto de bibliotecas web que has elegido |
+| `pom.xml` | Configuración de Maven. Localiza `dependencies` y comprueba su contenido con la lista de abajo |
 | `src/main/java/com/ejemplo/gestor/GestorApplication.java` | Clase de arranque. Localiza el método `main` |
 | `src/main/resources/application.properties` | Ajustes de la aplicación. Hoy puede estar vacío o contener su nombre |
 | `src/test/java` | Código de pruebas. Lo utilizaremos en próximas sesiones |
 | `.mvn`, `mvnw` y `mvnw.cmd` | Configuración y comandos del wrapper de Maven |
+
+**Comprueba el `pom.xml` antes de seguir.** Con los valores de la tabla anterior, el generador declara exactamente dos dependencias, y de ellas depende que la aplicación arranque como servidor:
+
+```xml
+<dependencies>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-webmvc</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-webmvc-test</artifactId>
+		<scope>test</scope>
+	</dependency>
+</dependencies>
+```
+
+| Dependencia | Qué aporta |
+| --- | --- |
+| `spring-boot-starter-webmvc` | Spring MVC y el servidor Tomcat embebido. Es la que mantiene el proceso vivo a la escucha en un puerto; sin ella la aplicación arranca y termina |
+| `spring-boot-starter-webmvc-test` | El instrumental de pruebas, en ámbito `test`: JUnit, AssertJ, Mockito y el soporte para probar controladores. No se empaqueta con la aplicación |
+
+Si tu archivo declara otras dependencias, o si le falta la primera, seleccionaste una lista distinta en el generador: vuelve a generarlo con **Spring Web** y solo con ella.
 
 La clase de arranque tendrá esta forma:
 

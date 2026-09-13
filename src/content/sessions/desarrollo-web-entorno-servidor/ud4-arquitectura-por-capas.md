@@ -1076,7 +1076,7 @@ De ahí se deriva una pregunta que conviene plantear pronto: si alguien envía u
 
 #### Paso 6 · Localizar JUnit y preparar la clase de test
 
-Mira el `pom.xml`: `spring-boot-starter-test` está desde el primer día, porque lo puso `start.spring.io`. Trae JUnit 5 y todo lo necesario.
+Mira el `pom.xml`: `spring-boot-starter-webmvc-test` está desde el primer día, porque lo puso `start.spring.io`. Trae JUnit 5 y todo lo necesario.
 
 Conviene examinar `src/test/java`: existe desde la UD1, con una clase generada en su interior. Es la carpeta gemela de `src/main/java`, y **el código de tests no se empaqueta con la aplicación**.
 
@@ -1147,7 +1147,7 @@ Vive en `src/test/java`, así que no se publica con la aplicación.
 
 <details class="aside aside--extra">
   <summary>Existen librerías que generan estos dobles</summary>
-  <p>La más extendida es <strong>Mockito</strong>, ya incluida en el proyecto dentro de <code>spring-boot-starter-test</code>. Con ella, lo de arriba se escribe en una línea por comportamiento.</p>
+  <p>La más extendida es <strong>Mockito</strong>, ya incluida en el proyecto dentro de <code>spring-boot-starter-webmvc-test</code>. Con ella, lo de arriba se escribe en una línea por comportamiento.</p>
   <p>Lo hacemos a mano primero porque un doble escrito por ti se entiende sin aprender una sintaxis nueva, y porque así ves que no hay magia: es una clase normal que implementa la misma interfaz. Cuando en la UD11 se ordene la estrategia de pruebas, sabrás qué te está generando la librería.</p>
 </details>
 

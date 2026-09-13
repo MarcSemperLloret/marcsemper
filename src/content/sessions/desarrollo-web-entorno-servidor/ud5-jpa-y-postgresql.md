@@ -710,7 +710,7 @@ Los nombres de métodos que diseñamos en la sesión 16 no fueron casualidad: **
 
 #### Paso 4 · Borrar la memoria y conectar el servicio
 
-**Migrar también un test de la interfaz antigua.** Mockito ya viene con `spring-boot-starter-test`: `mock` crea un colaborador de prueba y `when` define su respuesta. En el test del servicio sustituye `new TareaRepositorioFalso()` por lo siguiente, importando `mock`, `when` y `verify` de `org.mockito.Mockito` y `java.util.Optional`:
+**Migrar también un test de la interfaz antigua.** Mockito ya viene con `spring-boot-starter-webmvc-test`: `mock` crea un colaborador de prueba y `when` define su respuesta. En el test del servicio sustituye `new TareaRepositorioFalso()` por lo siguiente, importando `mock`, `when` y `verify` de `org.mockito.Mockito` y `java.util.Optional`:
 
 ```java
 TareaRepository repositorio = mock(TareaRepository.class);
