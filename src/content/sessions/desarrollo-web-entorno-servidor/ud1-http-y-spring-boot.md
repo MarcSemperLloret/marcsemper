@@ -419,6 +419,19 @@ Si ya has hecho la primera sesión de Intermodular, estos comandos los has visto
 2. Revisa la tabla de comprobaciones de los pasos 7 y 8. Debe indicar la petición, la respuesta observada y cualquier dificultad pendiente. Explica qué parte de la aplicación produce cada respuesta.
 3. Abre `.gitignore`, el archivo que indica a Git qué no debe subir. Comprueba que excluye `target/` (archivos generados al compilar), la configuración local del IDE y `.env` si lo utilizas más adelante. Conserva los archivos del wrapper, incluidos `.mvn/`, `mvnw` y `mvnw.cmd`.
 
+Conviene entender qué queda dentro del repositorio y qué queda fuera, porque determina cómo se recupera el proyecto en cualquier otro equipo:
+
+| Se versiona | No se versiona |
+| --- | --- |
+| `src`, tu código fuente | `target/`, todo lo que produce la compilación |
+| `pom.xml`, que **declara** las dependencias | Las bibliotecas de las que depende el proyecto |
+| `mvnw`, `mvnw.cmd` y `.mvn/`, el wrapper | La configuración local del editor |
+| `README.md` y `.gitignore` | Credenciales y archivos de entorno |
+
+**Las dependencias no se guardan: se declaran.** Maven las descarga una sola vez y las conserva en el repositorio local de tu equipo, una carpeta `.m2` de tu perfil de usuario que queda fuera del proyecto. Por eso el repositorio ocupa unos pocos kilobytes mientras que las bibliotecas que utiliza suman decenas de megabytes, y por eso lo que se comparte es la declaración y no el contenido descargado.
+
+La consecuencia práctica aparece al llevar el proyecto a otro ordenador: basta clonar el repositorio y ejecutar el arranque con el wrapper. Maven lee el `pom.xml`, resuelve cada dependencia y reconstruye `target/` desde cero. No se copian carpetas entre equipos ni se envían bibliotecas por mensajería: se clona y se ejecuta. Es la misma propiedad que hace reproducible el flujo de integración de Proyecto Intermodular, donde la máquina que construye tampoco conserva nada entre ejecuciones.
+
 **Si aún no hay repositorio del proyecto**, crea uno vacío en GitHub con el botón **New repository**. No añadas allí README ni `.gitignore`: ya existen en tu ordenador. Copia su dirección HTTPS. En la terminal del proyecto, ejecuta cada comando por separado:
 
 ```bash
@@ -456,6 +469,26 @@ Completa el inicio de sesión que solicite Git. La [guía de GitHub para subir c
 **Al terminar la sesión:**
 
 Con tu proyecto abierto, explica para qué utilizas Spring Boot y Maven, señala el método que atiende una de tus rutas y reproduce una respuesta correcta y un 404. Explica qué cambia si detienes el programa. Comprueba también que tu propuesta tiene las entidades y reglas necesarias para seguir ampliándola durante el trimestre.
+
+**Para casa · recuperar el proyecto desde el repositorio**
+
+La entrega de la sesión no termina en el `push`: un repositorio solo sirve si otra persona, u otro equipo, puede partir de él. Compruébalo sobre el tuyo.
+
+1. Clona tu repositorio en una carpeta distinta de la de trabajo, o en otro ordenador si dispones de él: `git clone <la dirección de tu repositorio> gestor-copia`.
+2. Antes de ejecutar nada, inspecciona la copia. No existe `target/` ni ninguna biblioteca: solo el código, el `pom.xml` y el wrapper.
+3. Abre la carpeta en el editor y espera a que termine de importar el proyecto Maven. Si los `import` aparecen marcados como error, la importación no ha concluido; el código es correcto y lo que falta es que el editor resuelva las dependencias declaradas en el `pom.xml`.
+4. Arranca con el wrapper y comprueba que `/hola` responde el mismo texto que en tu carpeta original.
+5. Ejecuta `git status` en la copia. Pese a haber compilado, `target/` no aparece como cambio pendiente: el `.gitignore` lo excluye.
+
+**Qué traer a la sesión 2:** la dirección del repositorio clonado y una nota con lo que tuviste que hacer para ponerlo en marcha, incluido cualquier paso que no estuviera en este guion.
+
+<details class="aside aside--extra">
+  <summary>Reto · simular un equipo que nunca ha visto Spring</summary>
+  <p>En tu propio ordenador las bibliotecas ya están descargadas, de modo que la copia arranca de inmediato y la descarga inicial no vuelve a verse. Para reproducirla, indica a Maven un repositorio local vacío:</p>
+  <p><code>.\mvnw.cmd -Dmaven.repo.local=..\m2-limpio spring-boot:run</code> en PowerShell, o <code>./mvnw -Dmaven.repo.local=../m2-limpio spring-boot:run</code> en Linux y macOS.</p>
+  <p>Maven descargará en esa carpeta todo lo que declara el <code>pom.xml</code>, que es exactamente lo que ocurre la primera vez en una máquina nueva. Compara cuánto tarda esa ejecución con la siguiente, y consulta el tamaño de la carpeta creada: esa cifra es la que <strong>no</strong> viaja en el repositorio.</p>
+</details>
+
 
 
 ## Sesión 2 · Rutas y primeras consultas del proyecto
