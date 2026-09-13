@@ -31,9 +31,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Auditoría y correcciones de seguridad.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Auditoría y correcciones de seguridad.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **5/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **5/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 | Criterio                                            | Puntos |
 | --------------------------------------------------- | -----: |
@@ -499,7 +499,7 @@ Cada corrección reclamada tiene una prueba y una explicación propia. El inform
 
 <p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
 
-Una revisión cruzada comprueba si otra persona puede reproducir el resultado con las instrucciones entregadas. No consiste en atacar el trabajo de un compañero ni en premiar a quien encuentre más fallos. El objetivo es descubrir instrucciones incompletas, resultados no reproducibles o límites no declarados.
+Una comprobación de reproducibilidad verifica si el resultado se obtiene partiendo únicamente de las instrucciones entregadas, sin el conocimiento que tiene quien las escribió. No se trata de buscar fallos, sino de descubrir instrucciones incompletas, resultados no reproducibles o límites no declarados.
 
 Una observación útil indica paso seguido, resultado esperado y resultado observado. «No funciona» no permite corregir; «la búsqueda normal falla después del cambio de SQL» identifica un comportamiento que debe conservarse.
 
@@ -507,11 +507,11 @@ Una observación útil indica paso seguido, resultado esperado y resultado obser
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Intercambia la carpeta del laboratorio con otra pareja, junto con la guía del laboratorio y la tabla de hallazgos. Trabaja en una copia distinta de tu versión, siempre en local.
+1. Parte de una copia limpia de la carpeta del laboratorio y sigue tu propia guía y tu tabla de hallazgos al pie de la letra, sin completar ningún paso de memoria. Trabaja en una copia distinta de tu versión, siempre en local.
 2. Arranca siguiendo solo sus instrucciones y ejecuta las pruebas. Registra el resultado y una incidencia reproducible si aparece; no cambies todavía el código ajeno.
 3. Elige un caso permitido y uno rechazado. Contrasta las respuestas con su matriz de permisos y pregunta por una decisión cuya evidencia no esté clara.
 4. Devuelve observaciones concretas. En tu propio trabajo corrige una incidencia o explica con evidencia por qué no procede, y repite las pruebas afectadas.
-5. Entrega versión final, matriz, hallazgos y resultados. Cada integrante explica una corrección y una limitación. La decisión «publicaría/no publicaría» se refiere a los criterios del laboratorio y no autoriza a publicar su versión vulnerable.
+5. Entrega versión final, matriz, hallazgos y resultados. Explica una corrección aplicada y una limitación que persiste. La decisión «publicaría/no publicaría» se refiere a los criterios del laboratorio y no autoriza a publicar su versión vulnerable.
 
 ### Cierre
 

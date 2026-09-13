@@ -32,9 +32,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Análisis de datos e informe de decisiones.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Análisis de datos e informe de decisiones.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 <table>
   <thead>
@@ -354,7 +354,7 @@ Una frase como «este producto vende más unidades en este periodo» es defendib
 2. Organiza cuatro diapositivas o secciones: datos y reglas, hallazgos, decisiones y límites. En las decisiones indica riesgo y métrica de seguimiento.
 3. Reinicia el kernel y ejecuta el notebook desde el principio. Comprueba que los resultados no dependen de ejecutar celdas fuera de orden. Si falla, corrige la celda y repite desde la carga.
 4. Pide a otra persona que localice en el notebook la evidencia de una diapositiva. Añade referencias o títulos de celdas si no puede encontrarla.
-5. Entrega informe y notebook enlazados en la actividad de UD5. Incluye fuente de datos y decisiones de limpieza. Cada integrante explica una limitación o una revisión de la conclusión de la IA.
+5. Entrega informe y notebook enlazados en la actividad de UD5. Incluye fuente de datos y decisiones de limpieza. Explica una limitación del análisis y una revisión de la conclusión de la IA.
 
 ### Cierre
 

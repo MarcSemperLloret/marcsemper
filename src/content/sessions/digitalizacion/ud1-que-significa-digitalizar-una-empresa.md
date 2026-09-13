@@ -31,19 +31,19 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Rediseño de Reparaciones Rápidas.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Rediseño de Reparaciones Rápidas.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-**Qué se entrega.** Un único documento, el **registro de la unidad**, que se crea en la sesión 1 y crece en cada sesión hasta quedar completo al final. No hay tareas sueltas ni examen: la calificación sale de ese documento y de que cada integrante explique la parte que ha trabajado. Esto es lo que debe contener al cerrar cada sesión:
+**Qué se entrega.** Un único documento, el **registro de la unidad**, que se crea en la sesión 1 y crece en cada sesión hasta quedar completo al final. No hay tareas sueltas ni examen: la calificación sale de ese documento y de que puedas explicar cualquier parte de él. Esto es lo que debe contener al cerrar cada sesión:
 
 | Al terminar la sesión | El registro contiene |
 | :--- | :--- |
 | 1 | El proceso actual de la empresa, con una acción por caja, sus flechas y el responsable de cada una; y tres problemas tomados del caso, cada uno con el hecho que lo demuestra, a quién afecta y su consecuencia |
 | 2 | Lo anterior más el proceso futuro, la arquitectura propuesta, cada tecnología con la necesidad concreta que resuelve, y una alternativa descartada con el motivo del descarte |
-| 3 | La versión defendida en la puesta en común, corregida con lo que haya salido del debate |
+| 3 | La versión defendida ante el profesor, corregida con las observaciones recibidas |
 
 Los apartados de la tabla son los mismos que puntúa la rúbrica, de modo que un registro completo es un registro evaluable.
 
-Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 <table>
   <thead>
@@ -310,7 +310,7 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 2. Lee la entrada, asignación y cierre de una reparación. Dibuja una caja por acción y une las cajas con flechas; escribe encima quién realiza cada acción. No añadas todavía aplicaciones nuevas.
 3. Marca tres dificultades que aparezcan en la ficha. Para cada una anota el hecho, a quién afecta y su consecuencia. Ejemplo: las fotos quedan en el móvil del técnico; administración no puede consultarlas al preparar la factura.
 4. Elige un problema y formúlalo como necesidad sin mencionar marcas: «la información de una reparación debe estar disponible para quien la tramita». Distingue el dato que aporta el caso de una suposición propia.
-5. Intercambia el dibujo con otra pareja. Pídele que siga una reparación desde la llegada hasta el aviso al cliente. Corrige una flecha o un responsable que no pueda explicar.
+5. Deja reposar el dibujo unos minutos y recórrelo después siguiendo una reparación desde la llegada hasta el aviso al cliente, leyendo solo lo que está escrito y sin completar de memoria. Corrige toda flecha o responsable que no puedas explicar.
 
 ### Cierre
 
@@ -352,7 +352,7 @@ Por ejemplo, un formulario de recepción puede guardar una reparación en un reg
 El documento contiene proceso actual, proceso futuro, arquitectura y una alternativa descartada. Cada tecnología tiene una necesidad concreta asociada.
 
 
-## Sesión 3 · Puesta en común, debate y defensa de propuestas
+## Sesión 3 · Revisión y defensa de la propuesta
 
 **Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas» —el taller ficticio de reparación de dispositivos del caso—, sesión 3 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
@@ -369,10 +369,10 @@ Una observación útil señala una parte concreta y propone cómo comprobarla. �
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
 1. Selecciona en el documento tres elementos: problema prioritario, cambio propuesto y alternativa descartada. Escribe una frase para explicar cada uno sin leer toda la entrega.
-2. Ensaya durante tres minutos con otra pareja. Mientras una persona explica, la otra anota una duda sobre responsables y otra sobre viabilidad. Después intercambiad los papeles.
+2. Ensaya la explicación en voz alta durante tres minutos. Anota después las dos preguntas que plantearía quien no conoce el caso, una sobre responsables y otra sobre viabilidad, y respóndelas en el documento.
 3. Responde con el diagrama delante. Si el caso no proporciona un dato, indica qué información pedirías; no improvises un presupuesto como si fuera real.
 4. Revisa la propuesta incorporando al menos una observación justificada. Guarda una nota «observación → decisión → cambio» para que se vea la mejora.
-5. Entrega el enlace al documento final con sus versiones o registro de cambios. Cada integrante añade una decisión propia que pueda explicar. Los turnos ante toda la clase se reparten dentro del tiempo disponible; todas las parejas realizan la revisión cruzada.
+5. Entrega el enlace al documento final con sus versiones o su registro de cambios, e incluye una decisión propia que puedas explicar. La defensa es individual: expones tu propuesta y respondes a las preguntas que se te planteen.
 
 ### Cierre
 

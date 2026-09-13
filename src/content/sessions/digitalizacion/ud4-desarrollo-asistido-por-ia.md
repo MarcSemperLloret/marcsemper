@@ -32,9 +32,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Mejora del sitio asistida por IA.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Mejora del sitio asistida por IA.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 <table>
   <thead>
@@ -518,7 +518,7 @@ La revisión empieza por el criterio de aceptación. Si pedimos mejorar el conta
 2. Pide un plan acotado y revisa los archivos que pretende tocar. Aplica el cambio por partes; conserva el punto inicial para poder comparar o volver atrás.
 3. Abre la comparación de cambios en el editor. Para cada archivo explica por qué se modificó. Retira o justifica cualquier cambio fuera del alcance antes de darlo por terminado.
 4. Abre la web, prueba los criterios y revisa un comportamiento anterior que deba mantenerse. Anota paso, resultado esperado y resultado observado; no basta con copiar «tests correctos» de la conversación.
-5. Entrega el sitio actualizado y el registro con tarea, instrucciones, procedimiento de revisión, decisión sobre permisos y pruebas. Cada integrante explica un cambio aceptado o rechazado.
+5. Entrega el sitio actualizado y el registro con tarea, instrucciones, procedimiento de revisión, decisión sobre permisos y pruebas. Explica un cambio aceptado y otro rechazado.
 
 ### Cierre
 

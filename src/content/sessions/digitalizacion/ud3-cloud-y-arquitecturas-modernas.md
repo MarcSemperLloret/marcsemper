@@ -32,9 +32,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Sitio de laboratorio y arquitectura.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Sitio de laboratorio y arquitectura.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **5/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **5/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 <table>
   <thead>
@@ -212,8 +212,8 @@ Después de montar una VM podemos comparar su coste de administración con un se
 1. Representa el recorrido completo empleando los nombres reales del entorno propio. Separa la ruta del visitante de la ruta que seguisteis para actualizar el código.
 2. Para cada pieza añade una responsabilidad: resolver nombre, filtrar tráfico, servir archivo, cifrar conexión o conservar versión. Elimina las flechas cuyo significado no puedas explicar.
 3. Completa una tabla IaaS/PaaS/SaaS con qué administraríais en cada modelo y un uso posible para la empresa. No hace falta contratar otras opciones.
-4. Pide a otra pareja que explique qué comprobaría si el sitio responde por IP pero no por nombre. Utiliza su respuesta para detectar y corregir huecos del diagrama.
-5. Entrega sitio, URL y documento de arquitectura con comprobaciones. Cada integrante explica una pieza y una incidencia resuelta. Enlaza el registro de sesiones, sin redactar otra memoria del mismo despliegue.
+4. Escribe qué comprobarías si el sitio respondiera por IP pero no por nombre, paso a paso y en orden. Utiliza esa secuencia para detectar y corregir huecos del diagrama.
+5. Entrega sitio, URL y documento de arquitectura con comprobaciones. Explica una pieza de la arquitectura y una incidencia resuelta. Enlaza el registro de sesiones, sin redactar otra memoria del mismo despliegue.
 
 ### Cierre
 

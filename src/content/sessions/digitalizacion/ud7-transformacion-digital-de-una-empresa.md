@@ -32,9 +32,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Plan de transformación de TecnoClima.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Plan de transformación de TecnoClima.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 | Criterio                                        | Puntos |
 | ----------------------------------------------- | -----: |
@@ -82,7 +82,7 @@ La tecnología es un medio. El objetivo es **mejorar cómo funciona la organizac
 2. Dibuja solicitud, asignación, visita, cierre y facturación. Indica persona responsable y lugar donde se guarda la información en cada paso.
 3. Marca tres problemas respaldados por la ficha. Separa hechos, consecuencias plausibles y datos que faltan. Elige uno como prioridad inicial y justifica a quién afecta.
 4. Escribe cinco preguntas dirigidas a la dirección que puedan modificar la propuesta: acceso, conectividad, volumen, formación o restricciones económicas.
-5. Intercambia el proceso con otra pareja y comprueba si puede seguir una intervención completa. Corrige omisiones y guarda las preguntas pendientes sin inventar respuestas.
+5. Recorre el proceso siguiendo una intervención completa a partir de lo escrito, sin añadir lo que recuerdas. Corrige omisiones y guarda las preguntas pendientes sin inventar respuestas.
 
 ### Cierre
 
@@ -289,8 +289,8 @@ El feedback debe poder convertirse en una revisión. Una duda sobre conectividad
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
 1. Organiza cinco diapositivas o secciones: problema, proceso futuro, arquitectura, fases/coste e indicadores/límites. Enlaza el documento de trabajo para consultar detalles.
-2. Ensaya en cinco minutos con otra pareja. Cada integrante explica una decisión de la que se responsabiliza; repartid la explicación por argumentos, no por leer párrafos.
-3. La pareja revisora plantea una duda de viabilidad y otra de evidencia. Anota la pregunta y la parte del plan afectada antes de responder.
+2. Ensaya la exposición en cinco minutos. Explica cada decisión por su argumento, no leyendo párrafos del documento.
+3. Anticipa una duda de viabilidad y otra de evidencia, las dos que plantearía quien tuviera que aprobar el plan. Anota cada pregunta y la parte del plan afectada antes de responderla.
 4. Presenta la propuesta con el recorrido preparado: problema, decisión, coste e indicador. Escucha las preguntas, responde con los datos del caso y anota qué parte necesita una explicación más clara.
 5. Registra dos observaciones y decide qué comprobarás en la siguiente sesión. Entrega el enlace a la propuesta presentada, conservando esta versión para comparar la revisión.
 
@@ -323,7 +323,7 @@ El cierre del módulo reúne las actividades realizadas y corrige sus pendientes
 2. Aplica las revisiones y registra observación, cambio y evidencia. Si falta información externa, formula la comprobación que harías antes de ejecutar la propuesta.
 3. Contrasta el plan con la rúbrica de UD7. Localiza un párrafo, tabla o diagrama que permita valorar cada criterio; corrige las afirmaciones sin respaldo.
 4. Actualiza el índice con enlaces a las siete actividades del módulo y su versión final. No copies sus contenidos en un dossier nuevo.
-5. Cada integrante escribe un hecho que le hizo cambiar una decisión y una mejora para su siguiente trabajo. Comprueba que el plan revisado y su índice incorporan las mejoras y que los criterios pendientes están identificados.
+5. Escribe un hecho que te hizo cambiar una decisión y una mejora para tu siguiente trabajo. Comprueba que el plan revisado y su índice incorporan las mejoras y que los criterios pendientes están identificados.
 
 ### Cierre
 

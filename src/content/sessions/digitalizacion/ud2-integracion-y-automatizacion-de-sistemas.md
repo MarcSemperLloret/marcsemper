@@ -31,9 +31,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Automatización diseñada y simulada.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Automatización diseñada y simulada.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 <table>
   <thead>
@@ -443,7 +443,7 @@ puede ser mejor desarrollar la solución mediante código.
 2. Escribe el evento en pasado y enumera sus datos mínimos: identificador de reparación, fecha de cierre y referencia del cliente. Explica por qué cada dato resulta necesario.
 3. Dibuja tres participantes: gestión de reparaciones, facturación y servicio de avisos. Asigna a cada uno una responsabilidad; evita que dos piezas mantengan estados contradictorios sin explicarlo.
 4. Simula un intercambio: una persona prepara una tarjeta con la petición de factura y otra responde «creada» con su identificador. Si falta un dato, devuelve «petición incompleta» e indica cuál.
-5. Registra la petición, la respuesta y una condición que impida continuar. Comprueba que otra pareja entiende quién solicita, quién responde y qué cambia al terminar.
+5. Registra la petición, la respuesta y una condición que impida continuar. Relee ese registro sin añadir nada de memoria y comprueba que queda claro quién solicita, quién responde y qué cambia al terminar.
 
 ### Cierre
 
@@ -505,7 +505,7 @@ Un caso de prueba necesita situación inicial, acción, resultado esperado y res
 2. Reparte los papeles de reparaciones y facturación entre dos personas. En el caso normal, pasa el mensaje y registra la respuesta y el estado final de la reparación.
 3. Repite con facturación marcada como caída. Guarda el mensaje en pendientes; cuando vuelva a estar disponible, procésalo y anota cómo cambia su estado.
 4. Envía dos veces el mismo identificador. Comprueba en el diseño si se crea una factura o dos. Si no hay regla que lo impida, añádela y repite la simulación.
-5. Intercambia los casos con otra pareja para que los siga sin explicaciones. Corrige las ambigüedades y comprueba que el flujo, la tabla de pruebas y la justificación de la solución sean coherentes.
+5. Recorre tus casos siguiendo únicamente lo escrito, sin apoyarte en explicaciones que no estén en el documento. Corrige las ambigüedades y comprueba que el flujo, la tabla de pruebas y la justificación de la solución sean coherentes.
 
 ### Cierre
 
