@@ -584,13 +584,13 @@ Esa última fila combina las dos ideas, y es la forma que tendrá casi toda tu A
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
-#### Paso 1 · Retomar el proyecto y preparar la comprobación
+#### Paso 1 · Retomar el proyecto y preparar la comprobación · 10 min
 
 1. Abre `HolaController.java` en tu carpeta de trabajo, no en la copia que clonaste para la tarea de la sesión anterior, y arranca como en la sesión 1. Comprueba `/hola` desde el navegador; aún no hay colección HTTP que ejecutar.
 2. Localiza `src/main/java/com/ejemplo/gestor/controller`. Las nuevas clases irán en ese paquete; si ya tienes una clase con el nombre del ejemplo, modifica esa clase en vez de duplicarla.
 3. Anota un identificador numérico, como `7`, y un filtro de tu tema, como `estado=activo`. Hoy sirven para observar qué valores llegan al método.
 
-#### Paso 2 · `@RequestParam` · leer la query string
+#### Paso 2 · `@RequestParam` · leer la query string · 30 min
 
 1. Crea `SaludoController.java` en el paquete `controller`, junto a `HolaController`. El primer bloque es la clase completa; los siguientes son versiones alternativas de **su mismo método** `saludo`.
 2. Ejecuta primero la versión con parámetro obligatorio. Después sustituye ese método por el que incluye `defaultValue`, conservando `package`, imports y la clase. No dejes dos métodos que atiendan `GET /saludo`.
@@ -711,7 +711,36 @@ http://localhost:8080/incidencias?pagina=abc
 
 Otro `400`. Es exactamente el mismo mecanismo: no se puede construir un `int` con `"abc"`, así que la petición no encaja con lo declarado y se rechaza antes de ejecutar nada. **Declarar el tipo ya es validar.** En la UD3 aprenderemos a devolver un mensaje de error mucho mejor que este, pero el comportamiento de base ya te protege.
 
-#### Paso 3 · `@PathVariable` · leer un trozo de la ruta
+#### Paso 2-bis · Otros tipos que Spring convierte · 15 min
+
+El paso anterior ha convertido `"3"` en un `int`. El mecanismo no se limita a los números: Spring construye el tipo declarado siempre que sepa interpretar el texto recibido. Añade este método a `SaludoController`, con `import java.time.LocalDate;` entre los imports.
+
+```java
+@GetMapping("/informes")
+public String informes(
+        @RequestParam(name = "desde") LocalDate desde,
+        @RequestParam(name = "activo", defaultValue = "true") boolean activo) {
+
+    return "Desde " + desde + " (día " + desde.getDayOfMonth()
+            + " del mes " + desde.getMonthValue() + "), activo=" + activo;
+}
+```
+
+Reinicia y comprueba las cuatro peticiones:
+
+| Petición | Respuesta |
+| :--- | :--- |
+| `/informes?desde=2026-09-13` | `200` · el booleano toma su valor por defecto |
+| `/informes?desde=2026-09-13&activo=false` | `200` · el booleano llega convertido desde el texto |
+| `/informes?desde=13-09-2026` | `400` · el formato no es el que `LocalDate` interpreta |
+| `/informes` | `400` · falta un parámetro declarado como obligatorio |
+
+Dos observaciones sobre lo que acaba de ocurrir:
+
+* `desde.getMonthValue()` devuelve `9`. Lo que recibe el método no es el texto de la URL, sino un objeto `LocalDate` con sus operaciones disponibles. La conversión no es un cambio de apariencia.
+* El formato que se interpreta por defecto es el de la norma **ISO 8601**, `aaaa-mm-dd`. Una fecha escrita como `13-09-2026` produce un `400` por el mismo motivo que `pagina=abc`: la petición no encaja con lo declarado y se rechaza antes de ejecutar el método. Cuando un cliente imponga otro formato, habrá que declararlo de forma explícita en el parámetro.
+
+#### Paso 3 · `@PathVariable` · leer un trozo de la ruta · 20 min
 
 Crea `UsuarioController.java` con el bloque completo. Las llaves de `{id}` pertenecen a la anotación Java: en el navegador escribe un valor concreto, como `/usuarios/3`. El método de rutas anidadas se añade **dentro de esa clase**, antes de su última llave; conserva los métodos existentes mientras las combinaciones de método y ruta sean distintas. Prueba un número y luego texto para observar la conversión a `int`.
 
@@ -755,7 +784,7 @@ public String incidenciaDeProyecto(
 
 `/proyectos/7/incidencias/41` se lee de un vistazo: la incidencia 41, que pertenece al proyecto 7. Esa legibilidad no es casualidad, y es justo lo que vamos a convertir en regla ahora.
 
-#### Paso 4 · Agrupar rutas con `@RequestMapping`
+#### Paso 4 · Agrupar rutas con `@RequestMapping` · 15 min
 
 Sustituye la versión anterior de `UsuarioController` por la clase que aparece aquí. Hemos movido el prefijo común a `@RequestMapping`: comprueba que los métodos ya no repiten `/usuarios`, o la dirección resultante sería `/usuarios/usuarios/...`. Después de reiniciar, vuelve a probar listado y detalle para comprobar que la agrupación no ha cambiado sus direcciones.
 
@@ -801,7 +830,7 @@ Un `@GetMapping` sin argumento designa la ruta declarada en la clase, sin segmen
   <p>Aun así, mezclar identificadores y palabras en el mismo nivel envejece mal. Cuando lleguemos al diseño REST de la UD3 veremos por qué se evita.</p>
 </details>
 
-#### Paso 5 · Las rutas del gestor
+#### Paso 5 · Las rutas del gestor · 30 min
 
 Construye el controlador de tu entidad principal siguiendo este orden: crea la clase en `controller`, anótala con `@RestController` y `@RequestMapping`, añade el listado y compruébalo; después añade el detalle y compruébalo; por último incorpora los parámetros opcionales y las rutas anidadas. El controlador `ProyectoController` de la tabla es el patrón: en reservas sería `ReservaController` y `/reservas`. Mantén tus nombres en todos los pasos posteriores. Hoy cada método devuelve una frase con los parámetros, no una lista de registros reales.
 
@@ -827,7 +856,19 @@ Amplía tu controlador con dos rutas más, decidiendo tú dónde va cada dato:
 
 Para cada una, escribe en un comentario del código la respuesta a esto: qué datos has puesto en la ruta, cuáles en la query string, y qué prueba de la regla has aplicado para decidirlo.
 
-#### Paso 6 · Comprobar y registrar el resultado del proyecto
+#### Paso 5-bis · Revisión cruzada del diseño de rutas · 10 min
+
+La regla de esta sesión —lo que identifica al recurso va en la ruta, lo que acota una consulta va en la query string— se verifica cuando alguien ajeno al código interpreta la URL. Intercambia con tu pareja **únicamente las URL** de las dos rutas que has diseñado, sin mostrar el controlador.
+
+Responde por escrito sobre las que recibas:
+
+1. Qué devuelve cada una, deducido solo de su forma.
+2. Qué dato actúa como identificador y cuál como filtro.
+3. Si trasladarías alguno al otro sitio, y qué prueba de la regla lo justifica.
+
+Contrastad después las respuestas con el código. Una URL que la otra persona no logra interpretar sin leer el controlador señala un problema de diseño, no de comunicación: dentro de tres semanas su autor estará en la misma situación.
+
+#### Paso 6 · Comprobar y registrar el resultado del proyecto · 10 min
 
 1. Prueba el saludo con el parámetro ausente, vacío y con un nombre. Con `defaultValue="mundo"`, los dos primeros deben devolver `Hola, mundo.`.
 2. Consulta el detalle con `7` y con `abc`: el primero devuelve el texto que has programado y el segundo produce 400 al no poder convertirse a entero. Un número como `999` todavía no permite saber si existe un registro: esa búsqueda aún no está implementada.
