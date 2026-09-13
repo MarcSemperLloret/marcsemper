@@ -937,6 +937,17 @@ Las rutas de listado y detalle devuelven textos que incorporan los parámetros r
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
+**Antes de cerrar, sube el trabajo a GitHub.** Los controladores de hoy no existen fuera de tu equipo mientras no los publiques, y el historial forma parte de lo que se evalúa en Proyecto Intermodular: una sesión sin rastro en el repositorio no se distingue de una sesión sin trabajo.
+
+```bash
+git status
+git add .
+git commit -m "Completar sesión 02: parámetros de ruta y de consulta"
+git push
+```
+
+`git status` antes de confirmar evita subir el trabajo a medias: comprueba que aparecen los controladores escritos hoy y que no aparece `target/`, que el `.gitignore` excluye. Si el `push` es el primero desde otro equipo, Git pedirá de nuevo tus credenciales.
+
 
 ## Semana 2 · JSON y primera escritura con un cliente HTTP
 
