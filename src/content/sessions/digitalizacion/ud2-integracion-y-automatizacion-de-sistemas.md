@@ -27,7 +27,7 @@ priorKnowledge:
 
 Son 3 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. El caso de empresa de cada unidad se describe en su propia página. No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
@@ -71,6 +71,12 @@ En cada criterio, una evidencia ausente no permite acreditar el logro; una evide
 ## Sesión 1 · Cómo se comunican las aplicaciones
 
 **Punto de partida.** Actividad «Automatización diseñada y simulada», sesión 1 de 3. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+
+### El caso · Reparaciones Rápidas
+
+La unidad continúa con la empresa de la UD1: repara dispositivos, recibe los encargos en papel, reparte el trabajo por mensajería y prepara la factura a mano cuando el técnico avisa de que ha terminado.
+
+**Datos para la simulación:** reparación `reparacion-42`, cliente ficticio `cliente-7`, cierre `2026-10-15 10:00`. La factura debe asociarse una sola vez a esa reparación. No hace falta utilizar un teléfono real ni una pasarela de pago. Si facturación no responde, el mensaje queda pendiente. Una respuesta incompleta no permite afirmar que la factura está creada. Simula el cierre normal, el servicio no disponible, el reintento, el mensaje duplicado y el dato obligatorio ausente, con tarjetas o con una tabla.
 
 ### Se explica
 

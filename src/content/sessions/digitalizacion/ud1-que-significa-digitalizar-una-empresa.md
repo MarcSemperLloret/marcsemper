@@ -27,7 +27,7 @@ priorKnowledge:
 
 Son 3 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. El caso de empresa de cada unidad se describe en su propia página. No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
@@ -82,7 +82,13 @@ En cada criterio, una evidencia ausente no permite acreditar el logro; una evide
 
 **Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 1 de 3. Abre los materiales enlazados y crea el registro de la unidad: el documento que recoge la actividad completa y que se describe arriba, en «Qué se entrega». La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
-**El caso.** Reparaciones Rápidas es una empresa ficticia que repara ordenadores, móviles y tabletas. El cliente llama o acude al local, y un trabajador anota en papel su nombre, su teléfono, el dispositivo y la avería. Cada mañana el responsable reparte el trabajo de palabra o por WhatsApp, y las fotografías de los dispositivos quedan en el teléfono de cada técnico. El cliente no puede consultar en qué estado está su reparación, de modo que llama para preguntar, y el histórico queda repartido entre documentos, hojas de cálculo y mensajes. La [ficha del caso](/teaching/transversales/casos.pdf) recoge esa descripción y los datos que utilizarás; el trabajo de la unidad parte de ahí.
+### El caso · Reparaciones Rápidas
+
+Empresa ficticia. Los datos son didácticos y no proceden de un negocio real.
+
+La empresa repara ordenadores, móviles y tabletas. El cliente llama o acude al local. Un trabajador anota nombre, teléfono, dispositivo y avería en papel. Cada mañana el responsable asigna las reparaciones verbalmente o por mensajería. Los técnicos guardan las fotografías de los dispositivos en sus teléfonos.
+
+El cliente no puede consultar el estado de su reparación y llama para preguntar. Al terminar, el técnico avisa al responsable, este busca el contacto, envía un mensaje o llama, y prepara la factura manualmente. El histórico está repartido entre documentos, hojas de cálculo y mensajes: resulta difícil conocer tiempos de reparación, averías frecuentes o trabajos de un mes.
 
 **Antes de empezar · solicita hoy el acceso a las herramientas de IA.** La verificación de estudiante de GitHub la resuelve un tercero y puede tardar días, así que se lanza la primera semana y no el día en que hace falta, que es la UD4. Accede a [GitHub Education](https://github.com/education/students) con tu cuenta y solicita la verificación con el correo del centro y la documentación que te pida.
 
@@ -306,7 +312,7 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-La dirección de Reparaciones Rápidas ha recogido ocho propuestas de distintas personas de la empresa. Tu trabajo consiste en dictaminar cada una contra la [ficha del caso](/teaching/transversales/casos.pdf): qué problema aborda, qué seguiría ocurriendo después de aplicarla y en qué categoría de las tres cae. No se trata de elegir la mejor, sino de sostener por qué cada una hace lo que hace.
+La dirección de Reparaciones Rápidas ha recogido ocho propuestas de distintas personas de la empresa. Tu trabajo consiste en dictaminar cada una contra el caso: qué problema aborda, qué seguiría ocurriendo después de aplicarla y en qué categoría de las tres cae. No se trata de elegir la mejor, sino de sostener por qué cada una hace lo que hace.
 
 | Categoría | Qué significa |
 | :--- | :--- |

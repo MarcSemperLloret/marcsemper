@@ -28,7 +28,7 @@ date: "2026-09-09"
 
 Son 6 sesiones de una hora: 10 minutos de explicación, 45 de trabajo guiado y 5 de cierre. Los ejemplos ampliados son material de consulta durante la práctica; no añaden otra clase teórica ni tareas obligatorias.
 
-Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. Para los casos utiliza la [ficha común](/teaching/transversales/casos.pdf). No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
+Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/). Incluye archivos, herramientas y alternativas de acceso. El caso de empresa de cada unidad se describe en su propia página. No se necesita el CRUD de Servidor ni el workflow de Intermodular. Quien ya conozca una herramienta utiliza ese conocimiento para justificar y comprobar la actividad nueva, sin repetir un trabajo ya evaluado.
 
 ## Actividad y criterios de evaluación
 
@@ -52,6 +52,18 @@ En cada criterio, una evidencia ausente no permite acreditar el logro; una evide
 ## Sesión 1 · Entender la empresa antes de proponer nada
 
 **Punto de partida.** Actividad «Plan de transformación de TecnoClima», sesión 1 de 6. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+
+### El caso · TecnoClima Servicios
+
+Empresa ficticia. Los datos son didácticos y no proceden de un negocio real.
+
+PYME de instalación y mantenimiento de climatización con 18 trabajadores: 4 administrativos, 11 técnicos, 2 comerciales y 1 gerente. Atiende unas 150 intervenciones semanales en viviendas, comercios y oficinas.
+
+Las solicitudes llegan por teléfono, correo y mensajería. Administración las registra en mensajes o en una hoja de cálculo. El responsable asigna las visitas cada mañana y envía dirección, teléfono y descripción al técnico. Fotografías, notas y mediciones quedan a menudo en su móvil. Después comunica el cierre a administración, que prepara documentación, factura y aviso al cliente.
+
+Hay datos de equipos, averías, piezas y tiempos, repartidos entre hojas, correos, facturas y teléfonos. La dirección quiere reducir la coordinación manual, las llamadas sobre citas y la introducción repetida de datos. Le interesa analizar averías y pregunta por inteligencia artificial, sin haber definido todavía una tarea adecuada.
+
+**Restricciones del ejercicio:** una primera fase con 6.000 euros de presupuesto inicial y hasta 40 horas de trabajo interno durante el primer mes. Esas cifras limitan la propuesta y no son precios de productos reales. Declara tus estimaciones y la información que necesitaría una cotización. La propuesta debe contemplar formación, acceso y posibles visitas sin conexión. No se exige programarla.
 
 ### Se explica
 
