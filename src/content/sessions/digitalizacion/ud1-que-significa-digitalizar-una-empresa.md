@@ -72,6 +72,8 @@ En cada criterio, una evidencia ausente no permite acreditar el logro; una evide
 
 **Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 1 de 3. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
+**El caso.** Reparaciones Rápidas es una empresa ficticia que repara ordenadores, móviles y tabletas. El cliente llama o acude al local, y un trabajador anota en papel su nombre, su teléfono, el dispositivo y la avería. Cada mañana el responsable reparte el trabajo de palabra o por WhatsApp, y las fotografías de los dispositivos quedan en el teléfono de cada técnico. El cliente no puede consultar en qué estado está su reparación, de modo que llama para preguntar, y el histórico queda repartido entre documentos, hojas de cálculo y mensajes. La [ficha del caso](/teaching/transversales/casos.pdf) recoge esa descripción y los datos que utilizarás; el trabajo de la unidad parte de ahí.
+
 **Antes de empezar · solicita hoy el acceso a las herramientas de IA.** La verificación de estudiante de GitHub la resuelve un tercero y puede tardar días, así que se lanza la primera semana y no el día en que hace falta, que es la UD4. Accede a [GitHub Education](https://github.com/education/students) con tu cuenta y solicita la verificación con el correo del centro y la documentación que te pida.
 
 Mientras se resuelve no quedas bloqueado: **Copilot Free** funciona desde el primer día, con un límite mensual de completados. La verificación amplía ese límite y añade créditos de IA y acceso a agentes. Una vez concedida sirve en cualquier módulo, no solo en este.
@@ -311,7 +313,7 @@ Debe quedar un proceso actual comprensible y tres problemas respaldados por el c
 
 ## Sesión 2 · Rediseña una empresa
 
-**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 2 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas» —el taller ficticio de reparación de dispositivos del caso—, sesión 2 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
 ### Se explica
 
@@ -342,7 +344,7 @@ El documento contiene proceso actual, proceso futuro, arquitectura y una alterna
 
 ## Sesión 3 · Puesta en común, debate y defensa de propuestas
 
-**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 3 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas» —el taller ficticio de reparación de dispositivos del caso—, sesión 3 de 3. Abre el avance de la sesión anterior; los pasos de hoy indican qué conservar y qué completar. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
 ### Se explica
 

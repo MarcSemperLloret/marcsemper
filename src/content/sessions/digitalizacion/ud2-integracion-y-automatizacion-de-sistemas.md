@@ -439,7 +439,7 @@ puede ser mejor desarrollar la solución mediante código.
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Abre la ficha de Reparaciones Rápidas y crea el registro de la UD2. Copia únicamente el fragmento del proceso que comienza cuando un técnico termina una reparación.
+1. Abre la ficha de Reparaciones Rápidas, el taller de reparación de dispositivos con el que trabajaste en la UD1, y crea el registro de la UD2. Copia únicamente el fragmento del proceso que comienza cuando un técnico termina una reparación.
 2. Escribe el evento en pasado y enumera sus datos mínimos: identificador de reparación, fecha de cierre y referencia del cliente. Explica por qué cada dato resulta necesario.
 3. Dibuja tres participantes: gestión de reparaciones, facturación y servicio de avisos. Asigna a cada uno una responsabilidad; evita que dos piezas mantengan estados contradictorios sin explicarlo.
 4. Simula un intercambio: una persona prepara una tarjeta con la petición de factura y otra responde «creada» con su identificador. Si falta un dato, devuelve «petición incompleta» e indica cuál.
