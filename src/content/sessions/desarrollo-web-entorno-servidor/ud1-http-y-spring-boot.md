@@ -328,6 +328,13 @@ public class HolaController {
 5. Abre `http://localhost:8080/hola`. Debes leer exactamente la frase de `return`.
 6. Cambia la frase por una que presente tu aplicación, guarda, reinicia y recarga. Comprueba que cambia la respuesta.
 
+<details class="aside aside--extra">
+  <summary>Qué es exactamente una anotación, y por qué <code>@RestController</code> y no <code>@Controller</code></summary>
+  <p>Una anotación no ejecuta nada por sí misma: es <strong>metadato</strong> adherido al código, que permanece en el archivo compilado hasta que algún proceso lo lee. Aquí quien lo lee es Spring durante el arranque.</p>
+  <p><code>@SpringBootApplication</code> agrupa tres anotaciones, y una de ellas es <code>@ComponentScan</code>, que activa el <strong>escaneo de componentes</strong>: Spring recorre el paquete de la clase de arranque y sus subpaquetes, localiza las clases marcadas, las instancia y las registra. De ahí que <code>HolaController</code> atienda peticiones sin que nadie lo invoque desde <code>main</code>, y de ahí que deba colgar de <code>com.ejemplo.gestor</code>, porque fuera de ese paquete no se escanea. Las otras dos habilitan la autoconfiguración y el registro de la configuración propia.</p>
+  <p><code>@RestController</code> es una anotación compuesta: está meta-anotada con <code>@Controller</code> y <code>@ResponseBody</code>. La diferencia está en cómo se interpreta el valor que devuelve el método. Con <code>@Controller</code> por separado, ese valor se entiende como el <em>nombre de una plantilla</em> que debe renderizarse como HTML; con <code>@RestController</code> se escribe directamente en el cuerpo de la respuesta, que es lo que requiere una API. Si un método devuelve el texto correcto y el servidor responde con un error de vista, la causa es precisamente esa.</p>
+</details>
+
 Si obtienes 404, revisa la ruta letra a letra, el reinicio y que `HolaController` esté bajo `com.ejemplo.gestor`. Si el IDE marca un error de Java, corrígelo antes de arrancar; no hace falta cambiar el navegador.
 
 **Comprueba:** puedes recorrer navegador → ruta → método Java → texto de respuesta y señalar tu archivo en ese recorrido.
