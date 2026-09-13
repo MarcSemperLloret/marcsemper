@@ -33,6 +33,16 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 **Rediseño de Reparaciones Rápidas.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
 
+**Qué se entrega.** Un único documento, el **registro de la unidad**, que se crea en la sesión 1 y crece en cada sesión hasta quedar completo al final. No hay tareas sueltas ni examen: la calificación sale de ese documento y de que cada integrante explique la parte que ha trabajado. Esto es lo que debe contener al cerrar cada sesión:
+
+| Al terminar la sesión | El registro contiene |
+| :--- | :--- |
+| 1 | El proceso actual de la empresa, con una acción por caja, sus flechas y el responsable de cada una; y tres problemas tomados del caso, cada uno con el hecho que lo demuestra, a quién afecta y su consecuencia |
+| 2 | Lo anterior más el proceso futuro, la arquitectura propuesta, cada tecnología con la necesidad concreta que resuelve, y una alternativa descartada con el motivo del descarte |
+| 3 | La versión defendida en la puesta en común, corregida con lo que haya salido del debate |
+
+Los apartados de la tabla son los mismos que puntúa la rúbrica, de modo que un registro completo es un registro evaluable.
+
 Esta actividad se valora sobre 10 puntos y aporta **3/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
 
 <table>
@@ -70,7 +80,7 @@ En cada criterio, una evidencia ausente no permite acreditar el logro; una evide
 
 ## Sesión 1 · Qué cambia realmente al digitalizar
 
-**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 1 de 3. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
+**Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 1 de 3. Abre los materiales enlazados y crea el registro de la unidad: el documento que recoge la actividad completa y que se describe arriba, en «Qué se entrega». La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
 **El caso.** Reparaciones Rápidas es una empresa ficticia que repara ordenadores, móviles y tabletas. El cliente llama o acude al local, y un trabajador anota en papel su nombre, su teléfono, el dispositivo y la avería. Cada mañana el responsable reparte el trabajo de palabra o por WhatsApp, y las fotografías de los dispositivos quedan en el teléfono de cada técnico. El cliente no puede consultar en qué estado está su reparación, de modo que llama para preguntar, y el histórico queda repartido entre documentos, hojas de cálculo y mensajes. La [ficha del caso](/teaching/transversales/casos.pdf) recoge esa descripción y los datos que utilizarás; el trabajo de la unidad parte de ahí.
 
@@ -308,7 +318,7 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 
 **Al terminar la sesión:**
 
-Debe quedar un proceso actual comprensible y tres problemas respaldados por el caso. Explica por qué digitalizar un papel no garantiza resolverlos.
+El registro contiene ya el proceso actual, comprensible para alguien que no conozca el caso, y tres problemas respaldados por la ficha. Explica por qué digitalizar un papel no garantiza resolverlos. Guarda el documento: la sesión 2 continúa sobre él, no empieza otro.
 
 
 ## Sesión 2 · Rediseña una empresa
