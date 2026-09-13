@@ -1604,6 +1604,17 @@ Las peticiones de alta y consulta funcionan sin editar el código entre envíos.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
+**Antes de cerrar, sube el trabajo a GitHub.**
+
+```bash
+git status
+git add .
+git commit -m "Completar sesión 03: modelo, JSON y primera escritura"
+git push
+```
+
+Revisa en `git status` que se publican la clase del modelo y los controladores modificados hoy. Un commit por sesión mantiene el historial legible y acredita el trabajo repartido en el tiempo que evalúa Proyecto Intermodular.
+
 
 ## Sesión 4 · Primera versión CRUD en memoria
 
@@ -1828,6 +1839,17 @@ Ese tercer apartado no resta nota. Se lee en la primera sesión de la UD2.
 El CRUD funciona desde la colección HTTP y el README declara que esta primera versión pierde datos al reiniciar.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
+
+**Antes de cerrar, sube el trabajo a GitHub.** Es la última sesión de la unidad: lo que quede sin publicar no forma parte de la entrega.
+
+```bash
+git status
+git add .
+git commit -m "Completar sesión 04: CRUD en memoria"
+git push
+```
+
+Comprueba además que el README publicado declara la pérdida de datos al reiniciar. Es la única advertencia que recibe quien abra el repositorio sin haber estado en clase.
 
 
 ## Lo que debes recordar
