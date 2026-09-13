@@ -35,9 +35,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Optimización y comparación de la web.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Optimización y comparación de la web.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **6/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 | Criterio                                   | Puntos |
 | ------------------------------------------ | -----: |
@@ -392,9 +392,9 @@ La utilidad se conserva como condición de la mejora. La tabla de recursos y la 
 
 1. Repite la medición inicial con la misma condición de caché, perfil y recorrido. Anota la versión final y guarda resultados de Red y Lighthouse por separado.
 2. Completa antes/después de transferencia, peticiones y tamaños por categoría. Calcula la variación de las magnitudes comparables; no trates puntos de Lighthouse como porcentaje de sostenibilidad.
-3. Repite las funciones que definiste en la primera sesión. Pide a otra pareja que compruebe una acción sin explicarle cómo ha cambiado el código.
+3. Repite las funciones que definiste en la primera sesión. Comprueba cada acción partiendo solo de lo que hace la web, sin tener en cuenta cómo has cambiado el código.
 4. Resume en una página diagnóstico, cambios, comparación y una decisión descartada. Enlaza las mediciones completas y el registro de modificaciones.
-5. Entrega el proyecto y el informe de la actividad. Cada integrante explica un cambio y su comprobación. Describe lo demostrado como reducción de recursos observados y declara los límites de las pruebas.
+5. Entrega el proyecto y el informe de la actividad. Explica un cambio y la comprobación que lo respalda. Describe lo demostrado como reducción de recursos observados y declara los límites de las pruebas.
 
 ### Cierre
 

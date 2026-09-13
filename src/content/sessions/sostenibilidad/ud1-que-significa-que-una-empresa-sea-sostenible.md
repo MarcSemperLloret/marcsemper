@@ -36,9 +36,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Diagnóstico ASG de PixelStore.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Diagnóstico ASG de PixelStore.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 | Criterio                                             | Puntos |
 | ---------------------------------------------------- | -----: |
@@ -177,7 +177,7 @@ Relacionar una actividad con un ODS **no demuestra que estemos mejorando nada**.
 2. Lee las áreas de la empresa y elige seis hechos: equipos, visitas, datos, personas, infraestructura y proveedores. Escribe una posible consecuencia de cada uno.
 3. Clasifica las consecuencias como ambientales, sociales o de gobernanza. Ejemplo: no saber quién puede acceder a datos de clientes es un problema de responsabilidades y protección de personas.
 4. Selecciona un hecho que afecte a dos dimensiones y explica ambas relaciones. No fuerces que todos los hechos pertenezcan a las tres.
-5. Relaciona un impacto con un ODS pertinente y escribe qué evidencia necesitarías para afirmar que se mejora. Compara con otra pareja si has escrito una intención o un resultado.
+5. Relaciona un impacto con un ODS pertinente y escribe qué evidencia necesitarías para afirmar que se mejora. Comprueba después si lo que has escrito es una intención o un resultado observable.
 
 ### Cierre
 
@@ -245,7 +245,7 @@ Conviene observar que el impacto y el riesgo **no siempre coinciden**. Puede hab
 2. Desarrolla una cadena completa. Ejemplo: dificultad de acceso → compras que no se completan → personas que usan teclado → prueba del recorrido de compra.
 3. Para cada cadena escribe un riesgo y una oportunidad, diferenciando hechos del caso de hipótesis que habrá que verificar.
 4. Identifica qué puede hacer desarrollo y qué requiere otra función: compras, dirección, proveedor o atención al cliente. Asigna un responsable posible sin inventar que ya existe esa política.
-5. Intercambia una cadena con otra pareja. Pídele que señale el salto de razonamiento más débil y reescríbelo con una comprobación concreta.
+5. Relee una cadena buscando su salto de razonamiento más débil, el que aceptarías sin pruebas por conocer el caso, y reescríbelo con una comprobación concreta.
 
 ### Cierre
 
@@ -405,7 +405,7 @@ Una propuesta defendible sigue la cadena impacto → prioridad → acción → i
 2. Consolida el mapa ASG y los cinco asuntos importantes. Mantén las justificaciones; no vuelvas a redactar toda la teoría del módulo.
 3. Propón una mejora para tres asuntos prioritarios. Añade indicador, dato que falta y responsable que debería participar.
 4. Resume el diagnóstico en una página, diapositiva o panel, enlazando las tablas de trabajo. Señala una afirmación débil y cómo tendría que reformularse para ser defendible.
-5. Explica una decisión a otra pareja y recoge una pregunta. Cada integrante responde sobre su contribución. Corrige el diagnóstico y conserva esta versión inicial para compararla con el plan final de UD6.
+5. Escribe la explicación de una decisión y la pregunta que plantearía quien no ha trabajado el caso; respóndela con las evidencias del diagnóstico. Corrige el diagnóstico y conserva esta versión inicial para compararla con el plan final de UD6.
 
 ### Cierre
 

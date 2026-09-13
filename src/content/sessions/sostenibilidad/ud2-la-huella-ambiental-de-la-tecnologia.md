@@ -35,9 +35,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Política de renovación de equipos.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Política de renovación de equipos.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 | Criterio                             | Puntos |
 | ------------------------------------ | -----: |
@@ -297,7 +297,7 @@ En la ficha de PixelStore, los portátiles se renuevan cada tres años y no se r
 2. Redacta criterios de revisión periódica y excepciones por necesidad, soporte o reparación inviable. Aplica la regla a los escenarios analizados y comprueba que no contradice tus decisiones.
 3. Define qué registrar al retirar: identificador, motivo, tratamiento de los datos, receptor y justificante cuando proceda. Distingue borrado de información de reciclaje del material.
 4. Elige tres indicadores con unidad y fuente: vida útil, proporción reparada y destino documentado, por ejemplo. Señala si faltan los valores iniciales y cómo se recogerán.
-5. Entrega la política y las decisiones justificadas. Cada integrante explica una excepción y la información que podría cambiarla. Enlaza el ciclo de vida ya elaborado, sin copiarlo en otro informe.
+5. Entrega la política y las decisiones justificadas. Explica una excepción de la política y la información que podría cambiarla. Enlaza el ciclo de vida ya elaborado, sin copiarlo en otro informe.
 
 ### Cierre
 

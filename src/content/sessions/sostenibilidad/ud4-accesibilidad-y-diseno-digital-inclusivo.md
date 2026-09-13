@@ -33,9 +33,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Auditoría y mejora de accesibilidad.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Auditoría y mejora de accesibilidad.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 | Criterio                                       | Puntos |
 | ---------------------------------------------- | -----: |
@@ -246,7 +246,7 @@ La prioridad depende del efecto sobre el acceso. Un fallo que impide cerrar un d
 2. Elige avisos que puedas localizar en la página. Para cada uno identifica elemento, usuario afectado, evidencia y comprobación necesaria; no conviertas cada aviso automáticamente en un fallo confirmado.
 3. Añade los hallazgos manuales y completa una matriz de cinco a ocho barreras distintas. Evita contar varias veces el mismo problema solo porque lo detecten dos herramientas.
 4. Ordena las barreras por bloqueo de tareas e impacto. Continúa corrigiendo las prioritarias con cambios pequeños y repite la prueba específica después de cada uno.
-5. Contrasta una propuesta con el asistente o la ficha de revisión del aula. Acepta, modifica o rechaza con un motivo y evidencia; el diagnóstico sigue siendo responsabilidad de la pareja.
+5. Contrasta una propuesta con el asistente o la ficha de revisión del aula. Acepta, modifica o rechaza con un motivo y evidencia; el diagnóstico sigue siendo responsabilidad tuya.
 
 ### Cierre
 
@@ -313,8 +313,8 @@ Lo importante no es copiar ese CSS: es que el usuario pueda ver dónde está.
 1. Abre la matriz priorizada y completa las correcciones pendientes que puedan verificarse en el tiempo disponible. Identifica por separado lo corregido y lo pendiente.
 2. Repite navegación, formulario, diálogo y comprobación de nombre/rol/estado. Si cambiaste una etiqueta o estilo, verifica también que no se rompió una función anterior.
 3. Ejecuta de nuevo las herramientas con las mismas condiciones. Para cada barrera completa antes, cambio y después; una mejora global de puntuación no sustituye esta fila.
-4. Intercambia el ordenador con otra pareja y pídele un recorrido definido sin explicaciones. Registra dónde necesita ayuda y corrige o documenta el problema observado.
-5. Entrega proyecto y matriz resumida en diagnóstico y mejoras, con enlaces a las pruebas. Cada integrante explica una corrección. Describe el alcance revisado y evita declarar que toda la web es accesible por haber pasado una herramienta.
+4. Recorre tú mismo un itinerario definido utilizando únicamente el teclado, sin ratón y sin saltarte pasos. Registra dónde queda bloqueado el recorrido y corrige o documenta el problema observado.
+5. Entrega proyecto y matriz resumida en diagnóstico y mejoras, con enlaces a las pruebas. Explica una corrección y el criterio que la justifica. Describe el alcance revisado y evita declarar que toda la web es accesible por haber pasado una herramienta.
 
 ### Cierre
 

@@ -34,9 +34,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Decisiones de cloud, datos e IA.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Decisiones de cloud, datos e IA.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **4/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 | Criterio                                        | Puntos |
 | ----------------------------------------------- | -----: |
@@ -280,8 +280,8 @@ La solución mínima suficiente cubre la necesidad con una complejidad justifica
 1. Abre la tabla de escenarios y completa los siete casos utilizando las decisiones de las sesiones anteriores. Mantén referencias a cálculos y supuestos en vez de volver a escribirlos.
 2. En cada caso indica propuesta, alternativa descartada, ventaja, riesgo y comprobación. Revisa que la web corporativa y la tienda no comparten por error las mismas cifras de carga.
 3. Analiza una decisión desde ambiental, social, gobernanza y coste. Explica un compromiso real, como conservación de datos frente a capacidad de investigar una incidencia.
-4. Pide a otra pareja o al asistente que cuestione una suposición. Registra la objeción y decide si cambia la propuesta; confirma cualquier cifra que no proceda de la ficha.
-5. Entrega las decisiones y una síntesis de la solución mínima suficiente. Cada integrante explica un caso y el criterio que justificaría revisarlo después.
+4. Pide al asistente que cuestione una suposición. Registra la objeción y decide si cambia la propuesta; confirma cualquier cifra que no proceda de la ficha.
+5. Entrega las decisiones y una síntesis de la solución mínima suficiente. Explica un caso y el criterio que justificaría revisarlo después.
 
 ### Cierre
 

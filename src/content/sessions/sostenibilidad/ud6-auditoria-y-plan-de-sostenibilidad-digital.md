@@ -34,9 +34,9 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 ## Actividad y criterios de evaluación
 
-**Plan de sostenibilidad de PixelStore.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Cada integrante debe poder explicar su aportación.
+**Plan de sostenibilidad de PixelStore.** La actividad se construye durante las sesiones de la unidad: cada avance incorpora el resultado, su comprobación y las decisiones que lo justifican. Debes poder explicar cualquier decisión que contenga.
 
-Esta actividad se valora sobre 10 puntos y aporta **8/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Cada integrante registra y explica su aportación. La rúbrica se conoce desde el inicio:
+Esta actividad se valora sobre 10 puntos y aporta **8/30 de la calificación del módulo**. La nota del módulo se obtiene sumando cada nota de actividad multiplicada por sus horas y dividiendo entre 30. Las preguntas y revisiones forman parte de la actividad; no hay un examen adicional. Registras y explicas cada decisión propia. La rúbrica se conoce desde el inicio:
 
 | Criterio                                     | Puntos |
 | -------------------------------------------- | -----: |
@@ -99,7 +99,7 @@ Un conjunto organizado de objetivos, acciones e indicadores para gestionar los p
 2. Elige una intención del diagnóstico inicial de PixelStore y completa la cadena de planificación. Distingue un cambio ya realizado en el laboratorio de una acción propuesta para la empresa ficticia.
 3. Añade responsable, plazo de revisión y fuente del indicador. Si falta el valor inicial, incluye medirlo como primera acción.
 4. Comprueba cada flecha de la cadena: por qué esa acción debería cambiar ese indicador y cómo se relaciona con el impacto elegido.
-5. Pide a otra pareja que localice una afirmación sin evidencia o una acción sin responsable. Corrige la cadena y conserva este ejemplo como patrón para el plan.
+5. Recorre la cadena buscando una afirmación sin evidencia o una acción sin responsable. Corrige la cadena y conserva este ejemplo como patrón para el plan.
 
 ### Cierre
 
@@ -161,7 +161,7 @@ Las actividades del laboratorio no equivalen automáticamente a datos de toda la
 2. Incorpora transferencia antes/después y una barrera de accesibilidad verificada. Enlaza el resultado exacto y la versión a la que corresponde.
 3. Añade una decisión de equipos y otra de retención o IA. Márcalas como análisis del caso cuando no se hayan ejecutado ni medido realmente.
 4. Busca una afirmación que generalice demasiado. Reescríbela indicando qué se observó y qué información faltaría para ampliarla a la empresa completa.
-5. Contrasta la tabla con otra pareja. Debe poder abrir la fuente y reconocer si respalda la afirmación. Corrige enlaces o formulaciones ambiguas.
+5. Contrasta la tabla abriendo cada fuente enlazada y comprobando que respalda exactamente la afirmación que acompaña. Corrige enlaces o formulaciones ambiguas.
 
 ### Cierre
 
@@ -212,7 +212,7 @@ No pretendemos hacer una evaluación profesional. Queremos aprender a **justific
 2. Valora impacto y relevancia en la escala acordada de 1 a 3. Escribe una frase de justificación en cada fila usando la evidencia y el contexto.
 3. Ordena los asuntos y selecciona cinco. Comprueba que has considerado ambiental, social y gobernanza aunque no reciban idéntico número de acciones.
 4. Añade un asunto aplazado y explica por qué. Identifica una condición que obligaría a adelantarlo, como un nuevo bloqueo o información sobre mayor alcance.
-5. Pide a otra pareja que cuestione la prioridad más alta. Revisa la puntuación si la razón no se sostiene y registra qué evidencia decidió el orden.
+5. Cuestiona tu propia prioridad más alta: escribe el mejor argumento en contra que encuentres. Revisa la puntuación si la razón no se sostiene y registra qué evidencia decidió el orden.
 
 ### Cierre
 
@@ -256,7 +256,7 @@ Al redactar cada objetivo, conviene preguntarse qué comportamiento inadecuado p
 2. Añade indicador, unidad y referencia inicial. Cuando el valor no exista, formula una primera fase de medición antes de comprometer una reducción porcentual.
 3. Define una meta didáctica o criterio de éxito y explica en qué te basas. No la presentes como resultado ya conseguido ni como compromiso real de la empresa.
 4. Escribe una condición de calidad para cada objetivo: conservar funciones, acceso, recuperación o adecuación del equipo. Comprueba si una solución tramposa podría mejorar el indicador incumpliéndola.
-5. Revisa los objetivos con otra pareja y corrige uno que permita interpretaciones distintas. Guarda la versión revisada junto al motivo del cambio.
+5. Revisa los objetivos y corrige uno que permita interpretaciones distintas. Guarda la versión revisada junto al motivo del cambio.
 
 ### Cierre
 
@@ -354,9 +354,9 @@ Una crítica útil cambia una decisión o confirma que se mantiene por una razó
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
 1. Revisa que el documento reúna diagnóstico, grupos afectados, cinco prioridades, objetivos, acciones, indicadores y fases. Enlaza las actividades anteriores en lugar de copiar sus informes.
-2. Pide una crítica acotada a otra pareja o al asistente: una incoherencia, un indicador débil y un supuesto no justificado. Contrasta cada observación con las fuentes de tu trabajo.
+2. Pide una crítica acotada al asistente: una incoherencia, un indicador débil y un supuesto no justificado. Contrasta cada observación con las fuentes de tu trabajo.
 3. Corrige al menos una debilidad confirmada o documenta por qué una objeción no procede. Conserva observación, decisión y cambio; no inventes una crítica aceptada para completar el trabajo.
-4. Prepara una explicación breve de una cadena completa del plan. Cada integrante defiende una decisión. Escucha las preguntas y responde con las evidencias del plan.
+4. Prepara una explicación breve de una cadena completa del plan y defiende una de sus decisiones. Escucha las preguntas y responde con las evidencias del plan.
 5. Entrega plan e índice de las seis actividades con sus versiones finales. Señala pendientes, alcance de las mediciones y qué habría que confirmar antes de aplicar el plan a una empresa real.
 
 ### Cierre
