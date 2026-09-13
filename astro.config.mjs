@@ -8,10 +8,15 @@ export default defineConfig({
   site: "https://marcsemperlloret.com",
   integrations: [
     sitemap({
-      // Site-wide content date. It tracks changes to the pages themselves and
-      // is deliberately separate from `site.lastUpdated`, which records when
-      // the academic publication record was last verified.
-      lastmod: new Date("2026-08-29")
+      // Site-wide content date, deliberately separate from `site.lastUpdated`,
+      // which records when the academic publication record was last verified.
+      //
+      // It is the build time rather than a written date. A written one has to be
+      // remembered on every content change, and when it is not, the sitemap tells
+      // crawlers that nothing has changed since whatever day it was last edited —
+      // the opposite of what it is there for. Every deploy rebuilds the whole
+      // site, so the build time is a claim the site can actually keep.
+      lastmod: new Date()
     })
   ],
   markdown: {
