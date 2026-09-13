@@ -67,6 +67,15 @@ Servidor evalúa implementación, arquitectura, persistencia, contrato, reglas y
 **Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [del repositorio vacío a una url pública](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-1/). En Servidor continúas la implementación del mismo producto.
 
 
+
+### Qué vas a construir este trimestre
+
+Este módulo no se evalúa con ejercicios independientes. Durante todo el primer trimestre construyes **una sola aplicación de servidor**, un CRUD cuyo tema eliges tú, y esa aplicación es la evidencia que se evalúa. Cada sesión le incorpora una capacidad nueva —rutas, JSON, validación, capas, base de datos, pruebas— sobre el mismo código y el mismo repositorio, de modo que lo que decidas hoy te acompaña catorce semanas.
+
+Ese repositorio es también el que utilizas en Proyecto Intermodular, donde se evalúa **cómo** lo construyes: la descomposición en tareas, las ramas, la revisión por pares y el despliegue. Aquí se evalúa el producto; allí, el método.
+
+La sesión de hoy tiene dos mitades. En la primera decides qué vas a construir; en la segunda dejas el proyecto en marcha, respondiendo por una URL desde tu propio equipo. No necesitas saber todavía diseñar tablas ni interpretar términos como JPA o transacción: [la meta del proyecto durante el primer trimestre](/es/docencia/desarrollo-web-entorno-servidor/ud1-http-y-spring-boot/) recoge el nivel de complejidad exigible al final, y cada técnica se explica en la sesión que le corresponde.
+
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
@@ -123,6 +132,8 @@ Al terminar tendrás el tema de tu CRUD, una aplicación que responde a tres rut
 
 #### Paso 1 · Elegir un problema que tu aplicación resolverá · 15 min
 
+Este paso fija el tema del proyecto del trimestre. Conviene uno acotado y con reglas propias: algo que conozcas, con cuatro tipos de información y unas pocas condiciones que deban cumplirse siempre. No se trata de una idea original, sino de una que puedas seguir ampliando durante catorce semanas.
+
 1. Abre una nota y completa: «Mi aplicación la utilizará ___ para ___». Por ejemplo: «Una asociación la utilizará para organizar los préstamos de su material».
 2. Enumera cuatro tipos de información que necesitarás. Los llamaremos **entidades**. En el ejemplo serían socios, ejemplares de material, préstamos y categorías. Escribe dos datos de cada tipo, como nombre y número de socio. Cuatro socios distintos son cuatro registros, no cuatro entidades.
 3. Elige la entidad principal y describe sus cuatro operaciones CRUD con tus palabras: registrar un préstamo, consultarlo, corregirlo y eliminar un registro equivocado.
@@ -130,7 +141,7 @@ Al terminar tendrás el tema de tu CRUD, una aplicación que responde a tres rut
 5. Describe una acción que afecte a varias cosas: prestar varios ejemplares juntos y cancelar toda la operación si alguno no está disponible. Más adelante aprenderemos cómo garantizarlo.
 6. Acuerda la propuesta con el profesor. Guarda la nota para copiarla después al README, el archivo que presenta el proyecto.
 
-**Comprueba:** puedes explicar quién lo usará, qué guardará y qué debe impedir. La matriz de la introducción marca la meta del trimestre; hoy no tienes que saber diseñar sus tablas ni interpretar términos como JPA o transacción.
+**Comprueba:** puedes explicar quién lo usará, qué guardará y qué debe impedir, y tu propuesta está acordada con el profesor. La tabla de [la meta del proyecto durante el primer trimestre](/es/docencia/desarrollo-web-entorno-servidor/ud1-http-y-spring-boot/) fija el nivel exigible en diciembre; hoy no tienes que saber diseñar sus tablas ni interpretar sus términos.
 
 #### Paso 2 · Comprobar las herramientas y preparar el editor · 15 min
 
