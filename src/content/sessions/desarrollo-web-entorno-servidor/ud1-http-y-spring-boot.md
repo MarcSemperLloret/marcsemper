@@ -586,7 +586,7 @@ Esa última fila combina las dos ideas, y es la forma que tendrá casi toda tu A
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-1. Abre `HolaController.java` y arranca como en la sesión 1. Comprueba `/hola` desde el navegador; aún no hay colección HTTP que ejecutar.
+1. Abre `HolaController.java` en tu carpeta de trabajo, no en la copia que clonaste para la tarea de la sesión anterior, y arranca como en la sesión 1. Comprueba `/hola` desde el navegador; aún no hay colección HTTP que ejecutar.
 2. Localiza `src/main/java/com/ejemplo/gestor/controller`. Las nuevas clases irán en ese paquete; si ya tienes una clase con el nombre del ejemplo, modifica esa clase en vez de duplicarla.
 3. Anota un identificador numérico, como `7`, y un filtro de tu tema, como `estado=activo`. Hoy sirven para observar qué valores llegan al método.
 
@@ -863,7 +863,7 @@ Predice, **antes de probarlo**, qué devuelve cada petición: el código de esta
 4. `GET /tareas`
 5. `POST /tareas/5`
 
-Después copia el controlador en tu proyecto y compruébalas una a una. **De las cinco, dos suelen fallarse.** Cuando una predicción resulte equivocada, no basta con corregirla: escribe qué regla habías aplicado mal.
+Después copia el controlador en tu proyecto y comprueba las cuatro primeras en el navegador. La quinta exige enviar un `POST`, y la barra de direcciones solo emite `GET`: esa se verifica en la sesión 3 con el cliente HTTP. **De las cinco, dos suelen fallarse.** Cuando una predicción resulte equivocada, no basta con corregirla: escribe qué regla habías aplicado mal.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Las rutas <code>/saludo</code>, <code>/saludo?nombre=Marc</code> y <code>/usuarios/3</code> funcionando, y sabes provocar el 400.</span></div>
@@ -873,10 +873,11 @@ Después copia el controlador en tu proyecto y compruébalas una a una. **De las
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · <code>defaultValue</code> pone un valor cuando el parámetro no llega, así que el parámetro nunca es nulo. <code>required = false</code> lo deja llegar como <code>null</code> y te obliga a comprobarlo.</p>
-  <p>2 · Un <code>400 Bad Request</code>. Spring intenta convertir el texto al tipo declarado antes de invocar el método; como la conversión falla, la petición se rechaza y el método no llega a ejecutarse.</p>
-  <p>3 · El identificador en la ruta, el año en la query string. La prueba: si quito el año, <code>/facturas</code> sigue significando algo; si quito el identificador, <code>/facturas/</code> ya no pregunta por esa factura.</p>
-  <p>4 · Exactamente <code>/usuarios</code>: la ruta de la clase, sin añadir nada.</p>
+  <p>1 · <code>200</code>, con el cuerpo <code>Tarea 5 en formato corto</code>. El parámetro no llega en la petición, de modo que <code>defaultValue</code> lo sustituye; mientras esté declarado, <code>formato</code> nunca es nulo.</p>
+  <p>2 · <code>200</code>, con el cuerpo <code>Tarea 5 en formato largo</code>. El valor recibido en la query string sustituye al valor por defecto.</p>
+  <p>3 · <code>400 Bad Request</code>. Spring convierte el texto de la ruta al tipo declarado antes de invocar el método; <code>cinco</code> no admite conversión a <code>int</code>, así que la petición se rechaza y el método no llega a ejecutarse.</p>
+  <p>4 · <code>404 Not Found</code>, y es una de las dos que suelen fallarse, porque se espera un listado vacío. El controlador declara <code>/tareas/{id}</code> y ninguna ruta para <code>/tareas</code>: el prefijo declarado en la clase no atiende peticiones por sí mismo.</p>
+  <p>5 · <code>405 Method Not Allowed</code>, que es la otra. La ruta existe, pero únicamente para <code>GET</code>. El servidor distingue entre no encontrar un recurso y encontrarlo con un método que no admite, distinción sobre la que se construye toda la UD2.</p>
 </details>
 
 ### Cierre
