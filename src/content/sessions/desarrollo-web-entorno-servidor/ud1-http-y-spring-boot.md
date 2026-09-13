@@ -863,7 +863,13 @@ Predice, **antes de probarlo**, qué devuelve cada petición: el código de esta
 4. `GET /tareas`
 5. `POST /tareas/5`
 
-Después copia el controlador en tu proyecto y comprueba las cuatro primeras en el navegador. La quinta exige enviar un `POST`, y la barra de direcciones solo emite `GET`: esa se verifica en la sesión 3 con el cliente HTTP. **De las cinco, dos suelen fallarse.** Cuando una predicción resulte equivocada, no basta con corregirla: escribe qué regla habías aplicado mal.
+Después copia el controlador en tu proyecto y comprueba las cuatro primeras en el navegador. La quinta exige enviar un `POST`, y la barra de direcciones solo emite `GET`. Para esa, abre la terminal integrada del editor y lanza una única orden:
+
+```powershell
+curl.exe -i -X POST http://localhost:8080/tareas/5
+```
+
+En PowerShell debe escribirse `curl.exe`, con su extensión: `curl` a secas es un alias de `Invoke-WebRequest`, que no admite `-X` y produce otra salida. En Linux y macOS basta `curl`. La opción `-i` muestra la línea de estado y las cabeceras además del cuerpo, que es justo lo que hay que leer aquí. El cliente HTTP que se instala en la sesión 3 hace esto mismo con una interfaz encima. **De las cinco, dos suelen fallarse.** Cuando una predicción resulte equivocada, no basta con corregirla: escribe qué regla habías aplicado mal.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Las rutas <code>/saludo</code>, <code>/saludo?nombre=Marc</code> y <code>/usuarios/3</code> funcionando, y sabes provocar el 400.</span></div>

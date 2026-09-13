@@ -325,7 +325,7 @@ Una vez el workflow concluya con éxito, accede a la URL de la API por la ruta q
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>La API responde en su URL pública desde una red que no es la del aula.</span></div>
   <div><strong>Ampliación</strong><span>Capacidad de consultar el registro e interpretar la salida que emite la aplicación durante el arranque.</span></div>
-  <div><strong>Reto</strong><span>Implementar un <em>endpoint</em> de estado que acredite que la aplicación se encuentra operativa y verificarlo mediante <code>curl</code> desde la terminal.</span></div>
+  <div><strong>Reto</strong><span>Implementar un <em>endpoint</em> de estado que acredite que la aplicación se encuentra operativa y verificarlo desde la terminal con <code>curl</code>, que en PowerShell debe invocarse como <code>curl.exe</code> para no resolver al alias de <code>Invoke-WebRequest</code>.</span></div>
 </div>
 
 <details class="aside aside--extra">
