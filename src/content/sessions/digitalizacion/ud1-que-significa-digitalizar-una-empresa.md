@@ -37,7 +37,7 @@ Abre la [guía de arranque y evaluación](/es/docencia/talleres-transversales/).
 
 | Al terminar la sesión | El registro contiene |
 | :--- | :--- |
-| 1 | El proceso actual de la empresa, con una acción por caja, sus flechas y el responsable de cada una; y tres problemas tomados del caso, cada uno con el hecho que lo demuestra, a quién afecta y su consecuencia |
+| 1 | El dictamen razonado de las ocho propuestas de la dirección: categoría, hecho de la ficha que lo respalda y qué seguiría ocurriendo tras aplicar cada una |
 | 2 | Lo anterior más el proceso futuro, la arquitectura propuesta, cada tecnología con la necesidad concreta que resuelve, y una alternativa descartada con el motivo del descarte |
 | 3 | La versión defendida ante el profesor, corregida con las observaciones recibidas |
 
@@ -306,11 +306,30 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Abre la [ficha de Reparaciones Rápidas](/teaching/transversales/casos.pdf). Identifica el objetivo del trabajo: mejorar la gestión de reparaciones.
-2. Lee la entrada, asignación y cierre de una reparación. Dibuja una caja por acción y une las cajas con flechas; escribe encima quién realiza cada acción. No añadas todavía aplicaciones nuevas.
-3. Marca tres dificultades que aparezcan en la ficha. Para cada una anota el hecho, a quién afecta y su consecuencia. Ejemplo: las fotos quedan en el móvil del técnico; administración no puede consultarlas al preparar la factura.
-4. Elige un problema y formúlalo como necesidad sin mencionar marcas: «la información de una reparación debe estar disponible para quien la tramita». Distingue el dato que aporta el caso de una suposición propia.
-5. Deja reposar el dibujo unos minutos y recórrelo después siguiendo una reparación desde la llegada hasta el aviso al cliente, leyendo solo lo que está escrito y sin completar de memoria. Corrige toda flecha o responsable que no puedas explicar.
+La dirección de Reparaciones Rápidas ha recogido ocho propuestas de distintas personas de la empresa. Tu trabajo consiste en dictaminar cada una contra la [ficha del caso](/teaching/transversales/casos.pdf): qué problema aborda, qué seguiría ocurriendo después de aplicarla y en qué categoría de las tres cae. No se trata de elegir la mejor, sino de sostener por qué cada una hace lo que hace.
+
+| Categoría | Qué significa |
+| :--- | :--- |
+| **Cambia el proceso** | Altera quién hace qué, cuándo o con qué información, de modo que el problema deja de producirse |
+| **Cambia solo el soporte** | La misma secuencia de trabajo con otra herramienta: el problema sobrevive al cambio |
+| **No es una propuesta** | No identifica un dato, una decisión ni un cambio que pueda comprobarse |
+
+| | Propuesta recogida por la dirección |
+| :--- | :--- |
+| 1 | Escanear las fichas de papel y guardarlas en una carpeta compartida, ordenadas por fecha |
+| 2 | Un formulario en una tableta en el mostrador, que registre la reparación y le asigne un número |
+| 3 | Formalizar el reparto diario en un grupo de mensajería |
+| 4 | Que cada técnico suba las fotografías del dispositivo a la ficha de su reparación |
+| 5 | Una pantalla en el local con el estado de las reparaciones del día |
+| 6 | Un aviso automático al cliente cuando su reparación pasa a «terminada» |
+| 7 | Implantar inteligencia artificial para optimizar el taller |
+| 8 | Una hoja de cálculo compartida donde administración anote cada reparación al cerrarla, para obtener estadísticas |
+
+Cada dictamen necesita tres cosas: la categoría, **el hecho de la ficha** al que se refiere —citado, no resumido de memoria— y **qué seguiría ocurriendo** en la empresa después de aplicar la propuesta. Cuando concluyas que una resuelve algo, añade qué se podría observar para demostrarlo: una espera que desaparece, unas llamadas que dejan de producirse, un dato que deja de escribirse dos veces.
+
+Dos advertencias. Una propuesta puede resolver un problema y crear otro, y eso forma parte del dictamen. Ninguna de las ocho es tampoco acertada o desacertada por sí misma: lo que se evalúa es si tu razonamiento se sostiene sobre lo que dice la ficha, no si coincide con una respuesta esperada.
+
+**Entrega.** Exporta el documento a PDF con los ocho dictámenes razonados. Ese PDF es el registro de la unidad en su primer estado.
 
 ### Cierre
 
@@ -318,7 +337,7 @@ La digitalización está haciendo que ambos mundos estén cada vez más conectad
 
 **Al terminar la sesión:**
 
-El registro contiene ya el proceso actual, comprensible para alguien que no conozca el caso, y tres problemas respaldados por la ficha. Explica por qué digitalizar un papel no garantiza resolverlos. Guarda el documento: la sesión 2 continúa sobre él, no empieza otro.
+El registro contiene los ocho dictámenes, cada uno con su categoría, el hecho de la ficha que lo respalda y lo que seguiría ocurriendo. Debes poder sostener en voz alta por qué una propuesta que suena razonable, como digitalizar las fichas de papel, deja intacto el problema que dice resolver. Guarda el documento: la sesión 2 continúa sobre él, no empieza otro.
 
 
 ## Sesión 2 · Rediseña una empresa
@@ -337,7 +356,7 @@ Por ejemplo, un formulario de recepción puede guardar una reparación en un reg
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Abre el proceso actual de la sesión anterior y conserva una copia con ese título. En otra sección dibuja el proceso futuro; así podrá compararse qué ha cambiado.
+1. Recupera de la sesión anterior los problemas que, según tus dictámenes, ninguna de las ocho propuestas dejaba resueltos. Son el punto de partida del proceso futuro, que describes en una sección nueva para que pueda compararse con el estado actual del caso.
 2. Elige dos de los problemas documentados. Para cada uno escribe una necesidad, una acción nueva y una persona responsable. Comprueba que no has dejado sin dueño el aviso al cliente.
 3. Completa una tabla con necesidad, solución propuesta y motivo. Utiliza categorías como registro compartido, formulario o notificación antes de elegir un proveedor.
 4. Dibuja las piezas de la solución y escribe sobre cada flecha qué dato viaja: identificador de reparación, estado o contacto. Si una caja no tiene una función explicable, elimínala o aclárala.
