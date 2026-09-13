@@ -168,29 +168,29 @@ Visual Studio Code recién instalado **no sabe nada de Java**. Abre los archivos
 
 **Spring Initializr** es una web que genera los archivos iniciales de un proyecto Spring Boot. No aloja tu aplicación ni escribe las reglas de tu CRUD.
 
-1. Abre [Spring Initializr](https://start.spring.io) y localiza los campos Project, Language, Dependencies y los datos del proyecto. Esas elecciones determinan los archivos que contendrá el ZIP. El selector de versiones ofrece únicamente las líneas con soporte abierto vigente, de modo que hoy muestra la serie 4.x: la versión que utiliza el curso no figura en esa lista y no hay que buscarla allí.
-2. Para realizar el taller, descarga la [plantilla inicial del curso: gestor con Spring Boot 3.5.16](/teaching/downloads/gestor-spring-boot-3.5.16.zip). Contiene la estructura generada y ajustada a la serie 3.5 que utiliza el módulo, todavía sin controladores. La descarga fija las versiones para que los cambios de Initializr no cambien las bibliotecas a mitad del curso. Estos son sus valores; no tienes que volver a seleccionarlos en la web:
+1. Abre [Spring Initializr](https://start.spring.io). Cada campo determina qué archivos contendrá el ZIP. Rellénalos con estos valores, que son los que utiliza el módulo:
 
 | Campo | Valor y motivo |
 | --- | --- |
 | Project | **Maven**: es la herramienta de construcción que acabamos de explicar |
 | Language | **Java**: el lenguaje que conoces |
-| Spring Boot | **3.5.16**, fijada por la plantilla: es la última publicación de la serie 3.5 |
+| Spring Boot | **4.1.1**: la versión estable, que el generador ofrece marcada por defecto. Ninguna terminada en `SNAPSHOT` ni en `M1` |
 | Group | `com.ejemplo`: primera parte del identificador técnico del proyecto |
 | Artifact y Name | `gestor`: nombre técnico del proyecto y de su carpeta |
 | Package name | `com.ejemplo.gestor`: paquete base de nuestras clases |
 | Packaging | **Jar**: formato con el que empaquetaremos la aplicación Java |
 | Java | **21** |
-| Dependencies | **Spring Web**, que aporta el soporte web; ya incluido en la plantilla |
+| Dependencies | **Spring Web**, que aporta el soporte web y el servidor embebido |
 
 <details class="aside aside--extra">
-  <summary>Por qué la versión del curso no aparece en Initializr</summary>
-  <p>Spring Boot mantiene en paralelo varias <strong>líneas de versión</strong> y retira cada una del generador cuando termina su soporte abierto. La serie 3.5 dejó de recibir actualizaciones públicas el 30 de junio de 2026 y <code>3.5.16</code> fue su última publicación, de modo que Initializr ya solo ofrece la serie 4.x. Fijar la versión en una plantilla es la práctica habitual de un equipo: la construcción debe ser reproducible y no puede depender de lo que el generador proponga cada semana. El salto a la serie 4 introduce cambios incompatibles —entre otros, el <em>starter</em> web pasa a denominarse <code>spring-boot-starter-webmvc</code> y Jackson cambia de versión mayor— y se aborda como una migración con su propio análisis, nunca a mitad de un proyecto en curso.</p>
+  <summary>Por qué no se elige una versión en previsualización</summary>
+  <p>Junto a la versión estable, el generador ofrece otras marcadas como <code>SNAPSHOT</code> o <code>M1</code>: compilaciones en curso y entregas preliminares, sujetas a cambios y sin garantía de estabilidad. Un proyecto de trabajo toma siempre la estable. Spring Boot mantiene además varias <strong>líneas de versión</strong> en paralelo y retira cada una del generador cuando concluye su soporte abierto, de modo que la lista cambia a lo largo del curso. Eso no afecta a tu proyecto: en el momento de generarlo, la versión queda escrita en el <code>pom.xml</code> y la construcción deja de depender de lo que el generador proponga después. Es el mismo principio de reproducibilidad que Proyecto Intermodular aplica al pipeline.</p>
 </details>
 
-Usamos `gestor` como nombre técnico para que las rutas de archivos de estos primeros pasos coincidan en clase. El nombre público y el tema de tu aplicación quedan en el README. La configuración puede contrastarse con la [guía oficial de Spring Boot 3.5](https://docs.spring.io/spring-boot/3.5/tutorial/first-application/index.html).
+Usamos `gestor` como nombre técnico para que las rutas de archivos de estos primeros pasos coincidan en clase. El nombre público y el tema de tu aplicación quedan en el README. La configuración puede contrastarse con la [guía oficial de Spring Boot](https://docs.spring.io/spring-boot/tutorial/first-application/index.html).
 
-3. **Extrae** el ZIP del curso en la carpeta de trabajo. No abras el código dentro del ZIP.
+2. Pulsa **Generate**. El navegador descarga un ZIP con el nombre del artefacto.
+3. **Extrae** el ZIP en la carpeta de trabajo. No abras el código dentro del ZIP.
 4. En el IDE elige **Abrir carpeta/proyecto** y selecciona la carpeta que contiene `pom.xml`, no la carpeta `src`. Si pregunta cómo importarlo, elige Maven. Espera a que termine la descarga de dependencias.
 
 En Visual Studio Code es **Archivo → Abrir carpeta**, y después pasan tres cosas que conviene no despachar a golpe de Intro:
@@ -217,7 +217,7 @@ Antes de editar, comprueba que el IDE utiliza el JDK 21 también para este proye
 
 | Archivo o carpeta | Qué contiene y qué haces ahora |
 | --- | --- |
-| `pom.xml` | Configuración de Maven. Localiza `dependencies` y `spring-boot-starter-web`, el conjunto de bibliotecas web que has elegido |
+| `pom.xml` | Configuración de Maven. Localiza `dependencies` y `spring-boot-starter-webmvc`, el conjunto de bibliotecas web que has elegido |
 | `src/main/java/com/ejemplo/gestor/GestorApplication.java` | Clase de arranque. Localiza el método `main` |
 | `src/main/resources/application.properties` | Ajustes de la aplicación. Hoy puede estar vacío o contener su nombre |
 | `src/test/java` | Código de pruebas. Lo utilizaremos en próximas sesiones |
@@ -1036,7 +1036,7 @@ Mira además el panel de red: el `Content-Type` ya no es `text/plain`, es `appli
 
 ##### Quién ha hecho la conversión
 
-Recuerda el reparto de la sesión 1. Cuando tu método termina, Spring tiene un valor Java en la mano y tiene que meterlo en el cuerpo de la respuesta. Para eso usa **Jackson**, la librería que entró en el proyecto con `spring-boot-starter-web` sin que la pidieras.
+Recuerda el reparto de la sesión 1. Cuando tu método termina, Spring tiene un valor Java en la mano y tiene que meterlo en el cuerpo de la respuesta. Para eso usa **Jackson**, la librería que entró en el proyecto con `spring-boot-starter-webmvc` sin que la pidieras.
 
 <figure class="diagram">
   <figcaption>De objeto Java a cuerpo de respuesta</figcaption>

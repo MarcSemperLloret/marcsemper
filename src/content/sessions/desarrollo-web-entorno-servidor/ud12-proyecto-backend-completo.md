@@ -1634,7 +1634,7 @@ Un buen `README.md` no cuenta qué es Java ni explica qué es un microservicio. 
 ````markdown
 # Gestor de Proyectos e Incidencias · Backend API
 
-Servicio backend REST modular construido con Spring Boot 3.5, Spring Security (JWT),
+Servicio backend REST modular construido con Spring Boot 4.1, Spring Security (JWT),
 PostgreSQL y cliente HTTP saliente hacia Open-Meteo.
 
 ## 1. Requisitos previos

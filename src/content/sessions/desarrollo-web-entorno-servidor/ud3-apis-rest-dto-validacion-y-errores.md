@@ -1370,7 +1370,7 @@ La consecuencia práctica es la buena noticia del día: **dentro de tu método y
 
 #### Paso 2 · Instala la dependencia, porque no viene puesta
 
-Esto sorprende a mucha gente: la validación **no está incluida** en `spring-boot-starter-web`. Hay que pedirla.
+Esto sorprende a mucha gente: la validación **no está incluida** en `spring-boot-starter-webmvc`. Hay que pedirla.
 
 En el `pom.xml`, dentro de `<dependencies>`:
 
