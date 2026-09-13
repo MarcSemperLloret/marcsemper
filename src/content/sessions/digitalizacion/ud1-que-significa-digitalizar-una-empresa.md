@@ -72,6 +72,10 @@ En cada criterio, una evidencia ausente no permite acreditar el logro; una evide
 
 **Punto de partida.** Actividad «Rediseño de Reparaciones Rápidas», sesión 1 de 3. Abre los materiales enlazados y crea el registro de la unidad. La [guía de arranque](/es/docencia/talleres-transversales/) permite preparar las herramientas sin depender de otros módulos.
 
+**Antes de empezar · solicita hoy el acceso a las herramientas de IA.** La verificación de estudiante de GitHub la resuelve un tercero y puede tardar días, así que se lanza la primera semana y no el día en que hace falta, que es la UD4. Accede a [GitHub Education](https://github.com/education/students) con tu cuenta y solicita la verificación con el correo del centro y la documentación que te pida.
+
+Mientras se resuelve no quedas bloqueado: **Copilot Free** funciona desde el primer día, con un límite mensual de completados. La verificación amplía ese límite y añade créditos de IA y acceso a agentes. Una vez concedida sirve en cualquier módulo, no solo en este.
+
 ### Se explica
 
 <p class="stage stage--brief">10 minutos · contexto, explicación y ejemplo</p>
