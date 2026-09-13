@@ -33,14 +33,18 @@ const t = isSpanish
       previous: "Anterior",
       next: "Siguiente",
       nav: "Sesiones",
-      outcomes: "Ya deberías ser capaz de"
+      outcomes: "Ya deberías ser capaz de",
+      context: "De la unidad",
+      unitIntro: "Leer la introducción de la unidad"
     }
   : {
       contents: "Contents",
       previous: "Previous",
       next: "Next",
       nav: "Classes",
-      outcomes: "You should now be able to"
+      outcomes: "You should now be able to",
+      context: "About this unit",
+      unitIntro: "Read the unit introduction"
     };
 
 /**
@@ -52,6 +56,16 @@ const t = isSpanish
  */
 const outcomes = data.role === "recap" ? unit.entry.data.outcomes : [];
 
+/**
+ * Where the unit is framed for whoever lands on its first class.
+ *
+ * A unit's introduction is the body of the unit page, so it never reaches the
+ * class pages — and the class page is the link that gets shared. On the first
+ * class that left the reader starting a project without having been told what
+ * the project is. The whole introduction does not belong here either: some run
+ * to a thousand words and would bury the class, the same reason the outcomes
+ * were moved off the top of the unit. One sentence and a way in.
+ */
 const index = siblings.findIndex((candidate) => candidate.slug === lesson.slug);
 const previous = index > 0 ? siblings[index - 1] : undefined;
 const next =
@@ -124,6 +138,13 @@ const jsonLd = {
       )}
 
       <div class="session-content">
+        {data.role === "lesson" && index === 0 && unit.entry.data.summary && (
+          <aside class="lesson-context">
+            <p><strong>{t.context}:</strong> {unit.entry.data.summary}</p>
+            <a href={backPath}>{t.unitIntro}</a>
+          </aside>
+        )}
+
         <slot />
 
         {outcomes.length > 0 && (
@@ -162,6 +183,24 @@ const jsonLd = {
   .lesson-body {
     display: block;
     padding: 60px 0 80px;
+  }
+
+  /* Framing for whoever lands on the first class of a unit. */
+  .lesson-context {
+    margin-bottom: 40px;
+    padding: 16px 0;
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .lesson-context p {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .lesson-context a {
+    font-size: 0.85rem;
   }
 
   /* A checklist, not prose: the marks carry the "can I do this?" reading. */
