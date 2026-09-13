@@ -168,20 +168,25 @@ Visual Studio Code recién instalado **no sabe nada de Java**. Abre los archivos
 
 **Spring Initializr** es una web que genera los archivos iniciales de un proyecto Spring Boot. No aloja tu aplicación ni escribe las reglas de tu CRUD.
 
-1. Abre [Spring Initializr](https://start.spring.io) y localiza los campos Project, Language, Dependencies y los datos del proyecto. Esas elecciones determinan los archivos que contendrá el ZIP.
+1. Abre [Spring Initializr](https://start.spring.io) y localiza los campos Project, Language, Dependencies y los datos del proyecto. Esas elecciones determinan los archivos que contendrá el ZIP. El selector de versiones ofrece únicamente las líneas con soporte abierto vigente, de modo que hoy muestra la serie 4.x: la versión que utiliza el curso no figura en esa lista y no hay que buscarla allí.
 2. Para realizar el taller, descarga la [plantilla inicial del curso: gestor con Spring Boot 3.5.16](/teaching/downloads/gestor-spring-boot-3.5.16.zip). Contiene la estructura generada y ajustada a la serie 3.5 que utiliza el módulo, todavía sin controladores. La descarga fija las versiones para que los cambios de Initializr no cambien las bibliotecas a mitad del curso. Estos son sus valores; no tienes que volver a seleccionarlos en la web:
 
 | Campo | Valor y motivo |
 | --- | --- |
 | Project | **Maven**: es la herramienta de construcción que acabamos de explicar |
 | Language | **Java**: el lenguaje que conoces |
-| Spring Boot | **3.5.16**, la versión fijada en la plantilla del curso |
+| Spring Boot | **3.5.16**, fijada por la plantilla: es la última publicación de la serie 3.5 |
 | Group | `com.ejemplo`: primera parte del identificador técnico del proyecto |
 | Artifact y Name | `gestor`: nombre técnico del proyecto y de su carpeta |
 | Package name | `com.ejemplo.gestor`: paquete base de nuestras clases |
 | Packaging | **Jar**: formato con el que empaquetaremos la aplicación Java |
 | Java | **21** |
 | Dependencies | **Spring Web**, que aporta el soporte web; ya incluido en la plantilla |
+
+<details class="aside aside--extra">
+  <summary>Por qué la versión del curso no aparece en Initializr</summary>
+  <p>Spring Boot mantiene en paralelo varias <strong>líneas de versión</strong> y retira cada una del generador cuando termina su soporte abierto. La serie 3.5 dejó de recibir actualizaciones públicas el 30 de junio de 2026 y <code>3.5.16</code> fue su última publicación, de modo que Initializr ya solo ofrece la serie 4.x. Fijar la versión en una plantilla es la práctica habitual de un equipo: la construcción debe ser reproducible y no puede depender de lo que el generador proponga cada semana. El salto a la serie 4 introduce cambios incompatibles —entre otros, el <em>starter</em> web pasa a denominarse <code>spring-boot-starter-webmvc</code> y Jackson cambia de versión mayor— y se aborda como una migración con su propio análisis, nunca a mitad de un proyecto en curso.</p>
+</details>
 
 Usamos `gestor` como nombre técnico para que las rutas de archivos de estos primeros pasos coincidan en clase. El nombre público y el tema de tu aplicación quedan en el README. La configuración puede contrastarse con la [guía oficial de Spring Boot 3.5](https://docs.spring.io/spring-boot/3.5/tutorial/first-application/index.html).
 
