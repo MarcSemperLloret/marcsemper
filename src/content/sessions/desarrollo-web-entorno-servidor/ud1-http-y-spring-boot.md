@@ -267,6 +267,7 @@ Con las extensiones instaladas aparecen controles para esta operación: encima d
 
 | Si ocurre esto | Qué revisar |
 | --- | --- |
+| La aplicación escribe `Started ...Application` y termina con `BUILD SUCCESS` | El proyecto no tiene servidor web: se generó sin la dependencia **Spring Web**. Sin servidor no hay nada que mantenga el proceso vivo, así que termina. Comprueba que `spring-boot-starter-webmvc` está en el `pom.xml` y, si falta, vuelve a generar el proyecto con esa dependencia seleccionada |
 | No se encuentra `mvnw.cmd` | La terminal debe estar en la carpeta que contiene ese archivo y `pom.xml` |
 | Falla la descarga de una dependencia | Lee el primer error de descarga y revisa la conexión; no borres bibliotecas al azar |
 | `Port 8080 was already in use` | Puede haber otra ejecución tuya abierta. Detén esa ejecución con el botón Stop del IDE o Ctrl+C en su terminal y repite |
