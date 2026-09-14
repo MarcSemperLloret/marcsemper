@@ -584,19 +584,46 @@ Esa última fila combina las dos ideas, y es la forma que tendrá casi toda tu A
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
-#### Paso 1 · Retomar el proyecto y preparar la comprobación · 10 min
+#### Paso 1 · Abrir el proyecto y comprobar el punto de partida · 10 min
 
-1. Abre `HolaController.java` en tu carpeta de trabajo, no en la copia que clonaste para la tarea de la sesión anterior, y arranca como en la sesión 1. Comprueba `/hola` desde el navegador; aún no hay colección HTTP que ejecutar.
-2. Localiza `src/main/java/com/ejemplo/gestor/controller`. Las nuevas clases irán en ese paquete; si ya tienes una clase con el nombre del ejemplo, modifica esa clase en vez de duplicarla.
-3. Anota un identificador numérico, como `7`, y un filtro de tu tema, como `estado=activo`. Hoy sirven para observar qué valores llegan al método.
+Antes de añadir rutas, comprueba que puedes ejecutar la versión de la sesión anterior. En este paso trabajarás con `HolaController`; crearás `SaludoController` en el paso 2.
+
+1. En el IDE, abre la **carpeta del proyecto que contiene `pom.xml`**. Usa tu carpeta habitual de trabajo. Si hiciste la tarea de clonar el repositorio para comprobarlo, evita abrir a la vez las dos copias: podrías editar una y ejecutar la otra.
+2. Dentro de `src/main/java`, despliega tu paquete base y su carpeta `controller`. Abre `HolaController.java`. Localiza el método con `@GetMapping("/hola")` y lee su `return`: ese es el texto que vas a comprobar. Si elegiste otro paquete base, utiliza su carpeta y conserva el `package` de tus clases.
+3. Arranca la aplicación desde la terminal situada en la carpeta de `pom.xml`, con el comando correspondiente a tu sistema:
+
+**Windows · PowerShell**
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+**Linux o macOS**
+
+```bash
+./mvnw spring-boot:run
+```
+
+Si ya está ejecutándose, detén esa ejecución antes de volver a arrancar. Puedes usar **Stop** si la lanzaste desde el IDE o **Ctrl+C** en la terminal donde se está ejecutando.
+
+4. Espera al mensaje `Started ...Application` y abre **`http://localhost:8080/hola`** en el navegador. Debe aparecer la frase del `return` de tu método, incluida la personalización que hiciste en la sesión 1. Si cambiaste el puerto, úsalo en todas las URL de esta sesión.
+5. En la tabla de comprobaciones que guardaste con el proyecto, anota la URL y el texto observado. Para ver también el estado HTTP, abre **F12 → Red/Network**, recarga la página y selecciona la petición a `hola`: debe mostrar **200**.
+
+**Antes de continuar:** el servidor sigue ejecutándose y `/hola` responde con tu texto. Si no conecta, revisa el arranque; si devuelve 404, revisa la ruta y que estés ejecutando el proyecto correcto. Los identificadores y filtros de tu aplicación se elegirán al aplicar los ejemplos en el paso 5.
 
 #### Paso 2 · `@RequestParam` · leer la query string · 30 min
 
-1. Crea `SaludoController.java` en el paquete `controller`, junto a `HolaController`. El primer bloque es la clase completa; los siguientes son versiones alternativas de **su mismo método** `saludo`.
-2. Ejecuta primero la versión con parámetro obligatorio. Después sustituye ese método por el que incluye `defaultValue`, conservando `package`, imports y la clase. No dejes dos métodos que atiendan `GET /saludo`.
-3. Reinicia después de cada cambio. Comprueba primero la URL completa del ejemplo y después cambia solo un dato: el nombre, su ausencia o su valor vacío. Así sabrás qué modificación explica cada respuesta.
+Vas a realizar tres cambios en orden: **crear** una clase con un saludo, **modificar** ese saludo para darle un valor por defecto y **añadir** una consulta con dos parámetros. Prueba cada versión antes de pasar a la siguiente. `HolaController` se conserva.
 
-Crea un `SaludoController` en `com.ejemplo.gestor.controller`:
+##### 2.1 · Crear el saludo con un parámetro obligatorio
+
+Crea **`SaludoController.java`** en la misma carpeta que `HolaController.java`. Con el paquete del ejemplo, la ruta completa es:
+
+```text
+src/main/java/com/ejemplo/gestor/controller/SaludoController.java
+```
+
+Copia esta **clase completa**; si tu paquete base es distinto, adapta la primera línea para que coincida con el de `HolaController`. Si el archivo ya existe, revisa su contenido en lugar de crear otra clase con el mismo nombre.
 
 ```java
 package com.ejemplo.gestor.controller;
@@ -615,56 +642,40 @@ public class SaludoController {
 }
 ```
 
-Reinicia y prueba:
+**Guarda el archivo, detén la aplicación y vuelve a arrancarla** como en el paso 1. Repite esa secuencia después de cada cambio de Java: recargar el navegador solo envía otra petición, no ejecuta el código que acabas de editar.
 
-```text
-http://localhost:8080/saludo?nombre=Marc
-```
+Abre estas URL, una cada vez, y registra el estado HTTP y la respuesta. Cambiar la URL no requiere reiniciar el servidor.
 
-Responde `Hola, Marc.` Cambia el valor de la URL y responde otra cosa. **Un método, infinitas respuestas.**
-
-Lo que ha ocurrido por dentro es esto:
+| URL completa | Estado esperado | Respuesta o motivo |
+| --- | --- | --- |
+| `http://localhost:8080/saludo?nombre=Marc` | 200 | `Hola, Marc.` |
+| `http://localhost:8080/saludo?nombre=Ana` | 200 | `Hola, Ana.` |
+| `http://localhost:8080/saludo` | 400 | Falta el parámetro obligatorio `nombre`. |
+| `http://localhost:8080/saludo?nombre=` | 200 | `Hola, .` El parámetro está presente, pero su texto está vacío. |
 
 <figure class="diagram">
   <figcaption>De la URL al parámetro Java</figcaption>
   <ol class="flow flow--row flow--chain">
     <li>Llega <code>GET /saludo?nombre=Marc</code></li>
-    <li>Spring busca el método de <code>/saludo</code></li>
-    <li>Ve <code>@RequestParam(name = "nombre")</code></li>
-    <li>Busca <code>nombre</code> en la query string</li>
-    <li>Pasa <code>"Marc"</code> al método</li>
+    <li>Spring localiza el método de <code>/saludo</code></li>
+    <li><code>@RequestParam(name = "nombre")</code> indica qué dato leer</li>
+    <li>Spring entrega <code>"Marc"</code> al parámetro Java <code>nombre</code></li>
+    <li>El método devuelve <code>Hola, Marc.</code></li>
   </ol>
 </figure>
 
+`@RequestParam` es obligatorio por defecto. Cuando falta `nombre`, Spring responde **400 Bad Request antes de ejecutar `saludo`**. En el navegador puedes ver una página HTML de error; otro cliente que solicite JSON puede recibir un objeto con `status: 400`. Comprueba el estado en **Red/Network**, sin esperar una apariencia concreta del cuerpo. La consola del servidor también puede indicar que falta `nombre`.
+
+La petición con `?nombre=` permite distinguir **ausencia** de **texto vacío**: exigir que el parámetro exista no exige que contenga un nombre válido.
+
 <div class="rule">
-  <p class="rule-label">Escribe siempre el nombre</p>
-  <p>Verás mucho código con <code>@RequestParam String nombre</code>, sin el <code>name</code>. Funciona porque el proyecto se compila conservando los nombres de los parámetros, pero eso depende de cómo se compile: si alguien cambia la configuración, o si el compilador ofusca los nombres, deja de funcionar sin ningún aviso. <strong>Escribe el nombre explícitamente.</strong> Cuesta ocho caracteres y no vuelve a fallar nunca.</p>
+  <p class="rule-label">Nombre del parámetro de consulta</p>
+  <p>En <code>@RequestParam(name = "nombre")</code>, <code>name</code> indica la clave que Spring debe buscar en la URL. Escribirla explícitamente evita depender de que la compilación conserve el nombre del parámetro Java.</p>
 </div>
 
-Ahora pide la ruta **sin el parámetro**:
+##### 2.2 · Sustituir el método para añadir un valor por defecto
 
-```text
-http://localhost:8080/saludo
-```
-
-Observa a continuación:
-
-```json
-{
-  "timestamp": "2026-09-02T09:22:14.831+00:00",
-  "status": 400,
-  "error": "Bad Request",
-  "path": "/saludo"
-}
-```
-
-`400 Bad Request` indica que la petición no se puede aceptar tal como está construida. En este caso falta un parámetro declarado como obligatorio. El método no se ha ejecutado: Spring rechaza la petición al intentar preparar sus argumentos.
-
-Mira además la consola: hay un aviso que dice, más o menos, `Required request parameter 'nombre' is not present`. El mensaje bueno está siempre ahí.
-
-Esto es importante porque enseña algo que se repetirá todo el curso: **Spring valida antes de ejecutar**. Cuando tu método arranca, ya se ha comprobado que la petición encaja con lo que has declarado.
-
-Casi nunca queremos un 400 por un parámetro que podría tener un valor razonable:
+En **el mismo archivo `SaludoController.java`**, sustituye únicamente el bloque que empieza en `@GetMapping("/saludo")` y termina en la llave de cierre del método `saludo` por este:
 
 ```java
 @GetMapping("/saludo")
@@ -674,19 +685,32 @@ public String saludo(
 }
 ```
 
-| Petición | Respuesta |
-| :--- | :--- |
-| `/saludo` | `Hola, mundo.` |
-| `/saludo?nombre=Marc` | `Hola, Marc.` |
-| `/saludo?nombre=` | `Hola, mundo.` — el valor por defecto también se aplica al valor vacío |
+Conserva `package`, los tres imports, `@RestController`, la declaración `public class SaludoController` y su última llave. Debe quedar **un solo método para `GET /saludo`**. Guarda, detén y arranca de nuevo la aplicación; después repite estas pruebas:
 
-`defaultValue` se aplica tanto cuando el parámetro no aparece como cuando llega vacío, según la [documentación de RequestParam](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RequestParam.html). Repite ambas peticiones para observarlo. Un texto formado por espacios requiere tratar su contenido: no equivale a enviar un valor vacío.
+| URL completa | Estado esperado | Respuesta |
+| --- | --- | --- |
+| `http://localhost:8080/saludo?nombre=Marc` | 200 | `Hola, Marc.` |
+| `http://localhost:8080/saludo` | 200 | `Hola, mundo.` |
+| `http://localhost:8080/saludo?nombre=` | 200 | `Hola, mundo.` |
 
-Existe también `required = false`, que hace opcional el parámetro sin darle valor por defecto. En ese caso, si no llega, el parámetro vale `null`, y comprobarlo es cosa tuya.
+**Compara con la versión anterior:** la petición sin `nombre` deja de producir 400 y la petición con `nombre=` deja de devolver un saludo vacío. `defaultValue` proporciona `"mundo"` en ambos casos y hace que el parámetro sea opcional. Este comportamiento está definido en la [documentación de `RequestParam`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RequestParam.html). Un texto formado por espacios requiere comprobar su contenido; no equivale a enviar `nombre=`.
+
+<details class="aside aside--extra">
+<summary>Consulta · parámetro opcional sin valor por defecto</summary>
+
+La opción `required = false` permite omitir el parámetro sin asignarle un texto alternativo:
 
 ```java
 @RequestParam(name = "nombre", required = false) String nombre
 ```
+
+Este fragmento representa la declaración del parámetro de un método. Si no llega, su valor será `null` y el método tendrá que decidir cómo tratarlo. Es otra opción de la anotación; para continuar esta práctica conserva la versión con `defaultValue = "mundo"`.
+
+</details>
+
+##### 2.3 · Añadir una consulta con dos parámetros
+
+Ahora **añade** el siguiente método `buscar` dentro de `SaludoController`, **debajo del método `saludo` y antes de la última llave de la clase**. Conserva `saludo`: atienden rutas distintas. Los imports que ya tienes sirven para ambos métodos. En esta práctica reunimos los ejemplos en la misma clase; el paso 4 enseñará a agrupar las rutas por recurso.
 
 ```java
 @GetMapping("/incidencias")
@@ -699,17 +723,20 @@ public String buscar(
 }
 ```
 
-Pruébalo con `/incidencias?estado=abierta&pagina=3`, y también sin ningún parámetro.
+Si ya programaste un `GET /incidencias` en otro controlador, elige cuál conservar antes de arrancar: dos métodos registrados para la misma petición pueden impedir el arranque por un mapeo ambiguo (*ambiguous mapping*).
 
-Fíjate en `int pagina`. Por la URL llegó el texto `"3"` y en tu método hay un entero: **Spring ha convertido el tipo por ti**. Lo hace con `int`, `long`, `boolean`, `LocalDate` y muchos más.
+Guarda, detén y vuelve a arrancar. Comprueba las tres peticiones:
 
-Rómpelo de nuevo:
+| URL completa | Estado esperado | Respuesta o motivo |
+| --- | --- | --- |
+| `http://localhost:8080/incidencias?estado=abierta&pagina=3` | 200 | `Buscando incidencias con estado abierta, página 3` |
+| `http://localhost:8080/incidencias` | 200 | `Buscando incidencias con estado todas, página 1` |
+| `http://localhost:8080/incidencias?pagina=abc` | 400 | Spring no puede convertir `abc` al tipo `int` de `pagina`. |
 
-```text
-http://localhost:8080/incidencias?pagina=abc
-```
+En la primera petición, `&` separa los dos parámetros: `estado` recibe `"abierta"` y `pagina` recibe el entero `3`. En la última, la conversión falla antes de ejecutar `buscar`. Un entero negativo sí puede convertirse a `int`; decidir si es una página admisible requiere una validación adicional.
 
-Otro `400`. Es exactamente el mismo mecanismo: no se puede construir un `int` con `"abc"`, así que la petición no encaja con lo declarado y se rechaza antes de ejecutar nada. **Declarar el tipo ya es validar.** En la UD3 aprenderemos a devolver un mensaje de error mucho mejor que este, pero el comportamiento de base ya te protege.
+**Al terminar el paso 2:** `HolaController` conserva `/hola`. `SaludoController` contiene dos métodos: `saludo`, con valor por defecto, y `buscar`, con `estado` y `pagina`. Guarda en tu tabla las comprobaciones de ambas versiones del saludo y de la consulta. Estos métodos devuelven texto construido con los parámetros recibidos; todavía no consultan incidencias ni aplican paginación sobre datos reales.
+
 
 #### Paso 2-bis · Otros tipos que Spring convierte · 15 min
 
