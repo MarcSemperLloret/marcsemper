@@ -1277,15 +1277,13 @@ Los tres menús funcionan con el ratón. La pregunta de esta unidad es siempre l
 
 ## Sesión 3 · Imágenes y semántica estructural
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Imágenes correctamente utilizadas</strong>, <strong>HTML semántico</strong> y <strong>Auditoría semántica de una web real</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Imágenes correctamente utilizadas
+<p class="lead">Tres horas. Media hora para entender qué función cumple una imagen y qué declara cada elemento estructural, y dos horas y media decidiendo textos alternativos, refactorizando marcado ajeno y auditando una web en producción.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Que el <code>alt</code> correcto depende de la función de la imagen y no de lo que se ve en ella, y qué atributos mejoran el rendimiento.</li>
-    <li><strong>2. Haz:</strong> Decide el texto alternativo de cinco imágenes con funciones distintas y añade imágenes a tu proyecto.</li>
+    <li><strong>1. Aprende:</strong> Que el <code>alt</code> correcto depende de la función de la imagen y no de lo que se ve en ella, qué declara cada elemento estructural y cuándo un <code>div</code> sigue siendo correcto.</li>
+    <li><strong>2. Haz:</strong> Decide el texto alternativo de cinco imágenes, refactoriza un documento hecho solo de <code>div</code>, aplica la estructura a tus cuatro páginas y audita una web real.</li>
     <li><strong>3. Comprueba:</strong> Desactiva las imágenes y comprueba si la página sigue entendiéndose.</li>
   </ol>
 </div>
@@ -1299,7 +1297,13 @@ Los tres menús funcionan con el ratón. La pregunta de esta unidad es siempre l
   </ol>
 </div>
 
-#### La etiqueta
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy hay dos decisiones que se repiten todo el día: qué función cumple cada imagen, y qué representa cada bloque de la página. Ninguna se resuelve mirando cómo queda.
+
+#### El `alt` no describe la imagen: la sustituye
 
 ```html
 <img src="img/portatil.webp"
@@ -1307,8 +1311,6 @@ Los tres menús funcionan con el ratón. La pregunta de esta unidad es siempre l
 ```
 
 `src` indica el archivo y `alt` el texto alternativo. `img` es un elemento vacío: no se cierra.
-
-#### El `alt` no describe la imagen: la sustituye
 
 La pregunta habitual, «¿qué pongo en el `alt`?», casi siempre se responde describiendo lo que se ve. Es la respuesta equivocada.
 
@@ -1324,14 +1326,18 @@ De ahí salen tres casos, y solo tres:
 | **Actúa**: es el único contenido de un enlace o un botón | La acción o el destino, no el dibujo | `alt="Buscar en la tienda"` |
 | **Decora**: no aporta nada que no esté ya en el texto | Vacío, y se escribe igualmente | `alt=""` |
 
-##### Imagen informativa
+<div class="rule">
+  <p class="rule-label"><code>alt=""</code> no es lo mismo que no poner <code>alt</code></p>
+  <p><code>alt=""</code> significa «esta imagen es decorativa, ignórala». Un lector de pantalla la salta en silencio, que es justo lo que queremos.</p>
+  <p>Si directamente no escribes el atributo, el lector no sabe qué hacer y suele leer el nombre del archivo. Quien usa la página escucha «guion bajo img guion 47 punto webp». Por eso <strong>toda</strong> imagen lleva <code>alt</code>: la duda es solo si va vacío o lleno.</p>
+</div>
+
+Los dos casos extremos, escritos:
 
 ```html
 <img src="img/placa-solar.webp"
      alt="Paneles solares instalados sobre la cubierta del edificio">
 ```
-
-##### Imagen decorativa
 
 ```html
 <img src="img/separador.webp" alt="">
@@ -1339,26 +1345,18 @@ De ahí salen tres casos, y solo tres:
 
 Un texto alternativo vacío puede ser exactamente la decisión correcta.
 
-<div class="rule">
-  <p class="rule-label"><code>alt=""</code> no es lo mismo que no poner <code>alt</code></p>
-  <p><code>alt=""</code> significa «esta imagen es decorativa, ignórala». Un lector de pantalla la salta en silencio, que es justo lo que queremos.</p>
-  <p>Si directamente no escribes el atributo, el lector no sabe qué hacer y suele leer el nombre del archivo. Quien usa la página escucha «guion bajo img guion 47 punto webp». Por eso <strong>toda</strong> imagen lleva <code>alt</code>: la duda es solo si va vacío o lleno.</p>
-</div>
-
-##### Lo que no debemos hacer
+Dos textos alternativos que no sirven:
 
 ```html
 alt="foto"
 ```
-
-No aporta información alguna. Tampoco la aporta esto:
 
 ```html
 alt="ordenador portátil barato comprar ordenador portátil
 ofertas portátiles ordenador gaming tienda Alicante"
 ```
 
-El `alt` no es un sitio donde meter palabras clave. Quien depende de él tiene que escuchar eso entero.
+El primero no aporta información alguna. El segundo convierte el `alt` en un almacén de palabras clave, y quien depende de él tiene que escuchar eso entero.
 
 #### `figure` y `figcaption`
 
@@ -1377,191 +1375,9 @@ Cuando la imagen lleva un pie visible, los dos se marcan juntos:
 
 `figcaption` es el pie que ve todo el mundo; `alt` sustituye a la imagen para quien no la ve. **No deben decir lo mismo**, porque no hacen lo mismo: si los repites, quien use un lector de pantalla escucha la misma frase dos veces.
 
-#### Dos atributos de rendimiento
+#### Un `div` no dice nada; estos elementos sí
 
-```html
-<img src="img/producto.webp"
-     alt="Teclado mecánico compacto"
-     width="800"
-     height="600"
-     loading="lazy">
-```
-
-`width` y `height` reservan el hueco antes de que la imagen llegue, y evitan que el texto salte cuando termina de cargar. `loading="lazy"` retrasa la descarga de las imágenes que todavía no se ven. Más adelante veremos cómo CSS adapta visualmente estas imágenes.
-
-<details class="aside aside--extra">
-  <summary>Extra · una imagen no tiene por qué ser un único archivo</summary>
-  <p>HTML permite ofrecer varias versiones del mismo contenido y dejar que el navegador elija:</p>
-  <pre><code>&lt;picture&gt;
-    &lt;source srcset="img/portada.webp" type="image/webp"&gt;
-    &lt;img src="img/portada.jpg" alt="Estudiantes en un laboratorio"&gt;
-&lt;/picture&gt;</code></pre>
-  <p>El navegador usa el primer <code>source</code> que entiende y, si no entiende ninguno, cae en el <code>img</code>. No hace falta dominarlo ahora. Lo importante es saber que existe y que una imagen web no es necesariamente un solo archivo para cualquier situación.</p>
-</details>
-
-<details class="aside aside--extra">
-  <summary>Extra · audio, vídeo y contenido incrustado</summary>
-  <p>HTML también incorpora multimedia:</p>
-  <pre><code>&lt;video controls&gt;
-    &lt;source src="media/demo.mp4" type="video/mp4"&gt;
-    Tu navegador no puede reproducir este vídeo.
-&lt;/video&gt;
-
-&lt;audio controls&gt;
-    &lt;source src="media/audio.mp3" type="audio/mpeg"&gt;
-&lt;/audio&gt;</code></pre>
-  <p>El texto suelto dentro del elemento es lo que se muestra si el navegador no puede reproducirlo.</p>
-  <p>Y con <code>&lt;iframe&gt;</code> se puede incrustar un documento externo dentro del tuyo:</p>
-  <pre><code>&lt;iframe src="https://example.com"
-        title="Contenido externo de ejemplo"
-        loading="lazy"&gt;&lt;/iframe&gt;</code></pre>
-  <p>Un <code>iframe</code> no debería ser la opción automática para cualquier contenido: estás metiendo una página ajena dentro de la tuya, con implicaciones de seguridad, privacidad, rendimiento y accesibilidad. El <code>title</code> no es opcional, porque es lo único que identifica ese marco.</p>
-  <p>Un vídeo de 200 MB en tu web también es una decisión: tamaño, ancho de banda, formato y compatibilidad. Volveremos a este problema al estudiar optimización.</p>
-</details>
-
-#### Tarea 6 · ¿Qué `alt` pondrías?
-
-<p class="stage">Paso 1 · Te enseño uno</p>
-
-**El logotipo de la empresa en la cabecera, enlazado a `index.html`.**
-
-<dl class="worked">
-  <dt>¿Qué función tiene?</dt>
-  <dd>Actúa: es el único contenido de un enlace.</dd>
-  <dt>Si la borro, ¿qué se pierde?</dt>
-  <dd>Un enlace sin ningún texto. Quien no vea la imagen se encuentra un enlace que no dice adónde va.</dd>
-  <dt>Entonces, ¿qué escribo?</dt>
-  <dd>El destino, no el dibujo. No «logotipo azul de PixelStore», sino adónde lleva.</dd>
-  <dt>Solución</dt>
-  <dd><code>alt="PixelStore · Inicio"</code></dd>
-</dl>
-
-<p class="stage stage--solo">Paso 2 · Ahora tú</p>
-
-Para cada caso, decide si el `alt` debe ser descriptivo, funcional o vacío, escríbelo, y di **por qué**:
-
-1. **Un gráfico de barras** que compara el consumo energético de tres portátiles.
-2. **Una fotografía decorativa** que separa dos secciones.
-3. **Un icono de lupa** dentro de un enlace, sin ningún texto alrededor.
-4. **La foto de un producto** en su ficha: un teclado mecánico con iluminación RGB.
-5. **La foto del equipo** en la página «Acerca de», con un pie que ya dice quiénes son.
-
-<details class="aside aside--extra">
-  <summary>Ver soluciones recomendadas</summary>
-  <p>1 · Informa. <code>alt="El modelo A consume 45 W, el B 65 W y el C 90 W"</code>. Un gráfico se sustituye por sus datos, no por la palabra «gráfico».</p>
-  <p>2 · Decora. <code>alt=""</code>.</p>
-  <p>3 · Actúa. <code>alt="Buscar en la tienda"</code>: es la única etiqueta accesible que tiene ese enlace.</p>
-  <p>4 · Informa. <code>alt="Teclado mecánico compacto con interruptores rojos y retroiluminación RGB"</code>. En una ficha de producto la foto sí aporta contenido.</p>
-  <p>5 · Depende del pie. Si el <code>figcaption</code> ya identifica a las personas, el <code>alt</code> describe lo que se ve sin repetirlo: <code>alt="Nueve personas en la oficina"</code>. Si el pie no dice nada, el <code>alt</code> carga con la información.</p>
-</details>
-
-#### Ahora tú · Imágenes en tu proyecto
-
-Crea la carpeta `img/` y añade al menos tres imágenes a tu sitio: una informativa, una decorativa y una dentro de un `figure` con su pie. Enlázalas con rutas relativas.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Comprobación · la prueba de las imágenes apagadas</p>
-  <p>Desactiva la carga de imágenes en el navegador y recarga tu proyecto. Si alguna zona pasa a ser incomprensible, o aparece un hueco sin ninguna explicación, ese <code>alt</code> está mal resuelto.</p>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre <code>alt=""</code> y no escribir <code>alt</code>?</li>
-    <li>Una lupa dentro de un enlace de búsqueda: ¿qué <code>alt</code> lleva?</li>
-    <li>¿Por qué <code>alt</code> y <code>figcaption</code> no deben decir lo mismo?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>alt=""</code> declara que la imagen es decorativa y hace que se ignore. Sin el atributo, el lector de pantalla acaba leyendo el nombre del archivo.</p>
-  <p>2 · La acción, no el dibujo: <code>alt="Buscar en la tienda"</code>.</p>
-  <p>3 · Porque el pie lo lee todo el mundo y el <code>alt</code> solo sustituye a la imagen. Si coinciden, se oye la misma frase dos veces.</p>
-</details>
-
-
-### Bloque 2 · HTML semántico
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué declara cada elemento estructural, cuándo un <code>div</code> sigue siendo correcto y qué separa <code>section</code> de <code>article</code>.</li>
-    <li><strong>2. Haz:</strong> Refactoriza un documento hecho solo de <code>div</code> hasta convertirlo en HTML semántico.</li>
-    <li><strong>3. Comprueba:</strong> Resuelve los dos retos discutiéndolos con tu compañero.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuándo debe ser <code>alt=""</code> y cuándo debe describir información?</li>
-    <li>¿Qué aporta <code>figure</code> cuando una imagen tiene un pie propio?</li>
-    <li>Detecta el problema: <code>&lt;img src="grafico.png" alt="imagen"&gt;</code>.</li>
-  </ol>
-</div>
-
-#### Podríamos construir una web con cientos de `div`
-
-El resultado funcionaría, pero un `<div>` no aporta significado alguno: es únicamente un contenedor. HTML tiene elementos que explican **qué representa cada parte**, y eso permite que un lector de pantalla ofrezca una lista de zonas y salte directamente a la que interese.
-
-##### `<header>`
-
-```html
-<header>
-    <h1>PixelStore</h1>
-</header>
-```
-
-Contenido introductorio, de la página o de una sección.
-
-##### `<nav>`
-
-Un bloque importante de navegación. No hace falta envolver en `nav` cualquier grupo de tres enlaces: se reserva para la navegación principal del sitio o de una sección.
-
-##### `<main>`
-
-```html
-<main>
-    ...
-</main>
-```
-
-El contenido principal del documento. **Uno por página**, y no puede estar dentro de `header`, `nav`, `article`, `aside` ni `footer`.
-
-##### `<section>`
-
-Una sección temática:
-
-```html
-<section>
-    <h2>Productos destacados</h2>
-    ...
-</section>
-```
-
-Buena señal de que tienes una sección de verdad: **tiene sentido darle un encabezado**. Si no sabrías qué título ponerle, probablemente no es una `section`.
-
-##### `<article>`
-
-Contenido que tiene sentido por sí mismo:
-
-```html
-<article>
-    <h3>Portátil Nova 14</h3>
-    <p>Nuevo portátil profesional de 14 pulgadas.</p>
-</article>
-```
-
-Ejemplos habituales: una noticia, una publicación, un comentario, una ficha de producto, una entrada de blog.
-
-##### `<aside>`
-
-Contenido relacionado pero secundario respecto al principal.
-
-##### `<footer>`
-
-Pie de la página o de una sección. Puede contener autoría, información legal, enlaces relacionados, contacto o copyright.
+Podríamos construir una web con cientos de `div`. Funcionaría, pero un `<div>` no aporta significado alguno: es únicamente un contenedor. HTML tiene elementos que explican **qué representa cada parte**, y eso permite que un lector de pantalla ofrezca una lista de zonas y salte directamente a la que interese.
 
 <figure class="diagram">
   <figcaption>Las zonas que declara un documento bien estructurado</figcaption>
@@ -1580,6 +1396,8 @@ Pie de la página o de una sección. Puede contener autoría, información legal
 
 Cada una de esas zonas. Son los puntos de referencia que permiten recorrer una página sin verla, igual que tú la recorres mirando dónde está el menú y dónde el contenido.
 
+Dos matices que se olvidan. `<main>` va **una sola vez por página**, y no puede estar dentro de `header`, `nav`, `article`, `aside` ni `footer`. Una `<section>` de verdad, además, admite un encabezado: si no sabrías qué título ponerle, probablemente no es una `section`.
+
 #### `section` o `article`
 
 La regla que resuelve casi todos los casos:
@@ -1590,13 +1408,13 @@ Una ficha de producto se entiende sola: aparece en un buscador, se comparte por 
 
 #### El uso legítimo de `div`
 
-No. `<div>` es un contenedor genérico perfectamente válido. La pregunta es:
+`<div>` es un contenedor genérico perfectamente válido. La pregunta es:
 
 > **¿Existe un elemento con un significado más adecuado?**
 
 Si existe, úsalo. Si no existe —solo estás agrupando cosas de cara al CSS, sin que ese grupo represente ninguna zona con significado— `div` es exactamente lo correcto. **El error no es usar `div`: es usarlo en lugar de algo que sí significaba.**
 
-#### Un ejemplo completo
+Así queda un documento completo:
 
 ```html
 <body>
@@ -1665,7 +1483,117 @@ Si existe, úsalo. Si no existe —solo estás agrupando cosas de cara al CSS, s
 
 Aunque todavía no tenga CSS, la estructura del documento ya tiene sentido. Léela en voz alta: se entiende qué es cada cosa sin ver la pantalla.
 
-#### Tarea 7 · El infierno de los div
+#### Leer la estructura de una página ajena
+
+Hasta ahora has escrito HTML. Hoy vas a leerlo, que es lo que harás la mayor parte de tu vida profesional: casi siempre trabajarás sobre código que escribió otro.
+
+Abre DevTools con `F12`. Tres pestañas interesan:
+
+| Pestaña | Para qué |
+| ------- | -------- |
+| **Elements** / *Inspector* | Ver el HTML real que ha construido el navegador, ya reparado |
+| **Accessibility** / *Accesibilidad* | Ver el árbol de accesibilidad: zonas y nombres que percibe un lector de pantalla |
+| **Console** | Ver los errores que el navegador sí ha decidido contar |
+
+<div class="rule">
+  <p class="rule-label">Lo que ves en Elements no es lo que escribió el autor</p>
+  <p>El panel muestra el documento <strong>después</strong> de que el navegador lo haya reparado y de que el JavaScript lo haya modificado. Para ver lo que se escribió de verdad, usa <code>Ctrl + U</code>. Comparar los dos es, muchas veces, la auditoría entera.</p>
+</div>
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto y sobre código ajeno</p>
+
+Los tres primeros pasos deciden textos alternativos y estructura sobre material dado; los cuatro últimos llevan esas decisiones a tu sitio y después a una web en producción.
+
+#### Paso 1 · ¿Qué `alt` pondrías? · 20 min
+
+##### 1.1 · Ejemplo resuelto
+
+**El logotipo de la empresa en la cabecera, enlazado a `index.html`.**
+
+<dl class="worked">
+  <dt>¿Qué función tiene?</dt>
+  <dd>Actúa: es el único contenido de un enlace.</dd>
+  <dt>Si la borro, ¿qué se pierde?</dt>
+  <dd>Un enlace sin ningún texto. Quien no vea la imagen se encuentra un enlace que no dice adónde va.</dd>
+  <dt>Entonces, ¿qué escribo?</dt>
+  <dd>El destino, no el dibujo. No «logotipo azul de PixelStore», sino adónde lleva.</dd>
+  <dt>Solución</dt>
+  <dd><code>alt="PixelStore · Inicio"</code></dd>
+</dl>
+
+##### 1.2 · Ahora tú
+
+Para cada caso, decide si el `alt` debe ser descriptivo, funcional o vacío, escríbelo, y di **por qué**:
+
+1. **Un gráfico de barras** que compara el consumo energético de tres portátiles.
+2. **Una fotografía decorativa** que separa dos secciones.
+3. **Un icono de lupa** dentro de un enlace, sin ningún texto alrededor.
+4. **La foto de un producto** en su ficha: un teclado mecánico con iluminación RGB.
+5. **La foto del equipo** en la página «Acerca de», con un pie que ya dice quiénes son.
+
+<details class="aside aside--extra">
+  <summary>Ver soluciones recomendadas</summary>
+  <p>1 · Informa. <code>alt="El modelo A consume 45 W, el B 65 W y el C 90 W"</code>. Un gráfico se sustituye por sus datos, no por la palabra «gráfico».</p>
+  <p>2 · Decora. <code>alt=""</code>.</p>
+  <p>3 · Actúa. <code>alt="Buscar en la tienda"</code>: es la única etiqueta accesible que tiene ese enlace.</p>
+  <p>4 · Informa. <code>alt="Teclado mecánico compacto con interruptores rojos y retroiluminación RGB"</code>. En una ficha de producto la foto sí aporta contenido.</p>
+  <p>5 · Depende del pie. Si el <code>figcaption</code> ya identifica a las personas, el <code>alt</code> describe lo que se ve sin repetirlo: <code>alt="Nueve personas en la oficina"</code>. Si el pie no dice nada, el <code>alt</code> carga con la información.</p>
+</details>
+
+#### Paso 2 · Imágenes en tu proyecto · 20 min
+
+Crea la carpeta `img/` y añade al menos tres imágenes a tu sitio: una informativa, una decorativa y una dentro de un `figure` con su pie. Enlázalas con rutas relativas.
+
+Añade a todas `width`, `height` y, a las que no se vean al abrir la página, `loading="lazy"`:
+
+```html
+<img src="img/producto.webp"
+     alt="Teclado mecánico compacto"
+     width="800"
+     height="600"
+     loading="lazy">
+```
+
+`width` y `height` reservan el hueco antes de que la imagen llegue, y evitan que el texto salte cuando termina de cargar. `loading="lazy"` retrasa la descarga de las imágenes que todavía no se ven. Más adelante veremos cómo CSS adapta visualmente estas imágenes.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Comprobación · la prueba de las imágenes apagadas</p>
+  <p>Desactiva la carga de imágenes en el navegador y recarga tu proyecto. Si alguna zona pasa a ser incomprensible, o aparece un hueco sin ninguna explicación, ese <code>alt</code> está mal resuelto.</p>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Consultar · una imagen no tiene por qué ser un único archivo</summary>
+  <p>HTML permite ofrecer varias versiones del mismo contenido y dejar que el navegador elija:</p>
+  <pre><code>&lt;picture&gt;
+    &lt;source srcset="img/portada.webp" type="image/webp"&gt;
+    &lt;img src="img/portada.jpg" alt="Estudiantes en un laboratorio"&gt;
+&lt;/picture&gt;</code></pre>
+  <p>El navegador usa el primer <code>source</code> que entiende y, si no entiende ninguno, cae en el <code>img</code>. No hace falta dominarlo ahora. Lo importante es saber que existe y que una imagen web no es necesariamente un solo archivo para cualquier situación.</p>
+</details>
+
+<details class="aside aside--extra">
+  <summary>Consultar · audio, vídeo y contenido incrustado</summary>
+  <p>HTML también incorpora multimedia:</p>
+  <pre><code>&lt;video controls&gt;
+    &lt;source src="media/demo.mp4" type="video/mp4"&gt;
+    Tu navegador no puede reproducir este vídeo.
+&lt;/video&gt;
+
+&lt;audio controls&gt;
+    &lt;source src="media/audio.mp3" type="audio/mpeg"&gt;
+&lt;/audio&gt;</code></pre>
+  <p>El texto suelto dentro del elemento es lo que se muestra si el navegador no puede reproducirlo.</p>
+  <p>Y con <code>&lt;iframe&gt;</code> se puede incrustar un documento externo dentro del tuyo:</p>
+  <pre><code>&lt;iframe src="https://example.com"
+        title="Contenido externo de ejemplo"
+        loading="lazy"&gt;&lt;/iframe&gt;</code></pre>
+  <p>Un <code>iframe</code> no debería ser la opción automática para cualquier contenido: estás metiendo una página ajena dentro de la tuya, con implicaciones de seguridad, privacidad, rendimiento y accesibilidad. El <code>title</code> no es opcional, porque es lo único que identifica ese marco.</p>
+  <p>Un vídeo de 200 MB en tu web también es una decisión: tamaño, ancho de banda, formato y compatibilidad. Volveremos a este problema al estudiar optimización.</p>
+</details>
+
+#### Paso 3 · El infierno de los div · 30 min
 
 Este código es del tipo que te vas a encontrar heredado:
 
@@ -1698,9 +1626,7 @@ Este código es del tipo que te vas a encontrar heredado:
 </div>
 ```
 
-<p class="stage">Paso 1 · Te enseño uno</p>
-
-Empiezo por la barra superior:
+##### 3.1 · Ejemplo resuelto · la barra superior
 
 <dl class="worked">
   <dt>¿Qué es <code>div.top-bar</code>?</dt>
@@ -1725,11 +1651,11 @@ Empiezo por la barra superior:
 
 Cuatro `div` han desaparecido y el documento dice cuatro cosas que antes no decía.
 
-<p class="stage">Paso 2 · Completa una versión guiada</p>
+##### 3.2 · Completa una versión guiada
 
-Antes de abordar el documento entero, sustituye en una copia únicamente <code>content-box</code>, <code>bloque-central</code> y <code>titulo-seccion</code>. Elige entre <code>main</code>, <code>section</code> y un encabezado, y escribe al lado de cada cambio qué significado has añadido.
+Antes de abordar el documento entero, sustituye en una copia únicamente `content-box`, `bloque-central` y `titulo-seccion`. Elige entre `main`, `section` y un encabezado, y escribe al lado de cada cambio qué significado has añadido.
 
-<p class="stage stage--solo">Paso 3 · Ahora tú</p>
+##### 3.3 · Ahora tú
 
 Reescribe el resto. Al terminar, tu versión debe cumplir:
 
@@ -1740,13 +1666,11 @@ Reescribe el resto. Al terminar, tu versión debe cumplir:
 5. El aviso lateral es un `aside` y el pie un `footer`.
 6. No has perdido ni una palabra del contenido original.
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Refactoriza el documento completo y justifica cada región.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade una segunda tarjeta sin duplicar regiones que deberían compartirse.</span></div>
-  <div><strong>Reto</strong><span>Refactoriza otro fragmento ajeno sin nombres de clase que te den pistas.</span></div>
-</div>
+#### Paso 4 · Dos decisiones que se discuten · 15 min
 
-#### Reto 3 · Botón contra falso botón (10 min)
+Las dos se resuelven en pareja, en voz alta, antes de mirar la respuesta.
+
+##### 4.1 · Botón contra falso botón
 
 ```html
 <!-- Opción A -->
@@ -1759,101 +1683,36 @@ Reescribe el resto. Al terminar, tu versión debe cumplir:
 Las dos funcionan al hacer clic. ¿Cuál eliges y por qué?
 
 <details class="aside aside--extra">
-  <summary>Ver respuesta del Reto 3</summary>
+  <summary>Ver respuesta</summary>
   <p>La B, y no por estilo. Un <code>&lt;button&gt;</code> trae de fábrica cuatro cosas que la A no tiene y habría que reconstruir a mano: se alcanza con <code>Tab</code>, se activa con <code>Enter</code> y con la barra espaciadora, se anuncia como «botón» a un lector de pantalla, y recibe el foco visible.</p>
   <p>La opción A solo funciona para quien use ratón y vea la pantalla. Mismo patrón de toda la unidad: se ve igual, y no hace lo mismo.</p>
 </details>
 
-#### Reto 4 · ¿`section` o `article`? (10 min)
+##### 4.2 · ¿`section` o `article`?
 
-Discútelo con tu compañero. En una tienda online:
+En una tienda online:
 
 * ¿La ficha individual de un producto es `section` o `article`?
 * ¿Y el catálogo que agrupa los veinte productos?
 * ¿Y un comentario de un cliente dentro de la ficha?
 
 <details class="aside aside--extra">
-  <summary>Ver respuesta del Reto 4</summary>
+  <summary>Ver respuesta</summary>
   <p>La ficha es un <code>article</code>: se entiende sola fuera de la página, y de hecho es lo que se comparte o lo que devuelve un buscador.</p>
   <p>El catálogo es una <code>section</code>: agrupa artículos y solo tiene sentido dentro de la tienda. Es decir, una <code>section</code> que contiene veinte <code>article</code>, y no al revés.</p>
   <p>El comentario es un <code>article</code> dentro del <code>article</code> de la ficha. Sí, se pueden anidar: un comentario es contenido independiente y atribuible a alguien.</p>
   <p>Fíjate en que aquí no hay una única respuesta mecánica. HTML semántico admite discusión, y saber defender tu decisión vale más que acertar la etiqueta «oficial».</p>
 </details>
 
-#### Ahora tú · Refactoriza tu propio sitio
+#### Paso 5 · Refactoriza tu propio sitio · 25 min
 
 Aplica lo mismo a tus cuatro páginas: `header`, `nav`, `main`, `footer` en todas, y `section` / `article` donde corresponda.
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Cuántos <code>&lt;main&gt;</code> puede haber en una página?</li>
-    <li>Da la regla de una frase que separa <code>section</code> de <code>article</code>.</li>
-    <li>Nombra dos cosas que un <code>&lt;button&gt;</code> hace y un <code>&lt;div onclick&gt;</code> no.</li>
-  </ol>
-</div>
+Escribe en un comentario, en cada página, una decisión que hayas tenido que pensar: un `div` que decidiste conservar, o un bloque en el que dudaste entre `section` y `article`.
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Uno. Es el contenido principal del documento, y no puede haber dos.</p>
-  <p>2 · Si tendría sentido publicado por separado es <code>article</code>; si solo lo tiene dentro de esta página, <code>section</code>.</p>
-  <p>3 · Se alcanza con <code>Tab</code>, se activa con teclado, se anuncia como botón y recibe el foco. Bastan dos.</p>
-</details>
+**Antes de continuar:** ninguna de las cuatro páginas tiene más de un `main`, y ninguna usa un `div` donde exista un elemento con significado.
 
-
-### Bloque 3 · Auditoría semántica de una web real
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se lee la estructura real de una página con DevTools, y qué elementos nativos usarías en lugar de programarlos.</li>
-    <li><strong>2. Haz:</strong> Audita una web en producción y extrae su mapa semántico.</li>
-    <li><strong>3. Comprueba:</strong> Aplica a tus páginas lo que hayas encontrado que merezca la pena.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué diferencia práctica hay entre <code>section</code> y <code>article</code>?</li>
-    <li>¿Cuándo sigue siendo correcto usar un <code>div</code>?</li>
-    <li>Sustituye <code>&lt;div onclick="..."&gt;Guardar&lt;/div&gt;</code> por el elemento nativo adecuado.</li>
-  </ol>
-</div>
-
-#### Ver la estructura, no el diseño
-
-Hasta ahora has escrito HTML. Hoy vas a leerlo, que es lo que harás la mayor parte de tu vida profesional: casi siempre trabajarás sobre código que escribió otro.
-
-Abre DevTools con `F12`. Tres pestañas interesan:
-
-| Pestaña | Para qué |
-| ------- | -------- |
-| **Elements** / *Inspector* | Ver el HTML real que ha construido el navegador, ya reparado |
-| **Accessibility** / *Accesibilidad* | Ver el árbol de accesibilidad: zonas y nombres que percibe un lector de pantalla |
-| **Console** | Ver los errores que el navegador sí ha decidido contar |
-
-<div class="rule">
-  <p class="rule-label">Lo que ves en Elements no es lo que escribió el autor</p>
-  <p>El panel muestra el documento <strong>después</strong> de que el navegador lo haya reparado y de que el JavaScript lo haya modificado. Para ver lo que se escribió de verdad, usa <code>Ctrl + U</code>. Comparar los dos es, muchas veces, la auditoría entera.</p>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Extra · elementos que ya existen y solemos reprogramar</summary>
-  <p>Al auditar webs verás componentes hechos con JavaScript que HTML ya resuelve solo:</p>
-  <p><strong>Un desplegable</strong>, sin una línea de código:</p>
-  <pre><code>&lt;details&gt;
-    &lt;summary&gt;¿Cuánto tarda el envío?&lt;/summary&gt;
-    &lt;p&gt;Los pedidos se envían en 24–48 horas.&lt;/p&gt;
-&lt;/details&gt;</code></pre>
-  <p><strong>Una fecha</strong> legible por personas y por máquinas:</p>
-  <pre><code>&lt;time datetime="2026-09-15"&gt;15 de septiembre de 2026&lt;/time&gt;</code></pre>
-  <p><strong>Progreso</strong> y <strong>medida</strong>, que no significan lo mismo: <code>&lt;progress value="70" max="100"&gt;</code> representa una tarea que avanza; <code>&lt;meter min="0" max="100" value="85"&gt;</code> representa un valor dentro de un rango conocido, como un nivel de batería.</p>
-  <p>Y <strong>datos de contacto</strong>: <code>&lt;address&gt;</code>.</p>
-  <p>La regla general: antes de construir algo complejo, pregúntate <strong>si HTML ya sabe hacerlo</strong>. Usar la plataforma suele dar soluciones más simples, más accesibles, más compatibles y más fáciles de mantener.</p>
-</details>
-
-#### Tarea 8 · Audita una web real
+#### Paso 6 · Audita una web real · 25 min
 
 Elige una web de noticias o una tienda conocida y respóndela con DevTools delante:
 
@@ -1876,9 +1735,28 @@ Elige una web de noticias o una tienda conocida y respóndela con DevTools delan
   <p>En vez de bucear por el árbol, usa el buscador del panel Elements (<code>Ctrl + F</code> dentro de DevTools) y busca directamente <code>main</code>, <code>nav</code>, <code>header</code> o <code>footer</code>. Te dirá cuántas coincidencias hay, que es justo el dato de las dos primeras preguntas.</p>
 </details>
 
-#### Microrevisión · diez minutos, sin nota
+<details class="aside aside--extra">
+  <summary>Consultar · elementos que ya existen y solemos reprogramar</summary>
+  <p>Al auditar webs verás componentes hechos con JavaScript que HTML ya resuelve solo:</p>
+  <p><strong>Un desplegable</strong>, sin una línea de código:</p>
+  <pre><code>&lt;details&gt;
+    &lt;summary&gt;¿Cuánto tarda el envío?&lt;/summary&gt;
+    &lt;p&gt;Los pedidos se envían en 24–48 horas.&lt;/p&gt;
+&lt;/details&gt;</code></pre>
+  <p><strong>Una fecha</strong> legible por personas y por máquinas:</p>
+  <pre><code>&lt;time datetime="2026-09-15"&gt;15 de septiembre de 2026&lt;/time&gt;</code></pre>
+  <p><strong>Progreso</strong> y <strong>medida</strong>, que no significan lo mismo: <code>&lt;progress value="70" max="100"&gt;</code> representa una tarea que avanza; <code>&lt;meter min="0" max="100" value="85"&gt;</code> representa un valor dentro de un rango conocido, como un nivel de batería.</p>
+  <p>Y <strong>datos de contacto</strong>: <code>&lt;address&gt;</code>.</p>
+  <p>La regla general: antes de construir algo complejo, pregúntate <strong>si HTML ya sabe hacerlo</strong>. Usar la plataforma suele dar soluciones más simples, más accesibles, más compatibles y más fáciles de mantener.</p>
+</details>
 
-Intercambia únicamente tu `index.html` con un compañero. No lo corrijas por él: encuentra **un problema semántico concreto** y descríbelo con este formato:
+#### Paso 7 · La misma auditoría sobre lo tuyo, y revisión cruzada · 15 min
+
+Pásale a tus cuatro páginas exactamente la misma auditoría que acabas de hacerle a una web profesional, y corrige lo que encuentres.
+
+No es casualidad que la auditoría vaya antes: es más fácil ver un fallo en el código de otro, y ese ojo entrenado es el que después aplicas al tuyo.
+
+Intercambia después únicamente tu `index.html` con un compañero. No lo corrijas por él: encuentra **un problema semántico concreto** y descríbelo con este formato:
 
 1. **Qué veo:** señala el elemento y el contenido afectado.
 2. **Por qué importa:** explica qué significado o navegación pierde.
@@ -1886,36 +1764,104 @@ Intercambia únicamente tu `index.html` con un compañero. No lo corrijas por é
 
 El autor decide si acepta la observación. También puede rechazarla, pero debe justificar su decisión con el significado del contenido.
 
-#### Ahora tú · La misma auditoría, sobre lo tuyo
+#### Ampliación si has completado el trabajo
 
-Pásale a tus cuatro páginas exactamente la misma auditoría que acabas de hacerle a una web profesional, y corrige lo que encuentres.
+Primero termina y comprueba los siete pasos. Los dos retos trabajan sobre material que no da ninguna pista, que es la situación real cuando heredas un proyecto.
 
-No es casualidad que la auditoría vaya antes que el proyecto final: es más fácil ver un fallo en el código de otro, y ese ojo entrenado es el que después aplicas al tuyo.
+##### Reto 1 · Refactorizar sin nombres de clase que ayuden
+
+En el paso 3 los nombres de clase casi daban la respuesta: `top-bar`, `menu`, `pie`. Aquí no hay nada de eso.
+
+```html
+<div id="a1">
+    <div class="b1">
+        <div class="c1">Revista Mecánica</div>
+        <div class="c2">
+            <a href="index.html">Portada</a>
+            <a href="numeros.html">Números</a>
+            <a href="suscripcion.html">Suscripción</a>
+        </div>
+    </div>
+    <div class="b2">
+        <div class="c3">
+            <div class="d1">Motores de combustión: el final de una era</div>
+            <div class="d2">Por Elena Ruiz · 12 de marzo de 2026</div>
+            <div class="d3">El calendario europeo de prohibición obliga a replantear
+            toda la cadena de suministro.</div>
+        </div>
+        <div class="c3">
+            <div class="d1">Diez años de baterías de estado sólido</div>
+            <div class="d2">Por Marc Oliver · 3 de marzo de 2026</div>
+            <div class="d3">Lo que se prometió, lo que llegó y lo que sigue sin
+            resolverse.</div>
+        </div>
+    </div>
+    <div class="b3">
+        <div class="c4">Suscríbete y recibe cada número en papel.</div>
+    </div>
+    <div class="b4">Revista Mecánica · Depósito legal V-1234-2011</div>
+</div>
+```
+
+Reescríbelo entero. Como no hay nombres que te orienten, la decisión sale del **contenido**: qué dice cada bloque y qué papel cumple en la página. Justifica por escrito estas cuatro:
+
+1. Los dos bloques `c3` repetidos, ¿son `section` o `article`? Aplica la regla.
+2. La línea de autoría y fecha, ¿qué elemento merece? Hay uno pensado para fechas.
+3. El bloque `b3`, ¿es contenido principal o secundario?
+4. ¿Queda algún `div` en tu versión? Si queda, di por qué es el elemento correcto ahí.
+
+##### Reto 2 · Cinco textos alternativos en producción
+
+Vuelve a la web que auditaste y localiza cinco imágenes con funciones distintas: al menos un logotipo enlazado, un icono dentro de un botón o enlace, una foto de contenido y algo decorativo.
+
+| Imagen | Función que cumple | `alt` que tiene | ¿Correcto? | El que escribirías tú |
+| ------ | ------------------ | --------------- | ---------- | --------------------- |
+| | | | | |
+
+Cuenta cuántos de los cinco están bien resueltos. Si alguna imagen no tiene atributo `alt`, anótalo aparte: no es lo mismo que tenerlo vacío, y esa distinción es la que hoy tienes que poder explicar.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Los cinco textos alternativos decididos y justificados, el documento de <code>div</code> refactorizado y tus cuatro páginas con estructura semántica.</span></div>
+  <div><strong>Si lo tienes</strong><span>La auditoría de una web real completa, con hallazgos concretos en lugar de impresiones, y la revisión cruzada contestada.</span></div>
+  <div><strong>Reto</strong><span>La revista refactorizada sin pistas en los nombres de clase, con las cuatro justificaciones, y la tabla de los cinco <code>alt</code> en producción.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
+    <li>Todas tus imágenes tienen <code>alt</code>, lleno o vacío según su función.</li>
+    <li>La página sigue entendiéndose con las imágenes desactivadas.</li>
+    <li>Tus cuatro páginas usan elementos estructurales, no <code>div</code> genéricos.</li>
+    <li>Hay un único <code>main</code> por página.</li>
     <li>Sabes abrir el árbol de accesibilidad y leer las zonas de una página.</li>
     <li>Has auditado una web real con hallazgos concretos, no impresiones.</li>
-    <li>Tus cuatro páginas usan elementos estructurales, no <code>div</code> genéricos.</li>
-    <li>Todas tus imágenes tienen <code>alt</code>, lleno o vacío según su función.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
-    <li>¿Por qué el panel Elements puede no coincidir con el código fuente?</li>
+    <li>¿Qué diferencia hay entre <code>alt=""</code> y no escribir <code>alt</code>?</li>
+    <li>¿Por qué <code>alt</code> y <code>figcaption</code> no deben decir lo mismo?</li>
+    <li>¿Cuántos <code>&lt;main&gt;</code> puede haber en una página?</li>
+    <li>Da la regla de una frase que separa <code>section</code> de <code>article</code>.</li>
     <li>¿Cómo compruebas en diez segundos si un botón es un botón de verdad?</li>
-    <li>Nombra un elemento HTML que evite escribir JavaScript.</li>
+    <li>¿Por qué el panel Elements puede no coincidir con el código fuente?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque muestra el documento ya reparado por el navegador y modificado por el JavaScript. El fuente original se ve con <code>Ctrl + U</code>.</p>
-  <p>2 · Intentando llegar hasta él con <code>Tab</code>. Si no recibe el foco, no es un botón.</p>
-  <p>3 · <code>&lt;details&gt;</code> con <code>&lt;summary&gt;</code> da un desplegable sin código. Vale también <code>&lt;progress&gt;</code>, <code>&lt;meter&gt;</code> o la validación nativa de formularios que veremos la semana que viene.</p>
+  <p>1 · <code>alt=""</code> declara que la imagen es decorativa y hace que se ignore. Sin el atributo, el lector de pantalla acaba leyendo el nombre del archivo.</p>
+  <p>2 · Porque el pie lo lee todo el mundo y el <code>alt</code> solo sustituye a la imagen. Si coinciden, se oye la misma frase dos veces.</p>
+  <p>3 · Uno. Es el contenido principal del documento, y no puede haber dos.</p>
+  <p>4 · Si tendría sentido publicado por separado es <code>article</code>; si solo lo tiene dentro de esta página, <code>section</code>.</p>
+  <p>5 · Intentando llegar hasta él con <code>Tab</code>. Si no recibe el foco, no es un botón.</p>
+  <p>6 · Porque muestra el documento ya reparado por el navegador y modificado por el JavaScript. El fuente original se ve con <code>Ctrl + U</code>.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -1927,6 +1873,7 @@ No es casualidad que la auditoría vaya antes que el proyecto final: es más fá
     <li>Escribe el <code>alt</code> de una imagen decorativa y el de un gráfico que aporta un dato.</li>
   </ol>
 </div>
+
 
 ---
 
