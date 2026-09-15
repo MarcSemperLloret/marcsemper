@@ -170,17 +170,18 @@ Cada petición que hace la página: la URL, el estado, el tiempo y lo que devolv
 | **Sesión 6** | Interfaz robusta y entrega | Accesibilidad, depuración y revisión por pares | 3 h |
 | **Total** | | **Una interfaz completa gobernada por datos** | **18 h** |
 
-Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada bloque mantiene el ritmo de las unidades anteriores:
+Cada sesión dura tres horas y mantiene el reparto de las unidades anteriores: la teoría se concentra al principio y el resto de la tarde se construye interfaz. Lo que se aprende aquí solo se comprueba usándolo, y sobre todo usándolo sin ratón y con la red simulada lenta.
 
 <figure class="diagram">
-  <figcaption>El ritmo de cada bloque de una hora</figcaption>
+  <figcaption>El ritmo de cada sesión de tres horas</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>Recupera · 5 min</li>
-    <li>Aprende y observa · 10–20 min</li>
-    <li>Practica · 30–40 min</li>
-    <li>Cierra · 5 min</li>
+    <li>Se explica · 25 min</li>
+    <li>Se trabaja · 150 min</li>
+    <li>Cierre · 5 min</li>
   </ol>
 </figure>
+
+El bloque de trabajo se divide en pasos cronometrados, y cada sesión termina con una **ampliación** de dos retos para quien acabe antes: trabajan sobre interfaces ajenas o sobre lo que ocurre cuando la red no se porta.
 
 ---
 
@@ -1984,16 +1985,14 @@ Este fallo tiene nombre en la disciplina. Búscalo y escríbelo: lo vas a volver
 
 ## Sesión 6 · Interfaz robusta y entrega
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Accesibilidad y rendimiento con JavaScript</strong>, <strong>Reto acumulativo y depuración</strong> y <strong>Auditoría final, revisión por pares y entrega</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Accesibilidad y rendimiento con JavaScript
+<p class="lead">Tres horas. Media hora para saber qué rompe JavaScript cuando se usa sin cuidado y cómo se ordena un diagnóstico, y dos horas y media auditando tu interfaz, montando una nueva y reparando una rota.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué rompe JavaScript cuando se usa sin cuidado, y cómo se evita.</li>
-    <li><strong>2. Haz:</strong> Audita tu interfaz con el teclado y arregla lo que falle.</li>
-    <li><strong>3. Comprueba:</strong> Todo lo que se puede hacer con ratón se puede hacer sin él.</li>
+    <li><strong>1. Aprende:</strong> Qué rompe JavaScript con facilidad, dónde debe quedar el foco cuando cambia el contenido, y cuál es la primera pregunta de todo diagnóstico de interfaz.</li>
+    <li><strong>2. Haz:</strong> Audita tu interfaz con el teclado, monta una de un dominio desconocido y diagnostica cinco fallos en una ajena.</li>
+    <li><strong>3. Entrega:</strong> El sitio completo, las tres listas de auditoría, la revisión del compañero y tus notas.</li>
   </ol>
 </div>
 
@@ -2002,9 +2001,15 @@ Este fallo tiene nombre en la disciplina. Búscalo y escríbelo: lo vas a volver
   <ol>
     <li>Recorre tu página entera con el tabulador. ¿Sabes siempre dónde estás?</li>
     <li>Cuando el catálogo se vuelve a pintar, ¿dónde queda el foco?</li>
-    <li>¿Qué pasa si alguien tiene activada la reducción de movimiento?</li>
+    <li>Ante un botón que no responde, ¿qué compruebas primero?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+JavaScript es la capa que más fácilmente estropea lo que las dos anteriores hicieron bien. Hoy se nombran esos destrozos y se ordena el método para encontrarlos.
 
 #### Lo que JavaScript rompe con facilidad
 
@@ -2035,14 +2040,12 @@ Al sustituir el contenido de un contenedor, el elemento que tenía el foco deja 
   <p>Un panel que se abre lleva el foco dentro; al cerrarse, lo devuelve al control que lo abrió. Es la regla que hace usable un diálogo sin ratón.</p>
 </div>
 
-#### Respetar las preferencias
+Las preferencias del sistema se respetan también desde el código, con la misma consulta que usaste en el CSS de la UD2:
 
 ```javascript
 const sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (!sinMovimiento) elemento.classList.add("con-animacion");
 ```
-
-La misma consulta que usaste en el CSS de la UD2, ahora desde el código. Las decisiones de la persona usuaria se respetan en las tres capas.
 
 #### Rendimiento: las tres cosas que importan
 
@@ -2063,63 +2066,15 @@ tarjetas.forEach((t, i) => t.style.setProperty("--alto", `${alturas[i]}px`));
 
 Con doscientas tarjetas la diferencia es perceptible; con dos mil, separa una interfaz fluida de una inutilizable.
 
-#### Tarea 16 · Auditoría de accesibilidad
+#### Cómo se diagnostica una interfaz
 
-1. Recorre toda la interfaz con el tabulador y anota cada punto donde te pierdes.
-2. Comprueba que ningún control es un contenedor genérico disfrazado.
-3. Arregla el foco tras cada render.
-4. Verifica que el resumen de resultados se anuncia.
-5. Comprueba el contraste y la visibilidad del foco.
-6. Mide con la pestaña Performance cuánto tarda un render de cien tarjetas.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Interfaz completa manejable con teclado y foco conservado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Prueba con un lector de pantalla y anota qué se oye al filtrar.</span></div>
-  <div><strong>Reto</strong><span>Implementa un panel de filtros que atrape y devuelva el foco correctamente.</span></div>
+<div class="rule">
+  <p class="rule-label">La pregunta que ordena el diagnóstico</p>
+  <p>En una interfaz, empieza siempre por separar el problema en dos: <strong>¿llega el evento?</strong> Un mensaje en la primera línea del manejador lo responde.</p>
+  <p>Si no llega, el problema está en la selección, en el registro de la escucha o en el momento en que se ejecutó tu código. Si llega, el problema está en tu lógica, y ahí ya sabes trabajar desde la UD3.</p>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Todo se puede usar sin ratón.</li>
-    <li>El foco no se pierde al volver a pintar.</li>
-    <li>Los cambios importantes se anuncian.</li>
-    <li>Respetas la preferencia de movimiento reducido.</li>
-  </ul>
-</div>
-
-
-### Bloque 2 · Reto acumulativo y depuración
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Nada nuevo. Hoy se comprueba si sabes montar y arreglar una interfaz.</li>
-    <li><strong>2. Haz:</strong> Monta una interfaz de un dominio desconocido y repara otra que está rota.</li>
-    <li><strong>3. Comprueba:</strong> Localizas cada fallo antes de tocar el código.</li>
-  </ol>
-</div>
-
-#### Primera parte · una interfaz nueva
-
-Recibirás un fichero JSON de un dominio que no has visto —cartelera de cine, ofertas de empleo, rutas de senderismo— y una lista de requisitos. En veinticinco minutos:
-
-<figure class="diagram">
-  <figcaption>Lo que hay que montar</figcaption>
-  <ol class="flow">
-    <li>Cargar los datos con fetch y sus tres estados</li>
-    <li>Pintar la lista desde los datos</li>
-    <li>Un buscador y dos filtros combinables</li>
-    <li>Estado único y render idempotente</li>
-    <li>Resultado anunciado y manejable con teclado</li>
-  </ol>
-</figure>
-
-Sin copiar y pegar tu proyecto: puedes mirar tus apuntes, pero el código se escribe hoy.
-
-#### Segunda parte · el diagnóstico
-
-Los quince minutos restantes, sobre una interfaz que ya viene con cinco fallos, uno de cada familia. No hace falta arreglarlos todos hoy: lo que se evalúa es el diagnóstico, y los que no dé tiempo se terminan como trabajo personal.
+Los fallos de esta unidad caen casi siempre en una de cinco familias, y cada una se busca en un sitio distinto:
 
 | Familia | Síntoma típico |
 | ------- | -------------- |
@@ -2129,43 +2084,67 @@ Los quince minutos restantes, sobre una interfaz que ya viene con cinco fallos, 
 | Asincronía | La lista sale vacía: se leyó antes de que llegara |
 | Render | Cada filtrado duplica el contenido |
 
-Para cada uno: escribe el síntoma, la hipótesis, cómo la compruebas y la corrección.
+#### Revisar una interfaz ajena
 
-<div class="rule">
-  <p class="rule-label">La pregunta que ordena el diagnóstico</p>
-  <p>En una interfaz, empieza siempre por separar el problema en dos: <strong>¿llega el evento?</strong> Un mensaje en la primera línea del manejador lo responde.</p>
-  <p>Si no llega, el problema está en la selección, en el registro de la escucha o en el momento en que se ejecutó tu código. Si llega, el problema está en tu lógica, y ahí ya sabes trabajar desde la UD3.</p>
-</div>
+La revisión de hoy no se hace leyendo código, al menos no al principio. Se hace usándola:
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La interfaz nueva funcionando y tres fallos diagnosticados.</span></div>
-  <div><strong>Si lo tienes</strong><span>Los cinco, con la hipótesis escrita antes de la corrección.</span></div>
-  <div><strong>Reto</strong><span>Añade a la interfaz rota una comprobación que hubiera hecho evidente cada fallo.</span></div>
-</div>
+1. Usar la interfaz **solo con el teclado** y anotar dónde se atasca uno.
+2. Simular red lenta y sin red, y describir qué ve el usuario.
+3. Buscar algo que no exista y comprobar el estado vacío.
+4. Localizar en el código dónde vive el estado y explicarlo.
+5. Señalar una decisión bien tomada y una mejorable, con su razón.
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Has montado una interfaz completa desde datos ajenos.</li>
-    <li>Separas fallos de evento de fallos de lógica.</li>
-    <li>Usas Elements, Sources y Network según lo que buscas.</li>
-    <li>Escribes la hipótesis antes de tocar nada.</li>
-  </ul>
-</div>
+Los tres primeros puntos no requieren entender el código de nadie, y son los que encuentran más defectos.
 
+### Se trabaja
 
-### Bloque 3 · Auditoría final, revisión por pares y entrega
+<p class="stage stage--guided">150 minutos · auditoría, interfaz nueva y diagnóstico</p>
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué se revisa en una interfaz antes de darla por terminada.</li>
-    <li><strong>2. Haz:</strong> Audita tu proyecto, revisa el de un compañero y corrige.</li>
-    <li><strong>3. Comprueba:</strong> Puedes defender cada decisión.</li>
+El primer paso arregla lo tuyo. El segundo y el tercero comprueban si sabrías hacerlo otra vez y repararlo cuando lo escribió otro.
+
+#### Paso 1 · Auditoría de accesibilidad · 35 min
+
+1. Recorre toda la interfaz con el tabulador y anota cada punto donde te pierdes.
+2. Comprueba que ningún control es un contenedor genérico disfrazado.
+3. Arregla el foco tras cada render.
+4. Verifica que el resumen de resultados se anuncia.
+5. Comprueba el contraste y la visibilidad del foco.
+6. Mide con la pestaña Performance cuánto tarda un render de cien tarjetas, y aplica la separación entre lectura y escritura si mezclas las dos.
+
+**Antes de continuar:** escribe una letra en el buscador y comprueba que el foco sigue dentro del campo después de que la lista se repinte.
+
+#### Paso 2 · Una interfaz nueva · 45 min
+
+Es el trabajo central de la sesión. Recibirás un fichero JSON de un dominio que no has visto —cartelera de cine, ofertas de empleo, rutas de senderismo— y una lista de requisitos.
+
+<figure class="diagram">
+  <figcaption>Lo que hay que montar</figcaption>
+  <ol class="flow">
+    <li>Cargar los datos con fetch y sus cuatro estados</li>
+    <li>Pintar la lista desde los datos</li>
+    <li>Un buscador y dos filtros combinables</li>
+    <li>Estado único y render idempotente</li>
+    <li>Resultado anunciado y manejable con teclado</li>
   </ol>
-</div>
+</figure>
 
-#### La lista de auditoría
+Sin copiar y pegar tu proyecto: puedes mirar tus apuntes, pero el código se escribe hoy. Empieza por el estado, no por el HTML: si sabes qué campos necesita, el resto se deduce.
+
+#### Paso 3 · El diagnóstico · 30 min
+
+Sobre una interfaz que viene con cinco fallos, uno de cada familia de la explicación. Lo que se evalúa es el diagnóstico, no la velocidad de corrección.
+
+| Fallo | Síntoma | Hipótesis | Cómo la compruebas | Corrección |
+| ----- | ------- | --------- | ------------------ | ---------- |
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+
+Rellena las tres primeras columnas **antes** de tocar nada. Si tu hipótesis resulta equivocada, no la borres: anota al lado por qué la descartaste. Esa columna es la que enseña a diagnosticar.
+
+#### Paso 4 · La auditoría final · 20 min
 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría · arquitectura</p>
@@ -2201,34 +2180,30 @@ Para cada uno: escribe el síntoma, la hipótesis, cómo la compruebas y la corr
   </ul>
 </div>
 
-#### Revisión por pares
+#### Paso 5 · Revisión por pares y cierre de la entrega · 20 min
 
-Intercambia proyectos y, sin preguntar nada:
+Intercambia proyectos y aplica los cinco puntos de la explicación, empezando por usar la interfaz sin ratón y con la red simulada. Devuelve las cinco respuestas por escrito, recibe la tuya y decide qué aceptas.
 
-1. Usa la interfaz **solo con el teclado** y anota dónde te atascas.
-2. Simula red lenta y sin red, y describe qué ve el usuario.
-3. Busca algo que no exista y comprueba el estado vacío.
-4. Localiza en el código dónde vive el estado y explícalo.
-5. Señala una decisión bien tomada y una mejorable, con su razón.
+<div class="unit-deliverable">
+  <p>El sitio completo con su carpeta <code>js/</code> organizada en módulos; el catálogo cargado desde una API con sus cuatro estados; búsqueda, filtros y orden gobernados por un único estado; el formulario validado y accesible; las preferencias persistidas; las tres listas de auditoría marcadas; la revisión del compañero por escrito; y un <code>NOTAS.md</code> con las decisiones que tomaste y lo que dejaste fuera.</p>
+</div>
 
-#### Defensa
+Prepara respuestas de un minuto para estas cinco preguntas:
 
 <div class="rule">
   <p class="rule-label">Las preguntas de la defensa</p>
   <ol>
-    <li>Enséñame el estado de tu aplicación y explícame qué guarda cada campo.</li>
-    <li>Escribe una letra en el buscador y cuéntame todo lo que ocurre, en orden.</li>
+    <li>Enseña el estado de tu aplicación y explica qué guarda cada campo.</li>
+    <li>Escribe una letra en el buscador y cuenta todo lo que ocurre, en orden.</li>
     <li>¿Qué pasa si el servidor tarda cinco segundos? ¿Y si devuelve un 500?</li>
     <li>¿Qué parte de tu código tendrías que cambiar si mañana los datos llegaran de otra API?</li>
-    <li>Enséñame un fallo que te costó encontrar y cómo lo encontraste.</li>
+    <li>Enseña un fallo que te costó encontrar y cuenta cómo lo encontraste.</li>
   </ol>
 </div>
 
 La cuarta vuelve a ser la de siempre: si has separado datos, lógica, estado y render, la respuesta debería ser «solo la función que llama a `fetch`».
 
-#### Evaluación
-
-| Criterio | Puntos |
+| Criterio de evaluación | Puntos |
 | ---------------------------------------------------------- | -----: |
 | Render desde datos: idempotente y con su estado vacío | 2 |
 | Estado único: ninguna decisión se toma leyendo el DOM | 2 |
@@ -2239,12 +2214,84 @@ La cuarta vuelve a ser la de siempre: si has separado datos, lógica, estado y r
 
 No puntúa que la interfaz sea vistosa. Puntúa que **aguante**: contenido que cambia, red que falla, búsquedas sin resultados y alguien que no usa el ratón.
 
-#### Entrega
+#### Ampliación si has completado el trabajo
 
-<div class="unit-deliverable">
-  <p>El sitio completo con su carpeta <code>js/</code> organizada en módulos; el catálogo cargado desde una API con sus cuatro estados; búsqueda, filtros y orden gobernados por un único estado; el formulario validado y accesible; las preferencias persistidas; las tres listas de auditoría marcadas; la revisión del compañero por escrito; y un <code>NOTAS.md</code> con las decisiones que tomaste y lo que dejaste fuera.</p>
+Primero termina la entrega. El primer reto es el componente más difícil de hacer accesible; el segundo convierte el diagnóstico en prevención.
+
+##### Reto 1 · El panel que no deja escapar el foco
+
+Un panel de filtros que se abre sobre el contenido es el ejemplo clásico de algo que funciona con ratón y es inservible sin él.
+
+1. Móntalo con un botón que lo abre y un botón que lo cierra.
+2. Al abrirlo, lleva el foco **dentro**. Decide a qué elemento y justifícalo.
+3. Mientras está abierto, el tabulador no debe salir del panel: al llegar al último elemento vuelve al primero, y al revés con `Shift + Tab`. Impleméntalo.
+4. `Escape` lo cierra, y al cerrarse el foco vuelve **al botón que lo abrió**, no al principio del documento.
+5. Mientras está abierto, el contenido de detrás no debería ser alcanzable ni por el tabulador ni por un lector de pantalla. Averigua con qué atributo se marca eso.
+6. Ahora busca el elemento HTML nativo que hace todo lo anterior sin una línea de JavaScript. Léelo, pruébalo, y escribe en tres líneas qué te ha costado reconstruir a mano de lo que él trae hecho. Es la misma lección de la UD1 con `details` y de la sesión 2 con el botón falso.
+
+##### Reto 2 · La comprobación que lo habría delatado
+
+Vuelve a los cinco fallos del paso 3. Para cada uno, añade al código una comprobación que lo hubiera hecho evidente **en el momento de producirse**.
+
+| Fallo | Dónde va la comprobación | Qué comprueba | Qué dice cuando salta |
+| ----- | ------------------------ | ------------- | --------------------- |
+| Selección nula | | | |
+| Evento que no llega | | | |
+| Valor de tipo equivocado | | | |
+| Dato leído antes de llegar | | | |
+| Render que duplica | | | |
+
+Tres criterios para escribirlas:
+
+1. **Cerca del origen**, no donde aparece el síntoma.
+2. **Ruidosas**: que detengan o avisen de forma inequívoca, no un mensaje perdido entre otros cincuenta.
+3. **Que digan qué se esperaba**, no solo que algo falló.
+
+El quinto es el más interesante: una comprobación de idempotencia se puede escribir de verdad. Pinta dos veces con los mismos datos y compara el número de hijos del contenedor. Si no coincide, el render no era idempotente y el programa lo dice solo.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Interfaz manejable con teclado y foco conservado, la interfaz nueva funcionando y tres fallos diagnosticados.</span></div>
+  <div><strong>Si lo tienes</strong><span>Los cinco fallos con la hipótesis escrita antes de la corrección, y las tres listas de auditoría marcadas.</span></div>
+  <div><strong>Reto</strong><span>El panel con gestión completa del foco comparado con su equivalente nativo, o las cinco comprobaciones preventivas escritas.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Lista de verificación de la entrega</p>
+  <ul class="checklist">
+    <li>Todo se puede usar sin ratón y el foco no se pierde al repintar.</li>
+    <li>Los cambios importantes se anuncian.</li>
+    <li>Has montado una interfaz completa desde datos ajenos.</li>
+    <li>Separas fallos de evento de fallos de lógica.</li>
+    <li>Las tres listas de auditoría están marcadas.</li>
+    <li><code>NOTAS.md</code> recoge tus decisiones y lo que dejaste fuera.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Dónde debe quedar el foco cuando se repinta una lista?</li>
+    <li>Nombra tres cosas que JavaScript rompe con facilidad.</li>
+    <li>¿Cuál es la primera pregunta ante una interfaz que no responde?</li>
+    <li>Nombra las cinco familias de fallo de esta unidad.</li>
+    <li>¿Por qué no conviene leer y escribir el DOM alternativamente en un bucle?</li>
+    <li>Describe, en orden, lo que ocurre al escribir una letra en el buscador.</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · En un punto con sentido: el control que se usó, el primer resultado o el mensaje que acaba de aparecer. Nunca al principio del documento.</p>
+  <p>2 · Por ejemplo: controles falsos, foco perdido, cambios que no se anuncian, foco invisible o movimiento no solicitado.</p>
+  <p>3 · Si el evento llega, con un mensaje en la primera línea del manejador.</p>
+  <p>4 · Selección, evento, tipo, asincronía y render.</p>
+  <p>5 · Porque leer una medida obliga al navegador a recalcular, y alternarlo con escrituras multiplica ese coste.</p>
+  <p>6 · Salta el evento <code>input</code>, el manejador cambia el estado, se llama a <code>actualizar</code>, se aplican los filtros sobre los datos, se vuelve a pintar el contenedor y se anuncia el número de resultados.</p>
+</details>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 6 · 10 minutos</p>
@@ -2255,6 +2302,7 @@ No puntúa que la interfaz sea vistosa. Puntúa que **aguante**: contenido que c
     <li>Señala dos decisiones de accesibilidad de tu interfaz y di a quién ayuda cada una.</li>
   </ol>
 </div>
+
 ---
 
 ## Lo que debes recordar
