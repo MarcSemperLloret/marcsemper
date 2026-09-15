@@ -480,29 +480,33 @@ Elige una API pública con documentación abierta y búscale una decisión de di
 
 ## Sesión 2 · El CRUD completo
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Leer: listar, filtrar y obtener</strong>, <strong>Crear y validar</strong> y <strong>Modificar y borrar</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Leer: listar, filtrar y obtener
+<p class="lead">Tres horas. Media hora para decidir qué valida cada ruta y qué código devuelve, y dos horas y media implementando las cinco operaciones de tu recurso según el contrato de ayer.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se implementan las lecturas, con filtros, orden y paginación.</li>
-    <li><strong>2. Haz:</strong> Las dos rutas de lectura de tu recurso, completas.</li>
-    <li><strong>3. Comprueba:</strong> Un parámetro inválido no rompe nada ni devuelve algo raro.</li>
+    <li><strong>1. Aprende:</strong> Cómo se implementan las lecturas con filtros validados, cómo se recibe y se valida un recurso nuevo, y qué distingue reemplazar de modificar.</li>
+    <li><strong>2. Haz:</strong> Las cinco operaciones de tu recurso, con sus errores y sus códigos.</li>
+    <li><strong>3. Comprueba:</strong> Ninguna entrada inválida llega a tocar los datos, y repetir una operación no produce efectos distintos.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Qué debe devolver <code>/api/productos?max=abc</code>?</li>
-    <li>¿Y <code>/api/productos?categoria=inexistente</code>?</li>
-    <li>¿Qué diferencia hay entre esas dos situaciones?</li>
+    <li>¿Qué debe devolver <code>/api/productos?max=abc</code>? ¿Y <code>?categoria=inexistente</code>?</li>
+    <li>¿Qué pasaría si alguien envía un campo <code>id</code> en la creación?</li>
+    <li>¿Puede el cliente saltarse tu validación de la UD4?</li>
   </ol>
 </div>
 
-#### Listar con filtros
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy se implementa el contrato de ayer. Todo lo que aparece se reduce a dos preguntas que se repiten en cada ruta: **qué entra y quién lo comprueba**, y **qué código dice lo que ha pasado**.
+
+#### Leer: la ruta recoge, el servicio decide
 
 ```javascript
 export async function listarProductos(peticion, respuesta, next) {
@@ -518,7 +522,7 @@ export async function listarProductos(peticion, respuesta, next) {
 
 La ruta **no filtra**: recoge los parámetros y se los pasa al servicio. Las funciones que hacen el trabajo son las de la UD3, que no saben nada de HTTP, y por eso las mismas sirven aquí y en el CLI.
 
-#### Los parámetros llegan como texto
+Los parámetros de la consulta llegan como texto, igual que en la UD4:
 
 ```javascript
 const maximo = max === undefined ? null : Number(max);
@@ -533,27 +537,19 @@ if (maximo !== null && (Number.isNaN(maximo) || maximo < 0)) {
   <p>Devolver 404 por una lista vacía es un error de diseño frecuente: la colección existe, y el cliente sabe leer un array de cero elementos.</p>
 </div>
 
-#### Obtener uno
+En la obtención por identificador conviven los dos errores del contrato, dentro del mismo `try` que delega en `next`:
 
 ```javascript
-export async function obtenerProducto(peticion, respuesta, next) {
-  try {
-    const id = Number(peticion.params.id);
-    if (!Number.isInteger(id) || id < 1) {
-      throw new ErrorDeValidacion([{ campo: "id", mensaje: "Debe ser un entero positivo" }]);
-    }
-
-    const producto = await servicio.obtener(id);
-    if (!producto) throw new ErrorNoEncontrado("Producto no encontrado");
-
-    respuesta.json(producto);
-  } catch (error) {
-    next(error);
-  }
+const id = Number(peticion.params.id);
+if (!Number.isInteger(id) || id < 1) {
+  throw new ErrorDeValidacion([{ campo: "id", mensaje: "Debe ser un entero positivo" }]);
 }
+
+const producto = await servicio.obtener(id);
+if (!producto) throw new ErrorNoEncontrado("Producto no encontrado");
 ```
 
-#### Decidir qué se devuelve
+Una función decide, por último, **qué sale**, en lugar de devolver el objeto tal como está guardado:
 
 ```javascript
 function aRespuesta({ id, nombre, precio, categoria, stock }) {
@@ -563,78 +559,7 @@ function aRespuesta({ id, nombre, precio, categoria, stock }) {
 
 Devolver el objeto en su forma almacenada resulta inmediato y expone información que no corresponde publicar: notas internas, márgenes o el propio stock. Una función que decide la forma pública del recurso deja explícito qué sale, y evita que añadir un campo interno lo publique sin querer.
 
-#### Tarea 4 · Las lecturas completas
-
-1. Implementa la lista con filtro por categoría, texto y precio máximo.
-2. Añade orden por dos campos, ascendente y descendente.
-3. Implementa la obtención por identificador con sus dos errores.
-4. Valida todos los parámetros y responde 400 con detalles.
-5. Escribe la función que decide la forma pública del recurso.
-6. Prueba los ocho casos con tu fichero de peticiones.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las dos rutas con filtros validados y los códigos correctos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade paginación con <code>limite</code> y <code>pagina</code>, y devuelve el total.</span></div>
-  <div><strong>Reto</strong><span>Permite elegir los campos devueltos con un parámetro, validando los nombres.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>La ruta recoge y valida; el servicio decide.</li>
-    <li>Un filtro inválido responde 400 con detalle.</li>
-    <li>Una búsqueda sin resultados responde 200 y una lista vacía.</li>
-    <li>Decides explícitamente qué campos salen.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Un 400: el parámetro está mal formado.</p>
-  <p>2 · Un 200 con una lista vacía: la petición era válida.</p>
-  <p>3 · Para no publicar campos internos al añadirlos al modelo.</p>
-</details>
-
-
-### Bloque 2 · Crear y validar
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se recibe un recurso nuevo, se valida y se responde.</li>
-    <li><strong>2. Haz:</strong> La ruta de creación con validación completa.</li>
-    <li><strong>3. Comprueba:</strong> Ninguna entrada inválida llega a tocar los datos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué pasaría si alguien envía un campo <code>id</code> en la creación?</li>
-    <li>¿Y un campo que no existe en tu modelo?</li>
-    <li>¿Puede el cliente saltarse tu validación de la UD4?</li>
-  </ol>
-</div>
-
-#### La ruta
-
-```javascript
-export async function crearProducto(peticion, respuesta, next) {
-  try {
-    const datos = validarProductoNuevo(peticion.body);   // lanza si no vale
-    const creado = await servicio.crear(datos);
-
-    respuesta
-      .status(201)
-      .location(`/api/productos/${creado.id}`)
-      .json(aRespuesta(creado));
-  } catch (error) {
-    next(error);
-  }
-}
-```
-
-#### La validación, en tres pasos
+#### Crear: la validación, en tres pasos
 
 ```javascript
 const CAMPOS_PERMITIDOS = ["nombre", "precio", "categoria", "stock", "descripcion"];
@@ -674,11 +599,17 @@ export function validarProductoNuevo(cuerpo) {
   <p>Enumera los campos que aceptas y descarta el resto. Es una línea más y cierra una familia entera de agujeros.</p>
 </div>
 
-#### El identificador lo pone el servidor
+La respuesta incluye el recurso creado y la cabecera `Location` con su URL, porque **quien crea no elige el identificador**: lo asigna el servidor. Por eso `id` no está entre los campos permitidos.
 
-Quien crea no elige el identificador: lo asigna el servidor y lo devuelve. Por eso la respuesta incluye el recurso creado y la cabecera `Location` con su URL, y por eso `id` no está entre los campos permitidos.
+```javascript
+const datos = validarProductoNuevo(peticion.body);   // lanza si no vale
+const creado = await servicio.crear(datos);
 
-#### Recordar de dónde viene esto
+respuesta
+  .status(201)
+  .location(`/api/productos/${creado.id}`)
+  .json(aRespuesta(creado));
+```
 
 <figure class="diagram">
   <figcaption>Las tres validaciones, otra vez</figcaption>
@@ -689,62 +620,9 @@ Quien crea no elige el identificador: lo asigna el servidor y lo devuelve. Por e
   </ol>
 </figure>
 
-Cualquiera puede llamar a tu API con un cliente HTTP y saltarse las dos primeras. Compruébalo hoy mismo: envía desde tu fichero `.http` un producto con precio negativo y mira qué pasa.
+Cualquiera puede llamar a tu API con un cliente HTTP y saltarse las dos primeras. Lo comprobarás hoy mismo.
 
-#### Tarea 5 · La creación
-
-1. Implementa `POST /api/productos` con validación en tres pasos.
-2. Devuelve 201, `Location` y el recurso creado.
-3. Devuelve 400 con **todos** los errores, no solo el primero.
-4. Descarta los campos no permitidos y demuéstralo enviando uno de más.
-5. Intenta crear un producto saltándote el formulario y comprueba que la API se defiende.
-6. Comprueba qué ocurre si el cuerpo no es JSON válido.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Creación con validación completa, 201 y <code>Location</code>.</span></div>
-  <div><strong>Si lo tienes</strong><span>Responde 409 si ya existe un producto con el mismo nombre.</span></div>
-  <div><strong>Reto</strong><span>Escribe la validación como una tabla de reglas declarada como dato, y aplícala en bucle.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Solo entran los campos permitidos.</li>
-    <li>Se devuelven todos los errores de una vez.</li>
-    <li>El identificador lo asigna el servidor.</li>
-    <li>Has comprobado tú mismo que la validación del cliente se salta.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Se descarta: solo se aceptan los campos de la lista.</p>
-  <p>2 · Un 201 con <code>Location</code> y el recurso creado.</p>
-  <p>3 · Sí, con cualquier cliente HTTP: por eso la del servidor es la que cuenta.</p>
-</details>
-
-
-### Bloque 3 · Modificar y borrar
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La diferencia entre reemplazar y modificar, y cómo se borra bien.</li>
-    <li><strong>2. Haz:</strong> Completa el CRUD de tu recurso.</li>
-    <li><strong>3. Comprueba:</strong> Repetir una operación no produce efectos distintos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si envías solo el precio, ¿qué debería pasar con los demás campos?</li>
-    <li>¿Qué responde un borrado de algo que ya no existe?</li>
-    <li>¿Qué pasa si dos personas modifican el mismo producto a la vez?</li>
-  </ol>
-</div>
-
-#### PUT y PATCH
+#### Modificar y borrar
 
 | Método | Significa | Cuerpo |
 | ------ | --------- | ------ |
@@ -754,16 +632,12 @@ Cualquiera puede llamar a tu API con un cliente HTTP y saltarse las dos primeras
 ```javascript
 // PUT: lo que no llega, se pierde
 const reemplazo = validarProductoNuevo(peticion.body);
-const actualizado = await servicio.reemplazar(id, reemplazo);
 
 // PATCH: se combina con lo que había
 const cambios = validarCambios(peticion.body);      // ninguno obligatorio
-const actualizado = await servicio.modificar(id, cambios);
 ```
 
 El error clásico es implementar PUT combinando los campos: entonces tienes dos rutas que hacen lo mismo y un contrato que miente. Si solo vas a ofrecer una, ofrece PATCH y dilo en el contrato.
-
-#### Borrar
 
 ```javascript
 const borrado = await servicio.borrar(id);
@@ -773,46 +647,161 @@ respuesta.status(204).end();
 
 Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. Sobre el segundo borrado existen dos posturas defendibles —404 porque ya no está, o 204 porque el resultado deseado se cumple— pero elige una **y escríbela en el contrato**.
 
-#### Modificaciones que se pisan
-
 <div class="rule">
   <p class="rule-label">Leer, modificar y guardar no es una operación indivisible</p>
-  <p>Dos peticiones que llegan casi a la vez leen la misma versión del fichero, cada una aplica su cambio y la segunda escribe encima: el cambio de la primera desaparece sin que nadie se entere.</p>
-  <p>Con un fichero y poco tráfico es improbable, pero conviene saber nombrarlo. Se resuelve con una versión en el recurso, que el cliente devuelve al modificar: si no coincide, el servidor responde 409 en lugar de pisar. Es el mismo problema que en el módulo de servidor se resuelve con transacciones.</p>
+  <p>Dos peticiones que llegan casi a la vez leen la misma versión del fichero, cada una aplica su cambio y la segunda escribe encima: el cambio de la primera desaparece sin que nadie se entere. Es la carrera que demostraste en la UD5, ahora con dos clientes en lugar de dos procesos.</p>
+  <p>Se resuelve con una versión en el recurso, que el cliente devuelve al modificar: si no coincide, el servidor responde 409 en lugar de pisar. Es el mismo problema que en el módulo de servidor se resuelve con transacciones.</p>
 </div>
 
-#### Tarea 6 · El CRUD cerrado
+### Se trabaja
 
-1. Implementa PATCH con validación de los campos enviados.
+<p class="stage stage--guided">150 minutos · las cinco operaciones</p>
+
+Los tres primeros pasos implementan el contrato. Los dos últimos lo atacan: uno se salta tu propio cliente, y el otro comprueba la propiedad que permite reintentar sin miedo.
+
+#### Paso 1 · Las lecturas completas · 35 min
+
+1. Implementa la lista con filtro por categoría, texto y precio máximo.
+2. Añade orden por dos campos, ascendente y descendente.
+3. Implementa la obtención por identificador con sus dos errores.
+4. Valida todos los parámetros y responde 400 con detalles.
+5. Escribe la función que decide la forma pública del recurso, y comprueba que un campo interno nuevo **no** aparece en la respuesta.
+6. Añade paginación con `limite` y `pagina`, devolviendo también el total.
+
+**Antes de continuar:** `?categoria=inexistente` devuelve 200 con lista vacía y `?max=abc` devuelve 400. Si los dos dan lo mismo, la distinción no está hecha.
+
+#### Paso 2 · La creación · 40 min
+
+1. Implementa `POST /api/productos` con validación en tres pasos.
+2. Devuelve 201, `Location` y el recurso creado.
+3. Devuelve 400 con **todos** los errores, no solo el primero.
+4. Descarta los campos no permitidos y demuéstralo enviando un `id` y un campo inventado.
+5. Comprueba qué ocurre si el cuerpo no es JSON válido, y que da 400 y no 500.
+6. Responde 409 si ya existe un producto con el mismo nombre.
+
+#### Paso 3 · El CRUD cerrado · 40 min
+
+1. Implementa PATCH con validación de los campos enviados, ninguno obligatorio.
 2. Decide si ofreces PUT; si lo haces, que reemplace de verdad.
-3. Implementa DELETE con 204 y su comportamiento documentado.
-4. Comprueba que repetir PATCH y DELETE no produce efectos distintos.
-5. Actualiza `peticiones.http` con todos los casos nuevos.
-6. Añade una fecha de modificación que el servidor mantiene.
+3. Implementa DELETE con 204 y su comportamiento documentado para el segundo borrado.
+4. Añade una fecha de modificación que mantiene el servidor, no el cliente.
+5. Impide modificar campos que el cliente no debería tocar, como el identificador o la fecha de creación.
+6. Actualiza `peticiones.http` con todos los casos nuevos.
+
+#### Paso 4 · Sáltate tu propio cliente · 20 min
+
+Tu formulario de la UD4 valida. Comprueba qué pasa cuando alguien no lo usa: desde el fichero `.http`, envía estas peticiones directamente a la API.
+
+| Petición enviada a mano | Qué debería responder | Qué responde | Corrección |
+| ----------------------- | --------------------- | ------------ | ---------- |
+| Producto con precio negativo | | | |
+| Producto sin nombre | | | |
+| Producto con `"id": 1` incluido | | | |
+| Producto con un campo inventado | | | |
+| Producto con `"precio": "veinte"` | | | |
+| Cuerpo que no es un objeto, sino un array | | | |
+| Cuerpo vacío | | | |
+
+Las dos últimas son las que se olvidan. Ninguna de las siete debe devolver 500, y ninguna debe llegar a escribir en el fichero de datos.
+
+Escribe al terminar, en una línea, qué habría pasado si tu única validación fuera la del formulario.
+
+#### Paso 5 · Repetir sin consecuencias · 15 min
+
+1. Ejecuta dos veces seguidas el mismo PATCH. Compara el recurso después de la primera y de la segunda.
+2. Ejecuta dos veces el mismo DELETE. Anota qué responde cada una.
+3. Ejecuta dos veces el mismo POST. Cuenta los productos.
+4. Rellena la tabla con lo observado y compárala con la del contrato de la sesión 1.
+
+| Operación | Primera vez | Segunda vez | ¿Coincide con el contrato? |
+| --------- | ----------- | ----------- | -------------------------- |
+| GET | | | |
+| PUT o PATCH | | | |
+| DELETE | | | |
+| POST | | | |
+
+5. Explica en dos líneas por qué esa propiedad importa cuando la red falla y el cliente reintenta.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto convierte la validación en dato; el segundo resuelve la carrera que arrastras desde la UD5.
+
+##### Reto 1 · Las reglas de validación, como tabla
+
+Tu `validarProductoNuevo` tiene las reglas escritas a mano. Con dos recursos más, serán tres funciones casi idénticas.
+
+```javascript
+const ESQUEMA_PRODUCTO = {
+  nombre:      { tipo: "texto",  obligatorio: true,  minimo: 2, maximo: 120 },
+  precio:      { tipo: "numero", obligatorio: true,  minimo: 0.01 },
+  categoria:   { tipo: "texto",  obligatorio: true,  valores: ["teclados", "ratones"] },
+  stock:       { tipo: "entero", obligatorio: false, minimo: 0, porDefecto: 0 },
+  descripcion: { tipo: "texto",  obligatorio: false, maximo: 500 }
+};
+```
+
+1. Escribe `validar(cuerpo, esquema)` que recorra el esquema, aplique cada regla y devuelva los datos limpios o lance con **todos** los errores.
+2. Que la lista blanca salga del propio esquema: lo que no esté declarado, se descarta.
+3. Aplica los valores por defecto de los campos opcionales ausentes.
+4. Escribe un segundo esquema para PATCH, donde nada sea obligatorio, derivándolo del primero en lugar de repetirlo.
+5. Añade un tipo nuevo —`fecha`— **sin tocar** la función `validar`. Si has tenido que tocarla, el diseño no era genérico.
+6. Escribe el esquema del segundo recurso de tu API y comprueba que la misma función sirve. Anota en tres líneas qué has ganado y qué has perdido respecto a los `if` escritos a mano: hay una pérdida real y conviene nombrarla.
+
+##### Reto 2 · Dos clientes que se pisan
+
+Reproduce la carrera de la UD5, ahora con dos peticiones HTTP en lugar de dos procesos.
+
+1. Pide el mismo producto desde dos clientes. Los dos tienen ahora la misma versión.
+2. Desde el primero, envía un PATCH que cambie el precio. Desde el segundo, sin volver a leer, envía otro que cambie el stock.
+3. Consulta el producto. Uno de los dos cambios ha desaparecido. Explica exactamente por qué, siguiendo el orden de lectura y escritura.
+4. Añade al recurso un campo de versión que el servidor incrementa en cada modificación y devuelve en cada lectura.
+5. Haz que PATCH exija esa versión y responda **409** si no coincide con la actual. Decide si va en el cuerpo o en una cabecera, y busca cuál es la cabecera estándar para esto.
+6. Repite el apartado 2 con la protección puesta. El segundo cliente debe recibir un 409, y su mensaje debe decirle qué hacer: volver a leer y reintentar.
+7. Explica en tres líneas por qué esta estrategia se llama optimista, y cuál sería la alternativa pesimista. La segunda es la que verás en el módulo de servidor.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>CRUD completo con los códigos del contrato.</span></div>
-  <div><strong>Si lo tienes</strong><span>Impide modificar campos que el cliente no debería tocar.</span></div>
-  <div><strong>Reto</strong><span>Implementa la versión del recurso y devuelve 409 cuando no coincida.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Las cinco operaciones funcionando según el contrato, con validación completa y los códigos correctos.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de las siete peticiones hostiles contestada sin ningún 500, y la de repetición comprobada contra el contrato.</span></div>
+  <div><strong>Reto</strong><span>La validación por esquema sirviendo a dos recursos, o la versión del recurso con su 409.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 2</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Las cinco operaciones funcionan según tu contrato.</li>
-    <li>Toda entrada se valida antes de tocar los datos.</li>
-    <li>Cada operación devuelve el código y el cuerpo acordados.</li>
-    <li>Tu fichero de peticiones cubre también los casos que fallan.</li>
+    <li>La ruta recoge y valida; el servicio decide.</li>
+    <li>Un filtro inválido responde 400 y una búsqueda sin resultados, 200 con lista vacía.</li>
+    <li>Solo entran los campos permitidos, y el identificador lo asigna el servidor.</li>
+    <li>Se devuelven todos los errores de validación de una vez.</li>
+    <li>Decides explícitamente qué campos salen en la respuesta.</li>
+    <li>Ninguna de las peticiones hostiles devuelve 500 ni escribe en los datos.</li>
   </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué devuelve <code>?max=abc</code> y qué devuelve <code>?categoria=inexistente</code>?</li>
+    <li>¿Por qué se decide explícitamente qué campos salen?</li>
+    <li>¿Qué es una lista blanca de campos y qué evita?</li>
+    <li>¿Qué devuelve una creación correcta?</li>
+    <li>Diferencia entre PUT y PATCH.</li>
+    <li>¿Qué ocurre si dos clientes modifican el mismo recurso a la vez?</li>
+  </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Con PUT se pierden; con PATCH se conservan.</p>
-  <p>2 · Un 204 sin cuerpo, si se borró.</p>
-  <p>3 · Que la segunda escritura pise a la primera sin que nadie lo note.</p>
+  <p>1 · Un 400 el primero, porque el parámetro está mal formado; un 200 con lista vacía el segundo, porque la petición era válida.</p>
+  <p>2 · Para no publicar campos internos al añadirlos al modelo.</p>
+  <p>3 · Enumerar los campos que se aceptan y descartar el resto; evita que quien llama introduzca campos no previstos.</p>
+  <p>4 · Un 201 con <code>Location</code> y el recurso creado.</p>
+  <p>5 · Con PUT los campos que no llegan se pierden; con PATCH se conservan.</p>
+  <p>6 · Que la segunda escritura pise a la primera sin que nadie lo note, salvo que haya una versión que lo detecte.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 2 · 5–10 minutos</p>
@@ -823,6 +812,7 @@ Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. So
     <li>Diferencia entre PUT y PATCH, con un ejemplo de tu proyecto.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 3 · Capas y consistencia
