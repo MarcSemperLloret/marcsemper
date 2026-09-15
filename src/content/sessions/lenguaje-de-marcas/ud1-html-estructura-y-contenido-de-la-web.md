@@ -2288,16 +2288,14 @@ Para cada error, escribe: en qué fila está, cuánto suma esa fila, cuánto deb
 
 ## Sesión 5 · Formularios accesibles
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Formularios · recoger información</strong>, <strong>Tipos de campo y validación nativa</strong> y <strong>Grupos de controles y auditoría de formularios</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Formularios · recoger información
+<p class="lead">Tres horas. Media hora para entender qué une una etiqueta con su campo y qué valida el navegador por sí solo, y dos horas y media construyendo un formulario completo, auditando uno defectuoso y recorriéndolo todo sin ratón.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué une un <code>label</code> con su campo, en qué se diferencian <code>id</code> y <code>name</code>, y por qué el botón importa.</li>
-    <li><strong>2. Haz:</strong> Construye el formulario base de tu página de contacto.</li>
-    <li><strong>3. Comprueba:</strong> Al hacer clic en el texto de cada etiqueta, el cursor entra en su campo.</li>
+    <li><strong>1. Aprende:</strong> Qué une un <code>label</code> con su campo, en qué se diferencian <code>id</code> y <code>name</code>, qué te da gratis elegir bien el <code>type</code> y cómo se agrupan las opciones.</li>
+    <li><strong>2. Haz:</strong> Construye el formulario de contacto en tres fases, audita uno defectuoso y revisa el de un compañero.</li>
+    <li><strong>3. Comprueba:</strong> Recorre el formulario entero usando solo el teclado.</li>
   </ol>
 </div>
 
@@ -2309,6 +2307,12 @@ Para cada error, escribe: en qué fila está, cuánto suma esa fila, cuánto deb
     <li>Marca semánticamente: título, navegación, noticia independiente y lista de características.</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Un formulario es la parte de una web donde los errores de marcado dejan de ser teóricos: un campo mal etiquetado no es feo, es un campo que alguien no puede rellenar. Casi todo lo de hoy se comprueba soltando el ratón.
 
 #### El formulario mínimo
 
@@ -2336,14 +2340,7 @@ Para cada error, escribe: en qué fila está, cuánto suma esa fila, cuánto deb
 
 Tres piezas: el contenedor `form`, los controles, y el botón que lo envía. Lo que casi siempre se hace mal es la relación entre cada campo y su etiqueta.
 
-#### `label`
-
-```html
-<label for="nombre">Nombre</label>
-<input id="nombre" name="nombre" type="text">
-```
-
-Pruébalo: haz clic sobre la palabra **Nombre**. El navegador coloca el foco en el campo.
+#### La etiqueta pertenece al campo
 
 <p class="term">Etiqueta asociada</p>
 
@@ -2354,6 +2351,12 @@ Qué se gana asociándola:
 1. Un lector de pantalla anuncia el campo con su nombre. Sin `label`, anuncia «campo de texto» y nada más.
 2. El área de clic crece: pulsar sobre el texto lleva el cursor al campo. Importa mucho en pantallas pequeñas y en casillas de verificación.
 3. El navegador puede autocompletar mejor.
+
+<div class="rule">
+  <p class="rule-label">El <code>placeholder</code> no es una etiqueta</p>
+  <p>El texto gris dentro de un campo <strong>desaparece en cuanto empiezas a escribir</strong>. Quien interrumpe la cumplimentación de un formulario largo encuentra un campo relleno sin indicación de qué contenía. Quien emplea un lector de pantalla puede no oírlo nunca.</p>
+  <p>Sirve para dar un ejemplo de formato <em>junto a</em> una etiqueta —<code>placeholder="nombre@example.com"</code>—, nunca para sustituirla.</p>
+</div>
 
 #### `id` y `name` no son lo mismo
 
@@ -2370,70 +2373,7 @@ Se escriben casi siempre iguales, y por eso se confunden.
 
 Un campo sin `name` se rellena perfectamente y **su dato no llega a ninguna parte**. Cuando estudies servidores verás por qué.
 
-#### `button`
-
-```html
-<button type="submit">Enviar</button>
-```
-
-No conviertas un texto o una imagen en un falso botón. Si algo es una acción, empieza por el elemento diseñado para representar una acción. Ya lo viste en el Reto 3: un `<div>` no se alcanza con `Tab`, no se activa con `Enter` y no se anuncia como botón.
-
-<div class="rule">
-  <p class="rule-label">El <code>placeholder</code> no es una etiqueta</p>
-  <p>El texto gris dentro de un campo <strong>desaparece en cuanto empiezas a escribir</strong>. Quien interrumpe la cumplimentación de un formulario largo encuentra un campo relleno sin indicación de qué contenía. Quien emplea un lector de pantalla puede no oírlo nunca.</p>
-  <p>Sirve para dar un ejemplo de formato <em>junto a</em> una etiqueta —<code>placeholder="nombre@example.com"</code>—, nunca para sustituirla.</p>
-</div>
-
-#### Tarea 12 · Fase A · El formulario base
-
-En `contacto.html`, escribe un formulario con:
-
-* Nombre completo.
-* Correo electrónico.
-* Asunto.
-* Mensaje, con `<textarea rows="6">`.
-* Botón de envío.
-
-Cada campo con su `id` y su `name`, y cada `label` con su `for`.
-
-**Comprobación inmediata:** haz clic sobre el *texto* de cada etiqueta, no sobre el campo. Si el cursor se desplaza al campo correspondiente, la asociación es correcta. Si no se produce ningún efecto, ese `for` no coincide con ningún `id`.
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre <code>id</code> y <code>name</code>?</li>
-    <li>Da dos razones para asociar la etiqueta con <code>for</code>.</li>
-    <li>¿Por qué un <code>placeholder</code> no sustituye a un <code>label</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>id</code> identifica el campo dentro del documento y es a lo que apunta el <code>for</code>; <code>name</code> es el nombre con el que el dato se envía al servidor.</p>
-  <p>2 · El lector de pantalla anuncia el campo por su nombre, y pulsar el texto lleva el foco al campo. Vale también el autocompletado.</p>
-  <p>3 · Porque desaparece al escribir y deja el campo sin identificar.</p>
-</details>
-
-
-### Bloque 2 · Tipos de campo y validación nativa
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué te da gratis elegir bien el <code>type</code> y qué validación trae el navegador de fábrica.</li>
-    <li><strong>2. Haz:</strong> Añade tipos correctos, validación y un desplegable a tu formulario.</li>
-    <li><strong>3. Comprueba:</strong> Intenta enviarlo vacío y con datos inválidos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cómo se conectan un <code>label</code> y su <code>input</code>?</li>
-    <li>¿En qué se diferencian <code>id</code> y <code>name</code>?</li>
-    <li>Corrige un campo cuyo <code>label for="correo"</code> apunta a <code>id="email"</code>.</li>
-  </ol>
-</div>
+El botón que envía es un `<button type="submit">`. No conviertas un texto o una imagen en un falso botón: un `<div>` no se alcanza con `Tab`, no se activa con `Enter` y no se anuncia como botón.
 
 #### El tipo no es cosmético
 
@@ -2460,11 +2400,6 @@ Todos estos campos aceptan texto. La diferencia está en lo que el navegador hac
 
 Ese teclado adaptado determina la diferencia entre completar un formulario con comodidad en el móvil y abandonarlo, de modo que no constituye un detalle menor.
 
-<div class="rule">
-  <p class="rule-label">La pregunta antes de escribir JavaScript</p>
-  <p>Antes de programar una validación, pregúntate: <strong>¿HTML ya sabe hacerlo?</strong> Muchas veces sí, y la versión nativa funciona mejor, es más accesible y no hay que mantenerla.</p>
-</div>
-
 #### Validación nativa
 
 <p class="term">Validación nativa</p>
@@ -2487,12 +2422,89 @@ Las comprobaciones que hace el propio navegador antes de enviar, declaradas con 
 | `pattern` | Que el texto encaje con un patrón concreto |
 
 <div class="rule">
+  <p class="rule-label">La pregunta antes de escribir JavaScript</p>
+  <p>Antes de programar una validación, pregúntate: <strong>¿HTML ya sabe hacerlo?</strong> Muchas veces sí, y la versión nativa funciona mejor, es más accesible y no hay que mantenerla.</p>
+</div>
+
+<div class="rule">
   <p class="rule-label">Validar en el navegador no es validar</p>
   <p>Todo esto se puede desactivar: basta con enviar la petición sin pasar por el formulario. La validación nativa está para <strong>ayudar a quien rellena</strong>, avisándole antes de enviar y sin recargar la página.</p>
   <p>La comprobación que de verdad protege los datos se hace <strong>en el servidor</strong>, y la verás en otro módulo. Las dos son necesarias y no se sustituyen.</p>
 </div>
 
-#### `textarea` y `select`
+#### Agrupar opciones
+
+La exclusión mutua entre botones de opción la produce **compartir exactamente el mismo `name`**, no el `fieldset`. Si puedes marcar los dos a la vez, tienen `name` distinto.
+
+```html
+<fieldset>
+
+    <legend>Modalidad de envío</legend>
+
+    <label>
+        <input type="radio" name="envio" value="estandar">
+        Estándar
+    </label>
+
+    <label>
+        <input type="radio" name="envio" value="urgente">
+        Urgente
+    </label>
+
+</fieldset>
+```
+
+Fíjate también en otra forma de asociar la etiqueta: aquí el `input` está **dentro** del `label`, y entonces no hace falta `for`. Las dos formas son válidas.
+
+Cuando se pueden elegir varias, la casilla comparte `name` y se distingue por su `value`:
+
+```html
+<fieldset>
+    <legend>¿Qué tecnologías conoces?</legend>
+
+    <label><input type="checkbox" name="tec" value="html"> HTML</label>
+    <label><input type="checkbox" name="tec" value="css"> CSS</label>
+    <label><input type="checkbox" name="tec" value="js"> JavaScript</label>
+</fieldset>
+```
+
+`fieldset` y `legend` agrupan controles que forman una misma pregunta y le ponen nombre al grupo. En un formulario de tres campos sobran; en uno de quince son lo que lo hace navegable, porque cada campo se anuncia precedido del nombre de su grupo. En los botones de opción no resultan prescindibles en la práctica: el `legend` es lo único que indica **sobre qué** se está eligiendo.
+
+#### Los seis fallos de siempre
+
+Antes de mirar código, una prueba que dura treinta segundos y sirve para cualquier web: **suelta el ratón**. Recorre el formulario con `Tab`, cambia de opción con las flechas, envía con `Enter`. Si no sabes dónde está el foco, o hay algo que no puedes alcanzar, ese formulario está roto para todo el que no use un ratón.
+
+| Fallo | Consecuencia |
+| ----- | ------------ |
+| Campos sin `label` asociado | Se anuncian como «campo de texto», sin nombre |
+| `placeholder` usado como etiqueta | La indicación desaparece al escribir |
+| `type="text"` para correos, números o fechas | Sin validación ni teclado adaptado |
+| Campos sin `name` | El dato no llega al servidor aunque se rellene |
+| `<div onclick>` como botón de enviar | No se alcanza con `Tab` ni se activa con `Enter` |
+| `<br>` para separar los campos | El formulario no tiene estructura, solo saltos de línea |
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto y sobre código ajeno</p>
+
+El formulario de contacto se construye en tres fases y cada una se comprueba antes de seguir. Los tres últimos pasos lo someten a la prueba del teclado, a un caso defectuoso y a la mirada de otra persona.
+
+#### Paso 1 · Fase A · El formulario base · 25 min
+
+En `contacto.html`, escribe un formulario con:
+
+* Nombre completo.
+* Correo electrónico.
+* Asunto.
+* Mensaje, con `<textarea rows="6">`.
+* Botón de envío.
+
+Cada campo con su `id` y su `name`, y cada `label` con su `for`.
+
+**Comprobación inmediata:** haz clic sobre el *texto* de cada etiqueta, no sobre el campo. Si el cursor se desplaza al campo correspondiente, la asociación es correcta. Si no se produce ningún efecto, ese `for` no coincide con ningún `id`.
+
+<details class="aside aside--extra">
+<summary>Consultar · <code>textarea</code> y <code>select</code></summary>
 
 ```html
 <label for="mensaje">Mensaje</label>
@@ -2515,7 +2527,9 @@ Las comprobaciones que hace el propio navegador antes de enviar, declaradas con 
 
 La primera `option` con `value=""` sirve para que el desplegable no aparezca ya respondido; combinada con `required`, obliga a elegir de verdad.
 
-#### Tarea 12 · Fase B · Tipos y validación
+</details>
+
+#### Paso 2 · Fase B · Tipos y validación · 30 min
 
 Amplía tu formulario:
 
@@ -2530,104 +2544,7 @@ Amplía tu formulario:
   <p>Envía el formulario vacío, después con un correo sin arroba, y después con un asunto de tres caracteres. En los tres casos el navegador debe impedir el envío y decirte cuál es el problema, sin recargar la página y sin que tú hayas escrito JavaScript.</p>
 </div>
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Nombra dos cosas que da <code>type="email"</code> y no da <code>type="text"</code>.</li>
-    <li>¿Para qué sirve una <code>&lt;option value=""&gt;</code> al principio de un <code>select</code>?</li>
-    <li>¿Por qué la validación nativa no sustituye a la del servidor?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Comprueba el formato del correo y ofrece un teclado adaptado en el móvil.</p>
-  <p>2 · Para que el desplegable no venga ya respondido y, con <code>required</code>, obligar a elegir conscientemente.</p>
-  <p>3 · Porque se ejecuta en el navegador y se puede saltar enviando la petición directamente. Ayuda a quien rellena; no protege los datos.</p>
-</details>
-
-
-### Bloque 3 · Grupos de controles y auditoría de formularios
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se agrupan opciones excluyentes y múltiples, y cuáles son los fallos que se repiten en todos los formularios mal hechos.</li>
-    <li><strong>2. Haz:</strong> Termina tu formulario y audita uno defectuoso.</li>
-    <li><strong>3. Comprueba:</strong> Recorre tu formulario usando solo la tecla <code>Tab</code>.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué ventajas aporta <code>type="email"</code> frente a <code>type="text"</code>?</li>
-    <li>¿Cuándo usarías <code>textarea</code> y cuándo <code>select</code>?</li>
-    <li>Predice qué ocurre al enviar vacío un campo con <code>required</code>.</li>
-  </ol>
-</div>
-
-#### Botones de opción · cuando solo se puede elegir una
-
-```html
-<fieldset>
-
-    <legend>Modalidad de envío</legend>
-
-    <label>
-        <input type="radio" name="envio" value="estandar">
-        Estándar
-    </label>
-
-    <label>
-        <input type="radio" name="envio" value="urgente">
-        Urgente
-    </label>
-
-</fieldset>
-```
-
-La exclusión mutua entre dos botones de opción la produce **compartir exactamente el mismo `name`**, no el `fieldset`. Si puedes marcar los dos a la vez, tienen `name` distinto.
-
-Fíjate también en otra forma de asociar la etiqueta: aquí el `input` está **dentro** del `label`, y entonces no hace falta `for`. Las dos formas son válidas.
-
-#### Casillas · cuando se pueden elegir varias
-
-```html
-<fieldset>
-    <legend>¿Qué tecnologías conoces?</legend>
-
-    <label><input type="checkbox" name="tec" value="html"> HTML</label>
-    <label><input type="checkbox" name="tec" value="css"> CSS</label>
-    <label><input type="checkbox" name="tec" value="js"> JavaScript</label>
-</fieldset>
-```
-
-Una casilla independiente y obligatoria se declara así:
-
-```html
-<label>
-    <input type="checkbox" name="condiciones" required>
-    Acepto las condiciones
-</label>
-```
-
-#### `fieldset` y `legend`
-
-Agrupan controles que forman una misma pregunta y le ponen nombre al grupo. En un formulario de tres campos sobran; en uno de quince son lo que lo hace navegable, porque cada campo se anuncia precedido del nombre de su grupo.
-
-En los botones de opción no resultan prescindibles en la práctica: el `legend` es lo único que indica **sobre qué** se está eligiendo. No todo tiene que ser un `div`.
-
-#### Autocompletado
-
-```html
-<input type="text"  name="nombre" autocomplete="name">
-<input type="email" name="email"  autocomplete="email">
-```
-
-Los navegadores usan esta información para rellenar por ti. Cuesta un atributo y ahorra bastante escritura a quien usa tu web.
-
-#### Tarea 12 · Fase C · El formulario completo
+#### Paso 3 · Fase C · Grupos de controles · 30 min
 
 Termina tu formulario con:
 
@@ -2636,31 +2553,38 @@ Termina tu formulario con:
 8. Una casilla obligatoria de aceptación de condiciones.
 9. Dos `fieldset` que separen los datos personales de los de la consulta.
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Formulario completo, etiquetado y recorrible con teclado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade una opción nueva a cada grupo sin romper nombres ni asociaciones.</span></div>
-  <div><strong>Reto</strong><span>Audita un formulario desconocido y corrige solo los fallos que puedas justificar.</span></div>
-</div>
+```html
+<label>
+    <input type="checkbox" name="condiciones" required>
+    Acepto las condiciones
+</label>
+```
+
+Añade además el autocompletado a los campos que lo admiten. Cuesta un atributo y ahorra bastante escritura a quien usa tu web:
+
+```html
+<input type="text"  name="nombre" autocomplete="name">
+<input type="email" name="email"  autocomplete="email">
+```
 
 <details class="aside aside--help">
   <summary>Estoy atascado · los radio no funcionan como espero</summary>
   <p>Si puedes marcar los dos a la vez, es que tienen <code>name</code> distinto. Lo que agrupa unos botones de opción es <strong>compartir exactamente el mismo <code>name</code></strong>, y no el <code>fieldset</code>. Lo que sí debe ser distinto en cada uno es el <code>value</code>, que es el dato que se envía, y el <code>id</code> si los asocias con <code>for</code>.</p>
 </details>
 
-#### Los seis fallos de siempre
+#### Paso 4 · La prueba del teclado sobre tu formulario · 15 min
 
-Antes de mirar código, una prueba que dura treinta segundos y sirve para cualquier web: **suelta el ratón**. Recorre el formulario con `Tab`, cambia de opción con las flechas, envía con `Enter`. Si no sabes dónde está el foco, o hay algo que no puedes alcanzar, ese formulario está roto para todo el que no use un ratón.
+Suelta el ratón y recorre tu formulario entero. Anota las respuestas:
 
-| Fallo | Consecuencia |
-| ----- | ------------ |
-| Campos sin `label` asociado | Se anuncian como «campo de texto», sin nombre |
-| `placeholder` usado como etiqueta | La indicación desaparece al escribir |
-| `type="text"` para correos, números o fechas | Sin validación ni teclado adaptado |
-| Campos sin `name` | El dato no llega al servidor aunque se rellene |
-| `<div onclick>` como botón de enviar | No se alcanza con `Tab` ni se activa con `Enter` |
-| `<br>` para separar los campos | El formulario no tiene estructura, solo saltos de línea |
+1. ¿Puedes alcanzar **todos** los controles con `Tab`, incluido el botón de envío?
+2. ¿Sabes en todo momento dónde está el foco, sin adivinarlo?
+3. ¿El orden en que los recorres es el mismo en que se leen?
+4. ¿Puedes cambiar de opción en los radios con las flechas?
+5. ¿Puedes enviar con `Enter` sin tocar el ratón?
 
-#### Tarea 13 · El formulario defectuoso
+Cualquier «no» es un defecto que corregir ahora, no una preferencia. Escribe en un comentario qué encontraste y qué cambiaste.
+
+#### Paso 5 · El formulario defectuoso · 30 min
 
 ```html
 <form action="/enviar">
@@ -2674,7 +2598,7 @@ Antes de mirar código, una prueba que dura treinta segundos y sirve para cualqu
 </form>
 ```
 
-<p class="stage">Paso 1 · Te enseño uno</p>
+##### 5.1 · Ejemplo resuelto
 
 <dl class="worked">
   <dt>Fallo</dt>
@@ -2685,7 +2609,7 @@ Antes de mirar código, una prueba que dura treinta segundos y sirve para cualqu
   <dd><code>&lt;label for="nombre"&gt;Nombre&lt;/label&gt;</code> y <code>&lt;input type="text" id="nombre" name="nombre"&gt;</code>.</dd>
 </dl>
 
-<p class="stage stage--solo">Paso 2 · Ahora tú</p>
+##### 5.2 · Ahora tú
 
 1. Enumera los **seis** fallos, en el mismo formato: qué está mal, a quién perjudica y cuál es la corrección.
 2. Reescribe el formulario entero corrigiéndolos todos.
@@ -2701,31 +2625,108 @@ Antes de mirar código, una prueba que dura treinta segundos y sirve para cualqu
   <p>6 · Los campos se separan con <code>&lt;br&gt;</code>, que no aporta estructura. Cada campo con su etiqueta debería ir en su propio bloque.</p>
 </details>
 
+#### Paso 6 · Revisión cruzada de formularios · 20 min
+
+Intercambia tu `contacto.html` con un compañero y audita el suyo **sin tocarlo**, solo con el navegador y el teclado:
+
+| Comprobación | Resultado | Qué falta |
+| ------------ | --------- | --------- |
+| Pulsar el texto de cada etiqueta lleva el foco a su campo | | |
+| Todos los campos tienen `name` | | |
+| Cada campo usa el `type` que le corresponde | | |
+| El formulario se recorre entero con `Tab` | | |
+| Los radios se agrupan con el mismo `name` y tienen `legend` | | |
+| El envío es un `button` y funciona con `Enter` | | |
+
+Devuelve la tabla a su autor. El autor decide qué acepta, y justifica lo que rechace.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los seis pasos. Los dos retos trabajan con formularios que no has diseñado tú, que es donde `fieldset` y `legend` dejan de ser adorno.
+
+##### Reto 1 · Un formulario de quince campos
+
+Una escuela de música necesita el formulario de inscripción al curso. Solo recibes la lista de datos, sin ningún orden pensado:
+
+```text
+Nombre del alumno
+Apellidos del alumno
+Fecha de nacimiento
+Correo de contacto
+Teléfono de contacto
+Nombre del padre, madre o tutor (solo si el alumno es menor)
+Instrumento principal
+Nivel declarado: iniciación, medio o avanzado
+Años de estudio previos
+¿Dispone de instrumento propio?
+Días preferidos: lunes, martes, miércoles, jueves, viernes
+Franja horaria preferida: mañana o tarde
+¿Autoriza el uso de imágenes en redes de la escuela?
+Observaciones
+Aceptación de las condiciones de matrícula
+```
+
+1. **Agrúpalos en `fieldset`.** Decide cuántos grupos hacen falta y qué `legend` lleva cada uno. No hay un número correcto, pero sí hay agrupaciones que no se sostienen: tienes que poder decir qué pregunta responde cada grupo.
+2. **Elige el `type` de cada campo.** Tres de ellos admiten más de una solución razonable: identifícalos y justifica la que eliges.
+3. **Decide cuáles son `required`.** Un formulario que lo exige todo obliga a inventar datos; uno que no exige nada llega vacío. Justifica por escrito los que dejas opcionales.
+4. **Resuelve el campo condicional.** El nombre del tutor solo se pide si el alumno es menor. Con lo que sabes de HTML no puedes ocultarlo ni mostrarlo, así que decide cómo lo planteas de forma que se entienda igual, y anota qué harías cuando sepas JavaScript.
+
+Escríbelo entero y pásale la prueba del teclado. Con quince campos notarás por primera vez para qué sirve de verdad un `legend`.
+
+##### Reto 2 · Un formulario en producción, sin ratón
+
+Busca un formulario real de registro o de compra y recórrelo **solo con el teclado**, sin enviarlo.
+
+1. ¿Puedes alcanzar todos los controles con `Tab`?
+2. ¿Se ve siempre dónde está el foco?
+3. ¿Los campos tienen etiqueta asociada, o solo `placeholder`? Compruébalo pulsando sobre el texto de la etiqueta.
+4. ¿Qué ocurre si lo envías vacío? ¿El mensaje de error dice qué campo falla, o solo que «hay errores»?
+5. ¿Hay algún campo cuyo `type` esté mal elegido? Búscalo abriendo un teclado de móvil, o mirando el código con el inspector.
+
+Escribe los tres defectos más graves que encuentres y, para cada uno, la corrección concreta en una línea de HTML. Es un sitio profesional, con equipo detrás: encontrar tres fallos es lo normal, y ese es el dato interesante de este reto.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Formulario completo, etiquetado, con los tipos correctos y recorrible entero con teclado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Los seis fallos del formulario defectuoso enumerados y corregidos, y la revisión cruzada contestada.</span></div>
+  <div><strong>Reto</strong><span>El formulario de quince campos agrupado y justificado, y los tres defectos de un formulario en producción con su corrección.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Tu formulario se recorre entero con <code>Tab</code>, en un orden que tiene sentido.</li>
     <li>Todos los campos tienen <code>label</code> asociado, <code>id</code> y <code>name</code>.</li>
     <li>Cada campo usa el <code>type</code> que le corresponde.</li>
     <li>Los botones de opción comparten <code>name</code> y están dentro de un <code>fieldset</code> con <code>legend</code>.</li>
     <li>El botón de envío es un <code>&lt;button&gt;</code>.</li>
+    <li>El formulario defectuoso está corregido y la revisión cruzada, devuelta.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Qué diferencia hay entre <code>id</code> y <code>name</code>?</li>
+    <li>¿Por qué un <code>placeholder</code> no sustituye a un <code>label</code>?</li>
+    <li>Nombra dos cosas que da <code>type="email"</code> y no da <code>type="text"</code>.</li>
+    <li>¿Por qué la validación nativa no sustituye a la del servidor?</li>
     <li>¿Qué hace que dos botones de opción sean excluyentes?</li>
-    <li>Un campo rellenado no llega al servidor. ¿Qué atributo falta?</li>
     <li>¿En qué consiste la prueba del teclado y qué detecta?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Compartir el mismo atributo <code>name</code>.</p>
-  <p>2 · El atributo <code>name</code>.</p>
-  <p>3 · Recorrer el formulario sin ratón, solo con <code>Tab</code>, flechas y <code>Enter</code>. Detecta elementos inalcanzables, foco invisible y falsos botones.</p>
+  <p>1 · <code>id</code> identifica el campo dentro del documento y es a lo que apunta el <code>for</code>; <code>name</code> es el nombre con el que el dato se envía al servidor.</p>
+  <p>2 · Porque desaparece al escribir y deja el campo sin identificar.</p>
+  <p>3 · Comprueba el formato del correo y ofrece un teclado adaptado en el móvil.</p>
+  <p>4 · Porque se ejecuta en el navegador y se puede saltar enviando la petición directamente. Ayuda a quien rellena; no protege los datos.</p>
+  <p>5 · Compartir el mismo atributo <code>name</code>.</p>
+  <p>6 · Recorrer el formulario sin ratón, solo con <code>Tab</code>, flechas y <code>Enter</code>. Detecta elementos inalcanzables, foco invisible y falsos botones.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -2737,6 +2738,7 @@ Antes de mirar código, una prueba que dura treinta segundos y sirve para cualqu
     <li>Detecta dos fallos: <code>&lt;label&gt;Edad&lt;/label&gt;&lt;input type="text" required&gt;</code>.</li>
   </ol>
 </div>
+
 
 ---
 
