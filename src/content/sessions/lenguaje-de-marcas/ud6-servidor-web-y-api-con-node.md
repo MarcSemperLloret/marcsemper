@@ -160,27 +160,31 @@ Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada blo
 
 ## Sesión 1 · Diseñar la API
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Qué es una API REST</strong>, <strong>El contrato: rutas, códigos y formas</strong> y <strong>Router y estructura</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Qué es una API REST
+<p class="lead">Tres horas. Media hora para entender qué distingue una API diseñada de un conjunto de rutas, y dos horas y media escribiendo el contrato de la tuya y reorganizando el proyecto para poder cumplirlo.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué significa REST, y qué distingue una API bien diseñada de un conjunto de rutas.</li>
-    <li><strong>2. Haz:</strong> Analiza dos APIs reales y detecta sus decisiones de diseño.</li>
-    <li><strong>3. Comprueba:</strong> Distingues una ruta orientada al recurso de una orientada a la pantalla.</li>
+    <li><strong>1. Aprende:</strong> Qué significa orientar una API a recursos, qué piezas forman su contrato y cómo se reparte una aplicación Express en ficheros.</li>
+    <li><strong>2. Haz:</strong> Analiza dos APIs reales, escribe el contrato completo de la tuya y reorganiza el proyecto con routers.</li>
+    <li><strong>3. Comprueba:</strong> Otra persona podría escribir el cliente solo con tu contrato, y tu aplicación se puede crear sin arrancarla.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>Escribe las rutas que tiene hoy tu servidor. ¿Se parecen entre sí?</li>
-    <li>Si mañana alguien más las usara, ¿podría adivinar la siguiente?</li>
-    <li>¿Qué información necesitaría para usarlas sin preguntarte?</li>
+    <li>Escribe las rutas que tiene hoy tu servidor. Si mañana alguien más las usara, ¿podría adivinar la siguiente?</li>
+    <li>¿Cómo sabría un cliente distinguir «no existe» de «se rompió»?</li>
+    <li>¿Cómo probarías tu aplicación sin levantar un servidor?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Tu servidor ya funciona. Hoy se convierte en algo que otra persona puede usar sin preguntarte: un contrato escrito, cumplido de forma constante, sobre una estructura que admite crecer.
 
 #### Recursos, no acciones
 
@@ -197,8 +201,6 @@ Una cosa del problema que se puede identificar con una URL: un producto, una cat
 
 La columna derecha tiene una propiedad que la izquierda no: es **predecible**. Quien conozca dos rutas sabe escribir la tercera.
 
-#### Los principios que vamos a aplicar
-
 <figure class="diagram">
   <figcaption>Lo que hace REST a una API</figcaption>
   <ol class="flow">
@@ -214,10 +216,8 @@ La columna derecha tiene una propiedad que la izquierda no: es **predecible**. Q
 
 El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesario viaja en la petición. Es lo que permite que dos copias del servidor atiendan al mismo cliente sin coordinarse, y es la razón de que la autenticación se resuelva con algo que se envía en cada llamada.
 
-#### Nombrar bien
-
-| Regla | Ejemplo |
-| ----- | ------- |
+| Regla de nombrado | Ejemplo |
+| ----------------- | ------- |
 | Sustantivos en plural | `/api/productos`, no `/api/producto` |
 | Minúsculas y guiones | `/api/categorias-destacadas` |
 | Jerarquía para lo que pertenece | `/api/categorias/teclados/productos` |
@@ -230,68 +230,7 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
   <p>La prueba: si al añadir un filtro nuevo tienes que crear una ruta nueva, acabarás con quince rutas que devuelven lo mismo con distinta condición.</p>
 </div>
 
-#### Tarea 1 · Analizar y diseñar
-
-1. Explora dos APIs públicas y anota diez rutas de cada una.
-2. Clasifícalas: ¿orientadas a recursos o a acciones?
-3. Localiza cómo filtran, cómo paginan y cómo devuelven los errores.
-4. Diseña sobre papel la tabla de rutas de **tu** proyecto: método, ruta, qué hace, qué devuelve y con qué código.
-5. Enséñasela a un compañero y comprueba si puede adivinar una ruta que no le has enseñado.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La tabla de rutas de tu proyecto, con al menos siete entradas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade un segundo recurso con relación con el primero.</span></div>
-  <div><strong>Reto</strong><span>Encuentra en una API real una decisión de diseño discutible y argumenta cómo la harías tú.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Distingues una ruta orientada al recurso de una orientada a la acción.</li>
-    <li>Sabes dónde van los filtros.</li>
-    <li>Explicas qué significa que una API no guarde estado.</li>
-    <li>Tienes la tabla de rutas de tu proyecto.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué las rutas no llevan verbos?</li>
-    <li>¿Dónde van los filtros?</li>
-    <li>¿Qué significa que el servidor no guarde estado?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque el verbo ya lo aporta el método HTTP.</p>
-  <p>2 · En la cadena de consulta: no son recursos distintos.</p>
-  <p>3 · Que no recuerda nada entre peticiones: cada una trae todo lo que necesita.</p>
-</details>
-
-
-### Bloque 2 · El contrato: rutas, códigos y formas
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué compone el contrato de una API y por qué no se rompe a la ligera.</li>
-    <li><strong>2. Haz:</strong> Escribe el contrato completo de tu API antes de implementarlo.</li>
-    <li><strong>3. Comprueba:</strong> Otra persona podría escribir el cliente solo con tu contrato.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si cambias el nombre de un campo de la respuesta, ¿qué se rompe?</li>
-    <li>¿Cómo sabría un cliente distinguir «no existe» de «se rompió»?</li>
-    <li>¿Qué debe devolver una creación correcta?</li>
-  </ol>
-</div>
-
-#### Lo que forma el contrato
+#### El contrato
 
 | Pieza | Qué fija |
 | ----- | -------- |
@@ -300,8 +239,6 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
 | Código de estado | Qué ha pasado |
 | Cuerpo de la respuesta | Qué campos vuelven y con qué nombre |
 | Formato de error | La misma forma, siempre |
-
-#### La tabla de tu API
 
 | Método | Ruta | Éxito | Errores |
 | ------ | ---- | :---: | ------- |
@@ -313,8 +250,6 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
 | DELETE | `/api/productos/:id` | 204 | 400, 404 |
 
 El 400 de las rutas con identificador no es un capricho: `/api/productos/abc` es una petición mal formada, y responder 404 a eso confunde «no existe» con «no me has pedido bien».
-
-#### El formato de error
 
 ```json
 {
@@ -333,8 +268,6 @@ El 400 de las rutas con identificador no es un capricho: `/api/productos/abc` es
   <p>Con una forma única, el cliente escribe una función de tratamiento de errores y vale para toda la API, hoy y cuando crezca. El campo <code>codigo</code> permite además reaccionar por programa sin depender del texto, que puede traducirse o reescribirse.</p>
 </div>
 
-#### Métodos: qué se puede repetir
-
 | Método | Repetirlo dos veces |
 | ------ | ------------------- |
 | GET | No cambia nada |
@@ -343,67 +276,6 @@ El 400 de las rutas con identificador no es un capricho: `/api/productos/abc` es
 | POST | **Crea otro** |
 
 Esa propiedad —que repetir la operación no cambie el resultado— es la que permite que un cliente reintente sin miedo cuando la red falla. Con POST no se puede, y por eso los formularios que se envían dos veces crean dos pedidos.
-
-#### Tarea 2 · El contrato escrito
-
-1. Escribe la tabla completa de tu API, con éxitos y errores por ruta.
-2. Define el objeto que representa un producto: campos, tipos y cuáles son obligatorios.
-3. Define el formato único de error, con sus códigos.
-4. Escribe `peticiones.http` con un ejemplo de cada caso, incluidos los que fallan.
-5. Dale el contrato a un compañero y que escriba, sobre papel, cómo llamaría a tres rutas.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Contrato completo y fichero de peticiones con todos los casos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade paginación al contrato y decide qué devuelve la respuesta.</span></div>
-  <div><strong>Reto</strong><span>Documenta qué cambiarías si mañana hiciera falta la versión 2 sin romper la 1.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Tu contrato cubre método, ruta, cuerpo, estado y respuesta.</li>
-    <li>Todos los errores tienen la misma forma.</li>
-    <li>Distingues 400 de 404 en la misma ruta.</li>
-    <li>Sabes qué operaciones se pueden repetir sin consecuencias.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué código devuelve una creación correcta?</li>
-    <li>¿Qué responde <code>/api/productos/abc</code>?</li>
-    <li>¿Por qué un formato único de error facilita el cliente?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Un 201, con la cabecera <code>Location</code>.</p>
-  <p>2 · Un 400: la petición está mal formada, no es que el recurso no exista.</p>
-  <p>3 · Porque permite escribir un solo tratamiento válido para toda la API.</p>
-</details>
-
-
-### Bloque 3 · Router y estructura
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se reparte una aplicación Express en ficheros y qué hace un router.</li>
-    <li><strong>2. Haz:</strong> Reorganiza tu proyecto con la estructura de la unidad.</li>
-    <li><strong>3. Comprueba:</strong> Cada fichero se explica en una frase y el arranque queda separado de la aplicación.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuántas líneas tiene hoy tu <code>servidor.js</code>?</li>
-    <li>¿Qué partes cambiarían si añadieras un segundo recurso?</li>
-    <li>¿Cómo probarías tu aplicación sin levantar un servidor?</li>
-  </ol>
-</div>
 
 #### Un router por recurso
 
@@ -444,8 +316,6 @@ export function crearApp() {
 
 Las rutas del router son **relativas** al punto donde se monta, así que la ruta base aparece una sola vez. Cambiar `/api/productos` por `/api/v1/productos` es cambiar una línea.
 
-#### Separar la aplicación del arranque
-
 ```javascript
 // src/servidor.js
 import { crearApp } from "./app.js";
@@ -460,8 +330,6 @@ crearApp().listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`)
   <p>Con la aplicación por un lado y el arranque por otro, las pruebas de la sesión 5 importan la aplicación y le hacen peticiones sin abrir ningún puerto. Es una decisión de dos líneas que decide si tu proyecto se puede probar.</p>
 </div>
 
-#### El orden, otra vez
-
 <figure class="diagram">
   <figcaption>El orden de la cadena</figcaption>
   <ol class="flow">
@@ -473,38 +341,130 @@ crearApp().listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`)
   </ol>
 </figure>
 
-#### Tarea 3 · Reorganizar
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · el contrato y la estructura</p>
+
+Hoy se escribe antes de programar, que es el orden que esta unidad exige. Los dos últimos pasos comprueban las dos promesas de la sesión: que el contrato baste y que la aplicación se pueda probar.
+
+#### Paso 1 · Analizar y diseñar · 35 min
+
+1. Explora dos APIs públicas y anota diez rutas de cada una.
+2. Clasifícalas: ¿orientadas a recursos o a acciones?
+3. Localiza cómo filtran, cómo paginan y cómo devuelven los errores.
+4. Diseña sobre papel la tabla de rutas de **tu** proyecto: método, ruta, qué hace, qué devuelve y con qué código.
+5. Añade un segundo recurso que tenga relación con el primero, y decide cómo se expresa esa relación en las rutas.
+
+#### Paso 2 · El contrato escrito · 40 min
+
+1. Escribe la tabla completa de tu API, con éxitos y errores por ruta.
+2. Define el objeto que representa un producto: campos, tipos y cuáles son obligatorios.
+3. Define el formato único de error, con sus códigos.
+4. Añade paginación al contrato y decide qué devuelve exactamente la respuesta paginada.
+5. Escribe `peticiones.http` con un ejemplo de cada caso, **incluidos los que fallan**.
+
+**Antes de continuar:** para cada ruta con identificador, el contrato distingue el 400 del 404 y dice cuándo se devuelve cada uno.
+
+#### Paso 3 · Reorganizar · 40 min
 
 1. Crea `src/app.js` con `crearApp()` y deja `servidor.js` solo con el arranque.
 2. Mueve las rutas de productos a su router.
 3. Mueve el registro y los errores a `src/middleware/`.
 4. Comprueba que todo sigue funcionando con tu fichero de peticiones.
-5. Añade un segundo router vacío para un recurso nuevo y monta su ruta base.
-6. Escribe en cada fichero la frase que lo describe.
+5. Añade el router del segundo recurso, aunque esté vacío, y monta su ruta base.
+6. Monta la API bajo `/api/v1` cambiando **una sola línea**. Si has tenido que tocar más de una, las rutas del router no eran relativas.
+
+#### Paso 4 · Que otro escriba el cliente · 20 min
+
+Dale a un compañero **solo el contrato**, sin acceso a tu código ni a tu servidor.
+
+| Encargo | ¿Lo resolvió? | Qué le faltó del contrato |
+| ------- | ------------- | ------------------------- |
+| Escribir la llamada que lista los productos de una categoría | | |
+| Escribir la llamada que crea un producto | | |
+| Decir qué recibe si el precio es inválido | | |
+| Decir qué recibe si pide un identificador que no existe | | |
+| Adivinar una ruta que no le has enseñado | | |
+
+Cada hueco de la tercera columna es un agujero de tu contrato, no un despiste de la persona. Corrígelo y vuelve a probarlo.
+
+#### Paso 5 · La aplicación sin puerto · 15 min
+
+1. Escribe un pequeño programa que importe `crearApp()` y le haga una petición **sin llamar a `listen`**.
+2. Comprueba que ningún puerto queda ocupado: arráncalo dos veces seguidas y mira que no da `EADDRINUSE`.
+3. Ahora haz lo contrario: mete el `listen` dentro de `app.js` y repite el apartado 1. Anota qué ocurre.
+4. Devuelve el `listen` a su sitio.
+5. Escribe en un comentario por qué esta separación importa más de lo que parece. En la sesión 5 la vas a necesitar para cada prueba que escribas.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos tratan el contrato como lo que es: algo que otros usan y que no se puede cambiar a la ligera.
+
+##### Reto 1 · La versión 2 sin romper la 1
+
+Tu API ya la usa alguien. Ahora hay que cambiar algo que rompe el contrato: el campo `precio` pasa a ser un objeto con `importe` y `moneda`.
+
+1. Enumera **todo** lo que se rompería en un cliente que ya funciona.
+2. Decide una estrategia de versionado. Hay al menos tres: en la ruta, en una cabecera, o por parámetro. Busca qué hace cada una, elige y justifica.
+3. Implementa la que elijas de modo que `/api/v1/productos` siga devolviendo lo de antes y `/api/v2/productos` devuelva la forma nueva. Reutiliza la lógica: lo que cambia es la representación, no los datos.
+4. ¿Durante cuánto tiempo mantendrías la v1, y cómo avisarías de que va a desaparecer? Busca qué cabecera existe para eso.
+5. Hay cambios que **no** rompen el contrato y se pueden hacer sin versionar. Escribe tres ejemplos y explica por qué son seguros.
+6. Explica en tres líneas por qué esto no es una preocupación exagerada para un proyecto de clase. La respuesta tiene que ver con quién consume tu API a partir de la sesión 4: tu propio cliente.
+
+##### Reto 2 · Una decisión discutible en una API real
+
+Elige una API pública con documentación abierta y búscale una decisión de diseño que no seguirías.
+
+1. Documéntala: qué hace, con qué rutas, y qué te parece discutible.
+2. Busca si hay una razón histórica o técnica detrás. Muchas decisiones raras lo son por compatibilidad con algo anterior, y eso cambia el juicio.
+3. Escribe cómo la harías tú, con la tabla de rutas equivalente.
+4. Enumera qué perdería tu versión respecto a la original. Siempre se pierde algo: si no encuentras nada, no has entendido la decisión original.
+5. Busca en la misma API una decisión que al principio te pareciera rara y que, al mirarla despacio, resulte acertada. Explícala.
+6. Compara esa API con tu contrato: ¿qué le copiarías?
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Aplicación separada del arranque y rutas en su router.</span></div>
-  <div><strong>Si lo tienes</strong><span>Monta la API bajo <code>/api/v1</code> cambiando una sola línea.</span></div>
-  <div><strong>Reto</strong><span>Escribe un pequeño programa que importe la aplicación y le haga una petición sin levantar el puerto.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>La tabla de rutas de tu proyecto con siete entradas, el contrato completo con su formato de error, y la aplicación separada del arranque.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla del paso 4 contestada y sus agujeros corregidos, y la API montada bajo <code>/api/v1</code> cambiando una línea.</span></div>
+  <div><strong>Reto</strong><span>El versionado implementado con las dos versiones conviviendo, o el análisis razonado de una API real.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 1</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Tu API está diseñada por recursos y escrita como contrato.</li>
-    <li>Todos los errores comparten forma.</li>
-    <li>Cada recurso tiene su router.</li>
+    <li>Los filtros van en la cadena de consulta, no en rutas nuevas.</li>
+    <li>Todos los errores comparten forma, con su código propio.</li>
+    <li>Distingues 400 de 404 en la misma ruta.</li>
+    <li>Cada recurso tiene su router, con rutas relativas.</li>
     <li>La aplicación se puede crear sin arrancarla.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué las rutas no llevan verbos, y dónde van los filtros?</li>
+    <li>¿Qué significa que el servidor no guarde estado?</li>
+    <li>¿Qué código devuelve una creación correcta, y qué cabecera la acompaña?</li>
+    <li>¿Qué responde <code>/api/productos/abc</code>, y por qué no un 404?</li>
+    <li>¿Qué operaciones se pueden repetir sin consecuencias, y cuál no?</li>
+    <li>¿Por qué la aplicación se crea en un fichero y se arranca en otro?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Para poder importarla en las pruebas sin ocupar un puerto.</p>
-  <p>2 · Relativas al punto donde se monta el router.</p>
-  <p>3 · El manejador de errores, después incluso del 404.</p>
+  <p>1 · Porque el verbo ya lo aporta el método HTTP; los filtros van en la cadena de consulta, porque no son recursos distintos.</p>
+  <p>2 · Que no recuerda nada entre peticiones: cada una trae todo lo que necesita.</p>
+  <p>3 · Un 201, con la cabecera <code>Location</code>.</p>
+  <p>4 · Un 400: la petición está mal formada, no es que el recurso no exista.</p>
+  <p>5 · GET, PUT y DELETE se pueden repetir; POST crea otro recurso cada vez.</p>
+  <p>6 · Para poder importarla en las pruebas sin ocupar un puerto.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 1 · 5–10 minutos</p>
@@ -515,6 +475,7 @@ crearApp().listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`)
     <li>¿Por qué la aplicación se crea en un fichero y se arranca en otro?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 2 · El CRUD completo
