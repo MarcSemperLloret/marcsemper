@@ -182,27 +182,31 @@ Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada blo
 
 ## Sesión 1 · El entorno
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Qué es Node y qué cambia</strong>, <strong>Argumentos, entorno y salida</strong> y <strong>Módulos y estructura del proyecto</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Qué es Node y qué cambia
+<p class="lead">Tres horas. Media hora para entender qué desaparece y qué aparece al sacar JavaScript del navegador, y dos horas y media montando un proyecto de Node con su configuración fuera del código y sus responsabilidades separadas.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es Node.js, qué desaparece y qué aparece respecto al navegador.</li>
-    <li><strong>2. Haz:</strong> Instala, comprueba la versión y ejecuta tus primeros programas.</li>
-    <li><strong>3. Comprueba:</strong> Sabes qué código de la UD3 funciona aquí y cuál no.</li>
+    <li><strong>1. Aprende:</strong> Qué es Node.js, qué desaparece y qué aparece respecto al navegador, cómo recibe datos un programa de terminal y cómo se organiza un proyecto por responsabilidades.</li>
+    <li><strong>2. Haz:</strong> Ejecuta tus primeros programas, escribe uno configurable desde el entorno y estructura el proyecto que usarás toda la unidad.</li>
+    <li><strong>3. Comprueba:</strong> La lógica de la UD3 funciona aquí sin tocar una coma, y ninguna clave está escrita en el código.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Qué partes de tu código de la UD4 crees que no funcionarán fuera del navegador?</li>
-    <li>¿Y cuáles funcionarán sin tocar nada?</li>
-    <li>¿Quién ejecuta el código de un servidor, y durante cuánto tiempo?</li>
+    <li>¿Qué partes de tu código de la UD4 crees que no funcionarán fuera del navegador? ¿Y cuáles funcionarán sin tocar nada?</li>
+    <li>¿Dónde guardarías una contraseña de base de datos?</li>
+    <li>¿Cómo sabe otro programa si el tuyo ha terminado bien?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+El lenguaje es el mismo; cambia todo lo que lo rodea. Hoy se inventaría qué se pierde, qué se gana, y por qué la parte de tu código que no sabía nada de la página es la única que viaja intacta.
 
 #### Un motor sin navegador
 
@@ -214,26 +218,19 @@ node -e "console.log('Hola desde Node')"
 node src/hola.js
 ```
 
-Existe también un modo interactivo, equivalente a la consola del navegador: la orden `node` sin argumentos abre un intérprete donde se evalúan expresiones.
-
-#### Lo que ya no existe
-
 ```javascript
 document.querySelector("h1");   // ReferenceError: document is not defined
 window.localStorage;            // ReferenceError
 alert("Hola");                  // ReferenceError
 ```
 
-No es que estén rotos: es que no tienen sentido. No hay documento ni ventana. Todo el módulo `catalogo.js` de la UD3, en cambio, funciona aquí sin cambiar una coma, porque solo trabaja con datos. Ese es, otra vez, el premio de haber separado la lógica de la página.
-
-#### Lo que aparece
+No están rotos: no tienen sentido. No hay documento ni ventana. Todo el módulo `catalogo.js` de la UD3, en cambio, funciona aquí sin cambiar una coma, porque solo trabaja con datos. Ese es, otra vez, el premio de haber separado la lógica de la página.
 
 ```javascript
 process.argv;              // los argumentos de la llamada
 process.env;               // las variables de entorno
 process.exit(1);           // terminar con un código
 process.cwd();             // desde dónde se ejecutó
-console.log(import.meta.url);   // el fichero actual
 ```
 
 Los módulos del sistema se importan con el prefijo `node:`:
@@ -248,77 +245,13 @@ import http from "node:http";
 
 Deja claro que el módulo es del propio Node y no una dependencia descargada. Sin él también funciona, pero con él nadie puede confundir tu importación con un paquete externo instalado por alguien.
 
-#### Un programa que empieza y termina
-
 <div class="rule">
   <p class="rule-label">Un programa de Node no es una página</p>
   <p>Una página vive mientras esté abierta y reacciona a lo que hace una persona. Un programa de Node se ejecuta, hace su trabajo y termina; salvo que sea un servidor, y entonces se queda escuchando hasta que alguien lo pare.</p>
   <p>De ahí una diferencia práctica: un fallo en el navegador estropea la experiencia de quien visita la web; un fallo no capturado en un servidor puede tumbarlo para todo el mundo a la vez.</p>
 </div>
 
-#### Tarea 1 · Primeros programas
-
-1. Comprueba tu versión de Node; debe ser 22 o superior.
-2. Crea `src/hola.js` que salude e imprima la versión desde `process.version`.
-3. Copia tu `catalogo.js` de la UD3 y ejecuta sus funciones desde Node.
-4. Intenta usar `document` y anota el error exacto.
-5. Imprime `process.cwd()` ejecutando desde dos carpetas distintas y explica la diferencia.
-6. Prueba el modo interactivo con tres expresiones.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Node instalado, dos programas ejecutados y las funciones de la UD3 funcionando.</span></div>
-  <div><strong>Si lo tienes</strong><span>Escribe un programa que muestre un resumen del catálogo por consola.</span></div>
-  <div><strong>Reto</strong><span>Haz una lista de qué partes de tu proyecto de la UD4 funcionarían aquí y cuáles no, con la razón.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Ejecutas programas desde la terminal.</li>
-    <li>Explicas qué desaparece y qué aparece respecto al navegador.</li>
-    <li>Reutilizas sin cambios la lógica de la UD3.</li>
-    <li>Importas módulos del sistema con el prefijo <code>node:</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué no existe <code>document</code> en Node?</li>
-    <li>¿Qué guarda <code>process.argv</code>?</li>
-    <li>¿Qué indica el prefijo <code>node:</code> en una importación?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque no hay documento: Node ejecuta JavaScript sin navegador.</p>
-  <p>2 · Los argumentos con los que se llamó al programa, empezando por el ejecutable y el fichero.</p>
-  <p>3 · Que el módulo es del propio Node y no una dependencia instalada.</p>
-</details>
-
-
-### Bloque 2 · Argumentos, entorno y salida
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo recibe datos un programa de terminal y cómo comunica su resultado.</li>
-    <li><strong>2. Haz:</strong> Un programa que hace cosas distintas según cómo lo llames.</li>
-    <li><strong>3. Comprueba:</strong> Devuelve el código de salida correcto y no imprime secretos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cómo le pasarías un dato a un programa que no tiene interfaz?</li>
-    <li>¿Dónde guardarías una contraseña de base de datos?</li>
-    <li>¿Cómo sabe otro programa si el tuyo ha terminado bien?</li>
-  </ol>
-</div>
-
-#### Argumentos
+#### Cómo entran los datos
 
 ```bash
 node src/cli.js listar
@@ -335,22 +268,11 @@ console.log(argumentos);   // ["teclado"]
 
 Las dos primeras posiciones son siempre el ejecutable y el fichero, por eso se descartan. Y, como todo lo que entra desde fuera, **los argumentos son texto**: un precio hay que convertirlo y comprobarlo, igual que hacías con los campos de formulario.
 
-#### Variables de entorno
+La configuración, en cambio, no entra por argumentos sino por el entorno:
 
 ```javascript
 const puerto = Number(process.env.PUERTO ?? 3000);
 const entorno = process.env.NODE_ENV ?? "development";
-```
-
-Sus valores se asignan en el arranque. El procedimiento **depende de la terminal**, y es una de las cosas que más tiempo hacen perder en clase:
-
-```bash
-PUERTO=4000 node src/servidor.js          # Git Bash, macOS, Linux
-```
-
-```text
-$env:PUERTO="4000"; node src/servidor.js   PowerShell
-set PUERTO=4000 && node src/servidor.js    cmd de Windows
 ```
 
 <div class="rule">
@@ -359,7 +281,7 @@ set PUERTO=4000 && node src/servidor.js    cmd de Windows
   <p>Nota además el <code>?? 3000</code>: un valor por defecto razonable para que el programa arranque sin configurar nada. El que no debe tener valor por defecto es un secreto: si falta, el programa debe negarse a arrancar.</p>
 </div>
 
-Por eso, en cuanto haya más de una variable, se pasan por fichero. Desde Node 20 se puede cargar un `.env` sin instalar nada, y la orden es idéntica en las tres terminales:
+En cuanto haya más de una variable, se pasan por fichero. Desde Node 20 se puede cargar un `.env` sin instalar nada, y la orden es idéntica en las tres terminales:
 
 ```bash
 node --env-file=.env src/servidor.js
@@ -367,7 +289,7 @@ node --env-file=.env src/servidor.js
 
 Al repositorio se incorpora `.env.example`, con las claves y sin los valores. El `.env` real va al `.gitignore`.
 
-#### Entrada y salida
+#### Cómo sale el resultado
 
 ```javascript
 console.log("Resultado");      // salida estándar
@@ -382,68 +304,6 @@ process.exit(1);   // ha fallado
 El número con el que termina un programa. Cero significa éxito; cualquier otro, fallo. Es como se enteran las herramientas que encadenan programas —un script, un sistema de integración continua— de si deben seguir o pararse.
 
 Separar `console.log` de `console.error` importa por lo mismo: permite que quien use tu programa redirija los resultados a un fichero y siga viendo los errores.
-
-#### Tarea 2 · Un programa configurable
-
-1. Escribe `src/cli.js` que acepte los comandos `listar`, `buscar` y `ayuda`.
-2. Si no se pasa comando, muestra la ayuda y termina con código 1.
-3. Lee de una variable de entorno la ruta del fichero de datos, con un valor por defecto.
-4. Convierte y valida los argumentos numéricos.
-5. Comprueba el código de salida tras cada ejecución.
-6. Crea `.env.example` y añade `.env` al `.gitignore`.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres comandos, ayuda, y códigos de salida correctos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Acepta opciones con guiones, como <code>--formato=json</code>.</span></div>
-  <div><strong>Reto</strong><span>Haz que el programa se niegue a arrancar si falta una variable obligatoria, con un mensaje claro.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Lees argumentos y los conviertes al leerlos.</li>
-    <li>La configuración vive en el entorno, no en el código.</li>
-    <li>Distingues salida estándar de salida de error.</li>
-    <li>Terminas con el código de salida adecuado.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué se descartan las dos primeras posiciones de <code>process.argv</code>?</li>
-    <li>¿Qué significa un código de salida distinto de cero?</li>
-    <li>¿Qué se sube al repositorio: <code>.env</code> o <code>.env.example</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque son el ejecutable de Node y la ruta del fichero ejecutado.</p>
-  <p>2 · Que el programa ha terminado con un fallo.</p>
-  <p>3 · Solo el de ejemplo, con las claves y sin los valores reales.</p>
-</details>
-
-
-### Bloque 3 · Módulos y estructura del proyecto
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se organizan los módulos en Node y qué diferencia hay con los dos sistemas que verás.</li>
-    <li><strong>2. Haz:</strong> Estructura tu proyecto en carpetas con una responsabilidad cada una.</li>
-    <li><strong>3. Comprueba:</strong> Cada fichero se puede explicar en una frase.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>En la UD3 separaste datos, lógica y uso. ¿Sigue valiendo aquí?</li>
-    <li>¿Qué parte de un servidor cambiaría si mañana los datos vinieran de una base de datos?</li>
-    <li>¿Has visto <code>require</code> en algún tutorial? ¿Qué crees que es?</li>
-  </ol>
-</div>
 
 #### Dos sistemas de módulos
 
@@ -460,7 +320,7 @@ Para usar ESM basta una línea en `package.json`:
 
 Verás muchísimo `require` por ahí. Funciona, pero es el sistema heredado: si una respuesta de IA o un tutorial te lo dan, tradúcelo en lugar de mezclar los dos.
 
-Una diferencia práctica: en ESM no existen `__dirname` ni `__filename`. Su equivalente:
+Dos diferencias prácticas. En ESM no existen `__dirname` ni `__filename`, y la extensión es obligatoria en las rutas relativas, igual que en el navegador:
 
 ```javascript
 import { dirname } from "node:path";
@@ -468,8 +328,6 @@ import { fileURLToPath } from "node:url";
 
 const aqui = dirname(fileURLToPath(import.meta.url));
 ```
-
-Otra: en Node **la extensión es obligatoria** en las rutas relativas, igual que en el navegador.
 
 #### Estructura por responsabilidad
 
@@ -489,38 +347,165 @@ Otra: en Node **la extensión es obligatoria** en las rutas relativas, igual que
   <p>Esa separación es la que hace que el cambio de la UD6 —pasar del fichero a otra forma de guardar— afecte a un solo módulo. Es también, exactamente, la arquitectura por capas del módulo de servidor.</p>
 </div>
 
-#### Tarea 3 · Estructurar el proyecto
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · montar el proyecto de la unidad</p>
+
+Lo que montes hoy es el esqueleto sobre el que trabajarás las seis sesiones. Los dos últimos pasos comprueban que la separación que has hecho es real y no solo una disposición de carpetas.
+
+#### Paso 1 · Primeros programas · 30 min
+
+1. Comprueba tu versión de Node; debe ser 22 o superior.
+2. Crea `src/hola.js` que salude e imprima la versión desde `process.version`.
+3. Copia tu `catalogo.js` de la UD3 y ejecuta sus funciones desde Node.
+4. Intenta usar `document` y anota el error exacto.
+5. Imprime `process.cwd()` ejecutando desde dos carpetas distintas y explica la diferencia.
+6. Prueba el modo interactivo —la orden `node` sin argumentos— con tres expresiones.
+
+**Antes de continuar:** tus funciones de la UD3 devuelven lo mismo aquí que devolvían en el navegador, y no has tenido que cambiar ni una línea.
+
+#### Paso 2 · Un programa configurable · 40 min
+
+1. Escribe `src/cli.js` que acepte los comandos `listar`, `buscar` y `ayuda`.
+2. Si no se pasa comando, muestra la ayuda y termina con código 1.
+3. Lee de una variable de entorno la ruta del fichero de datos, con un valor por defecto.
+4. Convierte y valida los argumentos numéricos.
+5. Comprueba el código de salida tras cada ejecución. En Git Bash es `echo $?`; en PowerShell, `$LASTEXITCODE`.
+6. Crea `.env.example` y añade `.env` al `.gitignore`.
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · la variable de entorno no llega</summary>
+  <p>La forma de asignarla <strong>depende de la terminal</strong>, y es de las cosas que más tiempo hacen perder:</p>
+  <pre><code>PUERTO=4000 node src/servidor.js           Git Bash, macOS, Linux
+$env:PUERTO="4000"; node src/servidor.js   PowerShell
+set PUERTO=4000 &amp;&amp; node src/servidor.js    cmd de Windows</code></pre>
+  <p>Si tienes dudas sobre cuál estás usando, imprime <code>process.env</code> entero y mira si tu variable aparece. En cuanto haya más de una, pasa al fichero <code>.env</code>, cuya orden sí es idéntica en las tres.</p>
+</details>
+
+#### Paso 3 · Estructurar el proyecto · 40 min
+
+Es el trabajo central de la sesión.
 
 1. Crea la carpeta `mi-api/` con `package.json` y `"type": "module"`.
 2. Crea `src/` con `almacen.js`, `catalogo.js` y `cli.js`.
-3. Mueve ahí tus funciones de la UD3 sin modificarlas.
-4. Escribe en un comentario, en cada fichero, la frase que lo describe.
-5. Calcula la ruta de `datos/productos.json` a partir de la posición del fichero.
-6. Comprueba que `cli.js` funciona desde cualquier carpeta.
+3. Mueve ahí tus funciones de la UD3 **sin modificarlas**.
+4. Escribe en un comentario, en cada fichero, la frase que lo describe. Si necesitas dos frases, el fichero hace dos cosas.
+5. Calcula la ruta de `datos/productos.json` a partir de la posición del fichero, no de dónde se ejecute.
+6. Comprueba que `cli.js` funciona llamándolo desde otra carpeta distinta.
+
+El apartado 6 es el que delata el error clásico: una ruta relativa al directorio de trabajo funciona mientras ejecutes desde la raíz del proyecto y falla en cuanto alguien lo llama desde otro sitio.
+
+#### Paso 4 · Qué sobrevive de la UD4 · 20 min
+
+Recorre tu proyecto del navegador y clasifica cada módulo:
+
+| Módulo de la UD4 | ¿Funciona en Node? | Por qué | Qué habría que cambiar |
+| ---------------- | ------------------ | ------- | ---------------------- |
+| `datos.js` | | | |
+| `catalogo.js` | | | |
+| `formato.js` | | | |
+| `render.js` | | | |
+| `dom.js` | | | |
+| `estado.js` | | | |
+| `main.js` | | | |
+
+Cuenta cuántos pasan intactos. Ese número es la medida de lo bien separado que estaba tu código, y no depende de lo listo que fuera: depende de si cada módulo sabía solo de lo suyo.
+
+Los dos casos interesantes son `formato.js` y `estado.js`. Míralos con cuidado antes de decidir.
+
+#### Paso 5 · El grafo de dependencias · 20 min
+
+Dibuja qué módulo importa a cuál, con una flecha por `import`.
+
+1. ¿Alguna flecha va de `catalogo.js` hacia `almacen.js`? Si la hay, tu lógica sabe de dónde vienen los datos, y eso es lo que hoy queremos evitar.
+2. ¿Hay ciclos?
+3. ¿Qué módulo es el único que conoce el sistema de ficheros?
+4. Imagina que mañana los datos vienen de una base de datos. Marca en el dibujo **todos** los ficheros que habría que tocar. Si es más de uno, señala por qué.
+5. Guarda el dibujo: en la sesión 5 lo compararás con el del servidor ya montado.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto trata la configuración como lo que es: una parte del programa que también falla.
+
+##### Reto 1 · El programa que se niega a arrancar
+
+Un servidor que arranca sin su clave de base de datos no está funcionando: está esperando a fallar en la primera petición, en producción y de madrugada.
+
+1. Escribe un módulo `config.js` que lea todas las variables de entorno **en un solo sitio** y las exporte ya convertidas y validadas.
+2. Distingue tres clases de variable: las que tienen un valor por defecto razonable, las obligatorias sin valor por defecto, y las opcionales que pueden faltar.
+3. Si falta una obligatoria, el programa debe terminar **antes de hacer nada**, con un mensaje que diga qué variable falta y cómo se define. Usa el código de salida adecuado.
+4. Valida también los tipos: un puerto que llega como `"abc"` debe fallar igual de pronto que uno que falta.
+5. Comprueba tu `config.js` en los cuatro escenarios: todo definido, sin la obligatoria, con el puerto no numérico, y con una variable opcional ausente.
+6. Escribe en tres líneas por qué esta comprobación va en el arranque y no en el punto donde se usa cada variable. La respuesta conecta con «validar en el borde» de la UD3.
+
+##### Reto 2 · Traducir de CommonJS
+
+Este fragmento es el que te va a dar cualquier tutorial antiguo o cualquier respuesta de IA que no le hayas acotado la versión.
+
+```javascript
+const fs = require("fs");
+const path = require("path");
+const { buscar } = require("./catalogo");
+
+const RUTA = path.join(__dirname, "..", "datos", "productos.json");
+
+function cargar() {
+  const texto = fs.readFileSync(RUTA, "utf8");
+  return JSON.parse(texto);
+}
+
+module.exports = { cargar, RUTA };
+```
+
+1. Tradúcelo a ESM. Hay **cuatro** cosas que cambiar, y una de ellas no es una traducción directa: `__dirname` no existe.
+2. La función usa la versión síncrona de la lectura. Averigua qué significa eso en un servidor y reescríbela con la API de promesas. Explica en dos líneas por qué en un programa de terminal daba igual y en un servidor no.
+3. Comprueba qué pasa si dejas `require` en un fichero de un proyecto con `"type": "module"`. Anota el error exacto: lo vas a ver más de una vez.
+4. Comprueba también el caso inverso: un `import` en un proyecto sin `"type": "module"`.
+5. Explica en tres líneas por qué no conviene mezclar los dos sistemas en un mismo proyecto, aunque técnicamente haya formas de hacerlo convivir.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Proyecto estructurado, con ESM y rutas que no dependen de dónde se ejecute.</span></div>
-  <div><strong>Si lo tienes</strong><span>Traduce a ESM un fragmento escrito con <code>require</code>.</span></div>
-  <div><strong>Reto</strong><span>Dibuja el grafo de dependencias y comprueba que la lógica no depende de nada de infraestructura.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Node instalado, la lógica de la UD3 funcionando intacta, el CLI con tres comandos y códigos de salida correctos, y el proyecto estructurado con ESM.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de módulos de la UD4 clasificada y el grafo de dependencias dibujado sin flechas de la lógica hacia la infraestructura.</span></div>
+  <div><strong>Reto</strong><span>El <code>config.js</code> que se niega a arrancar probado en cuatro escenarios, o el fragmento de CommonJS traducido y reescrito con promesas.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 1</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Ejecutas programas de Node y les pasas datos.</li>
-    <li>La configuración está fuera del código.</li>
-    <li>Tu proyecto tiene una estructura con responsabilidades claras.</li>
-    <li>Usas ESM y sabes reconocer CommonJS.</li>
+    <li>Ejecutas programas desde la terminal y les pasas datos.</li>
+    <li>Reutilizas sin cambios la lógica de la UD3.</li>
+    <li>Importas módulos del sistema con el prefijo <code>node:</code>.</li>
+    <li>La configuración vive en el entorno, y <code>.env</code> no está en el repositorio.</li>
+    <li>Terminas con el código de salida adecuado y separas salida de error.</li>
+    <li>Tu proyecto usa ESM y cada fichero se explica en una frase.</li>
   </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué no existe <code>document</code> en Node?</li>
+    <li>¿Qué indica el prefijo <code>node:</code> en una importación?</li>
+    <li>¿Por qué se descartan las dos primeras posiciones de <code>process.argv</code>?</li>
+    <li>¿Qué significa un código de salida distinto de cero?</li>
+    <li>¿Qué se sube al repositorio: <code>.env</code> o <code>.env.example</code>?</li>
+    <li>¿Cómo se activa ESM en un proyecto de Node?</li>
+  </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Añadiendo <code>"type": "module"</code> al <code>package.json</code>.</p>
-  <p>2 · Con <code>import.meta.url</code>, convertido a ruta con las utilidades de <code>node:url</code> y <code>node:path</code>.</p>
-  <p>3 · Para que la misma lógica sirva desde la terminal, desde el servidor y desde las pruebas.</p>
+  <p>1 · Porque no hay documento: Node ejecuta JavaScript sin navegador.</p>
+  <p>2 · Que el módulo es del propio Node y no una dependencia instalada.</p>
+  <p>3 · Porque son el ejecutable de Node y la ruta del fichero ejecutado.</p>
+  <p>4 · Que el programa ha terminado con un fallo.</p>
+  <p>5 · Solo el de ejemplo, con las claves y sin los valores reales.</p>
+  <p>6 · Añadiendo <code>"type": "module"</code> al <code>package.json</code>.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 1 · 5–10 minutos</p>
@@ -531,6 +516,7 @@ Otra: en Node **la extensión es obligatoria** en las rutas relativas, igual que
     <li>¿Dónde vive el puerto de tu servidor, y por qué no está escrito en el código?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 2 · npm y el proyecto
