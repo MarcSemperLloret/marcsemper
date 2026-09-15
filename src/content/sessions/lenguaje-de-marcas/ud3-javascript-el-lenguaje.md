@@ -654,16 +654,14 @@ Escribe **una sola función** de validación que decida, para cada uno, si es un
 
 ## Sesión 2 · Decisiones y repeticiones
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Condicionales</strong>, <strong>Bucles</strong> y <strong>Taller · programas con reglas</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Condicionales
+<p class="lead">Tres horas. Media hora para escribir decisiones y repeticiones sin dejar casos fuera, y dos horas y media traduciendo reglas de negocio a código y resolviendo problemas completos.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se escribe una decisión: <code>if</code>, <code>else if</code>, <code>switch</code> y el operador ternario.</li>
-    <li><strong>2. Haz:</strong> Traduce a código las reglas de negocio de tu proyecto.</li>
-    <li><strong>3. Comprueba:</strong> Tus condiciones cubren todos los casos, incluidos los límites.</li>
+    <li><strong>1. Aprende:</strong> Cómo se escribe una decisión, por qué el orden de las ramas es parte de la lógica, qué bucle corresponde a cada repetición y cómo se descompone un enunciado antes de programar.</li>
+    <li><strong>2. Haz:</strong> Traduce las reglas de tu proyecto, recorre tu catálogo y resuelve cuatro problemas completos.</li>
+    <li><strong>3. Comprueba:</strong> Cada programa se prueba con casos normales, límite y absurdos.</li>
   </ol>
 </div>
 
@@ -675,6 +673,12 @@ Escribe **una sola función** de validación que decida, para cada uno, si es un
     <li>¿Qué valores hacen que un <code>if</code> no entre aunque el dato exista?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Los condicionales y los bucles se escriben en diez minutos. Lo que ocupa la sesión es lo que casi nadie hace: comprobar la frontera, el caso vacío y el orden de las ramas. Ahí está prácticamente el total de los errores.
 
 #### La decisión más simple
 
@@ -719,96 +723,15 @@ Casi todos los errores de condicionales están en la frontera. Para la regla «e
 
 Una advertencia: `10 <= n <= 20` **no** hace lo que parece. Se evalúa por partes y acaba comparando un booleano con un número.
 
-#### El ternario, para elegir un valor
+Para elegir entre dos valores está el ternario, que solo mejora la lectura cuando el `if` no hace otra cosa:
 
 ```javascript
 const etiqueta = stock > 0 ? "Disponible" : "Agotado";
 ```
 
-Sirve cuando el `if` solo elige entre dos valores. Si dentro hay varias instrucciones, o si necesitas anidar ternarios, usa un `if`: se lee mucho mejor.
+Si dentro hay varias instrucciones, o si necesitas anidar ternarios, usa un `if`.
 
-#### `switch`, cuando comparas una cosa contra una lista
-
-```javascript
-switch (categoria) {
-  case "teclado":
-  case "raton":
-    garantia = 24;
-    break;
-  case "monitor":
-    garantia = 36;
-    break;
-  default:
-    garantia = 12;
-}
-```
-
-Compara con el triple igual, así que `"3"` no coincide con `3`. Si se omite un `break`, la ejecución continúa en el caso siguiente: es la fuente de errores clásica de esta estructura.
-
-#### Tarea 4 · Las reglas de tu proyecto
-
-En `js/main.js`:
-
-1. Escribe en comentarios cuatro reglas de negocio de tu tema, en castellano.
-2. Tradúcelas a condicionales.
-3. Añade el cálculo de un estado con tres posibles valores.
-4. Escribe una tabla de casos límite y comprueba cada uno.
-5. Convierte uno de los `if` de dos ramas en un ternario.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Cuatro reglas traducidas, con sus límites comprobados.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade una regla que combine dos condiciones con «y» y otra con «o».</span></div>
-  <div><strong>Reto</strong><span>Te dan un <code>if</code> con las ramas en mal orden: encuentra el caso que nunca se alcanza.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Traduces una regla escrita en castellano a una condición correcta.</li>
-    <li>Compruebas siempre el valor de la frontera.</li>
-    <li>Ordenas las ramas de lo específico a lo general.</li>
-    <li>Sabes cuándo un ternario mejora la lectura y cuándo la empeora.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>«Envío gratis a partir de 50 €»: ¿qué operador?</li>
-    <li>¿Por qué <code>10 &lt;= n &lt;= 20</code> no funciona?</li>
-    <li>¿Qué ocurre si olvidas un <code>break</code> en un <code>switch</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Mayor o igual: el 50 exacto entra.</p>
-  <p>2 · Porque se evalúa por partes: la primera comparación da un booleano, y después se compara ese booleano con 20.</p>
-  <p>3 · La ejecución continúa en el caso siguiente y se aplican también sus instrucciones.</p>
-</details>
-
-
-### Bloque 2 · Bucles
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué bucles existen y cuál corresponde a cada tipo de repetición.</li>
-    <li><strong>2. Haz:</strong> Recorre una lista de productos y calcula totales y recuentos.</li>
-    <li><strong>3. Comprueba:</strong> Ningún bucle se queda colgado y todos tratan bien la lista vacía.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué cosas repetirías en tu proyecto: mostrar productos, sumar precios, buscar uno?</li>
-    <li>¿Cuántas veces se repite cada una: un número fijo, o «hasta que…»?</li>
-    <li>¿Qué debería mostrar tu web si la lista está vacía?</li>
-  </ol>
-</div>
-
-#### Las tres formas, y cuándo se usa cada una
+#### Las tres formas de repetir
 
 ```javascript
 // Un número conocido de vueltas, con índice
@@ -835,9 +758,7 @@ while (restante > 0) {
 | `while` | No sabes de antemano cuántas vueltas serán |
 | `for...in` | Casi nunca: recorre claves, y trae sorpresas en arrays |
 
-#### El acumulador
-
-El patrón que más vas a repetir:
+El patrón que más vas a repetir es el **acumulador**:
 
 ```javascript
 const precios = [89.9, 24.5, 199, 12.75];
@@ -849,7 +770,7 @@ for (const precio of precios) {
 console.log(total.toFixed(2));   // "326.15"
 ```
 
-El recuento con condición se escribe así:
+El recuento con condición es una variante del mismo patrón:
 
 ```javascript
 let baratos = 0;
@@ -863,18 +784,6 @@ for (const precio of precios) {
   <p>El fichero está bien escrito, el navegador se queda bloqueado y no hay ningún mensaje rojo. Ocurre cuando la condición del <code>while</code> nunca llega a ser falsa, casi siempre porque se olvidó actualizar la variable de control.</p>
   <p>Antes de ejecutar un <code>while</code>, responde a esto: ¿qué línea, dentro del bucle, acerca la condición a hacerse falsa? Si no la encuentras, todavía no ejecutes.</p>
 </div>
-
-#### Salir antes: `break` y `continue`
-
-```javascript
-for (const producto of productos) {
-  if (producto.stock === 0) continue;   // salta este y sigue
-  if (producto.precio > 500) break;     // deja de recorrer
-  console.log(producto.nombre);
-}
-```
-
-Úsalos con moderación: un bucle con cuatro `break` repartidos es más difícil de seguir que un bucle con una condición bien escrita.
 
 #### El caso vacío
 
@@ -892,68 +801,7 @@ Un bucle sobre una lista vacía no falla: simplemente no se ejecuta. Lo que fall
 const media = total / productos.length;   // 0 / 0 → NaN
 ```
 
-#### Tarea 5 · Recorrer el catálogo
-
-Con una lista de al menos seis precios de tu tema:
-
-1. Calcula el total y la media, tratando el caso de lista vacía.
-2. Cuenta cuántos elementos superan un umbral.
-3. Encuentra el más caro sin usar métodos de array todavía.
-4. Escribe un bucle que se detenga en el primero que cumpla una condición.
-5. Provoca un bucle infinito a propósito, obsérvalo, y explica qué faltaba.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Total, media y recuento correctos, y la lista vacía sin <code>NaN</code>.</span></div>
-  <div><strong>Si lo tienes</strong><span>Calcula el más caro y el más barato en un solo recorrido.</span></div>
-  <div><strong>Reto</strong><span>Recorre dos listas a la vez y detecta qué elementos están en ambas.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Eliges el bucle adecuado y justificas por qué.</li>
-    <li>Usas el patrón acumulador con soltura.</li>
-    <li>Sabes qué hace que un <code>while</code> termine.</li>
-    <li>Tu código no se rompe con una lista vacía.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Cuándo eliges <code>for...of</code> y cuándo un <code>for</code> con índice?</li>
-    <li>¿Qué diferencia hay entre <code>break</code> y <code>continue</code>?</li>
-    <li>¿Cuánto vale la media de una lista vacía, y qué deberías hacer?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>for...of</code> cuando solo necesitas el valor; el clásico cuando necesitas la posición o un salto distinto de uno.</p>
-  <p>2 · <code>break</code> abandona el bucle; <code>continue</code> salta a la vuelta siguiente.</p>
-  <p>3 · <code>NaN</code>, porque divides entre cero. Hay que comprobar la longitud antes y devolver 0 o un aviso.</p>
-</details>
-
-
-### Bloque 3 · Taller · programas con reglas
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se descompone un enunciado en datos, reglas y salida antes de escribir código.</li>
-    <li><strong>2. Haz:</strong> Resuelve cuatro problemas completos combinando lo de la semana.</li>
-    <li><strong>3. Comprueba:</strong> Cada programa se prueba con casos normales, límite y absurdos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Ante un enunciado nuevo, ¿qué es lo primero que escribes?</li>
-    <li>¿Qué tres tipos de caso hay que probar siempre?</li>
-    <li>¿Qué diferencia hay entre «no da error» y «está bien»?</li>
-  </ol>
-</div>
+Ese `NaN` es el resultado más peligroso de la sesión. No detiene el programa, sino que se propaga en silencio como un número más por todo lo que venga después.
 
 #### Antes de escribir código
 
@@ -969,7 +817,75 @@ Con una lista de al menos seis precios de tu tema:
 
 Escribir esas cuatro respuestas cuesta dos minutos y ahorra media hora. Es exactamente el mismo hábito de la UD1, cuando antes de marcar una página decidías qué era cada cosa.
 
-#### Un ejemplo resuelto
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Los dos primeros pasos traducen reglas y recorren datos. El cuarto es el trabajo grande de la sesión, y el quinto es el que hace que lo anterior valga: probar los casos que nadie prueba.
+
+#### Paso 1 · Las reglas de tu proyecto · 30 min
+
+En `js/main.js`:
+
+1. Escribe en comentarios cuatro reglas de negocio de tu tema, en castellano.
+2. Tradúcelas a condicionales.
+3. Añade el cálculo de un estado con tres posibles valores.
+4. Escribe una tabla de casos límite y comprueba cada uno.
+5. Convierte uno de los `if` de dos ramas en un ternario.
+6. Añade una regla que combine dos condiciones con «y», y otra con «o».
+
+<details class="aside aside--extra">
+<summary>Consultar · <code>switch</code>, cuando comparas una cosa contra una lista</summary>
+
+```javascript
+switch (categoria) {
+  case "teclado":
+  case "raton":
+    garantia = 24;
+    break;
+  case "monitor":
+    garantia = 36;
+    break;
+  default:
+    garantia = 12;
+}
+```
+
+Compara con el triple igual, así que `"3"` no coincide con `3`. Si se omite un `break`, la ejecución continúa en el caso siguiente: es la fuente de errores clásica de esta estructura.
+
+</details>
+
+**Antes de continuar:** cada una de las cuatro reglas tiene escrito su valor de frontera y el resultado comprobado en ese valor exacto.
+
+#### Paso 2 · Recorrer el catálogo · 35 min
+
+Con una lista de al menos seis precios de tu tema:
+
+1. Calcula el total y la media, tratando el caso de lista vacía.
+2. Cuenta cuántos elementos superan un umbral.
+3. Encuentra el más caro sin usar métodos de array todavía.
+4. Escribe un bucle que se detenga en el primero que cumpla una condición.
+5. Provoca un bucle infinito a propósito, obsérvalo, y explica qué faltaba.
+6. Calcula el más caro y el más barato en **un solo recorrido**.
+
+<details class="aside aside--extra">
+<summary>Consultar · salir antes con <code>break</code> y <code>continue</code></summary>
+
+```javascript
+for (const producto of productos) {
+  if (producto.stock === 0) continue;   // salta este y sigue
+  if (producto.precio > 500) break;     // deja de recorrer
+  console.log(producto.nombre);
+}
+```
+
+Úsalos con moderación: un bucle con cuatro `break` repartidos es más difícil de seguir que un bucle con una condición bien escrita.
+
+</details>
+
+#### Paso 3 · Un enunciado descompuesto · 15 min
+
+Reproduce este ejemplo y comprueba que entiendes por qué el orden de las reglas cambia el resultado.
 
 > **Enunciado.** Dado un carrito con nombres, precios y unidades, calcula el subtotal, aplica un 10 % de descuento si supera 100 €, suma 4,95 € de envío salvo que el subtotal con descuento llegue a 50 €, y muestra el desglose.
 
@@ -996,33 +912,128 @@ console.log(`Envío:     ${envio.toFixed(2)} €`);
 console.log(`Total:     ${total.toFixed(2)} €`);
 ```
 
-Fíjate en que el código se lee casi como el enunciado. Eso no es casualidad: es consecuencia de haberlo descompuesto antes.
+El código se lee casi como el enunciado, y eso no es casualidad: es consecuencia de haberlo descompuesto antes.
 
-#### Tarea 6 · Cuatro problemas
+Ahora invierte el orden de las dos reglas —decide el envío antes de aplicar el descuento— y busca un carrito en el que el total salga distinto. Ese carrito es la demostración de que el orden era parte del enunciado.
 
-Resuelve estos cuatro. Para cada uno, escribe primero las cuatro respuestas de la descomposición:
+#### Paso 4 · Cuatro problemas · 50 min
+
+Es el trabajo central de la sesión. Para cada uno, escribe primero las cuatro respuestas de la descomposición, y solo después programa.
 
 1. **Escalonado.** Un descuento por unidades: hasta 3, nada; de 4 a 9, un 5 %; de 10 en adelante, un 12 %. Comprueba 3, 4, 9 y 10.
 2. **Validador.** Dada una entrada de texto, decide si es un precio válido: número, positivo, con dos decimales como mucho.
 3. **Resumen.** Dado un catálogo con precios y stock, calcula el valor total del almacén, cuántos productos están agotados y cuál es el más caro disponible.
 4. **Etiquetado.** Genera para cada producto una etiqueta de texto que combine su estado de stock y su franja de precio.
 
+El tercero y el cuarto tienen que funcionar con el catálogo vacío. El segundo reutiliza lo que hiciste en la sesión 1 con las entradas de texto.
+
+#### Paso 5 · La tabla que casi nadie escribe · 20 min
+
+Vuelve sobre los cuatro problemas y sobre las reglas del paso 1, y construye para cada uno esta tabla:
+
+| Caso | Entrada | Salida esperada | Salida real | ¿Coincide? |
+| ---- | ------- | --------------- | ----------- | ---------- |
+| Normal | | | | |
+| Frontera exacta | | | | |
+| Uno menos que la frontera | | | | |
+| Vacío | | | | |
+| Cero | | | | |
+| Negativo | | | | |
+| Texto donde iba un número | | | | |
+
+Rellena la columna «salida esperada» **antes** de ejecutar. Las filas donde no coincidan son los defectos reales de tu programa: uno que no da error y devuelve un número equivocado es peor que uno que se rompe.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos atacan los dos fallos que no se ven: una rama inalcanzable y un enunciado mal leído.
+
+##### Reto 1 · Las ramas que nunca se alcanzan
+
+Este código funciona, no da ningún error y clasifica mal a la mitad de los clientes.
+
+```javascript
+function categoriaCliente(pedidosAnuales, gastoTotal) {
+  if (pedidosAnuales > 0) {
+    return "Cliente activo";
+  } else if (pedidosAnuales > 10 && gastoTotal > 1000) {
+    return "Cliente preferente";
+  } else if (pedidosAnuales > 20) {
+    return "Cliente VIP";
+  } else if (pedidosAnuales === 0 && gastoTotal > 0) {
+    return "Cliente inactivo con historial";
+  } else if (gastoTotal > 5000) {
+    return "Gran cuenta";
+  }
+  return "Sin categoría";
+}
+```
+
+1. Identifica **todas** las ramas que no se pueden alcanzar nunca, y explica para cada una qué rama anterior se las come.
+2. Reordénalo para que cada categoría sea alcanzable, sin cambiar ninguna condición.
+3. Una de las categorías sigue sin poder alcanzarse ni siquiera después de reordenar, porque su condición se solapa con otra de forma irreparable. Encuéntrala y propón qué preguntarías al cliente antes de programarla.
+4. Construye una tabla de seis clientes de prueba que demuestre que tu versión clasifica bien y la original no.
+
+##### Reto 2 · Escribe tú el enunciado
+
+Escribe un enunciado de programa para un compañero, del estilo de los cuatro del paso 4. Debe cumplir tres condiciones: resolverse con lo visto esta semana, tener **al menos dos reglas cuyo orden importe**, y tener un caso límite que no sea evidente en la redacción.
+
+Prepara aparte, sin enseñarlo:
+
+1. Las cuatro respuestas de la descomposición.
+2. Tu solución.
+3. Una tabla de siete casos de prueba, incluidos los raros.
+
+Intercambiad los enunciados y resolvedlos sin preguntar nada. Al comparar:
+
+* ¿La otra persona leyó el mismo orden de reglas que tú tenías en la cabeza? Si no, el enunciado era ambiguo, y eso es un hallazgo sobre tu redacción, no sobre su solución.
+* ¿Encontró el caso límite que habías escondido?
+* ¿Pasa su solución tu tabla de siete casos?
+
+Un enunciado que dos personas leen distinto es exactamente lo que recibirás de un cliente. Detectarlo antes de programar es la habilidad del reto.
+
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Los dos primeros resueltos y probados con sus límites.</span></div>
-  <div><strong>Si lo tienes</strong><span>Los cuatro, con el caso de catálogo vacío tratado.</span></div>
-  <div><strong>Reto</strong><span>Intercambia el enunciado 4 con un compañero y resuelve el suyo sin preguntar nada.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Cuatro reglas traducidas con sus límites, el catálogo recorrido sin <code>NaN</code> en la lista vacía, y los dos primeros problemas resueltos.</span></div>
+  <div><strong>Si lo tienes</strong><span>Los cuatro problemas resueltos y la tabla de casos de prueba rellenada antes de ejecutar.</span></div>
+  <div><strong>Reto</strong><span>Las ramas inalcanzables localizadas y reordenadas, y el enunciado propio intercambiado y resuelto.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 2</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Traduces reglas de negocio a condicionales, con sus límites comprobados.</li>
-    <li>Recorres colecciones con el bucle adecuado.</li>
+    <li>Ordenas las ramas de lo específico a lo general.</li>
+    <li>Recorres colecciones con el bucle adecuado y sabes justificar cuál.</li>
+    <li>Tu código no se rompe ni devuelve <code>NaN</code> con una lista vacía.</li>
     <li>Descompones un enunciado antes de escribir la primera línea.</li>
-    <li>Pruebas con casos normales, límite y absurdos.</li>
+    <li>Tienes la tabla de casos de prueba rellenada antes de ejecutar.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>«Envío gratis a partir de 50 €»: ¿qué operador?</li>
+    <li>¿Por qué <code>10 &lt;= n &lt;= 20</code> no funciona?</li>
+    <li>¿Qué ocurre si olvidas un <code>break</code> en un <code>switch</code>?</li>
+    <li>¿Cuándo eliges <code>for...of</code> y cuándo un <code>for</code> con índice?</li>
+    <li>¿Qué diferencia hay entre <code>break</code> y <code>continue</code>?</li>
+    <li>¿Cuánto vale la media de una lista vacía, y qué deberías hacer?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Mayor o igual: el 50 exacto entra.</p>
+  <p>2 · Porque se evalúa por partes: la primera comparación da un booleano, y después se compara ese booleano con 20.</p>
+  <p>3 · La ejecución continúa en el caso siguiente y se aplican también sus instrucciones.</p>
+  <p>4 · <code>for...of</code> cuando solo necesitas el valor; el clásico cuando necesitas la posición o un salto distinto de uno.</p>
+  <p>5 · <code>break</code> abandona el bucle; <code>continue</code> salta a la vuelta siguiente.</p>
+  <p>6 · <code>NaN</code>, porque divides entre cero. Hay que comprobar la longitud antes y devolver 0 o un aviso.</p>
+</details>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 2 · 5–10 minutos</p>
@@ -1033,6 +1044,7 @@ Resuelve estos cuatro. Para cada uno, escribe primero las cuatro respuestas de l
     <li>Un <code>while</code> no termina nunca: nombra la causa más probable y cómo la comprobarías.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 3 · Funciones y depuración
