@@ -196,16 +196,14 @@ Los conceptos nuevos avanzan de **ejemplo resuelto → ejemplo incompleto → pr
 
 ## Sesión 1 · Cómo se aplica CSS y quién gana
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Nuestro primer CSS</strong>, <strong>Selectores</strong> y <strong>Cascada, herencia y especificidad</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Nuestro primer CSS
+<p class="lead">Tres horas. Media hora para entender cómo se enlaza una hoja, cómo se elige un selector y qué decide un conflicto entre dos reglas, y dos horas y media dando estilo a tu sitio y diagnosticando quién gana.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se enlaza una hoja de estilos, de qué partes se compone una regla y por qué existen tres formas de aplicar CSS aunque solo usemos una.</li>
-    <li><strong>2. Haz:</strong> Crea tu hoja de estilos, enlázala en las cuatro páginas y da el primer estilo al sitio.</li>
-    <li><strong>3. Comprueba:</strong> Las cuatro páginas cargan el CSS, y sabes comprobarlo sin adivinar.</li>
+    <li><strong>1. Aprende:</strong> Cómo se enlaza una hoja de estilos, de qué partes se compone una regla, qué familias de selectores existen y qué decide cuál de dos reglas en conflicto se aplica.</li>
+    <li><strong>2. Haz:</strong> Crea tu hoja, dale el primer estilo al sitio, elige el selector correcto para cinco requisitos y resuelve un conflicto sin <code>!important</code>.</li>
+    <li><strong>3. Comprueba:</strong> Sabes leer en DevTools qué regla ha ganado y por qué, y no queda un solo <code>!important</code> en tu hoja.</li>
   </ol>
 </div>
 
@@ -217,6 +215,12 @@ Los conceptos nuevos avanzan de **ejemplo resuelto → ejemplo incompleto → pr
     <li>Señala qué cambiarías para presentar un título en azul sin alterar su significado.</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy entra el lenguaje entero en su forma mínima: una hoja, una regla, un selector y un criterio para decidir quién gana cuando dos reglas se contradicen. El catálogo de selectores queda como material de consulta dentro del paso que lo usa.
 
 #### El navegador ya estaba aplicando CSS
 
@@ -237,14 +241,6 @@ el título se veía grande y en negrita. Eso no es «lo natural»: es una hoja d
 | En línea | Un atributo `style` en el elemento | Prácticamente nunca a mano |
 
 La hoja externa gana por tres razones concretas: una sola definición sirve para las cuatro páginas, el navegador se la guarda en caché y no vuelve a descargarla, y el estilo queda separado del contenido, que es la idea entera de estas dos unidades.
-
-Crea el archivo:
-
-```text
-css/styles.css
-```
-
-y enlázalo desde el `head` de **cada** página:
 
 ```html
 <link rel="stylesheet" href="css/styles.css">
@@ -293,7 +289,7 @@ body {
 
 Un selector más el bloque de declaraciones que se le aplican. Una hoja de estilos es una lista de reglas.
 
-##### Los comentarios
+Los comentarios se escriben solo de una forma. `//` no funciona, aunque el editor a veces lo coloree como si lo hiciera:
 
 ```css
 /* Sistema tipográfico base */
@@ -302,257 +298,38 @@ body {
 }
 ```
 
-CSS solo tiene esta forma de comentar. `//` no funciona, aunque el editor a veces lo coloree como si lo hiciera.
+#### Los selectores, en tres familias
 
-#### Tarea 1 · Tu primer estilo
+Un selector responde a «¿a qué te refieres?», y hay tres maneras de responder.
 
-Sobre tu proyecto de la UD1:
+**Por lo que el elemento es.** `p`, `a`, `h1`. Afecta a todos los del sitio: útil para las bases, peligroso para algo específico.
 
-1. Crea la carpeta `css/` y dentro `styles.css`.
-2. Enlázalo en las **cuatro** páginas.
-3. Cambia la tipografía general del sitio desde `body`.
-4. Da un color distinto a los encabezados.
-5. Cambia el aspecto de los enlaces.
-6. Comprueba que el estilo se aplica en las cuatro.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Una hoja externa cargada en las cuatro páginas y tres reglas que puedas explicar.</span></div>
-  <div><strong>Si lo tienes</strong><span>Cambia el nombre o la ubicación de la hoja y diagnostica el fallo con Network.</span></div>
-  <div><strong>Reto</strong><span>Recibe una quinta página y enlaza el CSS desde una carpeta distinta.</span></div>
-</div>
-
-<div class="rule">
-  <p class="rule-label">Si una página no cambia, no escribas más CSS</p>
-  <p>Es el error que más tiempo consume la primera semana, y la reacción instintiva es escribir más reglas por si acaso. No sirve de nada: si la hoja no carga, ninguna regla va a funcionar.</p>
-  <p>Comprueba en este orden: ¿la ruta del <code>link</code> es correcta desde <em>esa</em> página?, ¿el archivo se llama exactamente así, con sus mayúsculas?, ¿lo has guardado? Y la comprobación definitiva: abre DevTools, pestaña <strong>Network</strong>, recarga, y busca <code>styles.css</code>. Si aparece en rojo con un 404, ya sabes que el problema es la ruta y no el CSS.</p>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Existe <code>css/styles.css</code> y está enlazado en las cuatro páginas.</li>
-    <li>Sabes nombrar las tres partes de una regla.</li>
-    <li>Sabes comprobar en Network si la hoja se ha cargado.</li>
-    <li>No has tocado el HTML salvo para añadir el <code>link</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué usamos una hoja externa y no un atributo <code>style</code>?</li>
-    <li>Nombra las tres partes de una regla CSS.</li>
-    <li>Una página no aplica los estilos. ¿Cuál es la primera comprobación?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Una definición sirve para todas las páginas, el navegador la cachea, y el estilo queda separado del contenido.</p>
-  <p>2 · Selector, propiedad y valor. La propiedad con su valor forman una declaración.</p>
-  <p>3 · Que la hoja se esté cargando: la ruta del <code>link</code>, el nombre exacto del archivo, y comprobarlo en la pestaña Network de DevTools.</p>
-</details>
-
-
-### Bloque 2 · Selectores
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Las familias de selectores y qué problema resuelve cada una.</li>
-    <li><strong>2. Haz:</strong> Elige el selector adecuado para cinco requisitos distintos.</li>
-    <li><strong>3. Comprueba:</strong> Ninguna de tus reglas afecta a elementos que no debía tocar.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué tres partes tiene una regla CSS?</li>
-    <li>¿Por qué usamos una hoja externa en lugar del atributo <code>style</code>?</li>
-    <li>Esta regla no actúa: <code>h1 { colour: red; }</code>. Localiza la causa.</li>
-  </ol>
-</div>
-
-#### Decirle a CSS a qué te refieres
-
-##### Por elemento
-
-```css
-p {
-    line-height: 1.6;
-}
-```
-
-Afecta a **todos** los párrafos del sitio. Útil para las bases; peligroso si lo usas para algo específico.
-
-##### Por clase
-
-```html
-<p class="destacado">Oferta especial.</p>
-```
-
-```css
-.destacado {
-    font-weight: 700;
-}
-```
-
-Una clase puede repetirse en tantos elementos como quieras, y un elemento puede tener varias:
+**Por el papel que le das.** Una clase, que se repite en tantos elementos como quieras y describe una función:
 
 ```html
 <article class="card producto destacado">
 ```
 
-Es el selector que más vas a usar, porque describe **un papel** y se puede reutilizar.
-
-##### Por `id`
-
-```html
-<section id="productos">
+```css
+.destacado { font-weight: 700; }
 ```
 
-```css
-#productos {
-    padding-block: 3rem;
-}
-```
+Es el selector que más vas a usar. El `id` también funciona, pero es único en la página y pesa demasiado en los conflictos. Regla práctica: **los `id` son para enlazar y para los `label`; las clases son para dar estilo.**
 
-Existe, y funciona, pero un `id` es único en la página: no puedes reutilizar el estilo. Además pesa mucho en los conflictos, como veremos mañana. Regla práctica: **los `id` son para enlazar y para los `label`, las clases son para dar estilo.**
-
-##### Descendiente y directo
+**Por lo que el documento ya declara.** Su posición, su estado o sus atributos:
 
 ```css
-nav a {          /* cualquier enlace dentro de nav, a la profundidad que sea */
-    text-decoration: none;
-}
-
-nav > ul {       /* solo las listas que son hijas directas de nav */
-    display: flex;
-}
-```
-
-##### Por atributo
-
-```css
-input[type="email"] {
-    border-color: #999;
-}
-
-a[href^="http"] {     /* enlaces cuyo href empieza por http: los externos */
-    ...
-}
-```
-
-Aquí se comprueba el efecto de lo que hiciste en la UD1: si escribiste `type="email"` en lugar de `type="text"`, ahora tienes un selector. **El HTML bien marcado te devuelve selectores.**
-
-##### Pseudo-clases
-
-Seleccionan por estado o por posición, no por lo que el elemento es:
-
-```css
-a:hover        { }   /* el cursor está encima */
-a:focus-visible{ }   /* tiene el foco de teclado */
-li:first-child { }   /* es el primer hijo de su padre */
-li:last-child  { }   /* es el último */
+nav a          { }   /* cualquier enlace dentro de nav */
 input:required { }   /* el campo es obligatorio */
-input:invalid  { }   /* su valor no cumple la validación */
+li:first-child { }   /* es el primer hijo de su padre */
+a[href^="http"]{ }   /* enlaces externos */
 ```
 
 <p class="term">Pseudo-clase</p>
 
 Un selector que depende del estado o de la posición del elemento, no de su marcado. Se escribe con dos puntos y no existe en el HTML: la calcula el navegador.
 
-##### Agrupar
-
-```css
-h1, h2, h3 {
-    line-height: 1.15;
-}
-```
-
-La coma es «o». Un fallo típico es olvidarla: `h1 h2` significa «un `h2` dentro de un `h1`», que casi nunca existe, y entonces la regla no hace nada.
-
-#### Tarea 2 · El selector correcto
-
-Para cada requisito, escribe el selector que le corresponde. No vale cualquiera que funcione: **vale el que expresa lo que pide el enunciado**.
-
-<p class="stage">Paso 1 · Te enseño uno</p>
-
-**Requisito: los enlaces del pie no deben subrayarse, pero los del contenido sí.**
-
-<dl class="worked">
-  <dt>¿Qué me piden seleccionar?</dt>
-  <dd>Enlaces, pero solo los de una zona concreta del documento.</dd>
-  <dt>¿Cómo está marcada esa zona?</dt>
-  <dd>En la UD1 el pie es un <code>footer</code>. Ya tengo por dónde acotar.</dd>
-  <dt>¿Descendiente o hijo directo?</dt>
-  <dd>Descendiente: los enlaces pueden estar dentro de párrafos o de listas, no necesariamente colgando del <code>footer</code>.</dd>
-  <dt>Selector</dt>
-  <dd><code>footer a { text-decoration: none; }</code></dd>
-</dl>
-
-Fíjate en que no he inventado una clase. Si el HTML ya distingue esa zona, el selector sale solo.
-
-<p class="stage stage--solo">Paso 2 · Ahora tú</p>
-
-1. Todos los enlaces de la navegación principal deben cambiar de aspecto.
-2. El primer producto del catálogo debe destacarse.
-3. Los campos obligatorios del formulario deben distinguirse.
-4. Los enlaces externos deben poder marcarse de forma distinta a los internos.
-5. Solo los párrafos que están dentro de una ficha de producto, no todos los del sitio.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · ¿clase o selector estructural?</summary>
-  <p>Pregúntate si la condición <strong>ya está escrita en el HTML</strong>. Si es «los obligatorios», el HTML ya lo dice con <code>required</code>: usa <code>:required</code>. Si es «el primero», el HTML ya lo dice por su posición: usa <code>:first-child</code>. Si es «los de oferta», eso no está en ninguna parte del marcado y sí necesita una clase.</p>
-  <p>Inventar una clase para algo que el documento ya declara es duplicar la información en dos sitios, y tarde o temprano dejan de coincidir.</p>
-</details>
-
-<details class="aside aside--extra">
-  <summary>Ver soluciones</summary>
-  <p>1 · <code>nav a</code>, o si tienes varias navegaciones, acota por su etiqueta: <code>nav[aria-label="Navegación principal"] a</code>.</p>
-  <p>2 · <code>.catalogo article:first-child</code>, con la clase que uses para el contenedor.</p>
-  <p>3 · <code>input:required</code>, que además cubre los campos que añadas después sin tocar el CSS.</p>
-  <p>4 · <code>a[href^="http"]</code>, porque los internos de tu proyecto son rutas relativas y no empiezan por <code>http</code>.</p>
-  <p>5 · <code>article p</code>, o mejor <code>.producto p</code> si el catálogo comparte marcado con otras zonas.</p>
-</details>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre <code>nav a</code> y <code>nav &gt; a</code>?</li>
-    <li>¿Por qué preferimos clases a <code>id</code> para dar estilo?</li>
-    <li>¿Qué significa la coma en <code>h1, h2</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El primero selecciona cualquier enlace dentro del <code>nav</code>, a la profundidad que sea; el segundo, solo los que cuelgan directamente de él.</p>
-  <p>2 · Porque una clase se reutiliza y un <code>id</code> es único, y además el <code>id</code> pesa demasiado en los conflictos de la cascada.</p>
-  <p>3 · «O»: la regla se aplica a los <code>h1</code> y a los <code>h2</code>. Sin coma significaría «un <code>h2</code> dentro de un <code>h1</code>».</p>
-</details>
-
-
-### Bloque 3 · Cascada, herencia y especificidad
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué decide cuál de dos reglas en conflicto se aplica, qué se hereda y qué no, y por qué <code>!important</code> es una rendición.</li>
-    <li><strong>2. Haz:</strong> Diagnostica una hoja con reglas contradictorias y resuélvela sin <code>!important</code>.</li>
-    <li><strong>3. Comprueba:</strong> Sabes leer en DevTools qué regla ha ganado y por qué.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuándo conviene un selector de elemento y cuándo una clase?</li>
-    <li>¿Qué selecciona <code>nav a</code> que no selecciona <code>nav &gt; a</code>?</li>
-    <li>Escribe el selector de todos los campos obligatorios sin inventar una clase.</li>
-  </ol>
-</div>
+Aquí se comprueba el efecto de lo que hiciste en la UD1: si escribiste `type="email"` en lugar de `type="text"`, ahora tienes un selector. **El HTML bien marcado te devuelve selectores**, y esa es la razón de que inventar una clase para algo que el documento ya dice sea duplicar la información en dos sitios.
 
 #### La palabra «cascading» no es decorativa
 
@@ -567,9 +344,7 @@ p          { color: blue; }
 <p class="destacado">Hola</p>
 ```
 
-¿De qué color se ve? Rojo. La pregunta relevante es **por qué**.
-
-#### Lo que decide, en orden
+Se ve rojo. La pregunta relevante es **por qué**.
 
 <figure class="diagram">
   <figcaption>Cómo se resuelve un conflicto, de arriba abajo</figcaption>
@@ -590,32 +365,20 @@ Una medida de cuán concreto es un selector. Funciona como un orden de prioridad
 | Clase, atributo y pseudo-clase | `.destacado`, `[type="email"]`, `:hover` |
 | `id` | `#productos` |
 
-Una regla práctica evita la aritmética: **una clase gana a cualquier cantidad de elementos, y un `id` gana a cualquier cantidad de clases**. Por eso `#productos p` gana a `body main section article p`, aunque el segundo parezca más trabajado.
+Una regla práctica evita la aritmética: **una clase gana a cualquier cantidad de elementos, y un `id` gana a cualquier cantidad de clases**. Por eso `#productos p` gana a `body main section article p`, aunque el segundo parezca más trabajado. De ahí sale el consejo anterior: si das estilo con `id`, cualquier ajuste posterior con clases no podrá corregirlo.
 
-De ahí sale el consejo de ayer: si das estilo con `id`, cualquier ajuste posterior con clases no podrá corregirlo, y acabarás escalando la pelea.
-
-##### El orden, cuando hay empate
+Cuando hay empate de especificidad decide el orden, y gana la última escrita:
 
 ```css
 .boton { background: blue; }
 .boton { background: green; }
 ```
 
-Gana el verde: misma especificidad, y la última escrita manda. Esto explica por qué el orden de tu hoja importa, y por qué conviene escribir de lo general a lo particular.
+Gana el verde. Por eso el orden de tu hoja importa, y por eso conviene escribir de lo general a lo particular.
 
 #### Herencia
 
-Algunas propiedades pasan de un elemento a sus descendientes:
-
-```css
-body {
-    font-family: system-ui, sans-serif;
-    color: #222;
-    line-height: 1.6;
-}
-```
-
-Con eso, todo el documento hereda la tipografía. No hace falta repetirla en cada elemento.
+Algunas propiedades pasan de un elemento a sus descendientes, de modo que basta declararlas una vez en `body`:
 
 | Se heredan | No se heredan |
 | ---------- | ------------- |
@@ -623,7 +386,7 @@ Con eso, todo el documento hereda la tipografía. No hace falta repetirla en cad
 
 La lógica es razonable: lo que se hereda tiene que ver con **el texto**, y lo que no, con **la caja**. Que un `padding` se heredara sería un desastre.
 
-#### `!important`
+#### `!important` y cómo se lee un conflicto
 
 ```css
 color: red !important;
@@ -638,13 +401,146 @@ Existe, gana casi siempre, y **no es el botón de arreglar CSS**.
   <p>Si te encuentras escribiéndolo, la pregunta correcta no es «¿cómo hago que esto gane?» sino <strong>«¿qué está ganando ahora y por qué?»</strong>.</p>
 </div>
 
-#### DevTools · leer quién gana
+Esa pregunta se responde en DevTools. Selecciona un elemento y ve a la pestaña **Styles**: verás las reglas que le afectan **ordenadas de la que gana a la que pierde**, con las declaraciones derrotadas **tachadas** y, a la derecha, el archivo y la línea donde se escribió cada una. La pestaña **Computed** da el valor final de cada propiedad, ya resuelto el conflicto.
 
-Selecciona un elemento e id a la pestaña **Styles**. Verás las reglas que le afectan, **ordenadas de la que gana a la que pierde**, y las declaraciones derrotadas aparecen **tachadas**. A la derecha de cada bloque está el archivo y la línea donde se escribió.
+### Se trabaja
 
-Eso responde simultáneamente a las tres preguntas: qué se está aplicando, qué se ha descartado y dónde está escrito. La pestaña **Computed** da el siguiente paso: el valor final de cada propiedad, ya resuelto el conflicto.
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
 
-#### Tarea 3 · ¿Quién está ganando?
+Los dos primeros pasos ponen en marcha la hoja y eligen selectores; los cuatro últimos entran en los conflictos, que es donde se pierde el tiempo cuando no se sabe diagnosticar.
+
+#### Paso 1 · Tu primer estilo · 25 min
+
+Sobre tu proyecto de la UD1:
+
+1. Crea la carpeta `css/` y dentro `styles.css`.
+2. Enlázalo en las **cuatro** páginas.
+3. Cambia la tipografía general del sitio desde `body`.
+4. Da un color distinto a los encabezados.
+5. Cambia el aspecto de los enlaces.
+6. Comprueba que el estilo se aplica en las cuatro.
+
+<div class="rule">
+  <p class="rule-label">Si una página no cambia, no escribas más CSS</p>
+  <p>Es el error que más tiempo consume la primera semana, y la reacción instintiva es escribir más reglas por si acaso. No sirve de nada: si la hoja no carga, ninguna regla va a funcionar.</p>
+  <p>Comprueba en este orden: ¿la ruta del <code>link</code> es correcta desde <em>esa</em> página?, ¿el archivo se llama exactamente así, con sus mayúsculas?, ¿lo has guardado? Y la comprobación definitiva: abre DevTools, pestaña <strong>Network</strong>, recarga, y busca <code>styles.css</code>. Si aparece en rojo con un 404, ya sabes que el problema es la ruta y no el CSS.</p>
+</div>
+
+**Antes de continuar:** las cuatro páginas cargan la hoja, comprobado en Network y no por su apariencia, y el HTML no se ha tocado salvo para añadir el `link`.
+
+#### Paso 2 · El selector correcto · 35 min
+
+Para cada requisito, escribe el selector que le corresponde. No vale cualquiera que funcione: **vale el que expresa lo que pide el enunciado**.
+
+##### 2.1 · Ejemplo resuelto
+
+**Requisito: los enlaces del pie no deben subrayarse, pero los del contenido sí.**
+
+<dl class="worked">
+  <dt>¿Qué me piden seleccionar?</dt>
+  <dd>Enlaces, pero solo los de una zona concreta del documento.</dd>
+  <dt>¿Cómo está marcada esa zona?</dt>
+  <dd>En la UD1 el pie es un <code>footer</code>. Ya tengo por dónde acotar.</dd>
+  <dt>¿Descendiente o hijo directo?</dt>
+  <dd>Descendiente: los enlaces pueden estar dentro de párrafos o de listas, no necesariamente colgando del <code>footer</code>.</dd>
+  <dt>Selector</dt>
+  <dd><code>footer a { text-decoration: none; }</code></dd>
+</dl>
+
+No ha hecho falta inventar ninguna clase. Si el HTML ya distingue esa zona, el selector sale solo.
+
+##### 2.2 · Ahora tú
+
+1. Todos los enlaces de la navegación principal deben cambiar de aspecto.
+2. El primer producto del catálogo debe destacarse.
+3. Los campos obligatorios del formulario deben distinguirse.
+4. Los enlaces externos deben poder marcarse de forma distinta a los internos.
+5. Solo los párrafos que están dentro de una ficha de producto, no todos los del sitio.
+
+<details class="aside aside--extra">
+<summary>Consultar · las familias de selectores al completo</summary>
+
+**Por elemento.** Afecta a todos los del sitio.
+
+```css
+p { line-height: 1.6; }
+```
+
+**Por clase.** Una clase puede repetirse en muchos elementos, y un elemento puede tener varias.
+
+```css
+.destacado { font-weight: 700; }
+```
+
+**Por `id`.** Funciona, pero es único y pesa demasiado en los conflictos.
+
+```css
+#productos { padding-block: 3rem; }
+```
+
+**Descendiente y directo.**
+
+```css
+nav a {          /* cualquier enlace dentro de nav, a la profundidad que sea */
+    text-decoration: none;
+}
+
+nav > ul {       /* solo las listas que son hijas directas de nav */
+    display: flex;
+}
+```
+
+**Por atributo.**
+
+```css
+input[type="email"] {
+    border-color: #999;
+}
+
+a[href^="http"] {     /* enlaces cuyo href empieza por http: los externos */
+    ...
+}
+```
+
+**Pseudo-clases.** Seleccionan por estado o por posición.
+
+```css
+a:hover        { }   /* el cursor está encima */
+a:focus-visible{ }   /* tiene el foco de teclado */
+li:first-child { }   /* es el primer hijo de su padre */
+li:last-child  { }   /* es el último */
+input:required { }   /* el campo es obligatorio */
+input:invalid  { }   /* su valor no cumple la validación */
+```
+
+**Agrupar.** La coma es «o».
+
+```css
+h1, h2, h3 {
+    line-height: 1.15;
+}
+```
+
+Un fallo típico es olvidarla: `h1 h2` significa «un `h2` dentro de un `h1`», que casi nunca existe, y entonces la regla no hace nada.
+
+</details>
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · ¿clase o selector estructural?</summary>
+  <p>Pregúntate si la condición <strong>ya está escrita en el HTML</strong>. Si es «los obligatorios», el HTML ya lo dice con <code>required</code>: usa <code>:required</code>. Si es «el primero», el HTML ya lo dice por su posición: usa <code>:first-child</code>. Si es «los de oferta», eso no está en ninguna parte del marcado y sí necesita una clase.</p>
+  <p>Inventar una clase para algo que el documento ya declara es duplicar la información en dos sitios, y tarde o temprano dejan de coincidir.</p>
+</details>
+
+<details class="aside aside--extra">
+  <summary>Ver soluciones</summary>
+  <p>1 · <code>nav a</code>, o si tienes varias navegaciones, acota por su etiqueta: <code>nav[aria-label="Navegación principal"] a</code>.</p>
+  <p>2 · <code>.catalogo article:first-child</code>, con la clase que uses para el contenedor.</p>
+  <p>3 · <code>input:required</code>, que además cubre los campos que añadas después sin tocar el CSS.</p>
+  <p>4 · <code>a[href^="http"]</code>, porque los internos de tu proyecto son rutas relativas y no empiezan por <code>http</code>.</p>
+  <p>5 · <code>article p</code>, o mejor <code>.producto p</code> si el catálogo comparte marcado con otras zonas.</p>
+</details>
+
+#### Paso 3 · ¿Quién está ganando? · 35 min
 
 Este HTML y este CSS conviven:
 
@@ -665,7 +561,7 @@ section .aviso         { color: purple; }
 main section p.aviso   { color: teal; }
 ```
 
-<p class="stage">Paso 1 · Te enseño uno</p>
+##### 3.1 · Ejemplo resuelto
 
 <dl class="worked">
   <dt>¿Cuántos <code>id</code> hay en juego?</dt>
@@ -678,7 +574,7 @@ main section p.aviso   { color: teal; }
   <dd><code>navy</code>. Al eliminar la regla del <code>id</code>, prevalecería <code>main section p.aviso</code>, que es <code>teal</code>.</dd>
 </dl>
 
-<p class="stage stage--solo">Paso 2 · Ahora tú</p>
+##### 3.2 · Ahora tú
 
 1. Comprueba en el navegador que el color es el que dice el razonamiento.
 2. Borra la regla del `id` y predice el nuevo color **antes** de recargar. Después comprueba.
@@ -696,7 +592,7 @@ main section p.aviso   { color: teal; }
   <p>El segundo es el que deja la hoja mejor que antes. Los otros dos la dejan igual de enredada, solo que a tu favor.</p>
 </details>
 
-#### Reto 1 · La regla que no hace nada (10 min)
+#### Paso 4 · La regla que no hace nada · 15 min
 
 ```css
 .card .titulo {
@@ -713,26 +609,109 @@ main section p.aviso   { color: teal; }
 El título no se ve rojo, y DevTools no muestra la regla ni siquiera tachada. ¿Qué está pasando?
 
 <details class="aside aside--extra">
-  <summary>Ver respuesta del Reto 1</summary>
+  <summary>Ver respuesta</summary>
   <p>Que no aparezca <strong>ni tachada</strong> es la pista entera. Una regla tachada es una regla que sí seleccionó el elemento y perdió el conflicto. Si no aparece en absoluto, es que <strong>no ha seleccionado nada</strong>.</p>
   <p>Las causas posibles son de fontanería, no de cascada: la hoja no se está cargando, hay una errata en el nombre de la clase, falta el punto y coma o la llave de la regla anterior —lo que invalida esta—, o el elemento no está donde crees.</p>
   <p>La lección es el método: <strong>tachado significa problema de cascada; ausente significa problema de selector o de sintaxis</strong>. Son dos diagnósticos distintos y se buscan en sitios distintos.</p>
 </details>
 
+#### Paso 5 · Cinco selectores reales en tu sitio · 25 min
+
+Lleva al proyecto lo del paso 2. Escribe cinco reglas que usen, cada una, una familia distinta de selector, y **anota en un comentario por qué ese y no otro**:
+
+1. Una que acote por una zona semántica de la UD1 (`nav`, `main`, `footer`…).
+2. Una que use una clase que describa un papel, no una apariencia.
+3. Una que se apoye en un atributo que ya está en tu HTML.
+4. Una que use una pseudo-clase de estado o de posición.
+5. Una que agrupe varios selectores con la coma.
+
+Si alguna te obliga a añadir una clase al HTML, pregúntate antes si el documento ya lo decía de otra forma. Si te obliga a inventar un `id`, es que no era el camino.
+
+#### Paso 6 · Auditoría de tu propia hoja · 15 min
+
+Recorre `styles.css` de arriba abajo y responde:
+
+| Comprobación | Cuántos | Qué haces |
+| ------------ | ------: | --------- |
+| `!important` en la hoja | | |
+| Selectores que empiezan por `#` | | |
+| Reglas que no seleccionan nada (comprobado en DevTools) | | |
+| Clases cuyo nombre describe la apariencia y no el papel | | |
+
+Corrige los cuatro grupos. Los nombres del tipo `.azul` o `.texto-grande` se renombran por lo que significan: el día que el azul pase a verde, la clase `.azul` miente.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los seis pasos. Los dos retos trabajan con hojas que no has escrito tú, que es como llegan los proyectos reales.
+
+##### Reto 1 · La hoja heredada
+
+Recibes esta hoja de un proyecto anterior. Funciona, y es un desastre.
+
+```css
+#main .content p.text { color: #444 !important; }
+#main .content p { color: #888; }
+.text { color: #222; }
+p { color: #000; }
+
+#nav ul li a { text-decoration: none !important; }
+#nav ul li a:hover { text-decoration: underline; }
+
+.boton-azul { background: #1a5fb4; color: white; }
+.boton-azul-grande { background: #1a5fb4; color: white; padding: 1rem 2rem; }
+#formulario input { border: 1px solid #ccc !important; }
+```
+
+Reescríbela entera con una condición: **ningún `!important` y ningún `id` como selector de estilo**, manteniendo exactamente el mismo resultado visual.
+
+1. Antes de tocar nada, escribe qué color acaba teniendo un `<p class="text">` dentro de `#main .content`, y por qué. Compruébalo después.
+2. El `!important` de la navegación tiene un efecto que quizá no era el buscado: averigua qué le ocurre al subrayado del `:hover` y explícalo.
+3. Las dos clases de botón repiten dos declaraciones. Resuélvelo sin duplicar, y di qué has hecho con el nombre de las clases.
+4. Anota cuántas líneas tiene tu versión frente a la original.
+
+##### Reto 2 · Seis conflictos, predichos antes de mirar
+
+Para cada pareja, predice **por escrito** qué regla gana y por qué, antes de probar nada. Después móntalo y comprueba.
+
+| # | Regla A | Regla B | Gana | Motivo |
+| - | ------- | ------- | ---- | ------ |
+| 1 | `.card p` | `article p` | | |
+| 2 | `p.aviso` | `.aviso` | | |
+| 3 | `#main p` | `.a .b .c .d p` | | |
+| 4 | `a:hover` | `nav a` | | |
+| 5 | `ul li` escrito arriba | `ul li` escrito abajo | | |
+| 6 | `p { color: red !important }` | `#main p { color: blue }` | | |
+
+La fila 4 no se decide igual que las demás: piénsala dos veces antes de escribir el motivo.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Hoja externa cargada en las cuatro páginas, los cinco selectores del paso 2 resueltos y el conflicto del paso 3 diagnosticado.</span></div>
+  <div><strong>Si lo tienes</strong><span>Las cinco reglas reales en tu sitio justificadas y la auditoría de tu hoja con sus cuatro grupos corregidos.</span></div>
+  <div><strong>Reto</strong><span>La hoja heredada reescrita sin <code>!important</code> ni <code>id</code>, y las seis predicciones escritas antes de comprobarlas.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
+    <li>Existe <code>css/styles.css</code> y está enlazado en las cuatro páginas.</li>
+    <li>Sabes nombrar las tres partes de una regla y comprobar en Network si la hoja se ha cargado.</li>
     <li>Sabes ordenar elemento, clase e <code>id</code> por especificidad.</li>
-    <li>Sabes que el orden solo decide cuando hay empate.</li>
     <li>Distingues una propiedad que se hereda de una que no.</li>
     <li>Sabes leer en Styles qué regla gana y cuáles están tachadas.</li>
-    <li>No hay ningún <code>!important</code> en tu hoja.</li>
+    <li>No hay ningún <code>!important</code> ni ningún <code>id</code> de estilo en tu hoja.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Por qué usamos una hoja externa y no un atributo <code>style</code>?</li>
+    <li>Nombra las tres partes de una regla CSS.</li>
+    <li>¿Qué diferencia hay entre <code>nav a</code> y <code>nav &gt; a</code>?</li>
     <li>¿Qué gana: tres clases o un <code>id</code>?</li>
     <li>¿Cuándo decide el orden en que están escritas las reglas?</li>
     <li>En DevTools, ¿qué significa que una declaración aparezca tachada, y qué que no aparezca?</li>
@@ -741,9 +720,12 @@ El título no se ve rojo, y DevTools no muestra la regla ni siquiera tachada. ¿
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · El <code>id</code>. Gana a cualquier cantidad de clases.</p>
-  <p>2 · Solo cuando dos reglas tienen la misma especificidad; entonces se aplica la última escrita.</p>
-  <p>3 · Tachada quiere decir que seleccionó el elemento pero perdió el conflicto: es un problema de cascada. Que no aparezca quiere decir que no seleccionó nada: es un problema de selector, de sintaxis o de carga.</p>
+  <p>1 · Una definición sirve para todas las páginas, el navegador la cachea, y el estilo queda separado del contenido.</p>
+  <p>2 · Selector, propiedad y valor. La propiedad con su valor forman una declaración.</p>
+  <p>3 · El primero selecciona cualquier enlace dentro del <code>nav</code>, a la profundidad que sea; el segundo, solo los que cuelgan directamente de él.</p>
+  <p>4 · El <code>id</code>. Gana a cualquier cantidad de clases.</p>
+  <p>5 · Solo cuando dos reglas tienen la misma especificidad; entonces se aplica la última escrita.</p>
+  <p>6 · Tachada quiere decir que seleccionó el elemento pero perdió el conflicto: es un problema de cascada. Que no aparezca quiere decir que no seleccionó nada: es un problema de selector, de sintaxis o de carga.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -755,6 +737,7 @@ El título no se ve rojo, y DevTools no muestra la regla ni siquiera tachada. ¿
     <li>Una regla aparece tachada en DevTools: explica qué significa y qué revisarías.</li>
   </ol>
 </div>
+
 
 ---
 
