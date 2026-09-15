@@ -1171,16 +1171,14 @@ La regla dice que en un servidor no se usa la API síncrona. Compruébalo en lug
 
 ## Sesión 4 · El servidor a mano
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Un servidor HTTP con las manos</strong>, <strong>Rutas, métodos y códigos de estado</strong> y <strong>Servir ficheros estáticos</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Un servidor HTTP con las manos
+<p class="lead">Tres horas. Media hora para entender qué hace exactamente un servidor web y qué código de estado corresponde a cada situación, y dos horas y media escribiendo uno con el módulo nativo hasta servir tu propia web y tu propia API.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué hace exactamente un servidor web y cómo se escribe uno con el módulo nativo.</li>
-    <li><strong>2. Haz:</strong> Levanta tu primer servidor y respóndele al navegador.</li>
-    <li><strong>3. Comprueba:</strong> Sabes leer una petición y componer una respuesta completa.</li>
+    <li><strong>1. Aprende:</strong> Cómo se escribe un servidor con el módulo nativo, cómo se lee una petición y se compone una respuesta, qué estado corresponde a cada caso y cómo se sirve un fichero sin abrir un agujero.</li>
+    <li><strong>2. Haz:</strong> Levanta tu primer servidor, sirve el catálogo en <code>/api/productos</code> y la web de las unidades anteriores en <code>/</code>.</li>
+    <li><strong>3. Comprueba:</strong> Cada situación devuelve su código, y no se puede pedir un fichero fuera de la carpeta pública.</li>
   </ol>
 </div>
 
@@ -1188,10 +1186,16 @@ La regla dice que en un servidor no se usa la API síncrona. Compruébalo en lug
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Cuando en la UD4 hacías <code>fetch</code>, ¿qué le llegaba al otro lado?</li>
-    <li>¿Qué partes tiene una petición HTTP? ¿Y una respuesta?</li>
-    <li>¿Por qué crees que un servidor «se queda escuchando»?</li>
+    <li>¿Qué significan 200, 201, 400, 404 y 500?</li>
+    <li>¿Qué pasaría si alguien pidiera a tu servidor <code>/../../.env</code>?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy pasas al otro lado. Durante dos unidades has sido el cliente; ahora escribes el programa que recibe la petición y decide qué responder, con qué código y con qué cabeceras.
 
 #### Diez líneas
 
@@ -1221,8 +1225,6 @@ Eso es un servidor web. Arráncalo, abre el navegador y ahí está: por primera 
   </ol>
 </figure>
 
-#### La petición
-
 ```javascript
 peticion.method;      // "GET", "POST"…
 peticion.url;         // "/api/productos?categoria=teclados"
@@ -1234,8 +1236,6 @@ url.searchParams.get("categoria");  // "teclados"
 ```
 
 `peticion.url` trae la ruta y la cadena de consulta juntas y sin analizar. `URL` las separa, y `searchParams` da los parámetros ya decodificados: es la misma clase que existe en el navegador.
-
-#### La respuesta
 
 ```javascript
 respuesta.statusCode = 404;
@@ -1249,75 +1249,11 @@ respuesta.end(JSON.stringify({ error: "No encontrado" }));
   <p>Escribe siempre <code>return</code> después de responder. Es la costumbre que te ahorrará las dos caras del mismo problema.</p>
 </div>
 
-#### El puerto
+Si al arrancar ves `EADDRINUSE`, el puerto está ocupado: casi siempre por otro servidor tuyo que se quedó corriendo. Y el puerto, como toda la configuración, sale del entorno:
 
 ```javascript
 const PUERTO = Number(process.env.PUERTO ?? 3000);
 ```
-
-Si al arrancar ves `EADDRINUSE`, el puerto está ocupado: casi siempre por otro servidor tuyo que se quedó corriendo. O lo paras, o arrancas en otro puerto.
-
-#### Tarea 10 · Tu primer servidor
-
-1. Escribe `src/servidor.js` que responda texto en cualquier ruta.
-2. Registra por consola método, ruta y momento de cada petición.
-3. Responde de forma distinta a `/` y a `/hola`.
-4. Lee un parámetro de la cadena de consulta y devuélvelo.
-5. Comprueba todo con el navegador y con tu cliente HTTP.
-6. Provoca a propósito una respuesta sin cerrar y observa qué hace el navegador.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Servidor levantado, dos rutas y registro de peticiones.</span></div>
-  <div><strong>Si lo tienes</strong><span>Devuelve JSON con la información completa de la petición.</span></div>
-  <div><strong>Reto</strong><span>Arranca dos servidores en el mismo puerto y explica el error.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Tienes un servidor que arranca y responde.</li>
-    <li>Lees método, ruta y parámetros.</li>
-    <li>Escribes estado, cabeceras y cuerpo.</li>
-    <li>Cierras siempre la respuesta, y solo una vez.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué tres partes escribes en una respuesta?</li>
-    <li>¿Qué significa <code>EADDRINUSE</code>?</li>
-    <li>¿Qué pasa si no cierras la respuesta?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El código de estado, las cabeceras y el cuerpo.</p>
-  <p>2 · Que el puerto ya está ocupado por otro proceso.</p>
-  <p>3 · El cliente espera hasta agotar el tiempo y no recibe nada.</p>
-</details>
-
-
-### Bloque 2 · Rutas, métodos y códigos de estado
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se decide qué hacer según el método y la ruta, y qué estado responder.</li>
-    <li><strong>2. Haz:</strong> Sirve tu catálogo en <code>/api/productos</code>, leyendo y creando.</li>
-    <li><strong>3. Comprueba:</strong> Cada situación devuelve el código de estado correcto.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué significan 200, 201, 400, 404 y 500?</li>
-    <li>¿Qué método usarías para crear algo? ¿Y para consultarlo?</li>
-    <li>Si el cliente envía datos inválidos, ¿de quién es el fallo?</li>
-  </ol>
-</div>
 
 #### Enrutar a mano
 
@@ -1326,24 +1262,23 @@ const servidor = http.createServer(async (peticion, respuesta) => {
   const url = new URL(peticion.url, `http://${peticion.headers.host}`);
   const ruta = url.pathname;
 
-  if (peticion.method === "GET" && ruta === "/api/productos") {
-    return responderJson(respuesta, 200, await listar());
-  }
+  // …
 
-  if (peticion.method === "GET" && ruta.startsWith("/api/productos/")) {
-    const id = Number(ruta.split("/").pop());
-    const producto = await obtener(id);
-    if (!producto) return responderJson(respuesta, 404, { error: "No encontrado" });
-    return responderJson(respuesta, 200, producto);
-  }
+if (peticion.method === "GET" && ruta === "/api/productos") {
+  return responderJson(respuesta, 200, await listar());
+}
 
-  responderJson(respuesta, 404, { error: "Ruta no encontrada" });
-});
+if (peticion.method === "GET" && ruta.startsWith("/api/productos/")) {
+  const id = Number(ruta.split("/").pop());
+  const producto = await obtener(id);
+  if (!producto) return responderJson(respuesta, 404, { error: "No encontrado" });
+  return responderJson(respuesta, 200, producto);
+}
 ```
 
 Se ve venir el problema: con quince rutas esto es una escalera de condicionales, y cada ruta con parámetro exige partir el texto a mano. Guárdalo en la memoria para la sesión 5.
 
-#### Leer el cuerpo de una petición
+El cuerpo, por su parte, no llega como una propiedad legible:
 
 ```javascript
 async function leerCuerpo(peticion) {
@@ -1380,82 +1315,15 @@ async function leerCuerpo(peticion) {
   <p>Un 500 en tus registros es una tarea pendiente para ti. Un 400 es información para quien llama.</p>
 </div>
 
-#### Un formato de error constante
+Que todas las respuestas de error tengan la misma forma permite al cliente escribir un solo tratamiento. Es un contrato, y romperlo a mitad de una API es una fuente inagotable de fallos en el cliente.
 
 ```javascript
 { "error": "Producto no encontrado", "detalles": [] }
 ```
 
-Que todas las respuestas de error tengan la misma forma permite al cliente escribir un solo tratamiento. Es un contrato, y romperlo a mitad de una API es una fuente inagotable de fallos en el cliente.
-
-#### Tarea 11 · La API a mano
-
-1. Implementa `GET /api/productos` con filtro por categoría en la consulta.
-2. Implementa `GET /api/productos/:id` con su 404.
-3. Implementa `POST /api/productos` con validación, 201 y cabecera `Location`.
-4. Devuelve 400 con la lista de errores cuando la validación falle.
-5. Responde 405 si el método no está soportado en una ruta que sí existe.
-6. Escribe un fichero `peticiones.http` que pruebe los seis casos.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres rutas con los códigos correctos y el fichero de pruebas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade paginación con parámetros de consulta.</span></div>
-  <div><strong>Reto</strong><span>Envía un cuerpo JSON inválido y consigue que responda 400 y no 500.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Decides la acción por método y ruta.</li>
-    <li>Lees el cuerpo acumulando el flujo.</li>
-    <li>Devuelves el código de estado que corresponde a cada caso.</li>
-    <li>Todos tus errores tienen la misma forma.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre un 400 y un 500?</li>
-    <li>¿Qué se devuelve al crear un recurso?</li>
-    <li>¿Por qué el cuerpo se lee por trozos?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El 400 dice que la petición estaba mal; el 500, que ha fallado el servidor.</p>
-  <p>2 · Un 201 con la cabecera <code>Location</code> apuntando al recurso creado.</p>
-  <p>3 · Porque llega como un flujo, no como un valor ya disponible.</p>
-</details>
-
-
-### Bloque 3 · Servir ficheros estáticos
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se sirve un fichero del disco y por qué eso es peligroso si no se hace bien.</li>
-    <li><strong>2. Haz:</strong> Sirve desde tu servidor la web de las unidades anteriores.</li>
-    <li><strong>3. Comprueba:</strong> No se puede pedir un fichero fuera de la carpeta pública.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Hasta ahora, ¿quién servía tu web durante el desarrollo?</li>
-    <li>¿Cómo sabe el navegador que un fichero es CSS y no texto?</li>
-    <li>¿Qué pasaría si alguien pidiera <code>/../../.env</code>?</li>
-  </ol>
-</div>
-
-#### Servir un fichero
+#### Servir ficheros del disco
 
 ```javascript
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-
 const PUBLICO = path.join(aqui, "..", "publico");
 
 const TIPOS = {
@@ -1486,59 +1354,158 @@ async function servirEstatico(ruta, respuesta) {
 }
 ```
 
-#### La comprobación que no puede faltar
-
 <div class="rule">
   <p class="rule-label">Un servidor de ficheros sin comprobar la ruta es un agujero</p>
   <p>Si compones la ruta con lo que pide el cliente y no compruebas nada, una petición con tramos <code>..</code> sale de tu carpeta pública y llega a cualquier fichero que el proceso pueda leer: tu <code>.env</code>, tu código, ficheros del sistema.</p>
   <p>Se llama <em>path traversal</em> y es una de las vulnerabilidades más antiguas que existen. La defensa es la de arriba: resolver la ruta completa y comprobar que sigue estando dentro de la carpeta permitida. <strong>Después</strong> de resolver, nunca antes.</p>
 </div>
 
-#### El tipo de contenido
+El tipo de contenido tampoco es un detalle. Si sirves un CSS sin su cabecera, el navegador recibe texto y no aplica los estilos, sin decir nada claro. Con un módulo de JavaScript es peor: se niega a ejecutarlo por el tipo incorrecto. Es un fallo que parece de tu código y es de tus cabeceras.
 
-Si sirves un CSS sin su cabecera, el navegador recibe texto y no aplica los estilos, sin decir nada claro. Con un módulo de JavaScript es peor: se niega a ejecutarlo por el tipo incorrecto. Es un fallo que parece de tu código y es de tus cabeceras.
-
-#### Servidor de estáticos y API a la vez
+Con una sola línea conviven, por último, la web y la API:
 
 ```javascript
 if (ruta.startsWith("/api/")) return atenderApi(peticion, respuesta, url);
 return servirEstatico(ruta, respuesta);
 ```
 
-Con esto, tu proyecto entero se sirve desde un solo sitio: la web en `/` y los datos en `/api/`. Al proceder todo del mismo origen, **desaparece el problema de CORS** que viste en la UD4.
+Al proceder todo del mismo origen, **desaparece el problema de CORS** que viste en la UD4.
 
-#### Tarea 12 · Tu web, servida por ti
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · tu propio servidor</p>
+
+Al final de la tarde tendrás tu web y tu API servidas por un programa que has escrito entero. Los dos últimos pasos comprueban que responde lo que debe en cada caso, que es lo que separa un servidor de una demostración.
+
+#### Paso 1 · Tu primer servidor · 30 min
+
+1. Escribe `src/servidor.js` que responda texto en cualquier ruta.
+2. Registra por consola método, ruta y momento de cada petición.
+3. Responde de forma distinta a `/` y a `/hola`.
+4. Lee un parámetro de la cadena de consulta y devuélvelo.
+5. Comprueba todo con el navegador y con tu cliente HTTP.
+6. Provoca a propósito una respuesta sin cerrar y observa qué hace el navegador. Después provoca una que se cierre dos veces y lee el error.
+
+**Antes de continuar:** el puerto sale de una variable de entorno con valor por defecto, no de un número escrito en el código.
+
+#### Paso 2 · La API a mano · 50 min
+
+Es el trabajo central de la sesión.
+
+1. Implementa `GET /api/productos` con filtro por categoría en la consulta.
+2. Implementa `GET /api/productos/:id` con su 404.
+3. Implementa `POST /api/productos` con validación, 201 y cabecera `Location`.
+4. Devuelve 400 con la lista de errores cuando la validación falle.
+5. Responde 405 si el método no está soportado en una ruta que sí existe. Fíjate en la diferencia con el 404: la ruta existe, el método no.
+6. Escribe una función `responderJson(respuesta, estado, datos)` y úsala en todas partes, para que el formato de error sea el mismo siempre.
+
+#### Paso 3 · Tu web, servida por ti · 40 min
 
 1. Copia el sitio de la UD4 a `publico/`.
 2. Sírvelo desde tu servidor, con `index.html` por defecto.
 3. Resuelve el tipo de contenido por extensión.
 4. Protege contra rutas que salgan de la carpeta pública.
 5. Devuelve 404 con una página propia cuando el fichero no exista.
-6. Comprueba que el `fetch` de la UD4 funciona ahora contra tu propia API.
+6. Comprueba que el `fetch` de la UD4 funciona ahora contra tu propia API, y que el error de CORS ha desaparecido.
+
+Es el momento en que las cuatro unidades anteriores se juntan: tu HTML, tu CSS, tu JavaScript de navegador y tu servidor, todo funcionando desde un solo proceso que has escrito tú.
+
+#### Paso 4 · Cada caso, su código · 15 min
+
+Un servidor que devuelve 200 para todo no es un servidor, es un eco. Comprueba los nueve casos con tu cliente HTTP:
+
+| Petición | Código esperado | Código real | Cuerpo |
+| -------- | :-------------: | :---------: | ------ |
+| `GET /api/productos` | 200 | | |
+| `GET /api/productos/1` | 200 | | |
+| `GET /api/productos/9999` | 404 | | |
+| `GET /api/productos/abc` | | | |
+| `POST /api/productos` válido | 201 | | |
+| `POST /api/productos` sin nombre | 400 | | |
+| `POST` con cuerpo JSON roto | 400 | | |
+| `DELETE /api/productos` | 405 | | |
+| `GET /api/inventado` | 404 | | |
+
+La cuarta fila no tiene código escrito a propósito: decídelo tú y justifícalo. Un identificador que no es un número, ¿es una petición mal formada o un recurso que no existe? Las dos respuestas son defendibles.
+
+#### Paso 5 · El fichero de peticiones · 15 min
+
+Escribe `peticiones.http` con los nueve casos del paso anterior, ejecutables desde el editor.
+
+1. Una petición por caso, con su comentario encima diciendo qué comprueba.
+2. Incluye los cuerpos JSON de los `POST`, el válido y los dos inválidos.
+3. Comprueba que se pueden ejecutar todas seguidas sin dejar el almacén en un estado raro.
+4. Súbelo al repositorio: es la documentación ejecutable de tu API, y el punto de partida de las pruebas automáticas del módulo de servidor.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto es de seguridad y se hace **contra tu propio servidor**, en tu máquina.
+
+##### Reto 1 · Demuestra el agujero que acabas de tapar
+
+Una defensa que no se ha visto fallar no se entiende. Haz una copia de tu servidor y quítale la comprobación de la ruta.
+
+1. Contra esa copia, construye una petición que salga de la carpeta `publico/` y consiga leer un fichero que no debería servirse. Empieza por tu propio `package.json`.
+2. Consigue leer el `.env`. Ese es el momento en el que la vulnerabilidad deja de ser teórica: acabas de exponer tus claves.
+3. Anota qué tuviste que escribir exactamente en la URL, y por qué el navegador quizá te lo normaliza. Pruébalo también con tu cliente HTTP, que no normaliza.
+4. Vuelve a poner la comprobación y repite los tres intentos. Comprueba que ahora devuelven 403.
+5. Busca si tu comprobación tiene algún hueco: prueba con la ruta codificada en porcentajes, con barras invertidas y con una ruta absoluta. Si alguno pasa, arréglalo.
+6. Escribe en tres líneas por qué la comprobación va **después** de resolver la ruta y no sobre el texto que llega del cliente. Es el error que convierte una defensa en un adorno.
+
+##### Reto 2 · Lo que el cliente hace mal no es un 500
+
+Tu servidor ya distingue 400 de 500. Ponlo a prueba con peticiones hostiles, que es como llegan las reales.
+
+1. Envía un `POST` con el cuerpo `{esto no es json`. Sin captura, tu servidor devuelve 500; consigue que devuelva 400 con un mensaje útil.
+2. Envía un cuerpo JSON válido pero que no es un objeto: un número, una cadena, un array. Decide qué responder a cada uno.
+3. Envía un objeto con campos de más que no esperabas. Decide si los ignoras o los rechazas, y justifica la decisión: las dos son defendibles y tienen consecuencias distintas.
+4. Envía un `Content-Type` que no sea JSON con un cuerpo que sí lo es. Averigua qué código existe para eso.
+5. Envía un cuerpo enorme, de varios megabytes. Anota qué hace tu servidor. Un servidor real pone un límite; propón dónde lo pondrías tú.
+6. Como segunda parte, añade paginación a `GET /api/productos` con parámetros de consulta, y trata los casos raros: página cero, página negativa, tamaño gigante, tamaño no numérico. Cada uno tiene una respuesta razonable, y ninguna es un 500.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La web servida, con tipos correctos y rutas protegidas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade cabeceras de caché a las imágenes y comprueba el efecto en Network.</span></div>
-  <div><strong>Reto</strong><span>Demuestra el ataque de <em>path traversal</em> contra una versión sin comprobación.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Servidor levantado con tres rutas de API, sus códigos correctos, la web servida con tipos resueltos y las rutas protegidas.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de los nueve casos contestada y el <code>peticiones.http</code> ejecutable en el repositorio.</span></div>
+  <div><strong>Reto</strong><span>El <em>path traversal</em> demostrado y tapado con sus variantes, o las peticiones hostiles respondidas con 4xx y la paginación con sus casos raros.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 4</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Tienes un servidor propio que sirve web y API.</li>
-    <li>Cada situación devuelve su código de estado.</li>
+    <li>Tienes un servidor propio que sirve web y API desde un solo proceso.</li>
+    <li>Lees método, ruta, parámetros y cuerpo.</li>
+    <li>Cierras siempre la respuesta, y solo una vez.</li>
+    <li>Cada situación devuelve su código de estado, y todos los errores tienen la misma forma.</li>
     <li>Los ficheros se sirven con su tipo correcto.</li>
     <li>No se puede salir de la carpeta pública.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué tres partes escribes en una respuesta?</li>
+    <li>¿Qué pasa si no cierras la respuesta? ¿Y si la cierras dos veces?</li>
+    <li>¿Qué diferencia hay entre un 400 y un 500?</li>
+    <li>¿Qué se devuelve al crear un recurso?</li>
+    <li>¿Por qué el cuerpo se lee por trozos?</li>
+    <li>¿Qué comprobación evita el <em>path traversal</em>, y en qué momento se hace?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Comprobar que la ruta resuelta sigue dentro de la carpeta pública.</p>
-  <p>2 · Por su extensión, para escribir la cabecera de tipo de contenido.</p>
-  <p>3 · Porque cliente y API pasan a compartir origen.</p>
+  <p>1 · El código de estado, las cabeceras y el cuerpo.</p>
+  <p>2 · Sin cerrarla, el cliente espera hasta agotar el tiempo; cerrándola dos veces, Node lanza un error de cabeceras ya enviadas.</p>
+  <p>3 · El 400 dice que la petición estaba mal; el 500, que ha fallado el servidor.</p>
+  <p>4 · Un 201 con la cabecera <code>Location</code> apuntando al recurso creado.</p>
+  <p>5 · Porque llega como un flujo, no como un valor ya disponible.</p>
+  <p>6 · Comprobar que la ruta ya resuelta sigue dentro de la carpeta pública, después de resolverla y nunca sobre el texto recibido.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 4 · 5–10 minutos</p>
@@ -1549,6 +1516,7 @@ Con esto, tu proyecto entero se sirve desde un solo sitio: la web en `/` y los d
     <li>¿Qué comprobación evita que alguien pida un fichero fuera de la carpeta pública?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 5 · Del servidor a mano al framework
