@@ -1717,16 +1717,14 @@ Construye una cabecera que degrade con dignidad **sin una sola media query** y s
 
 ## Sesión 4 · Grid y responsive
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>CSS Grid</strong>, <strong>Grid adaptable y áreas</strong> y <strong>Responsive: fluido primero</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · CSS Grid
+<p class="lead">Tres horas. Media hora para entender qué resuelve Grid que Flexbox no y por qué la mayoría de las adaptaciones no necesitan media query, y dos horas y media construyendo un catálogo que se adapta solo y rompiendo tu sitio a cinco anchuras.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué problema resuelve Grid que Flexbox no, y qué significa la unidad <code>fr</code>.</li>
-    <li><strong>2. Haz:</strong> Convierte tu catálogo en una cuadrícula.</li>
-    <li><strong>3. Comprueba:</strong> Observa qué pasa al estrechar la ventana. Todavía no lo arregles.</li>
+    <li><strong>1. Aprende:</strong> Qué problema bidimensional resuelve Grid, qué significa <code>fr</code>, cómo hacer que el número de columnas lo decida el espacio y dónde va de verdad un <em>breakpoint</em>.</li>
+    <li><strong>2. Haz:</strong> Convierte el catálogo en cuadrícula, monta el esqueleto de página con áreas y recorre tu sitio a cinco anchuras corrigiendo lo que se rompa.</li>
+    <li><strong>3. Comprueba:</strong> No hay scroll horizontal entre 320 px y 1600 px, y cada media query que hayas escrito responde a un problema que sabes nombrar.</li>
   </ol>
 </div>
 
@@ -1738,6 +1736,12 @@ Construye una cabecera que degrade con dignidad **sin una sola media query** y s
     <li>Decide si una botonera, una tarjeta horizontal y un catálogo necesitan Flexbox, Grid o ninguno.</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+La sesión tiene una sola idea de fondo: **deja de decir cuántas columnas quieres y describe cuánto necesita cada una**. Grid es la herramienta que lo permite, y el responsive es lo que sale de aplicarla bien.
 
 #### Dos dimensiones a la vez
 
@@ -1776,8 +1780,6 @@ Aquí no hay una dirección: hay filas **y** columnas, y quieres que las columna
 
 Tres declaraciones y tienes una cuadrícula de tres columnas con sus filas alineadas. Fíjate en que **no has dicho cuántas filas hay**: Grid las crea según los elementos que haya.
 
-#### La unidad `fr`
-
 <p class="term">fr</p>
 
 Una fracción del espacio **libre** del contenedor. `1fr 1fr 1fr` reparte lo disponible en tres partes iguales; `2fr 1fr` da el doble a la primera columna.
@@ -1790,9 +1792,7 @@ grid-template-columns: 250px 1fr;        /* una fija y otra elástica */
 grid-template-columns: 1fr 2fr;          /* una parte y dos partes */
 ```
 
-`repeat()` es solo una abreviatura, pero se vuelve importante en la sesión siguiente.
-
-#### El vocabulario
+#### El vocabulario, y por qué se cuentan líneas
 
 <figure class="diagram">
   <figcaption>Las piezas de una cuadrícula</figcaption>
@@ -1804,70 +1804,15 @@ grid-template-columns: 1fr 2fr;          /* una parte y dos partes */
   </ol>
 </figure>
 
-Conviene fijarse en que **se numeran las líneas, no las columnas**. Una cuadrícula de tres columnas tiene cuatro líneas verticales: la 1 al principio y la 4 al final. Es la fuente de casi todos los desajustes de la sesión siguiente.
-
-#### El inspector de Grid
-
-En DevTools, junto a un elemento con `display: grid`, aparece una etiqueta `grid`. Púlsala y el navegador dibuja encima de la página las líneas con su numeración, las pistas y los huecos.
+Conviene fijarse en que **se numeran las líneas, no las columnas**. Una cuadrícula de tres columnas tiene cuatro líneas verticales: la 1 al principio y la 4 al final. Es la fuente de casi todos los desajustes de la sesión.
 
 <div class="rule">
-  <p class="rule-label">Úsalo siempre</p>
+  <p class="rule-label">Usa siempre el inspector de Grid</p>
+  <p>En DevTools, junto a un elemento con <code>display: grid</code>, aparece una etiqueta <code>grid</code>. Púlsala y el navegador dibuja encima de la página las líneas con su numeración, las pistas y los huecos.</p>
   <p>No intentes imaginar mentalmente una cuadrícula compleja si el navegador puede dibujártela. Cuando un elemento no cae donde esperabas, el inspector te enseña en un segundo qué línea es la 3 de verdad.</p>
 </div>
 
-#### Tarea 10 · Tu catálogo en cuadrícula
-
-En `productos.html`, convierte el contenedor de las fichas en un Grid.
-
-1. Aplica `display: grid` y `gap` al contenedor de los `article`.
-2. Prueba `repeat(2, 1fr)`, después `repeat(3, 1fr)` y después `repeat(4, 1fr)`. Quédate con la que mejor te encaje en tu pantalla.
-3. Abre el inspector de Grid y localiza las líneas, las pistas y los huecos.
-4. Ahora **estrecha la ventana hasta 400 px** y observa qué pasa con las tarjetas.
-
-<div class="rule">
-  <p class="rule-label">Todavía no lo arregles</p>
-  <p>Vas a ver columnas ridículamente estrechas, con una palabra por línea. Es lo esperado, y es el problema que resuelve la sesión de mañana.</p>
-  <p>Anota qué has visto y a qué anchura ha empezado a verse mal. Ese número es tu primer <em>breakpoint</em> candidato, y lo has obtenido de la única forma legítima: mirando cuándo el contenido deja de funcionar.</p>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Cuándo eliges Grid en lugar de Flexbox?</li>
-    <li>¿Por qué <code>1fr</code> no es lo mismo que <code>33.33%</code>?</li>
-    <li>Una cuadrícula de cuatro columnas, ¿cuántas líneas verticales tiene?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Cuando el problema tiene filas y columnas a la vez y quieres que se alineen entre sí.</p>
-  <p>2 · Porque <code>fr</code> reparte el espacio que queda <strong>después</strong> de descontar los <code>gap</code>, y el porcentaje no los descuenta.</p>
-  <p>3 · Cinco: una a cada lado de cada columna, contando los dos extremos.</p>
-</details>
-
-
-### Bloque 2 · Grid adaptable y áreas
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo hacer que el número de columnas lo decida el espacio, y cómo colocar elementos por líneas o por áreas.</li>
-    <li><strong>2. Haz:</strong> Construye un catálogo que se adapta solo y un layout de página completa.</li>
-    <li><strong>3. Comprueba:</strong> El catálogo funciona de 320 px a 1600 px sin una media query.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué problema bidimensional resuelve Grid mejor que Flexbox?</li>
-    <li>¿Qué significa <code>1fr</code>?</li>
-    <li>Predice qué ocurre con <code>grid-template-columns: repeat(3, 1fr)</code> a 320 px.</li>
-  </ol>
-</div>
-
-#### La línea que resuelve el problema de ayer
+#### La línea más rentable de la unidad
 
 ```css
 .catalogo {
@@ -1887,34 +1832,7 @@ auto-fit              caben las que quepan; el número
                       lo decide el espacio disponible
 ```
 
-Es decir: **deja de decir cuántas columnas quieres y describe cuánto necesita cada una**. En un móvil cabrá una, en una tablet dos, en un monitor cuatro, y no has escrito una sola media query. Esta línea es probablemente la más rentable de toda la unidad.
-
-##### `auto-fit` contra `auto-fill`
-
-Se parecen y hacen cosas distintas cuando **sobra sitio**:
-
-| | Con pocos elementos y mucho espacio |
-| --- | --- |
-| `auto-fit` | Las columnas vacías se colapsan, y las que hay se estiran para ocuparlo todo |
-| `auto-fill` | Se mantienen las columnas vacías, y los elementos conservan su tamaño |
-
-La forma de verlo es la experimentación: pon tres tarjetas en una pantalla ancha y cambia una palabra por la otra. Con `auto-fit` las tres se estiran; con `auto-fill` se quedan a la izquierda con su tamaño.
-
-#### Colocar elementos concretos
-
-A veces un elemento debe ocupar más de una celda:
-
-```css
-.destacado {
-    grid-column: 1 / 3;    /* de la línea 1 a la 3: dos columnas */
-}
-
-.destacado {
-    grid-column: span 2;   /* dos columnas, empiece donde empiece */
-}
-```
-
-`span` suele ser más robusto: no depende de dónde acabe cayendo el elemento, cosa que cambia al variar el número de columnas.
+Es decir: **deja de decir cuántas columnas quieres y describe cuánto necesita cada una**. En un móvil cabrá una, en una tablet dos, en un monitor cuatro, y no has escrito una sola media query.
 
 #### Áreas con nombre
 
@@ -1937,7 +1855,7 @@ main   { grid-area: principal; }
 footer { grid-area: pie; }
 ```
 
-El dibujo entre comillas **es** el layout. Se ve de un vistazo que la cabecera ocupa las dos columnas y que el lateral está a la izquierda del contenido. Para modificarlo en móvil basta con redibujarlo:
+El dibujo entre comillas **es** el layout. Se ve de un vistazo que la cabecera ocupa las dos columnas y que el lateral está a la izquierda del contenido. Para modificarlo en una pantalla estrecha basta con redibujarlo:
 
 ```css
 @media (width < 48rem) {
@@ -1952,7 +1870,7 @@ El dibujo entre comillas **es** el layout. Se ve de un vistazo que la cabecera o
 }
 ```
 
-Fíjate en un detalle importante: en el móvil hemos puesto el contenido **antes** que el lateral, y el HTML no ha cambiado. Grid permite reordenar visualmente.
+Fíjate en un detalle importante: en la pantalla estrecha el contenido va **antes** que el lateral, y el HTML no ha cambiado. Grid permite reordenar visualmente.
 
 <div class="rule">
   <p class="rule-label">Reordenar visualmente tiene un límite</p>
@@ -1982,98 +1900,9 @@ GRID     para distribuir las tarjetas
 FLEXBOX  dentro de cada tarjeta
 ```
 
-#### Reto 3 · ¿Flexbox, Grid, los dos o ninguno? (15 min)
-
-Para cada interfaz, decide y justifica en una frase:
-
-1. La navegación principal.
-2. Una galería de imágenes en cuadrícula.
-3. Una botonera de dos botones.
-4. Un formulario de etiquetas y campos, uno debajo de otro.
-5. El catálogo de productos.
-6. Un panel con seis indicadores, uno de ellos del doble de ancho.
-7. La barra de precio y botón dentro de una tarjeta.
-8. El pie con tres columnas de enlaces.
-
-<details class="aside aside--extra">
-  <summary>Ver respuesta del Reto 3</summary>
-  <p>1 · <strong>Flexbox.</strong> Una línea de enlaces que miden lo que miden.</p>
-  <p>2 · <strong>Grid.</strong> Filas y columnas que deben alinearse.</p>
-  <p>3 · <strong>Flexbox.</strong> Una dimensión y dos elementos.</p>
-  <p>4 · <strong>Ninguno.</strong> El flujo normal ya apila bloques; basta con márgenes o un <code>gap</code> si lo envuelves. No todo necesita un sistema de layout.</p>
-  <p>5 · <strong>Grid</strong> para la cuadrícula, y <strong>Flexbox</strong> dentro de cada tarjeta. Los dos.</p>
-  <p>6 · <strong>Grid.</strong> Además el indicador ancho se resuelve con <code>span 2</code>, que en Flexbox sería incómodo.</p>
-  <p>7 · <strong>Flexbox</strong> con <code>space-between</code>. Una dimensión.</p>
-  <p>8 · <strong>Grid</strong> si las tres columnas deben tener el mismo ancho; <strong>Flexbox</strong> si cada una puede medir lo suyo. Aquí las dos respuestas son defendibles, y lo que se evalúa es la justificación.</p>
-</details>
-
-#### Tarea 11 · Grid Challenge
-
-**A · El catálogo que se adapta solo.** Aplica `auto-fit` con `minmax()` a tu página de productos. Comprueba de 320 px a 1600 px que en ningún momento hay columnas ilegibles ni tarjetas gigantes. Prueba también con `auto-fill` y explica en un comentario cuál has elegido y por qué.
-
-**B · El esqueleto de página.** Construye este layout con `grid-template-areas`:
-
-```text
-┌───────────────────────────┐
-│          HEADER           │
-├─────────┬─────────────────┤
-│ ASIDE   │      MAIN       │
-│         │                 │
-├─────────┴─────────────────┤
-│          FOOTER           │
-└───────────────────────────┘
-```
-
-y su versión en una columna para pantallas estrechas. Decide tú a qué anchura cambia, y justifícalo por el contenido.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · un elemento no cae donde quiero</summary>
-  <p>Abre el inspector de Grid y mira <strong>la numeración real de las líneas</strong>. El error casi siempre es contar columnas en lugar de líneas: para ocupar las dos primeras columnas hace falta <code>1 / 3</code>, no <code>1 / 2</code>.</p>
-  <p>Y si usas áreas, comprueba que todas las filas del dibujo tienen <strong>el mismo número de nombres</strong>. Si una fila tiene dos y otra tres, la plantilla entera es inválida y se ignora en silencio.</p>
-</details>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué hace <code>repeat(auto-fit, minmax(16rem, 1fr))</code>, en una frase?</li>
-    <li>¿En qué se diferencian <code>auto-fit</code> y <code>auto-fill</code>?</li>
-    <li>¿Qué riesgo tiene reordenar visualmente con Grid?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Crea tantas columnas como quepan, de al menos 16rem cada una, repartiéndose el espacio sobrante.</p>
-  <p>2 · Cuando sobra espacio, <code>auto-fit</code> colapsa las columnas vacías y estira las que hay; <code>auto-fill</code> las mantiene y deja los elementos con su tamaño.</p>
-  <p>3 · Que el orden del teclado sigue al HTML, así que un reordenado grande hace que el foco salte por la pantalla sin lógica.</p>
-</details>
-
-
-### Bloque 3 · Responsive: fluido primero
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Por qué la mayoría de las adaptaciones no necesitan media query, y dónde se ponen las que sí.</li>
-    <li><strong>2. Haz:</strong> Rompe tu propia página a cinco anchuras y arregla lo que encuentres.</li>
-    <li><strong>3. Comprueba:</strong> No hay scroll horizontal en ninguna de las cinco.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué hacen juntos <code>auto-fit</code>, <code>minmax()</code> y <code>1fr</code>?</li>
-    <li>¿Cuándo elegirías Flexbox y cuándo Grid?</li>
-    <li>Este Grid no se adapta: <code>repeat(4, 250px)</code>. Propón una estrategia, no una cifra nueva.</li>
-  </ol>
-</div>
-
-#### Una web no se diseña para 1920 × 1080
+#### Primero fluido, después media queries
 
 Quien entre a tu sitio puede hacerlo desde un móvil, una tablet, un portátil, un monitor grande, media pantalla en una ventana dividida, o un dispositivo que todavía no existe. No puedes enumerarlos.
-
-Por eso el orden correcto es este, y casi nadie lo respeta:
 
 <figure class="diagram">
   <figcaption>El orden del responsive</figcaption>
@@ -2083,9 +1912,7 @@ Por eso el orden correcto es este, y casi nadie lo respeta:
   </ol>
 </figure>
 
-#### Lo que ya se adapta sin media queries
-
-Llevas cuatro semanas construyendo herramientas que hacen esto:
+Llevas cuatro semanas construyendo herramientas que adaptan solas:
 
 | Herramienta | Qué adapta sola |
 | ----------- | --------------- |
@@ -2096,8 +1923,6 @@ Llevas cuatro semanas construyendo herramientas que hacen esto:
 | `gap` | La separación, sin cuentas |
 
 Si las usas bien, buena parte de tu sitio ya es responsive y no lo sabías. Las media queries son para lo que queda.
-
-#### Mobile first
 
 <p class="term">Mobile first</p>
 
@@ -2139,20 +1964,128 @@ Escribir primero los estilos de la disposición más sencilla —una columna— 
   <p class="lesson-demo__note">Mobile first parte de una columna y añade capacidad solo cuando el contenido dispone de espacio suficiente.</p>
 </figure>
 
-La razón no es ideológica: **el caso de una columna es el más simple**, y partir de lo simple para añadir complejidad da menos código que partir de lo complejo para irlo deshaciendo.
-
-La sintaxis `(width >= 48rem)` es la moderna y se lee sola. Encontrarás también la clásica, `(min-width: 48rem)`, que significa lo mismo.
+La razón no es ideológica: **el caso de una columna es el más simple**, y partir de lo simple para añadir complejidad da menos código que partir de lo complejo para irlo deshaciendo. La sintaxis `(width >= 48rem)` es la moderna y se lee sola; encontrarás también la clásica, `(min-width: 48rem)`, que significa lo mismo.
 
 <div class="rule">
   <p class="rule-label">Los breakpoints no son teléfonos</p>
   <p>No busques las medidas del iPhone 15 ni del Galaxy de turno. Esa lista cambia cada año y nunca está completa.</p>
-  <p>Un <em>breakpoint</em> va donde <strong>tu contenido deja de funcionar</strong>: donde el menú ya no cabe, donde una columna se queda demasiado estrecha para leerse, donde la tarjeta se rompe. Esa anchura la encuentras estirando la ventana hasta que se ve mal, y es distinta en cada proyecto porque cada proyecto tiene otro contenido.</p>
-  <p>Por eso en la sesión 4 te pedí que anotaras a qué anchura empezaba a verse mal el catálogo. Ese número vale más que cualquier lista de dispositivos.</p>
+  <p>Un <em>breakpoint</em> va donde <strong>tu contenido deja de funcionar</strong>: donde el menú ya no cabe, donde una columna se queda demasiado estrecha para leerse, donde la tarjeta se rompe. Esa anchura se encuentra estirando la ventana hasta que se ve mal, y es distinta en cada proyecto porque cada proyecto tiene otro contenido.</p>
+  <p>Ese es el motivo de que el paso 1 pida anotar a qué anchura empieza a verse mal el catálogo. Ese número vale más que cualquier lista de dispositivos.</p>
 </div>
 
-#### Tarea 12 · Rompe tu página
+### Se trabaja
 
-Con DevTools en modo dispositivo, recorre tu sitio a estas anchuras:
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+El paso 1 provoca el problema a propósito y no lo arregla; el paso 2 lo resuelve con una sola línea. Los cuatro restantes llevan esa idea al sitio entero.
+
+#### Paso 1 · Tu catálogo en cuadrícula · 20 min
+
+En `productos.html`, convierte el contenedor de las fichas en un Grid.
+
+1. Aplica `display: grid` y `gap` al contenedor de los `article`.
+2. Prueba `repeat(2, 1fr)`, después `repeat(3, 1fr)` y después `repeat(4, 1fr)`. Quédate con la que mejor te encaje en tu pantalla.
+3. Abre el inspector de Grid y localiza las líneas, las pistas y los huecos.
+4. Ahora **estrecha la ventana hasta 400 px** y observa qué pasa con las tarjetas.
+
+<div class="rule">
+  <p class="rule-label">Todavía no lo arregles</p>
+  <p>Vas a ver columnas ridículamente estrechas, con una palabra por línea. Es lo esperado, y es el problema que resuelve el paso siguiente.</p>
+  <p>Anota qué has visto y a qué anchura ha empezado a verse mal. Ese número es tu primer <em>breakpoint</em> candidato, y lo has obtenido de la única forma legítima: mirando cuándo el contenido deja de funcionar.</p>
+</div>
+
+#### Paso 2 · El catálogo que se adapta solo · 25 min
+
+Aplica `auto-fit` con `minmax()` a tu página de productos. Comprueba de 320 px a 1600 px que en ningún momento hay columnas ilegibles ni tarjetas gigantes.
+
+1. Elige el mínimo de `minmax()` a partir del número que anotaste en el paso 1, no de una cifra redonda.
+2. Prueba también con `auto-fill` y explica en un comentario cuál has elegido y por qué.
+3. Comprueba con el inspector cuántas columnas hay a 320, 768, 1024 y 1600 px.
+
+<details class="aside aside--extra">
+<summary>Consultar · <code>auto-fit</code> frente a <code>auto-fill</code></summary>
+
+Se parecen y hacen cosas distintas cuando **sobra sitio**:
+
+| | Con pocos elementos y mucho espacio |
+| --- | --- |
+| `auto-fit` | Las columnas vacías se colapsan, y las que hay se estiran para ocuparlo todo |
+| `auto-fill` | Se mantienen las columnas vacías, y los elementos conservan su tamaño |
+
+La forma de verlo es la experimentación: pon tres tarjetas en una pantalla ancha y cambia una palabra por la otra. Con `auto-fit` las tres se estiran; con `auto-fill` se quedan a la izquierda con su tamaño.
+
+</details>
+
+#### Paso 3 · El esqueleto de página con áreas · 30 min
+
+Construye este layout con `grid-template-areas`:
+
+```text
+┌───────────────────────────┐
+│          HEADER           │
+├─────────┬─────────────────┤
+│ ASIDE   │      MAIN       │
+│         │                 │
+├─────────┴─────────────────┤
+│          FOOTER           │
+└───────────────────────────┘
+```
+
+y su versión en una columna para pantallas estrechas, con el contenido antes que el lateral. Decide tú a qué anchura cambia, y justifícalo por el contenido.
+
+<details class="aside aside--extra">
+<summary>Consultar · colocar un elemento en celdas concretas</summary>
+
+A veces un elemento debe ocupar más de una celda:
+
+```css
+.destacado {
+    grid-column: 1 / 3;    /* de la línea 1 a la 3: dos columnas */
+}
+
+.destacado {
+    grid-column: span 2;   /* dos columnas, empiece donde empiece */
+}
+```
+
+`span` suele ser más robusto: no depende de dónde acabe cayendo el elemento, cosa que cambia al variar el número de columnas.
+
+</details>
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · un elemento no cae donde quiero</summary>
+  <p>Abre el inspector de Grid y mira <strong>la numeración real de las líneas</strong>. El error casi siempre es contar columnas en lugar de líneas: para ocupar las dos primeras columnas hace falta <code>1 / 3</code>, no <code>1 / 2</code>.</p>
+  <p>Y si usas áreas, comprueba que todas las filas del dibujo tienen <strong>el mismo número de nombres</strong>. Si una fila tiene dos y otra tres, la plantilla entera es inválida y se ignora en silencio.</p>
+</details>
+
+#### Paso 4 · ¿Flexbox, Grid, los dos o ninguno? · 15 min
+
+Para cada interfaz, decide y justifica en una frase:
+
+1. La navegación principal.
+2. Una galería de imágenes en cuadrícula.
+3. Una botonera de dos botones.
+4. Un formulario de etiquetas y campos, uno debajo de otro.
+5. El catálogo de productos.
+6. Un panel con seis indicadores, uno de ellos del doble de ancho.
+7. La barra de precio y botón dentro de una tarjeta.
+8. El pie con tres columnas de enlaces.
+
+<details class="aside aside--extra">
+  <summary>Ver respuesta</summary>
+  <p>1 · <strong>Flexbox.</strong> Una línea de enlaces que miden lo que miden.</p>
+  <p>2 · <strong>Grid.</strong> Filas y columnas que deben alinearse.</p>
+  <p>3 · <strong>Flexbox.</strong> Una dimensión y dos elementos.</p>
+  <p>4 · <strong>Ninguno.</strong> El flujo normal ya apila bloques; basta con márgenes o un <code>gap</code> si lo envuelves. No todo necesita un sistema de layout.</p>
+  <p>5 · <strong>Grid</strong> para la cuadrícula, y <strong>Flexbox</strong> dentro de cada tarjeta. Los dos.</p>
+  <p>6 · <strong>Grid.</strong> Además el indicador ancho se resuelve con <code>span 2</code>, que en Flexbox sería incómodo.</p>
+  <p>7 · <strong>Flexbox</strong> con <code>space-between</code>. Una dimensión.</p>
+  <p>8 · <strong>Grid</strong> si las tres columnas deben tener el mismo ancho; <strong>Flexbox</strong> si cada una puede medir lo suyo. Aquí las dos respuestas son defendibles, y lo que se evalúa es la justificación.</p>
+</details>
+
+#### Paso 5 · Rompe tu página · 45 min
+
+Es el trabajo central de la sesión. Con DevTools en modo dispositivo, recorre tu sitio a estas anchuras:
 
 ```text
 320 px    móvil pequeño
@@ -2163,12 +2096,6 @@ Con DevTools en modo dispositivo, recorre tu sitio a estas anchuras:
 ```
 
 Busca a continuación, en las cuatro páginas:
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Prueba las cinco anchuras, elimina el scroll horizontal y documenta cada causa.</span></div>
-  <div><strong>Si lo tienes</strong><span>Duplica la longitud de títulos y navegación y vuelve a probar.</span></div>
-  <div><strong>Reto</strong><span>Corrige una página ajena sin conocer sus breakpoints ni añadir uno por defecto.</span></div>
-</div>
 
 | Problema | ¿Dónde aparece? | A qué anchura | Cómo lo has resuelto |
 | -------- | --------------- | ------------- | -------------------- |
@@ -2191,34 +2118,110 @@ Después corrígelos, **intentando primero sin media query**. Si lo resuelves co
     <li>Una tabla, o un bloque de código, que no cabe y no tiene su propio <code>overflow-x: auto</code>.</li>
     <li>Un <code>margin</code> negativo.</li>
   </ol>
-  <p>Para localizarlo rápido, en la consola de DevTools puedes recorrer los elementos y ver cuál es más ancho que el documento. O, a lo bruto: ve dando <code>outline: 1px solid red</code> a secciones enteras hasta ver cuál se sale.</p>
+  <p>Para localizarlo rápido, en la consola de DevTools puedes recorrer los elementos y ver cuál es más ancho que el documento. O, de forma más rudimentaria: ve dando <code>outline: 1px solid red</code> a secciones enteras hasta ver cuál se sale.</p>
 </details>
 
+#### Paso 6 · Defiende cada breakpoint · 15 min
+
+Recorre todas las media queries de tu hoja y rellena una fila por cada una:
+
+| Anchura | Qué deja de funcionar exactamente a esa anchura | ¿Se podía resolver sin media query? |
+| ------- | ----------------------------------------------- | ----------------------------------- |
+| | | |
+
+Elimina las que no puedas defender. Una media query que está ahí «por si acaso», o copiada de una lista de dispositivos, es código que habrá que mantener sin saber qué protege.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los seis pasos. El segundo reto es el que más enseña de los dos, y consiste en borrar código.
+
+##### Reto 1 · Un panel de indicadores
+
+Construye un panel de seis indicadores con estas condiciones, **sin una sola media query**:
+
+```text
+┌─────────────────┬────────┐
+│   FACTURACIÓN   │ PEDIDOS│
+│   (doble ancho) │        │
+├────────┬────────┼────────┤
+│ STOCK  │ DEVOL. │ VISITAS│
+├────────┴────────┴────────┤
+│        INCIDENCIAS        │
+│      (todo el ancho)      │
+└──────────────────────────┘
+```
+
+1. Usa `auto-fit` con `minmax()` para las columnas, y `span` para los dos indicadores anchos.
+2. Comprueba qué ocurre a 320 px, donde solo cabe una columna. Un `span 2` en una cuadrícula de una sola columna puede romper el layout: averigua qué pasa exactamente y resuélvelo.
+3. Consigue que los seis indicadores tengan la misma altura aunque su contenido sea de longitudes distintas. Di si eso lo resuelve Grid o Flexbox, y por qué.
+4. Anota en cuántas disposiciones distintas se reorganiza el panel entre 320 y 1600 px. No las has escrito: las decide el contenido.
+
+##### Reto 2 · Quitar breakpoints
+
+Esta hoja resuelve un catálogo y una cabecera con seis media queries. Todas funcionan, y la mayoría sobran.
+
+```css
+.catalogo { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.tarjeta h3 { font-size: 18px; }
+.cabecera { display: flex; justify-content: space-between; }
+.contenedor { width: 100%; padding: 0 16px; }
+
+@media (min-width: 480px) { .catalogo { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 768px) { .catalogo { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px){ .catalogo { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 768px) { .tarjeta h3 { font-size: 22px; } }
+@media (min-width: 1280px){ .tarjeta h3 { font-size: 26px; } }
+@media (min-width: 1280px){ .contenedor { width: 1240px; margin: 0 auto; padding: 0; } }
+```
+
+1. Sustituye las tres primeras por **una sola declaración** sin media query.
+2. Sustituye las dos del titular por **una sola declaración** sin media query.
+3. Sustituye la del contenedor por una que no fije una anchura en píxeles.
+4. ¿Cuántas media queries quedan al terminar? Si queda alguna, defiéndela: di qué problema de contenido resuelve que no se pueda resolver de otro modo.
+5. Compara el número de líneas de las dos versiones y el número de valores que habría que revisar si mañana cambia el diseño.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Catálogo adaptable sin media queries, esqueleto de página con áreas y las cinco anchuras recorridas sin scroll horizontal.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de problemas del paso 5 completa y cada breakpoint defendido en el paso 6.</span></div>
+  <div><strong>Reto</strong><span>El panel de indicadores funcionando sin media queries, y la hoja del reto 2 reducida con las eliminaciones justificadas.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Tu catálogo se adapta sin media queries.</li>
     <li>No hay scroll horizontal a 320 px en ninguna página.</li>
     <li>Cada media query que has escrito responde a un problema concreto que puedes nombrar.</li>
     <li>Ninguno de tus breakpoints procede de un modelo de teléfono.</li>
     <li>Sabes justificar, para cada bloque, si es Flexbox o Grid.</li>
+    <li>El esqueleto de página usa áreas con nombre y se reordena en pantalla estrecha.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Por qué <code>1fr</code> no es lo mismo que <code>33.33%</code>?</li>
+    <li>Una cuadrícula de cuatro columnas, ¿cuántas líneas verticales tiene?</li>
+    <li>¿Qué hace <code>repeat(auto-fit, minmax(16rem, 1fr))</code>, en una frase?</li>
+    <li>¿Qué riesgo tiene reordenar visualmente con Grid?</li>
     <li>¿Qué significa mobile first y por qué se hace así?</li>
     <li>¿Dónde debe ir un breakpoint?</li>
-    <li>Nombra tres herramientas que adaptan sin necesitar media query.</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Escribir primero la disposición más simple y añadir después las de pantallas anchas. Porque partir de lo simple y añadir sale más corto que partir de lo complejo y deshacer.</p>
-  <p>2 · Donde el contenido deja de funcionar, no donde está un modelo de dispositivo.</p>
-  <p>3 · <code>max-width</code>, <code>flex-wrap</code>, <code>auto-fit</code> con <code>minmax()</code>, <code>clamp()</code>, <code>gap</code>. Bastan tres.</p>
+  <p>1 · Porque <code>fr</code> reparte el espacio que queda <strong>después</strong> de descontar los <code>gap</code>, y el porcentaje no los descuenta.</p>
+  <p>2 · Cinco: una a cada lado de cada columna, contando los dos extremos.</p>
+  <p>3 · Crea tantas columnas como quepan, de al menos 16rem cada una, repartiéndose el espacio sobrante.</p>
+  <p>4 · Que el orden del teclado sigue al HTML, así que un reordenado grande hace que el foco salte por la pantalla sin lógica.</p>
+  <p>5 · Escribir primero la disposición más simple y añadir después las de pantallas anchas. Porque partir de lo simple y añadir sale más corto que partir de lo complejo y deshacer.</p>
+  <p>6 · Donde el contenido deja de funcionar, no donde está un modelo de dispositivo.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -2230,6 +2233,7 @@ Después corrígelos, **intentando primero sin media query**. Si lo resuelves co
     <li>Una página desborda a 360 px: enumera tres comprobaciones antes de añadir un breakpoint.</li>
   </ol>
 </div>
+
 
 ---
 
