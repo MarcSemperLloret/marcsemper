@@ -521,16 +521,14 @@ module.exports = { cargar, RUTA };
 
 ## Sesión 2 · npm y el proyecto
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>package.json y los scripts</strong>, <strong>Dependencias y versiones</strong> y <strong>Una herramienta de terminal</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · package.json y los scripts
+<p class="lead">Tres horas. Media hora para entender qué declara un proyecto de Node y qué implica añadirle código de terceros, y dos horas y media construyendo una herramienta de terminal que otra persona pueda usar sin que le expliques nada.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué declara el <code>package.json</code> y para qué sirven sus scripts.</li>
-    <li><strong>2. Haz:</strong> Da a tu proyecto los comandos con los que se va a usar.</li>
-    <li><strong>3. Comprueba:</strong> Cualquiera puede arrancarlo leyendo solo el <code>package.json</code>.</li>
+    <li><strong>1. Aprende:</strong> Qué declara el <code>package.json</code>, qué es el versionado semántico, qué hace el fichero de bloqueo y qué preguntas preceden a instalar una dependencia.</li>
+    <li><strong>2. Haz:</strong> Da a tu proyecto los comandos con los que se va a usar, analiza dependencias reales sin instalarlas y termina tu CLI del catálogo.</li>
+    <li><strong>3. Comprueba:</strong> Un compañero arranca tu proyecto y usa tu herramienta sin preguntarte nada.</li>
   </ol>
 </div>
 
@@ -538,16 +536,20 @@ module.exports = { cargar, RUTA };
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Si te doy un proyecto que no conoces, ¿por dónde empiezas para saber cómo se arranca?</li>
-    <li>¿Qué comandos vas a repetir cien veces esta unidad?</li>
-    <li>¿Qué pasaría si cada persona del equipo arrancara el proyecto de una forma distinta?</li>
+    <li>¿Qué riesgo tiene meter en tu proyecto código escrito por desconocidos?</li>
+    <li>¿Qué hace un buen programa de terminal cuando lo llamas mal?</li>
   </ol>
 </div>
 
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Dos asuntos que parecen administrativos y no lo son: cómo se declara un proyecto para que cualquiera pueda arrancarlo, y qué significa de verdad añadirle una línea a `dependencies`.
+
 #### La ficha del proyecto
 
-```bash
-npm init -y
-```
+Se genera con `npm init -y` y se completa a mano:
 
 ```json
 {
@@ -575,7 +577,13 @@ npm init -y
 | `devDependencies` | Lo que hace falta solo para desarrollar |
 | `engines` | Qué versión de Node necesita |
 
-#### Los scripts
+<div class="rule">
+  <p class="rule-label">Los scripts son la interfaz del proyecto</p>
+  <p>El <code>package.json</code> es lo primero que abre quien llega a un proyecto que no conoce. Si arrancar requiere recordar una orden larga con banderas, alguien la escribirá mal.</p>
+  <p>Un proyecto bien montado se arranca con <code>npm start</code>, se desarrolla con <code>npm run dev</code> y se prueba con <code>npm test</code>, y esos nombres son los mismos en todas partes. Es la misma idea que verás en el módulo de servidor con Maven.</p>
+</div>
+
+El `--watch` de Node reinicia el programa solo cuando cambia un fichero; antes hacía falta una dependencia para eso. Los dos guiones de `npm run cli -- listar`, por su parte, separan los argumentos del script de los de npm.
 
 ```bash
 npm start
@@ -583,92 +591,17 @@ npm run dev
 npm run cli -- listar
 ```
 
-<div class="rule">
-  <p class="rule-label">Los scripts son la interfaz del proyecto</p>
-  <p>El <code>package.json</code> es lo primero que abre quien llega a un proyecto que no conoce. Si arrancar requiere recordar una orden larga con banderas, alguien la escribirá mal.</p>
-  <p>Un proyecto bien montado se arranca con <code>npm start</code>, se desarrolla con <code>npm run dev</code> y se prueba con <code>npm test</code>, y esos nombres son los mismos en todas partes. Es la misma idea que verás en el módulo de servidor con Maven.</p>
-</div>
-
-El `--watch` de Node reinicia el programa solo cuando cambia un fichero. Antes hacía falta una dependencia para eso; ahora viene incluido.
-
-Los dos guiones de `npm run cli -- listar` separan los argumentos del script de los de npm.
-
-#### Tarea 4 · La interfaz del proyecto
-
-1. Crea el `package.json` con `npm init` y añade `"type": "module"`.
-2. Define los scripts `start`, `dev` y `cli`.
-3. Declara `engines` con la versión de Node.
-4. Comprueba que `npm run dev` recarga al guardar.
-5. Escribe un `README.md` con las tres órdenes y qué hace cada una.
-6. Pásale el proyecto a un compañero y comprueba que lo arranca sin preguntarte.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres scripts funcionando y un README que basta para arrancar.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade un script que ejecute el CLI con datos de prueba.</span></div>
-  <div><strong>Reto</strong><span>Encadena dos scripts para que uno prepare los datos antes de arrancar.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Tu proyecto tiene <code>package.json</code> con ESM declarado.</li>
-    <li>Los comandos habituales están como scripts.</li>
-    <li>El README dice cómo arrancar.</li>
-    <li>Sabes qué hace <code>--watch</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre <code>dependencies</code> y <code>devDependencies</code>?</li>
-    <li>¿Para qué sirven los dos guiones en <code>npm run cli -- listar</code>?</li>
-    <li>¿Qué declara <code>"type": "module"</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Las primeras hacen falta para ejecutar en producción; las segundas, solo para desarrollar y probar.</p>
-  <p>2 · Para separar los argumentos destinados al script de los de npm.</p>
-  <p>3 · Que los ficheros del proyecto usan módulos ES, con <code>import</code> y <code>export</code>.</p>
-</details>
-
-
-### Bloque 2 · Dependencias y versiones
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se instala una dependencia, qué es el versionado semántico y qué hace el fichero de bloqueo.</li>
-    <li><strong>2. Haz:</strong> Analiza dependencias reales antes de decidir si las instalarías.</li>
-    <li><strong>3. Comprueba:</strong> Sabes decir qué versiones acepta cada especificación.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué riesgo tiene meter en tu proyecto código escrito por desconocidos?</li>
-    <li>Si funciona en tu portátil y no en el del profesor, ¿qué puede haber cambiado?</li>
-    <li>¿Por qué crees que no se sube <code>node_modules</code> al repositorio?</li>
-  </ol>
-</div>
-
-#### Instalar
+#### Qué ocurre al instalar
 
 ```bash
 npm install express            # dependencia de ejecución
 npm install --save-dev nodemon # solo para desarrollar
 npm install                    # todo lo declarado, en un proyecto clonado
-npm uninstall express
 npm outdated                   # qué se ha quedado atrás
 npm audit                      # vulnerabilidades conocidas
 ```
 
 Instalar crea o actualiza tres cosas: la entrada en `package.json`, el árbol real en `node_modules` y el `package-lock.json`.
-
-#### Versionado semántico
 
 ```text
     4 . 21 . 2
@@ -686,15 +619,11 @@ Instalar crea o actualiza tres cosas: la entrada en `package.json`, el árbol re
 
 El acento circunflejo es el valor por defecto de npm, y es la razón de que dos instalaciones del mismo `package.json` en días distintos puedan traer código distinto.
 
-#### El fichero de bloqueo
-
 <div class="rule">
   <p class="rule-label">El <code>package-lock.json</code> se sube al repositorio</p>
   <p>Guarda la versión exacta de cada paquete y de cada dependencia de cada paquete. Es lo que hace que tu proyecto instale hoy lo mismo que instaló ayer, y en el portátil del profesor lo mismo que en el tuyo.</p>
   <p>Sin él, «en mi máquina funciona» deja de ser una broma. Y <code>node_modules</code>, en cambio, no se sube nunca: son miles de ficheros reconstruibles con un solo comando.</p>
 </div>
-
-#### Antes de instalar, pregúntate
 
 <figure class="diagram">
   <figcaption>Cuatro preguntas antes de añadir una dependencia</figcaption>
@@ -708,69 +637,7 @@ El acento circunflejo es el valor por defecto de npm, y es la razón de que dos 
 
 Cada dependencia es código que se ejecuta con tus permisos, que puede tener vulnerabilidades y que alguien tiene que seguir manteniendo. En este proyecto vas a instalar exactamente una.
 
-#### Tarea 5 · Analizar sin instalar
-
-1. Crea el `.gitignore` con `node_modules` y `.env`.
-2. Busca la ficha de tres paquetes conocidos y anota versión, dependencias y última publicación.
-3. Di qué versiones acepta cada una de estas especificaciones: `^2.4.1`, `~2.4.1`, `2.4.1`.
-4. Instala Express, mira qué cambió en los tres sitios, y desinstálalo.
-5. Ejecuta `npm audit` y lee el informe.
-6. Borra `node_modules`, ejecuta `npm install` y comprueba que todo vuelve.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Análisis de tres paquetes y dominio de las especificaciones de versión.</span></div>
-  <div><strong>Si lo tienes</strong><span>Explica qué pasaría si un paquete publicara una versión mayor con cambios incompatibles.</span></div>
-  <div><strong>Reto</strong><span>Busca un caso real de paquete comprometido y resume qué ocurrió.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Interpretas una versión semántica y sus rangos.</li>
-    <li>Sabes qué se sube al repositorio y qué no.</li>
-    <li>Evalúas una dependencia antes de instalarla.</li>
-    <li>Reconstruyes <code>node_modules</code> desde cero.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué acepta <code>^1.2.3</code>?</li>
-    <li>¿Para qué sirve el fichero de bloqueo?</li>
-    <li>¿Por qué no se sube <code>node_modules</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Cualquier 1.x.x igual o posterior: menores y parches, no la versión mayor.</p>
-  <p>2 · Para que todas las instalaciones traigan exactamente las mismas versiones.</p>
-  <p>3 · Porque es reconstruible, pesa muchísimo y depende del sistema donde se instale.</p>
-</details>
-
-
-### Bloque 3 · Una herramienta de terminal
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se diseña un programa de terminal que otra persona pueda usar.</li>
-    <li><strong>2. Haz:</strong> Termina tu CLI del catálogo con sus comandos y su ayuda.</li>
-    <li><strong>3. Comprueba:</strong> Un compañero lo usa sin que le expliques nada.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué hace un buen programa de terminal cuando lo llamas mal?</li>
-    <li>¿Cómo sabes qué comandos acepta un programa que no conoces?</li>
-    <li>¿Qué debería imprimir: todo, o lo justo?</li>
-  </ol>
-</div>
-
-#### El despachador
+#### Una herramienta que otra persona pueda usar
 
 ```javascript
 const comandos = {
@@ -800,8 +667,6 @@ try {
 
 Es el objeto de funciones de la sesión 3 de la UD3, ahora con un cometido real. Añadir un comando es añadir una línea.
 
-#### Lo que hace usable una herramienta
-
 | Regla | Por qué |
 | ----- | ------- |
 | Ayuda con ejemplos reales | Nadie lee la documentación antes de probar |
@@ -816,7 +681,7 @@ Es el objeto de funciones de la sesión 3 de la UD3, ahora con un cometido real.
   <p>Es lo mismo que exigías a tus mensajes de validación en la UD4, ahora sin interfaz donde esconderlo.</p>
 </div>
 
-#### Salida legible
+`console.table` también existe en Node, y para una lista de objetos es la diferencia entre una salida que se lee y un volcado que no:
 
 ```javascript
 console.table(productos.map(({ id, nombre, precio, stock }) => ({
@@ -824,40 +689,135 @@ console.table(productos.map(({ id, nombre, precio, stock }) => ({
 })));
 ```
 
-`console.table` también existe en Node, y para una lista de objetos es la diferencia entre una salida que se lee y un volcado que no.
+### Se trabaja
 
-#### Tarea 6 · El CLI completo
+<p class="stage stage--guided">150 minutos · el proyecto y su herramienta de terminal</p>
+
+Los dos últimos pasos son los que de verdad evalúan lo anterior: uno pone tu herramienta en manos de otra persona, y el otro comprueba que tu proyecto se reconstruye desde cero.
+
+#### Paso 1 · La interfaz del proyecto · 30 min
+
+1. Crea el `package.json` con `npm init` y añade `"type": "module"`.
+2. Define los scripts `start`, `dev` y `cli`.
+3. Declara `engines` con la versión de Node.
+4. Comprueba que `npm run dev` recarga al guardar.
+5. Crea el `.gitignore` con `node_modules` y `.env`.
+6. Escribe un `README.md` con las tres órdenes y qué hace cada una.
+
+#### Paso 2 · Analizar sin instalar · 35 min
+
+1. Busca la ficha de tres paquetes conocidos y anota versión, número de dependencias y fecha de la última publicación.
+2. Di qué versiones acepta cada una de estas especificaciones: `^2.4.1`, `~2.4.1`, `2.4.1`. Escribe para cada una dos versiones que sí y una que no.
+3. Instala Express, mira qué cambió en los tres sitios, y desinstálalo.
+4. Ejecuta `npm audit` y lee el informe.
+5. Aplica a los tres paquetes las cuatro preguntas del diagrama y decide cuáles instalarías.
+6. Explica qué pasaría si uno de ellos publicara mañana una versión mayor con cambios incompatibles, teniendo tú un `^` en el `package.json`.
+
+#### Paso 3 · El CLI completo · 50 min
+
+Es el trabajo central de la sesión.
 
 1. Implementa `listar`, `buscar`, `ver`, `añadir`, `borrar` y `ayuda`.
-2. Valida los argumentos de cada uno con las funciones de la UD3.
-3. Escribe mensajes de error que digan qué se esperaba.
+2. Valida los argumentos de cada uno con las funciones de la UD3, sin reescribirlas.
+3. Escribe mensajes de error que digan qué se esperaba, qué se recibió y cuál es la forma correcta.
 4. Devuelve el código de salida correcto en cada caso.
 5. Pide confirmación antes de borrar.
-6. Dale el programa a un compañero, sin explicarle nada, y anota dónde se atasca.
+6. Usa `console.table` para las listas y comprueba que la salida se lee.
+
+**Antes de continuar:** llama a tu programa de cinco formas equivocadas distintas —sin comando, con un comando que no existe, sin argumentos, con un precio que no es número y con uno negativo— y comprueba que las cinco dan un mensaje útil y el código de salida correcto.
+
+#### Paso 4 · Que lo use otra persona · 20 min
+
+Dale el proyecto a un compañero **sin explicarle nada**, ni siquiera cómo se arranca.
+
+| Momento | ¿Se atasca? | Qué le faltó | Qué has corregido |
+| ------- | ----------- | ------------ | ----------------- |
+| Arrancar el proyecto | | | |
+| Descubrir qué comandos hay | | | |
+| Ejecutar el primero | | | |
+| Entender un error | | | |
+| Borrar algo sin miedo | | | |
+
+Anota dónde se atasca **sin ayudarle**, que es la parte difícil. Cada atasco es un defecto de tu README, de tu ayuda o de tus mensajes, no de la persona.
+
+Corrige lo que salga y vuelve a probarlo con alguien distinto.
+
+#### Paso 5 · Reconstruir desde cero · 15 min
+
+1. Borra `node_modules` por completo y ejecuta `npm install`. Comprueba que todo vuelve.
+2. Clona tu propio repositorio en otra carpeta, como si fueras otra persona, y arráncalo siguiendo solo el README.
+3. Comprueba qué falta: seguramente el `.env`, que no está en el repositorio. ¿Explica tu README cómo crearlo a partir del `.env.example`?
+4. Anota cuántos pasos han hecho falta desde clonar hasta ver funcionar el programa. Si son más de tres, mira cuál se puede automatizar en un script.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto es de seguridad y conviene hacerlo antes de instalar la primera dependencia de la unidad.
+
+##### Reto 1 · Cuando la dependencia es el problema
+
+Cada paquete que instalas ejecuta código con tus permisos, y lo mismo hacen sus dependencias, y las de sus dependencias.
+
+1. Toma un paquete de uso corriente y averigua **cuántos paquetes acabas instalando en total** al añadirlo. `npm ls --all` te lo dice después de instalar. El número suele sorprender.
+2. Busca un caso real documentado de un paquete de npm que fue comprometido o retirado, y resume en cinco líneas: qué pasó, cómo llegó a los proyectos que lo usaban y qué lo habría evitado.
+3. Explica qué papel juega el `package-lock.json` en ese escenario, y qué papel no juega. No protege de todo, y conviene saber de qué sí.
+4. Busca qué es un *typosquatting* de paquetes y por qué el nombre que escribes en `npm install` importa.
+5. Aplica las cuatro preguntas del diagrama a Express, que es la única dependencia que instalarás en esta unidad, y escribe si la instalarías. La respuesta es sí; lo que se evalúa es el razonamiento.
+6. Escribe en tres líneas qué política seguirías en un proyecto real para decidir cuándo actualizar dependencias, sabiendo que actualizar tarde y actualizar a ciegas son igual de malos.
+
+##### Reto 2 · Una herramienta que se puede encadenar
+
+Los programas de terminal valen mucho más cuando se combinan con otros. Para eso tienen que respetar unas convenciones.
+
+1. Añade una opción `--json` que imprima el resultado como JSON sin ningún adorno, para poder pasárselo a otro programa.
+2. Comprueba que funciona encadenándolo: redirige la salida a un fichero y ábrelo.
+3. Haz que los mensajes informativos vayan a la salida de error y solo el resultado a la estándar. Compruébalo redirigiendo solo una de las dos.
+4. Haz que el programa **acepte datos por la entrada estándar** además de por argumentos, de modo que se le pueda pasar un JSON desde otro proceso.
+5. Prueba la cadena completa: un comando que produce datos, el tuyo que los transforma, y la salida guardada en un fichero.
+6. Explica en tres líneas por qué «silencio cuando todo va bien» deja de ser una manía en cuanto tu programa forma parte de una cadena automatizada.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Seis comandos con ayuda, validación y códigos de salida.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade una opción <code>--json</code> que imprima el resultado sin formato.</span></div>
-  <div><strong>Reto</strong><span>Haz que el programa funcione también leyendo datos por la entrada estándar.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Tres scripts funcionando con su README, las especificaciones de versión dominadas, y seis comandos con ayuda, validación y códigos de salida.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de atascos de otra persona contestada y corregida, y el proyecto reconstruido desde un clon siguiendo solo el README.</span></div>
+  <div><strong>Reto</strong><span>El análisis del árbol de dependencias con su caso real documentado, o la herramienta encadenable con <code>--json</code> y entrada estándar.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 2</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>El proyecto se arranca leyendo solo el <code>package.json</code>.</li>
-    <li>Entiendes el versionado y el fichero de bloqueo.</li>
+    <li>El proyecto se arranca leyendo solo el <code>package.json</code> y el README.</li>
+    <li>Los comandos habituales están como scripts.</li>
+    <li>Interpretas una versión semántica y sus rangos.</li>
+    <li>Sabes qué se sube al repositorio y qué no.</li>
     <li>Tu herramienta valida, informa y termina con el código correcto.</li>
     <li>Sigues sin instalar dependencias.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué diferencia hay entre <code>dependencies</code> y <code>devDependencies</code>?</li>
+    <li>¿Para qué sirven los dos guiones en <code>npm run cli -- listar</code>?</li>
+    <li>¿Qué acepta <code>^1.2.3</code>?</li>
+    <li>¿Para qué sirve el fichero de bloqueo, y por qué no se sube <code>node_modules</code>?</li>
+    <li>¿Qué debe hacer un programa de terminal cuando lo llaman mal?</li>
+    <li>¿Por qué conviene que un programa esté callado cuando todo va bien?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Explicar cómo se usa y terminar con un código de error.</p>
-  <p>2 · Qué se esperaba, qué se recibió y cuál es la forma correcta.</p>
-  <p>3 · Porque un programa silencioso cuando todo va bien se puede encadenar con otros.</p>
+  <p>1 · Las primeras hacen falta para ejecutar en producción; las segundas, solo para desarrollar y probar.</p>
+  <p>2 · Para separar los argumentos destinados al script de los de npm.</p>
+  <p>3 · Cualquier 1.x.x igual o posterior: menores y parches, no la versión mayor.</p>
+  <p>4 · Para que todas las instalaciones traigan exactamente las mismas versiones; <code>node_modules</code> no se sube porque es reconstruible y depende del sistema.</p>
+  <p>5 · Explicar cómo se usa y terminar con un código de error.</p>
+  <p>6 · Porque así se puede encadenar con otros programas sin que su salida estorbe.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 2 · 5–10 minutos</p>
@@ -868,6 +828,7 @@ console.table(productos.map(({ id, nombre, precio, stock }) => ({
     <li>Escribe dos preguntas que te harías antes de instalar una dependencia.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 3 · Ficheros y datos
