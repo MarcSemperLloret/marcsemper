@@ -63,7 +63,9 @@ En cada criterio, una evidencia ausente no permite acreditar el logro; una evide
 
 <p class="stage stage--brief">10 minutos · conceptos y ejemplo resuelto</p>
 
-La **sostenibilidad** implica atender las necesidades del presente sin comprometer las posibilidades de las generaciones futuras. En una empresa exige considerar el uso de recursos, los efectos sobre las personas y la continuidad de su actividad a largo plazo. Una mejora aislada permite hablar de ese resultado concreto; valorar el conjunto de la empresa requiere examinar más impactos.
+La **sostenibilidad** consiste en atender las necesidades del presente sin comprometer las de las generaciones futuras. Llevada a una empresa, obliga a mirar tres cosas a la vez: qué recursos consume su actividad, a quién afecta y si puede mantenerse a largo plazo.
+
+Conviene separar desde el principio dos afirmaciones que suelen confundirse. Comprobar que una mejora concreta funciona demuestra esa mejora y nada más. Afirmar que la empresa es sostenible exige haber revisado el resto de sus impactos, y ese es el trabajo de esta unidad.
 
 Los criterios **ASG** ayudan a organizar ese análisis:
 
@@ -73,7 +75,7 @@ Los criterios **ASG** ayudan a organizar ese análisis:
 | Social | Condiciones de trabajo, seguridad, igualdad y acceso de las personas a los servicios. | ¿Quién se beneficia, quién soporta el perjuicio y de qué manera? |
 | Gobernanza | Responsabilidades, controles y transparencia al tomar decisiones. | ¿Quién decide, con qué información y quién comprueba el resultado? |
 
-La **viabilidad económica** permite mantener la actividad y sostener las mejoras. El presupuesto es una restricción real, pero ahorrar dinero no demuestra por sí solo un beneficio ambiental o social. La gobernanza tampoco equivale al beneficio económico.
+A esas tres dimensiones se añade una condición previa: la **viabilidad económica**. Una empresa que no se sostiene no puede mantener ninguna mejora, de modo que el presupuesto constituye una restricción real y no una excusa. Ahorrar dinero, en cambio, no demuestra por sí solo un beneficio ambiental o social: son resultados distintos, que unas veces coinciden y otras no.
 
 #### Ejemplo resuelto · del hecho al impacto
 
@@ -91,6 +93,37 @@ Una cafetería sustituye vasos desechables por reutilizables. El cambio está do
 </dl>
 
 Un **hecho** es información disponible; un **impacto** es un efecto sobre el entorno o las personas; una **hipótesis** es una explicación o resultado esperado que aún debe comprobarse. En la actividad tendrás que distinguir los tres.
+
+<details class="aside aside--extra">
+<summary>Consultar · cómo se hace este diagnóstico en una empresa</summary>
+
+PixelStore y sus cifras son un caso construido para la actividad, pero el procedimiento que vas a seguir sí es el que se aplica en una empresa. Conviene que reconozcas sus cinco pasos y el nombre de los instrumentos que los sostienen.
+
+**1 · Delimitar el alcance y levantar el inventario.** Antes de mejorar nada se establece qué actividades entran en el análisis y se inventaría lo que consumen y lo que emiten. En la parte ambiental el marco de referencia es el **GHG Protocol**, que reparte las emisiones en tres alcances: las de fuentes propias, las de la energía comprada y las del resto de la cadena de valor. En una tienda que compra aparatos y los envía, la mayor parte se concentra en el tercero. Ese reparto explica por qué reducir el papel de oficina apenas mueve el total.
+
+**2 · Analizar la materialidad.** Se identifican los asuntos relevantes y se ordenan por importancia, en lugar de atender al que primero llama la atención. Es el paso que trabajarás en la sesión 3 con el nombre de **doble materialidad**, y el que exigen los estándares europeos de información de sostenibilidad (**ESRS**) a las empresas obligadas a informar.
+
+**3 · Medir con un método reconocido.** Comparar dos alternativas requiere una regla común, no una estimación propia. El **análisis de ciclo de vida** contabiliza los impactos de un producto desde la extracción de los materiales hasta su fin de vida, y está normalizado en **ISO 14040** e **ISO 14044**. Es el método que resuelve casos como el del embalaje de F3.
+
+**4 · Fijar objetivo, línea base y responsable.** Una mejora sin año de referencia, sin cifra objetivo y sin una persona encargada de comprobarla no se puede verificar después. La ausencia de ese encargo es justamente lo que describe F6.
+
+**5 · Verificar antes de comunicar.** En las empresas obligadas a informar, un tercero independiente revisa la información de sostenibilidad publicada. La comunicación va al final del proceso y no sustituye a ninguno de los pasos anteriores.
+
+##### Dónde deja de ser voluntario
+
+Tres hechos del dossier tienen una norma detrás, de modo que no dependen de la buena voluntad de la dirección:
+
+| Hecho | Obligación que le afecta |
+| --- | --- |
+| F5 · el pago no se puede completar con el teclado | La **Ley 11/2023**, que traslada al derecho español la Ley Europea de Accesibilidad, exige accesibilidad a los servicios de comercio electrónico desde el 28 de junio de 2025. Su referencia técnica es la norma **EN 301 549**, que remite a las **WCAG** en nivel AA. Un foco que queda atrapado en un cuadro de diálogo incumple el criterio «sin trampas para el foco del teclado». La exención prevista para las microempresas no alcanza a PixelStore, que tiene 45 personas. |
+| F2 · doce portátiles almacenados sin destino | El **Real Decreto 110/2015** regula los residuos de aparatos eléctricos y electrónicos y aplica la jerarquía de residuos: la preparación para la reutilización tiene prioridad sobre el reciclaje. Almacenar de forma indefinida equipos que funcionan no figura entre las salidas previstas. |
+| F6 · el mensaje «una empresa sostenible» | La **Directiva (UE) 2024/825** prohíbe las afirmaciones ambientales genéricas, como «verde» o «sostenible», cuando no se acredita un comportamiento ambiental excelente. Sus obligaciones resultan exigibles desde el 27 de septiembre de 2026. La transposición española seguía pendiente cuando se redactó esta página, de modo que conviene comprobar en qué estado se encuentra. |
+
+##### El tamaño de la empresa cambia la obligación, no el método
+
+PixelStore tiene 45 personas, así que no está obligada a publicar información de sostenibilidad bajo la directiva europea de informes corporativos: la revisión de 2025 situó ese umbral en 1.000 personas trabajadoras. De ahí no se deduce que el análisis le resulte ajeno. Las empresas grandes deben responder por su cadena de valor y trasladan estas preguntas a quienes les suministran, así que una empresa pequeña acaba haciendo el ejercicio porque un cliente se lo pide en un formulario de compra.
+
+</details>
 
 ### Se trabaja
 
@@ -114,7 +147,7 @@ PixelStore es una tienda de tecnología con 45 personas en desarrollo, atención
 
 #### Las propuestas · presupuesto de 3.000 €
 
-Estos importes representan el coste total de cada piloto para el ejercicio, incluido el trabajo previsto. Puedes escoger una propuesta o combinar varias hasta 3.000 €; también puedes dejar una parte sin gastar. Las mejoras esperadas todavía no se han medido.
+Cada importe es el coste total de esa actuación durante un año, incluido el tiempo de trabajo que exige. Puedes escoger una propuesta, combinar varias hasta 3.000 € o dejar una parte del presupuesto sin gastar. Las mejoras que cada una promete todavía no se han medido.
 
 | Opción | Coste | Actuación propuesta y límite |
 | --- | --- | --- |
@@ -123,7 +156,7 @@ Estos importes representan el coste total de cada piloto para el ejercicio, incl
 | C · Corregir el pago | 2.400 € | Reparar el bloqueo de teclado y repetir la prueba con participantes. El piloto solo aborda esa barrera; no certifica la accesibilidad de toda la web. |
 | D · Campaña de comunicación | 600 € | Publicar una campaña sobre la reducción de papel. No incluye cambios operativos ni una revisión de otros impactos. |
 
-Elige con la información disponible. Una actuación puede afectar a varias dimensiones ASG y no es necesario financiar una de cada tipo. Los problemas que queden fuera necesitan una respuesta posterior; dejarlos sin presupuesto no elimina su importancia. Además de la inversión, señala qué debería hacer dirección con el mensaje de F6 antes de publicarlo.
+Decide con la información que tienes. Una misma actuación puede afectar a varias dimensiones ASG, de modo que no hace falta financiar una de cada tipo. Lo que dejes fuera sigue siendo un problema: no financiarlo ahora no lo vuelve menos importante, y tendrás que señalarlo como pendiente. Además de repartir la inversión, indica qué debería hacer dirección con el mensaje de F6 antes de publicarlo.
 
 #### 1. Identificar impactos · 10 minutos
 
@@ -133,9 +166,17 @@ No copies únicamente «F2: ambiental». Explica la relación entre retirar un e
 
 #### 2. Interpretar una mejora parcial · 8 minutos
 
-Comprueba con F1 de dónde sale el 75 % del mensaje. Después calcula con F3 los kilogramos de embalaje de cada lote y el porcentaje de envíos dañados. Usa las operaciones **envíos × gramos / 1.000** y **dañados / envíos × 100**.
+Comprueba primero con F1 de dónde sale el 75 % del mensaje de dirección.
 
-Escribe qué ha mejorado, qué ha empeorado y qué dato falta para valorar el cambio de embalaje en conjunto. Conserva las unidades: los kilogramos de embalaje ahorrados no equivalen a kilogramos de CO₂ evitados.
+Después trabaja F3 con tres cálculos encadenados. Cada lote es de 2.000 envíos:
+
+1. **Kilogramos de embalaje de cada lote.** Multiplica envíos por gramos y divide entre 1.000. Anota la diferencia entre los dos lotes: son los kilogramos de cartón que se ahorran.
+2. **Porcentaje de envíos dañados, antes y después.** Divide los dañados entre los envíos y multiplica por 100. Anota también cuántos productos se dañan de más con el embalaje nuevo.
+3. **Cartón ahorrado por cada producto dañado de más.** Divide el resultado del primer cálculo entre el del segundo.
+
+Ese tercer número es el que decide el caso, porque pone las dos caras del cambio en la misma balanza. De un lado, esos kilogramos de cartón. Del otro, fabricar un aparato electrónico de repuesto, enviarlo otra vez y gestionar el dañado. Escribe cuál de los dos pesa más y en qué te basas, aunque no dispongas de la cifra exacta de cada uno.
+
+Conserva las unidades al redactarlo: los kilogramos de cartón ahorrados no equivalen a kilogramos de CO₂ evitados. Resolver esa comparación con rigor exige el análisis de ciclo de vida que se describe en el material de consulta. Indica por último qué dato pedirías para cerrarla.
 
 #### 3. Recomendar una inversión · 12 minutos
 
@@ -184,7 +225,9 @@ Conserva la hoja. En la sesión 2 ampliarás tres impactos para estudiar riesgos
 
 El consumo de papel se reduce en 6.000 hojas: 6.000 / 8.000 × 100 = **75 %**. El dato respalda esa reducción del consumo de papel de oficina en los periodos comparados.
 
-El embalaje pasa de **1.600 kg a 1.000 kg**: 600 kg menos por lote. Los envíos dañados pasan del **2 % al 6 %**: cuatro puntos porcentuales más y el triple de casos. Falta valorar los productos dañados, su destino y los transportes adicionales para concluir si mejora el conjunto.
+El embalaje pasa de **1.600 kg a 1.000 kg**: 600 kg menos por lote. Los envíos dañados pasan del **2 % al 6 %**, es decir, cuatro puntos porcentuales más y 80 productos dañados adicionales sobre los 2.000 envíos.
+
+El tercer cálculo relaciona ambas cifras: 600 / 80 = **7,5 kg de cartón ahorrados por cada producto dañado de más**. Esa es la comparación que hay que sostener, y basta con ordenar las magnitudes para responderla: fabricar un aparato electrónico y transportarlo de nuevo arrastra un impacto muy superior al de 7,5 kg de cartón. El cambio de embalaje, con los datos disponibles, empeora el resultado en lugar de mejorarlo. Un análisis de ciclo de vida permitiría cuantificar esa diferencia en lugar de ordenarla.
 
 Una formulación respaldada por F1 sería: «PixelStore ha reducido un 75 % el consumo de papel de oficina entre dos trimestres con el mismo número de pedidos». Ese dato no describe por sí solo la sostenibilidad de toda la empresa.
 
@@ -305,7 +348,7 @@ Un **indicador** expresa qué observaremos y en qué unidad. «Consumimos menos�
 
 #### No todo tiene la misma importancia
 
-Imaginad una gran empresa tecnológica. Detectamos dos problemas ambientales:
+Considera una gran empresa tecnológica en la que se detectan dos problemas ambientales:
 
 <div class="compare-pair">
   <div>
