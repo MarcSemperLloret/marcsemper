@@ -1249,7 +1249,7 @@ respuesta.end(JSON.stringify({ error: "No encontrado" }));
   <p>Escribe siempre <code>return</code> después de responder. Es la costumbre que te ahorrará las dos caras del mismo problema.</p>
 </div>
 
-Si al arrancar ves `EADDRINUSE`, el puerto está ocupado: casi siempre por otro servidor tuyo que se quedó corriendo. Y el puerto, como toda la configuración, sale del entorno:
+Si al arrancar ves `EADDRINUSE`, el puerto está ocupado: casi siempre por otro servidor tuyo que se quedó corriendo. El puerto, como toda la configuración, sale del entorno:
 
 ```javascript
 const PUERTO = Number(process.env.PUERTO ?? 3000);
