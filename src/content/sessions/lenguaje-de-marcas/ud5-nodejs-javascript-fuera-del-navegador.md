@@ -166,17 +166,18 @@ Para probar tu servidor sin depender del navegador. Con REST Client de VS Code l
 | **Sesión 6** | Integración y entrega | Refactorización, depuración y revisión por pares | 3 h |
 | **Total** | | **Un servidor propio, escrito dos veces** | **18 h** |
 
-Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada bloque mantiene el ritmo de las unidades anteriores:
+Cada sesión dura tres horas y mantiene el reparto de las unidades anteriores: la teoría se concentra al principio y el resto de la tarde se construye. En esta unidad, además, buena parte del trabajo consiste en romper a propósito lo que acabas de montar, porque un servidor solo se conoce cuando se ha visto fallar.
 
 <figure class="diagram">
-  <figcaption>El ritmo de cada bloque de una hora</figcaption>
+  <figcaption>El ritmo de cada sesión de tres horas</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>Recupera · 5 min</li>
-    <li>Aprende y observa · 10–20 min</li>
-    <li>Practica · 30–40 min</li>
-    <li>Cierra · 5 min</li>
+    <li>Se explica · 25 min</li>
+    <li>Se trabaja · 150 min</li>
+    <li>Cierre · 5 min</li>
   </ol>
 </figure>
+
+El bloque de trabajo se divide en pasos cronometrados, y cada sesión termina con una **ampliación** de dos retos para quien acabe antes.
 
 ---
 
@@ -1853,36 +1854,36 @@ Todas tus rutas asíncronas terminan igual: un `try` con la lógica y un `catch`
 
 ## Sesión 6 · Integración y entrega
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Reto acumulativo · otro servicio</strong>, <strong>Depurar en el servidor</strong> y <strong>Auditoría final, revisión por pares y entrega</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Reto acumulativo · otro servicio
+<p class="lead">Tres horas. Media hora para aprender a diagnosticar cuando no hay interfaz que mirar, y dos horas y media montando un servicio nuevo, reparando uno roto y cerrando la entrega.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Nada nuevo. Hoy se comprueba si sabes montar un servicio desde cero.</li>
-    <li><strong>2. Haz:</strong> Construye un servidor completo para un dominio que no has visto.</li>
-    <li><strong>3. Comprueba:</strong> Lo entregas con su fichero de pruebas y su README.</li>
+    <li><strong>1. Aprende:</strong> En qué orden se monta un servicio, cómo se localiza el lado del fallo cuando hay dos consolas, y qué se revisa en un proyecto de servidor antes de entregarlo.</li>
+    <li><strong>2. Haz:</strong> Construye un servidor para un dominio que no has visto, repara uno con cinco fallos y audita el tuyo y el de un compañero.</li>
+    <li><strong>3. Entrega:</strong> El repositorio completo con su README, su fichero de peticiones y las tres listas de auditoría.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿En qué orden montarías un servicio nuevo?</li>
-    <li>¿Qué escribirías primero: las rutas o el almacén?</li>
-    <li>¿Cómo demuestras que funciona sin abrir el navegador?</li>
+    <li>¿En qué orden montarías un servicio nuevo: las rutas o el almacén?</li>
+    <li>Si el navegador muestra un error, ¿cómo sabes si el fallo es del cliente o del servidor?</li>
+    <li>¿Cómo demuestras que tu servidor funciona sin abrir el navegador?</li>
   </ol>
 </div>
 
-#### El encargo
+### Se explica
 
-Un dominio distinto del tuyo —reservas de aulas, préstamos de una biblioteca, incidencias de un taller— con sus reglas propias, al menos una de las cuales no se resuelve con un CRUD elemental: no se puede reservar un aula ocupada, no se presta un ejemplar ya prestado.
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
 
-En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los datos y a dejar funcionando las dos primeras rutas, que es donde se ve si el método es tuyo. El resto se termina como trabajo personal y se entrega con la unidad.
+Hoy no entra nada nuevo del lenguaje ni del framework. Entran dos habilidades: montar un servicio en el orden correcto, y encontrar un fallo cuando la pantalla no te enseña nada.
+
+#### El orden de montaje
 
 <figure class="diagram">
-  <figcaption>El orden de montaje</figcaption>
+  <figcaption>De los datos a las rutas, nunca al revés</figcaption>
   <ol class="flow">
     <li>Modelar los datos y sembrar el fichero JSON</li>
     <li>El almacén con sus operaciones</li>
@@ -1893,57 +1894,7 @@ En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los 
   </ol>
 </figure>
 
-#### Los requisitos mínimos
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Lo que hay que entregar</p>
-  <ul class="checklist">
-    <li>Cinco rutas, con al menos un <code>POST</code> y un <code>DELETE</code>.</li>
-    <li>Validación de entrada con respuesta 400 y lista de errores.</li>
-    <li>La regla de negocio del enunciado, con su código de estado propio.</li>
-    <li>Escritura segura en el fichero de datos.</li>
-    <li>Registro de peticiones y manejador de errores central.</li>
-    <li>Un <code>peticiones.http</code> que recorra todos los casos, incluidos los que fallan.</li>
-    <li>Un README con cómo arrancarlo y qué rutas ofrece.</li>
-  </ul>
-</div>
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las cinco rutas funcionando con sus estados correctos.</span></div>
-  <div><strong>Si lo tienes</strong><span>La regla de negocio y todos los casos de error cubiertos.</span></div>
-  <div><strong>Reto</strong><span>Añade una consulta con filtros combinables por parámetros de la URL.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Has montado un servicio completo sin partir del tuyo.</li>
-    <li>Las capas siguen separadas.</li>
-    <li>Cada situación devuelve su código de estado.</li>
-    <li>El fichero de pruebas demuestra lo que dices.</li>
-  </ul>
-</div>
-
-
-### Bloque 2 · Depurar en el servidor
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se diagnostica un fallo cuando no hay interfaz que mirar.</li>
-    <li><strong>2. Haz:</strong> Repara un servidor con cinco fallos.</li>
-    <li><strong>3. Comprueba:</strong> Sabes decir en qué lado está el problema antes de tocar nada.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si el navegador muestra un error, ¿cómo sabes si el fallo es del cliente o del servidor?</li>
-    <li>¿Qué mira primero: la consola del navegador o la terminal?</li>
-    <li>¿Qué información te da el código de estado sobre dónde buscar?</li>
-  </ol>
-</div>
+Empezar por las rutas es la tentación, porque es la parte que se ve. El problema es que entonces las reglas de negocio acaban escritas dentro de los manejadores, y ahí no se pueden probar ni reutilizar. La capa de HTTP es la última porque es la más superficial.
 
 #### Dos consolas, y hay que mirar la correcta
 
@@ -1959,15 +1910,11 @@ En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los 
 
 Ese registro de la sesión 5 deja de ser un adorno: es lo que separa «no llega la petición» de «llega y falla», que es la misma pregunta de la UD4 trasladada al servidor.
 
-#### El inspector
-
 ```bash
 node --inspect src/servidor.js
 ```
 
 Con el servidor arrancado así, puedes conectar DevTools o el depurador de VS Code y poner puntos de interrupción en tu código de servidor: mismo depurador, mismo procedimiento que en la UD3.
-
-#### Los fallos típicos de un servidor Node
 
 | Síntoma | Causa habitual |
 | ------- | -------------- |
@@ -1984,45 +1931,70 @@ Con el servidor arrancado así, puedes conectar DevTools o el depurador de VS Co
   <p>Antes de investigar, repite la petición con tu cliente HTTP. Si desde ahí funciona, el problema está en el cliente y no en el servidor; si falla igual, has eliminado media docena de variables de un golpe.</p>
 </div>
 
-#### Tarea 17 · El servidor roto
+#### Revisar un servidor ajeno
 
-Recibirás un proyecto con cinco fallos, uno de cada familia de la tabla. Para cada uno:
+La revisión de hoy empieza sin leer una línea de código, y los cuatro primeros puntos no lo necesitan:
 
-1. Escribe el síntoma exacto y qué esperabas.
-2. Di si el fallo es del cliente o del servidor, y cómo lo has sabido.
-3. Formula la hipótesis antes de tocar nada.
-4. Compruébala con el registro, el cliente HTTP o un punto de interrupción.
-5. Corrige con el cambio más pequeño posible.
+1. Clonarlo, instalar y arrancarlo. Anotar cada tropiezo.
+2. Ejecutar su fichero de peticiones y comprobar que hace lo que dice.
+3. Enviar datos inválidos y mirar qué responde.
+4. Pedir un fichero fuera de la carpeta pública y comprobar si se defiende.
+5. Señalar una decisión bien tomada y una mejorable, con su razón.
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres fallos localizados con su hipótesis escrita.</span></div>
-  <div><strong>Si lo tienes</strong><span>Los cinco, y una comprobación que hubiera evitado cada uno.</span></div>
-  <div><strong>Reto</strong><span>Rompe tu propio proyecto de forma sutil y cronometra a un compañero.</span></div>
-</div>
+Si el primer punto falla, ese es el hallazgo más valioso que le puedes devolver: un proyecto que no arranca desde una instalación limpia no está terminado, por bien escrito que esté por dentro.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · servicio nuevo, servidor roto y cierre del proyecto</p>
+
+El primer paso no cabe entero en su hora, y no se pretende: lo que se evalúa es que el método sea tuyo, y eso se ve en el modelado y en las dos primeras rutas.
+
+#### Paso 1 · Otro servicio · 50 min
+
+Recibirás un dominio distinto del tuyo —reservas de aulas, préstamos de una biblioteca, incidencias de un taller— con sus reglas propias, al menos una de las cuales **no se resuelve con un CRUD elemental**: no se puede reservar un aula ocupada, no se presta un ejemplar ya prestado.
+
+Sigue el orden de montaje de la explicación. En la sesión:
+
+1. Modela los datos y siembra el fichero JSON.
+2. Escribe el almacén con sus operaciones.
+3. Escribe la regla de negocio **fuera** de las rutas, sin que sepa nada de HTTP.
+4. Deja funcionando las dos primeras rutas con sus códigos.
+5. Empieza el `peticiones.http` con los casos de esas dos.
+
+El resto se termina como trabajo personal y se entrega con la unidad, con estos requisitos:
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
+  <p class="checkpoint-label">Lo que hay que entregar del servicio</p>
   <ul class="checklist">
-    <li>Separas fallos de cliente de fallos de servidor.</li>
-    <li>Usas Network, el registro y la terminal en el orden correcto.</li>
-    <li>Sabes arrancar Node con el inspector.</li>
-    <li>Reproduces sin navegador antes de investigar.</li>
+    <li>Cinco rutas, con al menos un <code>POST</code> y un <code>DELETE</code>.</li>
+    <li>Validación de entrada con respuesta 400 y lista de errores.</li>
+    <li>La regla de negocio del enunciado, con su código de estado propio.</li>
+    <li>Escritura segura en el fichero de datos.</li>
+    <li>Registro de peticiones y manejador de errores central.</li>
+    <li>Un <code>peticiones.http</code> que recorra todos los casos, incluidos los que fallan.</li>
+    <li>Un README con cómo arrancarlo y qué rutas ofrece.</li>
   </ul>
 </div>
 
+La regla de negocio tiene truco: decide **qué código de estado** merece intentar reservar un aula ocupada. No es un 400 ni un 404, y la respuesta está en la tabla de la sesión 4.
 
-### Bloque 3 · Auditoría final, revisión por pares y entrega
+#### Paso 2 · El servidor roto · 40 min
 
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué se revisa en un proyecto de servidor antes de entregarlo.</li>
-    <li><strong>2. Haz:</strong> Audita el tuyo, revisa el de un compañero y corrige.</li>
-    <li><strong>3. Comprueba:</strong> Otra persona lo arranca y lo entiende sin ayuda.</li>
-  </ol>
-</div>
+Recibirás un proyecto con cinco fallos, uno de cada familia de la tabla. Para cada uno:
 
-#### La lista de auditoría
+| Fallo | Síntoma exacto | ¿Cliente o servidor? | Cómo lo supiste | Hipótesis | Corrección |
+| ----- | -------------- | -------------------- | --------------- | --------- | ---------- |
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+| 4 | | | | | |
+| 5 | | | | | |
+
+Rellena las cuatro primeras columnas **antes** de tocar nada. La tercera es la que se evalúa: decir si el fallo está en el cliente o en el servidor, y por qué lo sabes, es el 80 % del diagnóstico.
+
+Corrige con el cambio más pequeño posible, y añade después a cada uno una comprobación que lo hubiera hecho evidente.
+
+#### Paso 3 · La auditoría final · 25 min
 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría · el proyecto</p>
@@ -2058,22 +2030,22 @@ Recibirás un proyecto con cinco fallos, uno de cada familia de la tabla. Para c
   </ul>
 </div>
 
-#### Revisión por pares
+#### Paso 4 · Revisión por pares · 20 min
 
-Intercambia proyectos y, sin preguntar nada:
+Intercambia proyectos y aplica los cinco puntos de la explicación, **empezando por clonarlo en una carpeta limpia**. Devuelve las respuestas por escrito, recibe la tuya y decide qué aceptas.
 
-1. Clónalo, instala y arráncalo. Anota cada tropiezo.
-2. Ejecuta su fichero de peticiones y comprueba que hace lo que dice.
-3. Envía datos inválidos y mira qué responde.
-4. Pide un fichero fuera de la carpeta pública y comprueba si se defiende.
-5. Señala una decisión bien tomada y una mejorable, con su razón.
+El punto 4 conviene hacerlo de verdad: intenta leer el `.env` de tu compañero a través de su servidor. Si lo consigues, es el hallazgo del día.
 
-#### Defensa
+#### Paso 5 · Cerrar la entrega y preparar la defensa · 15 min
+
+<div class="unit-deliverable">
+  <p>El repositorio de <code>mi-api</code> con su README y su <code>.env.example</code>; el CLI del catálogo; el servidor nativo conservado en una rama o carpeta aparte, como prueba de lo que sabes hacer sin framework; el servidor Express con estáticos, registro y errores centralizados; el fichero <code>peticiones.http</code>; las tres listas de auditoría marcadas; la revisión del compañero por escrito; y el informe de la sesión 5.</p>
+</div>
 
 <div class="rule">
   <p class="rule-label">Las preguntas de la defensa</p>
   <ol>
-    <li>Enséñame el recorrido completo de una petición <code>POST</code>, desde que llega hasta que se responde.</li>
+    <li>Enseña el recorrido completo de una petición <code>POST</code>, desde que llega hasta que se responde.</li>
     <li>¿Por qué escribimos primero el servidor a mano? ¿Qué te resolvió Express exactamente?</li>
     <li>¿Qué pasa si el fichero de datos no existe? ¿Y si el proceso muere escribiéndolo?</li>
     <li>¿Dónde validas, y qué pasaría si solo validaras en el cliente?</li>
@@ -2081,9 +2053,7 @@ Intercambia proyectos y, sin preguntar nada:
   </ol>
 </div>
 
-#### Evaluación
-
-| Criterio | Puntos |
+| Criterio de evaluación | Puntos |
 | ---------------------------------------------------------- | -----: |
 | El proyecto arranca desde una instalación limpia siguiendo el README | 1 |
 | Herramienta de terminal: comandos, ayuda, validación y códigos de salida | 1,5 |
@@ -2095,12 +2065,86 @@ Intercambia proyectos y, sin preguntar nada:
 
 No puntúa la cantidad de rutas. Puntúa que sepas decir **qué hace por ti cada pieza de Express**, porque antes lo escribiste tú.
 
-#### Entrega
+#### Ampliación si has completado el trabajo
 
-<div class="unit-deliverable">
-  <p>El repositorio de <code>mi-api</code> con su README y su <code>.env.example</code>; el CLI del catálogo; el servidor nativo conservado en una rama o carpeta aparte, como prueba de lo que sabes hacer sin framework; el servidor Express con estáticos, registro y errores centralizados; el fichero <code>peticiones.http</code>; las tres listas de auditoría marcadas; la revisión del compañero por escrito; y el informe de la sesión 5.</p>
+Primero termina la entrega. El primer reto invierte el ejercicio del paso 2; el segundo prepara el terreno de la UD6.
+
+##### Reto 1 · Rompe tu propio servidor
+
+Haz una copia de tu proyecto e introduce **cinco fallos deliberados**, uno de cada familia:
+
+* uno que impida arrancar;
+* uno de orden de declaración, que haga que todo responda 404;
+* uno que deje `peticion.body` sin contenido;
+* uno que cuelgue la petición sin error ni traza;
+* uno de lógica, que responda 200 con un dato equivocado.
+
+Guarda aparte la solución. Intercámbialo con un compañero y cronometrad cuánto tarda cada uno en encontrar los cinco.
+
+1. ¿Cuál costó más? Casi siempre el cuarto y el quinto, y por motivos distintos: uno no deja rastro, el otro no parece un fallo.
+2. ¿Miró la terminal, el Network o el registro? Anota en qué orden, y compáralo con el diagrama de la explicación.
+3. ¿Encontró la causa o solo el síntoma? Compruébalo preguntándole qué pasaría con otra ruta distinta.
+4. Para el cuarto fallo, el que cuelga la petición: ¿qué habría tenido que mirar para verlo? Escribe la comprobación que lo habría delatado.
+5. Anota una técnica que usara y tú no hubieras usado.
+
+##### Reto 2 · Consultas que se combinan
+
+Tu `GET /api/productos` acepta como mucho un filtro. Una API real acepta varios a la vez, y ahí aparecen decisiones que no son evidentes.
+
+```text
+GET /api/productos?categoria=teclados&precioMax=100&disponible=true&orden=precio&pagina=2&tamano=10
+```
+
+1. Haz que los filtros se combinen entre sí, reutilizando tu `aplicarFiltros` de la UD4 sin reescribirla. Si no puedes reutilizarla, mira por qué: probablemente sabía algo del DOM.
+2. Todos los parámetros llegan como **texto**. Conviértelos y valida cada uno en el borde, antes de que toquen la lógica.
+3. Decide y documenta qué hacer con cada caso raro: un parámetro desconocido, `precioMax=abc`, `pagina=0`, `pagina=-1`, `tamano=100000`, `orden=inventado`. Ninguno debe producir un 500.
+4. Devuelve la respuesta paginada con su metainformación: total de resultados, página actual y número de páginas. Decide la forma del objeto y sé coherente.
+5. Documenta los parámetros en el README, con un ejemplo de cada uno.
+6. Escribe en tres líneas por qué esta ruta, tal como queda, empieza a necesitar una forma más ordenada de declarar qué acepta. Eso es lo que resuelve la validación por esquema, y aparece en la UD6.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>El servicio nuevo modelado con sus dos primeras rutas, tres fallos localizados con su hipótesis, y las tres listas de auditoría marcadas.</span></div>
+  <div><strong>Si lo tienes</strong><span>Los cinco fallos diagnosticados con su columna de cliente o servidor, y la revisión del compañero hecha desde un clon limpio.</span></div>
+  <div><strong>Reto</strong><span>Los cinco fallos propios intercambiados y cronometrados, o las consultas combinables con sus casos raros documentados.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Lista de verificación de la entrega</p>
+  <ul class="checklist">
+    <li>Has montado un servicio completo sin partir del tuyo, con las capas separadas.</li>
+    <li>Separas fallos de cliente de fallos de servidor antes de tocar nada.</li>
+    <li>El proyecto arranca desde una instalación limpia siguiendo el README.</li>
+    <li>Las tres listas de auditoría están marcadas.</li>
+    <li>Has revisado el proyecto de un compañero desde un clon limpio.</li>
+    <li>Conservas el servidor nativo como prueba de lo que sabes hacer sin framework.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿En qué orden se monta un servicio, y por qué las rutas van al final?</li>
+    <li>Un servidor responde 404 a todo: escribe dos hipótesis.</li>
+    <li>¿Qué te dice la familia del código de estado sobre dónde buscar?</li>
+    <li>¿Qué haces antes de investigar un fallo que has visto en el navegador?</li>
+    <li>¿Qué significa que <code>peticion.body</code> sea <code>undefined</code>?</li>
+    <li>Si mañana los datos vinieran de una base de datos, ¿qué ficheros tocarías?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Datos, almacén, reglas de negocio y por último rutas; porque la capa de HTTP es la más superficial y la que menos debería saber.</p>
+  <p>2 · Por ejemplo: el orden de las declaraciones, con el 404 final puesto antes de las rutas; o la ruta escrita de forma distinta a la que se pide.</p>
+  <p>3 · Un 4xx señala al cliente y un 5xx a tu servidor, así que decide en qué consola empezar a mirar.</p>
+  <p>4 · Reproducirlo con el cliente HTTP, para saber si el problema estaba en el cliente.</p>
+  <p>5 · Que falta <code>express.json()</code>, o que está declarado después de la ruta que lo usa.</p>
+  <p>6 · Solo el almacén, si la lógica de negocio no sabe de dónde vienen los datos.</p>
+</details>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 6 · 10 minutos</p>
@@ -2111,6 +2155,7 @@ No puntúa la cantidad de rutas. Puntúa que sepas decir **qué hace por ti cada
     <li>¿Por qué escribimos el servidor a mano antes de usar Express? Responde en tres líneas.</li>
   </ol>
 </div>
+
 ---
 
 ## Lo que debes recordar
