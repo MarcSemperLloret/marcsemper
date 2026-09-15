@@ -743,16 +743,14 @@ La fila 4 no se decide igual que las demás: piénsala dos veces antes de escrib
 
 ## Sesión 2 · La caja y el sistema visual
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>El box model</strong>, <strong>Unidades, colores y tipografía</strong> y <strong>Variables y funciones modernas</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · El box model
+<p class="lead">Tres horas. Media hora para entender de qué capas se compone una caja y respecto a qué se calcula cada unidad, y dos horas y media construyendo el sistema visual de tu sitio y eliminando de él los valores repetidos.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> De qué capas se compone una caja, qué cambia <code>box-sizing</code> y por qué una anchura fija suele ser una mala idea.</li>
-    <li><strong>2. Haz:</strong> Construye las tarjetas de tu catálogo y localiza cada capa en DevTools.</li>
-    <li><strong>3. Comprueba:</strong> Ninguna tarjeta desborda su contenedor al estrechar la ventana.</li>
+    <li><strong>1. Aprende:</strong> De qué capas se compone una caja, qué cambia <code>box-sizing</code>, respecto a qué se calcula cada unidad y cómo se declara una decisión de diseño una sola vez.</li>
+    <li><strong>2. Haz:</strong> Construye las tarjetas del catálogo, define el sistema visual del sitio y conviértelo en variables.</li>
+    <li><strong>3. Comprueba:</strong> Ninguna tarjeta desborda al estrechar la ventana, y puedes cambiar el color principal del sitio tocando una sola línea.</li>
   </ol>
 </div>
 
@@ -764,6 +762,12 @@ La fila 4 no se decide igual que las demás: piénsala dos veces antes de escrib
     <li>Explica por qué añadir <code>!important</code> no diagnostica el conflicto.</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Todo lo de hoy sirve para lo mismo: dejar de escribir números sueltos y empezar a declarar decisiones. Primero la caja, después las unidades y al final las variables que ponen nombre a esas decisiones.
 
 #### Todo es una caja
 
@@ -818,14 +822,6 @@ La confusión clásica es padding contra margin. La distinción práctica: **el 
   <p class="lesson-demo__note">El fondo llega hasta el borde: pinta el contenido y el <code>padding</code>, pero nunca el <code>margin</code>.</p>
 </figure>
 
-Los valores admiten varias formas:
-
-```css
-padding: 1rem;                /* las cuatro caras */
-padding: 1rem 2rem;           /* vertical | horizontal */
-padding: 1rem 2rem 3rem 4rem; /* arriba, derecha, abajo, izquierda */
-```
-
 #### `box-sizing`, o por qué 300 no son 300
 
 Por defecto, `width` mide **solo el contenido**. El padding y el borde se suman por fuera:
@@ -865,9 +861,7 @@ Hace que `width` incluya el padding y el borde. Ahora 300px son 300px, pase lo q
 }
 ```
 
-La tercera es casi siempre la correcta: **ocupa lo que haya, pero no más de lo razonable**. Es la primera aparición de una idea que domina la unidad — describir límites en lugar de medidas exactas.
-
-##### Centrar un bloque
+La tercera es casi siempre la correcta: **ocupa lo que haya, pero no más de lo razonable**. Es la primera aparición de una idea que domina la unidad: describir límites en lugar de medidas exactas.
 
 ```css
 .container {
@@ -877,70 +871,6 @@ La tercera es casi siempre la correcta: **ocupa lo que haya, pero no más de lo 
 ```
 
 `margin-inline: auto` es la forma moderna de `margin-left: auto; margin-right: auto`. Y `min(90%, 70rem)` se lee: «el 90 % del espacio, salvo que eso pase de 70rem, en cuyo caso 70rem». Un contenedor así funciona en un móvil y en un monitor de 34 pulgadas sin una sola media query.
-
-<details class="aside aside--extra">
-  <summary>Extra · el colapso de márgenes</summary>
-  <p>Dos márgenes verticales adyacentes no se suman: se <strong>funden</strong> en el mayor de los dos. Si un párrafo tiene 20px abajo y el siguiente 30px arriba, la separación es 30, no 50.</p>
-  <p>Solo pasa en vertical, y no pasa dentro de un contenedor Flexbox o Grid. Por eso, en cuanto empecemos a usar <code>gap</code>, este problema desaparece: es una de las razones por las que <code>gap</code> es preferible a los márgenes para separar elementos de una lista.</p>
-</details>
-
-#### Tarea 4 · Construye tus tarjetas
-
-En `productos.html` tienes `article` con el marcado de cada producto. Dales forma:
-
-1. Pon el `box-sizing: border-box` global al principio de tu hoja.
-2. Da a cada tarjeta `padding`, `border`, `border-radius` y separación entre ellas.
-3. Limita su anchura con `width` y `max-width` en lugar de un valor fijo.
-4. Crea la clase `.container` y aplícala para centrar el contenido de las páginas.
-5. Inspecciona una tarjeta en DevTools y **localiza en el diagrama de Layout cada una de las cuatro capas**. Comprueba que los números coinciden con lo que escribiste.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · mis tarjetas desbordan</summary>
-  <p>Casi siempre es una de estas tres, en este orden de probabilidad:</p>
-  <ol>
-    <li>Falta el <code>box-sizing: border-box</code>, y el padding se está sumando por fuera del <code>width</code>.</li>
-    <li>Hay un <code>width</code> fijo en píxeles mayor que el espacio disponible.</li>
-    <li>Hay una imagen dentro sin <code>max-width: 100%</code>, y la imagen empuja la caja desde dentro.</li>
-  </ol>
-  <p>En DevTools, la pestaña <strong>Layout</strong> te dibuja el box model con sus medidas reales: compara ese número con el que tú escribiste y verás por dónde se va la diferencia.</p>
-</details>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Cuál es la diferencia práctica entre <code>padding</code> y <code>margin</code>?</li>
-    <li>¿Qué cambia exactamente <code>box-sizing: border-box</code>?</li>
-    <li>¿Por qué <code>max-width</code> suele ser mejor que <code>width</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El padding es espacio dentro de la caja y se pinta con su fondo; el margin es espacio fuera y siempre es transparente.</p>
-  <p>2 · Que <code>width</code> incluya el padding y el borde, en vez de medir solo el contenido.</p>
-  <p>3 · Porque describe un límite en lugar de una medida: la caja se adapta al espacio disponible y solo deja de crecer cuando llega al techo.</p>
-</details>
-
-
-### Bloque 2 · Unidades, colores y tipografía
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Respecto a qué se calcula cada unidad, cómo se escriben los colores y qué hace legible un texto.</li>
-    <li><strong>2. Haz:</strong> Define el sistema visual mínimo de tu proyecto.</li>
-    <li><strong>3. Comprueba:</strong> El sitio es coherente entre sus cuatro páginas.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Nombra las cuatro capas del box model de dentro hacia fuera.</li>
-    <li>¿Qué cambia <code>box-sizing: border-box</code>?</li>
-    <li>Una caja de <code>300px</code> tiene <code>padding: 20px</code> y dos bordes de <code>2px</code>: calcula su anchura con el modelo inicial.</li>
-  </ol>
-</div>
 
 #### No todo se mide en píxeles
 
@@ -956,16 +886,12 @@ En `productos.html` tienes `article` con el marcado de cada producto. Dales form
 
 *Root em*: una medida relativa al tamaño de fuente del elemento raíz, que por defecto son 16px. Así, `1.5rem` son 24px… **hasta que alguien cambia el tamaño de letra de su navegador**, y entonces todo tu diseño escala con él. Ese es el motivo real para usarlo.
 
-Ahí está la diferencia importante con `px`: un `font-size: 16px` ignora la preferencia de quien necesita la letra más grande. Un `1rem` la respeta.
-
-El contraste entre `rem` y `em` es este:
+Ahí está la diferencia importante con `px`: un `font-size: 16px` ignora la preferencia de quien necesita la letra más grande. Un `1rem` la respeta. Frente a `em`, la regla práctica es **`rem` por defecto, `em` cuando quieras que algo escale con su propio texto**, porque `em` se acumula al anidar:
 
 ```css
 .card       { font-size: 1.25rem; padding: 1em; }  /* padding = 1.25 × 20px */
 .card small { font-size: 0.8rem;  padding: 1em; }  /* padding = 0.8 × ese texto */
 ```
-
-`em` se acumula al anidar, lo cual sorprende cuando no lo esperas. Regla práctica: **`rem` por defecto, `em` cuando quieras que algo escale con su propio texto**.
 
 <div class="rule">
   <p class="rule-label">Las unidades de viewport tienen una trampa</p>
@@ -973,7 +899,7 @@ El contraste entre `rem` y `em` es este:
   <p>Existen <code>svh</code>, <code>lvh</code> y <code>dvh</code> para las variantes pequeña, grande y dinámica. La regla aplicable hoy es más simple: <strong>no uses una unidad porque sea moderna, úsala cuando sepas respecto a qué se calcula</strong>.</p>
 </div>
 
-#### Colores
+#### Color y tipografía
 
 ```css
 color: #1f2937;             /* hexadecimal */
@@ -983,15 +909,11 @@ color: hsl(215 28% 17%);    /* tono, saturación, luminosidad */
 
 Los tres describen el mismo color. `hsl` tiene una ventaja práctica cuando construyes una paleta: para conseguir una variante más clara del mismo color solo tienes que subir el último número, sin recalcular nada.
 
-VS Code te muestra un cuadradito junto a cada color y te abre un selector al pulsarlo, con el que además puedes cambiar de notación.
-
 <div class="rule">
   <p class="rule-label">El contraste no es una cuestión de gusto</p>
   <p>Un texto gris claro sobre fondo blanco puede parecerte elegante y ser ilegible para bastante gente. El criterio está medido: el texto normal necesita una relación de contraste de al menos <strong>4.5:1</strong> con su fondo, y el texto grande, 3:1.</p>
   <p>DevTools lo calcula: al abrir el selector de color de una declaración muestra la relación de contraste y advierte si no alcanza el mínimo. No es necesario estimarlo visualmente.</p>
 </div>
-
-#### Tipografía
 
 ```css
 body {
@@ -1007,15 +929,13 @@ h1 {
 }
 ```
 
-Tres decisiones que casi nadie explica:
+En tipografía hay tres decisiones que casi nadie explica:
 
 * **La lista de `font-family` es una cadena de respaldo.** El navegador usa la primera que tenga disponible. `system-ui` toma la tipografía del sistema operativo, así que carga instantánea y se ve nativa en cada dispositivo.
 * **El `line-height` sin unidad** —`1.6`, no `1.6rem`— es lo correcto: al no tener unidad, cada elemento lo multiplica por *su* tamaño de fuente, así que un titular grande no acaba con el interlineado de un párrafo.
 * **Los titulares llevan menos interlineado que el texto.** Un `line-height: 1.6` en un `h1` de 2.5rem deja un hueco enorme entre sus dos líneas. Alrededor de 1.1 es lo habitual.
 
-##### Una escala, no una lista de tamaños
-
-No elijas cada tamaño por separado. Elige un paso y multiplica:
+Los tamaños, además, no se eligen uno a uno: se elige un paso y se multiplica. Una interfaz coherente usa **una o dos familias** y una escala corta. La variedad tipográfica no es riqueza: casi siempre es falta de decisión.
 
 | Nivel | Tamaño |
 | ----- | ------ |
@@ -1024,60 +944,7 @@ No elijas cada tamaño por separado. Elige un paso y multiplica:
 | h2 | 1.75rem |
 | h1 | 2.5rem |
 
-Conviene una advertencia: no hace falta una tipografía distinta para cada zona. Una interfaz coherente usa **una o dos familias** y una escala corta. La variedad tipográfica no es riqueza: casi siempre es falta de decisión.
-
-#### Tarea 5 · Tu sistema visual mínimo
-
-Define para tu proyecto, y aplícalo a las cuatro páginas:
-
-1. Familia tipográfica y tamaño base.
-2. Una escala de encabezados de tres o cuatro pasos.
-3. `line-height` para texto y para titulares.
-4. Color de texto, color de fondo y un color principal.
-5. Dos o tres medidas de espaciado que vayas a repetir.
-
-Comprueba el contraste de tu color de texto sobre tu fondo con DevTools. Si no llega a 4.5:1, oscurece hasta que llegue.
-
-No buscamos todavía un diseño espectacular. Buscamos **consistencia**: que las cuatro páginas parezcan del mismo sitio.
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Respecto a qué se calcula un <code>rem</code>, y por qué importa?</li>
-    <li>¿Por qué el <code>line-height</code> se escribe sin unidad?</li>
-    <li>¿Cuál es el contraste mínimo para texto normal?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Respecto al tamaño de fuente del elemento raíz. Importa porque respeta la preferencia de tamaño de letra de quien usa la web, cosa que un valor en píxeles ignora.</p>
-  <p>2 · Para que cada elemento lo multiplique por su propio tamaño de fuente en lugar de heredar una altura fija.</p>
-  <p>3 · 4.5:1 con su fondo. Para texto grande basta 3:1.</p>
-</details>
-
-
-### Bloque 3 · Variables y funciones modernas
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se declara una decisión de diseño una sola vez, y qué resuelven <code>calc()</code>, <code>min()</code>, <code>max()</code> y <code>clamp()</code>.</li>
-    <li><strong>2. Haz:</strong> Convierte los valores repetidos de tu hoja en variables.</li>
-    <li><strong>3. Comprueba:</strong> Puedes cambiar el color principal del sitio tocando una sola línea.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Respecto a qué se calculan <code>rem</code>, <code>em</code> y <code>%</code>?</li>
-    <li>¿Qué dos decisiones hacen que un párrafo sea legible además del tamaño?</li>
-    <li>Detecta el riesgo de repetir el mismo color hexadecimal en veinte reglas.</li>
-  </ol>
-</div>
-
-#### El problema: repetir una decisión
+#### Una decisión escrita una sola vez
 
 ```css
 h1     { color: #2563eb; }
@@ -1109,7 +976,112 @@ Que se hereden tiene una consecuencia útil: puedes redefinir una variable dentr
 }
 ```
 
-##### Un sistema pequeño
+#### Cuatro funciones que quitan media queries
+
+`calc()` opera entre unidades distintas, que es lo que ninguna otra cosa puede hacer. Necesita espacios alrededor del `-` y del `+`; sin ellos no funciona, y es un despiste que cuesta encontrar.
+
+```css
+width: calc(100% - 2rem);
+```
+
+`min()` y `max()` se leen al revés de lo que parece: `min()` **pone un techo** y `max()` **pone un suelo**.
+
+```css
+width: min(90%, 70rem);      /* nunca pasará de 70rem */
+padding: max(1rem, 3vw);     /* nunca bajará de 1rem */
+```
+
+`clamp()` reúne las dos con un valor preferido en medio:
+
+```css
+h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+}
+```
+
+```text
+mínimo      2rem   · nunca más pequeño
+preferido   5vw    · lo que se adapta
+máximo      4rem   · nunca más grande
+```
+
+Ese titular crece con la ventana entre dos límites, sin una sola media query. Es la herramienta con la que se resuelve buena parte del responsive antes de llegar a los *breakpoints*, y volveremos a ella en la sesión 4.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Los tres primeros pasos construyen el sistema visual; los tres últimos lo ponen a prueba cambiándolo entero desde un solo sitio.
+
+#### Paso 1 · Construye tus tarjetas · 30 min
+
+En `productos.html` tienes `article` con el marcado de cada producto. Dales forma:
+
+1. Pon el `box-sizing: border-box` global al principio de tu hoja.
+2. Da a cada tarjeta `padding`, `border`, `border-radius` y separación entre ellas.
+3. Limita su anchura con `width` y `max-width` en lugar de un valor fijo.
+4. Crea la clase `.container` y aplícala para centrar el contenido de las páginas.
+5. Inspecciona una tarjeta en DevTools y **localiza en el diagrama de Layout cada una de las cuatro capas**. Comprueba que los números coinciden con lo que escribiste.
+
+<details class="aside aside--extra">
+<summary>Consultar · formas de escribir el espaciado y colapso de márgenes</summary>
+
+Los valores de `padding` y `margin` admiten varias formas:
+
+```css
+padding: 1rem;                /* las cuatro caras */
+padding: 1rem 2rem;           /* vertical | horizontal */
+padding: 1rem 2rem 3rem 4rem; /* arriba, derecha, abajo, izquierda */
+```
+
+Dos márgenes verticales adyacentes no se suman: se **funden** en el mayor de los dos. Si un párrafo tiene 20px abajo y el siguiente 30px arriba, la separación es 30, no 50.
+
+Solo pasa en vertical, y no pasa dentro de un contenedor Flexbox o Grid. Por eso, en cuanto empecemos a usar `gap`, este problema desaparece: es una de las razones por las que `gap` es preferible a los márgenes para separar elementos de una lista.
+
+</details>
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · mis tarjetas desbordan</summary>
+  <p>Casi siempre es una de estas tres, en este orden de probabilidad:</p>
+  <ol>
+    <li>Falta el <code>box-sizing: border-box</code>, y el padding se está sumando por fuera del <code>width</code>.</li>
+    <li>Hay un <code>width</code> fijo en píxeles mayor que el espacio disponible.</li>
+    <li>Hay una imagen dentro sin <code>max-width: 100%</code>, y la imagen empuja la caja desde dentro.</li>
+  </ol>
+  <p>En DevTools, la pestaña <strong>Layout</strong> te dibuja el box model con sus medidas reales: compara ese número con el que tú escribiste y verás por dónde se va la diferencia.</p>
+</details>
+
+**Antes de continuar:** estrecha la ventana hasta 320px. Ninguna tarjeta debe desbordar su contenedor.
+
+#### Paso 2 · Tu sistema visual mínimo · 35 min
+
+Define para tu proyecto, y aplícalo a las cuatro páginas:
+
+1. Familia tipográfica y tamaño base.
+2. Una escala de encabezados de tres o cuatro pasos.
+3. `line-height` para texto y para titulares.
+4. Color de texto, color de fondo y un color principal.
+5. Dos o tres medidas de espaciado que vayas a repetir.
+
+Comprueba el contraste de tu color de texto sobre tu fondo con DevTools. Si no llega a 4.5:1, oscurece hasta que llegue.
+
+No buscamos todavía un diseño espectacular. Buscamos **consistencia**: que las cuatro páginas parezcan del mismo sitio.
+
+#### Paso 3 · Elimina los números mágicos · 35 min
+
+<p class="term">Número mágico</p>
+
+Un valor escrito a pelo en el código sin que nada explique de dónde sale. `margin-left: 37px` es el ejemplo perfecto: funciona, nadie sabe por qué, y nadie se atreve a tocarlo.
+
+Sobre tu hoja de estilos:
+
+1. Busca los valores que se repiten: colores, espaciados, radios, tamaños.
+2. Decide **cuáles representan una decisión reutilizable** y conviértelos en variables con nombres que digan su papel.
+3. Sustituye todas sus apariciones por `var()`.
+4. Prueba a cambiar `--color-primary` por otro color y recarga. Si el sitio entero cambia de color con una sola línea, lo has hecho bien.
+
+<details class="aside aside--extra">
+<summary>Consultar · un sistema pequeño, y el valor de respaldo</summary>
 
 ```css
 :root {
@@ -1134,62 +1106,7 @@ Y `var()` admite un valor de respaldo, útil cuando la variable puede no estar d
 padding: var(--space-md, 1.5rem);
 ```
 
-#### Cuatro funciones que quitan media querys
-
-##### `calc()`
-
-Opera entre unidades distintas, que es lo que ninguna otra cosa puede hacer:
-
-```css
-width: calc(100% - 2rem);
-```
-
-Necesita espacios alrededor del `-` y del `+`. Sin ellos no funciona, y es un despiste que cuesta encontrar.
-
-##### `min()` y `max()`
-
-```css
-width: min(90%, 70rem);      /* el más pequeño de los dos */
-padding: max(1rem, 3vw);     /* el más grande de los dos */
-```
-
-Se leen al revés de lo que parece. `min()` **pone un techo**: nunca pasará de 70rem. `max()` **pone un suelo**: nunca bajará de 1rem.
-
-##### `clamp()`
-
-```css
-h1 {
-    font-size: clamp(2rem, 5vw, 4rem);
-}
-```
-
-```text
-mínimo      2rem   · nunca más pequeño
-preferido   5vw    · lo que se adapta
-máximo      4rem   · nunca más grande
-```
-
-Ese titular crece con la ventana entre dos límites, sin una sola media query. Es la herramienta con la que se resuelve buena parte del responsive antes de llegar a los *breakpoints*, y volveremos a ella en la sesión 4.
-
-#### Tarea 6 · Elimina los números mágicos
-
-<p class="term">Número mágico</p>
-
-Un valor escrito a pelo en el código sin que nada explique de dónde sale. `margin-left: 37px` es el ejemplo perfecto: funciona, nadie sabe por qué, y nadie se atreve a tocarlo.
-
-Sobre tu hoja de estilos:
-
-1. Busca los valores que se repiten: colores, espaciados, radios, tamaños.
-2. Decide **cuáles representan una decisión reutilizable** y conviértelos en variables con nombres que digan su papel.
-3. Sustituye todas sus apariciones por `var()`.
-4. Prueba a cambiar `--color-primary` por otro color y recarga. Si el sitio entero cambia de color con una sola línea, lo has hecho bien.
-5. Añade un `clamp()` al tamaño de tu `h1` y comprueba cómo se comporta al estrechar la ventana.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Variables con nombres semánticos y un cambio global comprobado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Crea una segunda variante visual modificando solo las variables.</span></div>
-  <div><strong>Reto</strong><span>Recibe CSS ajeno y distingue qué valores merecen variable y cuáles deben seguir locales.</span></div>
-</div>
+</details>
 
 <div class="rule">
   <p class="rule-label">No conviertas todo en una variable</p>
@@ -1197,31 +1114,128 @@ Sobre tu hoja de estilos:
   <p>La pregunta es: <strong>«si esto cambia, ¿tendría que cambiar en otros sitios a la vez?»</strong>. Si la respuesta es sí, es una variable. Si es no, es un valor.</p>
 </div>
 
+#### Paso 4 · Titulares fluidos con `clamp()` · 15 min
+
+Sustituye el `font-size` fijo de tus encabezados por un `clamp()` y comprueba el comportamiento estrechando la ventana desde 1600px hasta 320px.
+
+1. Aplica `clamp()` al `h1` y al `h2`.
+2. Anota a qué anchura deja de crecer y a cuál deja de encoger, comprobándolo en la pestaña Computed.
+3. Comprueba que el `h1` no se come la pantalla en un móvil ni queda diminuto en un monitor grande.
+4. Anota la anchura a la que tu catálogo **empieza a verse mal**. Guarda ese número: lo necesitarás en la sesión 4.
+
+#### Paso 5 · Una segunda variante visual · 20 min
+
+Sin tocar una sola regla que no sea una declaración de variable, crea una segunda versión del sitio con otra identidad: otro color principal, otro fondo, otra escala de espaciados.
+
+Guárdala como un bloque `:root` alternativo comentado al principio de la hoja. Si has tenido que modificar alguna regla fuera de `:root`, ese valor era una decisión que se te escapó del sistema: conviértelo en variable y vuelve a intentarlo.
+
+#### Paso 6 · Contraste y coherencia · 15 min
+
+| Comprobación | Resultado | Corrección |
+| ------------ | --------- | ---------- |
+| Contraste del texto sobre el fondo (mínimo 4.5:1) | | |
+| Contraste del color principal sobre el fondo | | |
+| Las cuatro páginas usan la misma familia y la misma escala | | |
+| No queda ningún color escrito a pelo fuera de `:root` | | |
+| No queda ninguna anchura fija en píxeles | | |
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los seis pasos. Los dos retos piden diagnosticar y decidir sobre código que no has escrito tú.
+
+##### Reto 1 · Cuatro cajas que desbordan por cuatro motivos distintos
+
+```html
+<div class="fila">
+  <div class="caja a">Uno</div>
+  <div class="caja b">Dos</div>
+  <div class="caja c"><img src="foto.jpg" alt="Una foto"></div>
+  <div class="caja d">Cuatro palabras bastante largas aquí</div>
+</div>
+```
+
+```css
+.fila { width: 400px; border: 2px solid red; }
+.caja { padding: 20px; border: 1px solid #ccc; }
+
+.a { width: 50%; }
+.b { width: 200px; margin-left: 30px; }
+.c { width: 100%; }
+.c img { width: 500px; }
+.d { width: 100%; padding: 60px; }
+```
+
+Las cuatro se salen del contenedor rojo, y **cada una por una razón distinta**. Para cada caja:
+
+1. Calcula a mano cuánto ocupa realmente, sumando contenido, padding y borde.
+2. Di cuál de los cuatro motivos es el suyo: el modelo de caja por defecto, un margen que se suma a una anchura, un contenido interno más ancho que su caja, o un padding desproporcionado.
+3. Corrígela **sin cambiar el `width` declarado** de la caja, salvo en el caso en que esa sea la única solución posible. Justifica cuál es ese caso.
+4. Aplica el `box-sizing: border-box` global y vuelve a calcular las cuatro. ¿Cuántas quedan arregladas solo con eso? Esa cifra explica por qué esas tres líneas abren toda hoja de estilos.
+
+##### Reto 2 · Qué merece ser variable
+
+Esta hoja pertenece a un proyecto ajeno. Decide qué valores se convierten en custom properties y cuáles se quedan donde están.
+
+```css
+.header { background: #0f172a; padding: 24px 32px; border-bottom: 1px solid #1e293b; }
+.header h1 { color: #f8fafc; font-size: 28px; letter-spacing: -0.02em; }
+.nav a { color: #94a3b8; margin-right: 24px; }
+.nav a:hover { color: #f8fafc; }
+.card { background: #f8fafc; padding: 24px; border-radius: 12px; }
+.card h3 { color: #0f172a; font-size: 20px; }
+.card .precio { color: #0f172a; font-size: 28px; font-weight: 700; }
+.boton { background: #2563eb; color: #f8fafc; padding: 12px 24px; border-radius: 12px; }
+.pie { background: #0f172a; color: #94a3b8; padding: 32px; }
+```
+
+1. Haz el recuento: cuántas veces aparece cada color y cada medida.
+2. Separa lo que es **una decisión repetida** de lo que solo es **una coincidencia**. Dos valores iguales por casualidad no son la misma decisión, y unirlos bajo una variable crea un acoplamiento falso: el día que uno cambie, arrastrará al otro.
+3. Escribe el `:root` y reescribe la hoja. Los nombres deben describir el papel.
+4. Justifica dos valores que hayas dejado **sin** convertir en variable, y uno que hayas dudado.
+5. Cambia el tema entero a una versión clara modificando solo el `:root`. Anota qué te ha obligado a volver atrás.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Tarjetas que no desbordan a 320px, sistema visual aplicado a las cuatro páginas y variables con nombres semánticos.</span></div>
+  <div><strong>Si lo tienes</strong><span>La segunda variante visual funcionando cambiando solo el <code>:root</code>, y la tabla de contraste y coherencia contestada.</span></div>
+  <div><strong>Reto</strong><span>Las cuatro cajas diagnosticadas con su cálculo a mano, y la hoja ajena convertida en sistema con las decisiones justificadas.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Tu hoja empieza con el <code>box-sizing: border-box</code> global.</li>
     <li>Tienes un bloque <code>:root</code> con colores y espaciados nombrados por su papel.</li>
     <li>Puedes cambiar el color principal del sitio tocando una línea.</li>
     <li>Tus anchuras usan <code>max-width</code> o <code>min()</code>, no medidas fijas.</li>
     <li>Las cuatro páginas comparten tipografía, escala y paleta.</li>
+    <li>El contraste del texto sobre el fondo llega al menos a 4.5:1.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Cuál es la diferencia práctica entre <code>padding</code> y <code>margin</code>?</li>
+    <li>¿Qué cambia exactamente <code>box-sizing: border-box</code>?</li>
+    <li>¿Respecto a qué se calcula un <code>rem</code>, y por qué importa?</li>
+    <li>¿Por qué el <code>line-height</code> se escribe sin unidad?</li>
     <li>¿Por qué las variables se declaran en <code>:root</code>?</li>
     <li>¿Qué hace <code>min(90%, 70rem)</code>, en una frase?</li>
-    <li>¿Qué tres valores lleva <code>clamp()</code>?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque las custom properties se heredan, y <code>:root</code> es el elemento raíz: declarándolas ahí quedan disponibles en todo el documento.</p>
-  <p>2 · Ocupa el 90 % del espacio, pero sin pasar nunca de 70rem. Pone un techo.</p>
-  <p>3 · Un mínimo, un valor preferido que se adapta, y un máximo.</p>
+  <p>1 · El padding es espacio dentro de la caja y se pinta con su fondo; el margin es espacio fuera y siempre es transparente.</p>
+  <p>2 · Que <code>width</code> incluya el padding y el borde, en vez de medir solo el contenido.</p>
+  <p>3 · Respecto al tamaño de fuente del elemento raíz. Importa porque respeta la preferencia de tamaño de letra de quien usa la web, cosa que un valor en píxeles ignora.</p>
+  <p>4 · Para que cada elemento lo multiplique por su propio tamaño de fuente en lugar de heredar una altura fija.</p>
+  <p>5 · Porque las custom properties se heredan, y <code>:root</code> es el elemento raíz: declarándolas ahí quedan disponibles en todo el documento.</p>
+  <p>6 · Ocupa el 90 % del espacio, pero sin pasar nunca de 70rem. Pone un techo.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -1233,6 +1247,7 @@ Sobre tu hoja de estilos:
     <li>Convierte tres colores repetidos en una custom property y predice el efecto de cambiarla.</li>
   </ol>
 </div>
+
 
 ---
 
