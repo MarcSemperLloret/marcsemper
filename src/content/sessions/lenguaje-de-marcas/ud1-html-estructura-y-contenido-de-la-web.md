@@ -655,16 +655,14 @@ Responde al terminar:
 
 ## Sesión 2 · Texto, listas, enlaces y navegación
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Texto y jerarquía de contenido</strong>, <strong>Listas</strong> y <strong>Enlaces, rutas y navegación</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Texto y jerarquía de contenido
+<p class="lead">Tres horas. Media hora para entender qué relación declara cada elemento, y dos horas y media interpretando información en bruto y convirtiendo tu portada en un sitio de cuatro páginas enlazadas.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Que los encabezados son el índice del documento, qué elementos marcan significado en el texto y cómo se escriben los caracteres especiales.</li>
-    <li><strong>2. Haz:</strong> Resuelve el reto de anidación y aplica la jerarquía correcta a tu portada.</li>
-    <li><strong>3. Comprueba:</strong> Ningún encabezado se salta un nivel.</li>
+    <li><strong>1. Aprende:</strong> Que los encabezados son el índice del documento, qué relación expresa cada tipo de lista, y desde dónde se resuelve una ruta relativa.</li>
+    <li><strong>2. Haz:</strong> Interpreta información sin marcar, crea la segunda página, monta el sitio de cuatro páginas con su navegación y resuelve el laberinto de rutas.</li>
+    <li><strong>3. Comprueba:</strong> Ningún encabezado se salta un nivel, y el proyecto entero sigue funcionando después de moverlo de carpeta.</li>
   </ol>
 </div>
 
@@ -677,6 +675,12 @@ Responde al terminar:
   </ol>
 </div>
 
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy aparecen tres familias de elementos —texto, listas y enlaces— y en las tres la decisión es la misma: qué relación hay entre estas piezas de información. Los catálogos de sintaxis quedan como material de consulta dentro de cada paso; aquí van las decisiones.
+
 #### HTML no sirve para decir «quiero esto grande»
 
 Sirve para decir:
@@ -685,9 +689,9 @@ Sirve para decir:
 
 Es la diferencia entre describir la apariencia y describir el significado, y explica casi todos los errores de esta unidad.
 
-#### Encabezados
+#### Los encabezados son el índice del documento
 
-Hay seis niveles, de `h1` a `h6`:
+Hay seis niveles, de `h1` a `h6`, y los niveles indican **jerarquía**, no tamaño:
 
 ```html
 <h1>PixelStore</h1>
@@ -697,7 +701,7 @@ Hay seis niveles, de `h1` a `h6`:
 <h3>Ordenadores portátiles</h3>
 ```
 
-Los niveles indican **jerarquía**, no tamaño. Construyen el índice del documento:
+Juntos construyen un índice:
 
 ```text
 h1 PixelStore
@@ -724,15 +728,7 @@ Ese índice es exactamente lo que usa un lector de pantalla para saltar de secci
   <p>Si el tamaño resultante no te gusta, es un problema de CSS. Con CSS podrás dar a cualquier encabezado el tamaño que necesites.</p>
 </div>
 
-#### Párrafos
-
-```html
-<p>
-    PixelStore es una tienda especializada en tecnología.
-</p>
-```
-
-No uses varios `<br>` para crear párrafos:
+#### Párrafos, no saltos de línea
 
 ```html
 <!-- Incorrecto -->
@@ -764,114 +760,9 @@ em = cursiva
 
 Eso describe su apariencia habitual, no su significado. Con CSS podrías hacer que `strong` se viera de cualquier otra forma, y seguiría significando lo mismo.
 
-##### Otros elementos de texto útiles
-
-```html
-<mark>texto destacado</mark>
-```
-
-```html
-<small>información secundaria</small>
-```
-
-```html
-<del>49,99 €</del> <ins>39,99 €</ins>
-```
-
-```html
-<abbr title="HyperText Markup Language">HTML</abbr>
-```
-
-```html
-<code>index.html</code>
-```
-
-| Elemento | Significa |
-| -------- | --------- |
-| `mark` | Resaltado por relevancia en el contexto actual, como un subrayador |
-| `small` | Letra pequeña en el sentido legal: avisos, notas al pie |
-| `del` / `ins` | Contenido eliminado y contenido añadido. El par es perfecto para un precio rebajado |
-| `abbr` | Una abreviatura, con su significado en `title` |
-| `code` | Un fragmento de código o un nombre de archivo |
-
-#### Entidades HTML
-
-¿Cómo escribimos un `<` si `<` es lo que abre una etiqueta? Con **entidades**:
-
-| Escribes | Se ve |
-| -------- | ----- |
-| `&lt;` | `<` |
-| `&gt;` | `>` |
-| `&amp;` | `&` |
-| `&quot;` | `"` |
-| `&nbsp;` | Un espacio que no se parte al final de línea |
-| `&copy;` | © |
-
-Esto es imprescindible cuando quieres **mostrar código HTML dentro de una página**, que es precisamente lo que hacen estos apuntes. Si `<p>` se escribiera sin escapar, el navegador lo interpretaría como un párrafo en lugar de mostrarlo.
-
-#### Reto 1 · ¿Qué está mal aquí? (10 min)
-
-```html
-<p>
-    <h2>Nuestros productos</h2>
-</p>
-```
-
-¿Qué principio de HTML se está incumpliendo y qué hará el navegador con esto?
-
-<details class="aside aside--extra">
-  <summary>Ver respuesta del Reto 1</summary>
-  <p>Un <code>&lt;p&gt;</code> solo puede contener contenido en línea: texto, <code>strong</code>, <code>em</code>, <code>a</code>, <code>img</code>… Un encabezado es un elemento de bloque y no cabe dentro de un párrafo.</p>
-  <p>El navegador no muestra un error: cierra el párrafo por su cuenta justo antes del <code>&lt;h2&gt;</code> y deja suelto el <code>&lt;/p&gt;</code> final. Acabas con un párrafo vacío, un encabezado que no está donde creías y una etiqueta huérfana. Otra vez el mismo patrón: se ve bien, y la estructura real no es la que escribiste.</p>
-</details>
-
-#### Ahora tú · Revisa la jerarquía de tu portada
-
-1. Dibuja en papel el índice de tu `index.html`: qué es `h1`, qué es `h2`, qué es `h3`.
-2. Comprueba que no hay ningún salto de nivel y que solo hay un `h1`.
-3. Sustituye cualquier `<br><br>` que hayas usado para separar por párrafos reales.
-4. Añade al menos un `abbr`, un `code` o un par `del`/`ins` donde tenga sentido de verdad. Si no lo tiene en tu tema, no lo fuerces: dilo en un comentario.
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué está mal pasar de <code>h2</code> a <code>h4</code>?</li>
-    <li>¿Cuál es la diferencia de significado entre <code>strong</code> y <code>em</code>?</li>
-    <li>¿Cómo se escribe «&lt;p&gt;» para que aparezca literalmente en la página?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque los encabezados forman el índice del documento y saltar deja un hueco: quien navegue por encabezados no sabrá de qué es parte ese <code>h4</code>.</p>
-  <p>2 · <code>strong</code> marca importancia; <code>em</code> marca énfasis, el matiz que cambiaría el tono al leer la frase en voz alta. Ninguno de los dos significa «negrita» o «cursiva».</p>
-  <p>3 · <code>&amp;lt;p&amp;gt;</code>.</p>
-</details>
-
-
-### Bloque 2 · Listas
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Los tres tipos de lista, qué relación expresa cada uno y cómo se anidan correctamente.</li>
-    <li><strong>2. Haz:</strong> Interpreta información en bruto y decide con qué se marca cada parte.</li>
-    <li><strong>3. Comprueba:</strong> Resuelve el reto de la lista anidada.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué no se elige un <code>h3</code> por su tamaño visual?</li>
-    <li>Escribe una jerarquía válida con un título principal y dos apartados.</li>
-    <li>Corrige <code>&lt;p&gt;Texto &lt;strong&gt;importante&lt;/p&gt;&lt;/strong&gt;</code>.</li>
-  </ol>
-</div>
-
 #### Tres listas para tres relaciones
 
-##### Lista no ordenada
+Una lista no es «texto con viñetas». Cada tipo declara una relación distinta entre sus elementos.
 
 ```html
 <ul>
@@ -881,8 +772,6 @@ Esto es imprescindible cuando quieres **mostrar código HTML dentro de una pági
 </ul>
 ```
 
-##### Lista ordenada
-
 ```html
 <ol>
     <li>Crear el proyecto</li>
@@ -891,38 +780,7 @@ Esto es imprescindible cuando quieres **mostrar código HTML dentro de una pági
 </ol>
 ```
 
-Aquí el orden **tiene significado**: no puedes validar antes de escribir.
-
-<div class="rule">
-  <p class="rule-label">La prueba que distingue <code>ul</code> de <code>ol</code></p>
-  <p>Reordena mentalmente los elementos. <strong>Si la información sigue siendo cierta, es <code>ul</code>. Si deja de serlo, es <code>ol</code>.</strong></p>
-  <p>No decide el hecho de que se vean números: los números son apariencia, y con CSS se pueden poner y quitar.</p>
-</div>
-
-##### Listas anidadas
-
-```html
-<ul>
-    <li>
-        Hardware
-
-        <ul>
-            <li>Portátiles</li>
-            <li>Monitores</li>
-        </ul>
-    </li>
-
-    <li>
-        Software
-    </li>
-</ul>
-```
-
-Fíjate bien en la jerarquía: el segundo `<ul>` está **dentro** del primer `<li>`, no detrás de él. Es el error más común de la sesión. Si lo sacas fuera, estás diciendo que «Portátiles» es hermano de «Hardware» en lugar de una parte suya.
-
-##### Listas de descripción
-
-Para pares de término y definición:
+En la segunda, el orden **tiene significado**: no puedes validar antes de escribir.
 
 ```html
 <dl>
@@ -974,7 +832,142 @@ Para pares de término y definición:
 | `<ol>` | El orden **es** el significado | Los pasos para tramitar una devolución |
 | `<dl>` | Cada elemento es un término y su definición | El glosario de la ficha técnica |
 
-#### Tarea 3 · De texto plano a estructura
+<div class="rule">
+  <p class="rule-label">La prueba que distingue <code>ul</code> de <code>ol</code></p>
+  <p>Reordena mentalmente los elementos. <strong>Si la información sigue siendo cierta, es <code>ul</code>. Si deja de serlo, es <code>ol</code>.</strong></p>
+  <p>No decide el hecho de que se vean números: los números son apariencia, y con CSS se pueden poner y quitar.</p>
+</div>
+
+Cuando una lista va dentro de otra, el segundo `<ul>` va **dentro del `<li>`** del que depende, no detrás de él. Es el error más común de la sesión: sacarlo fuera declara que «Portátiles» es hermano de «Hardware» en lugar de una parte suya.
+
+```html
+<ul>
+    <li>
+        Hardware
+
+        <ul>
+            <li>Portátiles</li>
+            <li>Monitores</li>
+        </ul>
+    </li>
+
+    <li>
+        Software
+    </li>
+</ul>
+```
+
+#### El enlace y la ruta relativa
+
+```html
+<a href="https://developer.mozilla.org/">MDN Web Docs</a>
+```
+
+`href` indica el destino y el contenido del elemento es el texto visible. Ese texto importa: «pincha aquí» no dice nada fuera de contexto, y mucha gente navega saltando de enlace en enlace sin leer lo que hay alrededor.
+
+Para otra página del mismo sitio basta su nombre de archivo:
+
+```html
+<a href="productos.html">Productos</a>
+```
+
+Lo que desatasca todo lo demás es de dónde parte una ruta. Cuando escribes `href="productos.html"`, el navegador no busca desde la raíz del proyecto: busca **desde la carpeta del archivo que contiene el enlace**.
+
+<div class="rule">
+  <p class="rule-label">No hay rutas correctas en abstracto</p>
+  <p>La misma ruta, escrita en dos archivos distintos, apunta a sitios distintos. Hay rutas correctas <strong>desde un origen</strong>, y por eso el procedimiento tiene siempre tres pasos: dónde estoy, dónde voy, y cuántos niveles subo antes de empezar a bajar.</p>
+</div>
+
+<div class="rule">
+  <p class="rule-label">Por qué <code>C:\Users\...</code> no es un enlace</p>
+  <p>Esto puede funcionar en tu ordenador:</p>
+  <p><code>&lt;img src="C:\Users\Laura\Desktop\foto.jpg"&gt;</code></p>
+  <p>Y deja de funcionar en cuanto mueves el proyecto, lo entregas o lo publicas, que es justo para lo que se hace una web. Lo mismo con <code>file:///</code>. Nuestros proyectos deben ser <strong>transportables</strong>.</p>
+</div>
+
+#### La navegación es una lista de enlaces
+
+```html
+<nav aria-label="Navegación principal">
+    <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="acerca.html">Acerca de</a></li>
+        <li><a href="contacto.html" aria-current="page">Contacto</a></li>
+    </ul>
+</nav>
+```
+
+* **`<nav>`** declara que ese bloque es navegación. Un lector de pantalla ofrece saltar a él, o saltárselo entero para ir al contenido, que es lo que hace casi todo el mundo que navega así.
+* **La lista** dice que son cuatro enlaces hermanos, y permite anunciar «lista de 4 elementos». Cuatro enlaces sueltos separados por espacios no dicen ni cuántos son ni dónde acaban.
+* **`aria-current="page"`** marca cuál es la página que se está viendo. Sin CSS es la única forma de comunicarlo.
+
+No elegimos las etiquetas pensando en cómo queremos que se vea. Elegimos las que representan mejor la información.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Hoy el proyecto pasa de una página suelta a un sitio de cuatro páginas enlazadas. Los pasos 1 a 4 trabajan el contenido; los pasos 5 a 7, la navegación y las rutas.
+
+#### Paso 1 · Revisa la jerarquía de tu portada · 20 min
+
+Antes de añadir páginas nuevas, arregla la que ya tienes.
+
+1. Dibuja en papel el índice de tu `index.html`: qué es `h1`, qué es `h2`, qué es `h3`.
+2. Comprueba que no hay ningún salto de nivel y que solo hay un `h1`.
+3. Sustituye cualquier `<br><br>` que hayas usado para separar por párrafos reales.
+4. Añade al menos un `abbr`, un `code` o un par `del`/`ins` donde tenga sentido de verdad. Si no lo tiene en tu tema, no lo fuerces: dilo en un comentario.
+
+Antes de eso, resuelve este caso y explica qué principio incumple:
+
+```html
+<p>
+    <h2>Nuestros productos</h2>
+</p>
+```
+
+<details class="aside aside--extra">
+  <summary>Ver respuesta</summary>
+  <p>Un <code>&lt;p&gt;</code> solo puede contener contenido en línea: texto, <code>strong</code>, <code>em</code>, <code>a</code>, <code>img</code>… Un encabezado es un elemento de bloque y no cabe dentro de un párrafo.</p>
+  <p>El navegador no muestra un error: cierra el párrafo por su cuenta justo antes del <code>&lt;h2&gt;</code> y deja suelto el <code>&lt;/p&gt;</code> final. Acabas con un párrafo vacío, un encabezado que no está donde creías y una etiqueta huérfana. Otra vez el mismo patrón: se ve bien, y la estructura real no es la que escribiste.</p>
+</details>
+
+<details class="aside aside--extra">
+<summary>Consultar · otros elementos de texto y entidades</summary>
+
+| Elemento | Significa |
+| -------- | --------- |
+| `mark` | Resaltado por relevancia en el contexto actual, como un subrayador |
+| `small` | Letra pequeña en el sentido legal: avisos, notas al pie |
+| `del` / `ins` | Contenido eliminado y contenido añadido. El par es perfecto para un precio rebajado |
+| `abbr` | Una abreviatura, con su significado en `title` |
+| `code` | Un fragmento de código o un nombre de archivo |
+
+```html
+<mark>texto destacado</mark>
+<small>información secundaria</small>
+<del>49,99 €</del> <ins>39,99 €</ins>
+<abbr title="HyperText Markup Language">HTML</abbr>
+<code>index.html</code>
+```
+
+Para escribir un `<` sin que abra una etiqueta se usan **entidades**:
+
+| Escribes | Se ve |
+| -------- | ----- |
+| `&lt;` | `<` |
+| `&gt;` | `>` |
+| `&amp;` | `&` |
+| `&quot;` | `"` |
+| `&nbsp;` | Un espacio que no se parte al final de línea |
+| `&copy;` | © |
+
+Es imprescindible cuando quieres mostrar código HTML dentro de una página, que es lo que hacen estos apuntes.
+
+</details>
+
+#### Paso 2 · De texto plano a estructura · 25 min
 
 Recibes esta información sin ningún marcado:
 
@@ -1003,7 +996,7 @@ Esto no es «escribir etiquetas»: es **interpretar la información**. Tu trabaj
   <p>Aplica la prueba de forma literal. Con «Memoria RAM, Almacenamiento SSD, Procesador», la afirmación de que esos son los componentes de un ordenador se mantiene con independencia del orden. Con «Reiniciar, Descargar la imagen, Arrancar desde el USB», en cambio, ya no describe una instalación posible.</p>
 </details>
 
-#### Reto 2 · Los módulos de DAW (10 min)
+#### Paso 3 · Los módulos de DAW · 10 min
 
 Representa esta estructura con **el mínimo HTML razonable y semánticamente correcto**:
 
@@ -1015,7 +1008,7 @@ DAW
 ```
 
 <details class="aside aside--extra">
-  <summary>Ver respuesta del Reto 2</summary>
+  <summary>Ver respuesta</summary>
   <p>Es una relación de pertenencia sin orden, o sea una lista dentro de otra lista:</p>
   <pre><code>&lt;ul&gt;
   &lt;li&gt;DAW
@@ -1029,7 +1022,7 @@ DAW
   <p>La lista anidada va <strong>dentro</strong> del <code>&lt;li&gt;</code> de DAW. Si la sacas fuera, estás diciendo que los tres módulos son hermanos de DAW en lugar de partes suyas.</p>
 </details>
 
-#### Ahora tú · Crea `productos.html`
+#### Paso 4 · Crea `productos.html` · 25 min
 
 Crea la segunda página de tu proyecto. Debe contener:
 
@@ -1040,167 +1033,11 @@ Crea la segunda página de tu proyecto. Debe contener:
 * Una lista anidada.
 * Al menos dos elementos de significado textual de la sesión anterior.
 
-Todavía no la enlazaremos con la portada: eso es la sesión que viene.
+Todavía no la enlazaremos con la portada: eso es el paso 5.
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Sabes aplicar la prueba de reordenar para decidir entre <code>ul</code> y <code>ol</code>.</li>
-    <li>Sabes dónde va exactamente una lista anidada.</li>
-    <li>Conoces <code>dl</code>, <code>dt</code> y <code>dd</code>.</li>
-    <li>Tienes <code>productos.html</code> con las tres clases de lista.</li>
-  </ul>
-</div>
+**Antes de continuar:** las tres clases de lista están presentes y cada una declara la relación que le corresponde, no la que da el aspecto deseado.
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Da la prueba de una frase que distingue <code>ul</code> de <code>ol</code>.</li>
-    <li>¿Dónde va el <code>&lt;ul&gt;</code> de una lista anidada?</li>
-    <li>¿Para qué sirve <code>&lt;dl&gt;</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Si al reordenar los elementos la información sigue siendo cierta, es <code>ul</code>; si deja de serlo, es <code>ol</code>.</p>
-  <p>2 · Dentro del <code>&lt;li&gt;</code> del que depende, no detrás de él.</p>
-  <p>3 · Para pares de término y descripción: glosarios, fichas técnicas, listas de definiciones.</p>
-</details>
-
-
-### Bloque 3 · Enlaces, rutas y navegación
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se construye un enlace, desde dónde se resuelve una ruta y qué convierte unos enlaces en una navegación.</li>
-    <li><strong>2. Haz:</strong> Monta las cuatro páginas enlazadas y después resuelve el laberinto de rutas.</li>
-    <li><strong>3. Comprueba:</strong> Mueve la carpeta del proyecto y confirma que nada se rompe.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuándo usarías <code>ul</code>, <code>ol</code> y <code>dl</code>?</li>
-    <li>¿Qué regla debe cumplir un <code>li</code> que contiene otra lista?</li>
-    <li>Convierte «HTML, CSS y JavaScript» en una lista no ordenada mínima.</li>
-  </ol>
-</div>
-
-#### El elemento que hace que exista la Web
-
-```html
-<a href="https://developer.mozilla.org/">MDN Web Docs</a>
-```
-
-`href` indica el destino y el contenido del elemento es el texto visible del enlace. Ese texto importa: «pincha aquí» no dice nada fuera de contexto, y mucha gente navega saltando de enlace en enlace sin leer lo que hay alrededor.
-
-##### Enlaces a otras páginas del sitio
-
-```text
-mi-web/
-│
-├── index.html
-├── productos.html
-└── contacto.html
-```
-
-Desde `index.html`:
-
-```html
-<a href="productos.html">Productos</a>
-```
-
-##### Enlaces dentro de la misma página
-
-```html
-<a href="#contacto">Ir a contacto</a>
-```
-
-y en algún punto del documento:
-
-```html
-<section id="contacto">
-    <h2>Contacto</h2>
-</section>
-```
-
-<p class="term">id</p>
-
-Identifica un elemento **de forma única** dentro del documento. Dos elementos con el mismo `id` son un error, y uno que los validadores sí detectan.
-
-##### Enlaces especiales
-
-```html
-<a href="mailto:contacto@example.com">Enviar correo</a>
-```
-
-```html
-<a href="tel:+34960000000">960 000 000</a>
-```
-
-`tel:` es especialmente útil en móvil, donde convierte el número en algo que se puede pulsar para llamar.
-
-##### Abrir en otra pestaña
-
-```html
-<a href="https://example.com"
-   target="_blank"
-   rel="noopener noreferrer">
-    Abrir recurso
-</a>
-```
-
-`target="_blank"` abre en pestaña nueva y `rel="noopener noreferrer"` corta la referencia que la página abierta obtendría hacia la tuya. Los navegadores actuales ya lo hacen por su cuenta, pero escribirlo sigue siendo lo correcto: no dependes de la versión del navegador y dejas la intención por escrito.
-
-Dicho lo cual: abrir pestañas automáticamente no debería ser tu opción por defecto. Quien navega debería mantener el control de su navegación, y el botón de volver atrás deja de funcionar en una pestaña nueva.
-
-#### Rutas relativas
-
-Esta es la idea que desatasca todo lo demás. Cuando escribes `href="productos.html"`, el navegador no busca desde la raíz del proyecto: busca **desde la carpeta del archivo que contiene el enlace**.
-
-Por eso la misma ruta, escrita en dos archivos distintos, apunta a sitios distintos. No hay rutas correctas en abstracto: hay rutas correctas *desde un origen*.
-
-| Escribes | Significa |
-| -------- | --------- |
-| `pagina.html` | Un archivo en **mi misma** carpeta |
-| `./pagina.html` | Lo mismo, escrito de forma explícita |
-| `carpeta/pagina.html` | Bajar a una carpeta que está dentro de la mía |
-| `../pagina.html` | **Subir** un nivel y buscar allí |
-| `../../pagina.html` | Subir dos niveles |
-| `#seccion` | Saltar a un elemento con ese `id` en esta misma página |
-
-<div class="rule">
-  <p class="rule-label">Por qué <code>C:\Users\...</code> no es un enlace</p>
-  <p>Esto puede funcionar en tu ordenador:</p>
-  <p><code>&lt;img src="C:\Users\Laura\Desktop\foto.jpg"&gt;</code></p>
-  <p>Y deja de funcionar en cuanto mueves el proyecto, lo entregas o lo publicas, que es justo para lo que se hace una web. Lo mismo con <code>file:///</code>. Nuestros proyectos deben ser <strong>transportables</strong>.</p>
-</div>
-
-#### La navegación
-
-Un menú es, conceptualmente, **una lista de enlaces**:
-
-```html
-<nav aria-label="Navegación principal">
-    <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="productos.html">Productos</a></li>
-        <li><a href="acerca.html">Acerca de</a></li>
-        <li><a href="contacto.html" aria-current="page">Contacto</a></li>
-    </ul>
-</nav>
-```
-
-* **`<nav>`** declara que ese bloque es navegación. Un lector de pantalla ofrece saltar a él, o saltárselo entero para ir al contenido, que es lo que hace casi todo el mundo que navega así.
-* **La lista** dice que son cuatro enlaces hermanos, y permite anunciar «lista de 4 elementos». Cuatro enlaces sueltos separados por espacios no dicen ni cuántos son ni dónde acaban.
-* **`aria-current="page"`** marca cuál es la página que se está viendo. Sin CSS es la única forma de comunicarlo.
-
-No elegimos las etiquetas pensando en cómo queremos que se vea. Elegimos las que representan mejor la información.
-
-#### Tarea 4 · El sitio multipágina
+#### Paso 5 · El sitio multipágina · 35 min
 
 Amplía tu proyecto hasta tener cuatro páginas en la raíz:
 
@@ -1219,20 +1056,52 @@ Requisitos:
 3. Cada página marca su propio enlace con `aria-current="page"`.
 4. Cada página tiene un único `h1` que coincide con su tema.
 
-Recorre después el ciclo completo: Inicio → Productos → Acerca de → Contacto → Inicio. Si algún enlace falla, no lo arregles todavía: anótalo, porque es exactamente el problema que ataca la tarea siguiente.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Cuatro páginas enlazadas, títulos distintos y navegación coherente.</span></div>
-  <div><strong>Si lo tienes</strong><span>Mueve una página a una carpeta y corrige solo las rutas afectadas.</span></div>
-  <div><strong>Reto</strong><span>Recibe un árbol ajeno y resuelve sus rutas sin copiar las de tu proyecto.</span></div>
-</div>
+Recorre después el ciclo completo: Inicio → Productos → Acerca de → Contacto → Inicio. Si algún enlace falla, no lo arregles todavía: anótalo, porque es exactamente el problema que ataca el paso siguiente.
 
 <details class="aside aside--help">
   <summary>Estoy atascado · el título de cada página</summary>
   <p>El <code>&lt;title&gt;</code> se lee fuera de contexto: en una pestaña estrecha, en un favorito, en un resultado de búsqueda. «Contacto» no dice de qué web es. Escribe primero lo específico y después el sitio, porque las pestañas se recortan por el final: <code>Contacto | PixelStore</code>.</p>
 </details>
 
-#### Tarea 5 · El laberinto de rutas
+<details class="aside aside--extra">
+<summary>Consultar · enlaces internos, especiales y a otra pestaña</summary>
+
+Para saltar dentro de la misma página se enlaza un `id`:
+
+```html
+<a href="#contacto">Ir a contacto</a>
+
+<section id="contacto">
+    <h2>Contacto</h2>
+</section>
+```
+
+<p class="term">id</p>
+
+Identifica un elemento **de forma única** dentro del documento. Dos elementos con el mismo `id` son un error, y uno que los validadores sí detectan.
+
+```html
+<a href="mailto:contacto@example.com">Enviar correo</a>
+<a href="tel:+34960000000">960 000 000</a>
+```
+
+`tel:` es especialmente útil en móvil, donde convierte el número en algo que se puede pulsar para llamar.
+
+```html
+<a href="https://example.com"
+   target="_blank"
+   rel="noopener noreferrer">
+    Abrir recurso
+</a>
+```
+
+`target="_blank"` abre en pestaña nueva y `rel="noopener noreferrer"` corta la referencia que la página abierta obtendría hacia la tuya. Los navegadores actuales ya lo hacen por su cuenta, pero escribirlo sigue siendo lo correcto: no dependes de la versión del navegador y dejas la intención por escrito.
+
+Abrir pestañas automáticamente no debería ser la opción por defecto. Quien navega debería mantener el control de su navegación, y el botón de volver atrás deja de funcionar en una pestaña nueva.
+
+</details>
+
+#### Paso 6 · El laberinto de rutas · 25 min
 
 Ahora el caso difícil, con carpetas de por medio:
 
@@ -1246,7 +1115,7 @@ web/
     └── contacto.html
 ```
 
-<p class="stage">Paso 1 · Te enseño uno</p>
+##### 6.1 · Ejemplo resuelto
 
 **Desde `productos.html`, enlazar `logo.webp`.**
 
@@ -1263,13 +1132,27 @@ web/
 
 No conviene resolverlo de una sola vez. El procedimiento tiene tres pasos: dónde estoy, dónde voy y cuántos niveles subo antes de empezar a bajar.
 
-<p class="stage stage--solo">Paso 2 · Ahora tú</p>
+##### 6.2 · Ahora tú
 
 1. Desde `productos.html`, volver a `index.html`.
 2. Desde `index.html`, mostrar la imagen `logo.webp`.
 3. Desde `contacto.html`, enlazar `productos.html`.
 4. Desde `index.html`, enlazar `contacto.html`.
 5. Desde `index.html`, saltar a una sección con `id="envios"` en esa misma página.
+
+<details class="aside aside--extra">
+  <summary>Consultar · qué significa cada forma de ruta</summary>
+
+| Escribes | Significa |
+| -------- | --------- |
+| `pagina.html` | Un archivo en **mi misma** carpeta |
+| `./pagina.html` | Lo mismo, escrito de forma explícita |
+| `carpeta/pagina.html` | Bajar a una carpeta que está dentro de la mía |
+| `../pagina.html` | **Subir** un nivel y buscar allí |
+| `../../pagina.html` | Subir dos niveles |
+| `#seccion` | Saltar a un elemento con ese `id` en esta misma página |
+
+</details>
 
 <details class="aside aside--extra">
   <summary>Ver soluciones</summary>
@@ -1280,41 +1163,104 @@ No conviene resolverlo de una sola vez. El procedimiento tiene tres pasos: dónd
   <p>5 · <code>#envios</code> — sin nombre de archivo: el destino está en el documento actual.</p>
 </details>
 
+#### Paso 7 · La prueba de portabilidad · 10 min
+
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación de portabilidad · un minuto</p>
   <p>Mueve la carpeta entera del proyecto al escritorio, o a un pendrive, y navega por todos los enlaces. Si algo deja de funcionar, esa ruta no era relativa. Es la única prueba que importa, porque es lo que le pasará al proyecto cuando lo entregues.</p>
 </div>
 
+Después de moverla, recorre las cuatro páginas en los dos sentidos y anota en un comentario cuántos enlaces fallaron y por qué. Un proyecto que solo funciona en la carpeta donde se escribió no está terminado.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los siete pasos. Estos dos retos no añaden etiquetas nuevas: exigen resolver rutas sobre estructuras que no has diseñado tú y juzgar decisiones ajenas.
+
+##### Reto 1 · Un árbol de carpetas que no es el tuyo
+
+```text
+tienda/
+├── index.html
+├── assets/
+│   ├── img/
+│   │   └── marca.webp
+│   └── docs/
+│       └── garantia.pdf
+├── catalogo/
+│   ├── index.html
+│   ├── portatiles.html
+│   └── fichas/
+│       └── portatil-14.html
+└── legal/
+    └── privacidad.html
+```
+
+Escribe la ruta relativa para cada caso, aplicando los tres pasos del procedimiento. No compruebes en el navegador hasta haberlas escrito todas:
+
+1. Desde `catalogo/portatiles.html`, enlazar `fichas/portatil-14.html`.
+2. Desde `fichas/portatil-14.html`, mostrar `marca.webp`.
+3. Desde `fichas/portatil-14.html`, volver a la portada del sitio.
+4. Desde `legal/privacidad.html`, enlazar `garantia.pdf`.
+5. Desde `index.html`, enlazar `catalogo/index.html` sin escribir el nombre del archivo.
+6. Desde `catalogo/index.html`, enlazar `privacidad.html`.
+7. Desde `fichas/portatil-14.html`, enlazar `portatiles.html`.
+
+Al terminar, monta esa estructura con archivos vacíos y comprueba cuántas acertaste a la primera. Las que falles, resuélvelas otra vez escribiendo los tres pasos por separado.
+
+##### Reto 2 · La navegación de una web real
+
+Abre tres sitios que uses y examina su menú principal con `Ctrl + U` o con el inspector. Responde por cada uno:
+
+1. ¿El bloque de navegación es un `nav`, o son enlaces sueltos dentro de un `div`?
+2. ¿Los enlaces están dentro de una lista, de modo que se pueda anunciar cuántos son?
+3. ¿Se indica de alguna forma, además del color, cuál es la página actual?
+4. ¿Hay algún enlace cuyo texto no signifique nada fuera de contexto, del tipo «aquí», «leer más» o «ver»? Cópialo y propón una redacción que sí funcione leída en voz alta y aislada.
+
+Los tres menús funcionan con el ratón. La pregunta de esta unidad es siempre la misma: qué le queda a quien no usa el ratón ni ve el color.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Cuatro páginas enlazadas, títulos distintos, navegación coherente y las tres clases de lista en <code>productos.html</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>La prueba de portabilidad superada después de mover la carpeta, con los fallos anotados y corregidos.</span></div>
+  <div><strong>Reto</strong><span>Las siete rutas del árbol ajeno resueltas sin probar en el navegador, y la auditoría de las tres navegaciones reales.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Las cuatro páginas existen y se enlazan entre sí sin ningún error 404.</li>
-    <li>El menú es idéntico en las cuatro y cada una marca la suya con <code>aria-current</code>.</li>
-    <li>Todas las rutas son relativas y el sitio sobrevive a moverse de carpeta.</li>
-    <li>Sabes resolver una ruta con el método de los tres pasos.</li>
+    <li>La portada no salta ningún nivel de encabezado y tiene un solo <code>h1</code>.</li>
+    <li>La elección entre <code>ul</code> y <code>ol</code> está justificada por escrito en un comentario.</li>
+    <li>Las listas anidadas van dentro del <code>li</code> del que dependen.</li>
+    <li>El sitio tiene cuatro páginas con títulos distintos y descriptivos.</li>
+    <li>La navegación es un <code>nav</code> con una lista, y cada página marca la suya con <code>aria-current</code>.</li>
+    <li>El proyecto sigue funcionando después de moverlo de carpeta.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Por qué está mal pasar de <code>h2</code> a <code>h4</code>?</li>
+    <li>¿Cuál es la diferencia de significado entre <code>strong</code> y <code>em</code>?</li>
+    <li>¿Cómo se escribe «&lt;p&gt;» para que aparezca literalmente en la página?</li>
+    <li>Da la prueba de una frase que distingue <code>ul</code> de <code>ol</code>.</li>
+    <li>¿Dónde va el <code>&lt;ul&gt;</code> de una lista anidada?</li>
     <li>¿Desde dónde se resuelve una ruta relativa?</li>
-    <li>¿Qué aporta <code>&lt;nav&gt;</code> que no aporta un <code>&lt;div&gt;</code> con enlaces?</li>
-    <li>¿Por qué una ruta con <code>C:\</code> funciona en tu equipo y no en el del profesor?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Desde la carpeta del archivo que contiene el enlace, no desde la raíz del proyecto.</p>
-  <p>2 · Declara que ese bloque es una zona de navegación, y eso permite saltar a él o saltárselo. Un <code>div</code> no significa nada.</p>
-  <p>3 · Porque describe una posición dentro de tu disco duro. En cualquier otro equipo esa ruta no existe.</p>
+  <p>1 · Porque los encabezados forman el índice del documento y saltar deja un hueco: quien navegue por encabezados no sabrá de qué es parte ese <code>h4</code>.</p>
+  <p>2 · <code>strong</code> marca importancia; <code>em</code> marca énfasis, el matiz que cambiaría el tono al leer la frase en voz alta. Ninguno de los dos significa «negrita» o «cursiva».</p>
+  <p>3 · <code>&amp;lt;p&amp;gt;</code>.</p>
+  <p>4 · Si al reordenar los elementos la información sigue siendo cierta, es <code>ul</code>; si deja de serlo, es <code>ol</code>.</p>
+  <p>5 · Dentro del <code>&lt;li&gt;</code> del que depende, no detrás de él.</p>
+  <p>6 · Desde la carpeta del archivo que contiene el enlace, no desde la raíz del proyecto.</p>
 </details>
-
-<div class="rule">
-  <p class="rule-label">Demostración del profesor · el mismo HTML, tres apariencias</p>
-  <p>Durante dos minutos observa esta misma página con tres hojas CSS completamente distintas. No necesitas conocer aún las reglas: identifica qué contenido y qué estructura permanecen idénticos.</p>
-</div>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 2 · 5–10 minutos</p>
@@ -1325,6 +1271,7 @@ No conviene resolverlo de una sola vez. El procedimiento tiene tres pasos: dónd
     <li>Desde <code>paginas/acerca.html</code>, enlaza <code>index.html</code> y explica cómo resolviste la ruta.</li>
   </ol>
 </div>
+
 
 ---
 
