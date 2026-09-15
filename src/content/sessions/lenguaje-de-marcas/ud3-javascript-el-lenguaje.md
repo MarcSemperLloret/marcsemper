@@ -1404,16 +1404,14 @@ La semana que viene aparecerán `map`, `filter` y `reduce` con esos mismos nombr
 
 ## Sesión 4 · Arrays y objetos
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Arrays</strong>, <strong>Métodos declarativos</strong> y <strong>Objetos y JSON</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Arrays
+<p class="lead">Tres horas. Media hora para entender qué devuelve cada método de array y cómo se modela una entidad con un objeto, y dos horas y media convirtiendo tus listas paralelas en el catálogo que usarás el resto del módulo.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se guarda una lista, cómo se accede a sus elementos y cómo se modifica.</li>
-    <li><strong>2. Haz:</strong> Construye la lista de productos de tu catálogo y opera sobre ella.</li>
-    <li><strong>3. Comprueba:</strong> Distingues los métodos que modifican el array de los que devuelven uno nuevo.</li>
+    <li><strong>1. Aprende:</strong> Cómo se guarda una lista, qué métodos la modifican y cuáles devuelven otra, qué devuelve exactamente <code>map</code>, <code>filter</code>, <code>find</code> y <code>reduce</code>, y qué es JSON.</li>
+    <li><strong>2. Haz:</strong> Construye tu catálogo como array de objetos, consúltalo con métodos declarativos y conviértelo a JSON y de vuelta.</li>
+    <li><strong>3. Comprueba:</strong> Eliges el método por lo que devuelve, y el catálogo original nunca queda alterado sin que lo hayas querido.</li>
   </ol>
 </div>
 
@@ -1421,10 +1419,16 @@ La semana que viene aparecerán `map`, `filter` y `reduce` con esos mismos nombr
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>En la sesión 2 usaste tres listas paralelas. ¿Qué problema tiene eso?</li>
-    <li>¿Cómo pedirías «el tercer producto»?</li>
     <li>¿Qué pasa si pides el elemento número cien de una lista de tres?</li>
+    <li>En la sesión 3 escribiste <code>aplicarATodos</code> y <code>filtrarPor</code>. ¿Qué devolvía cada una?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy hay dos preguntas que se repiten en cada línea: **¿esto modifica el original o devuelve algo nuevo?** y **¿qué me devuelve exactamente este método?**. Casi todos los errores de la sesión son una de las dos mal contestada.
 
 #### Una lista ordenada de valores
 
@@ -1433,28 +1437,11 @@ const categorias = ["teclados", "ratones", "monitores"];
 
 categorias[0]           // "teclados"   ← se empieza a contar en cero
 categorias.length       // 3
-categorias[2]           // "monitores"
 categorias[99]          // undefined    ← no da error
 categorias.at(-1)       // "monitores"  ← el último, sin calcular índices
 ```
 
 Que pedir un índice inexistente devuelva `undefined` en lugar de fallar es cómodo y peligroso a partes iguales: el programa sigue, y el `undefined` viaja hasta reventar tres funciones más allá.
-
-#### Añadir, quitar y buscar
-
-```javascript
-const lista = ["teclados", "ratones"];
-
-lista.push("monitores");      // añade al final       → 3
-lista.pop();                  // quita el último      → "monitores"
-lista.unshift("cables");      // añade al principio
-lista.shift();                // quita el primero
-
-lista.includes("ratones");    // true
-lista.indexOf("ratones");     // 1, o -1 si no está
-```
-
-#### Los que modifican y los que no
 
 <div class="rule">
   <p class="rule-label">Distingue mutar de devolver</p>
@@ -1471,79 +1458,6 @@ original;                                // [3, 1, 2], intacto
 
 Los tres puntos, el operador de propagación, copian los elementos en un array nuevo.
 
-#### Recorrer con `forEach`
-
-```javascript
-categorias.forEach((categoria, indice) => {
-  console.log(`${indice + 1}. ${categoria}`);
-});
-```
-
-`forEach` recorre y no devuelve nada: sirve para «haz algo con cada uno». Cuando lo que quieres es **obtener** otra lista, el método es `map`, que viene en la sesión siguiente.
-
-#### Tarea 10 · El catálogo como lista
-
-Crea `js/datos.js`:
-
-1. Declara un array con al menos ocho nombres de producto de tu tema.
-2. Otro con sus precios, en el mismo orden.
-3. Escribe funciones para añadir, quitar y buscar un producto.
-4. Ordena una copia por precio sin alterar el original, y demuéstralo.
-5. Escribe una función que devuelva los tres primeros.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las operaciones básicas funcionando, y el original intacto tras ordenar.</span></div>
-  <div><strong>Si lo tienes</strong><span>Escribe una función que devuelva un array sin duplicados.</span></div>
-  <div><strong>Reto</strong><span>Explica por qué mantener dos arrays paralelos es mala idea, con un ejemplo de cómo se desincronizan.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Accedes a los elementos por índice y conoces <code>length</code>.</li>
-    <li>Distingues los métodos que mutan de los que devuelven.</li>
-    <li>Copias un array antes de ordenarlo.</li>
-    <li>Sabes que un índice inexistente da <code>undefined</code>, no un error.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué índice tiene el primer elemento?</li>
-    <li>Nombra dos métodos que muten y dos que no.</li>
-    <li>¿Qué hace <code>[...lista]</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El cero.</p>
-  <p>2 · Mutan <code>push</code> y <code>sort</code>; no mutan <code>slice</code> y <code>map</code>.</p>
-  <p>3 · Crea un array nuevo con los mismos elementos: una copia superficial.</p>
-</details>
-
-
-### Bloque 2 · Métodos declarativos
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> <code>map</code>, <code>filter</code>, <code>find</code>, <code>some</code>, <code>every</code>, <code>sort</code> y <code>reduce</code>.</li>
-    <li><strong>2. Haz:</strong> Sustituye tus bucles por métodos y compara la legibilidad.</li>
-    <li><strong>3. Comprueba:</strong> Eliges el método por lo que devuelve, no por costumbre.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>En la sesión 3 escribiste <code>aplicarATodos</code> y <code>filtrarPor</code>. ¿Qué devolvía cada una?</li>
-    <li>¿Qué diferencia hay entre «quiero los caros» y «quiero el primero caro»?</li>
-    <li>¿Y entre «quiero saber si hay alguno caro» y «quiero los caros»?</li>
-  </ol>
-</div>
-
 #### Cada método devuelve una cosa distinta
 
 | Método | Devuelve | Pregunta que responde |
@@ -1556,14 +1470,13 @@ Crea `js/datos.js`:
 | `every` | `true` o `false` | «¿Cumplen todos?» |
 | `sort` | El array ordenado | «Ponlos en este orden» |
 | `reduce` | Un solo valor | «Combínalos todos en uno» |
+| `forEach` | Nada | «Haz algo con cada uno» |
 
 <div class="rule">
   <p class="rule-label">Elige por lo que necesitas recibir</p>
   <p>La mitad de los errores con estos métodos son de elección, no de escritura: usar <code>filter</code> y quedarse con <code>[0]</code> cuando lo que se quería era <code>find</code>, o usar <code>find</code> esperando una lista.</p>
   <p>Pregúntate qué quieres tener después: ¿otra lista, un elemento, un sí o un no, o un número?</p>
 </div>
-
-#### En código
 
 ```javascript
 const productos = [
@@ -1594,15 +1507,15 @@ productos.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
 Recuerda además que `sort` **muta**: ordena sobre una copia si el orden original importa.
 
-#### `reduce`, el que da más miedo
+`reduce` es el que da más miedo y el que menos lo merece:
 
 ```javascript
 const total = productos.reduce((suma, p) => suma + p.precio * p.stock, 0);
 ```
 
-Se lee así: empieza con `0`, y por cada producto, quédate con lo que llevabas más lo que aporta este. Es el acumulador de la sesión 2, escrito en una línea. Si te cuesta leerlo, escríbelo primero con `for...of` y tradúcelo después.
+Se lee así: empieza con `0`, y por cada producto, quédate con lo que llevabas más lo que aporta este. Es el acumulador de la sesión 2, escrito en una línea.
 
-#### Encadenar
+Como cada método devuelve un array, el siguiente puede trabajar sobre él:
 
 ```javascript
 const resumen = productos
@@ -1611,71 +1524,7 @@ const resumen = productos
   .map((p) => `${p.nombre}: ${p.precio.toFixed(2)} €`);
 ```
 
-Cada método devuelve un array, así que el siguiente puede trabajar sobre él. Se lee de arriba abajo como una frase: filtra, ordena, formatea. Con `sort` en medio, ojo: aquí es seguro porque `filter` ya devolvió un array nuevo.
-
-#### Tarea 11 · Consultas del catálogo
-
-En `js/catalogo.js`, sobre tu lista de productos:
-
-1. `nombresDisponibles(productos)` con `filter` y `map`.
-2. `buscarPorNombre(productos, texto)` con `find`, sin distinguir mayúsculas.
-3. `hayAgotados(productos)` con `some`.
-4. `valorAlmacen(productos)` con `reduce`.
-5. `ordenarPorPrecio(productos, ascendente)` que no mute el original.
-6. Reescribe dos de tus bucles de la sesión 2 con estos métodos y comenta cuál se lee mejor.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las cinco funciones, cada una con el método adecuado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Una consulta encadenada que responda a una pregunta compuesta.</span></div>
-  <div><strong>Reto</strong><span>Agrupa los productos por categoría usando <code>reduce</code>.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Eliges el método por lo que devuelve.</li>
-    <li>Pasas función de comparación a <code>sort</code> con números.</li>
-    <li>Encadenas dos o tres métodos y lo lees como una frase.</li>
-    <li>Sabes traducir un <code>reduce</code> a un bucle y al revés.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué devuelve <code>find</code> si no encuentra nada?</li>
-    <li>¿Por qué <code>[10, 9, 100].sort()</code> da un orden raro?</li>
-    <li>¿Qué diferencia hay entre <code>some</code> y <code>filter</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>undefined</code>, y hay que comprobarlo antes de usar el resultado.</p>
-  <p>2 · Porque sin comparador ordena como texto, y <code>"100"</code> va antes que <code>"9"</code>.</p>
-  <p>3 · <code>some</code> devuelve un booleano; <code>filter</code>, un array con los que cumplen.</p>
-</details>
-
-
-### Bloque 3 · Objetos y JSON
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se modela una entidad con un objeto, y qué es JSON.</li>
-    <li><strong>2. Haz:</strong> Sustituye tus arrays paralelos por un array de objetos.</li>
-    <li><strong>3. Comprueba:</strong> Tu catálogo es una sola estructura, y sabes convertirla a texto y de vuelta.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si borras el tercer nombre pero no el tercer precio, ¿qué ocurre?</li>
-    <li>¿Cómo guardarías juntos los datos de un mismo producto?</li>
-    <li>¿En qué formato crees que viajan los datos por internet?</li>
-  </ol>
-</div>
+Se lee de arriba abajo como una frase: filtra, ordena, formatea. Con `sort` en medio conviene fijarse: aquí es seguro porque `filter` ya devolvió un array nuevo.
 
 #### Un objeto agrupa datos con nombre
 
@@ -1705,25 +1554,13 @@ const catalogo = [
 
 Esta es la estructura que vas a usar durante el resto del módulo: en la UD4 la pintarás en la página, en la UD5 la guardarás en un fichero y en la UD6 la servirá tu API.
 
-#### Modificar, añadir y borrar propiedades
-
-```javascript
-producto.stock = 3;              // modificar
-producto.descuento = 0.1;        // añadir
-delete producto.descuento;       // borrar
-
-Object.keys(producto);           // ["id", "nombre", "precio", ...]
-Object.values(producto);
-Object.entries(producto);        // pares [clave, valor]
-```
-
 <div class="rule">
   <p class="rule-label">Una <code>const</code> con un objeto sí se puede modificar por dentro</p>
   <p><code>const</code> protege <strong>la asignación</strong>, no el contenido. Puedes cambiar las propiedades de un objeto declarado con <code>const</code>; lo que no puedes es apuntarlo a otro objeto distinto.</p>
   <p>De ahí sale otro clásico: dos variables que apuntan al mismo objeto. Modificar una cambia «las dos», porque siempre fue una. Para copiar de verdad: <code>{ ...producto }</code>.</p>
 </div>
 
-#### Anidar y acceder con seguridad
+Al acceder a datos anidados aparece el fallo más habitual con datos ajenos, y su remedio:
 
 ```javascript
 const pedido = {
@@ -1734,13 +1571,16 @@ const pedido = {
 
 pedido.cliente.nombre            // "Ana"
 pedido.lineas[0].unidades        // 1
+```
+
+```javascript
 pedido.envio.direccion           // TypeError: no se puede leer de undefined
 pedido.envio?.direccion          // undefined, sin romper nada
 ```
 
-El interrogante es el **encadenamiento opcional**: si lo de la izquierda no existe, devuelve `undefined` en lugar de lanzar un error. Es el remedio a un fallo que verás mucho al consumir datos ajenos.
+El interrogante es el **encadenamiento opcional**: si lo de la izquierda no existe, devuelve `undefined` en lugar de lanzar un error.
 
-#### Desestructurar
+Para sacar las propiedades que necesitas y darles nombre está la desestructuración, que ahorra repetir `producto.` diez veces y hace explícito qué usa cada función:
 
 ```javascript
 const { nombre, precio } = producto;
@@ -1751,8 +1591,6 @@ function describir({ nombre, precio }) {
 }
 ```
 
-Sacar las propiedades que necesitas y darles nombre. Ahorra repetir `producto.` diez veces y hace explícito qué usa cada función.
-
 #### JSON, el formato de intercambio
 
 <p class="term">JSON</p>
@@ -1760,9 +1598,9 @@ Sacar las propiedades que necesitas y darles nombre. Ahorra repetir `producto.` 
 Un formato de texto para representar datos, nacido de la sintaxis de los objetos de JavaScript pero independiente de él: lo entienden Java, Python, PHP y cualquier otro lenguaje. Es como viajan los datos entre un navegador y un servidor.
 
 ```javascript
-const texto = JSON.stringify(producto);          // objeto → texto
+const texto = JSON.stringify(producto);           // objeto → texto
 const texto2 = JSON.stringify(producto, null, 2); // con sangría, legible
-const recuperado = JSON.parse(texto);            // texto → objeto
+const recuperado = JSON.parse(texto);             // texto → objeto
 ```
 
 Sus reglas son más estrictas que las de JavaScript:
@@ -1777,42 +1615,196 @@ Sus reglas son más estrictas que las de JavaScript:
 }
 ```
 
-Las claves van **siempre entre comillas dobles**, no se admiten comillas simples, ni comas finales, ni comentarios, ni funciones, ni `undefined`. Y `JSON.parse` de un texto mal formado lanza un error: en la sesión 5 lo trataremos como se debe.
+Las claves van **siempre entre comillas dobles**, no se admiten comillas simples, ni comas finales, ni comentarios, ni funciones, ni `undefined`. Un `JSON.parse` de un texto mal formado lanza un error: en la sesión 5 lo trataremos como se debe.
 
-#### Tarea 12 · El catálogo de verdad
+### Se trabaja
 
-Reescribe `js/datos.js`:
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Hoy el catálogo deja de ser un conjunto de listas sueltas y pasa a ser la estructura de datos del resto del módulo. El último paso cierra el círculo abierto en la sesión 3.
+
+#### Paso 1 · El catálogo como lista · 30 min
+
+Crea `js/datos.js`:
+
+1. Declara un array con al menos ocho nombres de producto de tu tema.
+2. Otro con sus precios, en el mismo orden.
+3. Escribe funciones para añadir, quitar y buscar un producto.
+4. Ordena una copia por precio sin alterar el original, y **demuéstralo** imprimiendo los dos.
+5. Escribe una función que devuelva los tres primeros.
+6. Escribe una función que devuelva el array sin duplicados.
+
+<details class="aside aside--extra">
+<summary>Consultar · añadir, quitar y buscar</summary>
+
+```javascript
+const lista = ["teclados", "ratones"];
+
+lista.push("monitores");      // añade al final       → 3
+lista.pop();                  // quita el último      → "monitores"
+lista.unshift("cables");      // añade al principio
+lista.shift();                // quita el primero
+
+lista.includes("ratones");    // true
+lista.indexOf("ratones");     // 1, o -1 si no está
+```
+
+Para recorrer haciendo algo con cada elemento, sin obtener otra lista:
+
+```javascript
+categorias.forEach((categoria, indice) => {
+  console.log(`${indice + 1}. ${categoria}`);
+});
+```
+
+</details>
+
+**Antes de continuar:** después de ordenar la copia, el array original imprime exactamente el mismo orden que tenía al declararlo.
+
+#### Paso 2 · Consultas del catálogo · 40 min
+
+En `js/catalogo.js`, sobre tu lista de productos:
+
+1. `nombresDisponibles(productos)` con `filter` y `map`.
+2. `buscarPorNombre(productos, texto)` con `find`, sin distinguir mayúsculas.
+3. `hayAgotados(productos)` con `some`.
+4. `valorAlmacen(productos)` con `reduce`.
+5. `ordenarPorPrecio(productos, ascendente)` que no mute el original.
+6. Una consulta encadenada que responda a una pregunta compuesta de tu tema.
+
+Para cada función, escribe en un comentario **qué devuelve** antes de programarla. Si no sabes decirlo, todavía no sabes qué método usar.
+
+#### Paso 3 · El catálogo de verdad · 40 min
+
+Es el trabajo central de la sesión. Reescribe `js/datos.js`:
 
 1. Convierte tus arrays paralelos en un array de al menos ocho objetos, con `id`, `nombre`, `precio`, `categoria`, `stock` y `descripcion`.
-2. Adapta las funciones de la sesión 4 a la nueva estructura.
+2. Adapta las funciones del paso 2 a la nueva estructura.
 3. Escribe `describir(producto)` usando desestructuración en el parámetro.
-4. Convierte el catálogo a JSON con sangría y obsérvalo.
-5. Vuelve a convertirlo a objeto y comprueba que todo sigue igual.
-6. Rompe el JSON a propósito y observa el error de `JSON.parse`.
+4. Añade a algún producto una propiedad anidada y accede a ella con encadenamiento opcional.
+5. Escribe una función que devuelva una copia del catálogo con todos los precios subidos un 5 %, **sin tocar el original**. Compruébalo imprimiendo los dos.
+
+<details class="aside aside--extra">
+<summary>Consultar · modificar, añadir y recorrer propiedades</summary>
+
+```javascript
+producto.stock = 3;              // modificar
+producto.descuento = 0.1;        // añadir
+delete producto.descuento;       // borrar
+
+Object.keys(producto);           // ["id", "nombre", "precio", ...]
+Object.values(producto);
+Object.entries(producto);        // pares [clave, valor]
+```
+
+</details>
+
+#### Paso 4 · JSON de ida y vuelta · 20 min
+
+1. Convierte el catálogo a JSON con sangría y obsérvalo.
+2. Vuelve a convertirlo a objeto y comprueba que todo sigue igual.
+3. Rompe el JSON a propósito de **cuatro formas distintas** —una comilla simple, una coma final, un comentario y una clave sin comillas— y anota qué dice el error en cada caso.
+4. Añade al catálogo un producto con una propiedad de valor `undefined` y otra que sea una función. Conviértelo a JSON y mira qué ha pasado con ellas. No se trata de un error, sino de una regla del formato que conviene conocer antes de la UD6.
+
+#### Paso 5 · Tus funciones frente a los métodos · 20 min
+
+En la sesión 3 escribiste `aplicarATodos`, `filtrarPor`, `contarSi` y, si hiciste la ampliación, `reducir`. Ponlas al lado de `map`, `filter` y `reduce`.
+
+| Tu función | Método equivalente | ¿Devuelven lo mismo? | ¿Qué hace el método que la tuya no? |
+| ---------- | ------------------ | -------------------- | ----------------------------------- |
+| `aplicarATodos` | `map` | | |
+| `filtrarPor` | `filter` | | |
+| `contarSi` | | | |
+| `reducir` | `reduce` | | |
+
+La tercera fila tiene truco: no hay un método que se llame así. Decide con qué lo escribirías y por qué.
+
+Al terminar, responde en tres líneas: ahora que existen los métodos, ¿para qué ha servido escribir las tuyas a mano?
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto usa `reduce` para algo que no es sumar; el segundo enseña por qué el catálogo tenía que dejar de ser listas paralelas.
+
+##### Reto 1 · `reduce` no sirve solo para sumar
+
+El acumulador de `reduce` no tiene por qué ser un número: puede ser un array o un objeto, y ahí es donde el método deja de ser una curiosidad.
+
+1. **Agrupa por categoría.** Escribe `agruparPorCategoria(productos)` que devuelva un objeto donde cada clave es una categoría y su valor, el array de productos de esa categoría. Con `reduce`, en una sola pasada.
+2. **Indexa por id.** Escribe `indexarPorId(productos)` que devuelva un objeto donde la clave es el `id`. Explica por qué eso hace que buscar un producto sea inmediato, y qué pierdes respecto al array.
+3. **Cuenta por categoría.** Ahora el acumulador es un objeto de números.
+4. **Resume en una pasada.** Escribe una función que devuelva a la vez el total, el máximo, el mínimo y el recuento, recorriendo la lista **una sola vez**. El acumulador es un objeto con cuatro campos.
+5. Compara el resultado del apartado 4 con hacer cuatro recorridos separados. ¿Cuál se lee mejor? ¿Cuál harías en un catálogo de ocho productos y cuál en uno de cincuenta mil?
+
+##### Reto 2 · Las listas que se desincronizan
+
+Este código funcionaba perfectamente hasta que alguien retiró un producto del catálogo.
+
+```javascript
+const nombres  = ["Teclado", "Ratón", "Monitor", "Webcam"];
+const precios  = [89.9, 24.5, 199, 69];
+const stocks   = [4, 0, 7, 2];
+
+function retirar(indice) {
+  nombres.splice(indice, 1);
+  precios.splice(indice, 1);
+}
+
+retirar(1);
+
+for (let i = 0; i < nombres.length; i++) {
+  console.log(`${nombres[i]}: ${precios[i]} € · ${stocks[i]} unidades`);
+}
+```
+
+1. Ejecútalo y anota qué imprime. Ninguna línea da error, y tres de las tres son falsas.
+2. Explica exactamente qué se ha desincronizado y por qué el bucle no puede detectarlo.
+3. Reescríbelo con un array de objetos y comprueba que el mismo `retirar` ya no puede producir ese fallo. Enuncia por qué en una frase.
+4. Una defensa intermedia: escribe una comprobación que, con las listas paralelas, hubiera avisado del problema al arrancar. ¿Qué tendría que comparar?
+5. Este fallo tiene nombre en la disciplina: los datos de una misma entidad viven en sitios distintos y nada garantiza que se mantengan de acuerdo. Escribe en dos líneas por qué agrupar en un objeto lo elimina de raíz en lugar de detectarlo.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Catálogo de objetos, funciones adaptadas y conversión de ida y vuelta.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade una propiedad anidada y accede a ella con encadenamiento opcional.</span></div>
-  <div><strong>Reto</strong><span>Escribe una función que devuelva una copia del catálogo con todos los precios subidos un 5 %, sin tocar el original.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Catálogo de objetos con las funciones adaptadas, consultas con el método adecuado y conversión JSON de ida y vuelta.</span></div>
+  <div><strong>Si lo tienes</strong><span>La copia con precios subidos sin tocar el original, los cuatro JSON rotos diagnosticados y la tabla de comparación con tus funciones.</span></div>
+  <div><strong>Reto</strong><span>Las cuatro agrupaciones con <code>reduce</code> en una sola pasada, y las listas paralelas desincronizadas explicadas y corregidas.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 4</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Tu catálogo es un array de objetos, no listas paralelas.</li>
-    <li>Consultas ese catálogo con métodos declarativos.</li>
+    <li>Distingues los métodos que mutan de los que devuelven, y copias antes de ordenar.</li>
+    <li>Eliges el método por lo que devuelve, no por costumbre.</li>
+    <li>Pasas función de comparación a <code>sort</code> con números.</li>
     <li>Sabes copiar un objeto y por qué hace falta.</li>
     <li>Conviertes a JSON y desde JSON, y sabes qué reglas tiene.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>Nombra dos métodos que muten y dos que no.</li>
+    <li>¿Qué hace <code>[...lista]</code>?</li>
+    <li>¿Qué devuelve <code>find</code> si no encuentra nada?</li>
+    <li>¿Por qué <code>[10, 9, 100].sort()</code> da un orden raro?</li>
+    <li>¿Se puede modificar un objeto declarado con <code>const</code>?</li>
+    <li>¿Qué tres reglas de JSON son más estrictas que las de JavaScript?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Sí: <code>const</code> impide reasignar la variable, no modificar el objeto al que apunta.</p>
-  <p>2 · Las claves entre comillas dobles, sin comas finales, sin comentarios y sin funciones.</p>
-  <p>3 · Lanza un <code>SyntaxError</code>, que hay que capturar.</p>
+  <p>1 · Mutan <code>push</code> y <code>sort</code>; no mutan <code>slice</code> y <code>map</code>.</p>
+  <p>2 · Crea un array nuevo con los mismos elementos: una copia superficial.</p>
+  <p>3 · <code>undefined</code>, y hay que comprobarlo antes de usar el resultado.</p>
+  <p>4 · Porque sin comparador ordena como texto, y <code>"100"</code> va antes que <code>"9"</code>.</p>
+  <p>5 · Sí: <code>const</code> impide reasignar la variable, no modificar el objeto al que apunta.</p>
+  <p>6 · Las claves entre comillas dobles, sin comas finales y sin comentarios. Tampoco admite funciones ni <code>undefined</code>.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 4 · 5–10 minutos</p>
@@ -1823,6 +1815,7 @@ Reescribe `js/datos.js`:
     <li>Escribe el JSON de un producto con tres campos, respetando sus reglas.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 5 · Organizar y proteger el código
