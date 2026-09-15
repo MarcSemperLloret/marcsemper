@@ -1297,7 +1297,7 @@ Mira además el panel de red: el `Content-Type` ya no es `text/plain`, es `appli
 
 ##### Quién ha hecho la conversión
 
-Recuerda el reparto de la sesión 1. Cuando tu método termina, Spring tiene un valor Java en la mano y tiene que meterlo en el cuerpo de la respuesta. Para eso usa **Jackson**, la librería que entró en el proyecto con `spring-boot-starter-webmvc` sin que la pidieras.
+Recuerda el reparto de la sesión 1. Cuando tu método termina, Spring tiene un valor Java en la mano y tiene que meterlo en el cuerpo de la respuesta. Para eso usa **Jackson**, la biblioteca que entró en el proyecto con `spring-boot-starter-webmvc` sin que la pidieras.
 
 <figure class="diagram">
   <figcaption>De objeto Java a cuerpo de respuesta</figcaption>
@@ -1660,11 +1660,12 @@ Presta atención a las cuatro trampas: hay un *getter* renombrado, un método si
 </div>
 
 <details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · De los métodos públicos que empiezan por <code>get</code> o por <code>is</code>, quitándoles el prefijo y bajando a minúscula la primera letra. No de los atributos privados.</p>
-  <p>2 · Que tenga <em>getter</em> y que su nombre siga la convención. Un método llamado <code>autor()</code> o <code>estaCompletada()</code> no lo es, y el campo desaparece sin ningún error.</p>
-  <p>3 · Un array vacío: <code>[]</code>. Nunca <code>null</code> ni un mensaje de texto.</p>
-  <p>4 · Convertir un objeto que está en memoria en texto transmisible, en nuestro caso JSON.</p>
+  <summary>Ver la solución del reto</summary>
+  <p>El JSON es <code>{"id":7,"titulo":"Caída del servidor","nivel":3,"urgente":true}</code>.</p>
+  <p><strong>El <em>getter</em> renombrado:</strong> <code>getNivel()</code> devuelve el atributo <code>prioridad</code>, y la clave que sale es <code>nivel</code>. El nombre del atributo no interviene.</p>
+  <p><strong>El método sin prefijo:</strong> <code>autor()</code> no empieza por <code>get</code> ni por <code>is</code>, de modo que no se reconoce como <em>getter</em>.</p>
+  <p><strong>El atributo sin <em>getter</em>:</strong> <code>autor</code> no aparece en el JSON por la razón anterior, y además valdría <code>null</code>, porque el constructor no lo asigna.</p>
+  <p><strong>El <em>getter</em> sin atributo:</strong> <code>isUrgente()</code> no corresponde a ningún campo y aun así produce la clave <code>urgente</code>, con el valor calculado <code>true</code>. Lo que se publica son los métodos, no el estado.</p>
 </details>
 
 ##### Reto · Diagnóstico de tres respuestas
@@ -1684,11 +1685,10 @@ Después provoca las tres en tu proyecto para confirmar tus hipótesis. La terce
 </div>
 
 <details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque crea el objeto primero, vacío, y solo después le asigna los valores llamando a los <em>setters</em>. Sin constructor sin argumentos no puede dar el primer paso.</p>
-  <p>2 · <code>Content-Type: application/json</code>. Si falta, el servidor responde <code>415 Unsupported Media Type</code>. En Postman se pone sola al elegir JSON en el desplegable del cuerpo.</p>
-  <p>3 · Se ignora en silencio, sin error y sin aviso. Por eso una errata en un nombre de campo deja ese valor a <code>null</code> y la petición parece correcta.</p>
-  <p>4 · Todo lo guardado. La lista vive en la memoria del proceso, y al reiniciar el proceso se crea de nuevo, vacía.</p>
+  <summary>Ver la solución del reto</summary>
+  <p>1 · Falta la cabecera <code>Content-Type: application/json</code>: el servidor no acepta un cuerpo cuyo tipo desconoce. Comprueba el desplegable del cuerpo en Postman, que debe estar en <code>JSON</code> y no en <code>Text</code>.</p>
+  <p>2 · Las claves del JSON no coinciden con los <em>setters</em> del modelo, casi siempre por una errata o por un campo renombrado. Las claves que no se reconocen se descartan en silencio, y el único campo que llega es el único escrito bien. Pídele el JSON enviado y la lista de <em>setters</em> de su clase.</p>
+  <p>3 · Hay dos causas posibles. La primera: el método del POST devuelve el objeto recibido sin añadirlo a la lista. La segunda: la aplicación se ha reiniciado entre las dos peticiones, y la lista vive en la memoria del proceso. Pídele que repita las dos peticiones seguidas sin reiniciar, para distinguir un caso del otro.</p>
 </details>
 
 ### Cierre
@@ -1700,6 +1700,32 @@ Después provoca las tres en tu proyecto para confirmar tus hipótesis. La terce
 Las peticiones de alta y consulta funcionan sin editar el código entre envíos. Debe ser posible explicar la conversión entre JSON y Java, y por qué los datos se pierden al reiniciar. En la sesión 4 el servidor pasará a asignar el identificador.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Comprobación de lo aprendido · 3 minutos, sin mirar los apuntes</p>
+  <ol>
+    <li>¿De dónde salen los nombres de las claves del JSON?</li>
+    <li>¿Qué hace falta para que un campo de tu clase aparezca en la respuesta?</li>
+    <li>¿Qué devuelve una ruta de listado cuando no hay ningún elemento?</li>
+    <li>¿Qué significa serializar?</li>
+    <li>¿Por qué el modelo necesita un constructor sin argumentos?</li>
+    <li>¿Qué cabecera debe acompañar a un POST con cuerpo JSON, y qué ocurre si falta?</li>
+    <li>¿Qué hace el servidor con una clave que no existe en la clase?</li>
+    <li>¿Qué se pierde al reiniciar la aplicación, y por qué?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · De los métodos públicos que empiezan por <code>get</code> o por <code>is</code>, quitándoles el prefijo y bajando a minúscula la primera letra. No de los atributos privados.</p>
+  <p>2 · Que tenga <em>getter</em> y que su nombre siga la convención. Un método llamado <code>autor()</code> o <code>estaCompletada()</code> no lo es, y el campo desaparece sin ningún error.</p>
+  <p>3 · Un array vacío: <code>[]</code>. Nunca <code>null</code> ni un mensaje de texto.</p>
+  <p>4 · Convertir un objeto que está en memoria en texto transmisible, en nuestro caso JSON.</p>
+  <p>5 · Porque el objeto se crea primero, vacío, y solo después se le asignan los valores llamando a los <em>setters</em>. Sin constructor sin argumentos no puede darse el primer paso.</p>
+  <p>6 · <code>Content-Type: application/json</code>. Si falta, el servidor responde <code>415 Unsupported Media Type</code>. En Postman se pone sola al elegir JSON en el desplegable del cuerpo.</p>
+  <p>7 · Se ignora en silencio, sin error y sin aviso. Por eso una errata en un nombre de campo deja ese valor a <code>null</code> y la petición parece correcta.</p>
+  <p>8 · Todo lo guardado. La lista vive en la memoria del proceso, y al reiniciar el proceso se crea de nuevo, vacía.</p>
+</details>
 
 **Antes de cerrar, sube el trabajo a GitHub.**
 
@@ -2037,9 +2063,9 @@ Si además puedes añadir un recurso nuevo a la mini-API —modelo, controlador,
 | Endpoint | Una ruta con un método que tu aplicación atiende |
 | Framework | Armazón que resuelve lo repetitivo y que te llama a ti, no al revés |
 | Spring Boot | La forma de usar Spring que trae el servidor web ya montado |
-| Tomcat embebido | El servidor, incluido como librería dentro de tu propia aplicación |
+| Tomcat embebido | El servidor, incluido como biblioteca dentro de tu propia aplicación |
 | Maven | Quien descarga las dependencias, compila y empaqueta |
-| Dependencia | Una librería que tu proyecto necesita, declarada en el `pom.xml` |
+| Dependencia | Una biblioteca que tu proyecto necesita, declarada en el `pom.xml` |
 | *Starter* | Un paquete de dependencias que suelen ir juntas |
 | *Component scan* | El barrido que hace Spring buscando tus clases, solo bajo el paquete principal |
 | `@RestController` | Esta clase atiende peticiones y lo que devuelve es el cuerpo de la respuesta |
@@ -2050,7 +2076,7 @@ Si además puedes añadir un recurso nuevo a la mini-API —modelo, controlador,
 | JSON | El formato de texto en el que viajan los datos entre programas |
 | Serializar | Convertir un objeto en memoria a texto |
 | Deserializar | Convertir texto en un objeto en memoria |
-| Jackson | La librería que hace las dos conversiones, leyendo *getters* y *setters* |
+| Jackson | La biblioteca que hace las dos conversiones, leyendo *getters* y *setters* |
 | Cliente HTTP | Postman o Bruno: construye peticiones a mano y enseña la respuesta entera |
 | CRUD | Las cuatro operaciones: crear, leer, actualizar y borrar |
 
