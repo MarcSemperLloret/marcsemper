@@ -537,10 +537,69 @@ Construye `index.html` en la raíz de tu carpeta, ahora como portada real del si
   <p>Escribe en algún párrafo la palabra «Programación». Si se ve correctamente, tu <code>charset</code> está bien. Después abre DevTools con <code>F12</code>, activa la vista de dispositivo móvil y comprueba que el texto se lee sin hacer zoom: si hay que ampliar, falta el <em>viewport</em>.</p>
 </div>
 
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los siete pasos. Estos dos retos no sustituyen la entrega ni añaden etiquetas nuevas: se resuelven con lo que ya sabes, y lo que exigen es decidir y justificar. No tienen una única solución correcta, así que no se acaban tecleando deprisa.
+
+##### Reto 1 · Marcar un texto que no has escrito
+
+Un cliente entrega este texto sin ninguna marca, tal como lo escribiría en un correo. Conviértelo en un documento HTML completo usando **solo** encabezados, párrafos, `strong` y `em`.
+
+```text
+TALLER BICICLETA URBANA
+
+Reparamos bicicletas de ciudad desde 2011 en el barrio de Russafa. Somos
+tres mecánicos y atendemos sin cita previa.
+
+Qué hacemos
+
+Ponemos a punto frenos, cambios y transmisión. Montamos ruedas a medida.
+Reparamos pinchazos en el momento, normalmente en menos de veinte minutos.
+También revisamos bicicletas eléctricas, aunque no reparamos motores ni
+baterías: para eso derivamos al servicio técnico de cada marca.
+
+Horario
+
+De lunes a viernes, de 9:30 a 14:00 y de 16:30 a 20:00. Los sábados solo
+por la mañana. Cerramos en agosto.
+
+Antes de venir
+
+Si la bicicleta no frena, no la traigas rodando. Es el motivo más
+frecuente de accidente entre nuestros clientes.
+```
+
+El texto plano no dice qué es cada cosa, y ahí está el trabajo. Escribe debajo del documento, en un comentario HTML, la respuesta a estas cuatro decisiones:
+
+1. **Cuántos niveles de encabezado necesita** y por qué no más ni menos. El nombre del taller y los tres rótulos intermedios, ¿están al mismo nivel?
+2. **Dónde termina un párrafo y empieza otro.** El bloque de «Qué hacemos» describe cuatro servicios seguidos: ¿es un párrafo o son varios? Justifica el criterio que aplicas, no el resultado.
+3. **Qué merece `strong` y qué no merece ninguna marca.** El aviso sobre los frenos y el cierre de agosto compiten por esa marca; «en menos de veinte minutos» probablemente no. Si todo se marca como importante, nada lo es.
+4. **Qué información del texto no puedes representar todavía** con lo que sabes. Nómbrala y di qué elemento crees que le corresponderá.
+
+Compara después tu documento con el de otra persona. Donde las dos marcas coincidan, el texto era claro; donde difieran, hay una decisión que cada parte debe poder defender.
+
+##### Reto 2 · El esqueleto de tres webs reales
+
+Abre tres sitios web que uses de verdad. En cada uno, muestra el código fuente con `Ctrl + U` y localiza las cinco piezas de la tabla de la explicación.
+
+| Sitio | `doctype` | `lang` | `charset` | `viewport` | `title` |
+| ----- | :-------: | :----: | :-------: | :--------: | :-----: |
+| | | | | | |
+| | | | | | |
+| | | | | | |
+
+Para el `title`, además de anotar si existe, copia su contenido y valora si identifica la página en una lista de veinte pestañas.
+
+Responde al terminar:
+
+1. ¿Alguno declara un `lang` que no corresponde a su idioma real? Es un fallo frecuente y no produce ningún síntoma visible.
+2. ¿Alguno carece de alguna de las cinco piezas? Anota cuál y qué consecuencia tendría, según la tabla.
+3. Las tres páginas se ven correctamente en tu navegador. Relaciona ese hecho con la frase de la explicación.
+
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Entorno montado, esqueleto escrito a mano, documento roto reparado y portada con cero errores en el panel de problemas.</span></div>
   <div><strong>Si lo tienes</strong><span>La tabla de los seis fallos completa, con la cuenta de cuántos pasó por alto el navegador.</span></div>
-  <div><strong>Reto</strong><span>Cambia todo el contenido de la portada manteniendo la misma jerarquía, y explica qué parte del documento no ha cambiado y por qué.</span></div>
+  <div><strong>Reto</strong><span>Los dos retos de ampliación resueltos: el texto del taller marcado con sus cuatro decisiones justificadas, y la tabla de las tres webs reales.</span></div>
 </div>
 
 ### Cierre
