@@ -1879,16 +1879,14 @@ Cuenta cuántos de los cinco están bien resueltos. Si alguna imagen no tiene at
 
 ## Sesión 4 · Tablas e integración
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Tablas</strong>, <strong>Celdas combinadas</strong> y <strong>Reto de integración · del contenido al HTML</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Tablas
+<p class="lead">Tres horas. Media hora para entender qué relación declara una tabla y cómo se comprueba su cuadrícula, y dos horas y media construyendo tablas accesibles y convirtiendo una especificación desconocida en una página completa.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué hace cada parte de una tabla y qué problema resuelve exactamente el atributo <code>scope</code>.</li>
-    <li><strong>2. Haz:</strong> Convierte una comparativa en texto plano en una tabla accesible.</li>
-    <li><strong>3. Comprueba:</strong> El validador no encuentra celdas huérfanas ni errores de anidación.</li>
+    <li><strong>1. Aprende:</strong> Qué hace cada parte de una tabla, qué problema resuelve <code>scope</code>, cómo ocupan la cuadrícula las celdas combinadas y qué pregunta precede siempre a la elección de una etiqueta.</li>
+    <li><strong>2. Haz:</strong> Convierte una comparativa en tabla accesible, construye el horario de tu grupo y marca una página entera de la que solo recibes la especificación.</li>
+    <li><strong>3. Comprueba:</strong> Todas las filas suman el mismo número de columnas, y cada celda se puede leer junto a sus encabezados.</li>
   </ol>
 </div>
 
@@ -1901,11 +1899,17 @@ Cuenta cuántos de los cinco están bien resueltos. Si alguna imagen no tiene at
   </ol>
 </div>
 
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Una tabla es el primer elemento de la unidad cuyo marcado se puede verificar con una suma, y también el último en el que conviene caer por defecto: buena parte de la sesión consiste en decidir cuándo **no** hace falta.
+
 #### Las tablas sirven para datos tabulares
 
 No sirven para diseñar una página. Durante años se maquetaron webs enteras con tablas porque era la única forma de colocar cosas en columnas; eso terminó hace mucho, pero la costumbre dejó rastro.
 
-#### Una tabla básica
+Esta tabla funciona, y sin embargo le falta casi todo:
 
 ```html
 <table>
@@ -1920,15 +1924,11 @@ No sirven para diseñar una página. Durante años se maquetaron webs enteras co
 </table>
 ```
 
-Funciona, pero le falta casi todo. Vamos a ver por qué.
-
 #### El problema que resuelve una tabla bien marcada
 
 Cuando tú miras una tabla, lees una celda y **subes con la vista** hasta el encabezado de su columna para saber qué significa ese número. Es tan automático que no lo notas.
 
 Quien no percibe la tabla visualmente no puede hacer eso. Recorre las celdas una a una y, sin información adicional, escucha «899» y nada más. Necesita que el documento diga a qué encabezado pertenece cada celda.
-
-#### Una estructura completa
 
 ```html
 <table>
@@ -2019,59 +2019,6 @@ Fíjate en la primera columna del `tbody` del ejemplo: «Nova 14» y «Nova 16»
   <p>Poner un <code>&lt;h3&gt;Comparativa&lt;/h3&gt;</code> justo antes de la tabla no es equivalente. El <code>&lt;caption&gt;</code> va <strong>dentro</strong> de <code>&lt;table&gt;</code> y queda asociado a ella: se anuncia al entrar en la tabla y viaja con ella si se extrae de su contexto. Un encabezado suelto encima es solo un texto que casualmente está cerca.</p>
 </div>
 
-#### Tarea 9 · Construye la tabla
-
-Recibes estos datos sin formato:
-
-```text
-Comparativa de modelos de servidor
-Modelo       RAM     Almacenamiento   Transferencia   Precio mensual
-Básico       8 GB    256 GB NVMe      2 TB            19 €
-Avanzado     16 GB   512 GB NVMe      5 TB            39 €
-Empresarial  32 GB   1 TB NVMe        10 TB           79 €
-```
-
-Escribe el HTML con `caption`, `thead`, `tbody`, `th scope="col"` en la cabecera, `th scope="row"` en el nombre de cada modelo y `td` en el resto.
-
-**La comprobación:** lee en voz alta la celda «5 TB» tal y como la escucharía alguien que no ve la tabla. Si tu marcado es correcto, deberías poder decir «Avanzado, transferencia, 5 TB». Si no puedes, falta un `scope`.
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre <code>th</code> y <code>td</code>?</li>
-    <li>¿Para qué sirve <code>scope</code>?</li>
-    <li>¿Por qué <code>caption</code> no se sustituye por un encabezado encima de la tabla?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>th</code> es una celda que encabeza a otras y les da significado; <code>td</code> es una celda de datos.</p>
-  <p>2 · Para declarar si un encabezado manda sobre su columna o sobre su fila, y así cada celda pueda anunciarse junto a los encabezados que la describen.</p>
-  <p>3 · Porque <code>caption</code> está dentro de la tabla y queda asociado a ella; un encabezado suelto solo está cerca.</p>
-</details>
-
-
-### Bloque 2 · Celdas combinadas
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo <code>colspan</code> y <code>rowspan</code> ocupan la cuadrícula, y cómo se comprueba que no la han roto.</li>
-    <li><strong>2. Haz:</strong> Construye el horario semanal de tu grupo con una fila combinada.</li>
-    <li><strong>3. Comprueba:</strong> Todas las filas suman el mismo número de columnas.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué relación expresan <code>thead</code>, <code>tbody</code> y <code>caption</code>?</li>
-    <li>¿Para qué sirve <code>scope="col"</code>?</li>
-    <li>Detecta el error conceptual: usar una tabla para colocar una imagen junto a un texto.</li>
-  </ol>
-</div>
-
 #### Una tabla es una cuadrícula, aunque no lo parezca
 
 `colspan` y `rowspan` no «juntan» celdas: hacen que **una celda ocupe el sitio de varias**. La cuadrícula sigue existiendo debajo, con el mismo número de columnas en todas las filas.
@@ -2091,13 +2038,45 @@ Esa fila parece tener dos celdas, pero ocupa seis columnas. Si la tabla tiene se
   <p>Con <code>rowspan</code>, recuerda que una celda que baja invade la fila siguiente: esa fila tendrá una celda escrita menos, porque una de sus posiciones ya está ocupada desde arriba.</p>
 </div>
 
-##### Cuándo empieza a ser mala idea
+Una celda combinada aislada se entiende bien. Una tabla con combinaciones en varias direcciones a la vez se vuelve difícil de recorrer para quien la escucha, porque deja de estar claro qué encabezado gobierna cada celda. Si tu tabla necesita ese nivel de combinación, casi siempre lo correcto es **partirla en dos tablas más simples**, cada una con su `caption`. Profesionalmente, `rowspan` y `colspan` tienen bastante menos recorrido del que parece: conviene conocerlos y no abusar.
 
-Una celda combinada aislada se entiende bien. Una tabla con combinaciones en varias direcciones a la vez se vuelve difícil de recorrer para quien la escucha, porque deja de estar claro qué encabezado gobierna cada celda.
+#### La decisión viene antes que la etiqueta
 
-Si tu tabla necesita ese nivel de combinación, casi siempre lo correcto es **partirla en dos tablas más simples**, cada una con su `caption`. Profesionalmente, `rowspan` y `colspan` tienen bastante menos recorrido del que parece: conviene conocerlos y no abusar.
+Hoy la tabla vuelve a ser solo una opción entre muchas. Antes de escribir cada bloque, formula estas preguntas:
 
-#### Tarea 10 · El horario de clase
+1. ¿Este contenido se entiende por sí solo o forma parte de otro?
+2. ¿Es navegación, una acción o información?
+3. ¿Existe orden, jerarquía o cruce de fila y columna?
+4. ¿La decisión expresa significado o solo intenta colocar algo visualmente?
+
+<div class="rule">
+  <p class="rule-label">Demostración · la estructura no se maquilla</p>
+  <p>Se comparan tres diseños distintos del mismo documento integrado. La navegación, las regiones y la tabla no cambian en ninguno: solo cambia cómo se presentan. Es la misma idea que abrió la unidad, ahora sobre un documento completo.</p>
+</div>
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre datos dados y sobre una especificación nueva</p>
+
+Los dos primeros pasos construyen tablas; el tercero y el cuarto retiran las etiquetas y dejan solo el contenido, que es la situación real de un encargo.
+
+#### Paso 1 · Construye la tabla · 20 min
+
+Recibes estos datos sin formato:
+
+```text
+Comparativa de modelos de servidor
+Modelo       RAM     Almacenamiento   Transferencia   Precio mensual
+Básico       8 GB    256 GB NVMe      2 TB            19 €
+Avanzado     16 GB   512 GB NVMe      5 TB            39 €
+Empresarial  32 GB   1 TB NVMe        10 TB           79 €
+```
+
+Escribe el HTML con `caption`, `thead`, `tbody`, `th scope="col"` en la cabecera, `th scope="row"` en el nombre de cada modelo y `td` en el resto.
+
+**La comprobación:** lee en voz alta la celda «5 TB» tal y como la escucharía alguien que no ve la tabla. Si tu marcado es correcto, deberías poder decir «Avanzado, transferencia, 5 TB». Si no puedes, falta un `scope`.
+
+#### Paso 2 · El horario de clase · 30 min
 
 Construye una tabla con el horario semanal de tu grupo: de lunes a viernes, seis periodos lectivos y un recreo intermedio.
 
@@ -2112,57 +2091,15 @@ Construye una tabla con el horario semanal de tu grupo: de lunes a viernes, seis
   <p>Cuenta primero cuántas columnas tiene la tabla <strong>en total, incluida la de las horas</strong>. Si son cinco días más la columna de horas, son seis columnas. Entonces la fila del recreo puede ser un <code>th</code> con la hora más un <code>td colspan="5"</code>, o bien una sola celda con <code>colspan="6"</code>. Ese despiste de una columna es prácticamente el único fallo que da esta tarea.</p>
 </details>
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué hace exactamente <code>colspan="3"</code>?</li>
-    <li>¿Cómo compruebas una tabla con celdas combinadas sin abrir el navegador?</li>
-    <li>¿Qué haces si una tabla necesita combinaciones en las dos direcciones?</li>
-  </ol>
-</div>
+**Antes de continuar:** las sumas por filas dan todas el mismo total, comprobado sobre el código y no sobre el navegador.
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que esa celda ocupe la posición de tres columnas de la cuadrícula.</p>
-  <p>2 · Sumando por filas: cada celda cuenta su <code>colspan</code>, y todas las filas deben dar el mismo total.</p>
-  <p>3 · Partirla en dos tablas más simples, cada una con su propio <code>caption</code>.</p>
-</details>
+#### Paso 3 · Completa el marcado · 15 min
 
-
-### Bloque 3 · Reto de integración · del contenido al HTML
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Recupera:</strong> Decide qué estructura expresa cada relación sin recibir una lista de etiquetas.</li>
-    <li><strong>2. Haz:</strong> Convierte una especificación desconocida en una página HTML completa.</li>
-    <li><strong>3. Comprueba:</strong> Justifica las decisiones y modifica una de ellas ante un requisito nuevo.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cómo compruebas que una fila con <code>colspan</code> no rompe la cuadrícula?</li>
-    <li>¿Por qué una tabla muy combinada puede ser difícil de entender?</li>
-    <li>Decide si un horario, una navegación y una ficha de contacto necesitan tabla, lista o estructura semántica.</li>
-  </ol>
-</div>
-
-#### La decisión viene antes que la etiqueta
-
-En las dos sesiones anteriores aprendiste a construir tablas. Hoy la tabla vuelve a ser solo una opción entre muchas. Antes de escribir cada bloque, formula estas preguntas:
-
-1. ¿Este contenido se entiende por sí solo o forma parte de otro?
-2. ¿Es navegación, una acción o información?
-3. ¿Existe orden, jerarquía o cruce de fila y columna?
-4. ¿La decisión expresa significado o solo intenta colocar algo visualmente?
-
-#### Paso 1 · Un fragmento resuelto
+##### 3.1 · Un fragmento resuelto
 
 La especificación dice: «Una introducción explica el evento y después aparecen tres ventajas sin orden». La decisión es un apartado con encabezado, párrafo y lista no ordenada. No se elige por cómo quedará colocado, sino por la relación entre los datos.
 
-#### Paso 2 · Completa el marcado
+##### 3.2 · Ahora tú
 
 Recibes este contenido: «Cómo participar» contiene tres pasos que deben seguirse en orden. Completa los cuatro huecos sin añadir contenedores innecesarios:
 
@@ -2177,16 +2114,18 @@ Recibes este contenido: «Cómo participar» contiene tres pasos que deben segui
 </_____>
 ```
 
-Compara tu solución con un compañero y justificad el elemento exterior y el tipo de lista antes de verla resuelta.
+Compara tu solución con la de un compañero y justificad el elemento exterior y el tipo de lista antes de verla resuelta.
 
 <details class="aside aside--extra">
   <summary>Ver una solución razonada</summary>
   <p><code>&lt;section&gt;</code> agrupa un apartado temático con encabezado propio y <code>&lt;ol&gt;</code> expresa que los pasos tienen un orden. Las etiquetas de cierre corresponden a esos dos elementos.</p>
 </details>
 
-#### Tarea 11 · Marca una página que nunca has visto
+#### Paso 4 · Marca una página que nunca has visto · 60 min
 
-Una asociación local necesita una página para anunciar una jornada de puertas abiertas. Solo recibes esta especificación, no las etiquetas:
+Es el trabajo central de la sesión, y el primero en el que nadie te dice qué etiqueta usar.
+
+Una asociación local necesita una página para anunciar una jornada de puertas abiertas. Solo recibes esta especificación:
 
 * nombre de la jornada y una frase introductoria;
 * enlaces a inicio, programa, ponentes y contacto;
@@ -2197,48 +2136,142 @@ Una asociación local necesita una página para anunciar una jornada de puertas 
 * información complementaria sobre accesibilidad del recinto;
 * autoría y contacto de la asociación.
 
-Antes de programar, dibuja el árbol del documento y anota al lado de cada región **qué relación expresa**. Después escribe el HTML completo. La página debe incluir navegación, una jerarquía de encabezados, listas, imágenes con alternativa adecuada, una tabla pequeña, acciones y regiones semánticas. Nadie te dirá qué etiqueta corresponde a cada punto.
+##### 4.1 · Primero el árbol, en papel
+
+Dibuja el árbol del documento y anota al lado de cada región **qué relación expresa**. No escribas ni una etiqueta hasta tener el árbol entero.
+
+##### 4.2 · Después el documento
+
+Escribe el HTML completo. La página debe incluir navegación, una jerarquía de encabezados sin saltos, listas del tipo que corresponda, imágenes con alternativa adecuada a su función, una tabla pequeña, acciones y regiones semánticas.
+
+##### 4.3 · El requisito que llega tarde
+
+Cuando lo tengas terminado, aparece un requisito nuevo: **una de las tres actividades se cancela y hay que sustituirla por dos talleres cortos**. Aplícalo sin rehacer el documento y anota qué tuviste que tocar. Una estructura bien decidida absorbe un cambio así en pocos minutos; una decidida por el aspecto obliga a rehacer bloques enteros.
+
+#### Paso 5 · Transfiérelo a tu proyecto · 25 min
+
+Revisa ahora `productos.html`. Añade una comparativa real **solo si** sus valores necesitan fila y columna para entenderse. Si no existe ese cruce, usa la estructura adecuada y deja un comentario justificando por qué no has creado una tabla.
+
+Aplica después a tu sitio la lección del paso 4: busca un bloque cuya estructura hayas elegido por cómo quedaba y reescríbelo por lo que significa.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos atacan los dos errores caros de esta sesión: convertir en tabla algo que no lo es, y dar por buena una cuadrícula que no cuadra.
+
+##### Reto 1 · Solo uno de estos dos bloques es una tabla
+
+```text
+BLOQUE A · Tarifas de envío
+                Península   Baleares   Canarias
+Estándar        3,90 €      5,50 €     9,90 €
+Urgente         7,90 €      12,00 €    18,50 €
+Recogida        0,00 €      0,00 €     0,00 €
+
+BLOQUE B · El equipo
+Elena Ruiz. Dirección técnica. Trabaja en la empresa desde 2014 y coordina
+el taller de reparaciones.
+Marc Oliver. Atención al cliente. Gestiona las incidencias y el seguimiento
+de los pedidos.
+Nadia Franco. Logística. Responsable de almacén y de la relación con los
+transportistas.
+```
+
+Marca los dos. Solo uno necesita `<table>`.
+
+1. Identifica cuál y explica qué tienen sus datos que los del otro no tienen. La respuesta se formula con la palabra «coordenadas».
+2. Marca el otro bloque con la estructura que sí le corresponde. Hay al menos dos opciones defendibles: elige una y argumenta por qué no la otra.
+3. El bloque B **se puede** meter en una tabla de dos columnas, y se vería ordenado. Explica qué afirmación falsa estaría haciendo ese marcado sobre los datos.
+
+##### Reto 2 · La cuadrícula que no cuadra
+
+Esta tabla tiene tres errores de cuadrícula. Encuéntralos **sin abrir el navegador**, aplicando la suma por filas.
+
+```html
+<table>
+  <caption>Ocupación de las aulas</caption>
+  <thead>
+    <tr>
+      <th scope="col">Hora</th>
+      <th scope="col">Aula 1</th>
+      <th scope="col">Aula 2</th>
+      <th scope="col">Aula 3</th>
+      <th scope="col">Aula 4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">09:00</th>
+      <td>DAW1</td>
+      <td colspan="2">Reunión de departamento</td>
+      <td>ASIR2</td>
+      <td>Libre</td>
+    </tr>
+    <tr>
+      <th scope="row">10:00</th>
+      <td rowspan="2">Examen DAW2</td>
+      <td>DAW1</td>
+      <td>Libre</td>
+    </tr>
+    <tr>
+      <th scope="row">11:00</th>
+      <td>ASIR1</td>
+      <td>Libre</td>
+      <td>DAW2</td>
+      <td>Libre</td>
+    </tr>
+    <tr>
+      <th scope="row">12:00</th>
+      <td colspan="4">Claustro</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+Para cada error, escribe: en qué fila está, cuánto suma esa fila, cuánto debería sumar y cómo lo corriges. Después ábrelo en el navegador y comprueba si lo que dibuja coincide con lo que habías predicho.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Documento completo, válido y con cada relación principal marcada correctamente.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade una cuarta actividad que se entienda por sí sola sin reestructurar las demás.</span></div>
-  <div><strong>Reto</strong><span>Recibes una versión móvil dibujada en una columna: explica por qué no deberías cambiar el HTML para reproducirla.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Las dos tablas construidas con <code>caption</code>, <code>scope</code> y las sumas cuadradas, y la página de la jornada completa y válida.</span></div>
+  <div><strong>Si lo tienes</strong><span>El requisito tardío del paso 4.3 aplicado sin rehacer el documento, con la nota de qué hubo que tocar.</span></div>
+  <div><strong>Reto</strong><span>Los dos bloques del reto 1 marcados y justificados, y los tres errores de cuadrícula localizados sin abrir el navegador.</span></div>
 </div>
 
-#### Transfiérelo a tu proyecto
+### Cierre
 
-Revisa ahora `productos.html`. Añade una comparativa real solo si sus valores necesitan fila y columna para entenderse. Si no existe ese cruce, usa la estructura adecuada y deja un comentario justificando por qué no has creado una tabla.
+<p class="stage">5 minutos · comprobación y recuerdo</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
+    <li>Cada celda de datos se puede leer junto a los encabezados que la describen.</li>
+    <li>Todas las filas de tus tablas suman el mismo número de columnas.</li>
     <li>Has convertido una especificación nueva en un árbol antes de escribir etiquetas.</li>
     <li>Puedes justificar navegación, jerarquía, listas, imágenes, tabla, acciones y regiones.</li>
-    <li>Has aplicado un cambio nuevo sin rehacer el documento.</li>
+    <li>Has aplicado un requisito nuevo sin rehacer el documento.</li>
     <li>Tu proyecto contiene una tabla únicamente si los datos realmente tienen dos coordenadas.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Qué diferencia hay entre <code>th</code> y <code>td</code>?</li>
+    <li>¿Por qué <code>caption</code> no se sustituye por un encabezado encima de la tabla?</li>
+    <li>¿Qué hace exactamente <code>colspan="3"</code>?</li>
+    <li>¿Cómo compruebas una tabla con celdas combinadas sin abrir el navegador?</li>
     <li>¿Qué pregunta haces antes de elegir una etiqueta?</li>
     <li>¿Qué diferencia una acción de un enlace?</li>
-    <li>¿Qué parte del reto te obligó a recuperar un concepto anterior?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Qué relación o significado expresa ese contenido; la etiqueta viene después.</p>
-  <p>2 · La acción provoca un cambio y se marca como botón; el enlace lleva a otro destino.</p>
-  <p>3 · La respuesta depende de tu proceso, pero debe nombrar un concepto y dónde lo aplicaste, no limitarse a «todo».</p>
+  <p>1 · <code>th</code> es una celda que encabeza a otras y les da significado; <code>td</code> es una celda de datos.</p>
+  <p>2 · Porque <code>caption</code> está dentro de la tabla y queda asociado a ella; un encabezado suelto solo está cerca.</p>
+  <p>3 · Que esa celda ocupe la posición de tres columnas de la cuadrícula.</p>
+  <p>4 · Sumando por filas: cada celda cuenta su <code>colspan</code>, y todas las filas deben dar el mismo total.</p>
+  <p>5 · Qué relación o significado expresa ese contenido; la etiqueta viene después.</p>
+  <p>6 · La acción provoca un cambio y se marca como botón; el enlace lleva a otro destino.</p>
 </details>
-
-<div class="rule">
-  <p class="rule-label">Demostración del profesor · la estructura no se maquilla</p>
-  <p>Compara tres diseños del documento integrado de esta semana. Comprueba que la navegación, las regiones y la tabla no cambian: solo cambia cómo se presentan.</p>
-</div>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 4 · 5–10 minutos</p>
@@ -2246,9 +2279,10 @@ Revisa ahora `productos.html`. Añade una comparativa real solo si sus valores n
   <ol>
     <li>Dibuja el árbol semántico de una noticia con navegación, imagen, datos relacionados y una acción.</li>
     <li>Escribe solo el bloque de datos usando una tabla accesible si corresponde.</li>
-    <li>Justifica dos decisiones y cambia una cuando el profesor modifica el requisito.</li>
+    <li>Justifica dos decisiones y cambia una cuando se modifica el requisito.</li>
   </ol>
 </div>
+
 
 ---
 
