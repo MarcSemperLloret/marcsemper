@@ -1477,27 +1477,31 @@ Al borrar un producto, tu interfaz espera la respuesta del servidor antes de qui
 
 ## Sesión 5 · Listo para publicar
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Configuración, secretos y CORS</strong>, <strong>Seguridad mínima</strong> y <strong>Probar la API</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Configuración, secretos y CORS
+<p class="lead">Tres horas. Media hora para ver qué separa un proyecto de clase de un servicio expuesto a internet, y dos horas y media configurando, protegiendo y probando el tuyo.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se configura una aplicación para varios entornos y cómo se abre a otros orígenes.</li>
-    <li><strong>2. Haz:</strong> Centraliza la configuración y decide tu política de CORS.</li>
-    <li><strong>3. Comprueba:</strong> La aplicación se niega a arrancar si falta algo imprescindible.</li>
+    <li><strong>1. Aprende:</strong> Cómo se configura una aplicación para varios entornos, qué protecciones no pueden faltar y cómo se escribe una prueba automática con lo que trae Node.</li>
+    <li><strong>2. Haz:</strong> Centraliza la configuración, aplica las protecciones y escribe la batería de pruebas de tu recurso.</li>
+    <li><strong>3. Comprueba:</strong> La aplicación no arranca si falta algo imprescindible, resiste tus propios ataques y <code>npm test</code> se pone en rojo cuando rompes una regla.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Qué cambiaría entre tu portátil y un servidor real?</li>
-    <li>¿Qué debe pasar si falta una variable obligatoria: arrancar a medias o no arrancar?</li>
-    <li>¿Quién debería poder llamar a tu API desde otro dominio?</li>
+    <li>¿Qué cambiaría entre tu portátil y un servidor real, y qué debe pasar si falta una variable obligatoria?</li>
+    <li>¿Qué podría hacer alguien con acceso a tu API tal como está hoy, si envía un cuerpo de cien megabytes o llama mil veces por segundo?</li>
+    <li>¿Cómo sabes hoy que un cambio no ha roto otra cosa?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Tu aplicación funciona en tu portátil. Lo que falta para que funcione en otro sitio, delante de gente que no eres tú, se reduce a tres cosas: **saber de dónde salen sus valores**, **soportar a quien la use mal** y **poder cambiarla sin romperla en silencio**.
 
 #### Toda la configuración, en un módulo
 
@@ -1527,9 +1531,7 @@ export const configuracion = {
   <p>Comprobarlo todo al arrancar convierte un fallo intermitente en un mensaje claro, antes de que nadie llegue a usar la aplicación.</p>
 </div>
 
-#### CORS, desde el otro lado
-
-En la UD4 sufriste CORS como cliente. Ahora decides tú:
+En la UD4 sufriste CORS como cliente. Hoy lo decides tú:
 
 ```javascript
 app.use((peticion, respuesta, next) => {
@@ -1547,66 +1549,13 @@ app.use((peticion, respuesta, next) => {
 
 <div class="rule">
   <p class="rule-label">El comodín como renuncia a la configuración</p>
-  <p>Poner <code>*</code> permite que cualquier página de internet llame a tu API desde el navegador de sus visitantes. Para una API pública de solo lectura puede ser aceptable; para una que modifica datos, no.</p>
-  <p>Y recuerda qué es CORS y qué no: una protección del <strong>navegador</strong>. No impide que alguien llame a tu API con un cliente HTTP. La autorización de verdad es otra cosa, y es lo de mañana.</p>
+  <p>Poner <code>*</code> permite que cualquier página de internet llame a tu API desde el navegador de sus visitantes. Para una API pública de solo lectura puede resultar aceptable; para una que modifica datos, no.</p>
+  <p>Conviene recordar qué es CORS y qué no: una protección del <strong>navegador</strong>. No impide que alguien llame a tu API con un cliente HTTP. La autorización de verdad es otra cosa, y viene a continuación.</p>
 </div>
 
 Tu cliente, servido desde el mismo origen, no necesita nada de esto. Lo configuras para quien venga de fuera.
 
-#### Tarea 13 · Configurar
-
-1. Crea el módulo de configuración con valores por defecto y comprobaciones.
-2. Haz que la aplicación se niegue a arrancar si falta una variable obligatoria.
-3. Sustituye todos los valores escritos en el código.
-4. Configura CORS con una lista de orígenes permitidos.
-5. Comprueba desde una página de otro origen que se aplica.
-6. Actualiza `.env.example` y documenta cada variable en el README.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Configuración centralizada, comprobada al arrancar y documentada.</span></div>
-  <div><strong>Si lo tienes</strong><span>Comportamiento distinto por entorno: registro detallado solo en desarrollo.</span></div>
-  <div><strong>Reto</strong><span>Demuestra con un cliente HTTP que CORS no protege la API de una llamada directa.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Ningún valor de configuración vive en el código.</li>
-    <li>La aplicación no arranca si falta algo imprescindible.</li>
-    <li>CORS está configurado con una lista, no con un comodín.</li>
-    <li>Sabes qué protege CORS y qué no.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que el fallo aparezca lejos de su causa, mucho después de arrancar.</p>
-  <p>2 · Solo el navegador: un cliente HTTP no se ve afectado.</p>
-  <p>3 · Los orígenes concretos que deben poder llamar desde un navegador.</p>
-</details>
-
-
-### Bloque 2 · Seguridad mínima
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Las protecciones que no pueden faltar en un servicio expuesto a internet.</li>
-    <li><strong>2. Haz:</strong> Aplícalas a tu API y comprueba que funcionan.</li>
-    <li><strong>3. Comprueba:</strong> Intentas romper tu propio servicio y no lo consigues.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué podría hacer alguien con acceso a tu API tal como está hoy?</li>
-    <li>¿Qué pasa si envía un cuerpo de cien megabytes?</li>
-    <li>¿Y si llama mil veces por segundo?</li>
-  </ol>
-</div>
-
-#### La lista mínima
+#### La lista mínima de protecciones
 
 | Riesgo | Protección |
 | ------ | ---------- |
@@ -1618,8 +1567,6 @@ Tu cliente, servido desde el mismo origen, no necesita nada de esto. Lo configur
 | Cabeceras que delatan | Quitar la que anuncia el framework |
 | Escritura sin permiso | Autorización en las rutas que modifican |
 | Secretos filtrados | Todo en el entorno, nada en el repositorio |
-
-#### Aplicarlas
 
 ```javascript
 app.disable("x-powered-by");
@@ -1647,9 +1594,7 @@ export function limitar(peticion, respuesta, next) {
 }
 ```
 
-Es un limitador de andar por casa —vive en memoria y se pierde al reiniciar— pero enseña la idea, y el 429 es el código que corresponde.
-
-#### Autorización para lo que modifica
+Es un limitador elemental, porque vive en memoria y se pierde al reiniciar, pero muestra la idea y el 429 es el código que corresponde.
 
 ```javascript
 export function requiereClave(peticion, respuesta, next) {
@@ -1666,66 +1611,13 @@ router.delete("/:id", requiereClave, borrarProducto);
 
 <div class="rule">
   <p class="rule-label">Leer es público; escribir, no</p>
-  <p>Una clave en una cabecera es la forma más simple de proteger las operaciones que modifican, y es suficiente para un proyecto de aula. No es un sistema de usuarios: no distingue quién llama, no caduca y quien la tenga puede todo.</p>
-  <p>Lo que sí enseña es dónde se pone la comprobación —en el servidor, antes del manejador— y la diferencia entre 401 y 403: la primera es «no sé quién eres», la segunda «sé quién eres y no puedes».</p>
+  <p>Una clave en una cabecera es la forma más simple de proteger las operaciones que modifican, y resulta suficiente para un proyecto de aula. Queda lejos de un sistema de usuarios: no distingue quién llama, no caduca y quien la tenga puede todo.</p>
+  <p>Lo que sí enseña es dónde se pone la comprobación —en el servidor, antes del manejador— y la diferencia entre 401 y 403: la primera significa «no sé quién eres», la segunda «sé quién eres y no puedes».</p>
 </div>
 
-Una regla no admite excepción: si algún día almacenas contraseñas, se guardan cifradas con una función pensada para eso, nunca en claro ni con un resumen sin sal. En este módulo directamente no guardamos ninguna.
+Una regla no admite excepción: si algún día almacenas contraseñas, se guardan cifradas con una función pensada para eso, nunca en claro ni con un resumen sin sal. En este módulo no se guarda ninguna.
 
-#### Tarea 14 · Blindar
-
-1. Aplica el límite de tamaño y quita la cabecera del framework.
-2. Escribe el limitador de peticiones y devuelve 429.
-3. Protege con clave las rutas que modifican.
-4. Repasa que toda entrada sigue validándose con lista blanca.
-5. Intenta atacar tu propio servicio de cinco formas distintas y anota el resultado.
-6. Ejecuta `npm audit` y resuelve lo que aparezca.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las seis protecciones aplicadas y comprobadas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Devuelve las cabeceras que dicen cuántas llamadas quedan.</span></div>
-  <div><strong>Reto</strong><span>Escribe un informe con los riesgos que tu servicio sigue teniendo y cómo se resolverían.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Las operaciones que modifican exigen autorización.</li>
-    <li>Hay límites de tamaño y de frecuencia.</li>
-    <li>Ningún secreto está en el repositorio.</li>
-    <li>Has intentado romper tu propio servicio.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Un 429.</p>
-  <p>2 · 401 es no autenticado; 403, autenticado pero sin permiso.</p>
-  <p>3 · En el servidor, antes del manejador de la ruta.</p>
-</details>
-
-
-### Bloque 3 · Probar la API
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué se prueba de una API y cómo se escribe una prueba automática con lo que trae Node.</li>
-    <li><strong>2. Haz:</strong> Escribe la batería de pruebas de tu recurso.</li>
-    <li><strong>3. Comprueba:</strong> <code>npm test</code> pasa, y falla si rompes algo a propósito.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuántas veces has probado a mano el mismo caso esta unidad?</li>
-    <li>¿Cómo sabes hoy que un cambio no ha roto otra cosa?</li>
-    <li>¿Qué casos son los que más se olvidan al probar a mano?</li>
-  </ol>
-</div>
-
-#### El ejecutor incluido
+#### Probar sin abrir el navegador
 
 ```javascript
 // pruebas/productos.test.js
@@ -1773,16 +1665,14 @@ describe("API de productos", () => {
 { "scripts": { "test": "node --env-file=.env.pruebas --test pruebas/" } }
 ```
 
-Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene observar tres detalles que determinan su funcionamiento:
+Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Tres detalles determinan su funcionamiento:
 
 * El `listen(0)` pide un puerto libre cualquiera, así que las pruebas no chocan con tu servidor de desarrollo. Ahí se cobra haber separado la aplicación del arranque en la sesión 1.
 * El `after` cierra el servidor. Sin él, el proceso se queda vivo cuando las pruebas ya han terminado y `npm test` no vuelve nunca.
-* El fichero de entorno propio da a las pruebas su clave y su ruta de datos. Recuerda que la configuración de la sesión 5 corta el arranque si falta una variable obligatoria: sin ese fichero, importar la aplicación desde una prueba mata el proceso antes del primer `assert`.
-
-#### Qué probar
+* El fichero de entorno propio da a las pruebas su clave y su ruta de datos. La configuración de esta misma sesión corta el arranque si falta una variable obligatoria: sin ese fichero, importar la aplicación desde una prueba mata el proceso antes del primer `assert`.
 
 <figure class="diagram">
-  <figcaption>Lo que no puede faltar</figcaption>
+  <figcaption>Lo que no puede faltar en la batería</figcaption>
   <ol class="flow">
     <li>El camino feliz de cada operación</li>
     <li>Cada código de error del contrato</li>
@@ -1794,42 +1684,151 @@ Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene o
 
 <div class="rule">
   <p class="rule-label">Una prueba que no falla nunca no prueba nada</p>
-  <p>Después de escribirla, rompe a propósito lo que comprueba y mira si se pone en rojo. Si sigue en verde, la prueba está mal escrita y te está dando una seguridad falsa, que es peor que no tener prueba.</p>
-  <p>Y usa datos propios de las pruebas, no los tuyos de desarrollo: una batería que depende de que exista el producto 7 falla el día que alguien lo borra.</p>
+  <p>Después de escribirla, rompe a propósito lo que comprueba y mira si se pone en rojo. Si sigue en verde, la prueba está mal escrita y da una seguridad falsa, peor que no tener prueba.</p>
+  <p>Usa además datos propios de las pruebas, no los tuyos de desarrollo: una batería que depende de que exista el producto 7 falla el día que alguien lo borra.</p>
 </div>
 
-#### Tarea 15 · La batería
+### Se trabaja
 
-1. Añade el script de pruebas al `package.json`.
-2. Escribe al menos ocho pruebas: caminos felices, errores y límites.
-3. Usa un fichero de datos propio de las pruebas.
-4. Comprueba el contrato: código de estado, forma del cuerpo y campos.
-5. Rompe cada regla a propósito y comprueba que la prueba correspondiente falla.
-6. Deja `npm test` en verde.
+<p class="stage stage--guided">150 minutos · configurar, blindar y probar</p>
+
+Los tres primeros pasos preparan el servicio. Los dos últimos comprueban que las protecciones y las pruebas hacen lo que prometen.
+
+#### Paso 1 · Configurar · 35 min
+
+1. Crea el módulo de configuración con sus valores por defecto y sus comprobaciones.
+2. Haz que la aplicación se niegue a arrancar si falta una variable obligatoria, con un mensaje que diga cuál.
+3. Sustituye todos los valores escritos en el código: puertos, rutas de datos, claves y orígenes.
+4. Configura CORS con una lista de orígenes permitidos, tomada de la configuración.
+5. Comprueba desde una página servida en otro origen que la política se aplica.
+6. Actualiza `.env.example` y documenta en el README qué hace cada variable y cuál es obligatoria.
+
+**Antes de continuar:** borra una variable obligatoria del entorno y arranca. Debe morir de inmediato con un mensaje claro, no arrancar y fallar después.
+
+#### Paso 2 · Blindar · 40 min
+
+1. Aplica el límite de tamaño del cuerpo y quita la cabecera que anuncia el framework.
+2. Escribe el limitador de peticiones y devuelve 429 cuando se supera.
+3. Protege con clave las rutas que modifican, y deja públicas las de lectura.
+4. Comprueba que una llamada sin clave devuelve 401 con el formato de error del contrato, y no una respuesta suelta.
+5. Repasa que toda entrada sigue validándose con lista blanca, incluida la de las rutas nuevas.
+6. Ejecuta `npm audit` y resuelve o justifica lo que aparezca.
+
+#### Paso 3 · La batería de pruebas · 45 min
+
+1. Añade el script de pruebas al `package.json` y crea el fichero de entorno propio.
+2. Usa un fichero de datos exclusivo de las pruebas, sembrado antes de cada ejecución.
+3. Escribe al menos ocho pruebas: los caminos felices de las cinco operaciones, cada código de error del contrato y dos límites.
+4. Comprueba en cada una las tres cosas: el código de estado, la forma del cuerpo y los campos concretos.
+5. Añade una prueba de la regla de negocio de tu proyecto.
+6. Añade una prueba que compruebe que ninguna respuesta incluye campos internos.
+7. Deja `npm test` en verde.
+
+#### Paso 4 · Ataca tu propio servicio · 20 min
+
+Con el servidor arrancado, intenta romperlo desde un cliente HTTP. Rellena la tabla con lo que responde y lo que queda registrado.
+
+| Ataque | Cómo lo envías | Qué responde | ¿Correcto? |
+| ------ | -------------- | ------------ | ---------- |
+| Cuerpo de varios megabytes | | | |
+| Creación sin la clave de API | | | |
+| Creación con una clave incorrecta | | | |
+| Doscientas peticiones seguidas | | | |
+| Petición de un fichero fuera de la carpeta pública | | | |
+| JSON mal formado | | | |
+
+1. Ninguna fila debe devolver 500, y ninguna debe dejar el servidor caído.
+2. Comprueba con `curl -I` o desde la pestaña de red que la cabecera del framework ya no aparece.
+3. Demuestra que CORS no protege nada frente a un cliente HTTP: repite desde el fichero `.http` una petición que un navegador de otro origen tendría bloqueada.
+4. Escribe en dos líneas qué protege entonces esa petición, y cuál de las protecciones de la lista es la que realmente la detiene.
+
+#### Paso 5 · Pruebas que se ponen en rojo · 10 min
+
+Una batería en verde sobre un código roto es una batería inútil. Compruébalo.
+
+1. Rompe a propósito, de una en una, estas cuatro cosas y anota qué prueba falla.
+
+| Lo que rompes | ¿Falla alguna prueba? | ¿Cuál? |
+| ------------- | --------------------- | ------ |
+| Cambia el 201 de la creación por un 200 | | |
+| Quita la validación del nombre obligatorio | | |
+| Haz que la lista devuelva también un campo interno | | |
+| Quita la comprobación de la clave en el borrado | | |
+
+2. Cada fila sin prueba que falle señala un hueco. Escribe la prueba que falta.
+3. Devuelve el código a su estado correcto y comprueba que todo vuelve al verde.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto obliga a mirar el servicio como lo miraría quien quiere romperlo; el segundo convierte la batería en una red de seguridad de verdad.
+
+##### Reto 1 · Lo que tu servicio sigue sin proteger
+
+Las protecciones de hoy son el mínimo. Escribe el informe de lo que falta, dirigido a alguien que fuera a publicar tu API mañana.
+
+1. Enumera al menos seis riesgos que tu servicio conserva. La clave única compartida, el limitador que se pierde al reiniciar y el fichero de datos sin copia son tres; busca los otros.
+2. Para cada uno, escribe qué podría ocurrir en la práctica y con qué consecuencia. Un riesgo sin consecuencia descrita no se puede priorizar.
+3. Ordénalos por dos criterios: probabilidad y daño. Anota qué atacarías primero y por qué.
+4. Propón la mitigación de cada uno, con su coste aproximado en trabajo. Algunas se resuelven en una tarde; otras exigen un sistema de usuarios entero.
+5. Busca el listado de los diez riesgos más frecuentes en aplicaciones web que publica OWASP, y comprueba cuáles de los tuyos aparecen. Añade los que se te hubieran escapado.
+6. Decide cuáles **no** vas a mitigar, y déjalo escrito con su razón. Aceptar un riesgo de forma consciente es una decisión legítima; ignorarlo, no.
+7. Cierra con un párrafo: si esta API se publicara hoy con datos reales, qué es lo primero que romperías tú.
+
+##### Reto 2 · La batería como red de seguridad
+
+Unas pruebas valen lo que valen los cambios que te atreves a hacer con ellas puestas.
+
+1. Ejecuta las pruebas con la cobertura que trae Node (`--experimental-test-coverage`) y anota qué partes de tu código no toca ninguna.
+2. Elige la que más te preocupe y escribe su prueba. No persigas el cien por cien: persigue las líneas donde vive una decisión.
+3. Ahora el cambio: reescribe por dentro una parte de tu servicio —cómo filtra, o cómo normaliza— sin cambiar su comportamiento. Las pruebas deben seguir en verde sin tocarlas.
+4. Si has tenido que modificar alguna prueba para que pase, estaba atada a la implementación y no al comportamiento. Reescríbela para que compruebe lo que se promete, no cómo se cumple.
+5. Añade una prueba del servicio sin HTTP, usando el repositorio en memoria de la sesión 3. Compara cuánto tarda frente a la equivalente que pasa por el servidor.
+6. Decide qué se prueba mejor en cada nivel y escríbelo en tres líneas: hay comprobaciones que solo tienen sentido pasando por HTTP y otras que no lo necesitan.
+7. Mide el tiempo total de la batería. Una batería lenta deja de ejecutarse, y una que no se ejecuta no protege nada.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Ocho pruebas en verde que cubren éxitos y errores.</span></div>
-  <div><strong>Si lo tienes</strong><span>Prueba el servicio directamente, sin HTTP, con un repositorio en memoria.</span></div>
-  <div><strong>Reto</strong><span>Añade una comprobación de que ninguna respuesta filtra campos internos.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Configuración centralizada y comprobada al arrancar, las protecciones de la lista aplicadas, y ocho pruebas en verde que cubren éxitos y errores.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de ataques contestada sin ningún 500, y las cuatro roturas del paso 5 detectadas por alguna prueba.</span></div>
+  <div><strong>Reto</strong><span>El informe de riesgos residuales con su priorización, o la batería sosteniendo una reescritura interna sin tocarse.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 5</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>La configuración vive fuera del código y se comprueba al arrancar.</li>
-    <li>Las operaciones que modifican están protegidas.</li>
-    <li>Hay límites de tamaño y de frecuencia.</li>
-    <li><code>npm test</code> pasa y detecta las roturas.</li>
+    <li>Ningún valor de configuración vive en el código.</li>
+    <li>La aplicación no arranca si falta algo imprescindible.</li>
+    <li>CORS está configurado con una lista, no con un comodín.</li>
+    <li>Las operaciones que modifican exigen autorización.</li>
+    <li>Hay límites de tamaño y de frecuencia, y ningún secreto en el repositorio.</li>
+    <li><code>npm test</code> pasa y se pone en rojo cuando rompes una regla.</li>
   </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué debe hacer la aplicación si falta una variable de entorno obligatoria, y por qué?</li>
+    <li>¿Qué protege CORS y qué no protege?</li>
+    <li>¿Qué código devuelve un servicio a quien llama demasiadas veces?</li>
+    <li>Diferencia entre 401 y 403.</li>
+    <li>¿Qué hace <code>listen(0)</code> en una prueba, y por qué hace falta el <code>after</code>?</li>
+    <li>¿Cómo compruebas que una prueba sirve de algo?</li>
+  </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Que pida un puerto libre cualquiera, sin chocar con el de desarrollo.</p>
-  <p>2 · Romper a propósito lo que comprueba y ver si se pone en rojo.</p>
-  <p>3 · Los caminos felices, cada error del contrato, los límites y la regla de negocio.</p>
+  <p>1 · No arrancar, con un mensaje que diga cuál falta: si arranca, el fallo aparecerá lejos de su causa.</p>
+  <p>2 · Protege al navegador de que una página ajena llame a tu API con las credenciales de quien la visita; no protege frente a un cliente HTTP.</p>
+  <p>3 · Un 429.</p>
+  <p>4 · 401 es no autenticado; 403, autenticado pero sin permiso.</p>
+  <p>5 · Pide un puerto libre cualquiera; sin el <code>after</code>, el servidor queda abierto y el proceso no termina.</p>
+  <p>6 · Rompiendo a propósito lo que comprueba y viendo si se pone en rojo.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 5 · 5–10 minutos</p>
@@ -1840,6 +1839,7 @@ Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene o
     <li>Escribe una prueba que compruebe que una entrada inválida devuelve 400.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 6 · Cierre del módulo
