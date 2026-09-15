@@ -149,16 +149,14 @@ No son dieciocho horas explicando etiquetas.
 
 ## Sesión 1 · El editor y el documento HTML
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Conociendo Visual Studio Code</strong>, <strong>Nuestra primera página y la anatomía del HTML</strong> y <strong>La estructura de un documento HTML</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Conociendo Visual Studio Code
+<p class="lead">Tres horas. Media hora para entender qué es un documento HTML y dos horas y media escribiendo, rompiendo y reparando documentos en tu propio proyecto.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué hace un editor de código, por qué se trabaja con carpetas de proyecto y qué es un linter.</li>
-    <li><strong>2. Haz:</strong> Monta el entorno y reconstruye un documento a partir de su resultado visible.</li>
-    <li><strong>3. Comprueba:</strong> El documento se ve como se pedía y el panel de problemas está limpio.</li>
+    <li><strong>1. Aprende:</strong> Qué hace un editor de código, qué es un linter, en qué se diferencian elemento, etiqueta y atributo, y por qué el navegador no sirve para comprobar si tu HTML está bien.</li>
+    <li><strong>2. Haz:</strong> Monta el entorno, reconstruye un documento, escribe el esqueleto a mano, repara uno roto, rómpelo a propósito y construye la portada de tu proyecto.</li>
+    <li><strong>3. Comprueba:</strong> El panel de problemas queda en cero, los acentos se ven bien y la portada se lee en un móvil sin ampliar.</li>
   </ol>
 </div>
 
@@ -171,6 +169,12 @@ No son dieciocho horas explicando etiquetas.
   </ol>
 </div>
 
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy no se memoriza ninguna lista de etiquetas. Se trata de entender cuatro cosas que vas a usar durante seis semanas: qué te da un editor de código, qué es un elemento, por qué el navegador no te sirve como corrector y qué declara cada pieza del esqueleto de un documento.
+
 #### Un editor no es un Bloc de notas con colores
 
 Durante el módulo usaremos **Visual Studio Code**. Nos ayuda a organizar proyectos, detectar errores, navegar entre archivos, completar y formatear código, buscar información y ejecutar herramientas.
@@ -179,8 +183,6 @@ Su desconocimiento previo no supone ningún obstáculo: aprender a manejar herra
 
 VS Code ya trae de serie todo lo que necesitamos para HTML: resaltado de sintaxis, sugerencias, cierre automático de etiquetas, documentación al pasar el ratón, formateo, Emmet y previsualización. **No hace falta instalar diez extensiones para empezar.**
 
-##### Por qué una carpeta de proyecto y no archivos sueltos
-
 Un sitio web está formado por un conjunto de archivos que se referencian entre sí, y no por un archivo aislado. Si abres archivos sueltos, el editor no sabe dónde está la raíz del sitio.
 
 | Si abres... | El editor puede... |
@@ -188,13 +190,13 @@ Un sitio web está formado por un conjunto de archivos que se referencian entre 
 | Un archivo suelto | Colorear la sintaxis de ese archivo |
 | La carpeta del proyecto | Resolver rutas, autocompletar enlaces, buscar en todo el sitio y analizarlo entero |
 
-#### La única extensión obligatoria · HTMLHint
+#### Un programa que revisa mientras escribes
 
 <p class="term">Linter</p>
 
 Un programa que analiza el código **mientras lo escribes** y avisa de errores y malas prácticas, sin llegar a ejecutarlo.
 
-Instala **HTMLHint** desde el panel de extensiones. Analizará tu HTML y avisará de cosas como estas:
+La única extensión obligatoria del módulo es **HTMLHint**. Avisará de cosas como estas, y sus avisos aparecen en el panel de problemas, en `View → Problems`:
 
 ```html
 <h1>Mi web
@@ -204,43 +206,131 @@ Instala **HTMLHint** desde el panel de extensiones. Analizará tu HTML y avisar�
 <img src="">
 ```
 
-Los avisos aparecen en el panel de problemas:
-
-```text
-View → Problems
-```
-
 <div class="rule">
   <p class="rule-label">Qué significa «arreglar un aviso»</p>
   <p>El objetivo no es que la herramienta deje de quejarse pulsando cosas al azar hasta que el panel se ponga verde. El objetivo es <strong>entender por qué existe el problema y corregirlo</strong>. Un aviso que no entiendes es un aviso que volverá.</p>
 </div>
 
-##### Prettier · opcional, y todavía no
-
 También existe **Prettier**, que aplica automáticamente un formato consistente. Puedes instalarlo, pero durante las primeras sesiones no vamos a depender de él: primero tienes que aprender a escribir código legible tú. Automatizar lo que no sabes hacer a mano solo esconde el problema.
 
-#### El entorno, paso a paso
+#### Elemento, etiqueta y atributo no son lo mismo
+
+Se usan como sinónimos y no lo son.
+
+```html
+<p>Hola</p>
+```
+
+```text
+<p>       etiqueta de apertura
+Hola      contenido
+</p>      etiqueta de cierre
+```
+
+<p class="term">Elemento</p>
+
+La unidad completa: apertura, contenido y cierre. La etiqueta es solo la marca que lo delimita. Cuando decimos «un párrafo» hablamos del elemento; cuando decimos «falta el `</p>`» hablamos de la etiqueta.
+
+Los elementos **contienen otros elementos**, y eso crea una estructura jerárquica, un árbol, que es lo que después leerán el CSS, el buscador y el lector de pantalla.
+
+```html
+<p>
+    Estoy estudiando <strong>DAW</strong>.
+</p>
+```
+
+Los elementos **tienen atributos**, que aportan información adicional sobre ellos:
+
+```text
+<html lang="es">
+
+elemento    html
+atributo    lang
+valor       es
+```
+
+Algunos elementos están **vacíos**: no envuelven nada, aportan algo por sí mismos, se escriben con una sola etiqueta y no se cierran. Escribir `</img>` no es otro estilo, es un error.
+
+```html
+<meta charset="UTF-8">
+<img src="teclado.webp" alt="Teclado mecánico compacto">
+<br>
+<hr>
+```
+
+```html
+<!-- Correcto -->
+<p>Un <strong>teclado <em>mecánico</em></strong> compacto.</p>
+
+<!-- Incorrecto -->
+<p>Un <strong>teclado <em>mecánico</strong></em> compacto.</p>
+```
+
+<div class="rule">
+  <p class="rule-label">La regla de la anidación</p>
+  <p>Los elementos se cierran como los paréntesis: <strong>el último que se abre es el primero que se cierra</strong>. En el segundo ejemplo, <code>strong</code> se cierra antes que <code>em</code>, que se abrió después. El navegador lo mostrará parecido, porque adivinará, pero el árbol que construya ya no es el que escribiste.</p>
+</div>
+
+#### El navegador no es un corrector
+
+Este documento está roto de cuatro formas: falta el `doctype`, falta el idioma, falta la codificación y hay tres etiquetas sin cerrar.
+
+```html
+<html>
+<head>
+<title>PixelStore
+</head>
+<body>
+<h1>Bienvenido
+<p>Componentes para desarrolladores
+</body>
+```
+
+Ábrelo. **Se ve perfectamente.** Un navegador está diseñado para no fallar nunca delante de un usuario: ante un documento roto no muestra un error, adivina lo que querías decir y lo repara en silencio.
+
+> **Que una página se vea bien no demuestra que su HTML esté bien. Solo demuestra que el navegador ha sabido disimularlo.**
+
+Recuerda esta frase, porque es el hilo de toda la unidad y volveremos a ella en la sesión 6.
+
+#### Las cinco piezas del esqueleto
+
+Todo documento HTML declara siempre las mismas cinco cosas. Las escribirás a mano en el paso 3 y las romperás una a una en el paso 5; la tabla resume qué aporta cada una y qué se estropea exactamente cuando falta.
+
+| Pieza | Qué declara | Qué pasa si falta |
+| ----- | ----------- | ----------------- |
+| `<!doctype html>` | Que el documento es HTML estándar | Modo compatibilidad, con reglas antiguas |
+| `lang="es"` | El idioma del contenido | El lector de pantalla lo pronuncia en inglés |
+| `charset="UTF-8"` | Cómo se traducen los bytes a caracteres | «Programación» se ve como «ProgramaciÃ³n» |
+| `viewport` | Que se adapte al ancho del dispositivo | En móvil se ve la página de escritorio encogida |
+| `<title>` | El nombre del documento | Pestaña, favorito y buscador sin identificar |
+
+<div class="rule">
+  <p class="rule-label">La prueba para no confundir <code>head</code> y <code>body</code></p>
+  <p>Si es algo que una persona debería <strong>leer</strong>, va en el <code>body</code>. Si es algo que el navegador necesita <strong>saber</strong> antes de dibujar nada, va en el <code>head</code>.</p>
+</div>
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Los siete pasos retiran la ayuda poco a poco: primero copias, después completas, después reparas y al final decides tú. Comprueba cada paso antes de pasar al siguiente, porque casi todos dejan algo escrito que se reutiliza más adelante.
+
+#### Paso 1 · Montar el entorno · 15 min
 
 1. Crea una carpeta para tu proyecto. Por ejemplo `mi-web`.
 2. En VS Code, `Archivo → Abrir carpeta`, y selecciona **la carpeta**, no un archivo.
 3. En el explorador lateral, crea `index.html`. Ese nombre no es casual: es el que los servidores sirven por defecto como página principal.
 4. Instala HTMLHint desde `Ctrl + Shift + X`.
+5. Localiza estas zonas, porque las vas a usar seis semanas: Explorer, Search, Extensions, el editor, la barra de estado y el panel Problems.
+6. Abre la paleta de comandos con `Ctrl + Shift + P` y pruébala escribiendo `Format Document`. Permite ejecutar prácticamente cualquier acción de VS Code por su nombre, en lugar de recordar en qué menú está.
 
-Localiza también estas zonas, porque las vas a usar seis semanas: Explorer, Search, Extensions, el editor, la barra de estado y el panel Problems.
+**Antes de continuar:** la carpeta está abierta como proyecto, `index.html` existe y HTMLHint aparece entre las extensiones instaladas.
 
-##### La paleta de comandos
-
-```text
-Ctrl + Shift + P
-```
-
-Permite ejecutar prácticamente cualquier acción de VS Code escribiendo su nombre. En lugar de memorizar en qué menú está cada opción, la buscas. Pruébalo con `Format Document`.
-
-#### Tarea 1 · Reconstruye este documento
+#### Paso 2 · Del ejemplo resuelto al documento propio · 25 min
 
 Todavía no tienes que inventar una solución desde cero. Avanza de una versión resuelta a otra con menos ayuda.
 
-##### Paso 1 · Observa uno resuelto
+##### 2.1 · Observa uno resuelto
 
 ```html
 <h1>Aula web</h1>
@@ -250,7 +340,7 @@ Todavía no tienes que inventar una solución desde cero. Avanza de una versión
 
 El primer encabezado nombra la página, el segundo introduce un nivel inferior, el párrafo agrupa una idea y `strong` señala importancia. Copia el fragmento, cambia cada texto y comprueba qué permanece igual.
 
-##### Paso 2 · Completa cuatro huecos
+##### 2.2 · Completa cuatro huecos
 
 ```html
 <__>Mi portfolio</__>
@@ -258,7 +348,7 @@ El primer encabezado nombra la página, el segundo introduce un nivel inferior, 
 <__>Estoy aprendiendo <strong>HTML</strong>.</__>
 ```
 
-##### Paso 3 · Repara uno parecido
+##### 2.3 · Repara uno parecido
 
 ```html
 <h1>Proyecto de clase<h1>
@@ -268,7 +358,7 @@ El primer encabezado nombra la página, el segundo introduce un nivel inferior, 
 
 Explica cada reparación antes de hacerla.
 
-##### Paso 4 · Ahora sí, reconstruye
+##### 2.4 · Ahora sí, reconstruye
 
 Esto es lo que debe verse en el navegador. Ahora no recibes el código, solo el resultado:
 
@@ -281,66 +371,13 @@ Bienvenido a mi primera página web. Estoy aprendiendo a estructurar
 documentos utilizando HTML5 estándar.
 ```
 
-Crea `index.html` y escribe el HTML mínimo que represente esa información: un encabezado principal, un encabezado secundario, un párrafo, y énfasis donde tenga sentido.
+Escribe el HTML mínimo que represente esa información: un encabezado principal, un encabezado secundario, un párrafo, y énfasis donde tenga sentido.
 
 La palabra importante es **mínimo**. Si has escrito una etiqueta que no aporta significado, sobra.
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Completa, repara y reconstruye el documento sin errores del linter.</span></div>
-  <div><strong>Si lo tienes</strong><span>Cambia todo el contenido manteniendo la misma jerarquía y explica qué no cambia.</span></div>
-  <div><strong>Reto</strong><span>Recibe un resultado distinto y decide cuántos encabezados y párrafos necesita sin pistas.</span></div>
-</div>
+#### Paso 3 · El esqueleto completo, escrito a mano · 20 min
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Tienes la carpeta del proyecto abierta en VS Code, no archivos sueltos.</li>
-    <li>HTMLHint está instalado y ves su salida en el panel Problems.</li>
-    <li>Sabes abrir la paleta de comandos.</li>
-    <li>Tu <code>index.html</code> se ve como el resultado pedido.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué se abre la carpeta entera en el editor y no el archivo?</li>
-    <li>¿Qué hace un linter?</li>
-    <li>¿Por qué se llama <code>index.html</code> la página principal?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Para que el editor conozca la raíz del proyecto: así resuelve y autocompleta las rutas relativas, busca en todos los archivos y aplica el linter a todo el sitio.</p>
-  <p>2 · Analiza el código mientras lo escribes y avisa de errores y malas prácticas sin ejecutarlo.</p>
-  <p>3 · Porque es el nombre que los servidores web sirven por defecto cuando se pide una carpeta sin especificar archivo.</p>
-</details>
-
-
-### Bloque 2 · Nuestra primera página y la anatomía del HTML
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es un elemento, en qué se diferencia de una etiqueta y de un atributo, y por qué el navegador no sirve para validar HTML.</li>
-    <li><strong>2. Haz:</strong> Escribe tu primera página completa a mano y repara un documento roto.</li>
-    <li><strong>3. Comprueba:</strong> El panel de problemas queda en cero errores.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Para qué abrimos la carpeta completa del proyecto en VS Code?</li>
-    <li>¿Qué información ofrece el panel <em>Problemas</em>?</li>
-    <li>Corrige mentalmente <code>&lt;h1&gt;Título&lt;h1&gt;</code> y explica qué faltaba.</li>
-  </ol>
-</div>
-
-#### Escríbela entera, a mano
-
-Todavía no vamos a usar atajos. Escribe esto letra a letra:
+Todavía no vamos a usar atajos. Escribe esto letra a letra, en `index.html`:
 
 ```html
 <!doctype html>
@@ -389,101 +426,32 @@ Guarda con `Ctrl + S` y ábrelo en el navegador, o usa la previsualización de V
   </ol>
 </figure>
 
-#### Elemento, etiqueta y atributo no son lo mismo
+<details class="aside aside--extra">
+<summary>Consultar · qué declara cada pieza, una por una</summary>
 
-Se usan como sinónimos y no lo son.
+**`<!doctype html>`** indica al navegador que el documento es HTML moderno. Sin él, el navegador entra en *modo compatibilidad* y aplica reglas de hace veinte años.
 
-```html
-<p>Hola</p>
-```
+**`<html lang="es">`** es el elemento raíz: todo lo demás va dentro. El atributo `lang` declara el idioma principal, y lo usan los lectores de pantalla para elegir la voz y la pronunciación, los navegadores para ofrecer traducción, y los buscadores para clasificar la página. Sin `lang="es"`, un lector de pantalla lee el español con fonética inglesa y se vuelve incomprensible.
 
-```text
-<p>       etiqueta de apertura
-Hola      contenido
-</p>      etiqueta de cierre
-```
+**`<head>`** contiene información *sobre* el documento. Nada de lo que hay aquí se ve en la ventana.
 
-<p class="term">Elemento</p>
+`<meta charset="UTF-8">` define la codificación: cómo se traducen los bytes del archivo a caracteres. Gracias a UTF-8 se escriben correctamente `á é í ó ú`, `ñ`, `€` y `¿ ?`. Si falta, «Programación» se muestra como «ProgramaciÃ³n».
 
-La unidad completa: apertura, contenido y cierre. La etiqueta es solo la marca que lo delimita. Cuando decimos «un párrafo» hablamos del elemento; cuando decimos «falta el `</p>`» hablamos de la etiqueta.
+`<meta name="viewport" content="width=device-width, initial-scale=1.0">` indica al navegador que use el ancho real del dispositivo. Sin él, un móvil muestra la página de escritorio encogida e ilegible. Se entiende del todo al estudiar CSS responsive; por ahora forma parte de la estructura fija.
 
-##### Los elementos contienen otros elementos
+`<title>` no aparece dentro de la página: aparece en la pestaña, en los favoritos y como titular en un buscador. Compara `<title>Inicio</title>` con `<title>PixelStore | Componentes para desarrolladores</title>` e imagina cuál identifica la web en una lista de veinte pestañas abiertas.
 
-```html
-<p>
-    Estoy estudiando <strong>DAW</strong>.
-</p>
-```
+**`<body>`** contiene el contenido que verá el usuario.
 
-Aquí `strong` está **dentro** de `p`. Eso crea una estructura jerárquica, un árbol, y ese árbol es lo que después leerán el CSS, el buscador y el lector de pantalla.
+</details>
 
-##### Los elementos tienen atributos
+**Antes de continuar:** el documento se abre en el navegador, el título aparece en la pestaña y el panel de problemas está en cero.
 
-```html
-<html lang="es">
-```
+#### Paso 4 · Reparar un documento roto · 25 min
 
-```text
-elemento    html
-atributo    lang
-valor       es
-```
+Copia en un archivo `roto.html` el fragmento defectuoso de la explicación.
 
-Los atributos aportan información adicional sobre el elemento. Vas a ver muchos durante la unidad.
-
-##### Elementos vacíos
-
-Algunos elementos no envuelven nada: aportan algo por sí mismos. Se escriben con una sola etiqueta y **no se cierran**.
-
-```html
-<meta charset="UTF-8">
-<img src="teclado.webp" alt="Teclado mecánico compacto">
-<br>
-<hr>
-```
-
-Escribir `</img>` no es otro estilo: es un error.
-
-##### La regla de la anidación
-
-Los elementos se cierran como los paréntesis: **el último que se abre es el primero que se cierra**.
-
-```html
-<!-- Correcto -->
-<p>Un <strong>teclado <em>mecánico</em></strong> compacto.</p>
-
-<!-- Incorrecto -->
-<p>Un <strong>teclado <em>mecánico</strong></em> compacto.</p>
-```
-
-En el segundo, `strong` se cierra antes que `em`, que se abrió después. El navegador lo mostrará parecido, porque adivinará, pero el árbol que construya ya no es el que escribiste.
-
-#### El navegador no es un corrector
-
-Este documento está roto de cuatro formas: falta el `doctype`, falta el idioma, falta la codificación y hay tres etiquetas sin cerrar.
-
-```html
-<html>
-<head>
-<title>PixelStore
-</head>
-<body>
-<h1>Bienvenido
-<p>Componentes para desarrolladores
-</body>
-```
-
-Ábrelo. **Se ve perfectamente.** Un navegador está diseñado para no fallar nunca delante de un usuario: ante un documento roto no muestra un error, adivina lo que querías decir y lo repara en silencio.
-
-> **Que una página se vea bien no demuestra que su HTML esté bien. Solo demuestra que el navegador ha sabido disimularlo.**
-
-Recuerda esta frase, porque es el hilo de toda la unidad y volveremos a ella en la sesión 6.
-
-#### Tarea 2 · Repara el HTML roto
-
-Copia ese mismo fragmento en un archivo `roto.html`.
-
-<p class="stage">Paso 1 · Te enseño uno</p>
+##### 4.1 · Ejemplo resuelto
 
 <dl class="worked">
   <dt>¿Qué está mal?</dt>
@@ -498,7 +466,7 @@ Copia ese mismo fragmento en un archivo `roto.html`.
 
 No basta con decir «falta una etiqueta»: interesa qué consecuencia tiene, porque es lo que te permitirá priorizar cuando encuentres veinte fallos a la vez.
 
-<p class="stage stage--solo">Paso 2 · Ahora tú</p>
+##### 4.2 · Ahora tú
 
 1. Abre el panel de problemas con `Ctrl + Shift + M` y anota qué detecta HTMLHint **y qué no**.
 2. Repara el documento entero: `doctype`, `lang`, codificación, viewport y todas las etiquetas pendientes.
@@ -516,117 +484,9 @@ No basta con decir «falta una etiqueta»: interesa qué consecuencia tiene, por
   <p>Los tres primeros grupos pesan más que el cuarto, aunque el cuarto sea el que más veces aparece.</p>
 </details>
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre un elemento y una etiqueta?</li>
-    <li>Escribe de memoria dos elementos que no se cierren.</li>
-    <li>¿Por qué <code>&lt;strong&gt;a&lt;em&gt;b&lt;/strong&gt;&lt;/em&gt;</code> está mal si se ve bien?</li>
-  </ol>
-</div>
+#### Paso 5 · Destruye la página y anota qué delata el navegador · 25 min
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El elemento es la unidad completa: apertura, contenido y cierre. La etiqueta es la marca que lo delimita.</p>
-  <p>2 · Por ejemplo <code>&lt;meta&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;br&gt;</code> o <code>&lt;hr&gt;</code>.</p>
-  <p>3 · Porque rompe el orden de anidación: <code>em</code> se abrió el último y debería cerrarse el primero. El navegador reconstruye un árbol distinto del escrito, y ese árbol es el que verán el CSS, el buscador y el lector de pantalla.</p>
-</details>
-
-
-### Bloque 3 · La estructura de un documento HTML
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué declara cada pieza del esqueleto y qué se rompe exactamente cuando falta.</li>
-    <li><strong>2. Haz:</strong> Rompe deliberadamente tu página, observa qué pasa, y empieza la portada de tu proyecto.</li>
-    <li><strong>3. Comprueba:</strong> Los acentos se ven bien y la página es legible en la vista de móvil.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿En qué se diferencian un elemento, una etiqueta y un atributo?</li>
-    <li>¿Por qué ver una página «bien» no demuestra que su HTML sea correcto?</li>
-    <li>Repara <code>&lt;p class="aviso"&gt;Importante&lt;/strong&gt;</code>.</li>
-  </ol>
-</div>
-
-#### Pieza por pieza
-
-##### `<!doctype html>`
-
-```html
-<!doctype html>
-```
-
-Le dice al navegador que el documento es HTML moderno. Sin él, el navegador entra en *modo compatibilidad* y aplica reglas de hace veinte años.
-
-##### `<html lang="es">`
-
-Es el elemento raíz: todo lo demás va dentro. El atributo `lang` declara el idioma principal, y lo usan los lectores de pantalla para elegir la voz y la pronunciación, los navegadores para ofrecer traducción, y los buscadores para clasificar la página.
-
-Sin `lang="es"`, un lector de pantalla lee el español con fonética inglesa y se vuelve incomprensible.
-
-##### `<head>`
-
-Contiene información **sobre** el documento. Nada de lo que hay aquí se ve en la ventana.
-
-```html
-<meta charset="UTF-8">
-```
-
-Define la codificación: cómo se traducen los bytes del archivo a caracteres. Gracias a UTF-8 podemos escribir correctamente:
-
-```text
-á é í ó ú
-ñ
-€
-¿ ?
-```
-
-Si falta, «Programación» se muestra como «ProgramaciÃ³n».
-
-```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-```
-
-Indica al navegador que use el ancho real del dispositivo. Sin él, un móvil muestra la página de escritorio encogida e ilegible. Lo entenderemos del todo al estudiar CSS responsive; por ahora forma parte de la estructura fija.
-
-```html
-<title>PixelStore | Componentes para desarrolladores</title>
-```
-
-No aparece dentro de la página: aparece en la pestaña, en los favoritos y como titular en un buscador. Compara:
-
-```html
-<title>Inicio</title>
-<title>PixelStore | Componentes para desarrolladores</title>
-```
-
-¿Cuál te dice de qué web es, si lo ves en una lista de veinte pestañas?
-
-##### `<body>`
-
-Contiene el contenido que verá el usuario.
-
-<div class="rule">
-  <p class="rule-label">La prueba para no confundir <code>head</code> y <code>body</code></p>
-  <p>Si es algo que una persona debería <strong>leer</strong>, va en el <code>body</code>. Si es algo que el navegador necesita <strong>saber</strong> antes de dibujar nada, va en el <code>head</code>.</p>
-</div>
-
-| Pieza | Qué declara | Qué pasa si falta |
-| ----- | ----------- | ----------------- |
-| `<!doctype html>` | Que el documento es HTML estándar | Modo compatibilidad, con reglas antiguas |
-| `lang="es"` | El idioma del contenido | El lector de pantalla lo pronuncia en inglés |
-| `charset="UTF-8"` | Cómo se traducen los bytes a caracteres | «Programación» se ve como «ProgramaciÃ³n» |
-| `viewport` | Que se adapte al ancho del dispositivo | En móvil se ve la página de escritorio encogida |
-| `<title>` | El nombre del documento | Pestaña, favorito y buscador sin identificar |
-
-#### Práctica guiada · Destruye la página
-
-Vamos a aprender provocando errores. Sobre una copia de tu página, haz estas seis cosas, **de una en una**, y anota qué ocurre:
+Sobre una **copia** de la página del paso 3, provoca estos seis fallos **de uno en uno**, y anota qué ocurre con cada uno antes de deshacerlo:
 
 1. Elimina `</h1>`.
 2. Elimina `</body>`.
@@ -635,29 +495,17 @@ Vamos a aprender provocando errores. Sobre una copia de tu página, haz estas se
 5. Cambia `UTF-8` por `ISO-8859-1`.
 6. Elimina `lang`.
 
-Para cada una, tres columnas:
+Registra cada uno en esta tabla:
 
 | Qué he roto | Qué hace el navegador | Qué dice HTMLHint |
 | ----------- | --------------------- | ----------------- |
 | | | |
 
-Al terminar, deja el documento correcto otra vez. Lo que quiero que veas es cuántas de las seis **el navegador no delata en absoluto**. Esa es la razón por la que existen los linters y los validadores.
+Al terminar, deja el documento correcto otra vez. Cuenta cuántos de los seis **el navegador no delata en absoluto**: esa cifra es la razón por la que existen los linters y los validadores, y lo que sostiene la frase de la explicación.
 
-#### Emmet · atajos, cuando ya sabes escribirlo
+#### Paso 6 · Emmet, ahora que ya sabes escribirlo · 10 min
 
-Ahora que has escrito el esqueleto a mano, puedes abreviarlo. VS Code incluye **Emmet**:
-
-```text
-!
-```
-
-y `Tab` genera la estructura completa de un documento. O:
-
-```text
-ul>li*3
-```
-
-que se expande a:
+Has escrito el esqueleto a mano, así que ya puedes abreviarlo. VS Code incluye **Emmet**: escribe `!` y pulsa `Tab` para generar la estructura completa de un documento. O escribe `ul>li*3`, que se expande a:
 
 ```html
 <ul>
@@ -667,14 +515,16 @@ que se expande a:
 </ul>
 ```
 
+Prueba ambas abreviaturas en un archivo de pruebas y compara el resultado con lo que escribiste a mano en el paso 3.
+
 <div class="rule">
   <p class="rule-label">La regla de Emmet</p>
   <p><strong>No uses una abreviatura cuyo resultado no seas capaz de escribir y explicar a mano.</strong> Emmet es una herramienta de productividad: te ahorra tecleo, no conocimiento.</p>
 </div>
 
-#### Ahora tú · La portada de tu proyecto
+#### Paso 7 · La portada de tu proyecto · 30 min
 
-Crea `index.html` en la raíz de tu carpeta y constrúyela con:
+Construye `index.html` en la raíz de tu carpeta, ahora como portada real del sitio que entregarás dentro de seis semanas y no como un ejercicio desechable:
 
 * El esqueleto completo y los cuatro metadatos correctos.
 * Un `<title>` descriptivo, con el tema de tu proyecto.
@@ -682,27 +532,53 @@ Crea `index.html` en la raíz de tu carpeta y constrúyela con:
 * Al menos tres `<h2>` que dividan la portada en áreas temáticas.
 * Párrafos descriptivos reales, con una descripción del proyecto.
 
-Este archivo constituye la primera página del sitio que se entregará dentro de seis semanas, y no un ejercicio desechable.
-
 <div class="checkpoint">
-  <p class="checkpoint-label">Comprobación · dos pruebas de un minuto</p>
+  <p class="checkpoint-label">Comprobación de la portada · dos pruebas de un minuto</p>
   <p>Escribe en algún párrafo la palabra «Programación». Si se ve correctamente, tu <code>charset</code> está bien. Después abre DevTools con <code>F12</code>, activa la vista de dispositivo móvil y comprueba que el texto se lee sin hacer zoom: si hay que ampliar, falta el <em>viewport</em>.</p>
 </div>
 
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Entorno montado, esqueleto escrito a mano, documento roto reparado y portada con cero errores en el panel de problemas.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de los seis fallos completa, con la cuenta de cuántos pasó por alto el navegador.</span></div>
+  <div><strong>Reto</strong><span>Cambia todo el contenido de la portada manteniendo la misma jerarquía, y explica qué parte del documento no ha cambiado y por qué.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
+  <ul class="checklist">
+    <li>Tienes la carpeta del proyecto abierta en VS Code, no archivos sueltos.</li>
+    <li>HTMLHint está instalado y ves su salida en el panel Problems.</li>
+    <li>Sabes abrir la paleta de comandos.</li>
+    <li>Tu <code>index.html</code> tiene el esqueleto completo con los cuatro metadatos.</li>
+    <li>La tabla de los seis fallos provocados está escrita y contestada.</li>
+    <li>La portada tiene un solo <code>h1</code>, tres <code>h2</code> y párrafos reales.</li>
+  </ul>
+</div>
+
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Por qué se abre la carpeta entera en el editor y no el archivo?</li>
+    <li>¿Qué diferencia hay entre un elemento y una etiqueta?</li>
+    <li>Escribe de memoria dos elementos que no se cierren.</li>
+    <li>¿Por qué <code>&lt;strong&gt;a&lt;em&gt;b&lt;/strong&gt;&lt;/em&gt;</code> está mal si se ve bien?</li>
     <li>¿Qué síntoma concreto delata que falta el <code>charset</code>?</li>
-    <li>¿A quién perjudica que falte <code>lang="es"</code>?</li>
     <li>De las seis cosas que rompiste, ¿cuántas delató el navegador?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Los caracteres no ingleses se muestran mal: acentos, eñes y signos de apertura aparecen como símbolos extraños.</p>
-  <p>2 · Sobre todo a quien usa un lector de pantalla, que elige voz y fonética según el idioma declarado. También a los buscadores.</p>
-  <p>3 · Prácticamente ninguna, salvo el cambio de codificación. Ese es justo el punto de la práctica.</p>
+  <p>1 · Para que el editor conozca la raíz del proyecto: así resuelve y autocompleta las rutas relativas, busca en todos los archivos y aplica el linter a todo el sitio.</p>
+  <p>2 · El elemento es la unidad completa: apertura, contenido y cierre. La etiqueta es la marca que lo delimita.</p>
+  <p>3 · Por ejemplo <code>&lt;meta&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;br&gt;</code> o <code>&lt;hr&gt;</code>.</p>
+  <p>4 · Porque rompe el orden de anidación: <code>em</code> se abrió el último y debería cerrarse el primero. El navegador reconstruye un árbol distinto del escrito, y ese árbol es el que verán el CSS, el buscador y el lector de pantalla.</p>
+  <p>5 · Los caracteres no ingleses se muestran mal: acentos, eñes y signos de apertura aparecen como símbolos extraños.</p>
+  <p>6 · Prácticamente ninguna, salvo el cambio de codificación. Ese es justo el punto de la práctica.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -714,6 +590,7 @@ Este archivo constituye la primera página del sitio que se entregará dentro de
     <li>Repara: <code>&lt;p lang="es"&gt;Hola &lt;strong&gt;mundo&lt;/p&gt;&lt;/strong&gt;</code>.</li>
   </ol>
 </div>
+
 
 ---
 
