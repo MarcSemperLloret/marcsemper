@@ -954,16 +954,14 @@ Monta esta situación, que es completamente habitual:
 
 ## Sesión 3 · Pintar desde datos
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Render · del array a la página</strong>, <strong>Formularios desde JavaScript</strong> y <strong>Validación accesible</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Render · del array a la página
+<p class="lead">Tres horas. Media hora para entender el patrón de render y cómo se leen y se validan los datos de un formulario, y dos horas y media haciendo que tu catálogo salga de los datos y que tus errores se puedan oír.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> El patrón de render: una función que recibe datos y deja la página como esos datos digan.</li>
-    <li><strong>2. Haz:</strong> Pinta todo tu catálogo de la UD3 en la página.</li>
-    <li><strong>3. Comprueba:</strong> Borras el HTML escrito a mano y la página sigue igual.</li>
+    <li><strong>1. Aprende:</strong> El patrón de render —una función que recibe datos y deja la página como esos datos digan—, cómo se leen los valores de un formulario y qué hace que un error sea perceptible sin ver la pantalla.</li>
+    <li><strong>2. Haz:</strong> Pinta todo tu catálogo de la UD3, lee el formulario entero y valídalo con mensajes accesibles.</li>
+    <li><strong>3. Comprueba:</strong> Borras el HTML escrito a mano y la página sigue igual; el foco va al primer campo que falla.</li>
   </ol>
 </div>
 
@@ -971,10 +969,16 @@ Monta esta situación, que es completamente habitual:
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>¿Cuántos productos tienes escritos a mano en el HTML? ¿Y si fueran cuatrocientos?</li>
-    <li>Si cambia el precio de uno, ¿cuántos sitios hay que tocar hoy?</li>
-    <li>¿Qué debería verse si la lista queda vacía tras filtrar?</li>
+    <li>Un campo numérico, ¿devuelve número?</li>
+    <li>Un error escrito en rojo junto al campo, ¿lo percibe quien no ve la pantalla?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy la página deja de ser algo que se escribe y pasa a ser algo que se **calcula** a partir de unos datos. Esa idea gobierna la sesión, y también la siguiente.
 
 #### La función de render
 
@@ -1005,9 +1009,7 @@ Tiene tres propiedades que conviene nombrar, porque son las que la hacen fiable:
 
 Que ejecutarla dos veces con los mismos datos deje el mismo resultado. Sin esa propiedad, cada nuevo filtrado duplicaría el catálogo, que es el fallo con el que casi todo el mundo se estrena en esta sesión.
 
-#### El estado vacío no es un detalle
-
-Una lista vacía sin mensaje se percibe como un error de la aplicación. Tampoco basta con «No hay resultados»:
+Una lista vacía sin mensaje se percibe como un error de la aplicación, y tampoco basta con «No hay resultados». Un buen estado vacío dice qué ha pasado **y qué se puede hacer**:
 
 ```javascript
 function mensajeVacio() {
@@ -1018,11 +1020,7 @@ function mensajeVacio() {
 }
 ```
 
-Un buen estado vacío dice qué ha pasado y qué se puede hacer.
-
-#### Borrar el HTML escrito a mano
-
-Ahora el catálogo vive en los datos. En el HTML solo queda el contenedor:
+A partir de aquí el catálogo vive en los datos, y en el HTML solo queda el contenedor:
 
 ```html
 <ul class="catalogo" data-js="catalogo"></ul>
@@ -1030,69 +1028,7 @@ Ahora el catálogo vive en los datos. En el HTML solo queda el contenedor:
 
 Con una salvedad, que es la condición 2 de la unidad: si tu web debe seguir mostrando contenido sin JavaScript, el HTML conserva los productos y el código los sustituye al arrancar. Decide cuál de las dos opciones eliges, y escríbelo en tus notas.
 
-#### Tarea 7 · El catálogo pintado
-
-1. Escribe `pintarCatalogo(productos, contenedor)` en `js/render.js`.
-2. Píntalo al arrancar desde `main.js`, importando los datos de la UD3.
-3. Añade el estado vacío con un mensaje útil.
-4. Llama a la función dos veces seguidas y comprueba que no se duplica.
-5. Pinta un subconjunto usando una de tus funciones de filtrado de la UD3.
-6. Muestra en un párrafo cuántos resultados se están viendo.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Catálogo completo pintado desde datos, con estado vacío.</span></div>
-  <div><strong>Si lo tienes</strong><span>Pinta también un resumen: total, disponibles y precio medio.</span></div>
-  <div><strong>Reto</strong><span>Mide con la consola cuánto tarda en pintar cuatrocientos productos.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Tu render recibe los datos que pinta.</li>
-    <li>Sustituye el contenido en lugar de añadirlo.</li>
-    <li>Trata el caso de lista vacía con un mensaje útil.</li>
-    <li>Reutilizas sin cambios las funciones de la UD3.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué significa que un render sea idempotente?</li>
-    <li>¿Por qué la función recibe los datos en vez de leerlos de una variable global?</li>
-    <li>¿Qué debe decir un buen estado vacío?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que llamarla varias veces con los mismos datos deja siempre el mismo resultado.</p>
-  <p>2 · Para poder pintar cualquier subconjunto y para poder probarla por separado.</p>
-  <p>3 · Qué ha ocurrido y qué puede hacer la persona a continuación.</p>
-</details>
-
-
-### Bloque 2 · Formularios desde JavaScript
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se leen los valores de un formulario y qué tipo tienen.</li>
-    <li><strong>2. Haz:</strong> Lee tu formulario de contacto y conviértelo en un objeto de datos.</li>
-    <li><strong>3. Comprueba:</strong> Cada valor llega con el tipo correcto antes de usarse.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué campos tiene tu formulario de la UD1?</li>
-    <li>Un campo numérico, ¿devuelve número?</li>
-    <li>¿Cómo sabrías si una casilla está marcada?</li>
-  </ol>
-</div>
-
-#### Leer un campo
+#### Leer un formulario
 
 ```javascript
 const buscador = document.querySelector("[data-js='buscador']");
@@ -1111,7 +1047,7 @@ seleccion.value           // el valor de la opción elegida
   <p>Convierte al leer, y comprueba: un campo numérico vacío da cadena vacía, y <code>Number("")</code> es <code>0</code>, no <code>NaN</code>. Ese cero silencioso ha estropeado muchos filtros.</p>
 </div>
 
-#### Leer el formulario entero
+Para leerlo entero de una vez:
 
 ```javascript
 formulario.addEventListener("submit", (evento) => {
@@ -1123,11 +1059,9 @@ formulario.addEventListener("submit", (evento) => {
 });
 ```
 
-`FormData` recoge los campos que tengan atributo `name` —de ahí la insistencia de la UD1 en ponerlo— y `Object.fromEntries` los convierte en un objeto normal, listo para validarlo con las funciones que escribiste en la UD3.
+`FormData` recoge los campos que tengan atributo `name` —de ahí la insistencia de la UD1 en ponerlo— y `Object.fromEntries` los convierte en un objeto normal, listo para validarlo con las funciones que escribiste en la UD3. Las casillas no marcadas no aparecen, y los grupos de casillas con el mismo nombre requieren `getAll`.
 
-Las casillas no marcadas no aparecen, y los grupos de casillas con el mismo nombre requieren `getAll`.
-
-#### Reaccionar mientras se escribe
+Con el evento `input` ya tienes la búsqueda en vivo, usando `buscar` de la UD3 sin un solo cambio:
 
 ```javascript
 buscador.addEventListener("input", (evento) => {
@@ -1136,92 +1070,19 @@ buscador.addEventListener("input", (evento) => {
 });
 ```
 
-Ya tienes la búsqueda en vivo: `buscar` es la función de la sesión 5 de la UD3, sin un solo cambio.
-
-#### Otras cosas útiles
-
-```javascript
-formulario.reset();          // vuelve a los valores iniciales
-buscador.focus();            // pone el foco
-buscador.select();           // selecciona el contenido
-campo.disabled = true;       // deshabilita mientras se envía
-```
-
-#### Tarea 8 · Leer y usar
-
-1. Búsqueda en vivo con `input` sobre tu catálogo pintado.
-2. Un filtro de precio máximo con conversión y comprobación del campo vacío.
-3. Lee el formulario de contacto entero con `FormData` al enviarlo.
-4. Muestra en consola el objeto resultante y comprueba el tipo de cada valor.
-5. Añade un botón de limpiar que vacíe los filtros y devuelva el foco al buscador.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Búsqueda en vivo y lectura completa del formulario.</span></div>
-  <div><strong>Si lo tienes</strong><span>Combina búsqueda y precio máximo en una sola consulta.</span></div>
-  <div><strong>Reto</strong><span>Detecta el caso del campo numérico vacío y trátalo como «sin límite».</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Conviertes cada valor al leerlo.</li>
-    <li>Usas <code>FormData</code> y sabes que depende del atributo <code>name</code>.</li>
-    <li>Tratas el campo vacío antes de que se convierta en un cero.</li>
-    <li>Reutilizas las funciones de la UD3 sin modificarlas.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿De qué tipo es el valor de un campo numérico?</li>
-    <li>¿Qué campos recoge <code>FormData</code>?</li>
-    <li>¿Cuánto vale <code>Number("")</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Texto, siempre.</p>
-  <p>2 · Los que tienen atributo <code>name</code>; las casillas sin marcar no aparecen.</p>
-  <p>3 · Cero, que es justo lo que hay que detectar antes de usarlo como límite.</p>
-</details>
-
-
-### Bloque 3 · Validación accesible
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se combina la validación nativa del navegador con la tuya, sin perder accesibilidad.</li>
-    <li><strong>2. Haz:</strong> Valida tu formulario de contacto y muestra errores que se puedan oír.</li>
-    <li><strong>3. Comprueba:</strong> Un lector de pantalla anuncia el error y el foco va al campo que falla.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué validación tiene ya tu formulario de la UD1, sin JavaScript?</li>
-    <li>Un error escrito en rojo junto al campo, ¿lo percibe quien no ve la pantalla?</li>
-    <li>¿Por qué el servidor también tendrá que validar, en la UD6?</li>
-  </ol>
-</div>
-
-#### Lo que el navegador ya hace
+#### Tres validaciones, y ninguna sobra
 
 En la UD1 escribiste campos obligatorios, tipos de dato y patrones. Eso sigue funcionando y es la primera línea de defensa. JavaScript no viene a sustituirla:
 
 ```javascript
 campo.validity.valueMissing;    // obligatorio y vacío
 campo.validity.typeMismatch;    // no parece un correo
-campo.validity.patternMismatch;
 campo.checkValidity();          // true / false
 formulario.noValidate = true;   // asumo yo la presentación de los errores
 ```
 
 <div class="rule">
-  <p class="rule-label">Tres validaciones, y ninguna sobra</p>
+  <p class="rule-label">Las tres capas de validación</p>
   <ol>
     <li><strong>Nativa:</strong> inmediata y gratis, funciona sin JavaScript.</li>
     <li><strong>Con JavaScript:</strong> mensajes mejores, reglas que el HTML no expresa, avisos mientras se escribe.</li>
@@ -1245,18 +1106,9 @@ function mostrarError(campo, mensaje) {
   destino.textContent = mensaje;
   campo.setAttribute("aria-invalid", "true");
 }
-
-function limpiarError(campo) {
-  document.querySelector(`#error-${campo.id}`).textContent = "";
-  campo.removeAttribute("aria-invalid");
-}
 ```
 
-Tres piezas que hacen el error perceptible para todo el mundo: `aria-describedby` ata el mensaje al campo, `aria-invalid` marca el campo como erróneo, y `role="alert"` hace que el lector de pantalla lo anuncie al aparecer.
-
-El color rojo, por sí solo, no informa a quien no distingue colores. Igual que en la UD2: el color acompaña, no comunica.
-
-#### Cuándo avisar
+Tres piezas que hacen el error perceptible para todo el mundo: `aria-describedby` ata el mensaje al campo, `aria-invalid` marca el campo como erróneo, y `role="alert"` hace que el lector de pantalla lo anuncie al aparecer. El color rojo, por sí solo, no informa a quien no distingue colores. Igual que en la UD2: el color acompaña, no comunica.
 
 Avisar con cada tecla mientras alguien escribe su correo es molesto y aparece en rojo antes de que haya terminado. El criterio habitual:
 
@@ -1269,57 +1121,160 @@ Avisar con cada tecla mientras alguien escribe su correo es molesto y aparece en
   </ol>
 </figure>
 
-#### Al enviar
+Al enviar, por último, el foco va **al primer campo que falla**, que es lo que permite corregir sin buscar:
 
 ```javascript
-formulario.addEventListener("submit", (evento) => {
-  evento.preventDefault();
-  const errores = validarContacto(Object.fromEntries(new FormData(formulario)));
-
-  if (errores.length > 0) {
-    errores.forEach(({ campo, mensaje }) => mostrarError(campos[campo], mensaje));
-    campos[errores[0].campo].focus();     // el foco, al primero que falla
-    return;
-  }
-
-  enviar();
-});
+if (errores.length > 0) {
+  errores.forEach(({ campo, mensaje }) => mostrarError(campos[campo], mensaje));
+  campos[errores[0].campo].focus();
+  return;
+}
 ```
 
-Llevar el foco al primer campo con error es lo que permite corregir sin buscar. Y `validarContacto` es, otra vez, la función de validación de la UD3: recibe un objeto y devuelve la lista de errores.
+### Se trabaja
 
-#### Tarea 9 · Formulario validado
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Hoy se cierra el circuito que abriste en la UD3: aquellos datos y aquellas funciones se convierten en la página que se ve. Los dos últimos pasos comprueban lo que se rompe cuando se quitan las muletas.
+
+#### Paso 1 · El catálogo pintado · 35 min
+
+1. Escribe `pintarCatalogo(productos, contenedor)` en `js/render.js`.
+2. Píntalo al arrancar desde `main.js`, importando los datos de la UD3.
+3. Añade el estado vacío con un mensaje que diga qué hacer.
+4. Llama a la función **dos veces seguidas** y comprueba que no se duplica. Si se duplica, no era idempotente.
+5. Pinta un subconjunto usando una de tus funciones de filtrado de la UD3, sin modificarla.
+6. Muestra en un párrafo cuántos resultados se están viendo.
+
+**Antes de continuar:** borra el catálogo escrito a mano del HTML. Si la página sigue igual, el render funciona.
+
+#### Paso 2 · Leer y usar · 35 min
+
+1. Búsqueda en vivo con `input` sobre tu catálogo pintado.
+2. Un filtro de precio máximo con conversión en el momento de leer.
+3. Lee el formulario de contacto entero con `FormData` al enviarlo.
+4. Muestra en consola el objeto resultante y comprueba **el tipo de cada valor** con `typeof`.
+5. Combina búsqueda y precio máximo en una sola consulta.
+6. Añade un botón de limpiar que vacíe los filtros y devuelva el foco al buscador.
+
+<details class="aside aside--extra">
+<summary>Consultar · otras cosas útiles de un formulario</summary>
+
+```javascript
+formulario.reset();          // vuelve a los valores iniciales
+buscador.focus();            // pone el foco
+buscador.select();           // selecciona el contenido
+campo.disabled = true;       // deshabilita mientras se envía
+```
+
+</details>
+
+#### Paso 3 · Formulario validado · 45 min
+
+Es el trabajo central de la sesión.
 
 1. Añade a cada campo su párrafo de error con `role="alert"` y `aria-describedby`.
 2. Valida al salir de cada campo y al enviar.
 3. Muestra todos los errores a la vez y lleva el foco al primero.
 4. Quita el error en cuanto el campo se corrige.
-5. Prueba el formulario **solo con el teclado**, de principio a fin.
-6. Comprueba que sin JavaScript el formulario sigue validando lo básico.
+5. Reutiliza tu función de validación de la UD3: recibe un objeto y devuelve la lista de errores. Si has tenido que reescribirla, mira por qué.
+6. Comprueba que el mensaje de error **no depende solo del color**: quítale el color en DevTools y comprueba que se sigue entendiendo.
+
+#### Paso 4 · Quita las muletas · 20 min
+
+Dos pruebas que casi nadie hace, y que descubren cosas distintas.
+
+**Sin JavaScript.** Desactívalo en DevTools y recarga.
+
+| Pregunta | Qué ocurre | ¿Es aceptable? |
+| -------- | ---------- | -------------- |
+| ¿Se ve algún producto? | | |
+| ¿El formulario sigue validando lo básico? | | |
+| ¿El formulario se puede enviar? | | |
+
+La respuesta depende de la decisión que anotaste sobre el catálogo. Lo que no es aceptable es que no la hayas tomado.
+
+**Solo con el teclado.** Recorre el formulario entero de principio a fin, provoca los errores y corrígelos sin tocar el ratón. Anota dónde se queda el foco después de mostrar los errores y después de corregir el último.
+
+#### Paso 5 · El campo vacío que vale cero · 15 min
+
+Tu filtro de precio máximo tiene un fallo que no da error. Compruébalo:
+
+1. Deja el campo de precio máximo vacío y observa qué productos se muestran.
+2. Escribe qué está pasando: `""` convertido a número no es `NaN`, es `0`.
+3. Corrígelo tratando el campo vacío como «sin límite» en lugar de como cero.
+4. Prueba estos cinco valores en el campo y anota qué hace tu filtro con cada uno: vacío, `0`, `-5`, `abc` y un número mayor que todos tus precios.
+5. Dos de los cinco necesitan una decisión que no es evidente. Identifícalos y documenta qué has decidido.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto mide; el segundo mejora una interfaz que ya funciona.
+
+##### Reto 1 · Cuatrocientos productos
+
+Genera un catálogo de cuatrocientos productos con un bucle y mide de verdad, en lugar de suponer.
+
+1. Usa `console.time` y `console.timeEnd` alrededor del render. Anota el tiempo.
+2. Reescribe `pintarCatalogo` para que inserte las tarjetas **una a una** con `append` sobre el contenedor, sin fragmento. Vuelve a medir.
+3. Compara los dos tiempos con 20, 400 y 4.000 productos. Anota los seis números en una tabla. La diferencia no es proporcional, y ese es el hallazgo.
+4. Abre la pestaña Performance y graba un render de los lentos. Busca las barras de *Layout* y cuenta cuántas hay en cada versión.
+5. Explica en tres líneas por qué el fragmento cambia el número de recálculos, con el vocabulario de la UD2: qué obliga al navegador a rehacer el layout.
+6. Con 4.000 productos, ni siquiera el fragmento es suficiente. Escribe qué harías: no hace falta que lo implementes, pero sí que nombres la técnica.
+
+##### Reto 2 · El resumen de errores
+
+Un formulario largo con cinco errores obliga a recorrerlo entero buscando cuáles fallaron. Las interfaces bien hechas ponen un resumen arriba.
+
+1. Al enviar con errores, genera un bloque al principio del formulario con la lista de los que han fallado.
+2. Cada elemento de la lista es un **enlace** al campo correspondiente, usando su `id`. Comprueba que al pulsarlo el foco llega al campo, y no solo la vista.
+3. El resumen debe anunciarse: decide entre `role="alert"` y llevarle el foco directamente. Prueba las dos y quédate con una, justificando la elección.
+4. Escribe mensajes distintos para «este campo está vacío» y «el formato no es correcto» en el mismo campo. La diferencia importa: no se corrigen igual.
+5. Cuando todos los errores queden resueltos, el resumen tiene que desaparecer. Decide qué pasa entonces con el foco de quien estaba dentro de él.
+6. Prueba el resultado entero con el teclado y, si tienes acceso a un lector de pantalla, con él. Anota qué se oye al enviar un formulario con tres errores.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Errores accesibles, foco al primero y sin recarga.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade un resumen de errores al principio del formulario, con enlaces a cada campo.</span></div>
-  <div><strong>Reto</strong><span>Escribe un mensaje distinto para «vacío» y para «formato incorrecto» en el mismo campo.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Catálogo pintado desde datos con estado vacío, búsqueda en vivo y errores accesibles con el foco al primero.</span></div>
+  <div><strong>Si lo tienes</strong><span>Las dos tablas de los pasos 4 y 5 contestadas, y el filtro de precio tratando bien el campo vacío.</span></div>
+  <div><strong>Reto</strong><span>Los seis tiempos medidos con su explicación, o el resumen de errores enlazado y anunciado.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 3</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Tu catálogo se genera desde datos y trata el caso vacío.</li>
-    <li>Lees el formulario y conviertes cada valor.</li>
+    <li>Tu render recibe los datos que pinta y los sustituye en lugar de añadirlos.</li>
+    <li>El caso de lista vacía tiene un mensaje que dice qué hacer.</li>
+    <li>Reutilizas sin cambios las funciones de la UD3.</li>
+    <li>Conviertes cada valor del formulario al leerlo, y tratas el campo vacío.</li>
     <li>Los errores se ven, se oyen y llevan el foco donde toca.</li>
     <li>La validación nativa sigue funcionando sin JavaScript.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué significa que un render sea idempotente, y qué se ve si no lo es?</li>
+    <li>¿Qué debe decir un buen estado vacío?</li>
+    <li>¿De qué tipo es el valor de un campo numérico, y cuánto vale <code>Number("")</code>?</li>
+    <li>¿Qué campos recoge <code>FormData</code>?</li>
+    <li>Nombra los tres atributos que hacen perceptible un error sin ver la pantalla.</li>
+    <li>¿Cuáles son las tres capas de validación, y cuál es obligatoria?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Nativa, en el cliente con JavaScript, y en el servidor; la del servidor es la obligatoria.</p>
-  <p>2 · <code>aria-describedby</code>, <code>aria-invalid</code> y <code>role="alert"</code>.</p>
-  <p>3 · Al primer campo que falla, para poder corregir sin buscarlo.</p>
+  <p>1 · Que llamarla varias veces con los mismos datos deja siempre el mismo resultado. Si no lo es, el catálogo se duplica en cada filtrado.</p>
+  <p>2 · Qué ha ocurrido y qué puede hacer la persona a continuación.</p>
+  <p>3 · Texto siempre; y <code>Number("")</code> vale cero, que es justo lo que hay que detectar antes de usarlo como límite.</p>
+  <p>4 · Los que tienen atributo <code>name</code>; las casillas sin marcar no aparecen.</p>
+  <p>5 · <code>aria-describedby</code>, <code>aria-invalid</code> y <code>role="alert"</code>.</p>
+  <p>6 · Nativa, en el cliente con JavaScript y en el servidor; la del servidor es la obligatoria.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 3 · 5–10 minutos</p>
@@ -1330,6 +1285,7 @@ Llevar el foco al primer campo con error es lo que permite corregir sin buscar. 
     <li>Nombra los tres atributos que hacen que un error de formulario se perciba sin ver la pantalla.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 4 · Estado y persistencia
