@@ -127,17 +127,18 @@ mi-api/
 | **Sesión 6** | Cierre del módulo | Proyecto final, despliegue y defensa | 3 h |
 | **Total** | | **Una aplicación web completa y publicada** | **18 h** |
 
-Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada bloque mantiene el ritmo de las unidades anteriores:
+Cada sesión dura tres horas y mantiene el reparto de las unidades anteriores: la teoría se concentra al principio y el resto de la tarde se construye. En esta unidad, además, el trabajo empieza por escribir lo que la API promete y solo después por cumplirlo.
 
 <figure class="diagram">
-  <figcaption>El ritmo de cada bloque de una hora</figcaption>
+  <figcaption>El ritmo de cada sesión de tres horas</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>Recupera · 5 min</li>
-    <li>Decide y diseña · 10–20 min</li>
-    <li>Implementa · 30–40 min</li>
-    <li>Cierra · 5 min</li>
+    <li>Se explica · 25 min</li>
+    <li>Se trabaja · 150 min</li>
+    <li>Cierre · 5 min</li>
   </ol>
 </figure>
+
+El bloque de trabajo se divide en pasos cronometrados, y cada sesión termina con una **ampliación** de dos retos para quien acabe antes.
 
 ### No todo pesa lo mismo
 
@@ -1844,16 +1845,14 @@ Unas pruebas valen lo que valen los cambios que te atreves a hacer con ellas pue
 
 ## Sesión 6 · Cierre del módulo
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>El proyecto completo</strong>, <strong>Documentar y desplegar</strong> y <strong>Defensa técnica y entrega final</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · El proyecto completo
+<p class="lead">Tres horas. Media hora para saber qué se evalúa y qué cambia al publicar, y dos horas y media cerrando el proyecto, desplegándolo, auditándolo y defendiéndolo.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Nada nuevo. Hoy se integra todo.</li>
-    <li><strong>2. Haz:</strong> Cierra tu aplicación: lo que falte, lo que esté a medias y lo que no encaje.</li>
-    <li><strong>3. Comprueba:</strong> Funciona de punta a punta desde una instalación limpia.</li>
+    <li><strong>1. Aprende:</strong> Qué comprueba quien recibe un proyecto, qué documentación necesita un servicio y qué deja de funcionar igual cuando deja tu máquina.</li>
+    <li><strong>2. Haz:</strong> Cierra la aplicación, publícala, audítala, revisa la de un compañero y defiende la tuya.</li>
+    <li><strong>3. Comprueba:</strong> Funciona de punta a punta desde una instalación limpia, tiene una URL pública y puedes explicar cualquier decisión que contenga.</li>
   </ol>
 </div>
 
@@ -1861,10 +1860,16 @@ Unas pruebas valen lo que valen los cambios que te atreves a hacer con ellas pue
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Si clonas tu proyecto en una carpeta nueva, ¿arranca?</li>
-    <li>¿Qué parte te da más vergüenza enseñar? Esa es la de hoy.</li>
     <li>¿Qué queda a medias, con un comentario que dice «arreglar esto»?</li>
+    <li>¿Qué pasará con tu fichero de datos cuando el servicio se reinicie en un servidor ajeno?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · criterios y preparación</p>
+
+Hoy no hay concepto nuevo. Lo que hay es el cambio de punto de vista que cierra el módulo: el proyecto deja de mirarse desde dentro, por quien lo escribió, y pasa a mirarse desde fuera, por quien lo recibe sin poder preguntar nada.
 
 #### La prueba de la instalación limpia
 
@@ -1880,54 +1885,7 @@ Unas pruebas valen lo que valen los cambios que te atreves a hacer con ellas pue
   </ol>
 </figure>
 
-Hazlo tú, de verdad, en otra carpeta. Cada tropiezo es un fallo que tu corrector encontrará también.
-
-#### El recorrido funcional
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Lo que tiene que funcionar seguido</p>
-  <ul class="checklist">
-    <li>La página inicial llega generada por el servidor.</li>
-    <li>El catálogo se filtra, se busca y se ordena.</li>
-    <li>El alta crea un producto que persiste tras reiniciar.</li>
-    <li>Un dato inválido se rechaza y el error aparece en su campo.</li>
-    <li>Un borrado desaparece de la lista y del fichero.</li>
-    <li>Sin servidor, el cliente muestra su estado de error.</li>
-    <li>Todo se puede hacer con el teclado.</li>
-    <li><code>npm test</code> está en verde.</li>
-  </ul>
-</div>
-
-#### Lo que hay que cerrar
-
-Reserva la última media hora para lo que siempre queda: rutas del contrato sin implementar, códigos de estado que no coinciden con lo documentado, mensajes de depuración olvidados, el README desactualizado y el `.env.example` sin las variables nuevas.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>El recorrido completo funcionando desde una instalación limpia.</span></div>
-  <div><strong>Si lo tienes</strong><span>Implementa la funcionalidad que dejaste pendiente por falta de tiempo.</span></div>
-  <div><strong>Reto</strong><span>Añade un segundo recurso completo, con su router, su servicio y sus pruebas.</span></div>
-</div>
-
-
-### Bloque 2 · Documentar y desplegar
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué documentación necesita un servicio y qué cambia al publicarlo.</li>
-    <li><strong>2. Haz:</strong> Escribe el README y despliega tu aplicación.</li>
-    <li><strong>3. Comprueba:</strong> Alguien puede usarla desde su casa, con una URL.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué cambia entre tu máquina y un servidor de internet?</li>
-    <li>¿De dónde saldrán ahí las variables de entorno?</li>
-    <li>¿Qué pasa con tu fichero de datos cuando el servicio se reinicia?</li>
-  </ol>
-</div>
+Cada tropiezo en ese recorrido es un fallo que tu corrector encontrará también. La única forma de saberlo es recorrerlo de verdad, en otra carpeta y sin arreglar nada por el camino con lo que ya tienes instalado.
 
 #### El README que sirve
 
@@ -1944,7 +1902,7 @@ Reserva la última media hora para lo que siempre queda: rutas del contrato sin 
   </ul>
 </div>
 
-Ese último punto es el que distingue un README de un proyecto de clase de uno profesional: decir qué no hace y por qué evita que quien lo lea lo tome por un fallo.
+Ese último punto distingue el README de un proyecto de clase del de uno profesional: decir qué no hace y por qué evita que quien lo lea lo tome por un fallo.
 
 #### Publicar
 
@@ -1955,7 +1913,7 @@ Ese último punto es el que distingue un README de un proyecto de clase de uno p
 }
 ```
 
-Casi todas las plataformas gratuitas hacen lo mismo: clonan tu repositorio, ejecutan la instalación y arrancan con `npm start`. Lo que tienes que preparar es esto:
+Casi todas las plataformas gratuitas hacen lo mismo: clonan tu repositorio, ejecutan la instalación y arrancan con `npm start`. Lo que hay que preparar es esto:
 
 | Detalle | Qué hay que hacer |
 | ------- | ----------------- |
@@ -1967,50 +1925,84 @@ Casi todas las plataformas gratuitas hacen lo mismo: clonan tu repositorio, ejec
 
 <div class="rule">
   <p class="rule-label">Un fichero en el disco de un servicio desplegado no es permanente</p>
-  <p>Muchas plataformas reconstruyen el contenedor en cada despliegue, y en algunas también al reiniciar por inactividad. Tus productos creados desaparecen, y no es un fallo de tu código.</p>
-  <p>Es exactamente el motivo por el que existen las bases de datos gestionadas, y el problema con el que empieza el módulo de servidor. De momento, sabe explicarlo y siembra los datos al arrancar.</p>
+  <p>Muchas plataformas reconstruyen el contenedor en cada despliegue, y algunas también al reiniciar por inactividad. Tus productos creados desaparecen, sin que haya ningún fallo en tu código.</p>
+  <p>Ese es el motivo por el que existen las bases de datos gestionadas, y el problema con el que empieza el módulo de servidor. De momento, sepas explicarlo y siembra los datos al arrancar.</p>
 </div>
 
-#### Tarea 17 · Publicado
+#### Qué se evalúa
 
-El README se trae escrito de casa: la hora de clase es para desplegar, que es donde aparecen los problemas que no se pueden prever.
+| Criterio | Puntos |
+| ---------------------------------------------------------- | -----: |
+| Diseño por recursos y contrato sostenido en toda la API | 1,5 |
+| CRUD completo con los códigos de estado del contrato | 1,5 |
+| Validación en el servidor, con lista blanca de campos | 1,5 |
+| Separación real en rutas, servicio y repositorio | 1,5 |
+| Contrato de errores único, usado de punta a punta | 1 |
+| Cliente conectado y formularios de extremo a extremo | 1 |
+| Configuración por entorno, seguridad mínima y escapado | 1 |
+| Pruebas automáticas en verde y aplicación desplegada | 1 |
 
-1. Repasa el README completo con sus siete apartados.
-2. Prepara el proyecto: puerto por entorno, `start`, `engines`.
-3. Despliega en una plataforma gratuita.
-4. Configura las variables en su panel.
-5. Comprueba la aplicación desde otro dispositivo.
-6. Anota qué se comporta distinto respecto a tu máquina.
+No puntúa el tamaño del proyecto. Puntúa que **el contrato se sostenga**: que cada ruta responda lo que promete, que ninguna entrada se acepte sin validar y que puedas defender por qué está hecho así.
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Aplicación desplegada y accesible, con su README.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade una ruta de estado que informe de si el servicio está sano.</span></div>
-  <div><strong>Reto</strong><span>Configura el despliegue automático en cada cambio de la rama principal.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Tu aplicación tiene una URL pública.</li>
-    <li>Las variables están en la plataforma, no en el repositorio.</li>
-    <li>El README basta para instalarla y usar la API.</li>
-    <li>Sabes qué pasa con los datos en cada despliegue.</li>
-  </ul>
-</div>
-
-
-### Bloque 3 · Defensa técnica y entrega final
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué se evalúa en una defensa técnica.</li>
-    <li><strong>2. Haz:</strong> Audita, revisa el proyecto de un compañero y defiende el tuyo.</li>
-    <li><strong>3. Comprueba:</strong> Puedes explicar cualquier línea de tu proyecto.</li>
+<div class="rule">
+  <p class="rule-label">Las preguntas de la defensa final</p>
+  <ol>
+    <li>Enséñame el recorrido de una petición desde que alguien pulsa un botón hasta que el dato se guarda.</li>
+    <li>¿Por qué esta ruta y no otra? ¿Por qué este código de estado?</li>
+    <li>¿Dónde validas y por qué no basta con hacerlo en el cliente?</li>
+    <li>Enséñame una decisión de accesibilidad y explícame a quién ayuda.</li>
+    <li>¿Qué pasa si tu API recibe un campo que no esperabas?</li>
+    <li>Si mañana hubiera que cambiar el fichero por una base de datos, ¿qué tocarías?</li>
+    <li>Enséñame el fallo que más te costó encontrar y cuéntame cómo lo encontraste.</li>
+    <li>¿Qué harías distinto si empezaras hoy el proyecto?</li>
   </ol>
 </div>
 
-#### La auditoría final del módulo
+Salen cuatro de esa lista, elegidas al azar, y cubren el módulo entero y no solo esta unidad. Las dos últimas valen tanto como las demás: saber qué te costó y qué harías distinto demuestra que has entendido lo que hiciste.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · cerrar, publicar y defender</p>
+
+El README se trae escrito de casa: el tiempo de clase es para desplegar, auditar y defender, que es donde aparecen los problemas que no se pueden prever.
+
+#### Paso 1 · Cerrar el proyecto · 40 min
+
+1. Clona tu repositorio en una carpeta vacía y recorre la instalación limpia entera, anotando cada tropiezo sin arreglarlo sobre la marcha.
+2. Corrige después todos los tropiezos anotados, empezando por los que impiden arrancar.
+3. Recorre la aplicación de punta a punta y marca la lista siguiente.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Lo que tiene que funcionar seguido</p>
+  <ul class="checklist">
+    <li>La página inicial llega generada por el servidor.</li>
+    <li>El catálogo se filtra, se busca y se ordena.</li>
+    <li>El alta crea un producto que persiste tras reiniciar.</li>
+    <li>Un dato inválido se rechaza y el error aparece en su campo.</li>
+    <li>Un borrado desaparece de la lista y del fichero.</li>
+    <li>Sin servidor, el cliente muestra su estado de error.</li>
+    <li>Todo se puede hacer con el teclado.</li>
+    <li><code>npm test</code> está en verde.</li>
+  </ul>
+</div>
+
+4. Cierra lo que siempre queda: rutas del contrato sin implementar, códigos de estado que no coinciden con lo documentado, mensajes de depuración olvidados, el README desactualizado y el `.env.example` sin las variables nuevas.
+5. Comprueba que el repositorio no contiene secretos ni dependencias instaladas.
+
+#### Paso 2 · Publicar · 35 min
+
+1. Prepara el proyecto: puerto tomado del entorno, script `start` y `engines`.
+2. Despliega en una plataforma gratuita.
+3. Configura las variables en su panel, incluida la clave de API.
+4. Comprueba la aplicación desde otro dispositivo, con otra red si puedes.
+5. Añade una ruta de estado que informe de si el servicio responde, y consúltala desde fuera.
+6. Anota qué se comporta distinto respecto a tu máquina. Habrá al menos tres diferencias, y una de ellas tendrá que ver con los datos.
+
+**Antes de continuar:** crea un producto en el despliegue, fuerza un reinicio y comprueba si sigue ahí. Sepas explicar el resultado, sea cual sea.
+
+#### Paso 3 · La auditoría · 30 min
+
+Marca las tres listas sobre tu proyecto ya desplegado, no sobre el de tu máquina. Cada punto sin marcar se apunta con lo que falta para marcarlo.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría · la API</p>
@@ -2046,57 +2038,100 @@ El README se trae escrito de casa: la hora de clase es para desplegar, que es do
   </ul>
 </div>
 
-#### Revisión por pares
+#### Paso 4 · Revisión por pares · 25 min
 
-Intercambia proyectos y, sin preguntar nada, dedica veinte minutos a:
+Intercambia proyectos y trabaja sobre el ajeno sin preguntar nada a quien lo escribió. Todo lo que necesites debe estar en su README.
 
-1. Clonar, configurar, sembrar y arrancar. Anota cada tropiezo.
-2. Usar la aplicación entera solo con el teclado.
-3. Atacar la API: datos inválidos, campos de más, rutas fuera de lo público, escritura sin clave.
-4. Ejecutar sus pruebas y romper algo para ver si lo detectan.
-5. Encontrar dónde vive una regla de negocio y explicarla en voz alta.
+1. Clona, configura, siembra y arranca. Anota cada tropiezo con su hora.
+2. Usa la aplicación entera solo con el teclado.
+3. Ataca la API: datos inválidos, campos de más, rutas fuera de lo público, escritura sin clave.
+4. Ejecuta sus pruebas, rompe algo a propósito y comprueba si lo detectan.
+5. Encuentra dónde vive una regla de negocio y explícala en voz alta.
+6. Devuelve por escrito tres cosas que funcionan bien, tres que fallan y una pregunta que el README no responde.
 
-#### La defensa
+#### Paso 5 · La defensa y la entrega · 20 min
 
-Tres minutos por persona, mientras el resto sigue con la revisión. Salen cuatro preguntas de esta lista, elegidas al azar, y cubren el módulo entero y no solo esta unidad:
+1. Prepara tres minutos: el recorrido de una petición, una decisión que defiendas y una que cambiarías.
+2. Responde las cuatro preguntas que salgan de la lista, con el código delante.
+3. Incorpora al proyecto lo que haya salido de la revisión del compañero y quepa en el tiempo.
+4. Escribe el documento de una página con las tres decisiones técnicas de las que estés más satisfecho y las tres que cambiarías.
+5. Comprueba la entrega completa contra la lista del cierre y envíala.
 
-<div class="rule">
-  <p class="rule-label">Las preguntas de la defensa final</p>
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos son las dos continuaciones naturales del proyecto: crecer en recursos y resolver el problema de los datos que desaparecen.
+
+##### Reto 1 · El segundo recurso, de contrato a pruebas
+
+Una API con un solo recurso esconde casi todas las decisiones difíciles. Añade el segundo, relacionado con el primero: categorías, pedidos o valoraciones.
+
+1. Escribe su contrato antes de escribir una línea: rutas, cuerpos, códigos y errores.
+2. Decide cómo se expresa la relación en las rutas, y qué ocurre al pedir un recurso a través del otro.
+3. Impleméntalo con sus tres capas, reutilizando el manejador de errores y la validación.
+4. Decide qué pasa al borrar algo de lo que dependen otros elementos. Hay al menos tres políticas posibles: impedirlo, borrar en cascada o dejar la referencia huérfana. Elige, justifica y escríbelo en el contrato.
+5. Provoca la situación del apartado anterior y comprueba que tu decisión se cumple.
+6. Añade sus pruebas, incluida una de la relación.
+7. Anota cuánto código nuevo has escrito y cuánto has reutilizado. Esa proporción mide lo que valían las decisiones de las sesiones 1 y 3.
+
+##### Reto 2 · Datos que sobreviven al despliegue
+
+Tu fichero desaparece en cada reconstrucción del servicio. Resuélvelo sin romper la frontera del repositorio.
+
+1. Busca qué ofrece tu plataforma: disco persistente, base de datos gestionada o almacenamiento externo. Anota el coste y el límite de cada opción en su capa gratuita.
+2. Elige una y escribe un repositorio nuevo contra ella, con la misma lista de funciones. Ninguna ruta ni ningún servicio debe cambiar.
+3. Adapta el script de siembra para que funcione también contra el almacén nuevo.
+4. Despliega y comprueba que un producto creado sobrevive a un reinicio y a un despliegue.
+5. Decide cómo eliges el repositorio en cada entorno: memoria en las pruebas, fichero en tu máquina, el nuevo en producción. Un solo punto de decisión.
+6. Ejecuta la batería de pruebas contra el almacén de producción en un entorno aparte, y anota qué pruebas dejan de valer cuando los datos no se reinician entre ejecuciones.
+7. Escribe en tres líneas qué problema nuevo has adquirido. Un almacén externo puede tardar, puede caer y puede quedarse a medias, y esos tres casos ahora son tuyos.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>El recorrido completo funcionando desde una instalación limpia, la aplicación desplegada con su README y las tres auditorías marcadas.</span></div>
+  <div><strong>Si lo tienes</strong><span>La revisión del compañero devuelta por escrito y sus hallazgos incorporados, y la defensa preparada.</span></div>
+  <div><strong>Reto</strong><span>El segundo recurso completo con sus pruebas, o los datos sobreviviendo al despliegue.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · entrega y recuerdo</p>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
+  <ul class="checklist">
+    <li>El proyecto arranca desde una instalación limpia sin ayuda.</li>
+    <li>Tiene una URL pública y las variables viven en la plataforma.</li>
+    <li>El README basta para instalarlo y usar la API.</li>
+    <li>Las tres listas de auditoría están marcadas.</li>
+    <li>Has revisado un proyecto ajeno y recibido la revisión del tuyo.</li>
+    <li>Puedes explicar cualquier decisión del proyecto con el código delante.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
-    <li>Enséñame el recorrido de una petición desde que alguien pulsa un botón hasta que el dato se guarda.</li>
-    <li>¿Por qué esta ruta y no otra? ¿Por qué este código de estado?</li>
-    <li>¿Dónde validas y por qué no basta con hacerlo en el cliente?</li>
-    <li>Enséñame una decisión de accesibilidad y explícame a quién ayuda.</li>
-    <li>¿Qué pasa si tu API recibe un campo que no esperabas?</li>
-    <li>Si mañana hubiera que cambiar el fichero por una base de datos, ¿qué tocarías?</li>
-    <li>Enséñame el fallo que más te costó encontrar y cuéntame cómo lo encontraste.</li>
-    <li>¿Qué harías distinto si empezaras hoy el proyecto?</li>
+    <li>¿Qué hace quien recibe tu proyecto, paso a paso, antes de verlo funcionar?</li>
+    <li>¿Qué apartados no pueden faltar en un README?</li>
+    <li>¿Qué pasa con un fichero de datos en un servicio desplegado, y por qué?</li>
+    <li>¿De dónde salen las variables de entorno en producción?</li>
+    <li>Si hubiera que cambiar el almacén, ¿qué ficheros tocarías?</li>
+    <li>¿Qué se puntúa en este proyecto, si no es su tamaño?</li>
   </ol>
 </div>
 
-Las dos últimas valen tanto como las demás: saber qué te costó y qué harías distinto es la prueba de que has entendido lo que hiciste.
-
-#### Evaluación
-
-| Criterio | Puntos |
-| ---------------------------------------------------------- | -----: |
-| Diseño por recursos y contrato sostenido en toda la API | 1,5 |
-| CRUD completo con los códigos de estado del contrato | 1,5 |
-| Validación en el servidor, con lista blanca de campos | 1,5 |
-| Separación real en rutas, servicio y repositorio | 1,5 |
-| Contrato de errores único, usado de punta a punta | 1 |
-| Cliente conectado y formularios de extremo a extremo | 1 |
-| Configuración por entorno, seguridad mínima y escapado | 1 |
-| Pruebas automáticas en verde y aplicación desplegada | 1 |
-
-No puntúa el tamaño del proyecto. Puntúa que **el contrato se sostenga**: que cada ruta responda lo que promete, que ninguna entrada se crea sin validar y que puedas defender por qué está hecho así.
-
-#### Entrega final del módulo
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Clonar, configurar el entorno, instalar, sembrar, arrancar y usarlo en el navegador.</p>
+  <p>2 · Qué es, cómo se instala, las variables, la tabla de rutas, el formato de error, cómo probar y qué decisiones se tomaron.</p>
+  <p>3 · Que puede desaparecer en cada despliegue o reinicio, porque el contenedor se reconstruye.</p>
+  <p>4 · Del panel de la plataforma, nunca del repositorio.</p>
+  <p>5 · Solo el repositorio y el punto donde se elige cuál se usa.</p>
+  <p>6 · Que el contrato se sostenga de punta a punta y que puedas defender cada decisión.</p>
+</details>
 
 <div class="unit-deliverable">
   <p>El repositorio con la aplicación completa: cliente y API servidos juntos, capas separadas, contrato documentado, configuración por entorno, seguridad mínima y pruebas en verde. La URL del despliegue. El README con sus siete apartados. Las tres listas de auditoría marcadas. La revisión del compañero por escrito. Finalmente, un documento de una página con las tres decisiones técnicas de las que estés más satisfecho y las tres que cambiarías.</p>
 </div>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 6 · 10 minutos</p>
@@ -2107,6 +2142,7 @@ No puntúa el tamaño del proyecto. Puntúa que **el contrato se sostenga**: que
     <li>Si mañana el fichero JSON fuera una base de datos, ¿qué tocarías y qué no?</li>
   </ol>
 </div>
+
 ---
 
 ## Lo que debes recordar
