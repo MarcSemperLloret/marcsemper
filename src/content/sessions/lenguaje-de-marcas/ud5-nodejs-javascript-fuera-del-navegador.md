@@ -1521,27 +1521,31 @@ Tu servidor ya distingue 400 de 500. Ponlo a prueba con peticiones hostiles, que
 
 ## Sesión 5 · Del servidor a mano al framework
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Los límites de hacerlo a mano</strong>, <strong>El primer Express</strong> y <strong>Middleware, registro y errores</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Los límites de hacerlo a mano
+<p class="lead">Tres horas. Media hora para contar qué le falta a tu servidor y ver cómo lo resuelve Express, y dos horas y media reescribiéndolo pieza a pieza hasta dejar el registro y los errores en un solo sitio.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué problemas concretos tiene tu servidor, y qué tendrías que escribir para resolverlos.</li>
-    <li><strong>2. Haz:</strong> Documenta esos problemas sobre tu propio código.</li>
-    <li><strong>3. Comprueba:</strong> Puedes justificar por qué mañana instalamos algo.</li>
+    <li><strong>1. Aprende:</strong> Qué problemas concretos tiene tu servidor, qué pieza de Express resuelve cada uno, qué es un middleware y cómo se centralizan los errores.</li>
+    <li><strong>2. Haz:</strong> Documenta los límites de tu código, reescríbelo con Express ruta a ruta y añade registro y tratamiento central de errores.</li>
+    <li><strong>3. Comprueba:</strong> Se comporta igual que el de la semana pasada, con menos código, y ninguna ruta tiene ya su propio <code>try/catch</code>.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>¿Cuántas líneas ocupa hoy tu enrutado?</li>
+    <li>¿Cuántas líneas ocupa hoy tu enrutado, y cuál es su nivel máximo de anidamiento?</li>
     <li>¿Qué tendrías que tocar para añadir una ruta con dos parámetros?</li>
-    <li>¿Cuántas veces has repetido la lectura del cuerpo?</li>
+    <li>¿Cuántos <code>try/catch</code> hay repartidos por tus rutas?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy se instala la única dependencia de la unidad, y se instala después de haber escrito a mano lo que hace. Ese orden no es casual: es lo que convierte un framework en una herramienta en lugar de en una caja negra.
 
 #### La cuenta de lo que falta
 
@@ -1562,9 +1566,7 @@ Ninguna es imposible. Todas juntas son un framework, y ya existe uno pequeño y 
   <p>Y el día que Express se quede corto —una cabecera rara, un flujo que no encaja— sabrás bajar un nivel, porque ese nivel lo has escrito tú.</p>
 </div>
 
-#### El patrón que ya has escrito sin saberlo
-
-Mira tu servidor: seguro que hay cosas que haces **antes** de decidir la ruta —registrar la petición, analizar la URL— y cosas que haces **después** —cerrar, capturar errores—. Esa idea de «una cadena de pasos por los que atraviesa toda petición» tiene nombre, y es la pieza central de mañana:
+Mira tu servidor: seguro que hay cosas que haces **antes** de decidir la ruta —registrar la petición, analizar la URL— y cosas que haces **después** —cerrar, capturar errores—. Esa idea de «una cadena de pasos por los que atraviesa toda petición» tiene nombre, y es la pieza central de la sesión:
 
 <figure class="diagram">
   <figcaption>Una petición atravesando la cadena</figcaption>
@@ -1577,54 +1579,7 @@ Mira tu servidor: seguro que hay cosas que haces **antes** de decidir la ruta �
   </ol>
 </figure>
 
-#### Tarea 13 · El informe
-
-Sobre tu propio código:
-
-1. Cuenta las líneas del enrutado y el nivel máximo de anidamiento.
-2. Marca todo lo que se repite en más de una ruta.
-3. Escribe qué habría que cambiar para añadir `GET /api/categorias/:nombre/productos`.
-4. Escribe un comparador de rutas con parámetros y comprueba lo que cuesta.
-5. Redacta media página: qué problemas tiene tu servidor y qué esperas de un framework.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>El informe escrito, con ejemplos de tu código.</span></div>
-  <div><strong>Si lo tienes</strong><span>El comparador de rutas con parámetros, funcionando.</span></div>
-  <div><strong>Reto</strong><span>Implementa tu propia cadena de pasos por los que atraviesa la petición.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Nombras seis problemas concretos de tu servidor.</li>
-    <li>Sabes lo que costaría resolverlos a mano.</li>
-    <li>Entiendes la idea de una cadena de pasos.</li>
-    <li>Puedes justificar la dependencia que instalarás mañana.</li>
-  </ul>
-</div>
-
-
-### Bloque 2 · El primer Express
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es Express y cómo resuelve cada problema de ayer.</li>
-    <li><strong>2. Haz:</strong> Reescribe tu servidor con Express, ruta a ruta.</li>
-    <li><strong>3. Comprueba:</strong> Se comporta igual que el de ayer, con menos código.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>De los seis problemas de ayer, ¿cuáles crees que resolverá?</li>
-    <li>¿Qué esperas que siga siendo trabajo tuyo?</li>
-    <li>¿Cómo comprobarás que la reescritura no ha roto nada?</li>
-  </ol>
-</div>
-
-#### Instalar y arrancar
+#### El primer Express
 
 ```bash
 npm install express
@@ -1653,8 +1608,6 @@ app.listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`));
 
 Compáralo con lo de la semana pasada. Las dos primeras líneas sustituyen tu lector de cuerpo y tu servidor de estáticos enteros; `:id` sustituye el partido de texto a mano; y `respuesta.json` pone la cabecera, serializa y cierra.
 
-#### El mapa de equivalencias
-
 | A mano | Con Express |
 | ------ | ----------- |
 | Condicionales por método y ruta | `app.get`, `app.post`, `app.put`, `app.delete` |
@@ -1670,77 +1623,13 @@ Compáralo con lo de la semana pasada. Las dos primeras líneas sustituyen tu le
   <p>Un framework quita trabajo repetitivo. No quita responsabilidad.</p>
 </div>
 
-#### El orden importa
+Express recorre lo declarado **en orden** hasta que algo responde. De ahí dos consecuencias que causan casi todos los desconciertos del primer día: el analizador de cuerpo va antes que las rutas que lo usan, y el 404 va al final, después de todas.
 
 ```javascript
 app.use(express.json());            // antes de las rutas que leen el cuerpo
 app.get("/api/productos", ...);
 app.use((peticion, respuesta) => respuesta.status(404).json({ error: "No encontrado" }));
 ```
-
-Express recorre lo declarado **en orden** hasta que algo responde. De ahí dos consecuencias que causan casi todos los desconciertos del primer día: el analizador de cuerpo va antes que las rutas que lo usan, y el 404 va al final, después de todas.
-
-#### Tarea 14 · La reescritura
-
-1. Instala Express y anota qué cambió en `package.json` y en el bloqueo.
-2. Reescribe las rutas de lectura y comprueba con tu fichero `.http`.
-3. Reescribe la creación con validación y 201.
-4. Sustituye tu servidor de estáticos por el de Express.
-5. Añade el 404 final.
-6. Comprueba que las respuestas son idénticas a las de la semana pasada.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Todas las rutas reescritas y respondiendo igual.</span></div>
-  <div><strong>Si lo tienes</strong><span>Mueve las rutas a <code>src/rutas.js</code> con un router propio.</span></div>
-  <div><strong>Reto</strong><span>Compara líneas de código antes y después, y explica qué se ha ido.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Tu servidor funciona con Express y responde igual.</li>
-    <li>Sabes qué pieza de Express sustituye a cada cosa que escribiste.</li>
-    <li>Entiendes que el orden de declaración importa.</li>
-    <li>Sigues validando la entrada.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué hace <code>express.json()</code> y dónde debe declararse?</li>
-    <li>¿Dónde vive el identificador de <code>/api/productos/:id</code>?</li>
-    <li>¿Por qué el 404 va al final?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Analiza el cuerpo JSON de la petición, y va antes de las rutas que lo usan.</p>
-  <p>2 · En <code>peticion.params.id</code>, y llega como texto.</p>
-  <p>3 · Porque Express recorre en orden: si va antes, responde 404 a todo.</p>
-</details>
-
-
-### Bloque 3 · Middleware, registro y errores
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es un middleware, cómo se escribe uno propio y cómo se centralizan los errores.</li>
-    <li><strong>2. Haz:</strong> Añade registro de peticiones y un único punto de tratamiento de errores.</li>
-    <li><strong>3. Comprueba:</strong> Ninguna ruta tiene ya su propio <code>try/catch</code>.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuántos <code>try/catch</code> hay repartidos por tus rutas?</li>
-    <li>Si quisieras registrar el tiempo de cada petición, ¿dónde lo pondrías?</li>
-    <li>¿Qué debe ver el cliente cuando algo se rompe por dentro?</li>
-  </ol>
-</div>
 
 #### Qué es un middleware
 
@@ -1805,38 +1694,150 @@ Los **cuatro** parámetros son lo que distingue a un manejador de errores de un 
   <p>Registra el detalle en el servidor y responde un mensaje genérico con el estado correcto. Esa es la razón de que el manejador tenga la última palabra sobre qué sale.</p>
 </div>
 
-#### Tarea 15 · La cadena completa
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · del servidor propio al framework</p>
+
+El primer paso documenta lo que tienes antes de sustituirlo; sin él, la reescritura no enseña nada. Los dos últimos miden el cambio y provocan a propósito los tres fallos del primer día con Express.
+
+#### Paso 1 · El informe · 25 min
+
+Sobre tu propio código, antes de instalar nada:
+
+1. Cuenta las líneas del enrutado y el nivel máximo de anidamiento.
+2. Marca todo lo que se repite en más de una ruta.
+3. Escribe qué habría que cambiar para añadir `GET /api/categorias/:nombre/productos`.
+4. Escribe un comparador de rutas con parámetros y comprueba lo que cuesta. Basta con que funcione para un parámetro.
+5. Redacta media página: qué problemas tiene tu servidor y qué esperas de un framework.
+
+Guarda ese informe. Al final de la sesión lo vas a contrastar con lo que ha ocurrido de verdad.
+
+#### Paso 2 · La reescritura · 45 min
+
+Es el trabajo central de la sesión.
+
+1. Instala Express y anota qué cambió en `package.json` y en el fichero de bloqueo.
+2. Reescribe las rutas de lectura y comprueba con tu fichero `peticiones.http` de la sesión 4.
+3. Reescribe la creación con validación y 201.
+4. Sustituye tu servidor de estáticos por `express.static`.
+5. Añade el 404 final.
+6. Mueve las rutas a `src/rutas.js` con un router propio, para que `servidor.js` solo monte la aplicación.
+
+**Antes de continuar:** ejecuta el `peticiones.http` entero contra la versión nueva. Las respuestas deben ser **idénticas** a las de la semana pasada, código por código y cuerpo por cuerpo. Si alguna cambia, la reescritura ha modificado el comportamiento y eso no era el encargo.
+
+#### Paso 3 · La cadena completa · 45 min
 
 1. Escribe el middleware de registro con método, ruta, estado y tiempo.
 2. Escribe uno que rechace cuerpos demasiado grandes.
 3. Convierte todas tus rutas para que deleguen los errores con `next`.
 4. Escribe el manejador de errores central con sus tres casos.
-5. Comprueba que un fallo interno responde 500 sin filtrar la traza.
-6. Provoca un middleware sin `next` y observa qué ocurre.
+5. Comprueba que un fallo interno responde 500 **sin filtrar la traza** al cliente, y que la traza sí aparece en tu consola.
+6. Añade un identificador único a cada petición, sácalo en los registros y devuélvelo en la respuesta de error. Así, cuando alguien te diga «me ha dado un error», podrás encontrar su petición exacta.
+
+#### Paso 4 · Antes y después, en números · 15 min
+
+Recupera el informe del paso 1 y compáralo con el resultado.
+
+| Medida | A mano | Con Express | Qué se ha ido |
+| ------ | -----: | ----------: | ------------- |
+| Líneas del enrutado | | | |
+| Nivel máximo de anidamiento | | | |
+| Número de `try/catch` | | | |
+| Líneas para leer el cuerpo | | | |
+| Líneas para servir estáticos | | | |
+| Líneas para añadir una ruta nueva | | | |
+
+La última fila es la importante: mide el coste del **próximo** cambio, no el de este. Un framework se paga una vez y se cobra en cada ruta que añadas después.
+
+Responde también a esto: ¿qué parte de lo que esperabas en tu informe **no** te ha dado Express, y sigue siendo trabajo tuyo?
+
+#### Paso 5 · Los tres desconciertos del primer día · 20 min
+
+Provócalos a propósito, en este orden, y anota el síntoma exacto de cada uno. Son los tres que te van a pasar, y reconocerlos ahorra tardes enteras.
+
+1. **Pon `express.json()` después de la ruta que lee el cuerpo.** ¿Qué vale `peticion.body`? ¿Da algún error?
+2. **Pon el 404 final antes de las rutas.** ¿Qué responde `GET /api/productos`?
+3. **Escribe un middleware que no responda ni llame a `next`.** ¿Qué ve el cliente? ¿Qué aparece en tus registros?
+
+| Fallo provocado | Síntoma | ¿Hay error en consola? | Cómo lo reconocerás la próxima vez |
+| --------------- | ------- | ---------------------- | ---------------------------------- |
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
+
+El tercero es el peor de los tres, precisamente porque la columna del error está vacía.
+
+Añade un cuarto por tu cuenta: quita el `next` final del manejador de errores, dejándolo con tres parámetros. Comprueba qué pasa cuando una ruta falla.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto es el que de verdad cierra la unidad: escribir tú lo que acabas de instalar.
+
+##### Reto 1 · Tu propio mini-framework
+
+Has visto qué hace Express. Escribe una versión mínima tuya, sobre el módulo `http` nativo, y comprueba cuánto de la magia era magia.
+
+1. Implementa `use(fn)` que acumule middlewares en una lista.
+2. Implementa el recorrido de esa lista: cada middleware recibe `next`, y llamarlo pasa al siguiente. Si ninguno responde, se acaba en un 404.
+3. Implementa `get(patron, fn)` y `post(patron, fn)` con un comparador que entienda `:parametro` y deje el valor en `peticion.params`.
+4. Implementa un middleware `json()` propio que acumule el cuerpo y lo analice, tratando el JSON inválido como un 400.
+5. Reescribe con tu framework dos rutas de tu API y comprueba que responden igual.
+6. Cuenta las líneas que te ha costado y compáralas con lo que hace Express. Escribe en tres líneas qué has entendido de Express que antes no entendías, y qué **no** has implementado de lo que él sí hace.
+
+##### Reto 2 · Que las rutas no repitan el `try/catch`
+
+Todas tus rutas asíncronas terminan igual: un `try` con la lógica y un `catch` que llama a `next`. Eso es repetición, y la repetición se elimina.
+
+1. Escribe una función `envolver(fn)` que reciba un manejador asíncrono y devuelva otro que capture cualquier rechazo y lo pase a `next`.
+2. Aplícala a todas tus rutas y borra los `try/catch`. Comprueba que los errores siguen llegando al manejador central.
+3. Provoca un error dentro de una ruta asíncrona **sin** el envoltorio y anota qué pasa. En versiones antiguas de Express la petición se quedaba colgada; comprueba qué hace la tuya.
+4. Averigua desde qué versión de Express eso cambió, y qué implica para el código que encuentres por ahí.
+5. Como segunda parte, escribe un middleware que limite el tamaño del cuerpo y devuelva 413. Decide el límite y justifícalo.
+6. Explica en tres líneas por qué este envoltorio es, conceptualmente, lo mismo que `aplicarATodos` de la UD3: una función que recibe una función y devuelve otra.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Registro funcionando y errores centralizados en un único manejador.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade un identificador único a cada petición y sácalo en los registros y en la respuesta de error.</span></div>
-  <div><strong>Reto</strong><span>Escribe un envoltorio que capture los errores de las rutas asíncronas sin repetir <code>try/catch</code>.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>El informe escrito, todas las rutas reescritas respondiendo igual, y registro y errores centralizados.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de antes y después completa, y los tres desconciertos provocados con su síntoma anotado.</span></div>
+  <div><strong>Reto</strong><span>El mini-framework propio con middlewares y rutas con parámetros, o el envoltorio asíncrono con el límite de tamaño.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 5</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Tu servidor está reescrito con Express y se comporta igual.</li>
-    <li>Sabes qué pieza sustituye a cada cosa que escribiste a mano.</li>
+    <li>Nombras seis problemas concretos de tu servidor a mano.</li>
+    <li>Tu servidor está reescrito con Express y responde exactamente igual.</li>
+    <li>Sabes qué pieza sustituye a cada cosa que escribiste.</li>
     <li>El registro y los errores están en un solo sitio.</li>
+    <li>Sigues validando la entrada: Express no lo hace por ti.</li>
     <li>El cliente nunca ve una traza.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué hace <code>express.json()</code> y dónde debe declararse?</li>
+    <li>¿Dónde vive el identificador de <code>/api/productos/:id</code>, y de qué tipo llega?</li>
+    <li>¿Por qué el 404 va al final?</li>
+    <li>¿Qué ocurre si un middleware no responde ni llama a <code>next</code>?</li>
+    <li>¿En qué se distingue un manejador de errores de un middleware normal?</li>
+    <li>¿Por qué no se devuelve la traza al cliente?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Que la petición se queda colgada sin respuesta ni error.</p>
-  <p>2 · Cuatro parámetros, empezando por el error.</p>
-  <p>3 · Porque revela información interna del sistema y no ayuda a quien llama.</p>
+  <p>1 · Analiza el cuerpo JSON de la petición, y va antes de las rutas que lo usan.</p>
+  <p>2 · En <code>peticion.params.id</code>, y llega como texto.</p>
+  <p>3 · Porque Express recorre en orden: si va antes, responde 404 a todo.</p>
+  <p>4 · Que la petición se queda colgada sin respuesta ni error.</p>
+  <p>5 · En que tiene cuatro parámetros, empezando por el error.</p>
+  <p>6 · Porque revela información interna del sistema y no ayuda a quien llama.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 5 · 5–10 minutos</p>
@@ -1847,6 +1848,7 @@ Los **cuatro** parámetros son lo que distingue a un manejador de errores de un 
     <li>¿En qué se distingue un manejador de errores de un middleware normal?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 6 · Integración y entrega
