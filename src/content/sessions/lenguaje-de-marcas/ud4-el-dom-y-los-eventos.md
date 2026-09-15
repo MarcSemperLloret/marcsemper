@@ -1290,16 +1290,14 @@ Un formulario largo con cinco errores obliga a recorrerlo entero buscando cuále
 
 ## Sesión 4 · Estado y persistencia
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>El estado, una sola fuente de verdad</strong>, <strong>Filtros, orden y búsqueda en vivo</strong> y <strong>Recordar entre visitas</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · El estado, una sola fuente de verdad
+<p class="lead">Tres horas. Media hora para entender por qué la interfaz debe tener una sola fuente de verdad, y dos horas y media reescribiendo tu página alrededor de ella y haciendo que recuerde las preferencias entre visitas.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es el estado de una interfaz y por qué debe estar en un solo sitio.</li>
-    <li><strong>2. Haz:</strong> Reescribe tu página con el ciclo evento → estado → render.</li>
-    <li><strong>3. Comprueba:</strong> Ninguna decisión se toma leyendo la página.</li>
+    <li><strong>1. Aprende:</strong> Qué es el estado de una interfaz, el ciclo evento → estado → render, cómo se combinan varios filtros y cómo se guarda algo en el navegador sin fiarse de lo guardado.</li>
+    <li><strong>2. Haz:</strong> Reescribe tu página con un estado único, monta el panel de filtros completo y recuerda las preferencias.</li>
+    <li><strong>3. Comprueba:</strong> Ninguna decisión se toma leyendo la página, y un dato guardado corrupto no rompe nada.</li>
   </ol>
 </div>
 
@@ -1308,9 +1306,15 @@ Un formulario largo con cinco errores obliga a recorrerlo entero buscando cuále
   <ol>
     <li>Ahora mismo, ¿dónde está guardado qué filtro está activo?</li>
     <li>Si hubiera dos sitios donde consultarlo, ¿qué podría pasar?</li>
-    <li>¿Qué información necesitarías para volver a pintar la página exactamente igual?</li>
+    <li>¿Qué debería recordar tu web entre visitas? ¿Y qué no?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+La sesión tiene una sola idea, y es la que separa una página que funciona de una que se puede mantener: **la información vive en un sitio, y la página es su reflejo**. Todo lo demás de hoy se deduce de ahí.
 
 #### El problema que resuelve
 
@@ -1336,7 +1340,6 @@ export const estado = {
 #### El ciclo
 
 ```javascript
-// js/main.js
 function actualizar() {
   const visibles = aplicarFiltros(estado);
   pintarCatalogo(visibles, elementos.catalogo);
@@ -1346,11 +1349,6 @@ function actualizar() {
 
 elementos.buscador.addEventListener("input", (evento) => {
   estado.busqueda = evento.target.value;
-  actualizar();
-});
-
-elementos.orden.addEventListener("change", (evento) => {
-  estado.orden = evento.target.value;
   actualizar();
 });
 ```
@@ -1373,10 +1371,9 @@ Cada manejador hace exactamente dos cosas: **cambiar el estado** y **pedir que s
   <p>El DOM es <strong>salida</strong>, no memoria. Se escribe en él; no se lee de él.</p>
 </div>
 
-#### Aplicar los filtros en un sitio
+Los filtros se aplican **en cadena**, en un solo sitio: cada uno reduce lo que dejó el anterior, y el resultado son los productos que cumplen todo a la vez.
 
 ```javascript
-// js/catalogo.js — funciones de la UD3, combinadas
 export function aplicarFiltros(estado) {
   let resultado = estado.productos;
 
@@ -1388,75 +1385,9 @@ export function aplicarFiltros(estado) {
 }
 ```
 
-Una función pura: recibe el estado y devuelve la lista que toca. Se puede probar sin abrir el navegador, que es exactamente lo que la hace fácil de arreglar cuando algo falla.
+Es una función pura: recibe el estado y devuelve la lista que toca. Se puede probar sin abrir el navegador, que es exactamente lo que la hace fácil de arreglar cuando algo falla. Añadir un filtro nuevo pasa a ser añadir tres líneas.
 
-#### Tarea 10 · Reescribir con estado
-
-1. Crea `js/estado.js` con el objeto y sus valores iniciales.
-2. Escribe `aplicarFiltros(estado)` combinando tus funciones de la UD3.
-3. Escribe `actualizar()` como único punto que pinta.
-4. Convierte todos tus manejadores al patrón «cambia estado, actualiza».
-5. Elimina cualquier lectura del DOM que sirviera para decidir algo.
-6. Comprueba que cambiando el estado a mano desde la consola y llamando a `actualizar()` la página responde.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Estado único, una función de render y manejadores de dos líneas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Que <code>sincronizarControles</code> deje los campos coherentes con el estado.</span></div>
-  <div><strong>Reto</strong><span>Escribe el estado inicial en la URL y recupéralo al cargar.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Existe un único objeto de estado.</li>
-    <li>Los manejadores cambian estado y llaman a actualizar.</li>
-    <li>Ninguna decisión se toma leyendo el DOM.</li>
-    <li>Puedes reproducir cualquier vista fijando el estado a mano.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué es el estado de una interfaz?</li>
-    <li>¿Por qué el DOM no debe ser el almacén de datos?</li>
-    <li>¿Qué dos cosas hace un manejador de eventos?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Todo lo necesario para saber cómo debe verse la página ahora mismo.</p>
-  <p>2 · Porque tendrías dos fuentes de verdad que pueden contradecirse.</p>
-  <p>3 · Cambiar el estado y pedir que se vuelva a pintar.</p>
-</details>
-
-
-### Bloque 2 · Filtros, orden y búsqueda en vivo
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se combinan varios filtros y cómo se evita trabajar de más.</li>
-    <li><strong>2. Haz:</strong> Monta el panel de filtros completo de tu catálogo.</li>
-    <li><strong>3. Comprueba:</strong> Los filtros se combinan bien y el resultado se anuncia.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si hay búsqueda y categoría a la vez, ¿deben cumplirse las dos o basta una?</li>
-    <li>Al escribir «teclado» se disparan siete eventos. ¿Importa?</li>
-    <li>¿Cómo se entera de que hay tres resultados quien no ve la pantalla?</li>
-  </ol>
-</div>
-
-#### Combinar filtros
-
-Los filtros se aplican **en cadena**: cada uno reduce lo que dejó el anterior, y el resultado son los productos que cumplen todo a la vez. Ese encadenamiento ya lo escribiste ayer en `aplicarFiltros`, y es la razón de que añadir un filtro nuevo sea añadir tres líneas.
-
-Dos decisiones de producto que hay que tomar a conciencia:
+Hay además dos decisiones de producto que conviene tomar a conciencia:
 
 | Situación | Decisión razonable |
 | --------- | ------------------ |
@@ -1477,11 +1408,6 @@ function retrasar(funcion, milisegundos = 250) {
     temporizador = setTimeout(() => funcion(...argumentos), milisegundos);
   };
 }
-
-elementos.buscador.addEventListener("input", retrasar((evento) => {
-  estado.busqueda = evento.target.value;
-  actualizar();
-}, 250));
 ```
 
 <p class="term">Debounce</p>
@@ -1510,69 +1436,7 @@ export function pintarResumen(visibles, total, destino) {
   <p>Una región con <code>aria-live="polite"</code> hace que el lector anuncie el nuevo texto sin interrumpir. Es una línea de HTML y cambia por completo la experiencia.</p>
 </div>
 
-#### Tarea 11 · El panel completo
-
-1. Añade al menos tres controles: búsqueda, categoría y orden.
-2. Genera las opciones de categoría **desde los datos**, no a mano.
-3. Añade una casilla de «solo disponibles».
-4. Aplica el retraso a la búsqueda y comprueba la diferencia en consola.
-5. Anuncia el número de resultados en una región activa.
-6. Añade un botón de limpiar que restaure el estado inicial.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres filtros combinables, resumen anunciado y botón de limpiar.</span></div>
-  <div><strong>Si lo tienes</strong><span>Rango de precio con dos campos y validación de que el mínimo no supera al máximo.</span></div>
-  <div><strong>Reto</strong><span>Muestra las «pastillas» de filtros activos, cada una con su botón de quitar.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Los filtros se combinan y ninguno pisa a otro.</li>
-    <li>Las opciones se generan desde los datos.</li>
-    <li>La búsqueda no recalcula con cada tecla.</li>
-    <li>El número de resultados se anuncia a los lectores de pantalla.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué hace un <em>debounce</em>?</li>
-    <li>¿Qué debe hacer un precio máximo vacío?</li>
-    <li>¿Para qué sirve <code>aria-live</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Esperar a que pare la ráfaga de eventos y ejecutar una sola vez.</p>
-  <p>2 · No filtrar: significa «sin límite», no cero.</p>
-  <p>3 · Para que un lector de pantalla anuncie los cambios de esa zona sin que haya que moverse hasta ella.</p>
-</details>
-
-
-### Bloque 3 · Recordar entre visitas
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se guardan datos en el navegador y qué límites tiene.</li>
-    <li><strong>2. Haz:</strong> Recuerda las preferencias de tu usuario entre visitas.</li>
-    <li><strong>3. Comprueba:</strong> Un dato guardado corrupto no rompe la página.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué debería recordar tu web entre visitas? ¿Y qué no?</li>
-    <li>¿Dónde crees que se guarda eso?</li>
-    <li>¿Qué pasaría si alguien edita a mano lo guardado?</li>
-  </ol>
-</div>
-
-#### Guardar y recuperar
+#### Recordar entre visitas
 
 ```javascript
 localStorage.setItem("preferencias", JSON.stringify(preferencias));
@@ -1588,13 +1452,19 @@ Solo guarda **texto**, así que todo pasa por `JSON.stringify` y `JSON.parse`: l
 | `sessionStorage` | Hasta cerrar la pestaña | Datos de un proceso en curso |
 | Cookies | Según se configuren | Sesión de servidor (UD6) |
 
-#### Leer con desconfianza
-
 <div class="rule">
   <p class="rule-label">Lo guardado es entrada externa</p>
   <p>Cualquiera puede abrir DevTools y editarlo. Puede estar corrupto, puede ser de una versión anterior de tu web, puede no estar. Si tu código hace <code>JSON.parse</code> a pelo, un valor manipulado deja la página en blanco.</p>
   <p>Léelo dentro de un <code>try/catch</code>, valida su forma, y si algo no cuadra, usa los valores por defecto y sigue. Es el mismo principio de la UD3: validar en el borde.</p>
 </div>
+
+<div class="rule">
+  <p class="rule-label">Nunca datos personales ni credenciales</p>
+  <p>Lo que guardes ahí es legible por cualquiera que se siente delante del equipo y por cualquier código que se ejecute en tu página. Preferencias de interfaz, sí. Contraseñas, tokens, datos de tarjetas o información personal, no.</p>
+  <p>Y si guardas algo que identifique a una persona, entras en el terreno del consentimiento y la protección de datos, que es harina de otro costal.</p>
+</div>
+
+Así queda una lectura que no se puede romper desde fuera:
 
 ```javascript
 const PREFERENCIAS_POR_DEFECTO = { categoria: "todas", orden: "precio-asc" };
@@ -1615,48 +1485,135 @@ export function leerPreferencias() {
 }
 ```
 
-#### Qué se guarda y qué no
+Hay además límites de tamaño —unos pocos megabytes— y el acceso puede fallar directamente en navegación privada o con el almacenamiento bloqueado. Otra razón para el `try/catch`.
 
-<div class="rule">
-  <p class="rule-label">Nunca datos personales ni credenciales</p>
-  <p>Lo que guardes ahí es legible por cualquiera que se siente delante del equipo y por cualquier código que se ejecute en tu página. Preferencias de interfaz, sí. Contraseñas, tokens, datos de tarjetas o información personal, no.</p>
-  <p>Y si guardas algo que identifique a una persona, entras en el terreno del consentimiento y la protección de datos, que es harina de otro costal.</p>
-</div>
+### Se trabaja
 
-También hay límites de tamaño —unos pocos megabytes— y el acceso puede fallar directamente en navegación privada o con el almacenamiento bloqueado. Otra razón para el `try/catch`.
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
 
-#### Tarea 12 · Preferencias que duran
+El primer paso reescribe lo que ya tenías; parece un retroceso y es el cambio más rentable de la unidad. Los cuatro siguientes construyen encima.
+
+#### Paso 1 · Reescribir con estado · 40 min
+
+1. Crea `js/estado.js` con el objeto y sus valores iniciales.
+2. Escribe `aplicarFiltros(estado)` combinando tus funciones de la UD3.
+3. Escribe `actualizar()` como único punto que pinta.
+4. Convierte todos tus manejadores al patrón «cambia estado, actualiza». Ninguno debe pasar de tres líneas.
+5. Elimina cualquier lectura del DOM que sirviera para decidir algo. Busca `classList.contains` y `.value` fuera de los manejadores: ahí suelen estar.
+6. Escribe `sincronizarControles(estado, elementos)` para que los campos reflejen el estado, y no al revés.
+
+**Antes de continuar:** ninguna función que no sea `actualizar` o una de render toca el DOM.
+
+#### Paso 2 · El panel completo · 40 min
+
+1. Añade al menos tres controles: búsqueda, categoría y orden.
+2. Genera las opciones de categoría **desde los datos**, no a mano. Si mañana aparece una categoría nueva, el desplegable debe incluirla sin tocar el HTML.
+3. Añade una casilla de «solo disponibles».
+4. Aplica el retraso a la búsqueda y comprueba la diferencia contando ejecuciones en consola.
+5. Anuncia el número de resultados en una región con `aria-live`.
+6. Añade un botón de limpiar que restaure el estado inicial y devuelva el foco al buscador.
+
+#### Paso 3 · Preferencias que duran · 35 min
 
 1. Guarda categoría, orden y vista compacta al cambiarlas.
-2. Recupéralas al arrancar y aplícalas al estado antes del primer render.
+2. Recupéralas al arrancar y aplícalas al estado **antes** del primer render.
 3. Valida lo leído y usa valores por defecto si no cuadra.
-4. Estropea a mano el valor guardado desde DevTools y comprueba que la web aguanta.
-5. Añade un botón de «restablecer preferencias».
-6. Escribe en tus notas qué has decidido no guardar, y por qué.
+4. Añade un botón de «restablecer preferencias».
+5. Escribe en tus notas qué has decidido **no** guardar, y por qué. El término de búsqueda es el caso interesante: piensa qué se encuentra alguien al volver mañana.
+
+#### Paso 4 · Rompe lo que has guardado · 15 min
+
+Abre DevTools, ve al almacenamiento local y estropea el valor a mano. Prueba estos cinco casos y anota qué hace tu web con cada uno:
+
+| Lo que hay guardado | Qué debería pasar | Qué pasa | Corrección |
+| ------------------- | ----------------- | -------- | ---------- |
+| Nada, primera visita | | | |
+| Un JSON válido pero con campos de más | | | |
+| Un JSON válido con `orden` puesto a un número | | | |
+| Texto que no es JSON | | | |
+| Un JSON con una categoría que ya no existe | | | |
+
+Los dos últimos son los que suelen dejar la página en blanco. El tercero es más sutil: el JSON es válido, el campo existe, y su valor no sirve.
+
+#### Paso 5 · La página desde la consola · 20 min
+
+Si el estado es de verdad la única fuente de verdad, debería poder gobernarse sin tocar la interfaz.
+
+1. Desde la consola, cambia `estado.categoria` a mano y llama a `actualizar()`. La página debe responder.
+2. Repítelo con los cinco campos del estado.
+3. Comprueba que **los controles también se actualizan**: el desplegable debe mostrar la categoría que has puesto. Si no lo hace, te falta `sincronizarControles`.
+4. Pon el estado en una combinación concreta, anótala, recarga la página y vuelve a ponerla. ¿Se ve exactamente lo mismo? Si no, hay información viviendo fuera del estado: encuéntrala.
+5. Escribe en un comentario qué campo del estado te ha costado más reproducir, y por qué.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos empujan el estado fuera de la memoria: a la URL y al futuro.
+
+##### Reto 1 · El estado en la dirección
+
+Ahora mismo, si alguien filtra por «teclados», ordena por precio y quiere enseñárselo a otra persona, no puede: la dirección de la página es la misma que al entrar.
+
+1. Escribe los filtros activos en la URL con `URLSearchParams` y `history.replaceState`, de modo que la barra de direcciones refleje el estado.
+2. Al cargar la página, lee la URL y úsala para inicializar el estado.
+3. Decide qué gana cuando hay conflicto: lo que dice la URL o lo que había guardado en las preferencias. No hay una respuesta única; justifica la tuya.
+4. Comprueba que copiar la dirección y abrirla en otra pestaña reproduce exactamente la misma vista.
+5. Ahora el botón de retroceso: usa `pushState` en lugar de `replaceState` para un filtro concreto y escucha `popstate`. ¿Qué gana y qué pierde la interfaz? Anótalo: hay un motivo real para no guardar en el historial cada pulsación del buscador.
+6. Con esto acabas de reproducir lo que hace cualquier tienda en línea. Escribe en tres líneas qué ventaja tiene para quien usa la web, más allá de compartir el enlace.
+
+##### Reto 2 · Lo guardado de la versión anterior
+
+Tu web ya funciona. Dentro de dos meses la cambias, y quienes vuelvan traerán en su navegador las preferencias del formato viejo.
+
+1. Simula el escenario: guarda a mano unas preferencias con el formato actual, cambia después la estructura del objeto —renombra `orden` como `ordenacion` y añade un campo nuevo—, y recarga.
+2. Anota qué ocurre. Con suerte tu lectura defensiva lo salva; lo que seguro se pierde es la preferencia de la persona.
+3. Añade un campo `version` a lo guardado y escribe una función `migrar(datos)` que convierta el formato antiguo al nuevo en lugar de descartarlo.
+4. Comprueba las tres situaciones: sin nada guardado, con el formato viejo y con el nuevo.
+5. Decide qué hacer con una versión **más nueva** que la que entiende tu código, que ocurre cuando alguien abre una pestaña antigua. Es el caso que casi nadie contempla.
+6. Escribe en tres líneas por qué esto no es una manía: relaciona la respuesta con lo que ocurrirá en la UD6 cuando los datos vivan en un servidor y el formato cambie.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres preferencias que sobreviven a recargar, con lectura defensiva.</span></div>
-  <div><strong>Si lo tienes</strong><span>Guarda también el término de búsqueda y decide si eso es buena idea.</span></div>
-  <div><strong>Reto</strong><span>Versiona lo guardado con una clave de versión y migra el formato antiguo.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Estado único con manejadores de tres líneas, tres filtros combinables con su resumen anunciado, y preferencias que sobreviven a recargar.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de datos corruptos contestada y la página gobernada entera desde la consola.</span></div>
+  <div><strong>Reto</strong><span>El estado reflejado en la URL y compartible, o la migración de preferencias entre versiones.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 4</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Un único estado gobierna toda la interfaz.</li>
-    <li>Los filtros se combinan y se anuncian.</li>
-    <li>Las preferencias sobreviven a la recarga.</li>
+    <li>Existe un único objeto de estado y ninguna decisión se toma leyendo el DOM.</li>
+    <li>Los manejadores cambian estado y llaman a actualizar.</li>
+    <li>Los filtros se combinan en un solo sitio y ninguno pisa a otro.</li>
+    <li>Las opciones de categoría se generan desde los datos.</li>
+    <li>El número de resultados se anuncia a los lectores de pantalla.</li>
     <li>Un dato guardado inválido no rompe nada.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué es el estado de una interfaz?</li>
+    <li>¿Por qué el DOM no debe ser el almacén de datos?</li>
+    <li>¿Qué dos cosas hace un manejador de eventos?</li>
+    <li>¿Qué hace un <em>debounce</em>?</li>
+    <li>¿Para qué sirve <code>aria-live</code>?</li>
+    <li>¿Por qué hay que desconfiar de lo guardado en el navegador?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Solo texto: hay que serializar con JSON.</p>
-  <p>2 · Porque es editable por cualquiera y puede venir de una versión anterior de la web.</p>
-  <p>3 · Preferencias de interfaz; nunca credenciales ni datos personales.</p>
+  <p>1 · Todo lo necesario para saber cómo debe verse la página ahora mismo.</p>
+  <p>2 · Porque tendrías dos fuentes de verdad que pueden contradecirse.</p>
+  <p>3 · Cambiar el estado y pedir que se vuelva a pintar.</p>
+  <p>4 · Esperar a que pare la ráfaga de eventos y ejecutar una sola vez.</p>
+  <p>5 · Para que un lector de pantalla anuncie los cambios de esa zona sin que haya que moverse hasta ella.</p>
+  <p>6 · Porque es editable por cualquiera y puede venir de una versión anterior de la web.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 4 · 5–10 minutos</p>
@@ -1667,6 +1624,7 @@ También hay límites de tamaño —unos pocos megabytes— y el acceso puede fa
     <li>¿Qué debe hacer un precio máximo vacío, y por qué no puede valer cero?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 5 · Datos remotos
