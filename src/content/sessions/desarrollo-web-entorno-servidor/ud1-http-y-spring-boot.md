@@ -900,6 +900,76 @@ Contrastad después las respuestas con el código. Una URL que la otra persona n
 1. Prueba el saludo con el parámetro ausente, vacío y con un nombre. Con `defaultValue="mundo"`, los dos primeros deben devolver `Hola, mundo.`.
 2. Consulta el detalle con `7` y con `abc`: el primero devuelve el texto que has programado y el segundo produce 400 al no poder convertirse a entero. Un número como `999` todavía no permite saber si existe un registro: esa búsqueda aún no está implementada.
 
+#### Criterios de diseño de las consultas GET
+
+La regla de la ruta y la query string resuelve dónde colocar cada dato, pero no agota el diseño de una consulta. El método `GET` tiene un significado fijado por el protocolo, y de ese significado salen los criterios que aplicarás a cada ruta de consulta que escribas durante el curso.
+
+##### Para qué se usa un GET en una aplicación real
+
+Las pantallas de una aplicación de gestión se sostienen sobre un repertorio corto de consultas. Las cuatro rutas del `ProyectoController` cubren las tres primeras filas, y la búsqueda por prioridad y página que has añadido en el paso 5 corresponde a las dos últimas.
+
+| Necesidad de la aplicación | Petición | Forma de consulta |
+| :--- | :--- | :--- |
+| Mostrar la pantalla de listado | `GET /proyectos` | colección |
+| Abrir la ficha de un elemento | `GET /proyectos/7` | recurso individual |
+| Recorrer lo que pertenece a ese elemento | `GET /proyectos/7/incidencias` | subcolección |
+| Acotar una lista extensa | `GET /incidencias?estado=abierta&prioridad=alta` | filtro |
+| Rellenar un desplegable de un formulario | `GET /usuarios?rol=tecnico` | filtro |
+| Recorrer una lista larga por partes | `GET /incidencias?pagina=2&tamano=20` | paginación |
+
+Las seis comparten una característica que conviene nombrar antes de seguir: ninguna modifica nada.
+
+##### `GET` es un método seguro
+
+<p class="term">Método seguro</p>
+
+Un método HTTP es *seguro* (*safe*) cuando la petición no solicita ningún cambio en el estado del servidor y se limita a pedir una representación de algo que ya existe. `GET`, `HEAD` y `OPTIONS` son seguros; `POST`, `PUT`, `PATCH` y `DELETE` no lo son. La definición figura en la [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html#name-safe-methods), la norma vigente de la semántica de HTTP.
+
+De esa propiedad depende el comportamiento de toda la infraestructura situada entre el cliente y tu servidor.
+
+<div class="rule">
+  <p class="rule-label">Consecuencias de la seguridad del método</p>
+  <p>Un <code>GET</code> se repite sin consultar a nadie. El navegador lo reemite al recargar la página y al usar el botón de retroceso, la caché conserva su respuesta, un intermediario lo reintenta cuando la red falla, el navegador lo precarga cuando anticipa que el enlace se va a seguir y los rastreadores de los buscadores recorren cuantas direcciones encuentran publicadas.</p>
+  <p>Por ese motivo, una dirección como <code>GET /incidencias/41/cerrar</code> constituye un defecto de diseño y no un atajo cómodo. La incidencia se cerraría al recargar la página, al volver atrás o al abrir el enlace guardado en marcadores, sin que nadie hubiera solicitado esa operación. Las acciones que modifican datos se envían con los métodos que aparecen en la sesión 3.</p>
+</div>
+
+##### La URL es el identificador de la consulta
+
+Un `GET` no lleva cuerpo, de modo que la URL contiene todo lo que determina la respuesta. De ahí se derivan dos prácticas.
+
+La primera: **una misma URL debe devolver la misma respuesta mientras los datos no cambien.** Una consulta cuyo resultado dependa de un estado oculto, como el orden en que se hayan pedido otras rutas antes, no se puede cachear, ni guardar en marcadores, ni compartir con otra persona, ni reproducir en un informe de error.
+
+La segunda afecta a la privacidad:
+
+<div class="rule">
+  <p class="rule-label">Datos que no pueden viajar en la query string</p>
+  <p>La URL queda escrita en el historial del navegador, en los registros de acceso del servidor y de los intermediarios, y en la cabecera <code>Referer</code> que el navegador envía al sitio que se visite a continuación. HTTPS la cifra durante el tránsito, pero no impide que el destino y esos registros la conserven en claro de forma indefinida.</p>
+  <p>Por tanto, una contraseña, un token de sesión o un dato personal identificable no se envían como parámetro de consulta. Su lugar son las cabeceras de la petición, que se tratan en la UD9.</p>
+</div>
+
+##### Criterios para declarar los parámetros
+
+Tres decisiones se repiten cada vez que escribes la firma de un método de consulta:
+
+* **Obligatorio solo lo imprescindible.** Un parámetro se declara obligatorio cuando la consulta carece de sentido sin él. Para el resto existe `defaultValue`, y cada `400` evitable es una petición que el cliente había construido con una intención razonable.
+* **El mismo concepto recibe el mismo nombre en toda la API.** Si la página se llama `pagina` en un controlador, no puede llamarse `page` en el siguiente. Quien consume la API aprende ese vocabulario una sola vez y lo aplica a todos los recursos.
+* **Toda colección acaba necesitando un límite superior.** Hoy tus listados devuelven una frase fija y el problema no se manifiesta. Cuando los datos procedan de PostgreSQL en la UD5, un `GET /incidencias` sin acotar recorrerá la tabla entera; la paginación se introduce en la UD7.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Lista de verificación del diseño de una consulta GET</p>
+  <ul class="checklist">
+    <li>Ninguna ruta contiene un verbo ni produce cambios en los datos.</li>
+    <li>Lo que identifica al recurso está en la ruta, y lo que acota la consulta, en la query string.</li>
+    <li>Cada parámetro obligatorio lo es porque la consulta no significa nada sin él.</li>
+    <li>Los parámetros opcionales declaran un valor por defecto, o su ausencia se comprueba dentro del método.</li>
+    <li>El mismo concepto recibe el mismo nombre en todos los controladores.</li>
+    <li>Ninguna credencial ni dato personal aparece en la URL.</li>
+  </ul>
+</div>
+
+Repasa con esta lista las rutas escritas hoy antes de pasar al cierre.
+
+
 #### Ampliación si has completado el trabajo
 
 Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
