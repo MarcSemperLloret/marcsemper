@@ -179,17 +179,18 @@ Si vas justo de tiempo, prioriza lo esencial. Un `reduce` elegante no compensa n
 | **Sesión 6** | Integración y entrega | Reto acumulativo, refactorización y revisión por pares | 3 h |
 | **Total** | | **Un módulo de catálogo en JavaScript puro** | **18 h** |
 
-Cada sesión dura tres horas, repartidas en tres bloques de una hora. Cada bloque mantiene el ritmo de las unidades anteriores:
+Cada sesión dura tres horas y mantiene el reparto de las unidades anteriores: la teoría se concentra al principio y el resto de la tarde se programa. Un lenguaje no se aprende escuchando su sintaxis, sino prediciendo lo que va a hacer y comprobando si acertabas.
 
 <figure class="diagram">
-  <figcaption>El ritmo de cada bloque de una hora</figcaption>
+  <figcaption>El ritmo de cada sesión de tres horas</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>Recupera · 5 min</li>
-    <li>Aprende y predice · 10–20 min</li>
-    <li>Practica · 30–40 min</li>
-    <li>Cierra · 5 min</li>
+    <li>Se explica · 25 min</li>
+    <li>Se trabaja · 150 min</li>
+    <li>Cierre · 5 min</li>
   </ol>
 </figure>
+
+El bloque de trabajo se divide en pasos cronometrados, y cada sesión termina con una **ampliación** de dos retos para quien acabe antes: trabajan sobre código ajeno o sobre datos que no se comportan, y piden justificar decisiones por escrito.
 
 El reparto real del tiempo es este:
 
@@ -2199,16 +2200,14 @@ Tu búsqueda ya ignora mayúsculas y espacios. Sigue sin encontrar «teclado mec
 
 ## Sesión 6 · Integración y entrega
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Reto acumulativo · un dominio desconocido</strong>, <strong>Refactorizar y leer código ajeno</strong> y <strong>Auditoría final, revisión por pares y entrega</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Reto acumulativo · un dominio desconocido
+<p class="lead">Tres horas. Media hora para aprender a leer y mejorar código ajeno sin cambiar lo que hace, y dos horas y media modelando un dominio que no has visto, refactorizando un fichero heredado y cerrando la entrega.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Nada nuevo. Hoy se comprueba si lo anterior es tuyo.</li>
-    <li><strong>2. Haz:</strong> Modela y consulta un dominio que no has visto antes.</li>
-    <li><strong>3. Comprueba:</strong> Lo resuelves sin copiar de tu propio proyecto.</li>
+    <li><strong>1. Aprende:</strong> Nada nuevo del lenguaje. Qué señales indican que un código se puede mejorar sin cambiar su comportamiento, y qué se revisa antes de dar un módulo por terminado.</li>
+    <li><strong>2. Haz:</strong> Modela y consulta un dominio desconocido, refactoriza un fichero que funciona pero está mal escrito, y audita tu proyecto y el de un compañero.</li>
+    <li><strong>3. Entrega:</strong> Los cuatro módulos, la lista de auditoría, la revisión del compañero y tus tres decisiones.</li>
   </ol>
 </div>
 
@@ -2216,17 +2215,21 @@ Tu búsqueda ya ignora mayúsculas y espacios. Sigue sin encontrar «teclado mec
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Ante datos nuevos, ¿qué decides primero: la estructura o las funciones?</li>
-    <li>¿Qué preguntas se le hacen siempre a una colección?</li>
-    <li>¿Qué comprobaciones no pueden faltar?</li>
+    <li>¿Qué es lo primero que miras al abrir código de otra persona?</li>
+    <li>¿Cómo sabes que una mejora no ha roto nada?</li>
   </ol>
 </div>
 
-#### El encargo
+### Se explica
 
-Recibirás un enunciado con un dominio distinto del tuyo —una biblioteca, un gimnasio, una liga deportiva, una clínica— descrito en prosa, con datos de ejemplo desordenados y unas cuantas preguntas que hay que poder responder.
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy no entra nada nuevo del lenguaje. Entra lo que se hace con el lenguaje cuando el código ya existe: leerlo, mejorarlo sin romperlo y decidir si está terminado.
+
+#### El camino, que ya es el mismo de siempre
 
 <figure class="diagram">
-  <figcaption>El camino, que ya es el mismo de siempre</figcaption>
+  <figcaption>Cómo se ataca un dominio nuevo</figcaption>
   <ol class="flow">
     <li>Identificar las entidades y sus propiedades</li>
     <li>Modelarlas como array de objetos</li>
@@ -2236,57 +2239,12 @@ Recibirás un enunciado con un dominio distinto del tuyo —una biblioteca, un g
   </ol>
 </figure>
 
-#### Las condiciones
-
 <div class="rule">
   <p class="rule-label">Sin copiar y pegar de tu proyecto</p>
   <p>Puedes consultar tus apuntes y la documentación. Lo que no vale es duplicar tu <code>catalogo.js</code> y renombrar variables: la sesión sirve justamente para comprobar si sabrías escribirlo otra vez.</p>
 </div>
 
-Las funciones deben cubrir, como mínimo: listar, buscar por texto, filtrar por un criterio numérico, ordenar por dos campos distintos, calcular un agregado y detectar un caso especial.
-
-#### Entrega de la sesión
-
-Un módulo con los datos, otro con las consultas, y un principal que responda por consola a las preguntas del enunciado. Con la lista vacía tratada.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Modelo correcto y cuatro de las seis consultas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Las seis, con validación y casos límite comprobados.</span></div>
-  <div><strong>Reto</strong><span>Añade una consulta compuesta que no estuviera en el enunciado y justifica por qué es útil.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Has modelado un dominio nuevo sin ayuda.</li>
-    <li>Cada pregunta tiene su función, y cada función devuelve.</li>
-    <li>Has elegido el método de array por lo que devuelve.</li>
-    <li>Has probado el caso vacío.</li>
-  </ul>
-</div>
-
-
-### Bloque 2 · Refactorizar y leer código ajeno
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué señales indican que un código se puede mejorar sin cambiar lo que hace.</li>
-    <li><strong>2. Haz:</strong> Refactoriza un fichero que funciona pero está mal escrito.</li>
-    <li><strong>3. Comprueba:</strong> El comportamiento no ha cambiado, y la lectura sí.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué es lo primero que miras al abrir código de otra persona?</li>
-    <li>¿Qué hace que un fragmento sea difícil de leer?</li>
-    <li>¿Cómo sabes que una mejora no ha roto nada?</li>
-  </ol>
-</div>
-
-#### Las señales
+#### Las señales de un código que pide una revisión
 
 | Señal | Qué suele significar | Qué se hace |
 | ----- | -------------------- | ----------- |
@@ -2334,45 +2292,55 @@ Antes de tocar, escribe en un fichero las respuestas actuales del programa para 
 
 Eso es, en versión manual, lo que en el módulo de servidor harán los tests automáticos.
 
-#### Tarea 17 · El fichero heredado
+#### Leer el código de otra persona
+
+La revisión de hoy no es de estilo. Se hace en cuatro pasos, y el primero no incluye preguntarle nada a su autor:
+
+1. Ejecutar el programa y describir qué hace.
+2. Elegir dos funciones y explicarlas en voz alta.
+3. Buscarle tres entradas que lo rompan.
+4. Señalar una cosa bien hecha y una mejorable, con su razón.
+
+Si no consigues completar el primer paso sin ayuda, eso ya es un hallazgo sobre el código, y es el más importante que le puedes devolver.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · dominio nuevo, código heredado y cierre del proyecto</p>
+
+Los dos primeros pasos son los largos: uno escribe desde cero, el otro repara lo que escribió otro. Los tres últimos cierran la unidad.
+
+#### Paso 1 · Un dominio desconocido · 55 min
+
+Recibirás un enunciado con un dominio distinto del tuyo —una biblioteca, un gimnasio, una liga deportiva, una clínica— descrito en prosa, con datos de ejemplo desordenados y unas cuantas preguntas que hay que poder responder.
+
+##### 1.1 · Primero el modelo
+
+Identifica las entidades y sus propiedades y escríbelas en papel antes de programar. Decide qué campo actúa de identificador y de qué tipo es cada propiedad.
+
+##### 1.2 · Después las consultas
+
+Escribe una función por pregunta. Deben cubrir, como mínimo: listar, buscar por texto, filtrar por un criterio numérico, ordenar por dos campos distintos, calcular un agregado y detectar un caso especial.
+
+##### 1.3 · Y por último las comprobaciones
+
+Valida la entrada en el borde y prueba cada consulta con un caso normal, uno límite y la colección vacía.
+
+**La entrega del paso:** un módulo con los datos, otro con las consultas, y un principal que responda por consola a las preguntas del enunciado.
+
+#### Paso 2 · El fichero heredado · 45 min
 
 Recibirás un módulo de unas cien líneas que funciona pero está mal escrito:
 
-1. Ejecútalo y anota su comportamiento con seis entradas.
-2. Localiza cinco señales de la tabla.
-3. Refactoriza en pasos pequeños, comprobando después de cada uno.
+1. Ejecútalo y anota su comportamiento con seis entradas. Esta lista es tu red de seguridad.
+2. Localiza cinco señales de la tabla de la explicación.
+3. Refactoriza en pasos pequeños, comprobando después de **cada uno**.
 4. Escribe un comentario por cada cambio explicando qué señal atacaba.
-5. Demuestra que el comportamiento es idéntico.
+5. Demuestra que el comportamiento es idéntico comparando con la lista del apartado 1.
+6. Reduce el anidamiento máximo a dos niveles en todo el fichero.
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Cinco mejoras aplicadas y comportamiento idéntico demostrado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Reduce el anidamiento máximo a dos niveles en todo el fichero.</span></div>
-  <div><strong>Reto</strong><span>Encuentra el fallo lógico que el fichero esconde, y sepáralo de la refactorización.</span></div>
-</div>
+Si en algún momento una comprobación deja de coincidir, deshaz ese paso antes de seguir. Refactorizar sobre un cambio de comportamiento no detectado es cómo se pierde una tarde entera.
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Reconoces las señales de un código difícil de mantener.</li>
-    <li>Refactorizas en pasos pequeños y comprobables.</li>
-    <li>Usas salidas tempranas en lugar de anidar.</li>
-    <li>Distingues refactorizar de modificar.</li>
-  </ul>
-</div>
-
-
-### Bloque 3 · Auditoría final, revisión por pares y entrega
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué se revisa en un módulo de JavaScript antes de darlo por terminado.</li>
-    <li><strong>2. Haz:</strong> Audita tu proyecto, revisa el de un compañero y corrige.</li>
-    <li><strong>3. Comprueba:</strong> Puedes defender cada decisión de tu código.</li>
-  </ol>
-</div>
-
-#### La lista de auditoría
+#### Paso 3 · La auditoría final · 20 min
 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría · el código</p>
@@ -2399,36 +2367,38 @@ Recibirás un módulo de unas cien líneas que funciona pero está mal escrito:
   </ul>
 </div>
 
-#### Revisión por pares
+#### Paso 4 · Revisión por pares · 20 min
 
-Intercambia proyectos. Sin preguntar nada a su autor:
+Intercambia proyectos y aplica los cuatro pasos de la explicación, **sin preguntar nada a su autor**:
 
 1. Ejecuta el programa y describe qué hace.
 2. Elige dos funciones y explícalas en voz alta.
 3. Búscale tres entradas que lo rompan.
 4. Señala una cosa bien hecha y una mejorable, con su razón.
 
-Devuelve el trabajo con esas cuatro respuestas por escrito.
+Devuelve el trabajo con esas cuatro respuestas por escrito. Después recibe la tuya y decide qué aceptas, justificando lo que rechaces.
 
-#### Defensa
+#### Paso 5 · Cerrar la entrega y preparar la defensa · 10 min
+
+<div class="unit-deliverable">
+  <p>La carpeta <code>js/</code> con <code>datos.js</code>, <code>catalogo.js</code>, <code>formato.js</code> y <code>main.js</code>; el enlace único con <code>type="module"</code>; la lista de auditoría marcada; la revisión del compañero por escrito; y un fichero <code>NOTAS.md</code> con las tres decisiones que más te costaron y por qué las tomaste así.</p>
+</div>
 
 Prepara respuestas de un minuto para estas cuatro preguntas:
 
 <div class="rule">
   <p class="rule-label">Las preguntas de la defensa</p>
   <ol>
-    <li>Enséñame una función y explícame qué recibe, qué devuelve y qué pasa si le llega basura.</li>
+    <li>Enseña una función y explica qué recibe, qué devuelve y qué pasa si le llega basura.</li>
     <li>¿Por qué elegiste ese método de array y no otro?</li>
     <li>Si mañana el catálogo llega desde un servidor en vez de estar escrito en tu fichero, ¿qué tendrías que cambiar?</li>
-    <li>Enséñame un fallo que te costó encontrar y cuéntame cómo lo encontraste.</li>
+    <li>Enseña un fallo que te costó encontrar y cuenta cómo lo encontraste.</li>
   </ol>
 </div>
 
 La tercera es la importante, y es la misma pregunta que cerraba la UD1 y la UD2: si has separado datos, lógica y uso, la respuesta debería ser «solo el módulo de datos».
 
-#### Evaluación
-
-| Criterio | Puntos |
+| Criterio de evaluación | Puntos |
 | ---------------------------------------------------------- | -----: |
 | Tipos y conversión tratados en los bordes del programa | 1,5 |
 | Condicionales y bucles que expresan la regla, con sus límites | 1,5 |
@@ -2440,12 +2410,73 @@ La tercera es la importante, y es la misma pregunta que cerraba la UD1 y la UD2:
 
 No puntúa que el código sea corto ni ingenioso. Puntúa que **se pueda leer**, que trate los casos raros —la lista vacía, el texto donde esperabas un número— y que puedas cambiar una decisión pequeña delante de alguien.
 
-#### Entrega
+#### Ampliación si has completado el trabajo
 
-<div class="unit-deliverable">
-  <p>La carpeta <code>js/</code> con <code>datos.js</code>, <code>catalogo.js</code>, <code>formato.js</code> y <code>main.js</code>; el enlace único con <code>type="module"</code>; la lista de auditoría marcada; la revisión del compañero por escrito; y un fichero <code>NOTAS.md</code> con las tres decisiones que más te costaron y por qué las tomaste así.</p>
+Primero termina la entrega. El primer reto separa dos cosas que se confunden siempre; el segundo pone a prueba, de verdad, si tus módulos estaban bien separados.
+
+##### Reto 1 · El fallo que estaba antes de que llegaras
+
+El fichero heredado del paso 2 esconde además un **fallo lógico**: no produce ningún error y devuelve un resultado equivocado en cierto caso.
+
+1. Encuéntralo. La lista de comportamiento del paso 2 no te ayuda aquí, porque el fichero ya lo tenía cuando la escribiste.
+2. Demuestra con una entrada concreta que el resultado es incorrecto, y di cuál debería ser.
+3. Arréglalo **en un commit distinto** del de la refactorización, o al menos en un bloque de cambios separado y anotado como tal.
+4. Explica en tres líneas por qué no se mezclan las dos cosas. La respuesta tiene que ver con lo que ocurre cuando, dentro de un mes, alguien tenga que averiguar qué cambio rompió qué.
+5. Escribe la comprobación que, añadida al fichero, habría hecho visible ese fallo desde el primer día.
+
+##### Reto 2 · Cambia el origen de los datos
+
+La tercera pregunta de la defensa dice que, si el catálogo llegara de un servidor, solo habría que tocar el módulo de datos. Compruébalo en lugar de suponerlo.
+
+1. Sustituye el array escrito a mano de `datos.js` por un texto JSON, y haz que el módulo lo lea con `JSON.parse` dentro de un `try/catch`.
+2. Ejecuta. **Cuenta cuántos ficheros has tenido que tocar.** Si es más de uno, anota cuál y por qué: ahí hay un acoplamiento que no sabías que tenías.
+3. Ahora haz que ese JSON venga de un fichero externo servido por tu servidor local. Todavía no conoces `fetch`, así que usa un módulo que exporte el texto; la sustitución completa llega en la UD4.
+4. Introduce en el JSON tres defectos realistas: un producto sin `precio`, uno con el `stock` como texto y uno con una clave escrita distinta. ¿Cuántos atraviesan tu validación?
+5. Escribe en cinco líneas qué habría que cambiar en tu proyecto para que el catálogo pudiera venir indistintamente de un fichero, de un servidor o de un formulario. Esa respuesta es el índice de las dos unidades siguientes.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>El dominio nuevo modelado con cuatro de las seis consultas, y cinco mejoras aplicadas al fichero heredado con comportamiento idéntico.</span></div>
+  <div><strong>Si lo tienes</strong><span>Las seis consultas con validación y casos límite, la auditoría marcada y la revisión del compañero contestada.</span></div>
+  <div><strong>Reto</strong><span>El fallo lógico separado de la refactorización, y el origen de los datos cambiado tocando un solo fichero.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Lista de verificación de la entrega</p>
+  <ul class="checklist">
+    <li>Has modelado un dominio nuevo sin copiar del tuyo.</li>
+    <li>Cada pregunta tiene su función, y cada función devuelve.</li>
+    <li>El fichero heredado está refactorizado con el comportamiento demostradamente idéntico.</li>
+    <li>Las dos listas de auditoría están marcadas.</li>
+    <li>Has revisado el proyecto de un compañero con los cuatro pasos.</li>
+    <li><code>NOTAS.md</code> recoge tus tres decisiones y su motivo.</li>
+  </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué es refactorizar, y qué deja de serlo?</li>
+    <li>Nombra tres señales de que un código necesita revisión.</li>
+    <li>¿Cómo demuestras que una refactorización no ha roto nada?</li>
+    <li>¿Qué ventaja tienen las salidas tempranas sobre el anidamiento?</li>
+    <li>Ante un resultado que no es el esperado, ¿qué compruebas y en qué orden?</li>
+    <li>Si el catálogo pasara a venir de un servidor, ¿qué módulo debería cambiar?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Cambiar cómo está escrito un programa sin cambiar lo que hace. En cuanto el comportamiento cambia, es una modificación y hay que probarla como tal.</p>
+  <p>2 · Por ejemplo: funciones muy largas, nombres de una letra, bloques repetidos, números sueltos, anidamiento profundo o comentarios que explican lo que hace el código.</p>
+  <p>3 · Anotando el comportamiento con varias entradas antes de tocar, y comparando después de cada paso.</p>
+  <p>4 · Despachan los casos raros al principio y dejan el camino normal sin anidar, de modo que el cuerpo se lee de arriba abajo.</p>
+  <p>5 · Qué se esperaba, qué ocurre, y dónde deja de coincidir; después se divide el recorrido en dos con una comprobación intermedia.</p>
+  <p>6 · Solo el de datos, si la separación en módulos está bien hecha.</p>
+</details>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 6 · 10 minutos</p>
@@ -2456,6 +2487,7 @@ No puntúa que el código sea corto ni ingenioso. Puntúa que **se pueda leer**,
     <li>Ante un resultado que no es el esperado, ¿qué compruebas y en qué orden?</li>
   </ol>
 </div>
+
 ---
 
 ## Lo que debes recordar
