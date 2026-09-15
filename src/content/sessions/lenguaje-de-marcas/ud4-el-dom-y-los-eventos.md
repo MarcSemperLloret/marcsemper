@@ -1629,16 +1629,14 @@ Tu web ya funciona. Dentro de dos meses la cambias, y quienes vuelvan traerán e
 
 ## Sesión 5 · Datos remotos
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Por qué existe la asincronía</strong>, <strong>Promesas y async/await</strong> y <strong>fetch y los tres estados</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Por qué existe la asincronía
+<p class="lead">Tres horas. Media hora para entender por qué JavaScript no espera y cómo se escribe código que sí lo parece, y dos horas y media cargando tu catálogo desde la red con todos los estados que eso implica.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Por qué JavaScript no espera, y qué es el bucle de eventos.</li>
-    <li><strong>2. Haz:</strong> Predice el orden de ejecución de varios fragmentos.</li>
-    <li><strong>3. Comprueba:</strong> Explicas por qué un valor «llega vacío» cuando llega tarde.</li>
+    <li><strong>1. Aprende:</strong> Por qué JavaScript no espera a lo lento, qué es una promesa, cómo se escribe código asíncrono que se lee en orden, y qué puede salir mal al pedir datos a un servidor.</li>
+    <li><strong>2. Haz:</strong> Predice órdenes de ejecución, reescribe tus simulaciones con <code>await</code> y carga el catálogo desde la red con sus estados.</li>
+    <li><strong>3. Comprueba:</strong> Con la red simulada lenta o caída, tu página se comporta bien.</li>
   </ol>
 </div>
 
@@ -1646,10 +1644,16 @@ Tu web ya funciona. Dentro de dos meses la cambias, y quienes vuelvan traerán e
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Si pedir datos a un servidor tarda dos segundos, ¿qué debería hacer la página mientras tanto?</li>
-    <li>¿Puede la página quedarse congelada? ¿Por qué sería grave?</li>
     <li>¿En qué orden crees que se ejecutan tres líneas si la de en medio tarda?</li>
+    <li>¿Qué ve tu usuario mientras los datos tardan, y qué si el servidor responde con un error?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Toda la sesión sale de un hecho: JavaScript tiene un solo hilo y no puede permitirse esperar. De ahí vienen las promesas, `await`, y los cuatro estados que toda carga de datos tiene que contemplar.
 
 #### Un solo hilo
 
@@ -1677,7 +1681,7 @@ Aunque el retraso sea cero. La función encargada se pone en cola y se ejecuta c
   </ol>
 </figure>
 
-#### El fallo que produce
+De ahí sale el fallo característico de la semana:
 
 ```javascript
 let productos = [];
@@ -1689,76 +1693,10 @@ setTimeout(() => {
 console.log(productos.length);    // 0, no 1
 ```
 
-No es que el array esté mal: es que se mira antes de tiempo. Cuando en la sesión 5 pidas datos al servidor y te salga una lista vacía, esta será la primera sospecha.
-
 <div class="rule">
   <p class="rule-label">Un valor que llega tarde no se puede leer pronto</p>
-  <p>La consecuencia práctica es una regla de diseño: <strong>todo lo que dependa del dato tiene que ocurrir dentro de lo que se ejecuta cuando el dato llega</strong>, no en la línea de después.</p>
-  <p>La sintaxis para escribir eso sin acabar con seis niveles de anidamiento es la de mañana.</p>
-</div>
-
-#### Temporizadores
-
-```javascript
-const id = setTimeout(() => console.log("Una vez"), 1000);
-clearTimeout(id);
-
-const otro = setInterval(() => console.log("Cada segundo"), 1000);
-clearInterval(otro);
-```
-
-Guarda siempre el identificador: un intervalo que nadie detiene sigue corriendo mientras la página esté abierta.
-
-#### Tarea 13 · Predecir el orden
-
-1. Escribe cinco fragmentos que mezclen código normal y temporizadores; predice el orden y compruébalo.
-2. Reproduce el fallo del array vacío y explícalo por escrito.
-3. Simula una carga de dos segundos que muestre un mensaje de «cargando» y luego los datos.
-4. Monta un contador con `setInterval` y detenlo con un botón.
-5. Provoca un intervalo no detenido y observa el efecto en consola.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Predices el orden de ejecución y explicas el fallo del valor leído pronto.</span></div>
-  <div><strong>Si lo tienes</strong><span>Simula una carga que a veces falla y muestra un mensaje distinto.</span></div>
-  <div><strong>Reto</strong><span>Explica qué pasa si pones un bucle de diez millones de vueltas en un manejador de clic.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Explicas por qué JavaScript no espera a lo lento.</li>
-    <li>Predices el orden con temporizadores de por medio.</li>
-    <li>Reconoces el fallo del valor leído antes de tiempo.</li>
-    <li>Detienes los temporizadores que creas.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque tiene un solo hilo: esperar bloquearía toda la interfaz.</p>
-  <p>2 · Al final, después del código actual, aunque el retraso sea cero.</p>
-  <p>3 · Que el dato aún no había llegado cuando se leyó.</p>
-</details>
-
-
-### Bloque 2 · Promesas y async/await
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es una promesa y cómo se escribe código asíncrono que se lee en orden.</li>
-    <li><strong>2. Haz:</strong> Convierte tus simulaciones de ayer en funciones con <code>async</code> y <code>await</code>.</li>
-    <li><strong>3. Comprueba:</strong> Tus errores asíncronos se capturan, no se pierden.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Ayer, para hacer algo tras la carga, ¿dónde tenías que escribirlo?</li>
-    <li>¿Y para hacer tres cosas seguidas, cada una tras la anterior?</li>
-    <li>¿Qué pasa si una de ellas falla?</li>
-  </ol>
+  <p>El array no está mal: se mira antes de tiempo. La consecuencia práctica es una regla de diseño: <strong>todo lo que dependa del dato tiene que ocurrir dentro de lo que se ejecuta cuando el dato llega</strong>, no en la línea de después.</p>
+  <p>Cuando pidas datos al servidor y te salga una lista vacía, esta será la primera sospecha.</p>
 </div>
 
 #### Una promesa es un valor futuro
@@ -1766,6 +1704,8 @@ Guarda siempre el identificador: un intervalo que nadie detiene sigue corriendo 
 <p class="term">Promesa</p>
 
 Un objeto que representa un resultado que todavía no está: puede quedar <em>cumplida</em> con un valor o <em>rechazada</em> con un error. No contiene el dato, sino el compromiso de proporcionarlo.
+
+Se consumen con `then`, `catch` y `finally`, o con la sintaxis que veremos enseguida:
 
 ```javascript
 const promesa = new Promise((resolver, rechazar) => {
@@ -1778,9 +1718,7 @@ promesa
   .finally(() => console.log("Terminado"));
 ```
 
-Casi nunca tendrás que crear promesas: te las darán hechas `fetch` y casi todas las APIs modernas. Lo que sí harás cada día es consumirlas.
-
-#### `async` y `await`
+Casi nunca tendrás que crear promesas: te las darán hechas `fetch` y casi todas las APIs modernas. Lo que sí harás cada día es consumirlas, y la forma de hacerlo es esta:
 
 ```javascript
 async function cargarProductos() {
@@ -1797,8 +1735,6 @@ async function cargarProductos() {
 
 `await` **pausa esa función** hasta que la promesa se resuelva, sin bloquear el resto de la página. El código se lee de arriba abajo, como el síncrono, y los errores se capturan con el `try/catch` de la UD3.
 
-Dos reglas que evitan la mayoría de tropiezos:
-
 | Regla | Consecuencia |
 | ----- | ------------ |
 | `await` solo dentro de `async` | Fuera, es un error de sintaxis (salvo en el nivel superior de un módulo) |
@@ -1811,7 +1747,7 @@ const productos = await cargarProductos();    // ahora sí, la lista
 
 Ese primer caso —imprimir una promesa creyendo que son los datos— es el error número uno de esta semana. La consola muestra `Promise { <pending> }`, y ahí está la pista.
 
-#### En serie o a la vez
+Cuando dos peticiones no dependen entre sí, se lanzan a la vez:
 
 ```javascript
 // En serie: dos segundos si cada una tarda uno
@@ -1824,61 +1760,6 @@ const [productos, categorias] = await Promise.all([
   cargarCategorias()
 ]);
 ```
-
-Espera en serie solo cuando la segunda petición necesita el resultado de la primera.
-
-#### Tarea 14 · Reescribir con await
-
-1. Convierte tus simulaciones de la sesión 5 en funciones `async`.
-2. Escribe `esperar(ms)` que devuelva una promesa, y úsala.
-3. Encadena tres operaciones y muestra su duración total.
-4. Repite con `Promise.all` y compara los tiempos.
-5. Provoca un rechazo y captúralo con `try/catch`.
-6. Imprime a propósito la promesa sin `await` y explica lo que ves.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres funciones <code>async</code> con sus errores capturados.</span></div>
-  <div><strong>Si lo tienes</strong><span>Compara medida la diferencia entre serie y paralelo.</span></div>
-  <div><strong>Reto</strong><span>Escribe una función que reintente dos veces antes de rendirse.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Explicas qué es una promesa y sus dos finales.</li>
-    <li>Usas <code>async</code> y <code>await</code> con <code>try/catch</code>.</li>
-    <li>Sabes que una función <code>async</code> devuelve una promesa.</li>
-    <li>Distingues cuándo esperar en serie y cuándo a la vez.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Cumplida con un valor, o rechazada con un error.</p>
-  <p>2 · Una promesa pendiente: falta el <code>await</code>.</p>
-  <p>3 · Cuando la segunda operación necesita el resultado de la primera.</p>
-</details>
-
-
-### Bloque 3 · fetch y los tres estados
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se piden datos a un servidor y qué puede salir mal.</li>
-    <li><strong>2. Haz:</strong> Carga tu catálogo desde una API con sus estados de carga, error y vacío.</li>
-    <li><strong>3. Comprueba:</strong> Con la red simulada lenta o caída, tu página se comporta bien.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué ve tu usuario mientras los datos tardan tres segundos?</li>
-    <li>¿Y si el servidor responde con un error?</li>
-    <li>¿En qué se parece esto a lo que hacías con un cliente HTTP en clase?</li>
-  </ol>
-</div>
 
 #### Pedir datos
 
@@ -1902,7 +1783,7 @@ export async function obtenerProductos() {
 
 Las dos fases importan: `fetch` resuelve cuando llegan las cabeceras, y `.json()` es una segunda promesa que se resuelve al terminar de leer el cuerpo. De ahí los dos `await`.
 
-#### Los tres estados de cualquier carga
+#### Los cuatro estados de cualquier carga
 
 <figure class="diagram">
   <figcaption>Lo que tiene que contemplar toda petición</figcaption>
@@ -1939,48 +1820,155 @@ El estado que montaste en la sesión 4 ya tenía sitio para `cargando` y `error`
   <p>Registra el error técnico con <code>console.error</code> y muestra el mensaje humano, con una salida: reintentar, volver, avisar.</p>
 </div>
 
-#### Probarlo de verdad
+Por último, si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la respuesta y la consola informa de un error de **CORS**. No se trata de un defecto del código propio, sino de una política de seguridad del navegador que se resuelve **en el servidor**. Lo harás tú mismo en la UD6.
 
-En DevTools, pestaña Network, puedes simular una red lenta o desconectada. Es la única forma de ver tus estados: con la red local todo va tan rápido que el indicador de carga no se llega a ver.
+### Se trabaja
 
-Comprueba las cuatro situaciones: carga normal, red lenta, sin red y respuesta con error del servidor.
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
 
-#### CORS, el error que verás
+El primer paso se hace en un archivo de pruebas y consiste casi entero en predecir. Del segundo en adelante, el catálogo empieza a venir de fuera.
 
-Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la respuesta y la consola informa de un error de CORS. No se trata de un defecto del código propio, sino de una política de seguridad del navegador que se resuelve **en el servidor**. Lo harás tú mismo en la UD6.
+#### Paso 1 · Predecir el orden · 25 min
 
-#### Tarea 15 · Catálogo desde la red
+1. Escribe cinco fragmentos que mezclen código normal y temporizadores; **predice el orden por escrito** y solo después compruébalo.
+2. Reproduce el fallo del array vacío y explícalo en un comentario.
+3. Monta un contador con `setInterval` y detenlo con un botón.
+4. Provoca un intervalo no detenido y observa el efecto en consola.
+5. Pon un bucle de diez millones de vueltas dentro de un manejador de clic y describe qué le pasa a la página mientras corre. Es la demostración del hilo único.
+
+<details class="aside aside--extra">
+<summary>Consultar · temporizadores</summary>
+
+```javascript
+const id = setTimeout(() => console.log("Una vez"), 1000);
+clearTimeout(id);
+
+const otro = setInterval(() => console.log("Cada segundo"), 1000);
+clearInterval(otro);
+```
+
+Guarda siempre el identificador: un intervalo que nadie detiene sigue corriendo mientras la página esté abierta.
+
+</details>
+
+#### Paso 2 · Reescribir con await · 35 min
+
+1. Convierte las simulaciones del paso 1 en funciones `async`.
+2. Escribe `esperar(ms)` que devuelva una promesa, y úsala.
+3. Encadena tres operaciones y mide su duración total.
+4. Repite con `Promise.all` y compara los dos tiempos. Anótalos.
+5. Provoca un rechazo y captúralo con `try/catch`.
+6. Imprime a propósito la promesa **sin** `await` y escribe qué ves y por qué.
+
+**Antes de continuar:** puedes decir, sin mirar, qué devuelve una función `async` y qué hace falta para obtener su valor.
+
+#### Paso 3 · Catálogo desde la red · 45 min
+
+Es el trabajo central de la sesión.
 
 1. Coloca tu catálogo como fichero `.json` y cárgalo con `fetch`.
 2. Comprueba `respuesta.ok` y lanza un error con el código de estado.
-3. Añade al estado `cargando` y `error`, y píntalos.
+3. Usa `cargando` y `error` del estado que montaste en la sesión 4, y píntalos desde la función de render. Ningún manejador debe tocar el DOM.
 4. Muestra un indicador de carga y un mensaje de error con botón de reintentar.
-5. Prueba las cuatro situaciones con Network.
-6. Consume además una API pública real y observa su respuesta.
+5. Comprueba que el estado **vacío** —un JSON que es una lista sin elementos— se distingue del estado de error. No son lo mismo y no se dicen igual.
+6. Consume además una API pública real y observa su respuesta en la pestaña Network.
+
+#### Paso 4 · Las cuatro situaciones · 25 min
+
+Con la red local todo va tan rápido que el indicador de carga no se llega a ver. En DevTools, pestaña Network, simula cada situación y rellena la tabla:
+
+| Situación | Qué se ve | ¿Hay salida para la persona? | Corrección |
+| --------- | --------- | ---------------------------- | ---------- |
+| Carga normal | | | |
+| Red lenta (*Slow 3G*) | | | |
+| Sin red (*Offline*) | | | |
+| El servidor responde 404 | | | |
+| El servidor responde 500 | | | |
+| La respuesta es una lista vacía | | | |
+
+Las dos últimas filas son las que se olvidan. Un 500 con tu comprobación de `ok` debe producir el mismo mensaje que un 404, y una lista vacía no constituye un error, sino un resultado legítimo que se comunica de otra forma.
+
+#### Paso 5 · El mensaje de error útil · 20 min
+
+Revisa todos los mensajes de error que muestra tu página y pásalos por estas tres preguntas:
+
+1. ¿Dice qué ha pasado, en palabras que entienda quien no programó esto?
+2. ¿Ofrece una salida: reintentar, volver, buscar otra cosa?
+3. ¿Filtra el detalle técnico a la consola en lugar de enseñarlo?
+
+Reescribe los que no pasen las tres. Después comprueba una cosa más: que el mensaje de error se **anuncia** en la región `aria-live` que montaste en la sesión 4, o tiene la suya. Un error que solo se ve no llega a todo el mundo.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos atacan lo que ocurre cuando la red no se porta: ni es instantánea ni es fiable ni respeta el orden.
+
+##### Reto 1 · Reintentar sin castigar al servidor
+
+Un fallo de red suele ser pasajero. Reintentar es razonable; reintentar mal, no.
+
+1. Escribe `pedirConReintentos(url, intentos = 3)` que vuelva a intentarlo si la petición falla.
+2. Espera entre intentos, y que la espera **crezca**: 1 s, 2 s, 4 s. Averigua cómo se llama esa técnica y escríbelo.
+3. Decide qué errores merecen reintento y cuáles no. Un 500 quizá sí; un 404 no, porque volver a pedir lo mismo dará lo mismo. Documenta tu criterio.
+4. Muestra en la interfaz que se está reintentando, y en qué intento va.
+5. Después del último fallo, el mensaje debe ofrecer un reintento manual.
+6. Explica en tres líneas qué pasaría si mil clientes reintentaran a la vez, cada 100 ms, contra un servidor que ya estaba en apuros. Esa es la razón de que la espera crezca.
+
+##### Reto 2 · La respuesta que llega tarde
+
+Este fallo es real, frecuente y no da ningún error. Monta una búsqueda que pida los resultados al servidor con cada cambio del campo.
+
+1. Simula que el servidor tarda un tiempo **aleatorio** entre 100 y 1500 ms.
+2. Escribe deprisa «teclado». Se lanzan varias peticiones. Observa el resultado final.
+3. Tarde o temprano verás lo siguiente: los resultados de «tec» llegan **después** de los de «teclado» y sobrescriben la lista. La interfaz muestra una respuesta que no corresponde a lo que hay escrito en el campo. Reprodúcelo y descríbelo por escrito.
+4. Primera defensa: aplica el `debounce` de la sesión 4. Comprueba que reduce el problema y **no lo elimina**. Explica por qué.
+5. Segunda defensa: cancela la petición anterior con `AbortController` cuando llega una nueva. Compruébalo en la pestaña Network, donde las canceladas aparecen marcadas.
+6. Tercera defensa, por si acaso: guarda cuál fue la última consulta lanzada y descarta cualquier respuesta que no corresponda a ella. Implementa esta también y explica por qué conviene tenerla aunque uses `AbortController`.
+
+Este fallo tiene nombre en la disciplina. Búscalo y escríbelo: lo vas a volver a encontrar en cuanto trabajes con datos remotos.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Carga desde fichero JSON con los tres estados pintados.</span></div>
-  <div><strong>Si lo tienes</strong><span>Botón de reintentar que vuelve a lanzar la carga.</span></div>
-  <div><strong>Reto</strong><span>Cancela una petición en curso con <code>AbortController</code> cuando llega otra.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Órdenes de ejecución predichos, funciones <code>async</code> con errores capturados, y el catálogo cargado desde JSON con sus cuatro estados.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de las seis situaciones de red contestada y los mensajes de error reescritos y anunciados.</span></div>
+  <div><strong>Reto</strong><span>Los reintentos con espera creciente y criterio por código de estado, o la búsqueda protegida contra las respuestas fuera de orden.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 5</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Explicas por qué JavaScript no espera y qué es una promesa.</li>
-    <li>Usas <code>async/await</code> con errores capturados.</li>
+    <li>Usas <code>async/await</code> con los errores capturados.</li>
     <li>Compruebas <code>respuesta.ok</code> en toda petición.</li>
-    <li>Tu página contempla cargando, error, vacío y datos.</li>
+    <li>Tu página contempla cargando, error, vacío y datos, y los distingue.</li>
+    <li>Has probado con red lenta, sin red y con respuesta de error.</li>
+    <li>Los mensajes de error ofrecen una salida y se anuncian.</li>
   </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué JavaScript no espera a lo lento?</li>
+    <li>¿Qué imprime <code>console.log</code> de una función <code>async</code> llamada sin <code>await</code>?</li>
+    <li>¿Cuándo se espera en serie y cuándo con <code>Promise.all</code>?</li>
+    <li>¿Por qué un 404 no rechaza la promesa de <code>fetch</code>?</li>
+    <li>Nombra los cuatro estados de una carga.</li>
+    <li>¿Qué es un error de CORS y dónde se resuelve?</li>
+  </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque el 404 es una respuesta válida: la promesa se cumple y hay que mirar <code>ok</code> o <code>status</code>.</p>
-  <p>2 · Cargando, error, vacío y datos.</p>
-  <p>3 · Es una política del navegador sobre peticiones a otro origen, y se resuelve en el servidor.</p>
+  <p>1 · Porque tiene un solo hilo: esperar bloquearía toda la interfaz.</p>
+  <p>2 · Una promesa pendiente: falta el <code>await</code>.</p>
+  <p>3 · En serie cuando la segunda operación necesita el resultado de la primera; a la vez cuando no dependen entre sí.</p>
+  <p>4 · Porque el 404 es una respuesta válida: la promesa se cumple y hay que mirar <code>ok</code> o <code>status</code>.</p>
+  <p>5 · Cargando, error, vacío y datos.</p>
+  <p>6 · Una política del navegador sobre peticiones a otro origen, y se resuelve en el servidor.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 5 · 5–10 minutos</p>
@@ -1991,6 +1979,7 @@ Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la resp
     <li>Nombra los cuatro estados de una carga.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 6 · Interfaz robusta y entrega
