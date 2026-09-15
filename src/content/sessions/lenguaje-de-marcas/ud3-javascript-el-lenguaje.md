@@ -1820,16 +1820,14 @@ for (let i = 0; i < nombres.length; i++) {
 
 ## Sesión 5 · Organizar y proteger el código
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Módulos ES</strong>, <strong>Errores y programación defensiva</strong> y <strong>Fechas, textos y formato</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Módulos ES
+<p class="lead">Tres horas. Media hora para aprender a repartir el código en módulos, a tratar los errores y a separar el dato de su presentación, y dos horas y media blindando tu catálogo contra los datos que no esperas.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se reparte el código en ficheros con <code>import</code> y <code>export</code>.</li>
-    <li><strong>2. Haz:</strong> Separa datos, lógica y programa principal en tres módulos.</li>
-    <li><strong>3. Comprueba:</strong> Todo funciona servido por un servidor local, y sabes por qué hace falta.</li>
+    <li><strong>1. Aprende:</strong> Cómo se reparte el código en ficheros con <code>import</code> y <code>export</code>, cómo se lanza y se captura un error, y por qué el dato y su formato son cosas distintas.</li>
+    <li><strong>2. Haz:</strong> Separa datos, lógica y programa principal, valida todo lo que entra y añade búsqueda y presentación.</li>
+    <li><strong>3. Comprueba:</strong> Tu programa falla de forma clara en vez de dar un resultado falso, y tu buscador encuentra «teclado» escribiendo «TECLA».</li>
   </ol>
 </div>
 
@@ -1837,10 +1835,16 @@ for (let i = 0; i < nombres.length; i++) {
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>¿Cuántas líneas tiene ya tu fichero principal?</li>
-    <li>Si otro proyecto quisiera tus funciones de catálogo, ¿qué le pasarías?</li>
-    <li>¿Qué partes de tu código son «datos», cuáles «reglas» y cuáles «uso»?</li>
+    <li>¿Qué le pasa a <code>valorAlmacen</code> si un producto no tiene precio?</li>
+    <li>¿Qué es peor: que el programa se pare, o que devuelva un número equivocado?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Tres asuntos que comparten una idea: poner fronteras. Una entre ficheros, para que cada uno responda a una pregunta. Otra en la entrada de datos, para que el resto del código pueda confiar. La tercera, entre el dato y su presentación.
 
 #### Exportar e importar
 
@@ -1857,10 +1861,6 @@ import { catalogo, IVA } from "./datos.js";
 export function disponibles(productos = catalogo) {
   return productos.filter((p) => p.stock > 0);
 }
-
-export function valorAlmacen(productos = catalogo) {
-  return productos.reduce((suma, p) => suma + p.precio * p.stock, 0);
-}
 ```
 
 ```javascript
@@ -1868,7 +1868,6 @@ export function valorAlmacen(productos = catalogo) {
 import { disponibles, valorAlmacen } from "./catalogo.js";
 
 console.table(disponibles());
-console.log(valorAlmacen().toFixed(2));
 ```
 
 En el documento se declara un único enlace, con su tipo:
@@ -1879,29 +1878,11 @@ En el documento se declara un único enlace, con su tipo:
 
 Con `type="module"` no hace falta `defer`: los módulos ya se ejecutan al final. Solo se enlaza el principal: los demás llegan por sus `import`.
 
-#### Dos detalles que hacen perder una tarde
-
 <div class="rule">
   <p class="rule-label">La extensión se escribe, y hace falta un servidor</p>
   <p>En el navegador, la ruta del <code>import</code> lleva su <code>.js</code>: <code>"./catalogo.js"</code>, no <code>"./catalogo"</code>. Además debe comenzar por <code>./</code> o por <code>/</code>.</p>
   <p>Además, los módulos <strong>no funcionan abriendo el fichero con doble clic</strong>. Verás un error de CORS con el esquema <code>file://</code>. Hay que servir la carpeta: la extensión Live Server de VS Code, o el servidor que montarás tú mismo en la UD5.</p>
 </div>
-
-#### Exportación por defecto
-
-```javascript
-export default function formatearPrecio(valor) {
-  return `${valor.toFixed(2)} €`;
-}
-```
-
-```javascript
-import formatearPrecio from "./formato.js";
-```
-
-Un módulo puede tener una exportación por defecto y muchas con nombre. En este módulo preferimos las nombradas: el nombre viaja con la función y no se puede renombrar sin querer.
-
-#### Qué va en cada fichero
 
 <figure class="diagram">
   <figcaption>El reparto de responsabilidades</figcaption>
@@ -1914,69 +1895,7 @@ Un módulo puede tener una exportación por defecto y muchas con nombre. En este
 
 Es el mismo criterio de siempre: cada fichero responde a una pregunta. El criterio anticipa la separación en capas que verás en la UD6 y en el módulo de servidor.
 
-#### Tarea 13 · Tres módulos
-
-1. Separa tu código en `datos.js`, `catalogo.js` y `main.js`.
-2. Exporta solo lo que se use fuera; el resto, privado del módulo.
-3. Añade `formato.js` con las funciones de presentación de texto.
-4. Enlaza únicamente `main.js` con `type="module"`.
-5. Sirve la carpeta con un servidor local y comprueba que funciona.
-6. Provoca a propósito un import con la extensión olvidada y lee el error.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres módulos, un solo enlace, y todo funcionando bajo un servidor local.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade un cuarto módulo de validación y úsalo desde <code>catalogo.js</code>.</span></div>
-  <div><strong>Reto</strong><span>Dibuja el grafo de dependencias de tu proyecto y comprueba que no hay ciclos.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Tu código está repartido en módulos con una responsabilidad cada uno.</li>
-    <li>Solo enlazas el módulo principal, con <code>type="module"</code>.</li>
-    <li>Escribes la extensión en las rutas de importación.</li>
-    <li>Sabes por qué los módulos necesitan un servidor.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué error verás si abres el fichero con doble clic?</li>
-    <li>¿Cuántos módulos enlazas en el documento?</li>
-    <li>¿Qué diferencia hay entre exportación nombrada y por defecto?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Un error de CORS por el esquema <code>file://</code>: los módulos exigen que la página se sirva por HTTP.</p>
-  <p>2 · Uno: el principal. Los demás entran por sus importaciones.</p>
-  <p>3 · La nombrada se importa entre llaves y con su nombre exacto; la de defecto se importa con el nombre que quieras.</p>
-</details>
-
-
-### Bloque 2 · Errores y programación defensiva
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se lanza, se captura y se trata un error.</li>
-    <li><strong>2. Haz:</strong> Protege tus funciones de las entradas que no esperas.</li>
-    <li><strong>3. Comprueba:</strong> Tu programa falla de forma clara en vez de dar un resultado falso.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué le pasa a <code>valorAlmacen</code> si un producto no tiene precio?</li>
-    <li>¿Qué es peor: que el programa se pare, o que devuelva un número equivocado?</li>
-    <li>¿De dónde vienen los datos en los que menos confías?</li>
-  </ol>
-</div>
-
-#### Lanzar un error
+#### Lanzar y capturar un error
 
 ```javascript
 function aplicarDescuento(precio, porcentaje) {
@@ -1991,8 +1910,6 @@ function aplicarDescuento(precio, porcentaje) {
 ```
 
 `throw` detiene la función ahí mismo. Es mejor que devolver `null` en silencio: quien llama se entera del problema en el momento en que ocurre y no tres funciones más tarde.
-
-#### Capturar
 
 ```javascript
 try {
@@ -2032,89 +1949,11 @@ export function crearProducto(datos) {
 }
 ```
 
-Fíjate en dos decisiones. Primero, se recogen **todos** los errores y no solo el primero: en la UD4 querrás mostrarlos todos al usuario a la vez. Segundo, la función devuelve un resultado que describe qué pasó, en lugar de lanzar: para una validación esperable, un error no es excepcional.
+Fíjate en dos decisiones. Primero, se recogen **todos** los errores y no solo el primero: en la UD4 querrás mostrarlos todos al usuario a la vez. Segundo, la función devuelve un resultado que describe qué pasó, en lugar de lanzar: para una validación esperable, un error no resulta excepcional.
 
 <p class="term">Validar en el borde</p>
 
 Comprobar los datos en el punto donde entran al programa —el formulario, el fichero, la respuesta del servidor— y no dentro de cada función que los usa. Después de ese punto, el resto del código puede confiar.
-
-#### Tarea 14 · Blinda tu catálogo
-
-1. Añade validación a `crearProducto` con al menos cinco reglas.
-2. Haz que devuelva la lista completa de errores.
-3. Protege `valorAlmacen` frente a productos sin precio o sin stock.
-4. Envuelve una lectura de JSON en `try/catch` y da un mensaje útil.
-5. Escribe cinco entradas inválidas y comprueba que ninguna pasa.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Validación con lista de errores y un <code>try/catch</code> con mensaje claro.</span></div>
-  <div><strong>Si lo tienes</strong><span>Distingue con <code>throw</code> los fallos de programación de los de datos.</span></div>
-  <div><strong>Reto</strong><span>Escribe una función que valide un objeto contra un esquema de reglas declarado como dato.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Lanzas errores con un mensaje que dice qué se esperaba.</li>
-    <li>Capturas solo lo que sabes tratar.</li>
-    <li>Validas donde entran los datos, no en cada función.</li>
-    <li>Devuelves todos los errores de validación, no solo el primero.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué hace <code>finally</code>?</li>
-    <li>¿Por qué es peligroso un <code>catch</code> vacío?</li>
-    <li>¿Qué significa validar en el borde?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Se ejecuta haya error o no, para lo que hay que hacer en cualquier caso.</p>
-  <p>2 · Porque oculta el fallo y el programa continúa con datos que no tiene.</p>
-  <p>3 · Comprobar los datos en el punto donde entran, para que el resto del código pueda confiar en ellos.</p>
-</details>
-
-
-### Bloque 3 · Fechas, textos y formato
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Los métodos de texto que más vas a usar, y cómo se manejan fechas y formatos locales.</li>
-    <li><strong>2. Haz:</strong> Añade búsqueda por texto y presentación de precios y fechas a tu catálogo.</li>
-    <li><strong>3. Comprueba:</strong> Tu buscador encuentra «teclado» escribiendo «TECLA».</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si el usuario escribe « Teclado » con espacios y mayúsculas, ¿lo encontrará tu búsqueda?</li>
-    <li>¿Cómo se escribe un precio en España? ¿Y una fecha?</li>
-    <li>¿Qué diferencia hay entre el dato y su presentación?</li>
-  </ol>
-</div>
-
-#### Los métodos de texto que usarás
-
-```javascript
-const texto = "  Teclado Mecánico RGB  ";
-
-texto.trim()                    // "Teclado Mecánico RGB"
-texto.toLowerCase()             // "  teclado mecánico rgb  "
-texto.includes("Mecánico")      // true
-texto.trim().startsWith("Tec")  // true
-texto.replaceAll(" ", "-")
-texto.trim().split(" ")         // ["Teclado", "Mecánico", "RGB"]
-"1,2,3".split(",")              // ["1", "2", "3"]
-texto.trim().slice(0, 7)        // "Teclado"
-```
-
-Ninguno modifica el original: los textos son inmutables, y todos devuelven uno nuevo.
 
 #### Una búsqueda que no falla por tonterías
 
@@ -2130,9 +1969,9 @@ export function buscar(productos, consulta) {
 }
 ```
 
-Tres decisiones que evitan tres quejas: se recortan los espacios, se compara todo en minúsculas, y una consulta vacía devuelve todo en lugar de nada.
+Tres decisiones que evitan tres quejas: se recortan los espacios, se compara todo en minúsculas, y una consulta vacía devuelve todo en lugar de nada. Ninguno de los métodos de texto modifica el original: los textos son inmutables, y todos devuelven uno nuevo.
 
-#### Fechas
+#### Fechas y formato local
 
 ```javascript
 const ahora = new Date();
@@ -2145,8 +1984,6 @@ const dias = (ahora - alta) / (1000 * 60 * 60 * 24);
 ```
 
 Que los meses empiecen en cero es la trampa histórica de las fechas en JavaScript. Restar dos fechas, por su parte, produce milisegundos y no días: el resultado debe dividirse.
-
-#### Formato local
 
 ```javascript
 const precio = 1234.5;
@@ -2166,7 +2003,67 @@ new Date().toLocaleDateString("es-ES", {
   <p>Si guardas el texto formateado, no podrás sumar, ordenar ni comparar sin deshacerlo, y el día que cambies de moneda o de idioma habrá que tocar los datos. Es la misma separación entre contenido y presentación que aprendiste en la UD1 y la UD2, aplicada a los valores.</p>
 </div>
 
-#### Tarea 15 · Búsqueda y presentación
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+El primer paso reorganiza el proyecto entero; los tres siguientes lo protegen. El último dibuja lo que has construido para comprobar que no se ha enredado.
+
+#### Paso 1 · Tres módulos · 35 min
+
+1. Separa tu código en `datos.js`, `catalogo.js` y `main.js`.
+2. Exporta solo lo que se use fuera; el resto, privado del módulo.
+3. Añade `formato.js` con las funciones de presentación de texto.
+4. Enlaza únicamente `main.js` con `type="module"`.
+5. Sirve la carpeta con un servidor local y comprueba que funciona.
+6. Provoca a propósito un import con la extensión olvidada y lee el error.
+
+<details class="aside aside--extra">
+<summary>Consultar · exportación por defecto</summary>
+
+```javascript
+export default function formatearPrecio(valor) {
+  return `${valor.toFixed(2)} €`;
+}
+```
+
+```javascript
+import formatearPrecio from "./formato.js";
+```
+
+Un módulo puede tener una exportación por defecto y muchas con nombre. En este módulo preferimos las nombradas: el nombre viaja con la función y no se puede renombrar sin querer.
+
+</details>
+
+**Antes de continuar:** el documento enlaza un solo script, la página se sirve por HTTP y la consola no muestra ningún error de módulo.
+
+#### Paso 2 · Blinda tu catálogo · 40 min
+
+Es el trabajo central de la sesión.
+
+1. Añade validación a `crearProducto` con al menos cinco reglas.
+2. Haz que devuelva la lista completa de errores, no solo el primero.
+3. Protege `valorAlmacen` frente a productos sin precio o sin stock.
+4. Envuelve una lectura de JSON en `try/catch` y da un mensaje útil, que diga qué se esperaba y qué llegó.
+5. Distingue con `throw` los fallos de programación —un argumento del tipo equivocado— de los de datos, que devuelven un resultado con sus errores.
+
+El apartado 5 es la decisión de diseño de la sesión: un dato inválido que escribe una persona es algo previsible y se informa; una función llamada con un array donde esperaba un número es un fallo tuyo y debe romperse ruidosamente.
+
+#### Paso 3 · Cinco entradas que no deberían pasar · 20 min
+
+Escribe cinco entradas inválidas y comprueba que ninguna atraviesa la validación:
+
+| Entrada | Por qué es inválida | ¿La detecta tu validación? | Qué mensaje da |
+| ------- | ------------------- | -------------------------- | -------------- |
+| Nombre solo con espacios | | | |
+| Precio negativo | | | |
+| Stock con decimales | | | |
+| Precio como texto con coma | | | |
+| Campo ausente por completo | | | |
+
+Después prueba una entrada **válida** y comprueba que pasa limpia. Una validación que rechaza todo deja de ser una validación y se convierte en un muro.
+
+#### Paso 4 · Búsqueda y presentación · 35 min
 
 En `js/formato.js` y `js/catalogo.js`:
 
@@ -2174,31 +2071,119 @@ En `js/formato.js` y `js/catalogo.js`:
 2. `formatearPrecio(valor)` con formato español.
 3. `formatearFecha(fecha)` en formato largo.
 4. Añade a cada producto una fecha de alta y ordénalos por ella.
-5. Comprueba la búsqueda con seis consultas, incluidas la vacía y una con acentos.
+5. Comprueba la búsqueda con seis consultas, incluidas la vacía, una con acentos y una que no encuentre nada.
+
+Comprueba también que en `datos.js` los precios siguen siendo números y las fechas, fechas. Si alguno se ha convertido en texto formateado, la separación se te ha escapado.
+
+<details class="aside aside--extra">
+<summary>Consultar · los métodos de texto que usarás</summary>
+
+```javascript
+const texto = "  Teclado Mecánico RGB  ";
+
+texto.trim()                    // "Teclado Mecánico RGB"
+texto.toLowerCase()             // "  teclado mecánico rgb  "
+texto.includes("Mecánico")      // true
+texto.trim().startsWith("Tec")  // true
+texto.replaceAll(" ", "-")
+texto.trim().split(" ")         // ["Teclado", "Mecánico", "RGB"]
+"1,2,3".split(",")              // ["1", "2", "3"]
+texto.trim().slice(0, 7)        // "Teclado"
+```
+
+</details>
+
+#### Paso 5 · El grafo de dependencias · 20 min
+
+Dibuja en papel qué módulo importa a cuál, con una flecha por cada `import`.
+
+1. ¿Hay algún **ciclo**? Es decir, ¿algún módulo del que se pueda salir y volver siguiendo las flechas. Si lo hay, es un defecto: significa que dos ficheros se necesitan mutuamente y ninguno de los dos se puede entender por separado.
+2. ¿Hay algún módulo del que dependa todo? Anótalo: es el que no podrás cambiar sin revisar el resto.
+3. ¿Hay algún módulo que no importe nadie? O sobra, o es el principal.
+4. Comprueba que `datos.js` no importa a `catalogo.js`. Las flechas deben ir de lo general a lo concreto, no al revés.
+
+Ese dibujo es la primera vez que ves la **arquitectura** de tu programa en lugar de su código. En la UD6 lo repetirás con más capas.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos convierten en dato lo que ahora tienes escrito como código.
+
+##### Reto 1 · Las reglas como dato
+
+Tu `crearProducto` tiene las reglas escritas a mano, un `if` por cada una. Si mañana hay que validar pedidos, clientes y facturas, habrá que escribir tres funciones más casi idénticas.
+
+Escribe un validador genérico que reciba **las reglas como dato**:
+
+```javascript
+const esquemaProducto = {
+  nombre:  { tipo: "texto",  obligatorio: true,  minimo: 2 },
+  precio:  { tipo: "numero", obligatorio: true,  minimo: 0 },
+  stock:   { tipo: "entero", obligatorio: true,  minimo: 0 },
+  web:     { tipo: "texto",  obligatorio: false }
+};
+
+validar(datos, esquemaProducto);   // { ok: false, errores: [...] }
+```
+
+1. Escribe `validar(datos, esquema)` que recorra las claves del esquema y aplique cada regla.
+2. Que devuelva todos los errores, con el nombre del campo incluido en cada mensaje.
+3. Añade un tipo nuevo al esquema —por ejemplo `"fecha"`— sin tocar la función `validar`. Si has tenido que tocarla, el diseño no era del todo genérico: arréglalo.
+4. Escribe un segundo esquema para otra entidad de tu proyecto y comprueba que la misma función sirve.
+5. Explica en tres líneas qué has ganado y qué has perdido respecto a los `if` escritos a mano. Hay una pérdida real, y conviene que sepas nombrarla.
+
+##### Reto 2 · La búsqueda que encuentra lo que la gente escribe
+
+Tu búsqueda ya ignora mayúsculas y espacios. Sigue sin encontrar «teclado mecanico» si el producto se llama «Teclado Mecánico».
+
+1. Haz que ignore también los acentos. La pista: los textos se pueden normalizar con `normalize("NFD")` y después eliminar las marcas diacríticas.
+2. Comprueba estas seis consultas: `"mecanico"`, `"MECÁNICO"`, `"  tecla  "`, `"teclado rgb"`, `""` y `"ñ"`.
+3. La cuarta probablemente falla: busca la cadena entera y no encuentra nada porque las palabras están separadas. Haz que una consulta de varias palabras encuentre los productos que contienen **todas**, en cualquier orden.
+4. Ordena los resultados por relevancia: primero los que coinciden al principio del nombre, después los que coinciden dentro del nombre, y al final los que solo coinciden en la descripción.
+5. Añade un caso que tu búsqueda **no** deba encontrar, y compruébalo. Una búsqueda que encuentra siempre algo es tan inútil como una que no encuentra nunca nada.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Búsqueda robusta y precios con formato español.</span></div>
-  <div><strong>Si lo tienes</strong><span>Haz que la búsqueda ignore también los acentos.</span></div>
-  <div><strong>Reto</strong><span>Devuelve los resultados ordenados por relevancia: primero los que coinciden al principio del nombre.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Tres módulos con un solo enlace funcionando bajo servidor local, validación con lista de errores y búsqueda insensible a mayúsculas.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de cinco entradas inválidas contestada, el formato español aplicado y el grafo de dependencias sin ciclos.</span></div>
+  <div><strong>Reto</strong><span>El validador por esquema sirviendo a dos entidades, y la búsqueda con acentos, varias palabras y relevancia.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 5</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Tu proyecto está en módulos y se sirve por HTTP.</li>
-    <li>Validas los datos donde entran y tratas los errores.</li>
+    <li>Solo enlazas el módulo principal, con <code>type="module"</code>.</li>
+    <li>Validas los datos donde entran y devuelves todos los errores.</li>
+    <li>Capturas solo lo que sabes tratar.</li>
     <li>Buscas por texto sin que la fallen mayúsculas ni espacios.</li>
     <li>Guardas datos y formateas solo al presentar.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué error verás si abres el fichero con doble clic?</li>
+    <li>¿Cuántos módulos enlazas en el documento?</li>
+    <li>¿Qué hace <code>finally</code>?</li>
+    <li>¿Por qué es peligroso un <code>catch</code> vacío?</li>
+    <li>¿Qué significa validar en el borde?</li>
+    <li>¿Por qué no se guarda el precio ya formateado?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Recortar espacios, pasar todo a minúsculas y decidir qué hace la consulta vacía.</p>
-  <p>2 · De 0 a 11: enero es el mes 0.</p>
-  <p>3 · Porque el texto formateado ya no se puede sumar ni ordenar, y ata los datos a un idioma y una moneda.</p>
+  <p>1 · Un error de CORS por el esquema <code>file://</code>: los módulos exigen que la página se sirva por HTTP.</p>
+  <p>2 · Uno: el principal. Los demás entran por sus importaciones.</p>
+  <p>3 · Se ejecuta haya error o no, para lo que hay que hacer en cualquier caso.</p>
+  <p>4 · Porque oculta el fallo y el programa continúa con datos que no tiene.</p>
+  <p>5 · Comprobar los datos en el punto donde entran, para que el resto del código pueda confiar en ellos.</p>
+  <p>6 · Porque el texto formateado ya no se puede sumar ni ordenar, y ata los datos a un idioma y una moneda.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 5 · 5–10 minutos</p>
@@ -2209,6 +2194,7 @@ En `js/formato.js` y `js/catalogo.js`:
     <li>¿Qué significa validar en el borde? Pon un ejemplo de tu proyecto.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 6 · Integración y entrega
