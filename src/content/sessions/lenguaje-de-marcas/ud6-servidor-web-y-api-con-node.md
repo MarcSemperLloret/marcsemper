@@ -1144,27 +1144,31 @@ Tus registros hoy sirven para mirarlos por encima. Conviértelos en algo sobre l
 
 ## Sesión 4 · La web y su API
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>HTML generado en el servidor</strong>, <strong>El cliente consume su propia API</strong> y <strong>Formularios de extremo a extremo</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · HTML generado en el servidor
+<p class="lead">Tres horas. Media hora para ver de dónde puede salir el HTML y qué recorrido hace un envío, y dos horas y media conectando tu interfaz de la UD4 con la API que escribiste ayer.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cuándo conviene generar el HTML en el servidor y cómo se hace sin abrir un agujero.</li>
-    <li><strong>2. Haz:</strong> Sirve una página de catálogo generada en el servidor.</li>
-    <li><strong>3. Comprueba:</strong> Un producto con etiquetas en el nombre no rompe ni ejecuta nada.</li>
+    <li><strong>1. Aprende:</strong> Cuándo conviene generar el HTML en el servidor, cómo consume el cliente su propia API y qué ocurre entre pulsar «Enviar» y ver el resultado.</li>
+    <li><strong>2. Haz:</strong> Sirve el catálogo generado en el servidor, alimenta la interfaz con tu API y monta el alta y el borrado reales.</li>
+    <li><strong>3. Comprueba:</strong> Un nombre con etiquetas no ejecuta nada, y cada error del servidor aparece junto al campo que lo causó.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>En la UD4 el catálogo se pintaba en el navegador. ¿Qué ve alguien con JavaScript desactivado?</li>
-    <li>¿Y un buscador que indexa tu web?</li>
+    <li>En la UD4 el catálogo se pintaba en el navegador. ¿Qué ve alguien con JavaScript desactivado, y qué ve un buscador que indexa tu web?</li>
     <li>¿Qué pasaría si el nombre de un producto contuviera una etiqueta?</li>
+    <li>Enumera todo lo que ocurre entre pulsar «Enviar» y ver el resultado.</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy se juntan las dos mitades del módulo: la interfaz de la UD4 y la API de esta unidad. Todo lo que aparece responde a tres decisiones: **dónde se genera el HTML**, **dónde se filtran los datos** y **qué pasa cuando el servidor dice que no**.
 
 #### Las dos formas de pintar
 
@@ -1173,9 +1177,7 @@ Tus registros hoy sirven para mirarlos por encima. Conviértelos en algo sobre l
 | En el servidor | Llega listo, funciona sin JavaScript, se indexa | Cada cambio recarga la página |
 | En el cliente | Interacción inmediata, menos trabajo del servidor | Depende de que el código se ejecute |
 
-No hay que elegir una para siempre: lo habitual es que la primera carga llegue hecha del servidor y la interacción se resuelva en el cliente. Es exactamente lo que vas a montar: la página de catálogo llega renderizada, y los filtros siguen funcionando en el navegador como en la UD4.
-
-#### Generar HTML con plantillas del lenguaje
+La elección no es permanente: lo habitual es que la primera carga llegue hecha del servidor y la interacción se resuelva en el cliente. Es lo que vas a montar hoy.
 
 ```javascript
 export function paginaCatalogo(productos) {
@@ -1206,9 +1208,7 @@ function tarjeta(producto) {
 }
 ```
 
-No hace falta instalar un motor de plantillas: las plantillas del lenguaje, las de la UD3, sirven perfectamente para esto. Un motor aporta herencia de plantillas y sintaxis propia; a cambio, una dependencia más y un lenguaje más que aprender.
-
-#### Escapar no es opcional
+Las plantillas del lenguaje, las de la UD3, bastan para esto sin instalar un motor de plantillas. Un motor aporta herencia de plantillas y sintaxis propia; a cambio, una dependencia más y un lenguaje más que aprender.
 
 ```javascript
 const ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
@@ -1220,92 +1220,31 @@ export function escapar(valor) {
 
 <div class="rule">
   <p class="rule-label">Todo dato que entra en el HTML se escapa</p>
-  <p>Si un producto se llama <code>Teclado &lt;script&gt;…&lt;/script&gt;</code> y se inserta sin escapar, ese código se ejecuta en el navegador de quien visite tu página, con sus permisos y sus datos de sesión. Esa vulnerabilidad se denomina <em>cross-site scripting</em> y es la vulnerabilidad más extendida de la web.</p>
-  <p>Es el mismo problema del <code>innerHTML</code> de la UD4, ahora del lado del servidor y peor: allí afectaba a quien lo escribía, aquí a todo el que visite la página.</p>
-  <p>Y ojo con el sitio donde insertas: escapar sirve para el contenido y para los atributos entrecomillados. Meter datos de fuera dentro de un bloque de código de la página o en una URL requiere reglas distintas; lo sensato es no hacerlo.</p>
+  <p>Si un producto se llama <code>Teclado &lt;script&gt;…&lt;/script&gt;</code> y se inserta sin escapar, ese código se ejecuta en el navegador de quien visite tu página, con sus permisos y sus datos de sesión. Esa vulnerabilidad se denomina <em>cross-site scripting</em> y es la más extendida de la web.</p>
+  <p>Es el mismo problema del <code>innerHTML</code> de la UD4, ahora del lado del servidor y con más alcance: allí afectaba a quien lo escribía, aquí a todo el que visite la página.</p>
+  <p>Importa además el sitio donde insertas: escapar sirve para el contenido y para los atributos entrecomillados. Meter datos de fuera dentro de un bloque de código de la página o en una URL requiere reglas distintas, y lo sensato es no hacerlo.</p>
 </div>
 
-#### Tarea 10 · La página del servidor
-
-1. Escribe `src/vistas/catalogo.js` que genere la página completa.
-2. Escribe y usa la función de escapado en todos los datos.
-3. Sirve la página en `GET /` desde su router.
-4. Comprueba con «ver código fuente» que el HTML llega hecho.
-5. Añade un producto con etiquetas en el nombre y comprueba que se ve como texto.
-6. Valida el HTML generado en el W3C.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Catálogo generado en el servidor, escapado y válido.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade la página de detalle de un producto, con su 404 propio.</span></div>
-  <div><strong>Reto</strong><span>Demuestra el ataque contra una versión sin escapado y explica qué ocurre.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Generas HTML en el servidor con plantillas del lenguaje.</li>
-    <li>Escapas todo dato antes de insertarlo.</li>
-    <li>El HTML generado es válido y semántico.</li>
-    <li>Explicas qué es el <em>cross-site scripting</em>.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que llega hecha y funciona sin JavaScript, y que los buscadores la leen.</p>
-  <p>2 · Sustituir los caracteres con significado en HTML por sus entidades.</p>
-  <p>3 · Que se ejecute código ajeno en el navegador de cualquier visitante.</p>
-</details>
-
-
-### Bloque 2 · El cliente consume su propia API
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se conecta el cliente de la UD4 con la API propia, y qué cambia respecto a una ajena.</li>
-    <li><strong>2. Haz:</strong> Sustituye los datos de ejemplo por llamadas reales a tu API.</li>
-    <li><strong>3. Comprueba:</strong> La aplicación funciona de punta a punta y trata los cuatro estados.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué ahora no tendrás problemas de CORS?</li>
-    <li>¿Qué cuatro estados tenía que contemplar una carga?</li>
-    <li>Si el servidor devuelve 400 con detalles, ¿qué debe hacer tu interfaz?</li>
-  </ol>
-</div>
-
-#### El mismo origen
-
-Como el cliente se sirve desde el mismo servidor que la API, las peticiones son relativas y no cruzan de origen:
+#### El cliente consume su propia API
 
 ```javascript
 const productos = await pedir("/api/productos");
 ```
 
-Sin dominio, sin puerto y sin CORS. Es una de las razones prácticas de servir ambas cosas juntas mientras el proyecto es pequeño.
+Como el cliente se sirve desde el mismo servidor que la API, la petición es relativa y no cruza de origen: sin dominio, sin puerto y sin CORS. Es una de las razones prácticas de servir ambas cosas juntas mientras el proyecto es pequeño.
 
-#### Filtrar: ¿en el cliente o en el servidor?
-
-| Dónde | Cuándo conviene |
-| ----- | --------------- |
+| Dónde filtrar | Cuándo conviene |
+| ------------- | --------------- |
 | En el cliente | Pocos datos, ya descargados: respuesta instantánea |
 | En el servidor | Muchos datos, o filtros que dependen de reglas o permisos |
 
 <div class="rule">
-  <p class="rule-label">Una decisión de diseño, no una preferencia</p>
-  <p>Con doscientos productos, descargarlos una vez y filtrar en el navegador es mejor experiencia: no hay espera. Con doscientos mil, o cuando el filtro depende de quién pregunta, la única opción es el servidor.</p>
-  <p>Lo que no vale es hacerlo en los dos sitios con reglas distintas: entonces el mismo filtro da resultados diferentes según por dónde pase, y ese fallo es dificilísimo de encontrar.</p>
+  <p class="rule-label">El lugar del filtrado es una decisión de diseño</p>
+  <p>Con doscientos productos, descargarlos una vez y filtrar en el navegador ofrece mejor experiencia, porque no hay espera. Con doscientos mil, o cuando el filtro depende de quién pregunta, la única opción es el servidor.</p>
+  <p>Lo que no vale es hacerlo en los dos sitios con reglas distintas: entonces el mismo filtro da resultados diferentes según por dónde pase, y ese fallo resulta muy difícil de encontrar. Toma la decisión, escríbela en tus notas y manténla.</p>
 </div>
 
-Toma la decisión, escríbela en tus notas y sé coherente.
-
-#### Los cuatro estados, ahora de verdad
-
-El estado que montaste en la UD4 ya tenía sitio para `cargando` y `error`. Ahora esos campos dejan de ser una simulación:
+El estado que montaste en la UD4 ya tenía sitio para `cargando` y `error`. Hoy esos campos dejan de ser una simulación:
 
 ```javascript
 async function cargar() {
@@ -1324,60 +1263,7 @@ async function cargar() {
 }
 ```
 
-#### Tarea 11 · Conectar
-
-1. Sustituye los datos escritos a mano por una llamada a tu API.
-2. Usa la función `pedir` de la sesión 3 para todas las llamadas.
-3. Decide dónde filtras y déjalo escrito.
-4. Comprueba los cuatro estados apagando el servidor y simulando red lenta.
-5. Añade el botón de reintentar.
-6. Comprueba que la primera carga llega renderizada del servidor y el cliente la toma desde ahí.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Interfaz completa alimentada por tu API, con los cuatro estados.</span></div>
-  <div><strong>Si lo tienes</strong><span>Filtra en el servidor y comprueba en Network qué se envía.</span></div>
-  <div><strong>Reto</strong><span>Haz que la primera carga no repita la petición de lo que ya llegó renderizado.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>El cliente consume tu API con rutas relativas.</li>
-    <li>Una sola función trata todas las respuestas y errores.</li>
-    <li>Los cuatro estados se ven de verdad.</li>
-    <li>Has decidido y documentado dónde se filtra.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque cliente y API comparten origen.</p>
-  <p>2 · Cargando, error, vacío y datos.</p>
-  <p>3 · Mostrar los detalles del error junto a los campos que los provocaron.</p>
-</details>
-
-
-### Bloque 3 · Formularios de extremo a extremo
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> El recorrido completo de un envío, desde el campo hasta el fichero y de vuelta.</li>
-    <li><strong>2. Haz:</strong> Un formulario que crea un producto de verdad.</li>
-    <li><strong>3. Comprueba:</strong> Los errores del servidor aparecen junto al campo que los causó.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Enumera todo lo que ocurre entre pulsar «Enviar» y ver el resultado.</li>
-    <li>¿Qué pasa si se pulsa dos veces seguidas?</li>
-    <li>¿Dónde deben aparecer los errores que devuelve el servidor?</li>
-  </ol>
-</div>
-
-#### El recorrido completo
+#### Un envío, de punta a punta
 
 <figure class="diagram">
   <figcaption>De un campo al fichero y de vuelta</figcaption>
@@ -1418,8 +1304,6 @@ formulario.addEventListener("submit", async (evento) => {
 });
 ```
 
-#### Los detalles del servidor, en su campo
-
 ```javascript
 function mostrarErroresDeCampo(detalles) {
   for (const { campo, mensaje } of detalles) {
@@ -1436,42 +1320,148 @@ function mostrarErroresDeCampo(detalles) {
   <p>Aquí se ve para qué servía diseñar el contrato antes de escribir la primera ruta.</p>
 </div>
 
-#### Dos detalles que se olvidan siempre
+Dos detalles se olvidan casi siempre. Deshabilitar el botón mientras se envía evita el doble envío, que con POST crea dos productos. Anunciar el resultado en la región activa de la UD4 consigue que el éxito no sea solo un cambio visual que algunas personas no perciben.
 
-Deshabilitar el botón mientras se envía evita el doble envío, que con POST crea dos productos. Anunciar además el resultado en la región activa de la UD4 consigue que el éxito no sea solo un cambio visual que algunas personas no perciben.
+### Se trabaja
 
-#### Tarea 12 · El formulario real
+<p class="stage stage--guided">150 minutos · la aplicación completa</p>
 
-1. Añade el formulario de alta a tu página, con su marcado accesible.
+Los tres primeros pasos montan la aplicación entera. Los dos últimos la atacan: uno intenta ejecutar código en tu página, el otro rompe la red a propósito.
+
+#### Paso 1 · La página del servidor · 40 min
+
+1. Escribe `src/vistas/catalogo.js` que genere la página completa.
+2. Escribe la función de escapado y úsala en **todos** los datos que entren en el HTML.
+3. Sirve la página en `GET /` desde su router, usando el servicio de ayer para obtener los productos.
+4. Comprueba con «ver código fuente» que el HTML llega hecho, no vacío.
+5. Añade la página de detalle de un producto, con su propio 404 en HTML y no en JSON.
+6. Valida el HTML generado en el W3C, con datos reales dentro.
+
+**Antes de continuar:** desactiva JavaScript en el navegador y recarga. El catálogo debe seguir viéndose.
+
+#### Paso 2 · Conectar el cliente · 40 min
+
+1. Sustituye los datos escritos a mano de la UD4 por una llamada a tu API.
+2. Usa la función `pedir` de la sesión 3 para todas las llamadas, sin ningún `fetch` suelto.
+3. Decide dónde filtras, impleméntalo en un solo sitio y déjalo escrito en tus notas con la razón.
+4. Añade el botón de reintentar cuando la carga falla.
+5. Comprueba en la pestaña de red qué se envía y qué vuelve en cada filtro.
+6. Añade el borrado desde la lista, con confirmación previa.
+
+#### Paso 3 · El formulario real · 40 min
+
+1. Añade el formulario de alta a tu página, con su marcado accesible: etiquetas asociadas, tipos correctos y mensajes vinculados.
 2. Envía con `fetch` y trata las dos respuestas posibles.
 3. Muestra los errores del servidor en su campo y lleva el foco al primero.
-4. Deshabilita el botón durante el envío.
+4. Deshabilita el botón durante el envío y devuélvelo a su estado después, también cuando falla.
 5. Anuncia el resultado en la región activa.
-6. Añade el borrado desde la lista, con confirmación.
+6. Añade la edición reutilizando el mismo formulario, con PATCH en lugar de POST.
+
+#### Paso 4 · El ataque que no debe ocurrir · 15 min
+
+Crea productos cuyos nombres sean cada una de estas cadenas y observa qué ocurre en la página generada por el servidor y en la lista pintada por el cliente.
+
+| Nombre del producto | Qué se ve | ¿Se ejecuta algo? |
+| ------------------- | --------- | ----------------- |
+| `Teclado <b>rebajado</b>` | | |
+| `Teclado <img src=x onerror="alert(1)">` | | |
+| `Teclado " onmouseover="alert(1)` | | |
+| `Teclado & ratón` | | |
+
+1. Rellena la tabla con lo observado.
+2. La tercera fila es la que distingue escapar el contenido de escapar un atributo. Comprueba dónde acaba esa cadena en tu HTML.
+3. Quita el escapado en una copia de la vista, repite las cuatro filas y anota la diferencia.
+4. Devuelve el escapado a su sitio.
+5. Escribe en dos líneas por qué validar el nombre al crearlo no sustituye a escaparlo al mostrarlo.
+
+#### Paso 5 · Cuando la red falla · 15 min
+
+1. Apaga el servidor con la página abierta y pulsa recargar la lista. Anota qué ve la persona.
+2. Simula red lenta desde las herramientas del navegador y comprueba que el estado de carga se ve de verdad.
+3. Envía el formulario pulsando el botón dos veces seguidas, deprisa. Cuenta los productos creados.
+4. Envía un producto inválido y comprueba que los mensajes aparecen en sus campos y que el foco va al primero.
+5. Rellena la tabla con los cuatro estados.
+
+| Estado | Cómo lo has provocado | Qué se ve | Qué se anuncia |
+| ------ | --------------------- | --------- | -------------- |
+| Cargando | | | |
+| Error | | | |
+| Vacío | | | |
+| Con datos | | | |
+
+El estado vacío es el que suele quedar sin diseñar, y aparece el primer día que alguien filtra por algo que no existe.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto elimina el trabajo duplicado entre servidor y cliente; el segundo cambia el orden entre lo que se ve y lo que se confirma.
+
+##### Reto 1 · La primera carga, sin pedir dos veces
+
+Tu página llega renderizada del servidor y, acto seguido, el cliente pide los mismos productos por la API. Se pintan dos veces los mismos datos.
+
+1. Mide el coste: cuenta las peticiones y los bytes de la primera carga en la pestaña de red.
+2. Haz que el servidor incluya los datos que ya ha usado dentro de la propia página, y que el cliente arranque su estado desde ahí en lugar de pedirlos.
+3. Elige cómo viajan esos datos. Hay al menos dos formas, y una de ellas vuelve a abrir el problema del escapado con reglas distintas a las del contenido. Busca cuál y qué precaución exige.
+4. Comprueba que la interfaz sigue funcionando: filtrar, crear y borrar deben seguir igual.
+5. Provoca la incoherencia: modifica un producto desde otra pestaña y recarga. Decide qué gana, lo embebido o lo pedido, y qué ocurre si el estado inicial está caducado.
+6. Desactiva JavaScript y comprueba que la página sigue completa.
+7. Explica en tres líneas qué has ganado y qué has complicado. Los mismos datos descritos en dos sitios tienen un coste que conviene nombrar.
+
+##### Reto 2 · Pintar antes de saber
+
+Al borrar un producto, tu interfaz espera la respuesta del servidor antes de quitarlo de la lista. Con red lenta, esa espera resulta perceptible.
+
+1. Invierte el orden: quita el producto de la lista en cuanto se pulsa, y envía la petición después.
+2. Si el servidor responde con error, devuelve el producto a su sitio **en la misma posición** y explica el fallo.
+3. Provoca el caso con el servidor apagado y comprueba que la lista queda como estaba.
+4. Aplica lo mismo al alta. Aquí aparece un problema que el borrado no tiene: el identificador todavía no existe. Decide cómo representas un elemento que aún no está confirmado.
+5. Decide qué operaciones **no** deberían pintarse de forma optimista, y por qué. Un cobro no se muestra como hecho antes de estarlo.
+6. Anuncia la reversión en la región activa. Un cambio que se deshace sin aviso resulta más confuso que la espera que querías evitar.
+7. Escribe en tres líneas qué compromiso has aceptado: la interfaz enseña durante unos instantes algo que todavía puede resultar falso.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Alta funcionando de punta a punta con errores en su campo.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade la edición reutilizando el mismo formulario.</span></div>
-  <div><strong>Reto</strong><span>Actualiza la lista de forma optimista y deshaz el cambio si el servidor rechaza.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Catálogo generado en el servidor y escapado, interfaz alimentada por tu API con los cuatro estados, y alta y borrado funcionando de punta a punta.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla del ataque rellenada sin ninguna ejecución, y la edición reutilizando el formulario del alta.</span></div>
+  <div><strong>Reto</strong><span>La primera carga sin petición duplicada, o el borrado optimista con su reversión.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 4</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>La primera carga llega generada del servidor.</li>
-    <li>El cliente consume su propia API.</li>
-    <li>Los formularios crean y borran datos reales.</li>
-    <li>Los errores del servidor llegan al campo correcto.</li>
+    <li>Generas HTML en el servidor con plantillas del lenguaje, y es válido.</li>
+    <li>Escapas todo dato antes de insertarlo en la página.</li>
+    <li>El cliente consume tu API con rutas relativas y una sola función.</li>
+    <li>Los cuatro estados se ven de verdad, incluido el vacío.</li>
+    <li>Los formularios crean, editan y borran datos reales.</li>
+    <li>Los errores del servidor llegan al campo correcto y el foco va al primero.</li>
   </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué gana una página generada en el servidor frente a una pintada en el navegador?</li>
+    <li>¿Qué hace la función de escapado y qué ocurre si falta?</li>
+    <li>¿Por qué el cliente no tiene problemas de CORS con su propia API?</li>
+    <li>¿Cuándo filtrarías en el cliente y cuándo en el servidor?</li>
+    <li>¿Por qué el contrato de errores incluye el nombre del campo que falla?</li>
+    <li>¿Qué evita deshabilitar el botón durante el envío?</li>
+  </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Que se envíe dos veces y se creen dos productos.</p>
-  <p>2 · Junto al campo que los provoca, gracias al campo <code>campo</code> del contrato.</p>
-  <p>3 · Deshabilitar el botón mientras dura el envío.</p>
+  <p>1 · Que llega hecha y funciona sin JavaScript, y que los buscadores la leen.</p>
+  <p>2 · Sustituye los caracteres con significado en HTML por sus entidades; sin ella, un dato puede ejecutarse como código en el navegador de cualquier visitante.</p>
+  <p>3 · Porque el cliente y la API comparten origen.</p>
+  <p>4 · En el cliente con pocos datos ya descargados; en el servidor con muchos, o cuando el filtro depende de permisos.</p>
+  <p>5 · Para poder mostrar cada mensaje junto al campo que lo provoca.</p>
+  <p>6 · El doble envío, que con POST crea dos productos.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 4 · 5–10 minutos</p>
@@ -1482,6 +1472,7 @@ Deshabilitar el botón mientras se envía evita el doble envío, que con POST cr
     <li>¿Por qué el contrato de errores incluye el nombre del campo que falla?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 5 · Listo para publicar
