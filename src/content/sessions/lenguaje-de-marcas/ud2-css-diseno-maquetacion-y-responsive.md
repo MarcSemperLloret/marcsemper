@@ -1253,16 +1253,14 @@ Esta hoja pertenece a un proyecto ajeno. Decide qué valores se convierten en cu
 
 ## Sesión 3 · Flujo normal y Flexbox
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Flujo normal, <code>display</code> y posicionamiento</strong>, <strong>Flexbox</strong> y <strong>Flexbox sobre problemas reales</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Flujo normal, `display` y posicionamiento
+<p class="lead">Tres horas. Media hora para entender cómo coloca el navegador cuando no le dices nada y cómo se razona un Flexbox, y dos horas y media rompiendo el flujo a propósito y construyendo los componentes de tu sitio.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo coloca el navegador los elementos cuando no le dices nada, y qué pasa cuando sacas uno de ese flujo.</li>
-    <li><strong>2. Haz:</strong> Experimenta con los modos de <code>display</code> y de <code>position</code> sobre unas cajas.</li>
-    <li><strong>3. Comprueba:</strong> Sabes explicar qué ocurre con el hueco que ocupaba cada elemento.</li>
+    <li><strong>1. Aprende:</strong> Cómo coloca el navegador los elementos por defecto, qué pasa cuando sacas uno de ese flujo, y los dos ejes con los que se razona cualquier Flexbox.</li>
+    <li><strong>2. Haz:</strong> Experimenta con <code>display</code> y <code>position</code>, convierte tu navegación en un Flexbox y construye tres componentes justificando cada decisión.</li>
+    <li><strong>3. Comprueba:</strong> Sabes decir para cada componente cuál es su eje principal, y nada desborda a 360 px.</li>
   </ol>
 </div>
 
@@ -1274,6 +1272,12 @@ Esta hoja pertenece a un proyecto ajeno. Decide qué valores se convierten en cu
     <li>Predice qué cambia si sustituyes <code>var(--color-principal)</code> en la declaración de <code>:root</code>.</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Antes de colocar nada conviene saber cómo se coloca solo. Después, dos formas de intervenir: sacar un elemento del flujo, que se usa poco y para cosas concretas, y repartir el espacio de una línea, que es Flexbox y se usa constantemente.
 
 #### Antes de Flexbox y Grid está el flujo normal
 
@@ -1288,15 +1292,13 @@ Merece la pena entenderlo porque el flujo normal ya resuelve bien muchas cosas. 
 | Bloque | Ocupa todo el ancho disponible y empieza en una línea nueva | `div`, `section`, `article`, `p`, `h1` |
 | En línea | Ocupa solo lo que mide su contenido y se coloca dentro del texto | `a`, `strong`, `em`, `span`, `img` |
 
-#### `display`
-
 ```css
 display: block;          /* fuerza el comportamiento de bloque */
 display: inline;         /* fuerza el de línea */
 display: inline-block;   /* fluye como texto, pero acepta ancho, alto y márgenes verticales */
 display: none;           /* lo saca del documento por completo */
-display: flex;           /* la semana que viene */
-display: grid;
+display: flex;           /* lo de hoy */
+display: grid;           /* la sesión que viene */
 ```
 
 `inline-block` resuelve la limitación clásica: a un elemento en línea no puedes darle `width` ni márgenes verticales útiles. Con `inline-block` sí, y sigue colocándose en la misma línea que su texto.
@@ -1307,7 +1309,7 @@ display: grid;
   <p>Si necesitas que algo siga estando disponible para quien no ve la pantalla, existen otras técnicas. Si la intención era únicamente que ocupara su hueco sin verse, eso es <code>visibility: hidden</code> o una opacidad, no <code>display: none</code>.</p>
 </div>
 
-#### `position`
+#### Sacar un elemento del flujo
 
 ```css
 position: static;    /* el valor por defecto: sigue el flujo */
@@ -1326,7 +1328,7 @@ La distinción que importa es **si el elemento deja o no su hueco**:
 | `fixed` | No | Igual, y además no se mueve al hacer scroll |
 | `sticky` | Sí | Se comporta normal hasta que toca su límite |
 
-`relative` casi nunca se usa para mover nada: se usa para crear el punto de referencia al que un `absolute` hijo se agarrará. De hecho es justo lo que hace el botón de copiar de esta misma página.
+`relative` casi nunca se usa para mover nada: se usa para crear el punto de referencia al que un `absolute` hijo se agarrará.
 
 ```css
 .card          { position: relative; }
@@ -1339,7 +1341,7 @@ La distinción que importa es **si el elemento deja o no su hueco**:
   <p><code>absolute</code> es para lo que de verdad es posicionamiento: una etiqueta de «oferta» sobre una esquina, un icono dentro de un campo. La distribución de la página se hace con Flexbox y con Grid.</p>
 </div>
 
-#### `overflow`
+Cuando algo no cabe, `overflow` decide qué se ve:
 
 ```css
 overflow: visible;  /* por defecto: el contenido se sale y se ve */
@@ -1347,69 +1349,9 @@ overflow: auto;     /* aparece barra de scroll si hace falta */
 overflow: hidden;   /* se recorta lo que no cabe */
 ```
 
-`overflow: hidden` es tentador cuando algo desborda, y muchas veces es tapar el problema en lugar de resolverlo: el contenido sigue sin caber, ahora además no se puede leer. Antes de usarlo, pregunta por qué no cabe.
+`overflow: hidden` es tentador cuando algo desborda, y muchas veces es tapar el problema en lugar de resolverlo: el contenido sigue sin caber, ahora además no se puede leer. Donde sí es la respuesta correcta es en contenido que legítimamente es más ancho que la pantalla, como una tabla de datos: ahí `overflow-x: auto` en un contenedor le da su propia barra de scroll sin romper la página.
 
-Donde sí es la respuesta correcta es en contenido que legítimamente es más ancho que la pantalla, como una tabla de datos: ahí `overflow-x: auto` en un contenedor le da su propia barra de scroll sin romper la página.
-
-#### Tarea 7 · Rompe el flujo
-
-Crea un archivo de pruebas `laboratorio.html` con cuatro cajas de colores, una debajo de otra, y experimenta. Para **cada** apartado anota qué le pasa a la caja y, sobre todo, **qué le pasa al hueco que ocupaba**.
-
-1. Cambia la segunda a `display: inline`. ¿Por qué deja de hacer caso al `width`?
-2. Cambia la segunda a `display: inline-block`. ¿Qué recupera?
-3. Ponle `position: relative` y desplázala con `top: 20px`. ¿Se han movido las demás?
-4. Ponle `position: absolute` con `top: 0; right: 0`. ¿Respecto a qué se ha colocado? Ahora dale `position: relative` a su contenedor y observa la diferencia.
-5. Ponle `position: sticky; top: 0` a la primera y haz scroll.
-6. Ponle `display: none` a la tercera y compáralo con `visibility: hidden`.
-
-| Apartado | Qué le pasa al elemento | Qué le pasa a su hueco |
-| -------- | ----------------------- | ---------------------- |
-| | | |
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · mi <code>absolute</code> se va a la esquina de la pantalla</summary>
-  <p>Un elemento <code>absolute</code> se coloca respecto a su <strong>ancestro posicionado más cercano</strong>, y si no encuentra ninguno, respecto al documento entero. Por eso acaba en la esquina de la página en lugar de en la de su tarjeta.</p>
-  <p>La solución es la del ejemplo: darle <code>position: relative</code> al contenedor que quieres que sirva de referencia. Es prácticamente el único uso de <code>relative</code> que verás en código profesional.</p>
-</details>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre <code>relative</code> y <code>absolute</code> respecto al hueco?</li>
-    <li>¿Respecto a qué se posiciona un <code>absolute</code>?</li>
-    <li>¿Por qué <code>display: none</code> no es lo mismo que «no se ve»?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>relative</code> sigue ocupando su hueco aunque se desplace; <code>absolute</code> sale del flujo y los demás elementos ocupan su sitio.</p>
-  <p>2 · Respecto a su ancestro posicionado más cercano, y si no hay ninguno, respecto al documento.</p>
-  <p>3 · Porque lo elimina del documento: deja de existir también para los lectores de pantalla y para el recorrido con <code>Tab</code>.</p>
-</details>
-
-
-### Bloque 2 · Flexbox
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Los dos ejes de Flexbox y las cinco propiedades con las que se resuelve casi todo.</li>
-    <li><strong>2. Haz:</strong> Convierte la navegación de tu sitio en un Flexbox.</li>
-    <li><strong>3. Comprueba:</strong> El menú se comporta razonablemente al estrechar la ventana.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué diferencia hay entre un elemento <code>block</code> y uno <code>inline</code>?</li>
-    <li>¿Qué ocurre con el hueco de un elemento en <code>position: absolute</code>?</li>
-    <li>Explica por qué <code>display: none</code> no es solo «hacerlo invisible».</li>
-  </ol>
-</div>
-
-#### Una dimensión
+#### Flexbox distribuye en una dimensión
 
 Flexbox distribuye elementos **en una línea**: o en fila, o en columna. Ese es el criterio para elegirlo, y lo veremos enfrentado a Grid en la sesión 4.
 
@@ -1424,7 +1366,7 @@ En la UD1 dejaste el menú así:
 </nav>
 ```
 
-Con dos declaraciones deja de ser una lista vertical:
+Con dos declaraciones deja de ser una lista vertical, **sin tocar el HTML**:
 
 ```css
 nav ul {
@@ -1451,8 +1393,6 @@ nav ul {
   <p class="lesson-demo__note"><code>display: flex</code> cambia la distribución; <code>gap</code> crea únicamente el espacio entre enlaces.</p>
 </figure>
 
-Fíjate en algo: **el HTML no se ha tocado**. Sigue siendo una lista de enlaces, que es lo que es. Solo ha cambiado cómo se dibuja.
-
 #### Los dos ejes
 
 <figure class="diagram">
@@ -1476,8 +1416,6 @@ flex-direction: column;  /* principal vertical */
   <p>Por eso, en cuanto pones <code>flex-direction: column</code>, las dos se intercambian: <code>justify-content</code> pasa a mover en vertical y <code>align-items</code> en horizontal. Cuando algo no se alinee como esperas, la primera pregunta es <strong>cuál es ahora el eje principal</strong>.</p>
 </div>
 
-#### Las cinco propiedades del contenedor
-
 ```css
 .barra {
     display: flex;
@@ -1496,26 +1434,62 @@ flex-direction: column;  /* principal vertical */
 | `gap` | Separación entre elementos, sin márgenes ni el último elemento sobrando |
 | `flex-wrap` | Permite que los elementos salten de línea cuando no caben |
 
-Valores útiles de `justify-content`: `flex-start`, `center`, `flex-end`, `space-between` —los extremos pegados a los bordes y el hueco repartido en medio— y `space-around`.
-
-De `align-items`: `stretch` (por defecto, todos igual de altos), `center`, `flex-start`, `flex-end`, `baseline`.
-
 <p class="term">gap</p>
 
 La separación entre elementos de un contenedor Flexbox o Grid. Sustituye a los márgenes y evita su problema clásico: no deja un margen sobrante en el último elemento, y no sufre el colapso de márgenes.
 
-#### En los elementos hijos
+En los hijos, `flex` resume cuánto puede crecer un elemento, cuánto encogerse y cuál es su tamaño de partida:
 
 ```css
 .logo    { flex: 0 0 auto; }   /* no crece, no se encoge, mide lo que mida */
 .buscador{ flex: 1; }          /* se queda con todo el espacio sobrante */
 ```
 
-`flex` resume tres propiedades: cuánto puede crecer, cuánto puede encogerse y cuál es su tamaño de partida. `flex: 1` es el atajo que más vas a usar, y significa «reparte el espacio que sobre entre los elementos que lo tengan».
-
 `margin-left: auto` en un hijo también tiene un efecto muy útil: empuja ese elemento y todos los siguientes hasta el final del eje. Es la forma limpia de separar un grupo del resto en una barra.
 
-#### Tarea 8 · La navegación de tu sitio
+#### El método, en tres preguntas
+
+Cuando te enfrentes a un componente, no busques la propiedad: contesta esto.
+
+<figure class="diagram">
+  <figcaption>Cómo se razona un Flexbox</figcaption>
+  <ol class="flow">
+    <li>¿Qué elementos tengo que colocar en una misma línea?</li>
+    <li>¿En qué dirección van: fila o columna? Ese es el eje principal</li>
+    <li>¿Qué hago con el espacio que sobra en ese eje, y cómo alineo en el otro?</li>
+  </ol>
+</figure>
+
+Con eso, `justify-content` y `align-items` dejan de ser prueba y error.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · laboratorio y componentes de tu proyecto</p>
+
+El paso 1 se hace en un archivo de pruebas, no sobre el proyecto: conviene romper cosas en un sitio donde romperlas no cueste nada. A partir del paso 2 se trabaja sobre el sitio.
+
+#### Paso 1 · Rompe el flujo · 30 min
+
+Crea un archivo de pruebas `laboratorio.html` con cuatro cajas de colores, una debajo de otra, y experimenta. Para **cada** apartado anota qué le pasa a la caja y, sobre todo, **qué le pasa al hueco que ocupaba**.
+
+1. Cambia la segunda a `display: inline`. ¿Por qué deja de hacer caso al `width`?
+2. Cambia la segunda a `display: inline-block`. ¿Qué recupera?
+3. Ponle `position: relative` y desplázala con `top: 20px`. ¿Se han movido las demás?
+4. Ponle `position: absolute` con `top: 0; right: 0`. ¿Respecto a qué se ha colocado? Ahora dale `position: relative` a su contenedor y observa la diferencia.
+5. Ponle `position: sticky; top: 0` a la primera y haz scroll.
+6. Ponle `display: none` a la tercera y compáralo con `visibility: hidden`.
+
+| Apartado | Qué le pasa al elemento | Qué le pasa a su hueco |
+| -------- | ----------------------- | ---------------------- |
+| | | |
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · mi <code>absolute</code> se va a la esquina de la pantalla</summary>
+  <p>Un elemento <code>absolute</code> se coloca respecto a su <strong>ancestro posicionado más cercano</strong>, y si no encuentra ninguno, respecto al documento entero. Por eso acaba en la esquina de la página en lugar de en la de su tarjeta.</p>
+  <p>La solución es la del ejemplo: darle <code>position: relative</code> al contenedor que quieres que sirva de referencia. Es prácticamente el único uso de <code>relative</code> que verás en código profesional.</p>
+</details>
+
+#### Paso 2 · La navegación de tu sitio · 30 min
 
 Transforma la cabecera de tus cuatro páginas:
 
@@ -1541,59 +1515,11 @@ Transforma la cabecera de tus cuatro páginas:
   <p>Y usa el inspector de Flexbox: junto al elemento aparece un icono <code>flex</code> en DevTools que dibuja los ejes y el espacio libre.</p>
 </details>
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Sobre qué eje actúa <code>justify-content</code>?</li>
-    <li>¿Qué le pasa a <code>align-items</code> si cambias a <code>flex-direction: column</code>?</li>
-    <li>¿Por qué <code>gap</code> es mejor que poner márgenes a los hijos?</li>
-  </ol>
-</div>
+#### Paso 3 · Tres casos razonados · 20 min
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Sobre el eje principal, sea cual sea su dirección.</p>
-  <p>2 · Pasa a alinear en horizontal, porque el eje transversal ahora es el horizontal.</p>
-  <p>3 · Porque separa solo entre elementos, sin dejar un margen sobrante al final, y no sufre el colapso de márgenes.</p>
-</details>
+Reproduce los tres, aplicando el método de las tres preguntas antes de escribir ninguna propiedad.
 
-
-### Bloque 3 · Flexbox sobre problemas reales
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se razona un layout de Flexbox en lugar de buscar la receta en internet.</li>
-    <li><strong>2. Haz:</strong> Construye tres componentes distintos y justifica cada decisión.</li>
-    <li><strong>3. Comprueba:</strong> Sabes decir para cada uno cuál es el eje principal.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cómo se determinan el eje principal y el eje cruzado?</li>
-    <li>¿Qué diferencia hay entre <code>justify-content</code> y <code>align-items</code>?</li>
-    <li>Una navegación desborda: ¿qué revisarías antes de reducir la fuente?</li>
-  </ol>
-</div>
-
-#### El método, en tres preguntas
-
-Cuando te enfrentes a un componente, no busques la propiedad: contesta esto.
-
-<figure class="diagram">
-  <figcaption>Cómo se razona un Flexbox</figcaption>
-  <ol class="flow">
-    <li>¿Qué elementos tengo que colocar en una misma línea?</li>
-    <li>¿En qué dirección van: fila o columna? Ese es el eje principal</li>
-    <li>¿Qué hago con el espacio que sobra en ese eje, y cómo alineo en el otro?</li>
-  </ol>
-</figure>
-
-Con eso, `justify-content` y `align-items` dejan de ser prueba y error.
-
-#### Caso 1 · Una botonera
+##### 3.1 · Una botonera
 
 ```html
 <div class="acciones">
@@ -1619,7 +1545,7 @@ Con eso, `justify-content` y `align-items` dejan de ser prueba y error.
 }
 ```
 
-#### Caso 2 · Una tarjeta horizontal
+##### 3.2 · Una tarjeta horizontal
 
 ```text
 ┌───────────────────────────────────┐
@@ -1643,7 +1569,7 @@ Aquí hay **dos Flexbox anidados**, y verlo es media solución:
 
 Anidar contenedores es normal y no es un síntoma de nada malo. Cada uno resuelve una dimensión.
 
-#### Caso 3 · Centrar
+##### 3.3 · Centrar
 
 El problema con más recetas copiadas de internet de toda la historia de CSS. Con Flexbox son dos líneas, pero conviene entenderlas:
 
@@ -1657,7 +1583,7 @@ El problema con más recetas copiadas de internet de toda la historia de CSS. Co
 
 Centrar es simplemente **centrar en los dos ejes a la vez**. Si solo necesitas uno, solo escribes uno.
 
-#### Reto 2 · Los tres centrados (10 min)
+#### Paso 4 · Los tres centrados · 10 min
 
 Tienes tres cajas, cada una con un cuadrado dentro. Consigue, sin `position` y sin márgenes fijos:
 
@@ -1666,7 +1592,7 @@ Tienes tres cajas, cada una con un cuadrado dentro. Consigue, sin `position` y s
 3. El cuadrado centrado en los dos ejes.
 
 <details class="aside aside--extra">
-  <summary>Ver respuesta del Reto 2</summary>
+  <summary>Ver respuesta</summary>
   <p>Con <code>display: flex</code> y dirección por defecto (fila):</p>
   <p>1 · <code>justify-content: center;</code> y nada más: el eje principal es el horizontal, y sin <code>align-items</code> el hijo se queda arriba si tiene altura propia.</p>
   <p>2 · <code>justify-content: flex-end; align-items: center;</code></p>
@@ -1674,23 +1600,13 @@ Tienes tres cajas, cada una con un cuadrado dentro. Consigue, sin `position` y s
   <p>Y la comprobación de que lo has entendido: con <code>flex-direction: column</code>, los tres se resuelven intercambiando las dos propiedades.</p>
 </details>
 
-#### Microrevisión · diez minutos, sin nota
+#### Paso 5 · Flexbox Challenge · 45 min
 
-Intercambia con un compañero únicamente una sección que ya hayas maquetado. Encuentra **una decisión de layout que no puedas justificar** y descríbela así:
-
-1. **Qué intenta resolver:** tamaño, espacio, distribución o estado.
-2. **Qué regla actúa:** compruébala en DevTools.
-3. **Qué duda queda:** por qué Flexbox, Grid o el flujo normal podrían encajar mejor.
-
-El autor decide si cambia el código o conserva la decisión y la justifica. No se valora la coincidencia de criterio estético entre ambas partes.
-
-#### Tarea 9 · Flexbox Challenge
-
-Construye estos tres componentes usando **solo Flexbox**, y aplícalos a tu proyecto donde encajen:
+Es el trabajo central de la sesión. Construye estos tres componentes usando **solo Flexbox**, y aplícalos a tu proyecto donde encajen:
 
 **A · La barra de cabecera**, con el nombre del sitio a la izquierda, la navegación a la derecha y todo alineado verticalmente.
 
-**B · La tarjeta horizontal** del caso 2, que debe seguir funcionando cuando la descripción sea el doble de larga.
+**B · La tarjeta horizontal** del paso 3.2, que debe seguir funcionando cuando la descripción sea el doble de larga.
 
 **C · Una línea de metadatos** —fecha, autor, categoría— separada por `gap`, que salte de línea con elegancia cuando no quepa.
 
@@ -1704,37 +1620,86 @@ Para cada uno responde por escrito:
 
 Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla solo la puede rellenar quien ha entendido los ejes.
 
+#### Paso 6 · Revisión cruzada de una decisión · 15 min
+
+Intercambia con un compañero únicamente una sección que ya hayas maquetado. Encuentra **una decisión de layout que no puedas justificar** y descríbela así:
+
+1. **Qué intenta resolver:** tamaño, espacio, distribución o estado.
+2. **Qué regla actúa:** compruébala en DevTools.
+3. **Qué duda queda:** por qué Flexbox, Grid o el flujo normal podrían encajar mejor.
+
+El autor decide si cambia el código o conserva la decisión y la justifica. No se valora la coincidencia de criterio estético entre ambas partes.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los seis pasos. El primer reto se resuelve **sin escribir CSS**, y es el más difícil de los dos.
+
+##### Reto 1 · Antes de la herramienta, la pregunta
+
+Para cada uno de estos seis casos, decide si lo resolverías con el **flujo normal**, con **Flexbox**, o si necesitarás algo que todavía no hemos visto. Escribe la respuesta y el motivo antes de probar nada.
+
+1. Un artículo de blog: título, párrafos, una imagen y más párrafos.
+2. Una barra de cabecera con logotipo, buscador que ocupa el resto y dos iconos a la derecha.
+3. Una galería de doce fotos en cuadrícula regular, alineadas en filas y columnas.
+4. Una lista de etiquetas de longitud variable que fluyen y saltan de línea.
+5. Una ficha con la foto a la izquierda y cinco datos a la derecha, uno bajo otro.
+6. El esqueleto de una página: cabecera arriba, barra lateral, contenido y pie.
+
+Dos de los seis no son trabajo de Flexbox, y uno no necesita ninguna herramienta. Identifícalos y explica por qué. Después comprueba tus respuestas construyendo los que puedas con lo que ya sabes, y deja anotados los que tengas que aplazar hasta la sesión 4.
+
+##### Reto 2 · La barra que no cabe
+
+Una cabecera tiene cuatro elementos: el nombre del sitio, un menú de cinco enlaces, un buscador y un menú de usuario. A 1400 px caben todos en una línea; a 360 px, no caben ni de lejos.
+
+Construye una cabecera que degrade con dignidad **sin una sola media query** y sin ocultar nada con `display: none`. Solo puedes usar `flex-wrap`, `gap`, `flex` en los hijos, `min-width` y `max-width`.
+
+1. Decide qué elemento se queda con el espacio sobrante cuando sobra, y cuál cede primero cuando falta. Justifícalo.
+2. Consigue que el buscador nunca baje de una anchura utilizable, en lugar de encogerse hasta ser inservible.
+3. Anota las tres anchuras en las que la barra cambia de disposición. No las has escrito tú: las decide el contenido. Eso es exactamente lo que discutiremos en la sesión 4 al hablar de *breakpoints*.
+4. Comprueba que en ninguna anchura entre 320 y 1600 px aparece una barra de scroll horizontal.
+
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Resuelve A, B y C, completa la tabla y evita desbordamientos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Duplica la longitud del contenido y adapta la solución sin cambiar el HTML.</span></div>
-  <div><strong>Reto</strong><span>Recibe un cuarto componente y decide primero si necesita Flexbox, Grid o ninguno.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>El laboratorio con su tabla de huecos, la navegación en Flexbox sin desbordar a 360 px y los tres componentes del reto construidos.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de ejes del paso 5 completa y la revisión cruzada contestada.</span></div>
+  <div><strong>Reto</strong><span>Los seis casos clasificados antes de escribir CSS, y la cabecera que degrada sin media queries con sus tres anchuras anotadas.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Sabes identificar el eje principal de cualquier Flexbox.</li>
     <li>Sabes que <code>justify-content</code> y <code>align-items</code> se intercambian al cambiar la dirección.</li>
     <li>Usas <code>gap</code> en lugar de márgenes para separar.</li>
     <li>Tu navegación funciona a 360 px sin desbordar.</li>
     <li>No hay ningún valor en píxeles colocando elementos a mano.</li>
+    <li>La tabla de ejes de los tres componentes está rellenada y justificada.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Qué diferencia hay entre <code>relative</code> y <code>absolute</code> respecto al hueco?</li>
+    <li>¿Por qué <code>display: none</code> no es lo mismo que «no se ve»?</li>
+    <li>¿Sobre qué eje actúa <code>justify-content</code>?</li>
+    <li>¿Qué le pasa a <code>align-items</code> si cambias a <code>flex-direction: column</code>?</li>
     <li>Enuncia las tres preguntas con las que se razona un Flexbox.</li>
-    <li>¿Está mal anidar un Flexbox dentro de otro?</li>
     <li>¿Qué hace <code>margin-left: auto</code> en un hijo de un Flexbox?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Qué elementos van en la misma línea, en qué dirección —ese es el eje principal— y qué hago con el espacio sobrante y con la alineación en el otro eje.</p>
-  <p>2 · No. Es lo normal: cada contenedor resuelve una dimensión, y una tarjeta suele necesitar dos o tres.</p>
-  <p>3 · Absorbe todo el espacio sobrante por ese lado, empujando ese elemento y los siguientes al final del eje.</p>
+  <p>1 · <code>relative</code> sigue ocupando su hueco aunque se desplace; <code>absolute</code> sale del flujo y los demás elementos ocupan su sitio.</p>
+  <p>2 · Porque lo elimina del documento: deja de existir también para los lectores de pantalla y para el recorrido con <code>Tab</code>.</p>
+  <p>3 · Sobre el eje principal, sea cual sea su dirección.</p>
+  <p>4 · Pasa a alinear en horizontal, porque el eje transversal ahora es el horizontal.</p>
+  <p>5 · Qué elementos van en la misma línea, en qué dirección —ese es el eje principal— y qué hago con el espacio sobrante y con la alineación en el otro eje.</p>
+  <p>6 · Absorbe todo el espacio sobrante por ese lado, empujando ese elemento y los siguientes al final del eje.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -1746,6 +1711,7 @@ Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla so
     <li>Predice qué cambia al pasar de <code>row</code> a <code>column</code>.</li>
   </ol>
 </div>
+
 
 ---
 
