@@ -368,7 +368,7 @@ enlace.removeAttribute("target");
 enlace.hasAttribute("download");
 ```
 
-Y los `data-` tienen además un acceso propio, que será la forma de saber en la sesión 2 a qué producto corresponde el botón que se acaba de pulsar:
+Los `data-` tienen además un acceso propio, que será la forma de saber en la sesión 2 a qué producto corresponde el botón que se acaba de pulsar:
 
 ```javascript
 tarjeta.dataset.id;            // "7"  ← siempre texto
