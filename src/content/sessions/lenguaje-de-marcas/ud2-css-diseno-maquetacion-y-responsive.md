@@ -2239,16 +2239,14 @@ Esta hoja resuelve un catálogo y una cabecera con seis media queries. Todas fun
 
 ## Sesión 5 · Imágenes, estados y movimiento
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Imágenes y medios adaptables</strong>, <strong>Estados, pseudo-clases y foco visible</strong> y <strong>Transiciones y transformaciones</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Imágenes y medios adaptables
+<p class="lead">Tres horas. Media hora para entender cómo encaja una imagen en un hueco que no es el suyo y por qué el estado de foco no es opcional, y dos horas y media dejando el catálogo coherente y el sitio recorrible sin ratón.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Por qué una imagen rompe un layout y cómo se encajan imágenes de tamaños distintos sin deformarlas.</li>
-    <li><strong>2. Haz:</strong> Consigue un catálogo visualmente coherente con imágenes irregulares.</li>
-    <li><strong>3. Comprueba:</strong> Ninguna imagen está estirada ni aplastada.</li>
+    <li><strong>1. Aprende:</strong> Por qué una imagen rompe un layout, cómo se encajan imágenes de tamaños distintos sin deformarlas, qué estados tiene una interfaz y cuándo un movimiento comunica algo.</li>
+    <li><strong>2. Haz:</strong> Consigue un catálogo coherente con imágenes irregulares, recorre tu sitio con el teclado y añade solo las transiciones que informen.</li>
+    <li><strong>3. Comprueba:</strong> Ninguna imagen está deformada, sabes en todo momento dónde está el foco, y cada movimiento de tu página comunica algo.</li>
   </ol>
 </div>
 
@@ -2260,6 +2258,12 @@ Esta hoja resuelve un catálogo y una cabecera con seis media queries. Todas fun
     <li>Ordena el diagnóstico de un desbordamiento horizontal antes de escribir CSS nuevo.</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Tres asuntos que parecen menores y no lo son: una imagen que no encaja rompe el layout entero, un foco invisible deja la web inservible para quien no usa ratón, y un movimiento sin motivo estorba. Los tres se resuelven con decisiones, no con recetas.
 
 #### La regla que va en toda hoja de estilos
 
@@ -2274,18 +2278,16 @@ img {
 
 `max-width: 100%` impide que sobrepase a su contenedor. `height: auto` es imprescindible junto a la anterior: sin ella, si el HTML declaraba `width` y `height` —como pedíamos en la UD1—, al reducirse el ancho la altura se quedaría fija y la imagen se deformaría.
 
-#### `object-fit`
+#### Encajar una imagen en un hueco que no es el suyo
 
-El problema real de un catálogo: las fotos de producto vienen con tamaños y proporciones distintas, y las tarjetas quedan desiguales.
-
-La tentación es forzarlas:
+El problema real de un catálogo: las fotos de producto vienen con tamaños y proporciones distintas, y las tarjetas quedan desiguales. La tentación es forzarlas, y eso las estira:
 
 ```css
 /* Mal: deforma */
 .card img { width: 100%; height: 15rem; }
 ```
 
-Eso estira o aplasta la imagen. La solución es decirle **cómo debe encajar** en el hueco que le das:
+La solución es decirle **cómo debe encajar** en el hueco que le das:
 
 ```css
 .card img {
@@ -2311,9 +2313,7 @@ Si el recorte de `cover` elimina la parte relevante, `object-position` determina
 .card img { object-fit: cover; object-position: top; }
 ```
 
-#### `aspect-ratio`
-
-Mejor que fijar una altura en `rem` es declarar una proporción:
+Mejor todavía que fijar una altura en `rem` es declarar una proporción, porque entonces la altura se calcula sola a partir del ancho y la tarjeta funciona igual en una columna estrecha que en una ancha:
 
 ```css
 .card img {
@@ -2323,64 +2323,7 @@ Mejor que fijar una altura en `rem` es declarar una proporción:
 }
 ```
 
-Ahora la altura se calcula sola a partir del ancho, así que la tarjeta funciona igual en una columna estrecha que en una ancha. Es la versión responsive de la idea anterior.
-
-#### Tarea 13 · El catálogo irregular
-
-Reúne al menos seis imágenes **deliberadamente dispares**: alguna vertical, alguna horizontal, alguna muy grande, alguna pequeña. Puedes usar fotos reales de tu tema.
-
-Consigue que el catálogo se vea coherente **sin editar los archivos**:
-
-1. Todas las tarjetas con la misma altura de imagen.
-2. Ninguna imagen deformada.
-3. Nada se sale a 320 px.
-4. Comprueba las verticales: si `cover` les corta la cabeza a las fotos, ajústalo con `object-position`.
-5. Explica en un comentario por qué has elegido `cover` o `contain`.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · las imágenes se ven aplastadas</summary>
-  <p>Si has dado <code>width</code> y <code>height</code> a la vez sin <code>object-fit</code>, el navegador estira la imagen hasta esa caja. Añade <code>object-fit: cover</code>.</p>
-  <p>Y si el problema aparece solo al estrechar la ventana, lo más probable es que te falte <code>height: auto</code> junto al <code>max-width: 100%</code>.</p>
-</details>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué par de declaraciones evita que una imagen desborde y se deforme?</li>
-    <li>¿Qué diferencia hay entre <code>cover</code> y <code>contain</code>?</li>
-    <li>¿Qué ventaja tiene <code>aspect-ratio</code> frente a una altura fija?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>max-width: 100%</code> y <code>height: auto</code>.</p>
-  <p>2 · <code>cover</code> llena el hueco recortando lo que sobra; <code>contain</code> mete la imagen entera y deja huecos.</p>
-  <p>3 · Que la altura se calcula a partir del ancho, así que la proporción se mantiene en cualquier tamaño de columna.</p>
-</details>
-
-
-### Bloque 2 · Estados, pseudo-clases y foco visible
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Que una interfaz tiene más de un estado, y por qué el del foco no es opcional.</li>
-    <li><strong>2. Haz:</strong> Recorre tu sitio solo con el teclado y arregla lo que no se vea.</li>
-    <li><strong>3. Comprueba:</strong> Sabes en todo momento dónde está el foco.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué se usan juntos <code>max-width: 100%</code> y <code>height: auto</code>?</li>
-    <li>¿Qué diferencia hay entre <code>cover</code> y <code>contain</code>?</li>
-    <li>Predice cómo ayuda <code>aspect-ratio</code> en un catálogo con imágenes irregulares.</li>
-  </ol>
-</div>
-
-#### Los estados de un enlace
+#### Una interfaz tiene más de un estado
 
 ```css
 a              { color: var(--color-primary); }
@@ -2402,15 +2345,11 @@ input:checked   { }
 
 `:invalid` merece una advertencia: se aplica desde que carga la página, así que un campo obligatorio y vacío aparece en rojo antes de que nadie haya escrito nada. Combínalo con `:user-invalid`, que solo actúa después de que la persona haya interactuado, o marca el error de otra forma.
 
-#### El foco no se quita
-
 <div class="rule">
   <p class="rule-label">Nunca <code>outline: none</code> a secas</p>
   <p>El contorno del foco resulta visualmente poco atractivo y constituye la única indicación de posición para quien navega con teclado. Su supresión deja la web inutilizable para esas personas: al pulsar <code>Tab</code> no se produce ningún cambio perceptible.</p>
   <p>Si no te gusta el contorno por defecto, <strong>sustitúyelo por otro igual de claro</strong>: un contorno propio, un cambio de fondo, un borde. Lo que no vale es dejarlo sin ninguna indicación.</p>
 </div>
-
-`:focus-visible` es la herramienta que resuelve la tensión real:
 
 <p class="term">:focus-visible</p>
 
@@ -2427,11 +2366,120 @@ Así se puede tener un foco de teclado bien visible sin que aparezca un recuadro
 
 `outline` tiene una ventaja sobre `border` para esto: **no ocupa espacio en el layout**, así que nada se mueve al recibir el foco. Y `outline-offset` lo separa del elemento para que se lea mejor.
 
-#### Selectores modernos
+#### Transiciones y transformaciones
+
+Una transición suaviza el paso de un estado a otro. Se declara en el estado **normal**, no en el `:hover`, para que funcione en los dos sentidos:
 
 ```css
-:is(h1, h2, h3) { line-height: 1.15; }
+.card {
+    transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 0.12);
+}
 ```
+
+```text
+transform    qué propiedad se anima
+150ms        cuánto dura
+ease         cómo acelera
+```
+
+<div class="rule">
+  <p class="rule-label">No animes <code>all</code></p>
+  <p><code>transition: all 300ms</code> parece cómodo y anima también cosas que no querías, incluidas propiedades que obligan al navegador a recalcular el layout entero. El resultado es una interfaz que va a tirones sin que se sepa por qué.</p>
+  <p>Nombra las propiedades. Si puedes elegir, anima <code>transform</code> y <code>opacity</code>: son las dos que el navegador resuelve sin rehacer el layout, y por eso van suaves.</p>
+</div>
+
+```css
+transform: translateY(-2px);
+transform: scale(1.03);
+transform: rotate(2deg);
+transform: translateY(-2px) scale(1.02);   /* se combinan en una sola declaración */
+```
+
+Una transformación **no afecta al espacio que ocupa el elemento**: se dibuja movido, pero su hueco sigue donde estaba y nada se descoloca alrededor. Por eso mover una tarjeta con `transform` es seguro y hacerlo con `margin-top` no.
+
+#### El movimiento tiene que decir algo
+
+Una interfaz no mejora por tener zooms, rebotes, sombras y degradados. Cada efecto debería responder a una pregunta: **¿qué le está comunicando esto a quien lo ve?**
+
+| Movimiento | Comunica | ¿Vale la pena? |
+| ---------- | -------- | -------------- |
+| Un botón que se aclara al pasar por encima | «Esto se puede pulsar» | Sí |
+| Una tarjeta que se eleva ligeramente | «Esto es interactivo» | Sí |
+| Un campo que se marca al recibir el foco | «Estás escribiendo aquí» | Sí |
+| Un titular que entra rebotando al cargar | Nada | No |
+
+Hay además quien configura su sistema para reducir las animaciones, y no por gusto: el movimiento puede provocar mareo o desorientación. El sistema operativo lo comunica, y CSS puede leerlo.
+
+<p class="term">prefers-reduced-motion</p>
+
+Una media query que no pregunta por el tamaño de la pantalla sino por **una preferencia declarada por quien usa el dispositivo**. Existen más de esta familia, como `prefers-color-scheme`.
+
+```css
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+```
+
+Es uno de los poquísimos sitios donde `!important` está justificado: es una preferencia de la persona, y debe ganar a cualquier estilo del sitio.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Los dos primeros pasos arreglan lo que está roto: las imágenes y el foco. Los cuatro últimos añaden movimiento, y después quitan el que sobra.
+
+#### Paso 1 · El catálogo irregular · 35 min
+
+Reúne al menos seis imágenes **deliberadamente dispares**: alguna vertical, alguna horizontal, alguna muy grande, alguna pequeña. Puedes usar fotos reales de tu tema.
+
+Consigue que el catálogo se vea coherente **sin editar los archivos**:
+
+1. Todas las tarjetas con la misma altura de imagen.
+2. Ninguna imagen deformada.
+3. Nada se sale a 320 px.
+4. Comprueba las verticales: si `cover` les corta la cabeza a las fotos, ajústalo con `object-position`.
+5. Explica en un comentario por qué has elegido `cover` o `contain`.
+
+<details class="aside aside--help">
+  <summary>Estoy atascado · las imágenes se ven aplastadas</summary>
+  <p>Si has dado <code>width</code> y <code>height</code> a la vez sin <code>object-fit</code>, el navegador estira la imagen hasta esa caja. Añade <code>object-fit: cover</code>.</p>
+  <p>Y si el problema aparece solo al estrechar la ventana, lo más probable es que te falte <code>height: auto</code> junto al <code>max-width: 100%</code>.</p>
+</details>
+
+**Antes de continuar:** las seis tarjetas tienen la misma altura de imagen y ninguna foto está estirada ni aplastada.
+
+#### Paso 2 · Los estados invisibles · 35 min
+
+Suelta el ratón. Recorre tus cuatro páginas con `Tab`, `Shift + Tab` y `Enter`.
+
+| Elemento | ¿Se ve el foco? | ¿Se distingue del estado normal? | Corrección |
+| -------- | --------------- | -------------------------------- | ---------- |
+| Enlaces de navegación | | | |
+| Enlaces del contenido | | | |
+| Botones | | | |
+| Campos del formulario | | | |
+| Casillas y radios | | | |
+
+Después:
+
+1. Define un `:focus-visible` propio y coherente para todo el sitio.
+2. Comprueba que los enlaces del texto se distinguen del resto **sin depender solo del color**: alguien daltónico necesita el subrayado.
+3. Da estilo a `:hover` en enlaces y tarjetas.
+4. Añade un estado visible a los campos obligatorios usando `:required`.
+
+<details class="aside aside--extra">
+<summary>Consultar · selectores modernos que simplifican estos estilos</summary>
 
 `:is()` agrupa como la coma, pero funciona dentro de un selector largo, donde la coma obligaría a repetirlo todo:
 
@@ -2459,173 +2507,123 @@ Y `:has()` selecciona un elemento **por lo que contiene**, algo que CSS no pudo 
 
 Ahí estás dando estilo al contenedor a partir del estado de su hijo. No hace falta que lo domines: basta con que sepas que los selectores también han evolucionado y que muchos problemas que antes pedían JavaScript ya no lo piden.
 
-#### Tarea 14 · Los estados invisibles
-
-Suelta el ratón. Recorre tus cuatro páginas con `Tab`, `Shift + Tab` y `Enter`.
-
-| Elemento | ¿Se ve el foco? | ¿Se distingue del estado normal? | Corrección |
-| -------- | --------------- | -------------------------------- | ---------- |
-| Enlaces de navegación | | | |
-| Enlaces del contenido | | | |
-| Botones | | | |
-| Campos del formulario | | | |
-| Casillas y radios | | | |
-
-Después:
-
-1. Define un `:focus-visible` propio y coherente para todo el sitio.
-2. Comprueba que los enlaces del texto se distinguen del resto **sin depender solo del color**: alguien daltónico necesita el subrayado.
-3. Da estilo a `:hover` en enlaces y tarjetas.
-4. Añade un estado visible a los campos obligatorios usando `:required`.
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué no procede escribir <code>outline: none</code> sin una alternativa que lo sustituya?</li>
-    <li>¿Qué hace <code>:focus-visible</code> que no hace <code>:focus</code>?</li>
-    <li>¿Para qué sirve <code>:where()</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque deja sin ninguna indicación a quien navega con teclado. Si se quita, hay que poner otra igual de clara.</p>
-  <p>2 · Solo aplica el estilo cuando la indicación hace falta, típicamente al llegar con el teclado y no al pulsar con el ratón.</p>
-  <p>3 · Para agrupar selectores con especificidad cero, de modo que los estilos base se puedan sobrescribir sin pelear con la cascada.</p>
 </details>
 
-
-### Bloque 3 · Transiciones y transformaciones
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se anima un cambio de estado, qué propiedades conviene animar y cómo respetar a quien prefiere no ver movimiento.</li>
-    <li><strong>2. Haz:</strong> Añade transiciones con una finalidad y quita las que no la tengan.</li>
-    <li><strong>3. Comprueba:</strong> Cada movimiento de tu página comunica algo.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué estados de un enlace debe distinguir una interfaz?</li>
-    <li>¿Por qué no se debe eliminar <code>outline</code> sin ofrecer una alternativa?</li>
-    <li>Usa <code>Tab</code>: predice qué debería cambiar visualmente antes de probarlo.</li>
-  </ol>
-</div>
-
-#### Transiciones
-
-Una transición suaviza el paso de un estado a otro. Se declara en el estado **normal**, no en el `:hover`, para que funcione en los dos sentidos:
-
-```css
-.card {
-    transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgb(0 0 0 / 0.12);
-}
-```
-
-```text
-transform    qué propiedad se anima
-150ms        cuánto dura
-ease         cómo acelera
-```
-
-<div class="rule">
-  <p class="rule-label">No animes <code>all</code></p>
-  <p><code>transition: all 300ms</code> parece cómodo y anima también cosas que no querías, incluidas propiedades que obligan al navegador a recalcular el layout entero. El resultado es una interfaz que va a tirones sin que se sepa por qué.</p>
-  <p>Nombra las propiedades. Si puedes elegir, anima <code>transform</code> y <code>opacity</code>: son las dos que el navegador resuelve sin rehacer el layout, y por eso van suaves.</p>
-</div>
-
-#### Transformaciones
-
-```css
-transform: translateY(-2px);
-transform: scale(1.03);
-transform: rotate(2deg);
-transform: translateY(-2px) scale(1.02);   /* se combinan en una sola declaración */
-```
-
-Una transformación **no afecta al espacio que ocupa el elemento**: se dibuja movido, pero su hueco sigue donde estaba y nada se descoloca alrededor. Por eso mover una tarjeta con `transform` es seguro y hacerlo con `margin-top` no.
-
-#### El movimiento tiene que decir algo
-
-Una interfaz no mejora por tener zooms, rebotes, sombras y degradados. Cada efecto debería responder a una pregunta: **¿qué le está comunicando esto a quien lo ve?**
-
-| Movimiento | Comunica | ¿Vale la pena? |
-| ---------- | -------- | -------------- |
-| Un botón que se aclara al pasar por encima | «Esto se puede pulsar» | Sí |
-| Una tarjeta que se eleva ligeramente | «Esto es interactivo» | Sí |
-| Un campo que se marca al recibir el foco | «Estás escribiendo aquí» | Sí |
-| Un titular que entra rebotando al cargar | Nada | No |
-
-#### Respetar la preferencia del usuario
-
-Hay quien configura su sistema para reducir las animaciones, y no por gusto: el movimiento puede provocar mareo o desorientación. El sistema operativo lo comunica, y CSS puede leerlo:
-
-```css
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-```
-
-Es uno de los poquísimos sitios donde `!important` está justificado: es una preferencia de la persona, y debe ganar a cualquier estilo del sitio.
-
-<p class="term">prefers-reduced-motion</p>
-
-Una media query que no pregunta por el tamaño de la pantalla sino por **una preferencia declarada por quien usa el dispositivo**. Existen más de esta familia, como `prefers-color-scheme`.
-
-#### Tarea 15 · Menos es más
+#### Paso 3 · Transiciones con una finalidad · 25 min
 
 1. Añade una transición a tus botones y otra a tus tarjetas o enlaces.
-2. Asegúrate de que los estados de `:hover` y `:focus-visible` son claros y distintos entre sí.
-3. Añade el bloque de `prefers-reduced-motion`.
-4. Después, la parte determinante: **recorre tu sitio y elimina cualquier efecto que no comunique nada**. Por cada uno que dejes, escribe en un comentario qué informa.
+2. Nombra las propiedades: nada de `all`.
+3. Asegúrate de que los estados de `:hover` y `:focus-visible` son claros y **distintos entre sí**.
+4. Por cada transición que escribas, anota en un comentario qué comunica. Si no sabes qué escribir, esa transición sobra.
 
-Es la única tarea de la unidad en la que se puntúa quitar cosas.
+#### Paso 4 · Respetar la preferencia de movimiento · 10 min
+
+Añade el bloque de `prefers-reduced-motion` al final de tu hoja y compruébalo de verdad, activando la reducción de movimiento en la configuración de tu sistema o desde DevTools, en el panel de *Rendering*.
+
+Anota qué cambia en tu sitio al activarla. Si no cambia nada, o el bloque no está bien escrito, o tus transiciones no estaban donde creías.
+
+#### Paso 5 · Menos es más · 25 min
+
+Ahora la parte determinante: **recorre tu sitio y elimina cualquier efecto que no comunique nada**.
+
+| Efecto | Dónde está | Qué comunica | ¿Se queda? |
+| ------ | ---------- | ------------ | ---------- |
+| | | | |
+
+Es la única tarea de la unidad en la que se puntúa quitar cosas. Cuenta cuántos efectos tenías y cuántos quedan.
+
+#### Paso 6 · Revisión cruzada sin ratón · 20 min
+
+Intercambia el sitio con un compañero y recorre el suyo **usando solo el teclado**, sin tocar el ratón en ningún momento.
+
+1. Anota el primer punto en el que pierdes de vista el foco.
+2. Anota cualquier elemento al que no consigas llegar.
+3. Comprueba si algún estado se distingue únicamente por el color, entrando en DevTools y forzando una simulación de daltonismo desde el panel de *Rendering*.
+4. Devuelve las tres respuestas con el formato qué / por qué importa / qué probaría.
+
+El autor decide qué acepta. Si rechaza algo, tiene que justificarlo con lo que hace la interfaz, no con lo que le parece más bonito.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los seis pasos. Los dos retos se resuelven decidiendo, y uno de ellos consiste casi entero en borrar.
+
+##### Reto 1 · Las imágenes imposibles
+
+Un cliente entrega estas cinco imágenes para un catálogo de tarjetas iguales:
+
+```text
+A · panorámica de 3000 × 600 px    (una estantería entera de la tienda)
+B · vertical de 800 × 2400 px      (una torre de ordenador de cuerpo entero)
+C · cuadrada de 500 × 500 px       (un ratón sobre fondo blanco)
+D · diminuta de 120 × 90 px        (un logotipo de fabricante)
+E · foto de 4000 × 3000 px         (un teclado, con la marca en la esquina inferior)
+```
+
+Consigue un catálogo coherente. Para **cada una**, decide y justifica:
+
+1. `cover` o `contain`, y por qué.
+2. Qué `object-position` necesita, si necesita alguno. La E tiene la información en una esquina: piensa qué pasa al recortarla en un formato apaisado.
+3. La D es más pequeña que el hueco. Explica qué ocurre al ampliarla y qué harías en un encargo real, que no siempre es una decisión de CSS.
+4. La B, recortada a 16 / 9, deja de mostrar el producto. Propón una solución que no sea deformarla ni recortarla.
+5. Escribe una sola regla de CSS que resuelva bien cuatro de las cinco, y di cuál se queda fuera y por qué.
+
+##### Reto 2 · Auditoría de movimiento en una interfaz ajena
+
+Elige una web con bastante animación: una tienda grande, una web de producto, una landing.
+
+| Movimiento que has visto | Qué comunica | Decorativo o informativo | ¿Lo conservarías? |
+| ------------------------ | ------------ | ------------------------ | ----------------- |
+| | | | |
+
+Localiza al menos seis. Después:
+
+1. Cuenta cuántos son informativos y cuántos decorativos.
+2. Activa la reducción de movimiento en DevTools y recarga. ¿Respeta la web la preferencia, o se mueve igual? Es la comprobación interesante del reto.
+3. Recorre la página con `Tab`. ¿Se ve el foco? ¿Alguna animación lo persigue o lo oculta?
+4. Escribe en tres líneas qué le quitarías a esa interfaz y qué ganaría con ello.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Estados claros, dos transiciones justificadas y movimiento reducido.</span></div>
-  <div><strong>Si lo tienes</strong><span>Prueba teclado y ratón y elimina cualquier estado que dependa solo del color.</span></div>
-  <div><strong>Reto</strong><span>Audita los movimientos de una interfaz ajena y conserva únicamente los que comunican.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Catálogo con imágenes irregulares sin deformar, foco visible en todos los elementos y dos transiciones justificadas.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de estados completa, el bloque de movimiento reducido comprobado y ningún estado que dependa solo del color.</span></div>
+  <div><strong>Reto</strong><span>Las cinco imágenes imposibles resueltas con su justificación, y la auditoría de movimiento de una interfaz ajena.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Todas tus imágenes tienen <code>max-width: 100%</code> y no se deforman.</li>
     <li>El foco es visible en todos los elementos interactivos.</li>
     <li>Los enlaces del texto se distinguen sin depender solo del color.</li>
     <li>Tus transiciones nombran propiedades concretas, no <code>all</code>.</li>
-    <li>Respetas <code>prefers-reduced-motion</code>.</li>
+    <li>Respetas <code>prefers-reduced-motion</code>, comprobado activándolo.</li>
+    <li>Cada efecto que queda tiene escrito al lado qué comunica.</li>
   </ul>
 </div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
   <ol>
+    <li>¿Qué par de declaraciones evita que una imagen desborde y se deforme?</li>
+    <li>¿Qué diferencia hay entre <code>cover</code> y <code>contain</code>?</li>
+    <li>¿Por qué no procede escribir <code>outline: none</code> sin una alternativa que lo sustituya?</li>
+    <li>¿Qué hace <code>:focus-visible</code> que no hace <code>:focus</code>?</li>
     <li>¿En qué estado se declara la <code>transition</code>, y por qué?</li>
     <li>¿Por qué mover algo con <code>transform</code> es más seguro que con <code>margin</code>?</li>
-    <li>¿Qué pregunta <code>prefers-reduced-motion</code>?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · En el estado normal, para que la animación ocurra tanto al entrar como al salir del estado.</p>
-  <p>2 · Porque <code>transform</code> no cambia el espacio que ocupa el elemento, así que nada se descoloca a su alrededor.</p>
-  <p>3 · Si la persona ha pedido en su sistema que se reduzcan las animaciones.</p>
+  <p>1 · <code>max-width: 100%</code> y <code>height: auto</code>.</p>
+  <p>2 · <code>cover</code> llena el hueco recortando lo que sobra; <code>contain</code> mete la imagen entera y deja huecos.</p>
+  <p>3 · Porque deja sin ninguna indicación a quien navega con teclado. Si se quita, hay que poner otra igual de clara.</p>
+  <p>4 · Solo aplica el estilo cuando la indicación hace falta, típicamente al llegar con el teclado y no al pulsar con el ratón.</p>
+  <p>5 · En el estado normal, para que la animación ocurra tanto al entrar como al salir del estado.</p>
+  <p>6 · Porque <code>transform</code> no cambia el espacio que ocupa el elemento, así que nada se descoloca a su alrededor.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -2637,6 +2635,7 @@ Es la única tarea de la unidad en la que se puntúa quitar cosas.
     <li>Añade una transición breve y explica cómo respetarías <code>prefers-reduced-motion</code>.</li>
   </ol>
 </div>
+
 
 ---
 
