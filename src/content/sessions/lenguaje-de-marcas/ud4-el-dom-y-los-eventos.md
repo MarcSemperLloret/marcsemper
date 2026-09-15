@@ -552,27 +552,31 @@ Monta una página mínima con un campo de texto y un contenedor donde se muestre
 
 ## Sesión 2 · Eventos y elementos dinámicos
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Escuchar lo que hace el usuario</strong>, <strong>El objeto evento y la delegación</strong> y <strong>Crear y eliminar elementos</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Escuchar lo que hace el usuario
+<p class="lead">Tres horas. Media hora para entender cómo se escucha lo que hace una persona, cómo viaja un evento por el árbol y cómo se crea un elemento, y dos horas y media haciendo que tu página reaccione y genere su propio marcado.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es un evento, cómo se escucha y qué eventos existen.</li>
-    <li><strong>2. Haz:</strong> Haz que tu página reaccione al clic, al teclado y al envío de un formulario.</li>
-    <li><strong>3. Comprueba:</strong> Sabes distinguir «no salta el evento» de «salta y falla mi función».</li>
+    <li><strong>1. Aprende:</strong> Qué es un evento y dónde se escucha, qué información trae, qué es delegar, y cómo se crea e inserta un elemento sin perder la semántica.</li>
+    <li><strong>2. Haz:</strong> Haz que tu página reaccione al clic, al teclado y al envío del formulario; atiende todas las tarjetas con un solo manejador; genera la tarjeta desde un objeto.</li>
+    <li><strong>3. Comprueba:</strong> Todo lo que funciona con ratón funciona con teclado, y el HTML generado pasa el validador.</li>
   </ol>
 </div>
 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>Enumera cinco cosas que puede hacer una persona en tu página.</li>
-    <li>¿Cuáles de ellas se pueden hacer sin ratón?</li>
-    <li>¿Qué pasa hoy cuando envías tu formulario de contacto?</li>
+    <li>Enumera cinco cosas que puede hacer una persona en tu página. ¿Cuáles se pueden hacer sin ratón?</li>
+    <li>Si tienes cincuenta botones iguales, ¿registrarías cincuenta escuchas?</li>
+    <li>Si generas HTML desde código, ¿quién garantiza que sigue siendo semántico?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Tres piezas que hoy encajan entre sí: escuchar, averiguar quién provocó la acción, y crear los elementos sobre los que se actuará. La tercera obliga a la primera a hacerse de una forma concreta, y de ahí sale la delegación.
 
 #### Escuchar
 
@@ -585,8 +589,6 @@ boton.addEventListener("click", () => {
 ```
 
 Tres piezas: el **elemento** que escucha, el **tipo** de evento y la **función** que se ejecutará. Esa función es un callback, el concepto de la sesión 3 de la UD3: tú no la llamas, la llama el navegador cuando ocurre algo.
-
-#### Los eventos que usarás
 
 | Evento | Ocurre cuando |
 | ------ | ------------- |
@@ -604,8 +606,6 @@ Tres piezas: el **elemento** que escucha, el **tipo** de evento y la **función*
   <p>Y para un control que se pulsa, usa un elemento que sea pulsable de verdad. Un <code>div</code> con un manejador de clic no recibe el foco, no responde a la tecla Intro y no se anuncia como control: es inaccesible por construcción.</p>
 </div>
 
-#### `submit` y `preventDefault`
-
 ```javascript
 const formulario = document.querySelector("[data-js='contacto']");
 
@@ -617,94 +617,7 @@ formulario.addEventListener("submit", (evento) => {
 
 Sin `preventDefault`, el navegador hace lo suyo: envía y recarga. Verás tu mensaje en consola durante un instante y desaparecerá. Es el desconcierto clásico de esta sesión.
 
-#### Quitar un manejador
-
-```javascript
-function alPulsar() { /* ... */ }
-
-boton.addEventListener("click", alPulsar);
-boton.removeEventListener("click", alPulsar);
-```
-
-Para poder quitarlo hace falta la **misma referencia** de función, así que una flecha escrita en el sitio no se puede retirar. También puedes usar la opción `{ once: true }` para que se ejecute una sola vez.
-
-#### El diagnóstico de esta unidad
-
-<figure class="diagram">
-  <figcaption>Cuando algo no responde</figcaption>
-  <ol class="flow">
-    <li>Un console.log como primera línea del manejador</li>
-    <li>¿Aparece? El evento llega: el fallo es de tu lógica</li>
-    <li>¿No aparece? ¿Existe el elemento, o era null?</li>
-    <li>¿El nombre del evento está bien escrito?</li>
-    <li>¿El elemento se creó después de registrar la escucha?</li>
-  </ol>
-</figure>
-
-Ese último caso es el que resuelve la sesión siguiente.
-
-#### Tarea 4 · Tu página reacciona
-
-1. Un botón que alterna la vista compacta del catálogo.
-2. Un campo de búsqueda que escribe en consola lo tecleado con `input`.
-3. El formulario de contacto que evita la recarga y muestra los valores.
-4. Un botón que solo funcione una vez, con `{ once: true }`.
-5. Comprueba que todo lo anterior se puede hacer **sin ratón**.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres eventos funcionando, incluido <code>submit</code> sin recarga.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade un atajo de teclado que ponga el foco en el buscador.</span></div>
-  <div><strong>Reto</strong><span>Pon un manejador de clic en un <code>div</code>, intenta usarlo con el teclado y explica qué falla.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Registras escuchas con las tres piezas claras.</li>
-    <li>Usas <code>submit</code> en el formulario y <code>preventDefault</code>.</li>
-    <li>Distingues <code>input</code> de <code>change</code>.</li>
-    <li>Compruebas si el evento llega antes de tocar la lógica.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué escuchamos <code>submit</code> y no el clic del botón?</li>
-    <li>¿Qué hace <code>preventDefault</code>?</li>
-    <li>¿Qué compruebas primero si un botón no responde?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque un formulario también se envía con Intro, y el clic no cubre ese caso.</p>
-  <p>2 · Cancela el comportamiento por defecto del navegador para ese evento.</p>
-  <p>3 · Que el evento llegue: un mensaje en la primera línea del manejador separa el problema en dos.</p>
-</details>
-
-
-### Bloque 2 · El objeto evento y la delegación
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué información trae el evento, cómo se propaga y qué es delegar.</li>
-    <li><strong>2. Haz:</strong> Un solo manejador que atienda a todas las tarjetas del catálogo.</li>
-    <li><strong>3. Comprueba:</strong> Funciona también con las tarjetas que aún no existen.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si tienes cincuenta botones iguales, ¿registrarías cincuenta escuchas?</li>
-    <li>¿Cómo sabrías cuál de ellos se ha pulsado?</li>
-    <li>¿Qué pasa con los botones que se crean después?</li>
-  </ol>
-</div>
-
-#### El objeto que recibe el manejador
+#### Qué trae el evento, y por dónde pasa
 
 ```javascript
 catalogo.addEventListener("click", (evento) => {
@@ -717,11 +630,7 @@ catalogo.addEventListener("click", (evento) => {
 });
 ```
 
-La pareja `target` / `currentTarget` es la clave de esta sesión: puedes escuchar en el contenedor y averiguar dentro cuál de sus hijos recibió la acción.
-
-#### La propagación
-
-Un clic no ocurre solo en un elemento: recorre el árbol.
+La pareja `target` / `currentTarget` es la clave de la sesión: puedes escuchar en el contenedor y averiguar dentro cuál de sus hijos recibió la acción. Eso es posible porque un clic no ocurre solo en un elemento, sino que recorre el árbol:
 
 <figure class="diagram">
   <figcaption>El camino de un evento</figcaption>
@@ -732,7 +641,7 @@ Un clic no ocurre solo en un elemento: recorre el árbol.
   </ol>
 </figure>
 
-El burbujeo es lo que hace posible la delegación y explica además un fallo característico: pulsar en un botón dentro de una tarjeta que también escucha el clic dispara los dos manejadores.
+El burbujeo explica también un fallo característico: pulsar en un botón dentro de una tarjeta que también escucha el clic dispara los dos manejadores.
 
 <div class="rule">
   <p class="rule-label"><code>stopPropagation</code> es el último recurso</p>
@@ -758,7 +667,7 @@ Tres ventajas, y son grandes: una sola escucha en lugar de cincuenta; funciona c
 
 Sube por los antepasados desde el elemento pulsado hasta encontrar uno que case con el selector. Resuelve el problema de que el clic caiga en un icono o en el texto de dentro del botón, y no en el botón mismo.
 
-#### Teclado, siempre
+El teclado se atiende con su propio evento cuando hace falta una tecla concreta:
 
 ```javascript
 buscador.addEventListener("keydown", (evento) => {
@@ -766,69 +675,7 @@ buscador.addEventListener("keydown", (evento) => {
 });
 ```
 
-Si delegas clics en elementos que son botones de verdad, el teclado ya funciona: pulsar Intro sobre un botón genera un `click`. Es otra razón para usar el elemento correcto en lugar de un `div` decorado.
-
-#### Tarea 5 · Un manejador para todos
-
-1. Añade a cada tarjeta de tu catálogo un botón con `data-accion` y `data-id`.
-2. Registra **una sola** escucha en el contenedor.
-3. Usa `closest` para localizar el botón y `dataset` para el identificador.
-4. Añade una segunda acción y distíngula por su `data-accion`.
-5. Comprueba con el teclado que ambas funcionan.
-6. Registra una escucha en el contenedor y otra en la tarjeta, y observa el orden.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Una escucha delegada que distingue dos acciones y el producto afectado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade Escape para limpiar la búsqueda y Intro para aplicar el filtro.</span></div>
-  <div><strong>Reto</strong><span>Explica un caso real en el que <code>stopPropagation</code> rompería otra funcionalidad.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Distingues <code>target</code> de <code>currentTarget</code>.</li>
-    <li>Explicas el burbujeo con un ejemplo de tu página.</li>
-    <li>Delegas con <code>closest</code> y sales pronto si no procede.</li>
-    <li>Todo lo que funciona con ratón funciona con teclado.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué ventaja tiene delegar?</li>
-    <li>¿Para qué sirve <code>closest</code>?</li>
-    <li>¿Por qué evitamos <code>stopPropagation</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Una sola escucha, y funciona con los elementos creados después.</p>
-  <p>2 · Para subir desde el elemento pulsado hasta el contenedor que te interesa, aunque el clic cayera en un icono interior.</p>
-  <p>3 · Porque impide que otros manejadores más arriba se enteren del evento, y eso rompe cosas a distancia.</p>
-</details>
-
-
-### Bloque 3 · Crear y eliminar elementos
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se crea un elemento, cómo se inserta y cómo se quita.</li>
-    <li><strong>2. Haz:</strong> Genera una tarjeta de producto desde un objeto de datos.</li>
-    <li><strong>3. Comprueba:</strong> El HTML generado es tan semántico como el que escribes a mano.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Escribe el HTML de una tarjeta de producto tuya, de memoria.</li>
-    <li>¿Qué partes cambian de un producto a otro y cuáles no?</li>
-    <li>Si generas HTML desde código, ¿quién garantiza que sigue siendo semántico?</li>
-  </ol>
-</div>
+Si delegas clics en elementos que son botones de verdad, en cambio, el teclado ya funciona: pulsar Intro sobre un botón genera un `click`. Es otra razón para usar el elemento correcto en lugar de un `div` decorado.
 
 #### Crear, rellenar, insertar
 
@@ -842,7 +689,6 @@ titulo.textContent = producto.nombre;
 
 item.append(titulo);
 catalogo.append(item);          // al final
-catalogo.prepend(item);         // al principio
 ```
 
 | Método | Qué hace |
@@ -852,17 +698,6 @@ catalogo.prepend(item);         // al principio
 | `before` / `after` | Inserta como hermano |
 | `remove` | Se elimina a sí mismo |
 | `replaceChildren` | Sustituye la totalidad del contenido en una sola operación |
-
-#### Vaciar un contenedor
-
-```javascript
-catalogo.replaceChildren();        // lo deja vacío
-catalogo.innerHTML = "";           // funciona, pero pasa por el analizador
-```
-
-`replaceChildren` es más claro y más seguro, y admite también los nuevos hijos: `catalogo.replaceChildren(...tarjetas)`.
-
-#### Insertar de una vez
 
 Añadir cincuenta elementos uno a uno hace que el navegador recalcule la página cincuenta veces. Se construyen aparte y se insertan juntos:
 
@@ -876,7 +711,14 @@ for (const producto of productos) {
 catalogo.replaceChildren(fragmento);
 ```
 
-#### El HTML generado también se audita
+Para vaciar un contenedor:
+
+```javascript
+catalogo.replaceChildren();        // lo deja vacío
+catalogo.innerHTML = "";           // funciona, pero pasa por el analizador
+```
+
+`replaceChildren()` es más claro y más seguro, y admite también los nuevos hijos de una vez.
 
 <div class="rule">
   <p class="rule-label">Lo que genera tu código pasa las mismas normas de la UD1</p>
@@ -884,7 +726,7 @@ catalogo.replaceChildren(fragmento);
   <p>La comprobación: abre Elements, copia el marcado generado, pégalo en el validador del W3C. La jerarquía de encabezados sigue siendo exigible sobre ese marcado generado.</p>
 </div>
 
-#### Una función por tarjeta
+La función que lo construye **devuelve el elemento sin insertarlo**: quien la llama decide dónde va. Es la misma regla de la UD3 —calcular y devolver— aplicada al DOM.
 
 ```javascript
 export function crearTarjeta(producto) {
@@ -909,40 +751,194 @@ export function crearTarjeta(producto) {
 }
 ```
 
-Devuelve el elemento y no lo inserta: quien la llama decide dónde va. Es la misma regla de la UD3 —calcular y devolver— aplicada al DOM.
+#### El diagnóstico de esta unidad
 
-#### Tarea 6 · La tarjeta generada
+<figure class="diagram">
+  <figcaption>Cuando algo no responde</figcaption>
+  <ol class="flow">
+    <li>Un console.log como primera línea del manejador</li>
+    <li>¿Aparece? El evento llega: el fallo es de tu lógica</li>
+    <li>¿No aparece? ¿Existe el elemento, o era null?</li>
+    <li>¿El nombre del evento está bien escrito?</li>
+    <li>¿El elemento se creó después de registrar la escucha?</li>
+  </ol>
+</figure>
 
-1. Escribe `crearTarjeta(producto)` en `js/render.js`.
+Ese último caso es el que resuelve la delegación, y por eso los tres bloques de hoy son en realidad uno.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Los tres primeros pasos construyen la interacción; los dos últimos comprueban lo que casi nadie comprueba: que el marcado generado siga siendo válido y que todo se pueda usar sin ratón.
+
+#### Paso 1 · Tu página reacciona · 30 min
+
+1. Un botón que alterna la vista compacta del catálogo.
+2. Un campo de búsqueda que escribe en consola lo tecleado con `input`.
+3. El formulario de contacto que evita la recarga y muestra los valores.
+4. Un botón que solo funcione una vez, con `{ once: true }`.
+5. Prueba la diferencia entre `input` y `change` en el mismo campo, y anótala.
+
+<details class="aside aside--extra">
+<summary>Consultar · quitar un manejador</summary>
+
+```javascript
+function alPulsar() { /* ... */ }
+
+boton.addEventListener("click", alPulsar);
+boton.removeEventListener("click", alPulsar);
+```
+
+Para poder quitarlo hace falta la **misma referencia** de función, así que una flecha escrita en el sitio no se puede retirar. También está la opción `{ once: true }` para que se ejecute una sola vez.
+
+</details>
+
+**Antes de continuar:** el formulario no recarga la página, y sabes decir en qué línea lo has impedido.
+
+#### Paso 2 · Un manejador para todos · 40 min
+
+1. Añade a cada tarjeta de tu catálogo un botón con `data-accion` y `data-id`.
+2. Registra **una sola** escucha en el contenedor.
+3. Usa `closest` para localizar el botón y `dataset` para el identificador.
+4. Añade una segunda acción y distínguela por su `data-accion`.
+5. Comprueba con el teclado que ambas funcionan.
+6. Registra una escucha en el contenedor y otra en la tarjeta, y observa el orden en que se disparan. Anótalo: es el burbujeo, visto en tu propia página.
+
+#### Paso 3 · La tarjeta generada · 45 min
+
+Es el trabajo central de la sesión.
+
+1. Escribe `crearTarjeta(producto)` en `js/render.js`, que devuelva el elemento sin insertarlo.
 2. Genera con ella las tarjetas de tres productos y añádelas con un fragmento.
-3. Compara el marcado generado con el que tenías escrito a mano.
-4. Valida el resultado copiándolo desde Elements.
-5. Añade un botón de acción con sus atributos `data-`.
-6. Escribe `vaciarCatalogo()` y comprueba que las escuchas delegadas siguen funcionando.
+3. Añade un botón de acción con sus atributos `data-`.
+4. Escribe `vaciarCatalogo()` con `replaceChildren()` y comprueba que **las escuchas delegadas siguen funcionando** después de vaciar y volver a pintar.
+5. Añade el estado «agotado» como clase para el CSS **y** como texto para quien no ve la pantalla. No basta con el color.
+
+<details class="aside aside--extra">
+<summary>Consultar · la otra forma, con <code>template</code></summary>
+
+HTML tiene un elemento pensado para esto: `<template>` guarda marcado que no se pinta hasta que lo clonas.
+
+```html
+<template data-js="plantilla-producto">
+  <li class="producto">
+    <h3></h3>
+    <p class="precio"></p>
+  </li>
+</template>
+```
+
+```javascript
+const plantilla = document.querySelector("[data-js='plantilla-producto']");
+const copia = plantilla.content.cloneNode(true);
+copia.querySelector("h3").textContent = producto.nombre;
+```
+
+La estructura vive en el HTML y el código solo rellena. Tiene la ventaja de que el marcado se ve y se valida donde siempre, y el inconveniente de repartir la tarjeta entre dos ficheros. Las dos formas son correctas.
+
+</details>
+
+#### Paso 4 · Valida lo que ha escrito tu código · 15 min
+
+1. Compara el marcado generado en el paso 3 con el que tenías escrito a mano en la UD1. ¿Es igual de semántico?
+2. Abre Elements, copia el bloque del catálogo entero y pásalo por `validator.w3.org`.
+3. Comprueba la jerarquía de encabezados del documento **con las tarjetas ya pintadas**. Si tu `h3` cuelga de un `h1` sin `h2` en medio, el salto lo ha creado tu JavaScript.
+4. Revisa que cada imagen generada tiene su `alt`, y que ese `alt` sale de un campo de datos y no de una cadena fija.
+
+| Comprobación | Resultado | Corrección |
+| ------------ | --------- | ---------- |
+| Validador del W3C sobre el marcado generado | | |
+| Jerarquía de encabezados sin saltos | | |
+| Todas las imágenes con `alt` que aporta algo | | |
+| Los botones son `button`, no `div` | | |
+
+#### Paso 5 · Todo esto, sin ratón · 20 min
+
+Suelta el ratón y recorre la página con `Tab`, `Shift + Tab`, `Intro` y `Espacio`.
+
+1. ¿Puedes llegar a los botones generados por tu código?
+2. ¿Se ve el foco sobre ellos, con el `:focus-visible` de la UD2?
+3. ¿Funcionan las dos acciones delegadas?
+4. Añade un atajo: `Escape` limpia la búsqueda, e `Intro` en el buscador aplica el filtro.
+5. Después de vaciar y repintar el catálogo, ¿dónde se ha quedado el foco? Anótalo. Es un problema real que resolverás en la sesión 6.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos miden el coste de dos atajos que parecen inofensivos.
+
+##### Reto 1 · Cuánto cuesta un botón falso
+
+```html
+<div class="boton" onclick="comprar()">Comprar</div>
+```
+
+1. Móntalo y comprueba con el teclado qué **no** hace: enumera las cuatro cosas que un `<button>` trae de fábrica y este no.
+2. Recontrúyelas una a una: hazlo enfocable, que responda a `Intro` y a `Espacio`, que se anuncie como botón, y que tenga foco visible. Cuenta las líneas de HTML, CSS y JavaScript que te ha costado.
+3. Compara ese recuento con escribir `<button type="button">`.
+4. Queda todavía una diferencia que no has podido reconstruir del todo: averigua qué ocurre con ese falso botón dentro de un formulario, y con el modo de alto contraste del sistema.
+5. Escribe en tres líneas por qué este ejercicio no va de accesibilidad, sino de no reprogramar lo que la plataforma ya hace. Es la misma conclusión que sacaste en la UD1 con `details` y `progress`.
+
+##### Reto 2 · El menú que deja de cerrarse
+
+Monta esta situación, que es completamente habitual:
+
+```text
+· Un menú desplegable que se abre con un botón.
+· Una escucha en `document` que lo cierra al pulsar en cualquier otro sitio.
+· Un catálogo de tarjetas; cada tarjeta abre el detalle al pulsarla.
+· Dentro de cada tarjeta, un botón «Añadir» que NO debe abrir el detalle.
+```
+
+1. Resuelve el botón «Añadir» con `stopPropagation` y comprueba que funciona.
+2. Ahora abre el menú y pulsa ese botón. El menú no se cierra. Explica exactamente por qué, siguiendo el camino del evento.
+3. Resuélvelo de nuevo **sin** `stopPropagation`: el manejador de la tarjeta debe filtrar por `target` y salir pronto si el clic venía de un botón de acción.
+4. Comprueba que ahora el menú sí se cierra y que el detalle sigue sin abrirse.
+5. Enuncia la regla en una frase: quién debe decidir si un evento le incumbe, el que lo emite o el que lo escucha.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tarjetas generadas, semánticas y validadas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade el estado «agotado» como clase y como texto para lectores de pantalla.</span></div>
-  <div><strong>Reto</strong><span>Haz la misma tarjeta con la etiqueta <code>template</code> del HTML y compara los dos enfoques.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Tres eventos funcionando con <code>submit</code> sin recarga, una escucha delegada que distingue dos acciones, y tarjetas generadas semánticas.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de validación del marcado generado contestada y el recorrido completo con teclado, atajos incluidos.</span></div>
+  <div><strong>Reto</strong><span>El coste del botón falso medido en líneas, y el conflicto del menú resuelto sin <code>stopPropagation</code>.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 2</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Tu página responde al ratón y al teclado.</li>
-    <li>Usas una sola escucha delegada por contenedor.</li>
-    <li>Generas elementos con marcado semántico y válido.</li>
-    <li>Insertas en bloque, no de uno en uno.</li>
+    <li>Usas <code>submit</code> en el formulario y <code>preventDefault</code>.</li>
+    <li>Distingues <code>input</code> de <code>change</code>.</li>
+    <li>Usas una sola escucha delegada por contenedor, con <code>closest</code>.</li>
+    <li>Tu página responde al ratón y al teclado por igual.</li>
+    <li>Generas elementos con marcado semántico, validado desde Elements.</li>
+    <li>Insertas en bloque con un fragmento, no de uno en uno.</li>
   </ul>
+</div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué escuchamos <code>submit</code> y no el clic del botón?</li>
+    <li>¿Qué hace <code>preventDefault</code>?</li>
+    <li>¿Qué diferencia hay entre <code>target</code> y <code>currentTarget</code>?</li>
+    <li>¿Qué ventaja tiene delegar, y para qué sirve <code>closest</code>?</li>
+    <li>¿Por qué evitamos <code>stopPropagation</code>?</li>
+    <li>¿Por qué se insertan los elementos con un fragmento?</li>
+  </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque cada inserción individual obliga al navegador a recalcular la página.</p>
-  <p>2 · <code>replaceChildren()</code> sin argumentos.</p>
-  <p>3 · Copiando el marcado desde Elements y pasándolo por el validador del W3C.</p>
+  <p>1 · Porque un formulario también se envía con Intro, y el clic no cubre ese caso.</p>
+  <p>2 · Cancela el comportamiento por defecto del navegador para ese evento.</p>
+  <p>3 · <code>target</code> es el elemento exacto donde ocurrió; <code>currentTarget</code>, el que tiene registrada la escucha.</p>
+  <p>4 · Una sola escucha que funciona también con los elementos creados después; <code>closest</code> sube desde el punto pulsado hasta el contenedor que interesa.</p>
+  <p>5 · Porque impide que otros manejadores más arriba se enteren del evento, y eso rompe cosas a distancia.</p>
+  <p>6 · Porque cada inserción individual obliga al navegador a recalcular la página.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 2 · 5–10 minutos</p>
@@ -953,6 +949,7 @@ Devuelve el elemento y no lo inserta: quien la llama decide dónde va. Es la mis
     <li>¿Qué diferencia hay entre <code>target</code> y <code>currentTarget</code>?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 3 · Pintar desde datos
