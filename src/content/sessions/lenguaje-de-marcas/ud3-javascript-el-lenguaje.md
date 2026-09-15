@@ -204,16 +204,14 @@ El reparto real del tiempo es este:
 
 ## Sesión 1 · Datos, tipos y expresiones
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Dónde se ejecuta JavaScript</strong>, <strong>Variables, tipos y valores</strong> y <strong>Operadores, conversión y comparación</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Dónde se ejecuta JavaScript
+<p class="lead">Tres horas. Media hora para entender dónde se ejecuta tu código, cómo se guarda un dato y qué hace JavaScript cuando mezclas tipos, y dos horas y media prediciendo resultados y comprobándolos uno a uno.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es JavaScript, dónde se ejecuta y cómo se enlaza con una página.</li>
-    <li><strong>2. Haz:</strong> Usa la consola como calculadora, crea <code>js/main.js</code> y enlázalo en tu sitio.</li>
-    <li><strong>3. Comprueba:</strong> Tu código se ejecuta, sabes demostrarlo y sabes leer un error.</li>
+    <li><strong>1. Aprende:</strong> Dónde se ejecuta JavaScript, cómo se enlaza con una página, qué tipos de dato existen y por qué se compara siempre con el triple igual.</li>
+    <li><strong>2. Haz:</strong> Enlaza tu primer script, modela un producto con variables y predice el resultado de una batería de expresiones antes de ejecutarlas.</li>
+    <li><strong>3. Comprueba:</strong> Aciertas la mayoría de las predicciones y sabes explicar las que fallas.</li>
   </ol>
 </div>
 
@@ -222,15 +220,19 @@ El reparto real del tiempo es este:
   <ol>
     <li>¿Qué cosas de una web crees que no puede hacer el HTML por sí solo?</li>
     <li>En la UD2, ¿cómo comprobabas que la hoja de estilos se había cargado?</li>
-    <li>¿Qué esperas que ocurra si enlazas un fichero que no existe?</li>
+    <li>¿Qué crees que vale <code>"3" + 1</code>? ¿Y <code>"3" - 1</code>?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+La sesión entera gira alrededor de una idea incómoda: JavaScript casi nunca se niega a hacer algo. Convierte, adivina y devuelve un resultado. Entender **qué** devuelve y **por qué** es lo que separa programar de probar cosas.
 
 #### Un lenguaje que vive dentro del navegador
 
 Todo navegador moderno lleva dentro un motor de JavaScript: un programa que lee tu código y lo ejecuta. No hay que instalar nada ni compilar nada. Abres la consola, escribes una expresión y te responde.
-
-Prueba esto, línea a línea:
 
 ```javascript
 2 + 3
@@ -239,29 +241,19 @@ Prueba esto, línea a línea:
 new Date().getFullYear()
 ```
 
-Ya estás programando. La consola evalúa lo que escribes y muestra el resultado.
-
-#### Escribirlo en un fichero
-
-Escribir en la consola sirve para probar; lo que se conserva va en un fichero. Crea `js/main.js`:
+Escribir en la consola sirve para probar; lo que se conserva va en un fichero. Se crea `js/main.js` y se enlaza desde el `head` con `defer`:
 
 ```javascript
 console.log("El código se está ejecutando");
 ```
 
-Enlázalo después desde el `head` de tu página, con `defer`:
-
 ```html
 <script src="js/main.js" defer></script>
 ```
 
-Recarga la página, abre la consola y busca el mensaje. Si aparece, el enlace funciona.
-
 <p class="term">defer</p>
 
 Le dice al navegador: descarga el fichero mientras lees el documento, y ejecútalo cuando el documento esté completo. Sin `defer`, el código se ejecuta antes de que exista la página, y en la UD4 eso significaría buscar elementos que todavía no están.
-
-#### Los tres sitios donde puede ir el código
 
 | Forma | Cómo se escribe | Cuándo |
 | ----- | --------------- | ------ |
@@ -273,85 +265,16 @@ Las razones son las mismas que en CSS: reutilización, caché y mantener separad
 
 #### Leer un error en vez de asustarse
 
-Escribe esto a propósito en `main.js`:
-
-```javascript
-console.log(precioTotal);
-```
-
-La consola responde algo parecido a:
-
 ```text
 Uncaught ReferenceError: precioTotal is not defined
     at main.js:1:13
 ```
 
-Tiene tres partes y las tres importan: el **tipo** de error (`ReferenceError`), el **mensaje** (`is not defined`) y la **posición** (`main.js`, línea 1, columna 13). Con eso ya sabes qué mirar antes de tocar nada.
+Ese es el aspecto de un error provocado por escribir `console.log(precioTotal);` sin haber declarado esa variable. Tiene tres partes y las tres importan: el **tipo** de error (`ReferenceError`), el **mensaje** (`is not defined`) y la **posición** (`main.js`, línea 1, columna 13). Con eso ya sabes qué mirar antes de tocar nada.
 
 <div class="rule">
   <p class="rule-label">El primer error es el que hay que arreglar</p>
   <p>Cuando algo falla, la consola suele llenarse. Casi siempre los errores siguientes son consecuencia del primero. Sube arriba del todo, arregla ese, recarga y vuelve a mirar.</p>
-</div>
-
-#### Tarea 1 · Tu primer script
-
-1. Crea `js/main.js` y enlázalo en `index.html` con `defer`.
-2. Escribe tres `console.log` con tu nombre, el nombre de tu proyecto y el año actual calculado.
-3. Provoca un error a propósito y anota su tipo, su mensaje y su línea.
-4. Corrígelo.
-5. Enlaza el mismo fichero en el resto de páginas.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>El código se ejecuta en las cuatro páginas y sabes demostrarlo.</span></div>
-  <div><strong>Si lo tienes</strong><span>Cambia la ruta del <code>src</code> y diagnostica el 404 desde la pestaña Network.</span></div>
-  <div><strong>Reto</strong><span>Suprime <code>defer</code>, desplaza el enlace y explica qué consecuencia tiene el cambio de orden.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Existe <code>js/main.js</code> y se ejecuta al cargar la página.</li>
-    <li>Sabes por qué usamos un fichero externo y no un atributo en la etiqueta.</li>
-    <li>Sabes leer el tipo, el mensaje y la línea de un error.</li>
-    <li>Puedes explicar qué hace <code>defer</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Dónde se ejecuta el JavaScript que escribes en esta unidad?</li>
-    <li>¿Qué tres datos te da un error de la consola?</li>
-    <li>¿Por qué evitamos <code>onclick</code> en el HTML?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · En el motor de JavaScript del navegador, sin instalar ni compilar nada.</p>
-  <p>2 · El tipo de error, el mensaje, y el fichero con su línea y su columna.</p>
-  <p>3 · Porque mezcla comportamiento con estructura, y pierde la reutilización y la caché del fichero externo.</p>
-</details>
-
-
-### Bloque 2 · Variables, tipos y valores
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se guarda un dato, qué tipos existen y qué diferencia hay entre <code>const</code> y <code>let</code>.</li>
-    <li><strong>2. Haz:</strong> Modela con variables la ficha de un producto de tu catálogo.</li>
-    <li><strong>3. Comprueba:</strong> Sabes decir el tipo de cada valor antes de preguntárselo a la consola.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué datos tiene un producto de tu proyecto? Escribe cinco.</li>
-    <li>¿Cuáles son texto, cuáles número y cuáles solo pueden ser sí o no?</li>
-    <li>¿Cuáles de ellos cambiarán mientras la página está abierta?</li>
-  </ol>
 </div>
 
 #### Guardar un valor con un nombre
@@ -361,8 +284,6 @@ const nombre = "Teclado mecánico";
 const precio = 89.9;
 let stock = 12;
 ```
-
-Una variable es un nombre para un valor. Se declara una vez y se usa muchas.
 
 | Palabra | Se puede reasignar | Cuándo se usa |
 | ------- | :---: | ------------- |
@@ -376,8 +297,6 @@ Una variable es un nombre para un valor. Se declara una vez y se usa muchas.
   <p><code>var</code> no lo usamos porque no respeta los bloques y permite redeclarar la misma variable sin avisar. Aparecerá en código antiguo y en respuestas de IA; sustitúyelo.</p>
 </div>
 
-#### Los tipos que vas a usar
-
 ```javascript
 const texto = "Teclado";        // string
 const numero = 89.9;            // number
@@ -386,11 +305,7 @@ const sinValor = null;          // null: vacío a propósito
 let noAsignada;                 // undefined: todavía no tiene valor
 ```
 
-Hay dos más, `bigint` y `symbol`, que no usarás en este módulo.
-
-La diferencia entre `null` y `undefined` se pregunta mucho y es sencilla: `undefined` es «nadie le ha dado valor»; `null` es «alguien decidió que estuviera vacío».
-
-Para preguntar el tipo:
+La diferencia entre `null` y `undefined` se pregunta mucho y es sencilla: `undefined` es «nadie le ha dado valor»; `null` es «alguien decidió que estuviera vacío». Para preguntar el tipo está `typeof`, con una rareza histórica que conviene conocer:
 
 ```javascript
 typeof "Teclado"   // "string"
@@ -400,7 +315,7 @@ typeof undefined   // "undefined"
 typeof null        // "object"  ← un error histórico del lenguaje
 ```
 
-#### Textos: comillas y plantillas
+Para construir texto se usan **plantillas**, escritas con acento grave, que permiten insertar valores con `${}` y ocupar varias líneas:
 
 ```javascript
 const producto = "Teclado";
@@ -410,117 +325,15 @@ const linea = "Has elegido " + unidades + " × " + producto;
 const mejor = `Has elegido ${unidades} × ${producto}`;
 ```
 
-Las **plantillas** —escritas con acento grave— permiten insertar valores con `${}` y ocupar varias líneas. A partir de aquí, para construir texto usamos siempre plantillas: concatenar con `+` es donde nacen la mitad de los espacios perdidos.
+A partir de aquí, siempre plantillas: concatenar con `+` es donde nacen la mitad de los espacios perdidos.
 
-#### Números: uno solo, y con un aviso
-
-JavaScript tiene un único tipo numérico, en coma flotante. Eso trae una sorpresa clásica:
+JavaScript tiene además un único tipo numérico, en coma flotante, y eso trae una sorpresa clásica:
 
 ```javascript
 0.1 + 0.2        // 0.30000000000000004
 ```
 
-El comportamiento no constituye un defecto de JavaScript, sino una consecuencia de la representación binaria de los decimales. Con dinero se trabaja en céntimos, con enteros, o se redondea al presentar:
-
-```javascript
-const total = 0.1 + 0.2;
-total.toFixed(2);            // "0.30"  ← ojo: devuelve texto
-Number(total.toFixed(2));    // 0.3
-```
-
-#### Nombrar bien no es cosmética
-
-```javascript
-const p = 89.9;              // ¿precio? ¿peso? ¿página?
-const precioConIva = 89.9;   // se lee solo
-```
-
-En este módulo: `camelCase`, en castellano o en inglés pero **sin mezclar**, nombres que digan qué contienen, y `MAYUSCULAS_CON_GUION` solo para constantes de configuración.
-
-#### Tarea 2 · La ficha de un producto
-
-En `js/main.js`, con datos de **tu** tema:
-
-1. Declara seis variables que describan un producto: nombre, precio, categoría, unidades, disponible y descripción.
-2. Elige `const` o `let` justificando cada elección en un comentario.
-3. Escribe con una plantilla una línea de resumen legible.
-4. Calcula el precio con IVA y muéstralo con dos decimales.
-5. Comprueba con `typeof` que cada variable tiene el tipo que esperabas.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Seis variables bien nombradas, del tipo correcto, y un resumen con plantilla.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade un descuento en porcentaje y calcula el precio final redondeado.</span></div>
-  <div><strong>Reto</strong><span>Reasigna una <code>const</code> a propósito, lee el error y explica qué protege exactamente.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Distingues <code>const</code> de <code>let</code> y usas <code>const</code> por defecto.</li>
-    <li>Nombras los cinco tipos que vas a usar.</li>
-    <li>Construyes texto con plantillas, no con el operador de suma.</li>
-    <li>Sabes por qué <code>0.1 + 0.2</code> no da exactamente <code>0.3</code>.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre <code>null</code> y <code>undefined</code>?</li>
-    <li>¿Qué devuelve <code>toFixed(2)</code>, un número o un texto?</li>
-    <li>¿Por qué no usamos <code>var</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>undefined</code> es que no se le ha dado valor; <code>null</code> es un vacío puesto a propósito.</p>
-  <p>2 · Un texto. Si vas a seguir calculando, conviértelo con <code>Number()</code>.</p>
-  <p>3 · Porque ignora los bloques y permite redeclarar sin avisar, así que oculta errores.</p>
-</details>
-
-
-### Bloque 3 · Operadores, conversión y comparación
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo opera JavaScript entre tipos distintos y por qué comparamos siempre con el triple igual.</li>
-    <li><strong>2. Haz:</strong> Predice el resultado de una batería de expresiones y comprueba tus predicciones.</li>
-    <li><strong>3. Comprueba:</strong> Aciertas la mayoría y sabes explicar las que fallas.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué crees que vale <code>"3" + 1</code>? ¿Y <code>"3" - 1</code>?</li>
-    <li>Un campo de formulario, ¿te devolverá un número o un texto?</li>
-    <li>¿Qué significa para ti que dos valores sean «iguales»?</li>
-  </ol>
-</div>
-
-#### Los operadores
-
-```javascript
-7 + 2      // 9
-7 - 2      // 5
-7 * 2      // 14
-7 / 2      // 3.5
-7 % 2      // 1   resto de la división
-7 ** 2     // 49  potencia
-```
-
-El resto, `%`, parece anecdótico y no lo es: es como se detecta un número par (`n % 2 === 0`) o se recorre algo en ciclo.
-
-Estos son los de asignación abreviada:
-
-```javascript
-let stock = 10;
-stock += 5;    // 15
-stock -= 2;    // 13
-stock++;       // 14
-```
+El comportamiento no constituye un defecto de JavaScript, sino una consecuencia de la representación binaria de los decimales. Con dinero se trabaja en céntimos, con enteros, o se redondea al presentar con `toFixed(2)`, que devuelve **texto**.
 
 #### La conversión automática, el gran tropiezo
 
@@ -549,29 +362,17 @@ Number(introducido) + 5        // 15      ← lo correcto
   <p>Y comprueba el resultado: <code>Number("hola")</code> da <code>NaN</code>, que es un número que significa «esto no era un número».</p>
 </div>
 
-```javascript
-Number("10")       // 10
-Number("10,5")     // NaN   ← la coma no es el separador decimal
-parseInt("10px")   // 10    se queda con lo que puede leer
-parseFloat("10.5") // 10.5
-Number.isNaN(Number("hola"))   // true
-```
-
-#### Comparar: dos iguales frente a tres
+#### Comparar, y qué cuenta como verdadero
 
 ```javascript
 5 == "5"     // true   compara después de convertir
 5 === "5"    // false  compara valor y tipo
-null == undefined    // true
-null === undefined   // false
 ```
 
 <div class="rule">
   <p class="rule-label">En este módulo se compara con el triple igual</p>
   <p>Siempre. El doble igual convierte antes de comparar, y esas conversiones tienen casos que nadie recuerda de memoria. Escribir un carácter más no cuesta nada y elimina una familia entera de errores.</p>
 </div>
-
-#### Valores «verdaderos» y «falsos»
 
 En un `if`, JavaScript pregunta si el valor es *truthy* o *falsy*. Los falsos son exactamente estos seis:
 
@@ -593,22 +394,101 @@ if (unidades !== undefined) {
 }
 ```
 
-Estos son los operadores lógicos:
+En los operadores lógicos hay una distinción que importa por lo mismo:
 
 ```javascript
 true && false     // false   y
 true || false     // true    o
 !true             // false   no
+```
 
-const nombre = entrada || "Sin nombre";      // si entrada es falsy
-const stock = recibido ?? 0;                 // solo si es null o undefined
+```javascript
+const nombre = entrada || "Sin nombre";   // si entrada es falsy: también con 0 o ""
+const stock = recibido ?? 0;              // solo si es null o undefined
 ```
 
 El segundo suele ser el que quieres: el `||` también sustituiría un `0` legítimo.
 
-#### Tarea 3 · Predice y comprueba
+#### Nombrar bien no es cosmética
 
-Crea `js/predicciones.js`. Para cada expresión, **escribe primero tu predicción en un comentario** y después ejecútala:
+```javascript
+const p = 89.9;              // ¿precio? ¿peso? ¿página?
+const precioConIva = 89.9;   // se lee solo
+```
+
+En este módulo: `camelCase`, en castellano o en inglés pero **sin mezclar**, nombres que digan qué contienen, y `MAYUSCULAS_CON_GUION` solo para constantes de configuración.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Los dos primeros pasos ponen el código en marcha. Del tercero en adelante se trabaja la única habilidad que de verdad se evalúa hoy: predecir qué va a hacer el lenguaje antes de ejecutarlo.
+
+#### Paso 1 · Tu primer script · 20 min
+
+1. Crea `js/main.js` y enlázalo en `index.html` con `defer`.
+2. Escribe tres `console.log` con tu nombre, el nombre de tu proyecto y el año actual calculado.
+3. Provoca un error a propósito y anota su tipo, su mensaje y su línea.
+4. Corrígelo.
+5. Enlaza el mismo fichero en el resto de páginas.
+
+**Antes de continuar:** el mensaje aparece en la consola de las cuatro páginas, y sabes demostrarlo sin recurrir a que «parece que funciona».
+
+#### Paso 2 · La ficha de un producto · 30 min
+
+En `js/main.js`, con datos de **tu** tema:
+
+1. Declara seis variables que describan un producto: nombre, precio, categoría, unidades, disponible y descripción.
+2. Elige `const` o `let` justificando cada elección en un comentario.
+3. Escribe con una plantilla una línea de resumen legible.
+4. Calcula el precio con IVA y muéstralo con dos decimales.
+5. Comprueba con `typeof` que cada variable tiene el tipo que esperabas.
+6. Reasigna una `const` a propósito, lee el error y escribe qué protege exactamente.
+
+<details class="aside aside--extra">
+<summary>Consultar · operadores y conversión explícita</summary>
+
+```javascript
+7 + 2      // 9
+7 - 2      // 5
+7 * 2      // 14
+7 / 2      // 3.5
+7 % 2      // 1   resto de la división
+7 ** 2     // 49  potencia
+```
+
+El resto, `%`, parece anecdótico y no lo es: es como se detecta un número par (`n % 2 === 0`) o se recorre algo en ciclo.
+
+```javascript
+let stock = 10;
+stock += 5;    // 15
+stock -= 2;    // 13
+stock++;       // 14
+```
+
+Conversión explícita, que es la que vas a escribir tú:
+
+```javascript
+Number("10")       // 10
+Number("10,5")     // NaN   ← la coma no es el separador decimal
+parseInt("10px")   // 10    se queda con lo que puede leer
+parseFloat("10.5") // 10.5
+Number.isNaN(Number("hola"))   // true
+```
+
+El redondeo al presentar:
+
+```javascript
+const total = 0.1 + 0.2;
+total.toFixed(2);            // "0.30"  ← devuelve texto
+Number(total.toFixed(2));    // 0.3
+```
+
+</details>
+
+#### Paso 3 · Predice y comprueba · 35 min
+
+Es el trabajo central de la sesión. Crea `js/predicciones.js`. Para cada expresión, **escribe primero tu predicción en un comentario** y solo después ejecútala:
 
 ```javascript
 "5" + 3
@@ -625,44 +505,140 @@ Number("")
 Boolean("false")
 ```
 
-Después, sobre tu proyecto:
+Las predicciones escritas antes son la tarea; ejecutar las doce expresiones son dos minutos. Cuando falles una, no te limites a corregir el comentario: **escribe qué regla habías aplicado mal**. Ese renglón vale más que el acierto.
 
-1. Simula tres datos «de formulario» como textos.
-2. Conviértelos correctamente.
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>De arriba abajo: <code>"53"</code>, <code>2</code>, <code>6</code>, <code>true</code> (convierte a número), <code>false</code> (compara texto con texto, y el «1» va antes que el «9»), <code>true</code>, <code>false</code> (nada es igual a <code>NaN</code>), <code>true</code>, <code>1</code>, <code>NaN</code>, <code>0</code>, <code>true</code> (es un texto no vacío).</p>
+</details>
+
+#### Paso 4 · La entrada llega como texto · 25 min
+
+Sobre tu proyecto, y simulando lo que en la UD4 vendrá de un formulario:
+
+1. Declara tres datos «de formulario» como textos: unas unidades, un precio y un código.
+2. Conviértelos correctamente en el momento de leerlos, no más tarde.
 3. Calcula un total y comprueba que no es `NaN`.
-4. Escribe una comprobación que detecte una entrada no numérica.
+4. Escribe una comprobación que detecte una entrada no numérica y avise en vez de calcular con basura.
+5. Prueba tu comprobación con estos cinco valores y anota qué hace con cada uno: `"12"`, `"12,5"`, `""`, `"  7 "` y `"doce"`.
+
+El quinto apartado es el que enseña: dos de los cinco pasan por número sin serlo del todo, y la comprobación ingenua los deja entrar.
+
+#### Paso 5 · Nombres que se leen solos · 20 min
+
+Este fragmento funciona y es ilegible:
+
+```javascript
+const x = 89.9;
+const y = 3;
+const z = x * y;
+const w = z * 1.21;
+let f = false;
+const d = "Teclado mecánico compacto con retroiluminación";
+const D = 12;
+const precio_final = w;
+```
+
+1. Renómbralo entero. Cada nombre debe decir qué contiene.
+2. Hay dos nombres que además incumplen el criterio del módulo por su forma, no por su significado: localízalos y corrígelos.
+3. Decide en cada caso si va `const` o `let`, y justifica los que cambies.
+4. Aplica después la misma revisión a tu propio `main.js`: si algún nombre necesita un comentario para entenderse, el nombre está mal.
+
+#### Paso 6 · Predicciones cruzadas · 20 min
+
+Escribe **cinco expresiones tramposas** para un compañero, con su respuesta apuntada aparte. Deben cumplir dos condiciones: que usen solo lo visto hoy, y que tú sepas explicar por qué dan lo que dan.
+
+Intercambiadlas. Sobre las que recibas:
+
+1. Predice cada una por escrito.
+2. Ejecútalas y compara.
+3. En las que falles, pide la explicación a su autor y comprueba si te convence. Si el autor no sabe explicarla, esa expresión no valía como trampa: era una casualidad.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los seis pasos. Los dos retos siguen la misma idea: el lenguaje no falla, responde, y hay que saber qué va a responder.
+
+##### Reto 1 · Por qué `"10" > "9"` es falso
+
+```javascript
+"10" > 9      // true
+"10" > "9"    // false
+```
+
+1. Explica por escrito qué comparación hace cada una, y por qué el resultado cambia al poner comillas en el segundo operando.
+2. Predice y comprueba estas otras cinco: `"2" > "10"`, `"b" > "a"`, `"B" > "a"`, `[] + []`, `[] + {}`.
+3. La tercera sorprende a casi todo el mundo. Averigua qué se está comparando en realidad y escríbelo.
+4. Enuncia en una frase la regla general: cuándo compara JavaScript como números y cuándo como texto.
+5. Relaciónalo con un caso real: una lista de códigos de producto ordenada alfabéticamente frente a la misma lista ordenada numéricamente. ¿Dónde acaba el `"10"`?
+
+##### Reto 2 · El formulario que miente
+
+Estos son los valores que un formulario real puede entregar para un campo de cantidad. Todos son texto.
+
+```text
+"12"        un número normal
+"012"       con cero delante
+"12,5"      con coma decimal, como se escribe en español
+"12.5"      con punto decimal
+"  12  "    con espacios alrededor
+""          el campo vacío
+"1e3"       notación científica
+"12px"      alguien pegó algo de más
+"doce"      texto sin ningún número
+"-3"        negativo
+"Infinity"  literalmente
+```
+
+Escribe **una sola función** de validación que decida, para cada uno, si es una cantidad aceptable y cuál es su valor numérico. Antes de escribirla:
+
+1. Decide qué debería aceptar tu programa y qué no. No hay una respuesta única: `"12,5"` puede ser un error del usuario o una cantidad perfectamente legítima escrita como se escribe aquí. Documenta tu criterio.
+2. Prueba qué hace `Number()` con cada uno, y qué hace `parseInt()`. Anota los tres casos en los que **no coinciden**.
+3. Dos de la lista pasan `Number()` sin ser cantidades razonables. Identifícalos y explica qué comprobación adicional hace falta.
+4. Comprueba tu función contra los once valores y construye una tabla con lo que aceptas, lo que rechazas y lo que conviertes antes de aceptar.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Doce predicciones escritas, comprobadas, y las falladas explicadas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Escribe cinco expresiones tramposas para un compañero y corregidlas juntos.</span></div>
-  <div><strong>Reto</strong><span>Explica por qué <code>"10" &gt; "9"</code> es falso y <code>"10" &gt; 9</code> verdadero.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>El script cargando en las cuatro páginas, el producto modelado con tipos correctos y las doce predicciones escritas y comprobadas.</span></div>
+  <div><strong>Si lo tienes</strong><span>La conversión de entradas con su comprobación de <code>NaN</code>, el fragmento renombrado y las predicciones cruzadas contestadas.</span></div>
+  <div><strong>Reto</strong><span>La regla general de comparación enunciada con sus cinco casos, y la función de validación probada contra los once valores del formulario.</span></div>
 </div>
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
-  <ul class="checklist">
-    <li>Predices el resultado de una mezcla de tipos y aciertas.</li>
-    <li>Conviertes la entrada al leerla y compruebas <code>NaN</code>.</li>
-    <li>Comparas siempre con el triple igual.</li>
-    <li>Recitas los seis valores <em>falsy</em>.</li>
-  </ul>
-</div>
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 1</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Tu código se ejecuta desde un fichero externo en todo el sitio.</li>
-    <li>Modelas un producto con variables bien nombradas y del tipo correcto.</li>
-    <li>Sabes por qué un campo de formulario nunca te dará un número.</li>
+    <li>Distingues <code>const</code> de <code>let</code> y usas <code>const</code> por defecto.</li>
+    <li>Construyes texto con plantillas, no con el operador de suma.</li>
+    <li>Conviertes la entrada al leerla y compruebas <code>NaN</code>.</li>
+    <li>Comparas siempre con el triple igual.</li>
     <li>Tienes un fichero de predicciones que puedes releer cuando algo raro pase.</li>
   </ul>
 </div>
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas de la sesión 1</summary>
-  <p>De arriba abajo: <code>"53"</code>, <code>2</code>, <code>6</code>, <code>true</code> (convierte a número), <code>false</code> (compara texto con texto, y el «1» va antes que el «9»), <code>true</code>, <code>false</code> (nada es igual a <code>NaN</code>), <code>true</code>, <code>1</code>, <code>NaN</code>, <code>0</code>, <code>true</code> (es un texto no vacío).</p>
-</details>
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué tres datos te da un error de la consola?</li>
+    <li>¿Por qué evitamos <code>onclick</code> en el HTML?</li>
+    <li>¿Qué diferencia hay entre <code>null</code> y <code>undefined</code>?</li>
+    <li>¿Qué devuelve <code>toFixed(2)</code>, un número o un texto?</li>
+    <li>Enumera los seis valores <em>falsy</em>.</li>
+    <li>¿Por qué <code>"5" + 3</code> y <code>"5" - 3</code> dan cosas distintas?</li>
+  </ol>
+</div>
 
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · El tipo de error, el mensaje, y el fichero con su línea y su columna.</p>
+  <p>2 · Porque mezcla comportamiento con estructura, y pierde la reutilización y la caché del fichero externo.</p>
+  <p>3 · <code>undefined</code> es que no se le ha dado valor; <code>null</code> es un vacío puesto a propósito.</p>
+  <p>4 · Un texto. Si vas a seguir calculando, conviértelo con <code>Number()</code>.</p>
+  <p>5 · <code>false</code>, <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code> y <code>NaN</code>.</p>
+  <p>6 · Porque el <code>+</code> con un texto a un lado concatena, y el <code>-</code> no sabe concatenar: convierte los dos operandos a número.</p>
+</details>
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 1 · 5–10 minutos</p>
@@ -673,6 +649,7 @@ Después, sobre tu proyecto:
     <li>Enumera los seis valores <em>falsy</em>.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 2 · Decisiones y repeticiones
