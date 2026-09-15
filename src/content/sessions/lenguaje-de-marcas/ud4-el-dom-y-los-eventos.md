@@ -5,7 +5,7 @@ section: "ud-04"
 order: 4
 lang: "es"
 summary: "Conectamos las tres capas. El catálogo que en la UD3 vivía en la consola pasa a pintarse en la página, a filtrarse desde un formulario y a llegar desde un servidor. Con una regla que no se negocia: los datos mandan, y la página es solo su reflejo."
-duration: "18 sesiones · 6 semanas"
+duration: "6 sesiones de 3 horas · 18 horas"
 modality: "Individual, con retos y revisión en pareja"
 deliverable: "El sitio de las unidades anteriores convertido en una interfaz viva: catálogo pintado desde datos, búsqueda y filtros en tiempo real, formulario validado y accesible, preferencias guardadas y datos cargados desde una API con sus estados de carga, error y vacío."
 outcomes:
@@ -137,7 +137,7 @@ Muestra el DOM **en vivo**, no tu fichero. Ahí verás aparecer y desaparecer lo
 
 <p class="term">Network</p>
 
-Cada petición que hace la página: la URL, el estado, el tiempo y lo que devolvió. En la semana 5 es imprescindible para saber si el problema es tuyo o del servidor.
+Cada petición que hace la página: la URL, el estado, el tiempo y lo que devolvió. En la sesión 5 es imprescindible para saber si el problema es tuyo o del servidor.
 
 ### No todo pesa lo mismo
 
@@ -158,20 +158,22 @@ Cada petición que hace la página: la URL, el estado, el tiempo y lo que devolv
 
 ---
 
-## Plan de trabajo semanal
+## Plan de trabajo por sesiones
 
-| Semana | Bloque temático | Práctica central | Horas |
+| Sesión | Contenido de las tres horas | Práctica central | Horas |
 | :---: | :--- | :--- | :---: |
-| **Semana 1** | La página como objetos | Seleccionar y modificar el documento | 3 h |
-| **Semana 2** | Eventos y elementos dinámicos | Responder al usuario y crear contenido | 3 h |
-| **Semana 3** | Pintar desde datos | Render del catálogo y formularios | 3 h |
-| **Semana 4** | Estado y persistencia | Filtros en vivo y preferencias guardadas | 3 h |
-| **Semana 5** | Datos remotos | Asincronía, `fetch` y sus tres estados | 3 h |
-| **Semana 6** | Interfaz robusta y entrega | Accesibilidad, depuración y revisión por pares | 3 h |
+| **Sesión 1** | La página como objetos | Seleccionar y modificar el documento | 3 h |
+| **Sesión 2** | Eventos y elementos dinámicos | Responder al usuario y crear contenido | 3 h |
+| **Sesión 3** | Pintar desde datos | Render del catálogo y formularios | 3 h |
+| **Sesión 4** | Estado y persistencia | Filtros en vivo y preferencias guardadas | 3 h |
+| **Sesión 5** | Datos remotos | Asincronía, `fetch` y sus tres estados | 3 h |
+| **Sesión 6** | Interfaz robusta y entrega | Accesibilidad, depuración y revisión por pares | 3 h |
 | **Total** | | **Una interfaz completa gobernada por datos** | **18 h** |
 
+Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada bloque mantiene el ritmo de las unidades anteriores:
+
 <figure class="diagram">
-  <figcaption>El ritmo de cada sesión</figcaption>
+  <figcaption>El ritmo de cada bloque de una hora</figcaption>
   <ol class="flow flow--row flow--chain">
     <li>Recupera · 5 min</li>
     <li>Aprende y observa · 10–20 min</li>
@@ -182,11 +184,11 @@ Cada petición que hace la página: la URL, el estado, el tiempo y lo que devolv
 
 ---
 
-## Semana 1 · La página como objetos
+## Sesión 1 · La página como objetos
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>El DOM</strong>, <strong>Seleccionar elementos</strong> y <strong>Modificar el documento</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 1 · El DOM
+### Bloque 1 · El DOM
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -206,7 +208,7 @@ Cada petición que hace la página: la URL, el estado, el tiempo y lo que devolv
   </ol>
 </div>
 
-### El documento, convertido en objetos
+#### El documento, convertido en objetos
 
 Cuando el navegador lee tu HTML construye en memoria un árbol de objetos: cada etiqueta pasa a ser un objeto con propiedades y métodos. Ese árbol es el **DOM**, y es lo que tu código manipula.
 
@@ -226,9 +228,9 @@ La representación en memoria del documento. Tu fichero `.html` es el punto de p
 
 Compruébalo: en la pestaña Elements borra un párrafo; desaparece de la pantalla, pero tu fichero sigue intacto. Recarga y vuelve. Lo que ves en Elements no es tu código, es el DOM.
 
-En sentido inverso: si tu código crea diez artículos, aparecerán en Elements y no constarán en el archivo. Por eso, cuando en la semana 3 pintes el catálogo, «ver código fuente» no te servirá de nada: hay que mirar Elements.
+En sentido inverso: si tu código crea diez artículos, aparecerán en Elements y no constarán en el archivo. Por eso, cuando en la sesión 3 pintes el catálogo, «ver código fuente» no te servirá de nada: hay que mirar Elements.
 
-### El árbol y sus nodos
+#### El árbol y sus nodos
 
 ```javascript
 document                       // el documento entero
@@ -245,7 +247,7 @@ main.nextElementSibling
 
 Un detalle que confunde a todo el mundo: el DOM también guarda como nodos los espacios y saltos de línea entre etiquetas. Por eso usamos siempre las propiedades que hablan de **elementos** (`children`, `firstElementChild`) y no las que hablan de nodos en general (`childNodes`, `firstChild`).
 
-### Cuándo puede ejecutarse tu código
+#### Cuándo puede ejecutarse tu código
 
 Si el código se ejecuta antes de que exista el documento, no encontrará nada:
 
@@ -256,7 +258,7 @@ console.log(titulo);      // null si el script se ejecutó demasiado pronto
 
 Esto ya lo resolviste en la UD3: con `defer`, o con `type="module"`, el navegador espera a tener el documento completo. Recuérdalo, porque el `null` de arriba es el error número uno de esta unidad.
 
-### Tarea 1 · Explora tu propia web
+#### Tarea 1 · Explora tu propia web
 
 Desde la consola de tu página de productos:
 
@@ -274,7 +276,7 @@ Desde la consola de tu página de productos:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Explicas la diferencia entre tu fichero y el DOM.</li>
     <li>Te mueves por el árbol con las propiedades de elemento.</li>
@@ -299,9 +301,8 @@ Desde la consola de tu página de productos:
   <p>3 · <code>null</code>, porque el elemento aún no existía.</p>
 </details>
 
----
 
-## Sesión 2 · Seleccionar elementos
+### Bloque 2 · Seleccionar elementos
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -321,7 +322,7 @@ Desde la consola de tu página de productos:
   </ol>
 </div>
 
-### Los dos métodos que vas a usar
+#### Los dos métodos que vas a usar
 
 ```javascript
 const titulo = document.querySelector("h1");            // el primero, o null
@@ -339,7 +340,7 @@ document.querySelectorAll("article:not(.agotado)");
 
 Existen métodos más antiguos —`getElementById`, `getElementsByClassName`— que verás en tutoriales. Funcionan, pero con dos sirve, y los dos aceptan la misma sintaxis que ya sabes.
 
-### Lo que devuelve `querySelectorAll` no es un array
+#### Lo que devuelve `querySelectorAll` no es un array
 
 ```javascript
 const tarjetas = document.querySelectorAll(".producto");
@@ -355,7 +356,7 @@ Es una `NodeList`. Tiene `length` y `forEach`, pero no los métodos de la UD3. L
 
 Una lista vacía, además, **no es null**: si el selector no encuentra nada, `querySelectorAll` devuelve una lista de longitud cero, mientras que `querySelector` devuelve `null`. Confundir esos dos casos es el segundo error más común de la unidad.
 
-### Anclajes pensados para el código
+#### Anclajes pensados para el código
 
 <div class="rule">
   <p class="rule-label">No selecciones por clases de estilo ni por posición</p>
@@ -374,7 +375,7 @@ const buscador = document.querySelector("[data-js='buscador']");
 const catalogo = document.querySelector("[data-js='catalogo']");
 ```
 
-### Guardar las referencias una sola vez
+#### Guardar las referencias una sola vez
 
 ```javascript
 // Mal: busca en el árbol cada vez que el usuario escribe
@@ -392,7 +393,7 @@ const elementos = {
 
 Además de ser más rápido, agrupa en un sitio todo lo que tu código espera encontrar en la página. Si algo sale `null`, se ve al arrancar y no en mitad de un evento.
 
-### Tarea 2 · Preparar el terreno
+#### Tarea 2 · Preparar el terreno
 
 Sobre tu página de productos:
 
@@ -409,7 +410,7 @@ Sobre tu página de productos:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Usas los dos métodos de selección y sabes qué devuelve cada uno.</li>
     <li>Seleccionas por <code>data-</code>, no por clases de estilo.</li>
@@ -434,9 +435,8 @@ Sobre tu página de productos:
   <p>3 · Convirtiéndola antes en array con los tres puntos.</p>
 </details>
 
----
 
-## Sesión 3 · Modificar el documento
+### Bloque 3 · Modificar el documento
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -456,7 +456,7 @@ Sobre tu página de productos:
   </ol>
 </div>
 
-### Contenido
+#### Contenido
 
 ```javascript
 const titulo = document.querySelector("h1");
@@ -471,7 +471,7 @@ titulo.innerHTML = "Catálogo <strong>2026</strong>";  // interpreta etiquetas
   <p><code>textContent</code> escribe texto y solo texto: el contenido se muestra literalmente, sin interpretarse ni ejecutarse. Usa <code>innerHTML</code> únicamente con marcado que hayas escrito tú, y nunca con datos del usuario.</p>
 </div>
 
-### Clases: el puente con el CSS
+#### Clases: el puente con el CSS
 
 ```javascript
 const tarjeta = document.querySelector("[data-js='producto-1']");
@@ -488,7 +488,7 @@ tarjeta.classList.contains("agotado");    // true / false
   <p>Si en lugar de eso escribes <code>elemento.style.backgroundColor = "grey"</code>, has metido una decisión de diseño dentro del comportamiento: nadie la encontrará buscando en el CSS, y no responderá al modo oscuro ni al tema de la UD2.</p>
 </div>
 
-### Atributos y datos
+#### Atributos y datos
 
 ```javascript
 const enlace = document.querySelector("a");
@@ -505,9 +505,9 @@ Number(tarjeta.dataset.id);    // 7
 tarjeta.dataset.categoria = "teclados";
 ```
 
-`dataset` será la forma de saber, en la semana 2, a qué producto corresponde el botón que se acaba de pulsar. Conviene observar de nuevo el mismo detalle: el valor llega como **texto**.
+`dataset` será la forma de saber, en la sesión 2, a qué producto corresponde el botón que se acaba de pulsar. Conviene observar de nuevo el mismo detalle: el valor llega como **texto**.
 
-### Estilos, y el caso en que sí valen
+#### Estilos, y el caso en que sí valen
 
 ```javascript
 elemento.style.setProperty("--altura-imagen", "220px");
@@ -515,7 +515,7 @@ elemento.style.setProperty("--altura-imagen", "220px");
 
 Cambiar una variable CSS de las que definiste en la UD2 sí es legítimo: el valor es un dato —una posición, una altura calculada, un porcentaje de progreso— y la regla que lo usa sigue viviendo en la hoja de estilos.
 
-### Tarea 3 · Estado visual desde el código
+#### Tarea 3 · Estado visual desde el código
 
 En tu página de productos, con el catálogo todavía escrito a mano en HTML:
 
@@ -532,7 +532,7 @@ En tu página de productos, con el catálogo todavía escrito a mano en HTML:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 1</p>
+  <p class="checkpoint-label">Cierre de la sesión 1</p>
   <ul class="checklist">
     <li>Explicas qué es el DOM y por qué no es tu fichero.</li>
     <li>Seleccionas por anclajes pensados para el código.</li>
@@ -560,11 +560,11 @@ En tu página de productos, con el catálogo todavía escrito a mano en HTML:
 </div>
 ---
 
-## Semana 2 · Eventos y elementos dinámicos
+## Sesión 2 · Eventos y elementos dinámicos
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Escuchar lo que hace el usuario</strong>, <strong>El objeto evento y la delegación</strong> y <strong>Crear y eliminar elementos</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 4 · Escuchar lo que hace el usuario
+### Bloque 1 · Escuchar lo que hace el usuario
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -584,7 +584,7 @@ En tu página de productos, con el catálogo todavía escrito a mano en HTML:
   </ol>
 </div>
 
-### Escuchar
+#### Escuchar
 
 ```javascript
 const boton = document.querySelector("[data-js='ordenar']");
@@ -594,9 +594,9 @@ boton.addEventListener("click", () => {
 });
 ```
 
-Tres piezas: el **elemento** que escucha, el **tipo** de evento y la **función** que se ejecutará. Esa función es un callback, el concepto de la sesión 8 de la UD3: tú no la llamas, la llama el navegador cuando ocurre algo.
+Tres piezas: el **elemento** que escucha, el **tipo** de evento y la **función** que se ejecutará. Esa función es un callback, el concepto de la sesión 3 de la UD3: tú no la llamas, la llama el navegador cuando ocurre algo.
 
-### Los eventos que usarás
+#### Los eventos que usarás
 
 | Evento | Ocurre cuando |
 | ------ | ------------- |
@@ -614,7 +614,7 @@ Tres piezas: el **elemento** que escucha, el **tipo** de evento y la **función*
   <p>Y para un control que se pulsa, usa un elemento que sea pulsable de verdad. Un <code>div</code> con un manejador de clic no recibe el foco, no responde a la tecla Intro y no se anuncia como control: es inaccesible por construcción.</p>
 </div>
 
-### `submit` y `preventDefault`
+#### `submit` y `preventDefault`
 
 ```javascript
 const formulario = document.querySelector("[data-js='contacto']");
@@ -627,7 +627,7 @@ formulario.addEventListener("submit", (evento) => {
 
 Sin `preventDefault`, el navegador hace lo suyo: envía y recarga. Verás tu mensaje en consola durante un instante y desaparecerá. Es el desconcierto clásico de esta sesión.
 
-### Quitar un manejador
+#### Quitar un manejador
 
 ```javascript
 function alPulsar() { /* ... */ }
@@ -638,7 +638,7 @@ boton.removeEventListener("click", alPulsar);
 
 Para poder quitarlo hace falta la **misma referencia** de función, así que una flecha escrita en el sitio no se puede retirar. También puedes usar la opción `{ once: true }` para que se ejecute una sola vez.
 
-### El diagnóstico de esta unidad
+#### El diagnóstico de esta unidad
 
 <figure class="diagram">
   <figcaption>Cuando algo no responde</figcaption>
@@ -653,7 +653,7 @@ Para poder quitarlo hace falta la **misma referencia** de función, así que una
 
 Ese último caso es el que resuelve la sesión siguiente.
 
-### Tarea 4 · Tu página reacciona
+#### Tarea 4 · Tu página reacciona
 
 1. Un botón que alterna la vista compacta del catálogo.
 2. Un campo de búsqueda que escribe en consola lo tecleado con `input`.
@@ -668,7 +668,7 @@ Ese último caso es el que resuelve la sesión siguiente.
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Registras escuchas con las tres piezas claras.</li>
     <li>Usas <code>submit</code> en el formulario y <code>preventDefault</code>.</li>
@@ -693,9 +693,8 @@ Ese último caso es el que resuelve la sesión siguiente.
   <p>3 · Que el evento llegue: un mensaje en la primera línea del manejador separa el problema en dos.</p>
 </details>
 
----
 
-## Sesión 5 · El objeto evento y la delegación
+### Bloque 2 · El objeto evento y la delegación
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -715,7 +714,7 @@ Ese último caso es el que resuelve la sesión siguiente.
   </ol>
 </div>
 
-### El objeto que recibe el manejador
+#### El objeto que recibe el manejador
 
 ```javascript
 catalogo.addEventListener("click", (evento) => {
@@ -730,7 +729,7 @@ catalogo.addEventListener("click", (evento) => {
 
 La pareja `target` / `currentTarget` es la clave de esta sesión: puedes escuchar en el contenedor y averiguar dentro cuál de sus hijos recibió la acción.
 
-### La propagación
+#### La propagación
 
 Un clic no ocurre solo en un elemento: recorre el árbol.
 
@@ -751,7 +750,7 @@ El burbujeo es lo que hace posible la delegación y explica además un fallo car
   <p>Antes de detenerla, comprueba si el manejador de arriba puede filtrar por <code>target</code>. Casi siempre puede.</p>
 </div>
 
-### Delegar
+#### Delegar
 
 ```javascript
 catalogo.addEventListener("click", (evento) => {
@@ -769,7 +768,7 @@ Tres ventajas, y son grandes: una sola escucha en lugar de cincuenta; funciona c
 
 Sube por los antepasados desde el elemento pulsado hasta encontrar uno que case con el selector. Resuelve el problema de que el clic caiga en un icono o en el texto de dentro del botón, y no en el botón mismo.
 
-### Teclado, siempre
+#### Teclado, siempre
 
 ```javascript
 buscador.addEventListener("keydown", (evento) => {
@@ -779,7 +778,7 @@ buscador.addEventListener("keydown", (evento) => {
 
 Si delegas clics en elementos que son botones de verdad, el teclado ya funciona: pulsar Intro sobre un botón genera un `click`. Es otra razón para usar el elemento correcto en lugar de un `div` decorado.
 
-### Tarea 5 · Un manejador para todos
+#### Tarea 5 · Un manejador para todos
 
 1. Añade a cada tarjeta de tu catálogo un botón con `data-accion` y `data-id`.
 2. Registra **una sola** escucha en el contenedor.
@@ -795,7 +794,7 @@ Si delegas clics en elementos que son botones de verdad, el teclado ya funciona:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Distingues <code>target</code> de <code>currentTarget</code>.</li>
     <li>Explicas el burbujeo con un ejemplo de tu página.</li>
@@ -820,9 +819,8 @@ Si delegas clics en elementos que son botones de verdad, el teclado ya funciona:
   <p>3 · Porque impide que otros manejadores más arriba se enteren del evento, y eso rompe cosas a distancia.</p>
 </details>
 
----
 
-## Sesión 6 · Crear y eliminar elementos
+### Bloque 3 · Crear y eliminar elementos
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -842,7 +840,7 @@ Si delegas clics en elementos que son botones de verdad, el teclado ya funciona:
   </ol>
 </div>
 
-### Crear, rellenar, insertar
+#### Crear, rellenar, insertar
 
 ```javascript
 const item = document.createElement("li");
@@ -865,7 +863,7 @@ catalogo.prepend(item);         // al principio
 | `remove` | Se elimina a sí mismo |
 | `replaceChildren` | Sustituye la totalidad del contenido en una sola operación |
 
-### Vaciar un contenedor
+#### Vaciar un contenedor
 
 ```javascript
 catalogo.replaceChildren();        // lo deja vacío
@@ -874,7 +872,7 @@ catalogo.innerHTML = "";           // funciona, pero pasa por el analizador
 
 `replaceChildren` es más claro y más seguro, y admite también los nuevos hijos: `catalogo.replaceChildren(...tarjetas)`.
 
-### Insertar de una vez
+#### Insertar de una vez
 
 Añadir cincuenta elementos uno a uno hace que el navegador recalcule la página cincuenta veces. Se construyen aparte y se insertan juntos:
 
@@ -888,7 +886,7 @@ for (const producto of productos) {
 catalogo.replaceChildren(fragmento);
 ```
 
-### El HTML generado también se audita
+#### El HTML generado también se audita
 
 <div class="rule">
   <p class="rule-label">Lo que genera tu código pasa las mismas normas de la UD1</p>
@@ -896,7 +894,7 @@ catalogo.replaceChildren(fragmento);
   <p>La comprobación: abre Elements, copia el marcado generado, pégalo en el validador del W3C. La jerarquía de encabezados sigue siendo exigible sobre ese marcado generado.</p>
 </div>
 
-### Una función por tarjeta
+#### Una función por tarjeta
 
 ```javascript
 export function crearTarjeta(producto) {
@@ -923,7 +921,7 @@ export function crearTarjeta(producto) {
 
 Devuelve el elemento y no lo inserta: quien la llama decide dónde va. Es la misma regla de la UD3 —calcular y devolver— aplicada al DOM.
 
-### Tarea 6 · La tarjeta generada
+#### Tarea 6 · La tarjeta generada
 
 1. Escribe `crearTarjeta(producto)` en `js/render.js`.
 2. Genera con ella las tarjetas de tres productos y añádelas con un fragmento.
@@ -939,7 +937,7 @@ Devuelve el elemento y no lo inserta: quien la llama decide dónde va. Es la mis
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 2</p>
+  <p class="checkpoint-label">Cierre de la sesión 2</p>
   <ul class="checklist">
     <li>Tu página responde al ratón y al teclado.</li>
     <li>Usas una sola escucha delegada por contenedor.</li>
@@ -967,11 +965,11 @@ Devuelve el elemento y no lo inserta: quien la llama decide dónde va. Es la mis
 </div>
 ---
 
-## Semana 3 · Pintar desde datos
+## Sesión 3 · Pintar desde datos
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Render · del array a la página</strong>, <strong>Formularios desde JavaScript</strong> y <strong>Validación accesible</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 7 · Render · del array a la página
+### Bloque 1 · Render · del array a la página
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -991,7 +989,7 @@ Devuelve el elemento y no lo inserta: quien la llama decide dónde va. Es la mis
   </ol>
 </div>
 
-### La función de render
+#### La función de render
 
 ```javascript
 import { crearTarjeta } from "./render.js";
@@ -1020,7 +1018,7 @@ Tiene tres propiedades que conviene nombrar, porque son las que la hacen fiable:
 
 Que ejecutarla dos veces con los mismos datos deje el mismo resultado. Sin esa propiedad, cada nuevo filtrado duplicaría el catálogo, que es el fallo con el que casi todo el mundo se estrena en esta sesión.
 
-### El estado vacío no es un detalle
+#### El estado vacío no es un detalle
 
 Una lista vacía sin mensaje se percibe como un error de la aplicación. Tampoco basta con «No hay resultados»:
 
@@ -1035,7 +1033,7 @@ function mensajeVacio() {
 
 Un buen estado vacío dice qué ha pasado y qué se puede hacer.
 
-### Borrar el HTML escrito a mano
+#### Borrar el HTML escrito a mano
 
 Ahora el catálogo vive en los datos. En el HTML solo queda el contenedor:
 
@@ -1045,7 +1043,7 @@ Ahora el catálogo vive en los datos. En el HTML solo queda el contenedor:
 
 Con una salvedad, que es la condición 2 de la unidad: si tu web debe seguir mostrando contenido sin JavaScript, el HTML conserva los productos y el código los sustituye al arrancar. Decide cuál de las dos opciones eliges, y escríbelo en tus notas.
 
-### Tarea 7 · El catálogo pintado
+#### Tarea 7 · El catálogo pintado
 
 1. Escribe `pintarCatalogo(productos, contenedor)` en `js/render.js`.
 2. Píntalo al arrancar desde `main.js`, importando los datos de la UD3.
@@ -1061,7 +1059,7 @@ Con una salvedad, que es la condición 2 de la unidad: si tu web debe seguir mos
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 7</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Tu render recibe los datos que pinta.</li>
     <li>Sustituye el contenido en lugar de añadirlo.</li>
@@ -1086,9 +1084,8 @@ Con una salvedad, que es la condición 2 de la unidad: si tu web debe seguir mos
   <p>3 · Qué ha ocurrido y qué puede hacer la persona a continuación.</p>
 </details>
 
----
 
-## Sesión 8 · Formularios desde JavaScript
+### Bloque 2 · Formularios desde JavaScript
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1108,7 +1105,7 @@ Con una salvedad, que es la condición 2 de la unidad: si tu web debe seguir mos
   </ol>
 </div>
 
-### Leer un campo
+#### Leer un campo
 
 ```javascript
 const buscador = document.querySelector("[data-js='buscador']");
@@ -1123,11 +1120,11 @@ seleccion.value           // el valor de la opción elegida
 
 <div class="rule">
   <p class="rule-label">Todo campo devuelve texto</p>
-  <p>Incluso los numéricos y los de fecha. Es exactamente el <code>"10" + 5</code> de la sesión 3 de la UD3, que ahora deja de ser un ejercicio y pasa a ser tu bug.</p>
+  <p>Incluso los numéricos y los de fecha. Es exactamente el <code>"10" + 5</code> de la sesión 1 de la UD3, que ahora deja de ser un ejercicio y pasa a ser tu bug.</p>
   <p>Convierte al leer, y comprueba: un campo numérico vacío da cadena vacía, y <code>Number("")</code> es <code>0</code>, no <code>NaN</code>. Ese cero silencioso ha estropeado muchos filtros.</p>
 </div>
 
-### Leer el formulario entero
+#### Leer el formulario entero
 
 ```javascript
 formulario.addEventListener("submit", (evento) => {
@@ -1143,7 +1140,7 @@ formulario.addEventListener("submit", (evento) => {
 
 Las casillas no marcadas no aparecen, y los grupos de casillas con el mismo nombre requieren `getAll`.
 
-### Reaccionar mientras se escribe
+#### Reaccionar mientras se escribe
 
 ```javascript
 buscador.addEventListener("input", (evento) => {
@@ -1152,9 +1149,9 @@ buscador.addEventListener("input", (evento) => {
 });
 ```
 
-Ya tienes la búsqueda en vivo: `buscar` es la función de la sesión 15 de la UD3, sin un solo cambio.
+Ya tienes la búsqueda en vivo: `buscar` es la función de la sesión 5 de la UD3, sin un solo cambio.
 
-### Otras cosas útiles
+#### Otras cosas útiles
 
 ```javascript
 formulario.reset();          // vuelve a los valores iniciales
@@ -1163,7 +1160,7 @@ buscador.select();           // selecciona el contenido
 campo.disabled = true;       // deshabilita mientras se envía
 ```
 
-### Tarea 8 · Leer y usar
+#### Tarea 8 · Leer y usar
 
 1. Búsqueda en vivo con `input` sobre tu catálogo pintado.
 2. Un filtro de precio máximo con conversión y comprobación del campo vacío.
@@ -1178,7 +1175,7 @@ campo.disabled = true;       // deshabilita mientras se envía
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 8</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Conviertes cada valor al leerlo.</li>
     <li>Usas <code>FormData</code> y sabes que depende del atributo <code>name</code>.</li>
@@ -1203,9 +1200,8 @@ campo.disabled = true;       // deshabilita mientras se envía
   <p>3 · Cero, que es justo lo que hay que detectar antes de usarlo como límite.</p>
 </details>
 
----
 
-## Sesión 9 · Validación accesible
+### Bloque 3 · Validación accesible
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1225,7 +1221,7 @@ campo.disabled = true;       // deshabilita mientras se envía
   </ol>
 </div>
 
-### Lo que el navegador ya hace
+#### Lo que el navegador ya hace
 
 En la UD1 escribiste campos obligatorios, tipos de dato y patrones. Eso sigue funcionando y es la primera línea de defensa. JavaScript no viene a sustituirla:
 
@@ -1247,7 +1243,7 @@ formulario.noValidate = true;   // asumo yo la presentación de los errores
   <p>Un cliente que valida bien mejora la experiencia. Un servidor que no valida es un agujero.</p>
 </div>
 
-### Un error que se ve y se oye
+#### Un error que se ve y se oye
 
 ```html
 <label for="email">Correo electrónico</label>
@@ -1273,7 +1269,7 @@ Tres piezas que hacen el error perceptible para todo el mundo: `aria-describedby
 
 El color rojo, por sí solo, no informa a quien no distingue colores. Igual que en la UD2: el color acompaña, no comunica.
 
-### Cuándo avisar
+#### Cuándo avisar
 
 Avisar con cada tecla mientras alguien escribe su correo es molesto y aparece en rojo antes de que haya terminado. El criterio habitual:
 
@@ -1286,7 +1282,7 @@ Avisar con cada tecla mientras alguien escribe su correo es molesto y aparece en
   </ol>
 </figure>
 
-### Al enviar
+#### Al enviar
 
 ```javascript
 formulario.addEventListener("submit", (evento) => {
@@ -1305,7 +1301,7 @@ formulario.addEventListener("submit", (evento) => {
 
 Llevar el foco al primer campo con error es lo que permite corregir sin buscar. Y `validarContacto` es, otra vez, la función de validación de la UD3: recibe un objeto y devuelve la lista de errores.
 
-### Tarea 9 · Formulario validado
+#### Tarea 9 · Formulario validado
 
 1. Añade a cada campo su párrafo de error con `role="alert"` y `aria-describedby`.
 2. Valida al salir de cada campo y al enviar.
@@ -1321,7 +1317,7 @@ Llevar el foco al primer campo con error es lo que permite corregir sin buscar. 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 3</p>
+  <p class="checkpoint-label">Cierre de la sesión 3</p>
   <ul class="checklist">
     <li>Tu catálogo se genera desde datos y trata el caso vacío.</li>
     <li>Lees el formulario y conviertes cada valor.</li>
@@ -1349,11 +1345,11 @@ Llevar el foco al primer campo con error es lo que permite corregir sin buscar. 
 </div>
 ---
 
-## Semana 4 · Estado y persistencia
+## Sesión 4 · Estado y persistencia
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>El estado, una sola fuente de verdad</strong>, <strong>Filtros, orden y búsqueda en vivo</strong> y <strong>Recordar entre visitas</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 10 · El estado, una sola fuente de verdad
+### Bloque 1 · El estado, una sola fuente de verdad
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1373,7 +1369,7 @@ Llevar el foco al primer campo con error es lo que permite corregir sin buscar. 
   </ol>
 </div>
 
-### El problema que resuelve
+#### El problema que resuelve
 
 Sin estado, la información se reparte: el término de búsqueda está en el campo, la categoría en la clase de un botón, el orden en una variable y los resultados en el DOM. Cuatro sitios que hay que mantener de acuerdo a mano, y que tarde o temprano dejan de estarlo.
 
@@ -1394,7 +1390,7 @@ export const estado = {
 };
 ```
 
-### El ciclo
+#### El ciclo
 
 ```javascript
 // js/main.js
@@ -1434,7 +1430,7 @@ Cada manejador hace exactamente dos cosas: **cambiar el estado** y **pedir que s
   <p>El DOM es <strong>salida</strong>, no memoria. Se escribe en él; no se lee de él.</p>
 </div>
 
-### Aplicar los filtros en un sitio
+#### Aplicar los filtros en un sitio
 
 ```javascript
 // js/catalogo.js — funciones de la UD3, combinadas
@@ -1451,7 +1447,7 @@ export function aplicarFiltros(estado) {
 
 Una función pura: recibe el estado y devuelve la lista que toca. Se puede probar sin abrir el navegador, que es exactamente lo que la hace fácil de arreglar cuando algo falla.
 
-### Tarea 10 · Reescribir con estado
+#### Tarea 10 · Reescribir con estado
 
 1. Crea `js/estado.js` con el objeto y sus valores iniciales.
 2. Escribe `aplicarFiltros(estado)` combinando tus funciones de la UD3.
@@ -1467,7 +1463,7 @@ Una función pura: recibe el estado y devuelve la lista que toca. Se puede proba
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 10</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Existe un único objeto de estado.</li>
     <li>Los manejadores cambian estado y llaman a actualizar.</li>
@@ -1492,9 +1488,8 @@ Una función pura: recibe el estado y devuelve la lista que toca. Se puede proba
   <p>3 · Cambiar el estado y pedir que se vuelva a pintar.</p>
 </details>
 
----
 
-## Sesión 11 · Filtros, orden y búsqueda en vivo
+### Bloque 2 · Filtros, orden y búsqueda en vivo
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1514,7 +1509,7 @@ Una función pura: recibe el estado y devuelve la lista que toca. Se puede proba
   </ol>
 </div>
 
-### Combinar filtros
+#### Combinar filtros
 
 Los filtros se aplican **en cadena**: cada uno reduce lo que dejó el anterior, y el resultado son los productos que cumplen todo a la vez. Ese encadenamiento ya lo escribiste ayer en `aplicarFiltros`, y es la razón de que añadir un filtro nuevo sea añadir tres líneas.
 
@@ -1527,7 +1522,7 @@ Dos decisiones de producto que hay que tomar a conciencia:
 | Precio máximo vacío | Sin límite, no cero |
 | Ningún resultado | Mensaje con salida: «quita algún filtro» |
 
-### No trabajar de más
+#### No trabajar de más
 
 Filtrar cuatrocientos productos con cada tecla es trabajo repetido. Se limita con una función que espera a que la persona deje de escribir:
 
@@ -1548,11 +1543,11 @@ elementos.buscador.addEventListener("input", retrasar((evento) => {
 
 <p class="term">Debounce</p>
 
-Agrupar una ráfaga de eventos en una sola ejecución, la última. Con un buscador local su efecto es reducido; en la semana 5, cuando cada pulsación implique una petición al servidor, resultará obligatorio.
+Agrupar una ráfaga de eventos en una sola ejecución, la última. Con un buscador local su efecto es reducido; en la sesión 5, cuando cada pulsación implique una petición al servidor, resultará obligatorio.
 
-Fíjate en que `retrasar` es una función que devuelve otra función: exactamente lo que practicaste en la sesión 8 de la UD3.
+Fíjate en que `retrasar` es una función que devuelve otra función: exactamente lo que practicaste en la sesión 3 de la UD3.
 
-### Anunciar el resultado
+#### Anunciar el resultado
 
 ```html
 <p data-js="resumen" role="status" aria-live="polite"></p>
@@ -1572,7 +1567,7 @@ export function pintarResumen(visibles, total, destino) {
   <p>Una región con <code>aria-live="polite"</code> hace que el lector anuncie el nuevo texto sin interrumpir. Es una línea de HTML y cambia por completo la experiencia.</p>
 </div>
 
-### Tarea 11 · El panel completo
+#### Tarea 11 · El panel completo
 
 1. Añade al menos tres controles: búsqueda, categoría y orden.
 2. Genera las opciones de categoría **desde los datos**, no a mano.
@@ -1588,7 +1583,7 @@ export function pintarResumen(visibles, total, destino) {
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 11</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Los filtros se combinan y ninguno pisa a otro.</li>
     <li>Las opciones se generan desde los datos.</li>
@@ -1613,9 +1608,8 @@ export function pintarResumen(visibles, total, destino) {
   <p>3 · Para que un lector de pantalla anuncie los cambios de esa zona sin que haya que moverse hasta ella.</p>
 </details>
 
----
 
-## Sesión 12 · Recordar entre visitas
+### Bloque 3 · Recordar entre visitas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1635,7 +1629,7 @@ export function pintarResumen(visibles, total, destino) {
   </ol>
 </div>
 
-### Guardar y recuperar
+#### Guardar y recuperar
 
 ```javascript
 localStorage.setItem("preferencias", JSON.stringify(preferencias));
@@ -1643,7 +1637,7 @@ const texto = localStorage.getItem("preferencias");   // texto, o null
 localStorage.removeItem("preferencias");
 ```
 
-Solo guarda **texto**, así que todo pasa por `JSON.stringify` y `JSON.parse`: las dos funciones de la sesión 12 de la UD3.
+Solo guarda **texto**, así que todo pasa por `JSON.stringify` y `JSON.parse`: las dos funciones de la sesión 4 de la UD3.
 
 | Almacén | Dura | Para qué |
 | ------- | ---- | -------- |
@@ -1651,7 +1645,7 @@ Solo guarda **texto**, así que todo pasa por `JSON.stringify` y `JSON.parse`: l
 | `sessionStorage` | Hasta cerrar la pestaña | Datos de un proceso en curso |
 | Cookies | Según se configuren | Sesión de servidor (UD6) |
 
-### Leer con desconfianza
+#### Leer con desconfianza
 
 <div class="rule">
   <p class="rule-label">Lo guardado es entrada externa</p>
@@ -1678,7 +1672,7 @@ export function leerPreferencias() {
 }
 ```
 
-### Qué se guarda y qué no
+#### Qué se guarda y qué no
 
 <div class="rule">
   <p class="rule-label">Nunca datos personales ni credenciales</p>
@@ -1688,7 +1682,7 @@ export function leerPreferencias() {
 
 También hay límites de tamaño —unos pocos megabytes— y el acceso puede fallar directamente en navegación privada o con el almacenamiento bloqueado. Otra razón para el `try/catch`.
 
-### Tarea 12 · Preferencias que duran
+#### Tarea 12 · Preferencias que duran
 
 1. Guarda categoría, orden y vista compacta al cambiarlas.
 2. Recupéralas al arrancar y aplícalas al estado antes del primer render.
@@ -1704,7 +1698,7 @@ También hay límites de tamaño —unos pocos megabytes— y el acceso puede fa
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 4</p>
+  <p class="checkpoint-label">Cierre de la sesión 4</p>
   <ul class="checklist">
     <li>Un único estado gobierna toda la interfaz.</li>
     <li>Los filtros se combinan y se anuncian.</li>
@@ -1732,11 +1726,11 @@ También hay límites de tamaño —unos pocos megabytes— y el acceso puede fa
 </div>
 ---
 
-## Semana 5 · Datos remotos
+## Sesión 5 · Datos remotos
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Por qué existe la asincronía</strong>, <strong>Promesas y async/await</strong> y <strong>fetch y los tres estados</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 13 · Por qué existe la asincronía
+### Bloque 1 · Por qué existe la asincronía
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1756,7 +1750,7 @@ También hay límites de tamaño —unos pocos megabytes— y el acceso puede fa
   </ol>
 </div>
 
-### Un solo hilo
+#### Un solo hilo
 
 JavaScript ejecuta una cosa cada vez. Si una operación bloquea, se bloquea todo: no responden los clics, no se desplaza la página, no se reproduce una animación.
 
@@ -1782,7 +1776,7 @@ Aunque el retraso sea cero. La función encargada se pone en cola y se ejecuta c
   </ol>
 </figure>
 
-### El fallo que produce
+#### El fallo que produce
 
 ```javascript
 let productos = [];
@@ -1794,7 +1788,7 @@ setTimeout(() => {
 console.log(productos.length);    // 0, no 1
 ```
 
-No es que el array esté mal: es que se mira antes de tiempo. Cuando en la sesión 15 pidas datos al servidor y te salga una lista vacía, esta será la primera sospecha.
+No es que el array esté mal: es que se mira antes de tiempo. Cuando en la sesión 5 pidas datos al servidor y te salga una lista vacía, esta será la primera sospecha.
 
 <div class="rule">
   <p class="rule-label">Un valor que llega tarde no se puede leer pronto</p>
@@ -1802,7 +1796,7 @@ No es que el array esté mal: es que se mira antes de tiempo. Cuando en la sesi�
   <p>La sintaxis para escribir eso sin acabar con seis niveles de anidamiento es la de mañana.</p>
 </div>
 
-### Temporizadores
+#### Temporizadores
 
 ```javascript
 const id = setTimeout(() => console.log("Una vez"), 1000);
@@ -1814,7 +1808,7 @@ clearInterval(otro);
 
 Guarda siempre el identificador: un intervalo que nadie detiene sigue corriendo mientras la página esté abierta.
 
-### Tarea 13 · Predecir el orden
+#### Tarea 13 · Predecir el orden
 
 1. Escribe cinco fragmentos que mezclen código normal y temporizadores; predice el orden y compruébalo.
 2. Reproduce el fallo del array vacío y explícalo por escrito.
@@ -1829,7 +1823,7 @@ Guarda siempre el identificador: un intervalo que nadie detiene sigue corriendo 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 13</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Explicas por qué JavaScript no espera a lo lento.</li>
     <li>Predices el orden con temporizadores de por medio.</li>
@@ -1845,9 +1839,8 @@ Guarda siempre el identificador: un intervalo que nadie detiene sigue corriendo 
   <p>3 · Que el dato aún no había llegado cuando se leyó.</p>
 </details>
 
----
 
-## Sesión 14 · Promesas y async/await
+### Bloque 2 · Promesas y async/await
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1867,7 +1860,7 @@ Guarda siempre el identificador: un intervalo que nadie detiene sigue corriendo 
   </ol>
 </div>
 
-### Una promesa es un valor futuro
+#### Una promesa es un valor futuro
 
 <p class="term">Promesa</p>
 
@@ -1886,7 +1879,7 @@ promesa
 
 Casi nunca tendrás que crear promesas: te las darán hechas `fetch` y casi todas las APIs modernas. Lo que sí harás cada día es consumirlas.
 
-### `async` y `await`
+#### `async` y `await`
 
 ```javascript
 async function cargarProductos() {
@@ -1917,7 +1910,7 @@ const productos = await cargarProductos();    // ahora sí, la lista
 
 Ese primer caso —imprimir una promesa creyendo que son los datos— es el error número uno de esta semana. La consola muestra `Promise { <pending> }`, y ahí está la pista.
 
-### En serie o a la vez
+#### En serie o a la vez
 
 ```javascript
 // En serie: dos segundos si cada una tarda uno
@@ -1933,9 +1926,9 @@ const [productos, categorias] = await Promise.all([
 
 Espera en serie solo cuando la segunda petición necesita el resultado de la primera.
 
-### Tarea 14 · Reescribir con await
+#### Tarea 14 · Reescribir con await
 
-1. Convierte tus simulaciones de la sesión 13 en funciones `async`.
+1. Convierte tus simulaciones de la sesión 5 en funciones `async`.
 2. Escribe `esperar(ms)` que devuelva una promesa, y úsala.
 3. Encadena tres operaciones y muestra su duración total.
 4. Repite con `Promise.all` y compara los tiempos.
@@ -1949,7 +1942,7 @@ Espera en serie solo cuando la segunda petición necesita el resultado de la pri
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 14</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Explicas qué es una promesa y sus dos finales.</li>
     <li>Usas <code>async</code> y <code>await</code> con <code>try/catch</code>.</li>
@@ -1965,9 +1958,8 @@ Espera en serie solo cuando la segunda petición necesita el resultado de la pri
   <p>3 · Cuando la segunda operación necesita el resultado de la primera.</p>
 </details>
 
----
 
-## Sesión 15 · fetch y los tres estados
+### Bloque 3 · fetch y los tres estados
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1987,7 +1979,7 @@ Espera en serie solo cuando la segunda petición necesita el resultado de la pri
   </ol>
 </div>
 
-### Pedir datos
+#### Pedir datos
 
 ```javascript
 export async function obtenerProductos() {
@@ -2009,7 +2001,7 @@ export async function obtenerProductos() {
 
 Las dos fases importan: `fetch` resuelve cuando llegan las cabeceras, y `.json()` es una segunda promesa que se resuelve al terminar de leer el cuerpo. De ahí los dos `await`.
 
-### Los tres estados de cualquier carga
+#### Los tres estados de cualquier carga
 
 <figure class="diagram">
   <figcaption>Lo que tiene que contemplar toda petición</figcaption>
@@ -2038,7 +2030,7 @@ async function cargar() {
 }
 ```
 
-El estado que montaste en la sesión 10 ya tenía sitio para `cargando` y `error`: la función de render decide qué pintar en cada caso, y ninguna otra parte del código se entera de nada.
+El estado que montaste en la sesión 4 ya tenía sitio para `cargando` y `error`: la función de render decide qué pintar en cada caso, y ninguna otra parte del código se entera de nada.
 
 <div class="rule">
   <p class="rule-label">El mensaje de error es para la persona; el detalle, para la consola</p>
@@ -2046,17 +2038,17 @@ El estado que montaste en la sesión 10 ya tenía sitio para `cargando` y `error
   <p>Registra el error técnico con <code>console.error</code> y muestra el mensaje humano, con una salida: reintentar, volver, avisar.</p>
 </div>
 
-### Probarlo de verdad
+#### Probarlo de verdad
 
 En DevTools, pestaña Network, puedes simular una red lenta o desconectada. Es la única forma de ver tus estados: con la red local todo va tan rápido que el indicador de carga no se llega a ver.
 
 Comprueba las cuatro situaciones: carga normal, red lenta, sin red y respuesta con error del servidor.
 
-### CORS, el error que verás
+#### CORS, el error que verás
 
 Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la respuesta y la consola informa de un error de CORS. No se trata de un defecto del código propio, sino de una política de seguridad del navegador que se resuelve **en el servidor**. Lo harás tú mismo en la UD6.
 
-### Tarea 15 · Catálogo desde la red
+#### Tarea 15 · Catálogo desde la red
 
 1. Coloca tu catálogo como fichero `.json` y cárgalo con `fetch`.
 2. Comprueba `respuesta.ok` y lanza un error con el código de estado.
@@ -2072,7 +2064,7 @@ Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la resp
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 5</p>
+  <p class="checkpoint-label">Cierre de la sesión 5</p>
   <ul class="checklist">
     <li>Explicas por qué JavaScript no espera y qué es una promesa.</li>
     <li>Usas <code>async/await</code> con errores capturados.</li>
@@ -2100,11 +2092,11 @@ Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la resp
 </div>
 ---
 
-## Semana 6 · Interfaz robusta y entrega
+## Sesión 6 · Interfaz robusta y entrega
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Accesibilidad y rendimiento con JavaScript</strong>, <strong>Reto acumulativo y depuración</strong> y <strong>Auditoría final, revisión por pares y entrega</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 16 · Accesibilidad y rendimiento con JavaScript
+### Bloque 1 · Accesibilidad y rendimiento con JavaScript
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2124,7 +2116,7 @@ Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la resp
   </ol>
 </div>
 
-### Lo que JavaScript rompe con facilidad
+#### Lo que JavaScript rompe con facilidad
 
 | Problema | Cómo se ve | Cómo se arregla |
 | -------- | ---------- | --------------- |
@@ -2135,7 +2127,7 @@ Si pides datos a otro dominio y no ha dado permiso, el navegador bloquea la resp
 | Trampa de foco | Un panel del que no se sale con el tabulador | Gestionar el foco al abrir y cerrar |
 | Movimiento forzado | Animaciones para quien pidió que no las hubiera | Respetar la preferencia del sistema |
 
-### El foco después de pintar
+#### El foco después de pintar
 
 ```javascript
 function actualizar() {
@@ -2153,7 +2145,7 @@ Al sustituir el contenido de un contenedor, el elemento que tenía el foco deja 
   <p>Un panel que se abre lleva el foco dentro; al cerrarse, lo devuelve al control que lo abrió. Es la regla que hace usable un diálogo sin ratón.</p>
 </div>
 
-### Respetar las preferencias
+#### Respetar las preferencias
 
 ```javascript
 const sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2162,7 +2154,7 @@ if (!sinMovimiento) elemento.classList.add("con-animacion");
 
 La misma consulta que usaste en el CSS de la UD2, ahora desde el código. Las decisiones de la persona usuaria se respetan en las tres capas.
 
-### Rendimiento: las tres cosas que importan
+#### Rendimiento: las tres cosas que importan
 
 1. **No trabajar de más.** Un `debounce` en lo que se dispara en ráfaga.
 2. **No tocar el DOM en bucle.** Construir aparte, insertar una vez.
@@ -2181,7 +2173,7 @@ tarjetas.forEach((t, i) => t.style.setProperty("--alto", `${alturas[i]}px`));
 
 Con doscientas tarjetas la diferencia es perceptible; con dos mil, separa una interfaz fluida de una inutilizable.
 
-### Tarea 16 · Auditoría de accesibilidad
+#### Tarea 16 · Auditoría de accesibilidad
 
 1. Recorre toda la interfaz con el tabulador y anota cada punto donde te pierdes.
 2. Comprueba que ningún control es un contenedor genérico disfrazado.
@@ -2197,7 +2189,7 @@ Con doscientas tarjetas la diferencia es perceptible; con dos mil, separa una in
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 16</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Todo se puede usar sin ratón.</li>
     <li>El foco no se pierde al volver a pintar.</li>
@@ -2206,9 +2198,8 @@ Con doscientas tarjetas la diferencia es perceptible; con dos mil, separa una in
   </ul>
 </div>
 
----
 
-## Sesión 17 · Reto acumulativo y depuración
+### Bloque 2 · Reto acumulativo y depuración
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2219,7 +2210,7 @@ Con doscientas tarjetas la diferencia es perceptible; con dos mil, separa una in
   </ol>
 </div>
 
-### Primera parte · una interfaz nueva
+#### Primera parte · una interfaz nueva
 
 Recibirás un fichero JSON de un dominio que no has visto —cartelera de cine, ofertas de empleo, rutas de senderismo— y una lista de requisitos. En veinticinco minutos:
 
@@ -2236,7 +2227,7 @@ Recibirás un fichero JSON de un dominio que no has visto —cartelera de cine, 
 
 Sin copiar y pegar tu proyecto: puedes mirar tus apuntes, pero el código se escribe hoy.
 
-### Segunda parte · el diagnóstico
+#### Segunda parte · el diagnóstico
 
 Los quince minutos restantes, sobre una interfaz que ya viene con cinco fallos, uno de cada familia. No hace falta arreglarlos todos hoy: lo que se evalúa es el diagnóstico, y los que no dé tiempo se terminan como trabajo personal.
 
@@ -2263,7 +2254,7 @@ Para cada uno: escribe el síntoma, la hipótesis, cómo la compruebas y la corr
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 17</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Has montado una interfaz completa desde datos ajenos.</li>
     <li>Separas fallos de evento de fallos de lógica.</li>
@@ -2272,9 +2263,8 @@ Para cada uno: escribe el síntoma, la hipótesis, cómo la compruebas y la corr
   </ul>
 </div>
 
----
 
-## Sesión 18 · Auditoría final, revisión por pares y entrega
+### Bloque 3 · Auditoría final, revisión por pares y entrega
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2285,7 +2275,7 @@ Para cada uno: escribe el síntoma, la hipótesis, cómo la compruebas y la corr
   </ol>
 </div>
 
-### La lista de auditoría
+#### La lista de auditoría
 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría · arquitectura</p>
@@ -2321,7 +2311,7 @@ Para cada uno: escribe el síntoma, la hipótesis, cómo la compruebas y la corr
   </ul>
 </div>
 
-### Revisión por pares
+#### Revisión por pares
 
 Intercambia proyectos y, sin preguntar nada:
 
@@ -2331,7 +2321,7 @@ Intercambia proyectos y, sin preguntar nada:
 4. Localiza en el código dónde vive el estado y explícalo.
 5. Señala una decisión bien tomada y una mejorable, con su razón.
 
-### Defensa
+#### Defensa
 
 <div class="rule">
   <p class="rule-label">Las preguntas de la defensa</p>
@@ -2346,7 +2336,7 @@ Intercambia proyectos y, sin preguntar nada:
 
 La cuarta vuelve a ser la de siempre: si has separado datos, lógica, estado y render, la respuesta debería ser «solo la función que llama a `fetch`».
 
-### Evaluación
+#### Evaluación
 
 | Criterio | Puntos |
 | ---------------------------------------------------------- | -----: |
@@ -2359,7 +2349,7 @@ La cuarta vuelve a ser la de siempre: si has separado datos, lógica, estado y r
 
 No puntúa que la interfaz sea vistosa. Puntúa que **aguante**: contenido que cambia, red que falla, búsquedas sin resultados y alguien que no usa el ratón.
 
-### Entrega
+#### Entrega
 
 <div class="unit-deliverable">
   <p>El sitio completo con su carpeta <code>js/</code> organizada en módulos; el catálogo cargado desde una API con sus cuatro estados; búsqueda, filtros y orden gobernados por un único estado; el formulario validado y accesible; las preferencias persistidas; las tres listas de auditoría marcadas; la revisión del compañero por escrito; y un <code>NOTAS.md</code> con las decisiones que tomaste y lo que dejaste fuera.</p>

@@ -5,7 +5,7 @@ section: "ud-02"
 order: 2
 lang: "es"
 summary: "El mismo sitio de la UD1, ahora con presentación. CSS exige decidir de qué tipo es cada problema —tamaño, espacio o distribución— y saber diagnosticar qué regla está actuando cuando el resultado no es el esperado."
-duration: "18 sesiones · 6 semanas"
+duration: "6 sesiones de 3 horas · 18 horas"
 modality: "Individual, con retos y revisión en pareja"
 deliverable: "El sitio HTML de la UD1 convertido en una web completa: sistema visual con variables, layout con Flexbox y Grid, responsive sin plantillas y estados de foco visibles."
 outcomes:
@@ -166,22 +166,22 @@ Si vas justo, prioriza los ocho contenidos esenciales. Las ampliaciones nunca co
 
 ---
 
-## Plan de trabajo semanal
+## Plan de trabajo por sesiones
 
-| Semana | Bloque temático | Práctica central | Horas |
+| Sesión | Contenido de las tres horas | Práctica central | Horas |
 | :---: | :--- | :--- | :---: |
-| **Semana 1** | Cómo se aplica CSS y quién gana | Primer estilo, selectores y diagnóstico de conflictos | 3 h |
-| **Semana 2** | La caja y el sistema visual | Box model, unidades, tipografía y variables | 3 h |
-| **Semana 3** | Flujo normal y Flexbox | Navegación y componentes en una dimensión | 3 h |
-| **Semana 4** | Grid y responsive | Catálogo adaptable y decisión de breakpoints | 3 h |
-| **Semana 5** | Imágenes, estados y movimiento | Catálogo irregular, foco visible y transiciones | 3 h |
-| **Semana 6** | Integración, depuración y entrega | Interfaz desconocida, CSS forense y revisión por pares | 3 h |
+| **Sesión 1** | Cómo se aplica CSS y quién gana | Primer estilo, selectores y diagnóstico de conflictos | 3 h |
+| **Sesión 2** | La caja y el sistema visual | Box model, unidades, tipografía y variables | 3 h |
+| **Sesión 3** | Flujo normal y Flexbox | Navegación y componentes en una dimensión | 3 h |
+| **Sesión 4** | Grid y responsive | Catálogo adaptable y decisión de breakpoints | 3 h |
+| **Sesión 5** | Imágenes, estados y movimiento | Catálogo irregular, foco visible y transiciones | 3 h |
+| **Sesión 6** | Integración, depuración y entrega | Interfaz desconocida, CSS forense y revisión por pares | 3 h |
 | **Total** | | **El sitio de la UD1 convertido en una web completa** | **18 h** |
 
-Cada sesión dura una hora y mantiene la estructura habitual de la UD1, adaptando el tiempo a la dificultad de cada concepto:
+Cada sesión dura tres horas, repartidas en tres bloques de una hora. Cada bloque mantiene la estructura habitual de la UD1, adaptando el tiempo a la dificultad de cada concepto:
 
 <figure class="diagram">
-  <figcaption>El ritmo de cada sesión</figcaption>
+  <figcaption>El ritmo de cada bloque de una hora</figcaption>
   <ol class="flow flow--row flow--chain">
     <li>Recupera · 5 min</li>
     <li>Aprende y observa · 10–20 min</li>
@@ -194,11 +194,11 @@ Los conceptos nuevos avanzan de **ejemplo resuelto → ejemplo incompleto → pr
 
 ---
 
-## Semana 1 · Cómo se aplica CSS y quién gana
+## Sesión 1 · Cómo se aplica CSS y quién gana
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Nuestro primer CSS</strong>, <strong>Selectores</strong> y <strong>Cascada, herencia y especificidad</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 1 · Nuestro primer CSS
+### Bloque 1 · Nuestro primer CSS
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -218,7 +218,7 @@ Los conceptos nuevos avanzan de **ejemplo resuelto → ejemplo incompleto → pr
   </ol>
 </div>
 
-### El navegador ya estaba aplicando CSS
+#### El navegador ya estaba aplicando CSS
 
 Cuando escribiste esto en la UD1:
 
@@ -228,7 +228,7 @@ Cuando escribiste esto en la UD1:
 
 el título se veía grande y en negrita. Eso no es «lo natural»: es una hoja de estilos que trae el navegador de fábrica, la **hoja de usuario-agente**. Nunca has trabajado sin CSS. Lo que vamos a hacer es tomar el control.
 
-### Las tres formas, y por qué usamos una
+#### Las tres formas, y por qué usamos una
 
 | Forma | Cómo se escribe | Cuándo |
 | ----- | --------------- | ------ |
@@ -252,7 +252,7 @@ y enlázalo desde el `head` de **cada** página:
 
 Fíjate en que es una ruta relativa, como las de la UD1. Si una página estuviera dentro de una carpeta, sería `../css/styles.css`.
 
-### Cómo funciona una regla
+#### Cómo funciona una regla
 
 ```css
 h1 {
@@ -293,7 +293,7 @@ body {
 
 Un selector más el bloque de declaraciones que se le aplican. Una hoja de estilos es una lista de reglas.
 
-#### Los comentarios
+##### Los comentarios
 
 ```css
 /* Sistema tipográfico base */
@@ -304,7 +304,7 @@ body {
 
 CSS solo tiene esta forma de comentar. `//` no funciona, aunque el editor a veces lo coloree como si lo hiciera.
 
-### Tarea 1 · Tu primer estilo
+#### Tarea 1 · Tu primer estilo
 
 Sobre tu proyecto de la UD1:
 
@@ -328,7 +328,7 @@ Sobre tu proyecto de la UD1:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Existe <code>css/styles.css</code> y está enlazado en las cuatro páginas.</li>
     <li>Sabes nombrar las tres partes de una regla.</li>
@@ -353,9 +353,8 @@ Sobre tu proyecto de la UD1:
   <p>3 · Que la hoja se esté cargando: la ruta del <code>link</code>, el nombre exacto del archivo, y comprobarlo en la pestaña Network de DevTools.</p>
 </details>
 
----
 
-## Sesión 2 · Selectores
+### Bloque 2 · Selectores
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -375,9 +374,9 @@ Sobre tu proyecto de la UD1:
   </ol>
 </div>
 
-### Decirle a CSS a qué te refieres
+#### Decirle a CSS a qué te refieres
 
-#### Por elemento
+##### Por elemento
 
 ```css
 p {
@@ -387,7 +386,7 @@ p {
 
 Afecta a **todos** los párrafos del sitio. Útil para las bases; peligroso si lo usas para algo específico.
 
-#### Por clase
+##### Por clase
 
 ```html
 <p class="destacado">Oferta especial.</p>
@@ -407,7 +406,7 @@ Una clase puede repetirse en tantos elementos como quieras, y un elemento puede 
 
 Es el selector que más vas a usar, porque describe **un papel** y se puede reutilizar.
 
-#### Por `id`
+##### Por `id`
 
 ```html
 <section id="productos">
@@ -421,7 +420,7 @@ Es el selector que más vas a usar, porque describe **un papel** y se puede reut
 
 Existe, y funciona, pero un `id` es único en la página: no puedes reutilizar el estilo. Además pesa mucho en los conflictos, como veremos mañana. Regla práctica: **los `id` son para enlazar y para los `label`, las clases son para dar estilo.**
 
-#### Descendiente y directo
+##### Descendiente y directo
 
 ```css
 nav a {          /* cualquier enlace dentro de nav, a la profundidad que sea */
@@ -433,7 +432,7 @@ nav > ul {       /* solo las listas que son hijas directas de nav */
 }
 ```
 
-#### Por atributo
+##### Por atributo
 
 ```css
 input[type="email"] {
@@ -447,7 +446,7 @@ a[href^="http"] {     /* enlaces cuyo href empieza por http: los externos */
 
 Aquí se comprueba el efecto de lo que hiciste en la UD1: si escribiste `type="email"` en lugar de `type="text"`, ahora tienes un selector. **El HTML bien marcado te devuelve selectores.**
 
-#### Pseudo-clases
+##### Pseudo-clases
 
 Seleccionan por estado o por posición, no por lo que el elemento es:
 
@@ -464,7 +463,7 @@ input:invalid  { }   /* su valor no cumple la validación */
 
 Un selector que depende del estado o de la posición del elemento, no de su marcado. Se escribe con dos puntos y no existe en el HTML: la calcula el navegador.
 
-#### Agrupar
+##### Agrupar
 
 ```css
 h1, h2, h3 {
@@ -474,7 +473,7 @@ h1, h2, h3 {
 
 La coma es «o». Un fallo típico es olvidarla: `h1 h2` significa «un `h2` dentro de un `h1`», que casi nunca existe, y entonces la regla no hace nada.
 
-### Tarea 2 · El selector correcto
+#### Tarea 2 · El selector correcto
 
 Para cada requisito, escribe el selector que le corresponde. No vale cualquiera que funcione: **vale el que expresa lo que pide el enunciado**.
 
@@ -534,9 +533,8 @@ Fíjate en que no he inventado una clase. Si el HTML ya distingue esa zona, el s
   <p>3 · «O»: la regla se aplica a los <code>h1</code> y a los <code>h2</code>. Sin coma significaría «un <code>h2</code> dentro de un <code>h1</code>».</p>
 </details>
 
----
 
-## Sesión 3 · Cascada, herencia y especificidad
+### Bloque 3 · Cascada, herencia y especificidad
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -556,7 +554,7 @@ Fíjate en que no he inventado una clase. Si el HTML ya distingue esa zona, el s
   </ol>
 </div>
 
-### La palabra «cascading» no es decorativa
+#### La palabra «cascading» no es decorativa
 
 CSS significa *Cascading Style Sheets*. Hojas de estilo **en cascada**. Esa palabra describe el mecanismo central del lenguaje: varias reglas pueden querer cambiar la misma propiedad del mismo elemento, y hace falta un criterio para decidir.
 
@@ -571,7 +569,7 @@ p          { color: blue; }
 
 ¿De qué color se ve? Rojo. La pregunta relevante es **por qué**.
 
-### Lo que decide, en orden
+#### Lo que decide, en orden
 
 <figure class="diagram">
   <figcaption>Cómo se resuelve un conflicto, de arriba abajo</figcaption>
@@ -596,7 +594,7 @@ Una regla práctica evita la aritmética: **una clase gana a cualquier cantidad 
 
 De ahí sale el consejo de ayer: si das estilo con `id`, cualquier ajuste posterior con clases no podrá corregirlo, y acabarás escalando la pelea.
 
-#### El orden, cuando hay empate
+##### El orden, cuando hay empate
 
 ```css
 .boton { background: blue; }
@@ -605,7 +603,7 @@ De ahí sale el consejo de ayer: si das estilo con `id`, cualquier ajuste poster
 
 Gana el verde: misma especificidad, y la última escrita manda. Esto explica por qué el orden de tu hoja importa, y por qué conviene escribir de lo general a lo particular.
 
-### Herencia
+#### Herencia
 
 Algunas propiedades pasan de un elemento a sus descendientes:
 
@@ -625,7 +623,7 @@ Con eso, todo el documento hereda la tipografía. No hace falta repetirla en cad
 
 La lógica es razonable: lo que se hereda tiene que ver con **el texto**, y lo que no, con **la caja**. Que un `padding` se heredara sería un desastre.
 
-### `!important`
+#### `!important`
 
 ```css
 color: red !important;
@@ -640,13 +638,13 @@ Existe, gana casi siempre, y **no es el botón de arreglar CSS**.
   <p>Si te encuentras escribiéndolo, la pregunta correcta no es «¿cómo hago que esto gane?» sino <strong>«¿qué está ganando ahora y por qué?»</strong>.</p>
 </div>
 
-### DevTools · leer quién gana
+#### DevTools · leer quién gana
 
 Selecciona un elemento e id a la pestaña **Styles**. Verás las reglas que le afectan, **ordenadas de la que gana a la que pierde**, y las declaraciones derrotadas aparecen **tachadas**. A la derecha de cada bloque está el archivo y la línea donde se escribió.
 
 Eso responde simultáneamente a las tres preguntas: qué se está aplicando, qué se ha descartado y dónde está escrito. La pestaña **Computed** da el siguiente paso: el valor final de cada propiedad, ya resuelto el conflicto.
 
-### Tarea 3 · ¿Quién está ganando?
+#### Tarea 3 · ¿Quién está ganando?
 
 Este HTML y este CSS conviven:
 
@@ -698,7 +696,7 @@ main section p.aviso   { color: teal; }
   <p>El segundo es el que deja la hoja mejor que antes. Los otros dos la dejan igual de enredada, solo que a tu favor.</p>
 </details>
 
-### Reto 1 · La regla que no hace nada (10 min)
+#### Reto 1 · La regla que no hace nada (10 min)
 
 ```css
 .card .titulo {
@@ -722,7 +720,7 @@ El título no se ve rojo, y DevTools no muestra la regla ni siquiera tachada. ¿
 </details>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3 y de la semana 1</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
   <ul class="checklist">
     <li>Sabes ordenar elemento, clase e <code>id</code> por especificidad.</li>
     <li>Sabes que el orden solo decide cuando hay empate.</li>
@@ -760,11 +758,11 @@ El título no se ve rojo, y DevTools no muestra la regla ni siquiera tachada. ¿
 
 ---
 
-## Semana 2 · La caja y el sistema visual
+## Sesión 2 · La caja y el sistema visual
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>El box model</strong>, <strong>Unidades, colores y tipografía</strong> y <strong>Variables y funciones modernas</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 4 · El box model
+### Bloque 1 · El box model
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -784,7 +782,7 @@ El título no se ve rojo, y DevTools no muestra la regla ni siquiera tachada. ¿
   </ol>
 </div>
 
-### Todo es una caja
+#### Todo es una caja
 
 ```text
 ┌────────────── margin ───────────────┐
@@ -845,7 +843,7 @@ padding: 1rem 2rem;           /* vertical | horizontal */
 padding: 1rem 2rem 3rem 4rem; /* arriba, derecha, abajo, izquierda */
 ```
 
-### `box-sizing`, o por qué 300 no son 300
+#### `box-sizing`, o por qué 300 no son 300
 
 Por defecto, `width` mide **solo el contenido**. El padding y el borde se suman por fuera:
 
@@ -873,7 +871,7 @@ La solución cabe en tres líneas, y se pone al principio de toda hoja de estilo
 
 Hace que `width` incluya el padding y el borde. Ahora 300px son 300px, pase lo que pase por dentro, y el tamaño declarado es el tamaño real.
 
-### Anchura: fija, fluida y con techo
+#### Anchura: fija, fluida y con techo
 
 ```css
 .card { width: 300px; }        /* frágil: no cabe en un móvil de 320 */
@@ -886,7 +884,7 @@ Hace que `width` incluya el padding y el borde. Ahora 300px son 300px, pase lo q
 
 La tercera es casi siempre la correcta: **ocupa lo que haya, pero no más de lo razonable**. Es la primera aparición de una idea que domina la unidad — describir límites en lugar de medidas exactas.
 
-#### Centrar un bloque
+##### Centrar un bloque
 
 ```css
 .container {
@@ -903,7 +901,7 @@ La tercera es casi siempre la correcta: **ocupa lo que haya, pero no más de lo 
   <p>Solo pasa en vertical, y no pasa dentro de un contenedor Flexbox o Grid. Por eso, en cuanto empecemos a usar <code>gap</code>, este problema desaparece: es una de las razones por las que <code>gap</code> es preferible a los márgenes para separar elementos de una lista.</p>
 </details>
 
-### Tarea 4 · Construye tus tarjetas
+#### Tarea 4 · Construye tus tarjetas
 
 En `productos.html` tienes `article` con el marcado de cada producto. Dales forma:
 
@@ -940,9 +938,8 @@ En `productos.html` tienes `article` con el marcado de cada producto. Dales form
   <p>3 · Porque describe un límite en lugar de una medida: la caja se adapta al espacio disponible y solo deja de crecer cuando llega al techo.</p>
 </details>
 
----
 
-## Sesión 5 · Unidades, colores y tipografía
+### Bloque 2 · Unidades, colores y tipografía
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -962,7 +959,7 @@ En `productos.html` tienes `article` con el marcado de cada producto. Dales form
   </ol>
 </div>
 
-### No todo se mide en píxeles
+#### No todo se mide en píxeles
 
 | Unidad | Se calcula respecto a | Para qué la usamos |
 | ------ | --------------------- | ------------------ |
@@ -993,7 +990,7 @@ El contraste entre `rem` y `em` es este:
   <p>Existen <code>svh</code>, <code>lvh</code> y <code>dvh</code> para las variantes pequeña, grande y dinámica. La regla aplicable hoy es más simple: <strong>no uses una unidad porque sea moderna, úsala cuando sepas respecto a qué se calcula</strong>.</p>
 </div>
 
-### Colores
+#### Colores
 
 ```css
 color: #1f2937;             /* hexadecimal */
@@ -1011,7 +1008,7 @@ VS Code te muestra un cuadradito junto a cada color y te abre un selector al pul
   <p>DevTools lo calcula: al abrir el selector de color de una declaración muestra la relación de contraste y advierte si no alcanza el mínimo. No es necesario estimarlo visualmente.</p>
 </div>
 
-### Tipografía
+#### Tipografía
 
 ```css
 body {
@@ -1033,7 +1030,7 @@ Tres decisiones que casi nadie explica:
 * **El `line-height` sin unidad** —`1.6`, no `1.6rem`— es lo correcto: al no tener unidad, cada elemento lo multiplica por *su* tamaño de fuente, así que un titular grande no acaba con el interlineado de un párrafo.
 * **Los titulares llevan menos interlineado que el texto.** Un `line-height: 1.6` en un `h1` de 2.5rem deja un hueco enorme entre sus dos líneas. Alrededor de 1.1 es lo habitual.
 
-#### Una escala, no una lista de tamaños
+##### Una escala, no una lista de tamaños
 
 No elijas cada tamaño por separado. Elige un paso y multiplica:
 
@@ -1046,7 +1043,7 @@ No elijas cada tamaño por separado. Elige un paso y multiplica:
 
 Conviene una advertencia: no hace falta una tipografía distinta para cada zona. Una interfaz coherente usa **una o dos familias** y una escala corta. La variedad tipográfica no es riqueza: casi siempre es falta de decisión.
 
-### Tarea 5 · Tu sistema visual mínimo
+#### Tarea 5 · Tu sistema visual mínimo
 
 Define para tu proyecto, y aplícalo a las cuatro páginas:
 
@@ -1076,9 +1073,8 @@ No buscamos todavía un diseño espectacular. Buscamos **consistencia**: que las
   <p>3 · 4.5:1 con su fondo. Para texto grande basta 3:1.</p>
 </details>
 
----
 
-## Sesión 6 · Variables y funciones modernas
+### Bloque 3 · Variables y funciones modernas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1098,7 +1094,7 @@ No buscamos todavía un diseño espectacular. Buscamos **consistencia**: que las
   </ol>
 </div>
 
-### El problema: repetir una decisión
+#### El problema: repetir una decisión
 
 ```css
 h1     { color: #2563eb; }
@@ -1130,7 +1126,7 @@ Que se hereden tiene una consecuencia útil: puedes redefinir una variable dentr
 }
 ```
 
-#### Un sistema pequeño
+##### Un sistema pequeño
 
 ```css
 :root {
@@ -1155,9 +1151,9 @@ Y `var()` admite un valor de respaldo, útil cuando la variable puede no estar d
 padding: var(--space-md, 1.5rem);
 ```
 
-### Cuatro funciones que quitan media querys
+#### Cuatro funciones que quitan media querys
 
-#### `calc()`
+##### `calc()`
 
 Opera entre unidades distintas, que es lo que ninguna otra cosa puede hacer:
 
@@ -1167,7 +1163,7 @@ width: calc(100% - 2rem);
 
 Necesita espacios alrededor del `-` y del `+`. Sin ellos no funciona, y es un despiste que cuesta encontrar.
 
-#### `min()` y `max()`
+##### `min()` y `max()`
 
 ```css
 width: min(90%, 70rem);      /* el más pequeño de los dos */
@@ -1176,7 +1172,7 @@ padding: max(1rem, 3vw);     /* el más grande de los dos */
 
 Se leen al revés de lo que parece. `min()` **pone un techo**: nunca pasará de 70rem. `max()` **pone un suelo**: nunca bajará de 1rem.
 
-#### `clamp()`
+##### `clamp()`
 
 ```css
 h1 {
@@ -1190,9 +1186,9 @@ preferido   5vw    · lo que se adapta
 máximo      4rem   · nunca más grande
 ```
 
-Ese titular crece con la ventana entre dos límites, sin una sola media query. Es la herramienta con la que se resuelve buena parte del responsive antes de llegar a los *breakpoints*, y volveremos a ella en la semana 4.
+Ese titular crece con la ventana entre dos límites, sin una sola media query. Es la herramienta con la que se resuelve buena parte del responsive antes de llegar a los *breakpoints*, y volveremos a ella en la sesión 4.
 
-### Tarea 6 · Elimina los números mágicos
+#### Tarea 6 · Elimina los números mágicos
 
 <p class="term">Número mágico</p>
 
@@ -1219,7 +1215,7 @@ Sobre tu hoja de estilos:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 6 y de la semana 2</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
   <ul class="checklist">
     <li>Tu hoja empieza con el <code>box-sizing: border-box</code> global.</li>
     <li>Tienes un bloque <code>:root</code> con colores y espaciados nombrados por su papel.</li>
@@ -1257,11 +1253,11 @@ Sobre tu hoja de estilos:
 
 ---
 
-## Semana 3 · Flujo normal y Flexbox
+## Sesión 3 · Flujo normal y Flexbox
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Flujo normal, <code>display</code> y posicionamiento</strong>, <strong>Flexbox</strong> y <strong>Flexbox sobre problemas reales</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 7 · Flujo normal, `display` y posicionamiento
+### Bloque 1 · Flujo normal, `display` y posicionamiento
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1281,7 +1277,7 @@ Sobre tu hoja de estilos:
   </ol>
 </div>
 
-### Antes de Flexbox y Grid está el flujo normal
+#### Antes de Flexbox y Grid está el flujo normal
 
 <p class="term">Flujo normal</p>
 
@@ -1294,7 +1290,7 @@ Merece la pena entenderlo porque el flujo normal ya resuelve bien muchas cosas. 
 | Bloque | Ocupa todo el ancho disponible y empieza en una línea nueva | `div`, `section`, `article`, `p`, `h1` |
 | En línea | Ocupa solo lo que mide su contenido y se coloca dentro del texto | `a`, `strong`, `em`, `span`, `img` |
 
-### `display`
+#### `display`
 
 ```css
 display: block;          /* fuerza el comportamiento de bloque */
@@ -1313,7 +1309,7 @@ display: grid;
   <p>Si necesitas que algo siga estando disponible para quien no ve la pantalla, existen otras técnicas. Si la intención era únicamente que ocupara su hueco sin verse, eso es <code>visibility: hidden</code> o una opacidad, no <code>display: none</code>.</p>
 </div>
 
-### `position`
+#### `position`
 
 ```css
 position: static;    /* el valor por defecto: sigue el flujo */
@@ -1345,7 +1341,7 @@ La distinción que importa es **si el elemento deja o no su hueco**:
   <p><code>absolute</code> es para lo que de verdad es posicionamiento: una etiqueta de «oferta» sobre una esquina, un icono dentro de un campo. La distribución de la página se hace con Flexbox y con Grid.</p>
 </div>
 
-### `overflow`
+#### `overflow`
 
 ```css
 overflow: visible;  /* por defecto: el contenido se sale y se ve */
@@ -1357,7 +1353,7 @@ overflow: hidden;   /* se recorta lo que no cabe */
 
 Donde sí es la respuesta correcta es en contenido que legítimamente es más ancho que la pantalla, como una tabla de datos: ahí `overflow-x: auto` en un contenedor le da su propia barra de scroll sin romper la página.
 
-### Tarea 7 · Rompe el flujo
+#### Tarea 7 · Rompe el flujo
 
 Crea un archivo de pruebas `laboratorio.html` con cuatro cajas de colores, una debajo de otra, y experimenta. Para **cada** apartado anota qué le pasa a la caja y, sobre todo, **qué le pasa al hueco que ocupaba**.
 
@@ -1394,9 +1390,8 @@ Crea un archivo de pruebas `laboratorio.html` con cuatro cajas de colores, una d
   <p>3 · Porque lo elimina del documento: deja de existir también para los lectores de pantalla y para el recorrido con <code>Tab</code>.</p>
 </details>
 
----
 
-## Sesión 8 · Flexbox
+### Bloque 2 · Flexbox
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1416,9 +1411,9 @@ Crea un archivo de pruebas `laboratorio.html` con cuatro cajas de colores, una d
   </ol>
 </div>
 
-### Una dimensión
+#### Una dimensión
 
-Flexbox distribuye elementos **en una línea**: o en fila, o en columna. Ese es el criterio para elegirlo, y lo veremos enfrentado a Grid en la semana 4.
+Flexbox distribuye elementos **en una línea**: o en fila, o en columna. Ese es el criterio para elegirlo, y lo veremos enfrentado a Grid en la sesión 4.
 
 En la UD1 dejaste el menú así:
 
@@ -1460,7 +1455,7 @@ nav ul {
 
 Fíjate en algo: **el HTML no se ha tocado**. Sigue siendo una lista de enlaces, que es lo que es. Solo ha cambiado cómo se dibuja.
 
-### Los dos ejes
+#### Los dos ejes
 
 <figure class="diagram">
   <figcaption>Los ejes con <code>flex-direction: row</code></figcaption>
@@ -1483,7 +1478,7 @@ flex-direction: column;  /* principal vertical */
   <p>Por eso, en cuanto pones <code>flex-direction: column</code>, las dos se intercambian: <code>justify-content</code> pasa a mover en vertical y <code>align-items</code> en horizontal. Cuando algo no se alinee como esperas, la primera pregunta es <strong>cuál es ahora el eje principal</strong>.</p>
 </div>
 
-### Las cinco propiedades del contenedor
+#### Las cinco propiedades del contenedor
 
 ```css
 .barra {
@@ -1511,7 +1506,7 @@ De `align-items`: `stretch` (por defecto, todos igual de altos), `center`, `flex
 
 La separación entre elementos de un contenedor Flexbox o Grid. Sustituye a los márgenes y evita su problema clásico: no deja un margen sobrante en el último elemento, y no sufre el colapso de márgenes.
 
-### En los elementos hijos
+#### En los elementos hijos
 
 ```css
 .logo    { flex: 0 0 auto; }   /* no crece, no se encoge, mide lo que mida */
@@ -1522,7 +1517,7 @@ La separación entre elementos de un contenedor Flexbox o Grid. Sustituye a los 
 
 `margin-left: auto` en un hijo también tiene un efecto muy útil: empuja ese elemento y todos los siguientes hasta el final del eje. Es la forma limpia de separar un grupo del resto en una barra.
 
-### Tarea 8 · La navegación de tu sitio
+#### Tarea 8 · La navegación de tu sitio
 
 Transforma la cabecera de tus cuatro páginas:
 
@@ -1564,9 +1559,8 @@ Transforma la cabecera de tus cuatro páginas:
   <p>3 · Porque separa solo entre elementos, sin dejar un margen sobrante al final, y no sufre el colapso de márgenes.</p>
 </details>
 
----
 
-## Sesión 9 · Flexbox sobre problemas reales
+### Bloque 3 · Flexbox sobre problemas reales
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1586,7 +1580,7 @@ Transforma la cabecera de tus cuatro páginas:
   </ol>
 </div>
 
-### El método, en tres preguntas
+#### El método, en tres preguntas
 
 Cuando te enfrentes a un componente, no busques la propiedad: contesta esto.
 
@@ -1601,7 +1595,7 @@ Cuando te enfrentes a un componente, no busques la propiedad: contesta esto.
 
 Con eso, `justify-content` y `align-items` dejan de ser prueba y error.
 
-### Caso 1 · Una botonera
+#### Caso 1 · Una botonera
 
 ```html
 <div class="acciones">
@@ -1627,7 +1621,7 @@ Con eso, `justify-content` y `align-items` dejan de ser prueba y error.
 }
 ```
 
-### Caso 2 · Una tarjeta horizontal
+#### Caso 2 · Una tarjeta horizontal
 
 ```text
 ┌───────────────────────────────────┐
@@ -1651,7 +1645,7 @@ Aquí hay **dos Flexbox anidados**, y verlo es media solución:
 
 Anidar contenedores es normal y no es un síntoma de nada malo. Cada uno resuelve una dimensión.
 
-### Caso 3 · Centrar
+#### Caso 3 · Centrar
 
 El problema con más recetas copiadas de internet de toda la historia de CSS. Con Flexbox son dos líneas, pero conviene entenderlas:
 
@@ -1665,7 +1659,7 @@ El problema con más recetas copiadas de internet de toda la historia de CSS. Co
 
 Centrar es simplemente **centrar en los dos ejes a la vez**. Si solo necesitas uno, solo escribes uno.
 
-### Reto 2 · Los tres centrados (10 min)
+#### Reto 2 · Los tres centrados (10 min)
 
 Tienes tres cajas, cada una con un cuadrado dentro. Consigue, sin `position` y sin márgenes fijos:
 
@@ -1682,7 +1676,7 @@ Tienes tres cajas, cada una con un cuadrado dentro. Consigue, sin `position` y s
   <p>Y la comprobación de que lo has entendido: con <code>flex-direction: column</code>, los tres se resuelven intercambiando las dos propiedades.</p>
 </details>
 
-### Microrevisión · diez minutos, sin nota
+#### Microrevisión · diez minutos, sin nota
 
 Intercambia con un compañero únicamente una sección que ya hayas maquetado. Encuentra **una decisión de layout que no puedas justificar** y descríbela así:
 
@@ -1692,7 +1686,7 @@ Intercambia con un compañero únicamente una sección que ya hayas maquetado. E
 
 El autor decide si cambia el código o conserva la decisión y la justifica. No se valora la coincidencia de criterio estético entre ambas partes.
 
-### Tarea 9 · Flexbox Challenge
+#### Tarea 9 · Flexbox Challenge
 
 Construye estos tres componentes usando **solo Flexbox**, y aplícalos a tu proyecto donde encajen:
 
@@ -1719,7 +1713,7 @@ Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla so
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 9 y de la semana 3</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
   <ul class="checklist">
     <li>Sabes identificar el eje principal de cualquier Flexbox.</li>
     <li>Sabes que <code>justify-content</code> y <code>align-items</code> se intercambian al cambiar la dirección.</li>
@@ -1757,11 +1751,11 @@ Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla so
 
 ---
 
-## Semana 4 · Grid y responsive
+## Sesión 4 · Grid y responsive
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>CSS Grid</strong>, <strong>Grid adaptable y áreas</strong> y <strong>Responsive: fluido primero</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 10 · CSS Grid
+### Bloque 1 · CSS Grid
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1781,7 +1775,7 @@ Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla so
   </ol>
 </div>
 
-### Dos dimensiones a la vez
+#### Dos dimensiones a la vez
 
 Flexbox coloca en una línea. Considera ahora este problema:
 
@@ -1818,7 +1812,7 @@ Aquí no hay una dirección: hay filas **y** columnas, y quieres que las columna
 
 Tres declaraciones y tienes una cuadrícula de tres columnas con sus filas alineadas. Fíjate en que **no has dicho cuántas filas hay**: Grid las crea según los elementos que haya.
 
-### La unidad `fr`
+#### La unidad `fr`
 
 <p class="term">fr</p>
 
@@ -1834,7 +1828,7 @@ grid-template-columns: 1fr 2fr;          /* una parte y dos partes */
 
 `repeat()` es solo una abreviatura, pero se vuelve importante en la sesión siguiente.
 
-### El vocabulario
+#### El vocabulario
 
 <figure class="diagram">
   <figcaption>Las piezas de una cuadrícula</figcaption>
@@ -1848,7 +1842,7 @@ grid-template-columns: 1fr 2fr;          /* una parte y dos partes */
 
 Conviene fijarse en que **se numeran las líneas, no las columnas**. Una cuadrícula de tres columnas tiene cuatro líneas verticales: la 1 al principio y la 4 al final. Es la fuente de casi todos los desajustes de la sesión siguiente.
 
-### El inspector de Grid
+#### El inspector de Grid
 
 En DevTools, junto a un elemento con `display: grid`, aparece una etiqueta `grid`. Púlsala y el navegador dibuja encima de la página las líneas con su numeración, las pistas y los huecos.
 
@@ -1857,7 +1851,7 @@ En DevTools, junto a un elemento con `display: grid`, aparece una etiqueta `grid
   <p>No intentes imaginar mentalmente una cuadrícula compleja si el navegador puede dibujártela. Cuando un elemento no cae donde esperabas, el inspector te enseña en un segundo qué línea es la 3 de verdad.</p>
 </div>
 
-### Tarea 10 · Tu catálogo en cuadrícula
+#### Tarea 10 · Tu catálogo en cuadrícula
 
 En `productos.html`, convierte el contenedor de las fichas en un Grid.
 
@@ -1888,9 +1882,8 @@ En `productos.html`, convierte el contenedor de las fichas en un Grid.
   <p>3 · Cinco: una a cada lado de cada columna, contando los dos extremos.</p>
 </details>
 
----
 
-## Sesión 11 · Grid adaptable y áreas
+### Bloque 2 · Grid adaptable y áreas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1910,7 +1903,7 @@ En `productos.html`, convierte el contenedor de las fichas en un Grid.
   </ol>
 </div>
 
-### La línea que resuelve el problema de ayer
+#### La línea que resuelve el problema de ayer
 
 ```css
 .catalogo {
@@ -1932,7 +1925,7 @@ auto-fit              caben las que quepan; el número
 
 Es decir: **deja de decir cuántas columnas quieres y describe cuánto necesita cada una**. En un móvil cabrá una, en una tablet dos, en un monitor cuatro, y no has escrito una sola media query. Esta línea es probablemente la más rentable de toda la unidad.
 
-#### `auto-fit` contra `auto-fill`
+##### `auto-fit` contra `auto-fill`
 
 Se parecen y hacen cosas distintas cuando **sobra sitio**:
 
@@ -1943,7 +1936,7 @@ Se parecen y hacen cosas distintas cuando **sobra sitio**:
 
 La forma de verlo es la experimentación: pon tres tarjetas en una pantalla ancha y cambia una palabra por la otra. Con `auto-fit` las tres se estiran; con `auto-fill` se quedan a la izquierda con su tamaño.
 
-### Colocar elementos concretos
+#### Colocar elementos concretos
 
 A veces un elemento debe ocupar más de una celda:
 
@@ -1959,7 +1952,7 @@ A veces un elemento debe ocupar más de una celda:
 
 `span` suele ser más robusto: no depende de dónde acabe cayendo el elemento, cosa que cambia al variar el número de columnas.
 
-### Áreas con nombre
+#### Áreas con nombre
 
 Para el esqueleto de una página completa hay una forma que se lee sola:
 
@@ -2003,7 +1996,7 @@ Fíjate en un detalle importante: en el móvil hemos puesto el contenido **antes
   <p>Reordenar el lateral y el contenido, que están contiguos, es inofensivo. Reordenar a lo grande no lo es. Si el orden visual y el del documento tienen que diferir mucho, lo que está mal es el orden del HTML.</p>
 </div>
 
-### Flexbox o Grid
+#### Flexbox o Grid
 
 No compiten. Una regla inicial que funciona:
 
@@ -2025,7 +2018,7 @@ GRID     para distribuir las tarjetas
 FLEXBOX  dentro de cada tarjeta
 ```
 
-### Reto 3 · ¿Flexbox, Grid, los dos o ninguno? (15 min)
+#### Reto 3 · ¿Flexbox, Grid, los dos o ninguno? (15 min)
 
 Para cada interfaz, decide y justifica en una frase:
 
@@ -2050,7 +2043,7 @@ Para cada interfaz, decide y justifica en una frase:
   <p>8 · <strong>Grid</strong> si las tres columnas deben tener el mismo ancho; <strong>Flexbox</strong> si cada una puede medir lo suyo. Aquí las dos respuestas son defendibles, y lo que se evalúa es la justificación.</p>
 </details>
 
-### Tarea 11 · Grid Challenge
+#### Tarea 11 · Grid Challenge
 
 **A · El catálogo que se adapta solo.** Aplica `auto-fit` con `minmax()` a tu página de productos. Comprueba de 320 px a 1600 px que en ningún momento hay columnas ilegibles ni tarjetas gigantes. Prueba también con `auto-fill` y explica en un comentario cuál has elegido y por qué.
 
@@ -2091,9 +2084,8 @@ y su versión en una columna para pantallas estrechas. Decide tú a qué anchura
   <p>3 · Que el orden del teclado sigue al HTML, así que un reordenado grande hace que el foco salte por la pantalla sin lógica.</p>
 </details>
 
----
 
-## Sesión 12 · Responsive: fluido primero
+### Bloque 3 · Responsive: fluido primero
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2113,7 +2105,7 @@ y su versión en una columna para pantallas estrechas. Decide tú a qué anchura
   </ol>
 </div>
 
-### Una web no se diseña para 1920 × 1080
+#### Una web no se diseña para 1920 × 1080
 
 Quien entre a tu sitio puede hacerlo desde un móvil, una tablet, un portátil, un monitor grande, media pantalla en una ventana dividida, o un dispositivo que todavía no existe. No puedes enumerarlos.
 
@@ -2127,7 +2119,7 @@ Por eso el orden correcto es este, y casi nadie lo respeta:
   </ol>
 </figure>
 
-### Lo que ya se adapta sin media queries
+#### Lo que ya se adapta sin media queries
 
 Llevas cuatro semanas construyendo herramientas que hacen esto:
 
@@ -2141,7 +2133,7 @@ Llevas cuatro semanas construyendo herramientas que hacen esto:
 
 Si las usas bien, buena parte de tu sitio ya es responsive y no lo sabías. Las media queries son para lo que queda.
 
-### Mobile first
+#### Mobile first
 
 <p class="term">Mobile first</p>
 
@@ -2191,10 +2183,10 @@ La sintaxis `(width >= 48rem)` es la moderna y se lee sola. Encontrarás tambié
   <p class="rule-label">Los breakpoints no son teléfonos</p>
   <p>No busques las medidas del iPhone 15 ni del Galaxy de turno. Esa lista cambia cada año y nunca está completa.</p>
   <p>Un <em>breakpoint</em> va donde <strong>tu contenido deja de funcionar</strong>: donde el menú ya no cabe, donde una columna se queda demasiado estrecha para leerse, donde la tarjeta se rompe. Esa anchura la encuentras estirando la ventana hasta que se ve mal, y es distinta en cada proyecto porque cada proyecto tiene otro contenido.</p>
-  <p>Por eso en la sesión 10 te pedí que anotaras a qué anchura empezaba a verse mal el catálogo. Ese número vale más que cualquier lista de dispositivos.</p>
+  <p>Por eso en la sesión 4 te pedí que anotaras a qué anchura empezaba a verse mal el catálogo. Ese número vale más que cualquier lista de dispositivos.</p>
 </div>
 
-### Tarea 12 · Rompe tu página
+#### Tarea 12 · Rompe tu página
 
 Con DevTools en modo dispositivo, recorre tu sitio a estas anchuras:
 
@@ -2239,7 +2231,7 @@ Después corrígelos, **intentando primero sin media query**. Si lo resuelves co
 </details>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 12 y de la semana 4</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
   <ul class="checklist">
     <li>Tu catálogo se adapta sin media queries.</li>
     <li>No hay scroll horizontal a 320 px en ninguna página.</li>
@@ -2277,11 +2269,11 @@ Después corrígelos, **intentando primero sin media query**. Si lo resuelves co
 
 ---
 
-## Semana 5 · Imágenes, estados y movimiento
+## Sesión 5 · Imágenes, estados y movimiento
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Imágenes y medios adaptables</strong>, <strong>Estados, pseudo-clases y foco visible</strong> y <strong>Transiciones y transformaciones</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 13 · Imágenes y medios adaptables
+### Bloque 1 · Imágenes y medios adaptables
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2301,7 +2293,7 @@ Después corrígelos, **intentando primero sin media query**. Si lo resuelves co
   </ol>
 </div>
 
-### La regla que va en toda hoja de estilos
+#### La regla que va en toda hoja de estilos
 
 Una imagen tiene un tamaño propio, y si es más ancha que su contenedor, se sale. Es la causa número uno de scroll horizontal.
 
@@ -2314,7 +2306,7 @@ img {
 
 `max-width: 100%` impide que sobrepase a su contenedor. `height: auto` es imprescindible junto a la anterior: sin ella, si el HTML declaraba `width` y `height` —como pedíamos en la UD1—, al reducirse el ancho la altura se quedaría fija y la imagen se deformaría.
 
-### `object-fit`
+#### `object-fit`
 
 El problema real de un catálogo: las fotos de producto vienen con tamaños y proporciones distintas, y las tarjetas quedan desiguales.
 
@@ -2351,7 +2343,7 @@ Si el recorte de `cover` elimina la parte relevante, `object-position` determina
 .card img { object-fit: cover; object-position: top; }
 ```
 
-### `aspect-ratio`
+#### `aspect-ratio`
 
 Mejor que fijar una altura en `rem` es declarar una proporción:
 
@@ -2365,7 +2357,7 @@ Mejor que fijar una altura en `rem` es declarar una proporción:
 
 Ahora la altura se calcula sola a partir del ancho, así que la tarjeta funciona igual en una columna estrecha que en una ancha. Es la versión responsive de la idea anterior.
 
-### Tarea 13 · El catálogo irregular
+#### Tarea 13 · El catálogo irregular
 
 Reúne al menos seis imágenes **deliberadamente dispares**: alguna vertical, alguna horizontal, alguna muy grande, alguna pequeña. Puedes usar fotos reales de tu tema.
 
@@ -2399,9 +2391,8 @@ Consigue que el catálogo se vea coherente **sin editar los archivos**:
   <p>3 · Que la altura se calcula a partir del ancho, así que la proporción se mantiene en cualquier tamaño de columna.</p>
 </details>
 
----
 
-## Sesión 14 · Estados, pseudo-clases y foco visible
+### Bloque 2 · Estados, pseudo-clases y foco visible
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2421,7 +2412,7 @@ Consigue que el catálogo se vea coherente **sin editar los archivos**:
   </ol>
 </div>
 
-### Los estados de un enlace
+#### Los estados de un enlace
 
 ```css
 a              { color: var(--color-primary); }
@@ -2443,7 +2434,7 @@ input:checked   { }
 
 `:invalid` merece una advertencia: se aplica desde que carga la página, así que un campo obligatorio y vacío aparece en rojo antes de que nadie haya escrito nada. Combínalo con `:user-invalid`, que solo actúa después de que la persona haya interactuado, o marca el error de otra forma.
 
-### El foco no se quita
+#### El foco no se quita
 
 <div class="rule">
   <p class="rule-label">Nunca <code>outline: none</code> a secas</p>
@@ -2468,7 +2459,7 @@ Así se puede tener un foco de teclado bien visible sin que aparezca un recuadro
 
 `outline` tiene una ventaja sobre `border` para esto: **no ocupa espacio en el layout**, así que nada se mueve al recibir el foco. Y `outline-offset` lo separa del elemento para que se lea mejor.
 
-### Selectores modernos
+#### Selectores modernos
 
 ```css
 :is(h1, h2, h3) { line-height: 1.15; }
@@ -2500,7 +2491,7 @@ Y `:has()` selecciona un elemento **por lo que contiene**, algo que CSS no pudo 
 
 Ahí estás dando estilo al contenedor a partir del estado de su hijo. No hace falta que lo domines: basta con que sepas que los selectores también han evolucionado y que muchos problemas que antes pedían JavaScript ya no lo piden.
 
-### Tarea 14 · Los estados invisibles
+#### Tarea 14 · Los estados invisibles
 
 Suelta el ratón. Recorre tus cuatro páginas con `Tab`, `Shift + Tab` y `Enter`.
 
@@ -2535,9 +2526,8 @@ Después:
   <p>3 · Para agrupar selectores con especificidad cero, de modo que los estilos base se puedan sobrescribir sin pelear con la cascada.</p>
 </details>
 
----
 
-## Sesión 15 · Transiciones y transformaciones
+### Bloque 3 · Transiciones y transformaciones
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2557,7 +2547,7 @@ Después:
   </ol>
 </div>
 
-### Transiciones
+#### Transiciones
 
 Una transición suaviza el paso de un estado a otro. Se declara en el estado **normal**, no en el `:hover`, para que funcione en los dos sentidos:
 
@@ -2584,7 +2574,7 @@ ease         cómo acelera
   <p>Nombra las propiedades. Si puedes elegir, anima <code>transform</code> y <code>opacity</code>: son las dos que el navegador resuelve sin rehacer el layout, y por eso van suaves.</p>
 </div>
 
-### Transformaciones
+#### Transformaciones
 
 ```css
 transform: translateY(-2px);
@@ -2595,7 +2585,7 @@ transform: translateY(-2px) scale(1.02);   /* se combinan en una sola declaraci�
 
 Una transformación **no afecta al espacio que ocupa el elemento**: se dibuja movido, pero su hueco sigue donde estaba y nada se descoloca alrededor. Por eso mover una tarjeta con `transform` es seguro y hacerlo con `margin-top` no.
 
-### El movimiento tiene que decir algo
+#### El movimiento tiene que decir algo
 
 Una interfaz no mejora por tener zooms, rebotes, sombras y degradados. Cada efecto debería responder a una pregunta: **¿qué le está comunicando esto a quien lo ve?**
 
@@ -2606,7 +2596,7 @@ Una interfaz no mejora por tener zooms, rebotes, sombras y degradados. Cada efec
 | Un campo que se marca al recibir el foco | «Estás escribiendo aquí» | Sí |
 | Un titular que entra rebotando al cargar | Nada | No |
 
-### Respetar la preferencia del usuario
+#### Respetar la preferencia del usuario
 
 Hay quien configura su sistema para reducir las animaciones, y no por gusto: el movimiento puede provocar mareo o desorientación. El sistema operativo lo comunica, y CSS puede leerlo:
 
@@ -2628,7 +2618,7 @@ Es uno de los poquísimos sitios donde `!important` está justificado: es una pr
 
 Una media query que no pregunta por el tamaño de la pantalla sino por **una preferencia declarada por quien usa el dispositivo**. Existen más de esta familia, como `prefers-color-scheme`.
 
-### Tarea 15 · Menos es más
+#### Tarea 15 · Menos es más
 
 1. Añade una transición a tus botones y otra a tus tarjetas o enlaces.
 2. Asegúrate de que los estados de `:hover` y `:focus-visible` son claros y distintos entre sí.
@@ -2644,7 +2634,7 @@ Es la única tarea de la unidad en la que se puntúa quitar cosas.
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 15 y de la semana 5</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
   <ul class="checklist">
     <li>Todas tus imágenes tienen <code>max-width: 100%</code> y no se deforman.</li>
     <li>El foco es visible en todos los elementos interactivos.</li>
@@ -2682,11 +2672,11 @@ Es la única tarea de la unidad en la que se puntúa quitar cosas.
 
 ---
 
-## Semana 6 · Integración, depuración y entrega
+## Sesión 6 · Integración, depuración y entrega
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Reto acumulativo · una interfaz desconocida</strong>, <strong>Depurar CSS</strong> y <strong>Auditoría final, revisión por pares y entrega</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 16 · Reto acumulativo · una interfaz desconocida
+### Bloque 1 · Reto acumulativo · una interfaz desconocida
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2706,7 +2696,7 @@ Es la única tarea de la unidad en la que se puntúa quitar cosas.
   </ol>
 </div>
 
-### Antes de tocar CSS · clasifica los problemas
+#### Antes de tocar CSS · clasifica los problemas
 
 Recibes una captura y el HTML semántico de una página de actividades. La interfaz contiene una cabecera con navegación, un bloque destacado, un catálogo de tarjetas, una botonera de filtros y un aviso final. No recibes ninguna pista sobre las propiedades.
 
@@ -2721,15 +2711,15 @@ Antes de escribir, completa esta tabla:
 
 No todas las casillas necesitan una propiedad. Dejar una zona en flujo normal también es una decisión.
 
-### Paso 1 · Una decisión resuelta
+#### Paso 1 · Una decisión resuelta
 
 Las tarjetas se repiten en filas y columnas y su número debe depender del espacio. Eso apunta a Grid con una plantilla adaptable. Dentro de cada tarjeta, imagen, texto y acción forman una relación en una dimensión: puede bastar flujo normal o Flexbox. Se resuelve cada nivel por separado.
 
-### Paso 2 · Completa una base incompleta
+#### Paso 2 · Completa una base incompleta
 
 Se entrega el HTML y una hoja con variables, tipografía y el box model ya preparados. Faltan deliberadamente la distribución del catálogo, el comportamiento de la navegación y los estados de los controles. Completa primero esas tres decisiones y comprueba cada una en DevTools antes de continuar.
 
-### Tarea 16 · Construye y defiende la interfaz
+#### Tarea 16 · Construye y defiende la interfaz
 
 La solución debe cumplir estos requisitos sin framework:
 
@@ -2778,9 +2768,8 @@ Al terminar, el profesor cambia un requisito: orden de la navegación, anchura m
   <p>3 · Prediciendo y realizando un cambio que no estaba en la captura inicial sin rehacer la solución.</p>
 </details>
 
----
 
-## Sesión 17 · Depurar CSS
+### Bloque 2 · Depurar CSS
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2800,7 +2789,7 @@ Al terminar, el profesor cambia un requisito: orden de la navegación, anchura m
   </ol>
 </div>
 
-### Diagnosticar, no rehacer
+#### Diagnosticar, no rehacer
 
 Recibirás una página que se ve mal. La tentación es borrarlo todo y empezar de cero, y es exactamente lo que no vas a poder hacer en un trabajo: el CSS que te toque arreglar será de otro, tendrá años y funcionará en sitios que no puedes romper.
 
@@ -2826,7 +2815,7 @@ El paso 4 es el que ahorra tiempo. Los cuatro tipos de problema se buscan en sit
 | Caja | El tamaño no es el que escribiste | Layout: box model, `box-sizing`, padding |
 | Layout | Los elementos no se colocan bien | Los inspectores de Flexbox y de Grid |
 
-### Las cuatro pestañas
+#### Las cuatro pestañas
 
 | Pestaña | Para qué |
 | ------- | -------- |
@@ -2837,7 +2826,7 @@ El paso 4 es el que ahorra tiempo. Los cuatro tipos de problema se buscan en sit
 
 Un procedimiento resuelve la mitad de los casos: en Styles, las casillas contiguas a cada declaración la **desactivan en vivo**. Desactivar propiedades una a una hasta que el problema desaparece te dice cuál era la culpable en veinte segundos, sin tocar el archivo.
 
-### Reto 4 · Quita el `!important` (10 min)
+#### Reto 4 · Quita el `!important` (10 min)
 
 ```css
 #main .listado div.card.producto {
@@ -2855,7 +2844,7 @@ Esta regla funciona. Di tres cosas que están mal en ella, y cómo quedaría bie
   <p>Quedaría en algo así como <code>.producto { }</code> sin margen, y un <code>gap</code> en el contenedor.</p>
 </details>
 
-### Tarea 17 · CSS forense
+#### Tarea 17 · CSS forense
 
 Recibirás una página cuya hoja de estilos contiene fallos deliberados de todos los tipos:
 
@@ -2907,9 +2896,8 @@ Tu trabajo:
   <p>3 · Porque en un trabajo real el CSS es de otro, tiene años y funciona en sitios que no puedes romper. El segundo motivo es que rehacer el código no identifica dónde estaba el defecto.</p>
 </details>
 
----
 
-## Sesión 18 · Auditoría final, revisión por pares y entrega
+### Bloque 3 · Auditoría final, revisión por pares y entrega
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2929,7 +2917,7 @@ Tu trabajo:
   </ol>
 </div>
 
-### Dónde estábamos y dónde estamos
+#### Dónde estábamos y dónde estamos
 
 <figure class="diagram">
   <figcaption>Doce semanas</figcaption>
@@ -2940,7 +2928,7 @@ Tu trabajo:
   </ol>
 </figure>
 
-### Tarea 18 · La auditoría
+#### Tarea 18 · La auditoría
 
 <div class="checkpoint">
   <p class="checkpoint-label">Organización</p>
@@ -2998,7 +2986,7 @@ Tu trabajo:
   </ul>
 </div>
 
-### Revisión por pares
+#### Revisión por pares
 
 Un compañero revisará tu proyecto. **No evaluará si le gustan tus colores**: eso no es revisable. Revisará lo técnico.
 
@@ -3015,7 +3003,7 @@ Después recibirás la revisión y decidirás qué cambias. **No todas las suger
 
 La regla de la UD1 sigue vigente: se revisa el código, no a la persona.
 
-### Producto final
+#### Producto final
 
 El mismo sitio de la UD1, convertido en una web completa. Debe incluir:
 
@@ -3030,7 +3018,7 @@ El mismo sitio de la UD1, convertido en una web completa. Debe incluir:
 * Al menos una transición con una finalidad.
 * Media queries solo donde hagan falta.
 
-Se entrega junto a la tabla forense de la sesión 17, la matriz de revisión que hayas hecho, y media página con las tres decisiones de layout de las que estés más seguro.
+Se entrega junto a la tabla forense de la sesión 6, la matriz de revisión que hayas hecho, y media página con las tres decisiones de layout de las que estés más seguro.
 
 <details class="aside aside--extra">
   <summary>Si acabas antes · copia un diseño</summary>
@@ -3038,7 +3026,7 @@ Se entrega junto a la tabla forense de la sesión 17, la matriz de revisión que
   <p>El objetivo <strong>no</strong> es la coincidencia píxel a píxel. Es identificar la estructura: qué está agrupado con qué, qué alineado con qué, qué espacios se repiten, qué es Grid y qué es Flexbox, y cuál es la jerarquía visual. Copiar un diseño es sobre todo un ejercicio de lectura.</p>
 </details>
 
-### Presentación
+#### Presentación
 
 Tres minutos y cuatro preguntas:
 
@@ -3049,7 +3037,7 @@ Tres minutos y cuatro preguntas:
 
 La defensa incluye una prueba en vivo: se te pedirá **un cambio pequeño sobre tu propio CSS**. Convertir un Grid de tres columnas en dos, cambiar el eje de un Flexbox, hacer que el menú funcione a 360 px, o quitar un `!important` sin romper nada. Si no puedes hacerlo, no controlas el código que has entregado.
 
-### Evaluación
+#### Evaluación
 
 | Criterio | Puntos |
 | ------------------------------------------------------ | -----: |

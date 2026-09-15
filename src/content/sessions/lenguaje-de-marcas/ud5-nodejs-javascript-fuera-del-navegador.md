@@ -5,7 +5,7 @@ section: "ud-05"
 order: 5
 lang: "es"
 summary: "El mismo lenguaje, sin navegador. Node ejecuta JavaScript en tu máquina, con acceso a ficheros y a la red, y con él construirás primero un servidor HTTP a mano —para entender qué hace de verdad— y solo después lo reescribirás con Express, sabiendo qué te ahorra."
-duration: "18 sesiones · 6 semanas"
+duration: "6 sesiones de 3 horas · 18 horas"
 modality: "Individual, con retos y revisión en pareja"
 deliverable: "Un proyecto Node completo: una herramienta de línea de comandos que gestiona el catálogo en un fichero JSON, un servidor HTTP escrito a mano que lo sirve, y ese mismo servidor reescrito con Express con sus rutas, sus estáticos, su registro de peticiones y su manejo central de errores."
 outcomes:
@@ -66,7 +66,7 @@ Podríamos empezar directamente por Express, que es lo que se usa en producción
 
 <div class="rule">
   <p class="rule-label">Primero a mano, después con el framework</p>
-  <p>Vas a escribir un servidor con el módulo nativo de Node: recibir la petición, mirar el método y la ruta, decidir la respuesta, poner las cabeceras y el código de estado. Es incómodo, y esa incomodidad es el contenido de la sesión 13.</p>
+  <p>Vas a escribir un servidor con el módulo nativo de Node: recibir la petición, mirar el método y la ruta, decidir la respuesta, poner las cabeceras y el código de estado. Es incómodo, y esa incomodidad es el contenido de la sesión 5.</p>
   <p>Cuando después llegue Express, cada una de sus piezas responderá a un dolor que ya has sentido. Es la diferencia entre saber usar un framework y saber qué está haciendo por ti; la primera se aprende en una tarde, la segunda es la que te permite arreglarlo cuando falla.</p>
 </div>
 
@@ -104,9 +104,9 @@ mi-api/
 </div>
 
 <div class="rule">
-  <p class="rule-label">Condición 1 · nada de dependencias hasta la sesión 14</p>
-  <p>Ni Express, ni utilidades de fecha, ni librerías de colores en la terminal: hasta la sesión 14, todo lo que entregues se resuelve con lo que Node trae de fábrica.</p>
-  <p>La única excepción es el ejercicio de la sesión 5, donde instalarás y desinstalarás un paquete para ver qué le hace al proyecto. La primera dependencia que se quede será Express, y para entonces sabrás exactamente por qué.</p>
+  <p class="rule-label">Condición 1 · nada de dependencias hasta la sesión 5</p>
+  <p>Ni Express, ni utilidades de fecha, ni librerías de colores en la terminal: hasta la sesión 5, todo lo que entregues se resuelve con lo que Node trae de fábrica.</p>
+  <p>La única excepción es el ejercicio de la sesión 2, donde instalarás y desinstalarás un paquete para ver qué le hace al proyecto. La primera dependencia que se quede será Express, y para entonces sabrás exactamente por qué.</p>
 </div>
 
 <div class="rule">
@@ -154,20 +154,22 @@ Para probar tu servidor sin depender del navegador. Con REST Client de VS Code l
 
 ---
 
-## Plan de trabajo semanal
+## Plan de trabajo por sesiones
 
-| Semana | Bloque temático | Práctica central | Horas |
+| Sesión | Contenido de las tres horas | Práctica central | Horas |
 | :---: | :--- | :--- | :---: |
-| **Semana 1** | El entorno | Ejecutar, argumentos, entorno y módulos | 3 h |
-| **Semana 2** | npm y el proyecto | `package.json`, dependencias y una herramienta de terminal | 3 h |
-| **Semana 3** | Ficheros y datos | Leer y escribir el catálogo sin corromperlo | 3 h |
-| **Semana 4** | El servidor a mano | HTTP nativo, rutas, estados y estáticos | 3 h |
-| **Semana 5** | Del servidor al framework | Los límites del nativo y el primer Express | 3 h |
-| **Semana 6** | Integración y entrega | Refactorización, depuración y revisión por pares | 3 h |
+| **Sesión 1** | El entorno | Ejecutar, argumentos, entorno y módulos | 3 h |
+| **Sesión 2** | npm y el proyecto | `package.json`, dependencias y una herramienta de terminal | 3 h |
+| **Sesión 3** | Ficheros y datos | Leer y escribir el catálogo sin corromperlo | 3 h |
+| **Sesión 4** | El servidor a mano | HTTP nativo, rutas, estados y estáticos | 3 h |
+| **Sesión 5** | Del servidor al framework | Los límites del nativo y el primer Express | 3 h |
+| **Sesión 6** | Integración y entrega | Refactorización, depuración y revisión por pares | 3 h |
 | **Total** | | **Un servidor propio, escrito dos veces** | **18 h** |
 
+Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada bloque mantiene el ritmo de las unidades anteriores:
+
 <figure class="diagram">
-  <figcaption>El ritmo de cada sesión</figcaption>
+  <figcaption>El ritmo de cada bloque de una hora</figcaption>
   <ol class="flow flow--row flow--chain">
     <li>Recupera · 5 min</li>
     <li>Aprende y observa · 10–20 min</li>
@@ -178,11 +180,11 @@ Para probar tu servidor sin depender del navegador. Con REST Client de VS Code l
 
 ---
 
-## Semana 1 · El entorno
+## Sesión 1 · El entorno
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Qué es Node y qué cambia</strong>, <strong>Argumentos, entorno y salida</strong> y <strong>Módulos y estructura del proyecto</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 1 · Qué es Node y qué cambia
+### Bloque 1 · Qué es Node y qué cambia
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -202,7 +204,7 @@ Para probar tu servidor sin depender del navegador. Con REST Client de VS Code l
   </ol>
 </div>
 
-### Un motor sin navegador
+#### Un motor sin navegador
 
 Node.js es el motor de JavaScript de Chrome, sacado del navegador y empaquetado como un programa que puedes ejecutar en tu máquina. Alrededor le añadieron lo que un navegador no le deja hacer: acceso al sistema de ficheros, a la red y a los procesos del sistema.
 
@@ -214,7 +216,7 @@ node src/hola.js
 
 Existe también un modo interactivo, equivalente a la consola del navegador: la orden `node` sin argumentos abre un intérprete donde se evalúan expresiones.
 
-### Lo que ya no existe
+#### Lo que ya no existe
 
 ```javascript
 document.querySelector("h1");   // ReferenceError: document is not defined
@@ -224,7 +226,7 @@ alert("Hola");                  // ReferenceError
 
 No es que estén rotos: es que no tienen sentido. No hay documento ni ventana. Todo el módulo `catalogo.js` de la UD3, en cambio, funciona aquí sin cambiar una coma, porque solo trabaja con datos. Ese es, otra vez, el premio de haber separado la lógica de la página.
 
-### Lo que aparece
+#### Lo que aparece
 
 ```javascript
 process.argv;              // los argumentos de la llamada
@@ -246,7 +248,7 @@ import http from "node:http";
 
 Deja claro que el módulo es del propio Node y no una dependencia descargada. Sin él también funciona, pero con él nadie puede confundir tu importación con un paquete externo instalado por alguien.
 
-### Un programa que empieza y termina
+#### Un programa que empieza y termina
 
 <div class="rule">
   <p class="rule-label">Un programa de Node no es una página</p>
@@ -254,7 +256,7 @@ Deja claro que el módulo es del propio Node y no una dependencia descargada. Si
   <p>De ahí una diferencia práctica: un fallo en el navegador estropea la experiencia de quien visita la web; un fallo no capturado en un servidor puede tumbarlo para todo el mundo a la vez.</p>
 </div>
 
-### Tarea 1 · Primeros programas
+#### Tarea 1 · Primeros programas
 
 1. Comprueba tu versión de Node; debe ser 22 o superior.
 2. Crea `src/hola.js` que salude e imprima la versión desde `process.version`.
@@ -270,7 +272,7 @@ Deja claro que el módulo es del propio Node y no una dependencia descargada. Si
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Ejecutas programas desde la terminal.</li>
     <li>Explicas qué desaparece y qué aparece respecto al navegador.</li>
@@ -295,9 +297,8 @@ Deja claro que el módulo es del propio Node y no una dependencia descargada. Si
   <p>3 · Que el módulo es del propio Node y no una dependencia instalada.</p>
 </details>
 
----
 
-## Sesión 2 · Argumentos, entorno y salida
+### Bloque 2 · Argumentos, entorno y salida
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -317,7 +318,7 @@ Deja claro que el módulo es del propio Node y no una dependencia descargada. Si
   </ol>
 </div>
 
-### Argumentos
+#### Argumentos
 
 ```bash
 node src/cli.js listar
@@ -334,7 +335,7 @@ console.log(argumentos);   // ["teclado"]
 
 Las dos primeras posiciones son siempre el ejecutable y el fichero, por eso se descartan. Y, como todo lo que entra desde fuera, **los argumentos son texto**: un precio hay que convertirlo y comprobarlo, igual que hacías con los campos de formulario.
 
-### Variables de entorno
+#### Variables de entorno
 
 ```javascript
 const puerto = Number(process.env.PUERTO ?? 3000);
@@ -366,7 +367,7 @@ node --env-file=.env src/servidor.js
 
 Al repositorio se incorpora `.env.example`, con las claves y sin los valores. El `.env` real va al `.gitignore`.
 
-### Entrada y salida
+#### Entrada y salida
 
 ```javascript
 console.log("Resultado");      // salida estándar
@@ -382,7 +383,7 @@ El número con el que termina un programa. Cero significa éxito; cualquier otro
 
 Separar `console.log` de `console.error` importa por lo mismo: permite que quien use tu programa redirija los resultados a un fichero y siga viendo los errores.
 
-### Tarea 2 · Un programa configurable
+#### Tarea 2 · Un programa configurable
 
 1. Escribe `src/cli.js` que acepte los comandos `listar`, `buscar` y `ayuda`.
 2. Si no se pasa comando, muestra la ayuda y termina con código 1.
@@ -398,7 +399,7 @@ Separar `console.log` de `console.error` importa por lo mismo: permite que quien
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Lees argumentos y los conviertes al leerlos.</li>
     <li>La configuración vive en el entorno, no en el código.</li>
@@ -423,9 +424,8 @@ Separar `console.log` de `console.error` importa por lo mismo: permite que quien
   <p>3 · Solo el de ejemplo, con las claves y sin los valores reales.</p>
 </details>
 
----
 
-## Sesión 3 · Módulos y estructura del proyecto
+### Bloque 3 · Módulos y estructura del proyecto
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -445,7 +445,7 @@ Separar `console.log` de `console.error` importa por lo mismo: permite que quien
   </ol>
 </div>
 
-### Dos sistemas de módulos
+#### Dos sistemas de módulos
 
 | Sistema | Cómo se escribe | Cuándo aparece |
 | ------- | --------------- | -------------- |
@@ -471,7 +471,7 @@ const aqui = dirname(fileURLToPath(import.meta.url));
 
 Otra: en Node **la extensión es obligatoria** en las rutas relativas, igual que en el navegador.
 
-### Estructura por responsabilidad
+#### Estructura por responsabilidad
 
 <figure class="diagram">
   <figcaption>Qué pregunta responde cada capa</figcaption>
@@ -489,7 +489,7 @@ Otra: en Node **la extensión es obligatoria** en las rutas relativas, igual que
   <p>Esa separación es la que hace que el cambio de la UD6 —pasar del fichero a otra forma de guardar— afecte a un solo módulo. Es también, exactamente, la arquitectura por capas del módulo de servidor.</p>
 </div>
 
-### Tarea 3 · Estructurar el proyecto
+#### Tarea 3 · Estructurar el proyecto
 
 1. Crea la carpeta `mi-api/` con `package.json` y `"type": "module"`.
 2. Crea `src/` con `almacen.js`, `catalogo.js` y `cli.js`.
@@ -505,7 +505,7 @@ Otra: en Node **la extensión es obligatoria** en las rutas relativas, igual que
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 1</p>
+  <p class="checkpoint-label">Cierre de la sesión 1</p>
   <ul class="checklist">
     <li>Ejecutas programas de Node y les pasas datos.</li>
     <li>La configuración está fuera del código.</li>
@@ -533,11 +533,11 @@ Otra: en Node **la extensión es obligatoria** en las rutas relativas, igual que
 </div>
 ---
 
-## Semana 2 · npm y el proyecto
+## Sesión 2 · npm y el proyecto
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>package.json y los scripts</strong>, <strong>Dependencias y versiones</strong> y <strong>Una herramienta de terminal</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 4 · package.json y los scripts
+### Bloque 1 · package.json y los scripts
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -557,7 +557,7 @@ Otra: en Node **la extensión es obligatoria** en las rutas relativas, igual que
   </ol>
 </div>
 
-### La ficha del proyecto
+#### La ficha del proyecto
 
 ```bash
 npm init -y
@@ -589,7 +589,7 @@ npm init -y
 | `devDependencies` | Lo que hace falta solo para desarrollar |
 | `engines` | Qué versión de Node necesita |
 
-### Los scripts
+#### Los scripts
 
 ```bash
 npm start
@@ -607,7 +607,7 @@ El `--watch` de Node reinicia el programa solo cuando cambia un fichero. Antes h
 
 Los dos guiones de `npm run cli -- listar` separan los argumentos del script de los de npm.
 
-### Tarea 4 · La interfaz del proyecto
+#### Tarea 4 · La interfaz del proyecto
 
 1. Crea el `package.json` con `npm init` y añade `"type": "module"`.
 2. Define los scripts `start`, `dev` y `cli`.
@@ -623,7 +623,7 @@ Los dos guiones de `npm run cli -- listar` separan los argumentos del script de 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Tu proyecto tiene <code>package.json</code> con ESM declarado.</li>
     <li>Los comandos habituales están como scripts.</li>
@@ -648,9 +648,8 @@ Los dos guiones de `npm run cli -- listar` separan los argumentos del script de 
   <p>3 · Que los ficheros del proyecto usan módulos ES, con <code>import</code> y <code>export</code>.</p>
 </details>
 
----
 
-## Sesión 5 · Dependencias y versiones
+### Bloque 2 · Dependencias y versiones
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -670,7 +669,7 @@ Los dos guiones de `npm run cli -- listar` separan los argumentos del script de 
   </ol>
 </div>
 
-### Instalar
+#### Instalar
 
 ```bash
 npm install express            # dependencia de ejecución
@@ -683,7 +682,7 @@ npm audit                      # vulnerabilidades conocidas
 
 Instalar crea o actualiza tres cosas: la entrada en `package.json`, el árbol real en `node_modules` y el `package-lock.json`.
 
-### Versionado semántico
+#### Versionado semántico
 
 ```text
     4 . 21 . 2
@@ -701,7 +700,7 @@ Instalar crea o actualiza tres cosas: la entrada en `package.json`, el árbol re
 
 El acento circunflejo es el valor por defecto de npm, y es la razón de que dos instalaciones del mismo `package.json` en días distintos puedan traer código distinto.
 
-### El fichero de bloqueo
+#### El fichero de bloqueo
 
 <div class="rule">
   <p class="rule-label">El <code>package-lock.json</code> se sube al repositorio</p>
@@ -709,7 +708,7 @@ El acento circunflejo es el valor por defecto de npm, y es la razón de que dos 
   <p>Sin él, «en mi máquina funciona» deja de ser una broma. Y <code>node_modules</code>, en cambio, no se sube nunca: son miles de ficheros reconstruibles con un solo comando.</p>
 </div>
 
-### Antes de instalar, pregúntate
+#### Antes de instalar, pregúntate
 
 <figure class="diagram">
   <figcaption>Cuatro preguntas antes de añadir una dependencia</figcaption>
@@ -723,7 +722,7 @@ El acento circunflejo es el valor por defecto de npm, y es la razón de que dos 
 
 Cada dependencia es código que se ejecuta con tus permisos, que puede tener vulnerabilidades y que alguien tiene que seguir manteniendo. En este proyecto vas a instalar exactamente una.
 
-### Tarea 5 · Analizar sin instalar
+#### Tarea 5 · Analizar sin instalar
 
 1. Crea el `.gitignore` con `node_modules` y `.env`.
 2. Busca la ficha de tres paquetes conocidos y anota versión, dependencias y última publicación.
@@ -739,7 +738,7 @@ Cada dependencia es código que se ejecuta con tus permisos, que puede tener vul
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Interpretas una versión semántica y sus rangos.</li>
     <li>Sabes qué se sube al repositorio y qué no.</li>
@@ -764,9 +763,8 @@ Cada dependencia es código que se ejecuta con tus permisos, que puede tener vul
   <p>3 · Porque es reconstruible, pesa muchísimo y depende del sistema donde se instale.</p>
 </details>
 
----
 
-## Sesión 6 · Una herramienta de terminal
+### Bloque 3 · Una herramienta de terminal
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -786,7 +784,7 @@ Cada dependencia es código que se ejecuta con tus permisos, que puede tener vul
   </ol>
 </div>
 
-### El despachador
+#### El despachador
 
 ```javascript
 const comandos = {
@@ -814,9 +812,9 @@ try {
 }
 ```
 
-Es el objeto de funciones de la sesión 8 de la UD3, ahora con un cometido real. Añadir un comando es añadir una línea.
+Es el objeto de funciones de la sesión 3 de la UD3, ahora con un cometido real. Añadir un comando es añadir una línea.
 
-### Lo que hace usable una herramienta
+#### Lo que hace usable una herramienta
 
 | Regla | Por qué |
 | ----- | ------- |
@@ -832,7 +830,7 @@ Es el objeto de funciones de la sesión 8 de la UD3, ahora con un cometido real.
   <p>Es lo mismo que exigías a tus mensajes de validación en la UD4, ahora sin interfaz donde esconderlo.</p>
 </div>
 
-### Salida legible
+#### Salida legible
 
 ```javascript
 console.table(productos.map(({ id, nombre, precio, stock }) => ({
@@ -842,7 +840,7 @@ console.table(productos.map(({ id, nombre, precio, stock }) => ({
 
 `console.table` también existe en Node, y para una lista de objetos es la diferencia entre una salida que se lee y un volcado que no.
 
-### Tarea 6 · El CLI completo
+#### Tarea 6 · El CLI completo
 
 1. Implementa `listar`, `buscar`, `ver`, `añadir`, `borrar` y `ayuda`.
 2. Valida los argumentos de cada uno con las funciones de la UD3.
@@ -858,7 +856,7 @@ console.table(productos.map(({ id, nombre, precio, stock }) => ({
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 2</p>
+  <p class="checkpoint-label">Cierre de la sesión 2</p>
   <ul class="checklist">
     <li>El proyecto se arranca leyendo solo el <code>package.json</code>.</li>
     <li>Entiendes el versionado y el fichero de bloqueo.</li>
@@ -886,11 +884,11 @@ console.table(productos.map(({ id, nombre, precio, stock }) => ({
 </div>
 ---
 
-## Semana 3 · Ficheros y datos
+## Sesión 3 · Ficheros y datos
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Leer y escribir ficheros</strong>, <strong>Un fichero JSON como almacén</strong> y <strong>Errores, validación y trazas</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 7 · Leer y escribir ficheros
+### Bloque 1 · Leer y escribir ficheros
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -910,7 +908,7 @@ console.table(productos.map(({ id, nombre, precio, stock }) => ({
   </ol>
 </div>
 
-### La API de promesas
+#### La API de promesas
 
 ```javascript
 import { readFile, writeFile, mkdir, access } from "node:fs/promises";
@@ -924,7 +922,7 @@ Node ofrece tres formas de trabajar con ficheros: con callbacks, síncrona y con
 
 El `"utf8"` no es opcional: sin él se reciben datos en bruto en lugar de texto y los acentos se representan de forma incorrecta.
 
-### Rutas portables
+#### Rutas portables
 
 ```javascript
 import path from "node:path";
@@ -943,7 +941,7 @@ path.basename("/datos/productos.json");   // "productos.json"
   <p>Y componla siempre desde la posición del fichero, no desde donde se ejecutó el programa: si dependes de <code>process.cwd()</code>, tu servidor arrancará bien desde la carpeta del proyecto y fallará desde cualquier otra.</p>
 </div>
 
-### Los errores que vas a ver
+#### Los errores que vas a ver
 
 | Código | Significa |
 | ------ | --------- |
@@ -964,7 +962,7 @@ try {
 
 Ese patrón —tratar el error que sabes tratar y dejar subir el resto— es el de la UD3, ahora con nombres concretos.
 
-### Tarea 7 · El catálogo en disco
+#### Tarea 7 · El catálogo en disco
 
 1. Crea `datos/productos.json` con tu catálogo.
 2. Escribe en `almacen.js` las funciones `leerProductos` y `guardarProductos`.
@@ -980,7 +978,7 @@ Ese patrón —tratar el error que sabes tratar y dejar subir el resto— es el 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 7</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Lees y escribes con la API de promesas.</li>
     <li>Compones rutas con <code>path</code>, no con barras.</li>
@@ -1005,9 +1003,8 @@ Ese patrón —tratar el error que sabes tratar y dejar subir el resto— es el 
   <p>3 · Porque el separador cambia según el sistema y la concatenación no es portable.</p>
 </details>
 
----
 
-## Sesión 8 · Un fichero JSON como almacén
+### Bloque 2 · Un fichero JSON como almacén
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1027,7 +1024,7 @@ Ese patrón —tratar el error que sabes tratar y dejar subir el resto— es el 
   </ol>
 </div>
 
-### Las cuatro operaciones
+#### Las cuatro operaciones
 
 ```javascript
 export async function listar() {
@@ -1058,7 +1055,7 @@ export async function borrar(id) {
 
 Fíjate en dos cosas. El identificador **no** es la longitud del array, porque tras borrar el tercero de tres volvería a repetirse el 3. Y `borrar` devuelve si borró algo, para que quien llame pueda responder 404 en la UD6.
 
-### Escribir sin romper
+#### Escribir sin romper
 
 <div class="rule">
   <p class="rule-label">Escribe en un temporal y renombra</p>
@@ -1076,7 +1073,7 @@ export async function guardarProductos(productos) {
 }
 ```
 
-### Los límites de este almacén
+#### Los límites de este almacén
 
 <div class="rule">
   <p class="rule-label">Esto no es una base de datos, y hay que saber por qué</p>
@@ -1084,7 +1081,7 @@ export async function guardarProductos(productos) {
   <p>Para lo que hacemos aquí es suficiente, y evita instalar y configurar un motor de base de datos. Conviene, no obstante, saber nombrar sus dos límites —tamaño y concurrencia— porque son exactamente los problemas que resuelve la base de datos del módulo de servidor.</p>
 </div>
 
-### Tarea 8 · El almacén completo
+#### Tarea 8 · El almacén completo
 
 1. Implementa `listar`, `obtener`, `crear`, `actualizar` y `borrar`.
 2. Genera los identificadores sin repetirlos nunca.
@@ -1100,7 +1097,7 @@ export async function guardarProductos(productos) {
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 8</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Las cinco operaciones funcionan de punta a punta.</li>
     <li>Los identificadores nunca se repiten.</li>
@@ -1125,9 +1122,8 @@ export async function guardarProductos(productos) {
   <p>3 · El tamaño, porque se reescribe entero, y la concurrencia, porque dos escrituras se pisan.</p>
 </details>
 
----
 
-## Sesión 9 · Errores, validación y trazas
+### Bloque 3 · Errores, validación y trazas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1147,7 +1143,7 @@ export async function guardarProductos(productos) {
   </ol>
 </div>
 
-### Dos familias de fallo
+#### Dos familias de fallo
 
 | Familia | Ejemplo | Qué se hace |
 | ------- | ------- | ----------- |
@@ -1160,7 +1156,7 @@ export async function guardarProductos(productos) {
   <p>Esa distinción es la que en la UD6 se convierte en la diferencia entre responder 404 y responder 500.</p>
 </div>
 
-### Errores propios
+#### Errores propios
 
 ```javascript
 export class ErrorDeValidacion extends Error {
@@ -1184,7 +1180,7 @@ catch (error) {
 }
 ```
 
-### Lo que nunca debe pasar desapercibido
+#### Lo que nunca debe pasar desapercibido
 
 ```javascript
 process.on("uncaughtException", (error) => {
@@ -1200,7 +1196,7 @@ process.on("unhandledRejection", (motivo) => {
 
 Una promesa rechazada que nadie captura es el fallo silencioso más común de Node: el programa sigue corriendo como si nada, con una operación que no ocurrió. Estos dos manejadores son la red de seguridad; no son el sitio donde tratar los errores.
 
-### Registrar con criterio
+#### Registrar con criterio
 
 ```javascript
 console.error(`[${new Date().toISOString()}] crear producto falló: ${error.message}`);
@@ -1215,7 +1211,7 @@ console.error(`[${new Date().toISOString()}] crear producto falló: ${error.mess
 
 Una regla no admite excepción: **en los registros no se escriben contraseñas, tokens ni datos personales**. Un fichero de log acaba copiado, enviado y guardado en sitios que nadie previó.
 
-### Tarea 9 · Errores coherentes
+#### Tarea 9 · Errores coherentes
 
 1. Define `ErrorDeValidacion` y `ErrorNoEncontrado`.
 2. Haz que el almacén lance el segundo y devuelva datos en los casos normales.
@@ -1231,7 +1227,7 @@ Una regla no admite excepción: **en los registros no se escriben contraseñas, 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 3</p>
+  <p class="checkpoint-label">Cierre de la sesión 3</p>
   <ul class="checklist">
     <li>Tus datos viven en disco y se leen y escriben sin corromperse.</li>
     <li>Distingues fallos esperables de inesperados.</li>
@@ -1259,11 +1255,11 @@ Una regla no admite excepción: **en los registros no se escriben contraseñas, 
 </div>
 ---
 
-## Semana 4 · El servidor a mano
+## Sesión 4 · El servidor a mano
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Un servidor HTTP con las manos</strong>, <strong>Rutas, métodos y códigos de estado</strong> y <strong>Servir ficheros estáticos</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 10 · Un servidor HTTP con las manos
+### Bloque 1 · Un servidor HTTP con las manos
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1283,7 +1279,7 @@ Una regla no admite excepción: **en los registros no se escriben contraseñas, 
   </ol>
 </div>
 
-### Diez líneas
+#### Diez líneas
 
 ```javascript
 import http from "node:http";
@@ -1311,7 +1307,7 @@ Eso es un servidor web. Arráncalo, abre el navegador y ahí está: por primera 
   </ol>
 </figure>
 
-### La petición
+#### La petición
 
 ```javascript
 peticion.method;      // "GET", "POST"…
@@ -1325,7 +1321,7 @@ url.searchParams.get("categoria");  // "teclados"
 
 `peticion.url` trae la ruta y la cadena de consulta juntas y sin analizar. `URL` las separa, y `searchParams` da los parámetros ya decodificados: es la misma clase que existe en el navegador.
 
-### La respuesta
+#### La respuesta
 
 ```javascript
 respuesta.statusCode = 404;
@@ -1339,7 +1335,7 @@ respuesta.end(JSON.stringify({ error: "No encontrado" }));
   <p>Escribe siempre <code>return</code> después de responder. Es la costumbre que te ahorrará las dos caras del mismo problema.</p>
 </div>
 
-### El puerto
+#### El puerto
 
 ```javascript
 const PUERTO = Number(process.env.PUERTO ?? 3000);
@@ -1347,7 +1343,7 @@ const PUERTO = Number(process.env.PUERTO ?? 3000);
 
 Si al arrancar ves `EADDRINUSE`, el puerto está ocupado: casi siempre por otro servidor tuyo que se quedó corriendo. O lo paras, o arrancas en otro puerto.
 
-### Tarea 10 · Tu primer servidor
+#### Tarea 10 · Tu primer servidor
 
 1. Escribe `src/servidor.js` que responda texto en cualquier ruta.
 2. Registra por consola método, ruta y momento de cada petición.
@@ -1363,7 +1359,7 @@ Si al arrancar ves `EADDRINUSE`, el puerto está ocupado: casi siempre por otro 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 10</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Tienes un servidor que arranca y responde.</li>
     <li>Lees método, ruta y parámetros.</li>
@@ -1388,9 +1384,8 @@ Si al arrancar ves `EADDRINUSE`, el puerto está ocupado: casi siempre por otro 
   <p>3 · El cliente espera hasta agotar el tiempo y no recibe nada.</p>
 </details>
 
----
 
-## Sesión 11 · Rutas, métodos y códigos de estado
+### Bloque 2 · Rutas, métodos y códigos de estado
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1410,7 +1405,7 @@ Si al arrancar ves `EADDRINUSE`, el puerto está ocupado: casi siempre por otro 
   </ol>
 </div>
 
-### Enrutar a mano
+#### Enrutar a mano
 
 ```javascript
 const servidor = http.createServer(async (peticion, respuesta) => {
@@ -1432,9 +1427,9 @@ const servidor = http.createServer(async (peticion, respuesta) => {
 });
 ```
 
-Se ve venir el problema: con quince rutas esto es una escalera de condicionales, y cada ruta con parámetro exige partir el texto a mano. Guárdalo en la memoria para la sesión 13.
+Se ve venir el problema: con quince rutas esto es una escalera de condicionales, y cada ruta con parámetro exige partir el texto a mano. Guárdalo en la memoria para la sesión 5.
 
-### Leer el cuerpo de una petición
+#### Leer el cuerpo de una petición
 
 ```javascript
 async function leerCuerpo(peticion) {
@@ -1451,7 +1446,7 @@ async function leerCuerpo(peticion) {
   <p>Y ese <code>JSON.parse</code> es un dato de fuera: un cuerpo mal formado lanza una excepción que, sin capturar, tumba la petición con un 500 cuando en realidad el fallo es del cliente y merece un 400.</p>
 </div>
 
-### Los códigos que vas a usar
+#### Los códigos que vas a usar
 
 | Código | Cuándo |
 | :---: | ------ |
@@ -1471,7 +1466,7 @@ async function leerCuerpo(peticion) {
   <p>Un 500 en tus registros es una tarea pendiente para ti. Un 400 es información para quien llama.</p>
 </div>
 
-### Un formato de error constante
+#### Un formato de error constante
 
 ```javascript
 { "error": "Producto no encontrado", "detalles": [] }
@@ -1479,7 +1474,7 @@ async function leerCuerpo(peticion) {
 
 Que todas las respuestas de error tengan la misma forma permite al cliente escribir un solo tratamiento. Es un contrato, y romperlo a mitad de una API es una fuente inagotable de fallos en el cliente.
 
-### Tarea 11 · La API a mano
+#### Tarea 11 · La API a mano
 
 1. Implementa `GET /api/productos` con filtro por categoría en la consulta.
 2. Implementa `GET /api/productos/:id` con su 404.
@@ -1495,7 +1490,7 @@ Que todas las respuestas de error tengan la misma forma permite al cliente escri
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 11</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Decides la acción por método y ruta.</li>
     <li>Lees el cuerpo acumulando el flujo.</li>
@@ -1520,9 +1515,8 @@ Que todas las respuestas de error tengan la misma forma permite al cliente escri
   <p>3 · Porque llega como un flujo, no como un valor ya disponible.</p>
 </details>
 
----
 
-## Sesión 12 · Servir ficheros estáticos
+### Bloque 3 · Servir ficheros estáticos
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1542,7 +1536,7 @@ Que todas las respuestas de error tengan la misma forma permite al cliente escri
   </ol>
 </div>
 
-### Servir un fichero
+#### Servir un fichero
 
 ```javascript
 import { readFile } from "node:fs/promises";
@@ -1578,7 +1572,7 @@ async function servirEstatico(ruta, respuesta) {
 }
 ```
 
-### La comprobación que no puede faltar
+#### La comprobación que no puede faltar
 
 <div class="rule">
   <p class="rule-label">Un servidor de ficheros sin comprobar la ruta es un agujero</p>
@@ -1586,11 +1580,11 @@ async function servirEstatico(ruta, respuesta) {
   <p>Se llama <em>path traversal</em> y es una de las vulnerabilidades más antiguas que existen. La defensa es la de arriba: resolver la ruta completa y comprobar que sigue estando dentro de la carpeta permitida. <strong>Después</strong> de resolver, nunca antes.</p>
 </div>
 
-### El tipo de contenido
+#### El tipo de contenido
 
 Si sirves un CSS sin su cabecera, el navegador recibe texto y no aplica los estilos, sin decir nada claro. Con un módulo de JavaScript es peor: se niega a ejecutarlo por el tipo incorrecto. Es un fallo que parece de tu código y es de tus cabeceras.
 
-### Servidor de estáticos y API a la vez
+#### Servidor de estáticos y API a la vez
 
 ```javascript
 if (ruta.startsWith("/api/")) return atenderApi(peticion, respuesta, url);
@@ -1599,7 +1593,7 @@ return servirEstatico(ruta, respuesta);
 
 Con esto, tu proyecto entero se sirve desde un solo sitio: la web en `/` y los datos en `/api/`. Al proceder todo del mismo origen, **desaparece el problema de CORS** que viste en la UD4.
 
-### Tarea 12 · Tu web, servida por ti
+#### Tarea 12 · Tu web, servida por ti
 
 1. Copia el sitio de la UD4 a `publico/`.
 2. Sírvelo desde tu servidor, con `index.html` por defecto.
@@ -1615,7 +1609,7 @@ Con esto, tu proyecto entero se sirve desde un solo sitio: la web en `/` y los d
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 4</p>
+  <p class="checkpoint-label">Cierre de la sesión 4</p>
   <ul class="checklist">
     <li>Tienes un servidor propio que sirve web y API.</li>
     <li>Cada situación devuelve su código de estado.</li>
@@ -1643,11 +1637,11 @@ Con esto, tu proyecto entero se sirve desde un solo sitio: la web en `/` y los d
 </div>
 ---
 
-## Semana 5 · Del servidor a mano al framework
+## Sesión 5 · Del servidor a mano al framework
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Los límites de hacerlo a mano</strong>, <strong>El primer Express</strong> y <strong>Middleware, registro y errores</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 13 · Los límites de hacerlo a mano
+### Bloque 1 · Los límites de hacerlo a mano
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1667,7 +1661,7 @@ Con esto, tu proyecto entero se sirve desde un solo sitio: la web en `/` y los d
   </ol>
 </div>
 
-### La cuenta de lo que falta
+#### La cuenta de lo que falta
 
 | Lo que necesitas | Lo que tienes | Lo que costaría |
 | ---------------- | ------------- | --------------- |
@@ -1686,7 +1680,7 @@ Ninguna es imposible. Todas juntas son un framework, y ya existe uno pequeño y 
   <p>Y el día que Express se quede corto —una cabecera rara, un flujo que no encaja— sabrás bajar un nivel, porque ese nivel lo has escrito tú.</p>
 </div>
 
-### El patrón que ya has escrito sin saberlo
+#### El patrón que ya has escrito sin saberlo
 
 Mira tu servidor: seguro que hay cosas que haces **antes** de decidir la ruta —registrar la petición, analizar la URL— y cosas que haces **después** —cerrar, capturar errores—. Esa idea de «una cadena de pasos por los que atraviesa toda petición» tiene nombre, y es la pieza central de mañana:
 
@@ -1701,7 +1695,7 @@ Mira tu servidor: seguro que hay cosas que haces **antes** de decidir la ruta �
   </ol>
 </figure>
 
-### Tarea 13 · El informe
+#### Tarea 13 · El informe
 
 Sobre tu propio código:
 
@@ -1718,7 +1712,7 @@ Sobre tu propio código:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 13</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Nombras seis problemas concretos de tu servidor.</li>
     <li>Sabes lo que costaría resolverlos a mano.</li>
@@ -1727,9 +1721,8 @@ Sobre tu propio código:
   </ul>
 </div>
 
----
 
-## Sesión 14 · El primer Express
+### Bloque 2 · El primer Express
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1749,7 +1742,7 @@ Sobre tu propio código:
   </ol>
 </div>
 
-### Instalar y arrancar
+#### Instalar y arrancar
 
 ```bash
 npm install express
@@ -1778,7 +1771,7 @@ app.listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`));
 
 Compáralo con lo de la semana pasada. Las dos primeras líneas sustituyen tu lector de cuerpo y tu servidor de estáticos enteros; `:id` sustituye el partido de texto a mano; y `respuesta.json` pone la cabecera, serializa y cierra.
 
-### El mapa de equivalencias
+#### El mapa de equivalencias
 
 | A mano | Con Express |
 | ------ | ----------- |
@@ -1795,7 +1788,7 @@ Compáralo con lo de la semana pasada. Las dos primeras líneas sustituyen tu le
   <p>Un framework quita trabajo repetitivo. No quita responsabilidad.</p>
 </div>
 
-### El orden importa
+#### El orden importa
 
 ```javascript
 app.use(express.json());            // antes de las rutas que leen el cuerpo
@@ -1805,7 +1798,7 @@ app.use((peticion, respuesta) => respuesta.status(404).json({ error: "No encontr
 
 Express recorre lo declarado **en orden** hasta que algo responde. De ahí dos consecuencias que causan casi todos los desconciertos del primer día: el analizador de cuerpo va antes que las rutas que lo usan, y el 404 va al final, después de todas.
 
-### Tarea 14 · La reescritura
+#### Tarea 14 · La reescritura
 
 1. Instala Express y anota qué cambió en `package.json` y en el bloqueo.
 2. Reescribe las rutas de lectura y comprueba con tu fichero `.http`.
@@ -1821,7 +1814,7 @@ Express recorre lo declarado **en orden** hasta que algo responde. De ahí dos c
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 14</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Tu servidor funciona con Express y responde igual.</li>
     <li>Sabes qué pieza de Express sustituye a cada cosa que escribiste.</li>
@@ -1846,9 +1839,8 @@ Express recorre lo declarado **en orden** hasta que algo responde. De ahí dos c
   <p>3 · Porque Express recorre en orden: si va antes, responde 404 a todo.</p>
 </details>
 
----
 
-## Sesión 15 · Middleware, registro y errores
+### Bloque 3 · Middleware, registro y errores
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1868,7 +1860,7 @@ Express recorre lo declarado **en orden** hasta que algo responde. De ahí dos c
   </ol>
 </div>
 
-### Qué es un middleware
+#### Qué es un middleware
 
 <p class="term">Middleware</p>
 
@@ -1896,7 +1888,7 @@ Lo que hace útil este ejemplo es dónde se registra: al **terminar** la respues
   <p>La petición se queda dentro de la cadena, sin avanzar y sin respuesta, hasta que el cliente se cansa. No hay error, no hay traza, no hay nada en los registros. Es el fallo más desconcertante de Express, y siempre es el mismo olvido.</p>
 </div>
 
-### Errores en un solo sitio
+#### Errores en un solo sitio
 
 ```javascript
 app.get("/api/productos/:id", async (peticion, respuesta, next) => {
@@ -1931,7 +1923,7 @@ Los **cuatro** parámetros son lo que distingue a un manejador de errores de un 
   <p>Registra el detalle en el servidor y responde un mensaje genérico con el estado correcto. Esa es la razón de que el manejador tenga la última palabra sobre qué sale.</p>
 </div>
 
-### Tarea 15 · La cadena completa
+#### Tarea 15 · La cadena completa
 
 1. Escribe el middleware de registro con método, ruta, estado y tiempo.
 2. Escribe uno que rechace cuerpos demasiado grandes.
@@ -1947,7 +1939,7 @@ Los **cuatro** parámetros son lo que distingue a un manejador de errores de un 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 5</p>
+  <p class="checkpoint-label">Cierre de la sesión 5</p>
   <ul class="checklist">
     <li>Tu servidor está reescrito con Express y se comporta igual.</li>
     <li>Sabes qué pieza sustituye a cada cosa que escribiste a mano.</li>
@@ -1975,11 +1967,11 @@ Los **cuatro** parámetros son lo que distingue a un manejador de errores de un 
 </div>
 ---
 
-## Semana 6 · Integración y entrega
+## Sesión 6 · Integración y entrega
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Reto acumulativo · otro servicio</strong>, <strong>Depurar en el servidor</strong> y <strong>Auditoría final, revisión por pares y entrega</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 16 · Reto acumulativo · otro servicio
+### Bloque 1 · Reto acumulativo · otro servicio
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1999,7 +1991,7 @@ Los **cuatro** parámetros son lo que distingue a un manejador de errores de un 
   </ol>
 </div>
 
-### El encargo
+#### El encargo
 
 Un dominio distinto del tuyo —reservas de aulas, préstamos de una biblioteca, incidencias de un taller— con sus reglas propias, al menos una de las cuales no se resuelve con un CRUD elemental: no se puede reservar un aula ocupada, no se presta un ejemplar ya prestado.
 
@@ -2017,7 +2009,7 @@ En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los 
   </ol>
 </figure>
 
-### Los requisitos mínimos
+#### Los requisitos mínimos
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lo que hay que entregar</p>
@@ -2039,7 +2031,7 @@ En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 16</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Has montado un servicio completo sin partir del tuyo.</li>
     <li>Las capas siguen separadas.</li>
@@ -2048,9 +2040,8 @@ En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los 
   </ul>
 </div>
 
----
 
-## Sesión 17 · Depurar en el servidor
+### Bloque 2 · Depurar en el servidor
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2070,7 +2061,7 @@ En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los 
   </ol>
 </div>
 
-### Dos consolas, y hay que mirar la correcta
+#### Dos consolas, y hay que mirar la correcta
 
 <figure class="diagram">
   <figcaption>Localizar el lado del fallo</figcaption>
@@ -2082,9 +2073,9 @@ En la sesión no cabe entero, y no se pretende: la hora se dedica a modelar los 
   </ol>
 </figure>
 
-Ese registro de la sesión 15 deja de ser un adorno: es lo que separa «no llega la petición» de «llega y falla», que es la misma pregunta de la UD4 trasladada al servidor.
+Ese registro de la sesión 5 deja de ser un adorno: es lo que separa «no llega la petición» de «llega y falla», que es la misma pregunta de la UD4 trasladada al servidor.
 
-### El inspector
+#### El inspector
 
 ```bash
 node --inspect src/servidor.js
@@ -2092,7 +2083,7 @@ node --inspect src/servidor.js
 
 Con el servidor arrancado así, puedes conectar DevTools o el depurador de VS Code y poner puntos de interrupción en tu código de servidor: mismo depurador, mismo procedimiento que en la UD3.
 
-### Los fallos típicos de un servidor Node
+#### Los fallos típicos de un servidor Node
 
 | Síntoma | Causa habitual |
 | ------- | -------------- |
@@ -2109,7 +2100,7 @@ Con el servidor arrancado así, puedes conectar DevTools o el depurador de VS Co
   <p>Antes de investigar, repite la petición con tu cliente HTTP. Si desde ahí funciona, el problema está en el cliente y no en el servidor; si falla igual, has eliminado media docena de variables de un golpe.</p>
 </div>
 
-### Tarea 17 · El servidor roto
+#### Tarea 17 · El servidor roto
 
 Recibirás un proyecto con cinco fallos, uno de cada familia de la tabla. Para cada uno:
 
@@ -2126,7 +2117,7 @@ Recibirás un proyecto con cinco fallos, uno de cada familia de la tabla. Para c
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 17</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Separas fallos de cliente de fallos de servidor.</li>
     <li>Usas Network, el registro y la terminal en el orden correcto.</li>
@@ -2135,9 +2126,8 @@ Recibirás un proyecto con cinco fallos, uno de cada familia de la tabla. Para c
   </ul>
 </div>
 
----
 
-## Sesión 18 · Auditoría final, revisión por pares y entrega
+### Bloque 3 · Auditoría final, revisión por pares y entrega
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2148,7 +2138,7 @@ Recibirás un proyecto con cinco fallos, uno de cada familia de la tabla. Para c
   </ol>
 </div>
 
-### La lista de auditoría
+#### La lista de auditoría
 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría · el proyecto</p>
@@ -2184,7 +2174,7 @@ Recibirás un proyecto con cinco fallos, uno de cada familia de la tabla. Para c
   </ul>
 </div>
 
-### Revisión por pares
+#### Revisión por pares
 
 Intercambia proyectos y, sin preguntar nada:
 
@@ -2194,7 +2184,7 @@ Intercambia proyectos y, sin preguntar nada:
 4. Pide un fichero fuera de la carpeta pública y comprueba si se defiende.
 5. Señala una decisión bien tomada y una mejorable, con su razón.
 
-### Defensa
+#### Defensa
 
 <div class="rule">
   <p class="rule-label">Las preguntas de la defensa</p>
@@ -2207,7 +2197,7 @@ Intercambia proyectos y, sin preguntar nada:
   </ol>
 </div>
 
-### Evaluación
+#### Evaluación
 
 | Criterio | Puntos |
 | ---------------------------------------------------------- | -----: |
@@ -2221,10 +2211,10 @@ Intercambia proyectos y, sin preguntar nada:
 
 No puntúa la cantidad de rutas. Puntúa que sepas decir **qué hace por ti cada pieza de Express**, porque antes lo escribiste tú.
 
-### Entrega
+#### Entrega
 
 <div class="unit-deliverable">
-  <p>El repositorio de <code>mi-api</code> con su README y su <code>.env.example</code>; el CLI del catálogo; el servidor nativo conservado en una rama o carpeta aparte, como prueba de lo que sabes hacer sin framework; el servidor Express con estáticos, registro y errores centralizados; el fichero <code>peticiones.http</code>; las tres listas de auditoría marcadas; la revisión del compañero por escrito; y el informe de la sesión 13.</p>
+  <p>El repositorio de <code>mi-api</code> con su README y su <code>.env.example</code>; el CLI del catálogo; el servidor nativo conservado en una rama o carpeta aparte, como prueba de lo que sabes hacer sin framework; el servidor Express con estáticos, registro y errores centralizados; el fichero <code>peticiones.http</code>; las tres listas de auditoría marcadas; la revisión del compañero por escrito; y el informe de la sesión 5.</p>
 </div>
 
 

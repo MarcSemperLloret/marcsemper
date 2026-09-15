@@ -5,7 +5,7 @@ section: "ud-06"
 order: 6
 lang: "es"
 summary: "La unidad que cierra el módulo. Las rutas sueltas de la UD5 se convierten en una API diseñada: recursos, contrato, CRUD completo, capas separadas y un cliente que consume su propia API de punta a punta, con la configuración y las pruebas necesarias para publicarla."
-duration: "18 sesiones · 6 semanas"
+duration: "6 sesiones de 3 horas · 18 horas"
 modality: "Individual, con retos y defensa técnica final"
 deliverable: "Una aplicación web completa: API REST con CRUD, validación y contrato de errores estable; capas separadas; la web de las unidades anteriores servida desde el mismo origen y consumiendo su propia API; configuración por entorno, seguridad mínima, pruebas automáticas, documentación y despliegue."
 outcomes:
@@ -115,20 +115,22 @@ mi-api/
 
 ---
 
-## Plan de trabajo semanal
+## Plan de trabajo por sesiones
 
-| Semana | Bloque temático | Práctica central | Horas |
+| Sesión | Contenido de las tres horas | Práctica central | Horas |
 | :---: | :--- | :--- | :---: |
-| **Semana 1** | Diseñar la API | Recursos, contrato y estructura por capas | 3 h |
-| **Semana 2** | El CRUD completo | Lectura, creación, modificación y borrado | 3 h |
-| **Semana 3** | Capas y consistencia | Servicio, repositorio y contrato de errores | 3 h |
-| **Semana 4** | La web y su API | HTML del servidor y cliente conectado | 3 h |
-| **Semana 5** | Listo para publicar | Configuración, seguridad y pruebas | 3 h |
-| **Semana 6** | Cierre del módulo | Proyecto final, despliegue y defensa | 3 h |
+| **Sesión 1** | Diseñar la API | Recursos, contrato y estructura por capas | 3 h |
+| **Sesión 2** | El CRUD completo | Lectura, creación, modificación y borrado | 3 h |
+| **Sesión 3** | Capas y consistencia | Servicio, repositorio y contrato de errores | 3 h |
+| **Sesión 4** | La web y su API | HTML del servidor y cliente conectado | 3 h |
+| **Sesión 5** | Listo para publicar | Configuración, seguridad y pruebas | 3 h |
+| **Sesión 6** | Cierre del módulo | Proyecto final, despliegue y defensa | 3 h |
 | **Total** | | **Una aplicación web completa y publicada** | **18 h** |
 
+Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada bloque mantiene el ritmo de las unidades anteriores:
+
 <figure class="diagram">
-  <figcaption>El ritmo de cada sesión</figcaption>
+  <figcaption>El ritmo de cada bloque de una hora</figcaption>
   <ol class="flow flow--row flow--chain">
     <li>Recupera · 5 min</li>
     <li>Decide y diseña · 10–20 min</li>
@@ -156,11 +158,11 @@ mi-api/
 
 ---
 
-## Semana 1 · Diseñar la API
+## Sesión 1 · Diseñar la API
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Qué es una API REST</strong>, <strong>El contrato: rutas, códigos y formas</strong> y <strong>Router y estructura</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 1 · Qué es una API REST
+### Bloque 1 · Qué es una API REST
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -180,7 +182,7 @@ mi-api/
   </ol>
 </div>
 
-### Recursos, no acciones
+#### Recursos, no acciones
 
 <p class="term">Recurso</p>
 
@@ -195,7 +197,7 @@ Una cosa del problema que se puede identificar con una URL: un producto, una cat
 
 La columna derecha tiene una propiedad que la izquierda no: es **predecible**. Quien conozca dos rutas sabe escribir la tercera.
 
-### Los principios que vamos a aplicar
+#### Los principios que vamos a aplicar
 
 <figure class="diagram">
   <figcaption>Lo que hace REST a una API</figcaption>
@@ -212,7 +214,7 @@ La columna derecha tiene una propiedad que la izquierda no: es **predecible**. Q
 
 El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesario viaja en la petición. Es lo que permite que dos copias del servidor atiendan al mismo cliente sin coordinarse, y es la razón de que la autenticación se resuelva con algo que se envía en cada llamada.
 
-### Nombrar bien
+#### Nombrar bien
 
 | Regla | Ejemplo |
 | ----- | ------- |
@@ -228,7 +230,7 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
   <p>La prueba: si al añadir un filtro nuevo tienes que crear una ruta nueva, acabarás con quince rutas que devuelven lo mismo con distinta condición.</p>
 </div>
 
-### Tarea 1 · Analizar y diseñar
+#### Tarea 1 · Analizar y diseñar
 
 1. Explora dos APIs públicas y anota diez rutas de cada una.
 2. Clasifícalas: ¿orientadas a recursos o a acciones?
@@ -243,7 +245,7 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Distingues una ruta orientada al recurso de una orientada a la acción.</li>
     <li>Sabes dónde van los filtros.</li>
@@ -268,9 +270,8 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
   <p>3 · Que no recuerda nada entre peticiones: cada una trae todo lo que necesita.</p>
 </details>
 
----
 
-## Sesión 2 · El contrato: rutas, códigos y formas
+### Bloque 2 · El contrato: rutas, códigos y formas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -290,7 +291,7 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
   </ol>
 </div>
 
-### Lo que forma el contrato
+#### Lo que forma el contrato
 
 | Pieza | Qué fija |
 | ----- | -------- |
@@ -300,7 +301,7 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
 | Cuerpo de la respuesta | Qué campos vuelven y con qué nombre |
 | Formato de error | La misma forma, siempre |
 
-### La tabla de tu API
+#### La tabla de tu API
 
 | Método | Ruta | Éxito | Errores |
 | ------ | ---- | :---: | ------- |
@@ -313,7 +314,7 @@ El servidor no recuerda nada entre una petición y la siguiente. Todo lo necesar
 
 El 400 de las rutas con identificador no es un capricho: `/api/productos/abc` es una petición mal formada, y responder 404 a eso confunde «no existe» con «no me has pedido bien».
 
-### El formato de error
+#### El formato de error
 
 ```json
 {
@@ -332,7 +333,7 @@ El 400 de las rutas con identificador no es un capricho: `/api/productos/abc` es
   <p>Con una forma única, el cliente escribe una función de tratamiento de errores y vale para toda la API, hoy y cuando crezca. El campo <code>codigo</code> permite además reaccionar por programa sin depender del texto, que puede traducirse o reescribirse.</p>
 </div>
 
-### Métodos: qué se puede repetir
+#### Métodos: qué se puede repetir
 
 | Método | Repetirlo dos veces |
 | ------ | ------------------- |
@@ -343,7 +344,7 @@ El 400 de las rutas con identificador no es un capricho: `/api/productos/abc` es
 
 Esa propiedad —que repetir la operación no cambie el resultado— es la que permite que un cliente reintente sin miedo cuando la red falla. Con POST no se puede, y por eso los formularios que se envían dos veces crean dos pedidos.
 
-### Tarea 2 · El contrato escrito
+#### Tarea 2 · El contrato escrito
 
 1. Escribe la tabla completa de tu API, con éxitos y errores por ruta.
 2. Define el objeto que representa un producto: campos, tipos y cuáles son obligatorios.
@@ -358,7 +359,7 @@ Esa propiedad —que repetir la operación no cambie el resultado— es la que p
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Tu contrato cubre método, ruta, cuerpo, estado y respuesta.</li>
     <li>Todos los errores tienen la misma forma.</li>
@@ -383,9 +384,8 @@ Esa propiedad —que repetir la operación no cambie el resultado— es la que p
   <p>3 · Porque permite escribir un solo tratamiento válido para toda la API.</p>
 </details>
 
----
 
-## Sesión 3 · Router y estructura
+### Bloque 3 · Router y estructura
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -405,7 +405,7 @@ Esa propiedad —que repetir la operación no cambie el resultado— es la que p
   </ol>
 </div>
 
-### Un router por recurso
+#### Un router por recurso
 
 ```javascript
 // src/rutas/productos.js
@@ -444,7 +444,7 @@ export function crearApp() {
 
 Las rutas del router son **relativas** al punto donde se monta, así que la ruta base aparece una sola vez. Cambiar `/api/productos` por `/api/v1/productos` es cambiar una línea.
 
-### Separar la aplicación del arranque
+#### Separar la aplicación del arranque
 
 ```javascript
 // src/servidor.js
@@ -457,10 +457,10 @@ crearApp().listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`)
 <div class="rule">
   <p class="rule-label">Quien crea la aplicación no debe arrancarla</p>
   <p>Si <code>app.js</code> llama a <code>listen</code>, importarlo desde una prueba levanta un servidor de verdad, ocupa un puerto y obliga a apagarlo después.</p>
-  <p>Con la aplicación por un lado y el arranque por otro, las pruebas de la sesión 15 importan la aplicación y le hacen peticiones sin abrir ningún puerto. Es una decisión de dos líneas que decide si tu proyecto se puede probar.</p>
+  <p>Con la aplicación por un lado y el arranque por otro, las pruebas de la sesión 5 importan la aplicación y le hacen peticiones sin abrir ningún puerto. Es una decisión de dos líneas que decide si tu proyecto se puede probar.</p>
 </div>
 
-### El orden, otra vez
+#### El orden, otra vez
 
 <figure class="diagram">
   <figcaption>El orden de la cadena</figcaption>
@@ -473,7 +473,7 @@ crearApp().listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`)
   </ol>
 </figure>
 
-### Tarea 3 · Reorganizar
+#### Tarea 3 · Reorganizar
 
 1. Crea `src/app.js` con `crearApp()` y deja `servidor.js` solo con el arranque.
 2. Mueve las rutas de productos a su router.
@@ -489,7 +489,7 @@ crearApp().listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`)
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 1</p>
+  <p class="checkpoint-label">Cierre de la sesión 1</p>
   <ul class="checklist">
     <li>Tu API está diseñada por recursos y escrita como contrato.</li>
     <li>Todos los errores comparten forma.</li>
@@ -517,11 +517,11 @@ crearApp().listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`)
 </div>
 ---
 
-## Semana 2 · El CRUD completo
+## Sesión 2 · El CRUD completo
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Leer: listar, filtrar y obtener</strong>, <strong>Crear y validar</strong> y <strong>Modificar y borrar</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 4 · Leer: listar, filtrar y obtener
+### Bloque 1 · Leer: listar, filtrar y obtener
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -541,7 +541,7 @@ crearApp().listen(PUERTO, () => console.log(`Escuchando en el puerto ${PUERTO}`)
   </ol>
 </div>
 
-### Listar con filtros
+#### Listar con filtros
 
 ```javascript
 export async function listarProductos(peticion, respuesta, next) {
@@ -557,7 +557,7 @@ export async function listarProductos(peticion, respuesta, next) {
 
 La ruta **no filtra**: recoge los parámetros y se los pasa al servicio. Las funciones que hacen el trabajo son las de la UD3, que no saben nada de HTTP, y por eso las mismas sirven aquí y en el CLI.
 
-### Los parámetros llegan como texto
+#### Los parámetros llegan como texto
 
 ```javascript
 const maximo = max === undefined ? null : Number(max);
@@ -572,7 +572,7 @@ if (maximo !== null && (Number.isNaN(maximo) || maximo < 0)) {
   <p>Devolver 404 por una lista vacía es un error de diseño frecuente: la colección existe, y el cliente sabe leer un array de cero elementos.</p>
 </div>
 
-### Obtener uno
+#### Obtener uno
 
 ```javascript
 export async function obtenerProducto(peticion, respuesta, next) {
@@ -592,7 +592,7 @@ export async function obtenerProducto(peticion, respuesta, next) {
 }
 ```
 
-### Decidir qué se devuelve
+#### Decidir qué se devuelve
 
 ```javascript
 function aRespuesta({ id, nombre, precio, categoria, stock }) {
@@ -602,7 +602,7 @@ function aRespuesta({ id, nombre, precio, categoria, stock }) {
 
 Devolver el objeto en su forma almacenada resulta inmediato y expone información que no corresponde publicar: notas internas, márgenes o el propio stock. Una función que decide la forma pública del recurso deja explícito qué sale, y evita que añadir un campo interno lo publique sin querer.
 
-### Tarea 4 · Las lecturas completas
+#### Tarea 4 · Las lecturas completas
 
 1. Implementa la lista con filtro por categoría, texto y precio máximo.
 2. Añade orden por dos campos, ascendente y descendente.
@@ -618,7 +618,7 @@ Devolver el objeto en su forma almacenada resulta inmediato y expone informació
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>La ruta recoge y valida; el servicio decide.</li>
     <li>Un filtro inválido responde 400 con detalle.</li>
@@ -634,9 +634,8 @@ Devolver el objeto en su forma almacenada resulta inmediato y expone informació
   <p>3 · Para no publicar campos internos al añadirlos al modelo.</p>
 </details>
 
----
 
-## Sesión 5 · Crear y validar
+### Bloque 2 · Crear y validar
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -656,7 +655,7 @@ Devolver el objeto en su forma almacenada resulta inmediato y expone informació
   </ol>
 </div>
 
-### La ruta
+#### La ruta
 
 ```javascript
 export async function crearProducto(peticion, respuesta, next) {
@@ -674,7 +673,7 @@ export async function crearProducto(peticion, respuesta, next) {
 }
 ```
 
-### La validación, en tres pasos
+#### La validación, en tres pasos
 
 ```javascript
 const CAMPOS_PERMITIDOS = ["nombre", "precio", "categoria", "stock", "descripcion"];
@@ -714,11 +713,11 @@ export function validarProductoNuevo(cuerpo) {
   <p>Enumera los campos que aceptas y descarta el resto. Es una línea más y cierra una familia entera de agujeros.</p>
 </div>
 
-### El identificador lo pone el servidor
+#### El identificador lo pone el servidor
 
 Quien crea no elige el identificador: lo asigna el servidor y lo devuelve. Por eso la respuesta incluye el recurso creado y la cabecera `Location` con su URL, y por eso `id` no está entre los campos permitidos.
 
-### Recordar de dónde viene esto
+#### Recordar de dónde viene esto
 
 <figure class="diagram">
   <figcaption>Las tres validaciones, otra vez</figcaption>
@@ -731,7 +730,7 @@ Quien crea no elige el identificador: lo asigna el servidor y lo devuelve. Por e
 
 Cualquiera puede llamar a tu API con un cliente HTTP y saltarse las dos primeras. Compruébalo hoy mismo: envía desde tu fichero `.http` un producto con precio negativo y mira qué pasa.
 
-### Tarea 5 · La creación
+#### Tarea 5 · La creación
 
 1. Implementa `POST /api/productos` con validación en tres pasos.
 2. Devuelve 201, `Location` y el recurso creado.
@@ -747,7 +746,7 @@ Cualquiera puede llamar a tu API con un cliente HTTP y saltarse las dos primeras
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Solo entran los campos permitidos.</li>
     <li>Se devuelven todos los errores de una vez.</li>
@@ -763,9 +762,8 @@ Cualquiera puede llamar a tu API con un cliente HTTP y saltarse las dos primeras
   <p>3 · Sí, con cualquier cliente HTTP: por eso la del servidor es la que cuenta.</p>
 </details>
 
----
 
-## Sesión 6 · Modificar y borrar
+### Bloque 3 · Modificar y borrar
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -785,7 +783,7 @@ Cualquiera puede llamar a tu API con un cliente HTTP y saltarse las dos primeras
   </ol>
 </div>
 
-### PUT y PATCH
+#### PUT y PATCH
 
 | Método | Significa | Cuerpo |
 | ------ | --------- | ------ |
@@ -804,7 +802,7 @@ const actualizado = await servicio.modificar(id, cambios);
 
 El error clásico es implementar PUT combinando los campos: entonces tienes dos rutas que hacen lo mismo y un contrato que miente. Si solo vas a ofrecer una, ofrece PATCH y dilo en el contrato.
 
-### Borrar
+#### Borrar
 
 ```javascript
 const borrado = await servicio.borrar(id);
@@ -814,7 +812,7 @@ respuesta.status(204).end();
 
 Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. Sobre el segundo borrado existen dos posturas defendibles —404 porque ya no está, o 204 porque el resultado deseado se cumple— pero elige una **y escríbela en el contrato**.
 
-### Modificaciones que se pisan
+#### Modificaciones que se pisan
 
 <div class="rule">
   <p class="rule-label">Leer, modificar y guardar no es una operación indivisible</p>
@@ -822,7 +820,7 @@ Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. So
   <p>Con un fichero y poco tráfico es improbable, pero conviene saber nombrarlo. Se resuelve con una versión en el recurso, que el cliente devuelve al modificar: si no coincide, el servidor responde 409 en lugar de pisar. Es el mismo problema que en el módulo de servidor se resuelve con transacciones.</p>
 </div>
 
-### Tarea 6 · El CRUD cerrado
+#### Tarea 6 · El CRUD cerrado
 
 1. Implementa PATCH con validación de los campos enviados.
 2. Decide si ofreces PUT; si lo haces, que reemplace de verdad.
@@ -838,7 +836,7 @@ Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. So
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 2</p>
+  <p class="checkpoint-label">Cierre de la sesión 2</p>
   <ul class="checklist">
     <li>Las cinco operaciones funcionan según tu contrato.</li>
     <li>Toda entrada se valida antes de tocar los datos.</li>
@@ -866,11 +864,11 @@ Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. So
 </div>
 ---
 
-## Semana 3 · Capas y consistencia
+## Sesión 3 · Capas y consistencia
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Separar en capas</strong>, <strong>Persistencia y consistencia</strong> y <strong>El contrato de errores en la práctica</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 7 · Separar en capas
+### Bloque 1 · Separar en capas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -890,7 +888,7 @@ Un 204 no lleva cuerpo: la operación ha ido bien y no hay nada que devolver. So
   </ol>
 </div>
 
-### Las tres capas
+#### Las tres capas
 
 <figure class="diagram">
   <figcaption>Qué sabe cada capa</figcaption>
@@ -940,13 +938,13 @@ export async function borrarProducto(peticion, respuesta, next) {
   <p>Y la prueba de fuego: si cambiar el fichero JSON por una base de datos obliga a tocar algo fuera del repositorio, todavía no están separadas. Ese es exactamente el ejercicio de la sesión siguiente.</p>
 </div>
 
-### Por qué molestarse
+#### Por qué molestarse
 
 Con un solo recurso y un fichero, esta separación parece burocracia. Sus tres razones aparecen enseguida: se puede probar el servicio sin levantar un servidor; se puede cambiar el almacén sin tocar la API; y cuando el proyecto tiene ocho recursos, todos se organizan igual y cualquiera sabe dónde mirar.
 
 Es, además, la arquitectura que verás en el módulo de servidor con otros nombres: controlador, servicio y repositorio.
 
-### Tarea 7 · La separación
+#### Tarea 7 · La separación
 
 1. Crea `src/servicio/` y `src/repositorio/` y reparte tu código.
 2. Deja las rutas sin ninguna referencia a ficheros.
@@ -962,7 +960,7 @@ Es, además, la arquitectura que verás en el módulo de servidor con otros nomb
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 7</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Cada capa sabe solo lo suyo.</li>
     <li>Las reglas de negocio están en el servicio.</li>
@@ -978,9 +976,8 @@ Es, además, la arquitectura que verás en el módulo de servidor con otros nomb
   <p>3 · Probar sin servidor, cambiar el almacén sin tocar la API y organizar igual todos los recursos.</p>
 </details>
 
----
 
-## Sesión 8 · Persistencia y consistencia
+### Bloque 2 · Persistencia y consistencia
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1000,7 +997,7 @@ Es, además, la arquitectura que verás en el módulo de servidor con otros nomb
   </ol>
 </div>
 
-### El repositorio como frontera
+#### El repositorio como frontera
 
 ```javascript
 // La interfaz que el servicio conoce
@@ -1012,7 +1009,7 @@ export async function eliminar(id) {}
 
 Mientras el conjunto de funciones y lo que devuelven no cambie, el servicio no distingue si detrás hay un fichero, una base de datos o una API ajena. Eso es lo que hace posible el ejercicio de hoy.
 
-### Datos que llegan rotos
+#### Datos que llegan rotos
 
 ```javascript
 function normalizar(crudo) {
@@ -1032,7 +1029,7 @@ function normalizar(crudo) {
   <p>Normalizar al leer da al resto del programa la garantía de que un producto tiene la forma de un producto. Es la misma idea de validar en el borde, aplicada al borde de abajo.</p>
 </div>
 
-### Sembrar y reiniciar
+#### Sembrar y reiniciar
 
 Un proyecto que se prueba necesita poder volver a un estado conocido:
 
@@ -1042,7 +1039,7 @@ Un proyecto que se prueba necesita poder volver a un estado conocido:
 
 Un script que rellena el fichero con datos de ejemplo. Sin él, cada prueba deja los datos en un estado distinto y los fallos dejan de ser reproducibles.
 
-### Tarea 8 · Cambiar el almacén
+#### Tarea 8 · Cambiar el almacén
 
 1. Escribe la lista de funciones que el servicio espera del repositorio.
 2. Normaliza los datos al leerlos del fichero.
@@ -1058,7 +1055,7 @@ Un script que rellena el fichero con datos de ejemplo. Sin él, cada prueba deja
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 8</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>El repositorio tiene una interfaz clara.</li>
     <li>Los datos se normalizan al leerse.</li>
@@ -1074,9 +1071,8 @@ Un script que rellena el fichero con datos de ejemplo. Sin él, cada prueba deja
   <p>3 · Para poder reproducir los fallos partiendo siempre del mismo estado.</p>
 </details>
 
----
 
-## Sesión 9 · El contrato de errores en la práctica
+### Bloque 3 · El contrato de errores en la práctica
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1096,7 +1092,7 @@ Un script que rellena el fichero con datos de ejemplo. Sin él, cada prueba deja
   </ol>
 </div>
 
-### La traducción, en un solo sitio
+#### La traducción, en un solo sitio
 
 ```javascript
 const ESTADOS = {
@@ -1125,7 +1121,7 @@ export function manejadorDeErrores(error, peticion, respuesta, next) {
 
 Añadir un tipo de error nuevo se reduce a añadir una línea a la tabla, sin que ninguna ruta necesite conocer qué código corresponde a su fallo.
 
-### El identificador de petición
+#### El identificador de petición
 
 ```javascript
 export function identificar(peticion, respuesta, next) {
@@ -1141,7 +1137,7 @@ export function identificar(peticion, respuesta, next) {
   <p>Es lo que permite no filtrar detalles internos sin quedarte ciego para diagnosticar.</p>
 </div>
 
-### El cliente, del otro lado
+#### El cliente, del otro lado
 
 ```javascript
 async function pedir(url, opciones) {
@@ -1155,7 +1151,7 @@ async function pedir(url, opciones) {
 
 Aquí se cobra el contrato: **una sola función** en el cliente sirve para toda la API, hoy y cuando añadas rutas. Si cada error tuviera una forma distinta, esta función no podría existir.
 
-### Tarea 9 · Errores de punta a punta
+#### Tarea 9 · Errores de punta a punta
 
 1. Define los cinco tipos de error de tu aplicación.
 2. Escribe la tabla de traducción y el manejador central.
@@ -1171,7 +1167,7 @@ Aquí se cobra el contrato: **una sola función** en el cliente sirve para toda 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 3</p>
+  <p class="checkpoint-label">Cierre de la sesión 3</p>
   <ul class="checklist">
     <li>Las tres capas están separadas de verdad.</li>
     <li>Puedes cambiar de almacén sin tocar rutas ni servicio.</li>
@@ -1199,11 +1195,11 @@ Aquí se cobra el contrato: **una sola función** en el cliente sirve para toda 
 </div>
 ---
 
-## Semana 4 · La web y su API
+## Sesión 4 · La web y su API
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>HTML generado en el servidor</strong>, <strong>El cliente consume su propia API</strong> y <strong>Formularios de extremo a extremo</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 10 · HTML generado en el servidor
+### Bloque 1 · HTML generado en el servidor
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1223,7 +1219,7 @@ Aquí se cobra el contrato: **una sola función** en el cliente sirve para toda 
   </ol>
 </div>
 
-### Las dos formas de pintar
+#### Las dos formas de pintar
 
 | Dónde se genera | Ventajas | Inconvenientes |
 | --------------- | -------- | -------------- |
@@ -1232,7 +1228,7 @@ Aquí se cobra el contrato: **una sola función** en el cliente sirve para toda 
 
 No hay que elegir una para siempre: lo habitual es que la primera carga llegue hecha del servidor y la interacción se resuelva en el cliente. Es exactamente lo que vas a montar: la página de catálogo llega renderizada, y los filtros siguen funcionando en el navegador como en la UD4.
 
-### Generar HTML con plantillas del lenguaje
+#### Generar HTML con plantillas del lenguaje
 
 ```javascript
 export function paginaCatalogo(productos) {
@@ -1265,7 +1261,7 @@ function tarjeta(producto) {
 
 No hace falta instalar un motor de plantillas: las plantillas del lenguaje, las de la UD3, sirven perfectamente para esto. Un motor aporta herencia de plantillas y sintaxis propia; a cambio, una dependencia más y un lenguaje más que aprender.
 
-### Escapar no es opcional
+#### Escapar no es opcional
 
 ```javascript
 const ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
@@ -1282,7 +1278,7 @@ export function escapar(valor) {
   <p>Y ojo con el sitio donde insertas: escapar sirve para el contenido y para los atributos entrecomillados. Meter datos de fuera dentro de un bloque de código de la página o en una URL requiere reglas distintas; lo sensato es no hacerlo.</p>
 </div>
 
-### Tarea 10 · La página del servidor
+#### Tarea 10 · La página del servidor
 
 1. Escribe `src/vistas/catalogo.js` que genere la página completa.
 2. Escribe y usa la función de escapado en todos los datos.
@@ -1298,7 +1294,7 @@ export function escapar(valor) {
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 10</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Generas HTML en el servidor con plantillas del lenguaje.</li>
     <li>Escapas todo dato antes de insertarlo.</li>
@@ -1314,9 +1310,8 @@ export function escapar(valor) {
   <p>3 · Que se ejecute código ajeno en el navegador de cualquier visitante.</p>
 </details>
 
----
 
-## Sesión 11 · El cliente consume su propia API
+### Bloque 2 · El cliente consume su propia API
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1336,7 +1331,7 @@ export function escapar(valor) {
   </ol>
 </div>
 
-### El mismo origen
+#### El mismo origen
 
 Como el cliente se sirve desde el mismo servidor que la API, las peticiones son relativas y no cruzan de origen:
 
@@ -1346,7 +1341,7 @@ const productos = await pedir("/api/productos");
 
 Sin dominio, sin puerto y sin CORS. Es una de las razones prácticas de servir ambas cosas juntas mientras el proyecto es pequeño.
 
-### Filtrar: ¿en el cliente o en el servidor?
+#### Filtrar: ¿en el cliente o en el servidor?
 
 | Dónde | Cuándo conviene |
 | ----- | --------------- |
@@ -1361,7 +1356,7 @@ Sin dominio, sin puerto y sin CORS. Es una de las razones prácticas de servir a
 
 Toma la decisión, escríbela en tus notas y sé coherente.
 
-### Los cuatro estados, ahora de verdad
+#### Los cuatro estados, ahora de verdad
 
 El estado que montaste en la UD4 ya tenía sitio para `cargando` y `error`. Ahora esos campos dejan de ser una simulación:
 
@@ -1382,10 +1377,10 @@ async function cargar() {
 }
 ```
 
-### Tarea 11 · Conectar
+#### Tarea 11 · Conectar
 
 1. Sustituye los datos escritos a mano por una llamada a tu API.
-2. Usa la función `pedir` de la sesión 9 para todas las llamadas.
+2. Usa la función `pedir` de la sesión 3 para todas las llamadas.
 3. Decide dónde filtras y déjalo escrito.
 4. Comprueba los cuatro estados apagando el servidor y simulando red lenta.
 5. Añade el botón de reintentar.
@@ -1398,7 +1393,7 @@ async function cargar() {
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 11</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>El cliente consume tu API con rutas relativas.</li>
     <li>Una sola función trata todas las respuestas y errores.</li>
@@ -1414,9 +1409,8 @@ async function cargar() {
   <p>3 · Mostrar los detalles del error junto a los campos que los provocaron.</p>
 </details>
 
----
 
-## Sesión 12 · Formularios de extremo a extremo
+### Bloque 3 · Formularios de extremo a extremo
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1436,7 +1430,7 @@ async function cargar() {
   </ol>
 </div>
 
-### El recorrido completo
+#### El recorrido completo
 
 <figure class="diagram">
   <figcaption>De un campo al fichero y de vuelta</figcaption>
@@ -1477,7 +1471,7 @@ formulario.addEventListener("submit", async (evento) => {
 });
 ```
 
-### Los detalles del servidor, en su campo
+#### Los detalles del servidor, en su campo
 
 ```javascript
 function mostrarErroresDeCampo(detalles) {
@@ -1495,11 +1489,11 @@ function mostrarErroresDeCampo(detalles) {
   <p>Aquí se ve para qué servía diseñar el contrato antes de escribir la primera ruta.</p>
 </div>
 
-### Dos detalles que se olvidan siempre
+#### Dos detalles que se olvidan siempre
 
 Deshabilitar el botón mientras se envía evita el doble envío, que con POST crea dos productos. Anunciar además el resultado en la región activa de la UD4 consigue que el éxito no sea solo un cambio visual que algunas personas no perciben.
 
-### Tarea 12 · El formulario real
+#### Tarea 12 · El formulario real
 
 1. Añade el formulario de alta a tu página, con su marcado accesible.
 2. Envía con `fetch` y trata las dos respuestas posibles.
@@ -1515,7 +1509,7 @@ Deshabilitar el botón mientras se envía evita el doble envío, que con POST cr
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 4</p>
+  <p class="checkpoint-label">Cierre de la sesión 4</p>
   <ul class="checklist">
     <li>La primera carga llega generada del servidor.</li>
     <li>El cliente consume su propia API.</li>
@@ -1543,11 +1537,11 @@ Deshabilitar el botón mientras se envía evita el doble envío, que con POST cr
 </div>
 ---
 
-## Semana 5 · Listo para publicar
+## Sesión 5 · Listo para publicar
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Configuración, secretos y CORS</strong>, <strong>Seguridad mínima</strong> y <strong>Probar la API</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 13 · Configuración, secretos y CORS
+### Bloque 1 · Configuración, secretos y CORS
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1567,7 +1561,7 @@ Deshabilitar el botón mientras se envía evita el doble envío, que con POST cr
   </ol>
 </div>
 
-### Toda la configuración, en un módulo
+#### Toda la configuración, en un módulo
 
 ```javascript
 // src/configuracion.js
@@ -1595,7 +1589,7 @@ export const configuracion = {
   <p>Comprobarlo todo al arrancar convierte un fallo intermitente en un mensaje claro, antes de que nadie llegue a usar la aplicación.</p>
 </div>
 
-### CORS, desde el otro lado
+#### CORS, desde el otro lado
 
 En la UD4 sufriste CORS como cliente. Ahora decides tú:
 
@@ -1621,7 +1615,7 @@ app.use((peticion, respuesta, next) => {
 
 Tu cliente, servido desde el mismo origen, no necesita nada de esto. Lo configuras para quien venga de fuera.
 
-### Tarea 13 · Configurar
+#### Tarea 13 · Configurar
 
 1. Crea el módulo de configuración con valores por defecto y comprobaciones.
 2. Haz que la aplicación se niegue a arrancar si falta una variable obligatoria.
@@ -1637,7 +1631,7 @@ Tu cliente, servido desde el mismo origen, no necesita nada de esto. Lo configur
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 13</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Ningún valor de configuración vive en el código.</li>
     <li>La aplicación no arranca si falta algo imprescindible.</li>
@@ -1653,9 +1647,8 @@ Tu cliente, servido desde el mismo origen, no necesita nada de esto. Lo configur
   <p>3 · Los orígenes concretos que deben poder llamar desde un navegador.</p>
 </details>
 
----
 
-## Sesión 14 · Seguridad mínima
+### Bloque 2 · Seguridad mínima
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1675,7 +1668,7 @@ Tu cliente, servido desde el mismo origen, no necesita nada de esto. Lo configur
   </ol>
 </div>
 
-### La lista mínima
+#### La lista mínima
 
 | Riesgo | Protección |
 | ------ | ---------- |
@@ -1688,7 +1681,7 @@ Tu cliente, servido desde el mismo origen, no necesita nada de esto. Lo configur
 | Escritura sin permiso | Autorización en las rutas que modifican |
 | Secretos filtrados | Todo en el entorno, nada en el repositorio |
 
-### Aplicarlas
+#### Aplicarlas
 
 ```javascript
 app.disable("x-powered-by");
@@ -1718,7 +1711,7 @@ export function limitar(peticion, respuesta, next) {
 
 Es un limitador de andar por casa —vive en memoria y se pierde al reiniciar— pero enseña la idea, y el 429 es el código que corresponde.
 
-### Autorización para lo que modifica
+#### Autorización para lo que modifica
 
 ```javascript
 export function requiereClave(peticion, respuesta, next) {
@@ -1741,7 +1734,7 @@ router.delete("/:id", requiereClave, borrarProducto);
 
 Una regla no admite excepción: si algún día almacenas contraseñas, se guardan cifradas con una función pensada para eso, nunca en claro ni con un resumen sin sal. En este módulo directamente no guardamos ninguna.
 
-### Tarea 14 · Blindar
+#### Tarea 14 · Blindar
 
 1. Aplica el límite de tamaño y quita la cabecera del framework.
 2. Escribe el limitador de peticiones y devuelve 429.
@@ -1757,7 +1750,7 @@ Una regla no admite excepción: si algún día almacenas contraseñas, se guarda
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 14</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Las operaciones que modifican exigen autorización.</li>
     <li>Hay límites de tamaño y de frecuencia.</li>
@@ -1773,9 +1766,8 @@ Una regla no admite excepción: si algún día almacenas contraseñas, se guarda
   <p>3 · En el servidor, antes del manejador de la ruta.</p>
 </details>
 
----
 
-## Sesión 15 · Probar la API
+### Bloque 3 · Probar la API
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1795,7 +1787,7 @@ Una regla no admite excepción: si algún día almacenas contraseñas, se guarda
   </ol>
 </div>
 
-### El ejecutor incluido
+#### El ejecutor incluido
 
 ```javascript
 // pruebas/productos.test.js
@@ -1845,11 +1837,11 @@ describe("API de productos", () => {
 
 Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene observar tres detalles que determinan su funcionamiento:
 
-* El `listen(0)` pide un puerto libre cualquiera, así que las pruebas no chocan con tu servidor de desarrollo. Ahí se cobra haber separado la aplicación del arranque en la sesión 3.
+* El `listen(0)` pide un puerto libre cualquiera, así que las pruebas no chocan con tu servidor de desarrollo. Ahí se cobra haber separado la aplicación del arranque en la sesión 1.
 * El `after` cierra el servidor. Sin él, el proceso se queda vivo cuando las pruebas ya han terminado y `npm test` no vuelve nunca.
-* El fichero de entorno propio da a las pruebas su clave y su ruta de datos. Recuerda que la configuración de la sesión 13 corta el arranque si falta una variable obligatoria: sin ese fichero, importar la aplicación desde una prueba mata el proceso antes del primer `assert`.
+* El fichero de entorno propio da a las pruebas su clave y su ruta de datos. Recuerda que la configuración de la sesión 5 corta el arranque si falta una variable obligatoria: sin ese fichero, importar la aplicación desde una prueba mata el proceso antes del primer `assert`.
 
-### Qué probar
+#### Qué probar
 
 <figure class="diagram">
   <figcaption>Lo que no puede faltar</figcaption>
@@ -1868,7 +1860,7 @@ Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene o
   <p>Y usa datos propios de las pruebas, no los tuyos de desarrollo: una batería que depende de que exista el producto 7 falla el día que alguien lo borra.</p>
 </div>
 
-### Tarea 15 · La batería
+#### Tarea 15 · La batería
 
 1. Añade el script de pruebas al `package.json`.
 2. Escribe al menos ocho pruebas: caminos felices, errores y límites.
@@ -1884,7 +1876,7 @@ Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene o
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 5</p>
+  <p class="checkpoint-label">Cierre de la sesión 5</p>
   <ul class="checklist">
     <li>La configuración vive fuera del código y se comprueba al arrancar.</li>
     <li>Las operaciones que modifican están protegidas.</li>
@@ -1912,11 +1904,11 @@ Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene o
 </div>
 ---
 
-## Semana 6 · Cierre del módulo
+## Sesión 6 · Cierre del módulo
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>El proyecto completo</strong>, <strong>Documentar y desplegar</strong> y <strong>Defensa técnica y entrega final</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 16 · El proyecto completo
+### Bloque 1 · El proyecto completo
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1936,7 +1928,7 @@ Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene o
   </ol>
 </div>
 
-### La prueba de la instalación limpia
+#### La prueba de la instalación limpia
 
 <figure class="diagram">
   <figcaption>Lo que hará quien reciba tu proyecto</figcaption>
@@ -1952,7 +1944,7 @@ Sin instalar nada: el ejecutor y las aserciones se incluyen con Node. Conviene o
 
 Hazlo tú, de verdad, en otra carpeta. Cada tropiezo es un fallo que tu corrector encontrará también.
 
-### El recorrido funcional
+#### El recorrido funcional
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lo que tiene que funcionar seguido</p>
@@ -1968,7 +1960,7 @@ Hazlo tú, de verdad, en otra carpeta. Cada tropiezo es un fallo que tu correcto
   </ul>
 </div>
 
-### Lo que hay que cerrar
+#### Lo que hay que cerrar
 
 Reserva la última media hora para lo que siempre queda: rutas del contrato sin implementar, códigos de estado que no coinciden con lo documentado, mensajes de depuración olvidados, el README desactualizado y el `.env.example` sin las variables nuevas.
 
@@ -1978,9 +1970,8 @@ Reserva la última media hora para lo que siempre queda: rutas del contrato sin 
   <div><strong>Reto</strong><span>Añade un segundo recurso completo, con su router, su servicio y sus pruebas.</span></div>
 </div>
 
----
 
-## Sesión 17 · Documentar y desplegar
+### Bloque 2 · Documentar y desplegar
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2000,7 +1991,7 @@ Reserva la última media hora para lo que siempre queda: rutas del contrato sin 
   </ol>
 </div>
 
-### El README que sirve
+#### El README que sirve
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lo que no puede faltar</p>
@@ -2017,7 +2008,7 @@ Reserva la última media hora para lo que siempre queda: rutas del contrato sin 
 
 Ese último punto es el que distingue un README de un proyecto de clase de uno profesional: decir qué no hace y por qué evita que quien lo lea lo tome por un fallo.
 
-### Publicar
+#### Publicar
 
 ```json
 {
@@ -2042,7 +2033,7 @@ Casi todas las plataformas gratuitas hacen lo mismo: clonan tu repositorio, ejec
   <p>Es exactamente el motivo por el que existen las bases de datos gestionadas, y el problema con el que empieza el módulo de servidor. De momento, sabe explicarlo y siembra los datos al arrancar.</p>
 </div>
 
-### Tarea 17 · Publicado
+#### Tarea 17 · Publicado
 
 El README se trae escrito de casa: la hora de clase es para desplegar, que es donde aparecen los problemas que no se pueden prever.
 
@@ -2060,7 +2051,7 @@ El README se trae escrito de casa: la hora de clase es para desplegar, que es do
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 17</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Tu aplicación tiene una URL pública.</li>
     <li>Las variables están en la plataforma, no en el repositorio.</li>
@@ -2069,9 +2060,8 @@ El README se trae escrito de casa: la hora de clase es para desplegar, que es do
   </ul>
 </div>
 
----
 
-## Sesión 18 · Defensa técnica y entrega final
+### Bloque 3 · Defensa técnica y entrega final
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2082,7 +2072,7 @@ El README se trae escrito de casa: la hora de clase es para desplegar, que es do
   </ol>
 </div>
 
-### La auditoría final del módulo
+#### La auditoría final del módulo
 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría · la API</p>
@@ -2118,7 +2108,7 @@ El README se trae escrito de casa: la hora de clase es para desplegar, que es do
   </ul>
 </div>
 
-### Revisión por pares
+#### Revisión por pares
 
 Intercambia proyectos y, sin preguntar nada, dedica veinte minutos a:
 
@@ -2128,7 +2118,7 @@ Intercambia proyectos y, sin preguntar nada, dedica veinte minutos a:
 4. Ejecutar sus pruebas y romper algo para ver si lo detectan.
 5. Encontrar dónde vive una regla de negocio y explicarla en voz alta.
 
-### La defensa
+#### La defensa
 
 Tres minutos por persona, mientras el resto sigue con la revisión. Salen cuatro preguntas de esta lista, elegidas al azar, y cubren el módulo entero y no solo esta unidad:
 
@@ -2148,7 +2138,7 @@ Tres minutos por persona, mientras el resto sigue con la revisión. Salen cuatro
 
 Las dos últimas valen tanto como las demás: saber qué te costó y qué harías distinto es la prueba de que has entendido lo que hiciste.
 
-### Evaluación
+#### Evaluación
 
 | Criterio | Puntos |
 | ---------------------------------------------------------- | -----: |
@@ -2163,7 +2153,7 @@ Las dos últimas valen tanto como las demás: saber qué te costó y qué haría
 
 No puntúa el tamaño del proyecto. Puntúa que **el contrato se sostenga**: que cada ruta responda lo que promete, que ninguna entrada se crea sin validar y que puedas defender por qué está hecho así.
 
-### Entrega final del módulo
+#### Entrega final del módulo
 
 <div class="unit-deliverable">
   <p>El repositorio con la aplicación completa: cliente y API servidos juntos, capas separadas, contrato documentado, configuración por entorno, seguridad mínima y pruebas en verde. La URL del despliegue. El README con sus siete apartados. Las tres listas de auditoría marcadas. La revisión del compañero por escrito. Finalmente, un documento de una página con las tres decisiones técnicas de las que estés más satisfecho y las tres que cambiarías.</p>

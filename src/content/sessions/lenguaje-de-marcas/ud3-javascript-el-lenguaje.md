@@ -5,7 +5,7 @@ section: "ud-03"
 order: 3
 lang: "es"
 summary: "La tercera capa de la web empieza por el lenguaje. Antes de tocar la página aprendemos a razonar con datos, decisiones, funciones y estructuras, porque un botón que no funciona casi nunca es un problema del botón: es un problema de lógica que todavía no sabes leer."
-duration: "18 sesiones · 6 semanas"
+duration: "6 sesiones de 3 horas · 18 horas"
 modality: "Individual, con retos y revisión en pareja"
 deliverable: "Un módulo de catálogo escrito en JavaScript puro: datos en memoria, funciones de búsqueda, filtrado y ordenación, validación de entradas y errores controlados, comprobado desde la consola."
 outcomes:
@@ -167,22 +167,22 @@ Si vas justo de tiempo, prioriza lo esencial. Un `reduce` elegante no compensa n
 
 ---
 
-## Plan de trabajo semanal
+## Plan de trabajo por sesiones
 
-| Semana | Bloque temático | Práctica central | Horas |
+| Sesión | Contenido de las tres horas | Práctica central | Horas |
 | :---: | :--- | :--- | :---: |
-| **Semana 1** | Datos, tipos y expresiones | Consola, variables, conversión y comparaciones | 3 h |
-| **Semana 2** | Decisiones y repeticiones | Condicionales, bucles y programas con reglas | 3 h |
-| **Semana 3** | Funciones y depuración | Descomponer un problema y depurar con criterio | 3 h |
-| **Semana 4** | Arrays y objetos | El catálogo en memoria y sus consultas | 3 h |
-| **Semana 5** | Organizar y proteger el código | Módulos, errores y validación | 3 h |
-| **Semana 6** | Integración y entrega | Reto acumulativo, refactorización y revisión por pares | 3 h |
+| **Sesión 1** | Datos, tipos y expresiones | Consola, variables, conversión y comparaciones | 3 h |
+| **Sesión 2** | Decisiones y repeticiones | Condicionales, bucles y programas con reglas | 3 h |
+| **Sesión 3** | Funciones y depuración | Descomponer un problema y depurar con criterio | 3 h |
+| **Sesión 4** | Arrays y objetos | El catálogo en memoria y sus consultas | 3 h |
+| **Sesión 5** | Organizar y proteger el código | Módulos, errores y validación | 3 h |
+| **Sesión 6** | Integración y entrega | Reto acumulativo, refactorización y revisión por pares | 3 h |
 | **Total** | | **Un módulo de catálogo en JavaScript puro** | **18 h** |
 
-Cada sesión dura una hora y mantiene el ritmo de las unidades anteriores:
+Cada sesión dura tres horas, repartidas en tres bloques de una hora. Cada bloque mantiene el ritmo de las unidades anteriores:
 
 <figure class="diagram">
-  <figcaption>El ritmo de cada sesión</figcaption>
+  <figcaption>El ritmo de cada bloque de una hora</figcaption>
   <ol class="flow flow--row flow--chain">
     <li>Recupera · 5 min</li>
     <li>Aprende y predice · 10–20 min</li>
@@ -202,11 +202,11 @@ El reparto real del tiempo es este:
 
 ---
 
-## Semana 1 · Datos, tipos y expresiones
+## Sesión 1 · Datos, tipos y expresiones
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Dónde se ejecuta JavaScript</strong>, <strong>Variables, tipos y valores</strong> y <strong>Operadores, conversión y comparación</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 1 · Dónde se ejecuta JavaScript
+### Bloque 1 · Dónde se ejecuta JavaScript
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -226,7 +226,7 @@ El reparto real del tiempo es este:
   </ol>
 </div>
 
-### Un lenguaje que vive dentro del navegador
+#### Un lenguaje que vive dentro del navegador
 
 Todo navegador moderno lleva dentro un motor de JavaScript: un programa que lee tu código y lo ejecuta. No hay que instalar nada ni compilar nada. Abres la consola, escribes una expresión y te responde.
 
@@ -241,7 +241,7 @@ new Date().getFullYear()
 
 Ya estás programando. La consola evalúa lo que escribes y muestra el resultado.
 
-### Escribirlo en un fichero
+#### Escribirlo en un fichero
 
 Escribir en la consola sirve para probar; lo que se conserva va en un fichero. Crea `js/main.js`:
 
@@ -261,7 +261,7 @@ Recarga la página, abre la consola y busca el mensaje. Si aparece, el enlace fu
 
 Le dice al navegador: descarga el fichero mientras lees el documento, y ejecútalo cuando el documento esté completo. Sin `defer`, el código se ejecuta antes de que exista la página, y en la UD4 eso significaría buscar elementos que todavía no están.
 
-### Los tres sitios donde puede ir el código
+#### Los tres sitios donde puede ir el código
 
 | Forma | Cómo se escribe | Cuándo |
 | ----- | --------------- | ------ |
@@ -271,7 +271,7 @@ Le dice al navegador: descarga el fichero mientras lees el documento, y ejecúta
 
 Las razones son las mismas que en CSS: reutilización, caché y mantener separadas las tres capas. Un `onclick` mete comportamiento dentro de la estructura, que es justo lo que llevamos dos unidades evitando.
 
-### Leer un error en vez de asustarse
+#### Leer un error en vez de asustarse
 
 Escribe esto a propósito en `main.js`:
 
@@ -293,7 +293,7 @@ Tiene tres partes y las tres importan: el **tipo** de error (`ReferenceError`), 
   <p>Cuando algo falla, la consola suele llenarse. Casi siempre los errores siguientes son consecuencia del primero. Sube arriba del todo, arregla ese, recarga y vuelve a mirar.</p>
 </div>
 
-### Tarea 1 · Tu primer script
+#### Tarea 1 · Tu primer script
 
 1. Crea `js/main.js` y enlázalo en `index.html` con `defer`.
 2. Escribe tres `console.log` con tu nombre, el nombre de tu proyecto y el año actual calculado.
@@ -308,7 +308,7 @@ Tiene tres partes y las tres importan: el **tipo** de error (`ReferenceError`), 
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Existe <code>js/main.js</code> y se ejecuta al cargar la página.</li>
     <li>Sabes por qué usamos un fichero externo y no un atributo en la etiqueta.</li>
@@ -333,9 +333,8 @@ Tiene tres partes y las tres importan: el **tipo** de error (`ReferenceError`), 
   <p>3 · Porque mezcla comportamiento con estructura, y pierde la reutilización y la caché del fichero externo.</p>
 </details>
 
----
 
-## Sesión 2 · Variables, tipos y valores
+### Bloque 2 · Variables, tipos y valores
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -355,7 +354,7 @@ Tiene tres partes y las tres importan: el **tipo** de error (`ReferenceError`), 
   </ol>
 </div>
 
-### Guardar un valor con un nombre
+#### Guardar un valor con un nombre
 
 ```javascript
 const nombre = "Teclado mecánico";
@@ -377,7 +376,7 @@ Una variable es un nombre para un valor. Se declara una vez y se usa muchas.
   <p><code>var</code> no lo usamos porque no respeta los bloques y permite redeclarar la misma variable sin avisar. Aparecerá en código antiguo y en respuestas de IA; sustitúyelo.</p>
 </div>
 
-### Los tipos que vas a usar
+#### Los tipos que vas a usar
 
 ```javascript
 const texto = "Teclado";        // string
@@ -401,7 +400,7 @@ typeof undefined   // "undefined"
 typeof null        // "object"  ← un error histórico del lenguaje
 ```
 
-### Textos: comillas y plantillas
+#### Textos: comillas y plantillas
 
 ```javascript
 const producto = "Teclado";
@@ -413,7 +412,7 @@ const mejor = `Has elegido ${unidades} × ${producto}`;
 
 Las **plantillas** —escritas con acento grave— permiten insertar valores con `${}` y ocupar varias líneas. A partir de aquí, para construir texto usamos siempre plantillas: concatenar con `+` es donde nacen la mitad de los espacios perdidos.
 
-### Números: uno solo, y con un aviso
+#### Números: uno solo, y con un aviso
 
 JavaScript tiene un único tipo numérico, en coma flotante. Eso trae una sorpresa clásica:
 
@@ -429,7 +428,7 @@ total.toFixed(2);            // "0.30"  ← ojo: devuelve texto
 Number(total.toFixed(2));    // 0.3
 ```
 
-### Nombrar bien no es cosmética
+#### Nombrar bien no es cosmética
 
 ```javascript
 const p = 89.9;              // ¿precio? ¿peso? ¿página?
@@ -438,7 +437,7 @@ const precioConIva = 89.9;   // se lee solo
 
 En este módulo: `camelCase`, en castellano o en inglés pero **sin mezclar**, nombres que digan qué contienen, y `MAYUSCULAS_CON_GUION` solo para constantes de configuración.
 
-### Tarea 2 · La ficha de un producto
+#### Tarea 2 · La ficha de un producto
 
 En `js/main.js`, con datos de **tu** tema:
 
@@ -455,7 +454,7 @@ En `js/main.js`, con datos de **tu** tema:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 2</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Distingues <code>const</code> de <code>let</code> y usas <code>const</code> por defecto.</li>
     <li>Nombras los cinco tipos que vas a usar.</li>
@@ -480,9 +479,8 @@ En `js/main.js`, con datos de **tu** tema:
   <p>3 · Porque ignora los bloques y permite redeclarar sin avisar, así que oculta errores.</p>
 </details>
 
----
 
-## Sesión 3 · Operadores, conversión y comparación
+### Bloque 3 · Operadores, conversión y comparación
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -502,7 +500,7 @@ En `js/main.js`, con datos de **tu** tema:
   </ol>
 </div>
 
-### Los operadores
+#### Los operadores
 
 ```javascript
 7 + 2      // 9
@@ -524,7 +522,7 @@ stock -= 2;    // 13
 stock++;       // 14
 ```
 
-### La conversión automática, el gran tropiezo
+#### La conversión automática, el gran tropiezo
 
 JavaScript, cuando mezclas tipos, convierte por su cuenta:
 
@@ -559,7 +557,7 @@ parseFloat("10.5") // 10.5
 Number.isNaN(Number("hola"))   // true
 ```
 
-### Comparar: dos iguales frente a tres
+#### Comparar: dos iguales frente a tres
 
 ```javascript
 5 == "5"     // true   compara después de convertir
@@ -573,7 +571,7 @@ null === undefined   // false
   <p>Siempre. El doble igual convierte antes de comparar, y esas conversiones tienen casos que nadie recuerda de memoria. Escribir un carácter más no cuesta nada y elimina una familia entera de errores.</p>
 </div>
 
-### Valores «verdaderos» y «falsos»
+#### Valores «verdaderos» y «falsos»
 
 En un `if`, JavaScript pregunta si el valor es *truthy* o *falsy*. Los falsos son exactamente estos seis:
 
@@ -608,7 +606,7 @@ const stock = recibido ?? 0;                 // solo si es null o undefined
 
 El segundo suele ser el que quieres: el `||` también sustituiría un `0` legítimo.
 
-### Tarea 3 · Predice y comprueba
+#### Tarea 3 · Predice y comprueba
 
 Crea `js/predicciones.js`. Para cada expresión, **escribe primero tu predicción en un comentario** y después ejecútala:
 
@@ -641,7 +639,7 @@ Después, sobre tu proyecto:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 3</p>
+  <p class="checkpoint-label">Checkpoint · fin de la sesión 1</p>
   <ul class="checklist">
     <li>Predices el resultado de una mezcla de tipos y aciertas.</li>
     <li>Conviertes la entrada al leerla y compruebas <code>NaN</code>.</li>
@@ -651,7 +649,7 @@ Después, sobre tu proyecto:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 1</p>
+  <p class="checkpoint-label">Cierre de la sesión 1</p>
   <ul class="checklist">
     <li>Tu código se ejecuta desde un fichero externo en todo el sitio.</li>
     <li>Modelas un producto con variables bien nombradas y del tipo correcto.</li>
@@ -661,7 +659,7 @@ Después, sobre tu proyecto:
 </div>
 
 <details class="aside aside--extra">
-  <summary>Ver respuestas de la sesión 3</summary>
+  <summary>Ver respuestas de la sesión 1</summary>
   <p>De arriba abajo: <code>"53"</code>, <code>2</code>, <code>6</code>, <code>true</code> (convierte a número), <code>false</code> (compara texto con texto, y el «1» va antes que el «9»), <code>true</code>, <code>false</code> (nada es igual a <code>NaN</code>), <code>true</code>, <code>1</code>, <code>NaN</code>, <code>0</code>, <code>true</code> (es un texto no vacío).</p>
 </details>
 
@@ -677,11 +675,11 @@ Después, sobre tu proyecto:
 </div>
 ---
 
-## Semana 2 · Decisiones y repeticiones
+## Sesión 2 · Decisiones y repeticiones
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Condicionales</strong>, <strong>Bucles</strong> y <strong>Taller · programas con reglas</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 4 · Condicionales
+### Bloque 1 · Condicionales
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -701,7 +699,7 @@ Después, sobre tu proyecto:
   </ol>
 </div>
 
-### La decisión más simple
+#### La decisión más simple
 
 ```javascript
 const total = 62;
@@ -731,7 +729,7 @@ if (stock === 0) {
   <p>Ordena siempre de lo más específico a lo más general, y compruébalo con el caso límite: 0, 5, 50, el valor exacto de la frontera.</p>
 </div>
 
-### Los límites, uno por uno
+#### Los límites, uno por uno
 
 Casi todos los errores de condicionales están en la frontera. Para la regla «envío gratis a partir de 50 €», prueba con 49,99, con 50 y con 50,01. Si la regla dice «a partir de», es `>=`. Si dice «más de», es `>`.
 
@@ -744,7 +742,7 @@ Casi todos los errores de condicionales están en la frontera. Para la regla «e
 
 Una advertencia: `10 <= n <= 20` **no** hace lo que parece. Se evalúa por partes y acaba comparando un booleano con un número.
 
-### El ternario, para elegir un valor
+#### El ternario, para elegir un valor
 
 ```javascript
 const etiqueta = stock > 0 ? "Disponible" : "Agotado";
@@ -752,7 +750,7 @@ const etiqueta = stock > 0 ? "Disponible" : "Agotado";
 
 Sirve cuando el `if` solo elige entre dos valores. Si dentro hay varias instrucciones, o si necesitas anidar ternarios, usa un `if`: se lee mucho mejor.
 
-### `switch`, cuando comparas una cosa contra una lista
+#### `switch`, cuando comparas una cosa contra una lista
 
 ```javascript
 switch (categoria) {
@@ -770,7 +768,7 @@ switch (categoria) {
 
 Compara con el triple igual, así que `"3"` no coincide con `3`. Si se omite un `break`, la ejecución continúa en el caso siguiente: es la fuente de errores clásica de esta estructura.
 
-### Tarea 4 · Las reglas de tu proyecto
+#### Tarea 4 · Las reglas de tu proyecto
 
 En `js/main.js`:
 
@@ -787,7 +785,7 @@ En `js/main.js`:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 4</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Traduces una regla escrita en castellano a una condición correcta.</li>
     <li>Compruebas siempre el valor de la frontera.</li>
@@ -812,9 +810,8 @@ En `js/main.js`:
   <p>3 · La ejecución continúa en el caso siguiente y se aplican también sus instrucciones.</p>
 </details>
 
----
 
-## Sesión 5 · Bucles
+### Bloque 2 · Bucles
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -834,7 +831,7 @@ En `js/main.js`:
   </ol>
 </div>
 
-### Las tres formas, y cuándo se usa cada una
+#### Las tres formas, y cuándo se usa cada una
 
 ```javascript
 // Un número conocido de vueltas, con índice
@@ -861,7 +858,7 @@ while (restante > 0) {
 | `while` | No sabes de antemano cuántas vueltas serán |
 | `for...in` | Casi nunca: recorre claves, y trae sorpresas en arrays |
 
-### El acumulador
+#### El acumulador
 
 El patrón que más vas a repetir:
 
@@ -890,7 +887,7 @@ for (const precio of precios) {
   <p>Antes de ejecutar un <code>while</code>, responde a esto: ¿qué línea, dentro del bucle, acerca la condición a hacerse falsa? Si no la encuentras, todavía no ejecutes.</p>
 </div>
 
-### Salir antes: `break` y `continue`
+#### Salir antes: `break` y `continue`
 
 ```javascript
 for (const producto of productos) {
@@ -902,7 +899,7 @@ for (const producto of productos) {
 
 Úsalos con moderación: un bucle con cuatro `break` repartidos es más difícil de seguir que un bucle con una condición bien escrita.
 
-### El caso vacío
+#### El caso vacío
 
 ```javascript
 const productos = [];
@@ -918,7 +915,7 @@ Un bucle sobre una lista vacía no falla: simplemente no se ejecuta. Lo que fall
 const media = total / productos.length;   // 0 / 0 → NaN
 ```
 
-### Tarea 5 · Recorrer el catálogo
+#### Tarea 5 · Recorrer el catálogo
 
 Con una lista de al menos seis precios de tu tema:
 
@@ -935,7 +932,7 @@ Con una lista de al menos seis precios de tu tema:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 5</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Eliges el bucle adecuado y justificas por qué.</li>
     <li>Usas el patrón acumulador con soltura.</li>
@@ -960,9 +957,8 @@ Con una lista de al menos seis precios de tu tema:
   <p>3 · <code>NaN</code>, porque divides entre cero. Hay que comprobar la longitud antes y devolver 0 o un aviso.</p>
 </details>
 
----
 
-## Sesión 6 · Taller · programas con reglas
+### Bloque 3 · Taller · programas con reglas
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -982,7 +978,7 @@ Con una lista de al menos seis precios de tu tema:
   </ol>
 </div>
 
-### Antes de escribir código
+#### Antes de escribir código
 
 <figure class="diagram">
   <figcaption>Cómo se ataca un enunciado</figcaption>
@@ -996,7 +992,7 @@ Con una lista de al menos seis precios de tu tema:
 
 Escribir esas cuatro respuestas cuesta dos minutos y ahorra media hora. Es exactamente el mismo hábito de la UD1, cuando antes de marcar una página decidías qué era cada cosa.
 
-### Un ejemplo resuelto
+#### Un ejemplo resuelto
 
 > **Enunciado.** Dado un carrito con nombres, precios y unidades, calcula el subtotal, aplica un 10 % de descuento si supera 100 €, suma 4,95 € de envío salvo que el subtotal con descuento llegue a 50 €, y muestra el desglose.
 
@@ -1025,7 +1021,7 @@ console.log(`Total:     ${total.toFixed(2)} €`);
 
 Fíjate en que el código se lee casi como el enunciado. Eso no es casualidad: es consecuencia de haberlo descompuesto antes.
 
-### Tarea 6 · Cuatro problemas
+#### Tarea 6 · Cuatro problemas
 
 Resuelve estos cuatro. Para cada uno, escribe primero las cuatro respuestas de la descomposición:
 
@@ -1041,7 +1037,7 @@ Resuelve estos cuatro. Para cada uno, escribe primero las cuatro respuestas de l
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 2</p>
+  <p class="checkpoint-label">Cierre de la sesión 2</p>
   <ul class="checklist">
     <li>Traduces reglas de negocio a condicionales, con sus límites comprobados.</li>
     <li>Recorres colecciones con el bucle adecuado.</li>
@@ -1062,11 +1058,11 @@ Resuelve estos cuatro. Para cada uno, escribe primero las cuatro respuestas de l
 </div>
 ---
 
-## Semana 3 · Funciones y depuración
+## Sesión 3 · Funciones y depuración
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Funciones</strong>, <strong>Funciones flecha y funciones como valor</strong> y <strong>Depurar con criterio</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 7 · Funciones
+### Bloque 1 · Funciones
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1086,7 +1082,7 @@ Resuelve estos cuatro. Para cada uno, escribe primero las cuatro respuestas de l
   </ol>
 </div>
 
-### Declarar y llamar
+#### Declarar y llamar
 
 ```javascript
 function calcularIva(base, tipo) {
@@ -1104,7 +1100,7 @@ Tres piezas: el **nombre**, que dice qué hace; los **parámetros**, que son lo 
   <p>Regla del módulo: las funciones calculan y devuelven; imprimir es cosa de quien las llama.</p>
 </div>
 
-### Valores por defecto y número de argumentos
+#### Valores por defecto y número de argumentos
 
 ```javascript
 function calcularIva(base, tipo = 0.21) {
@@ -1117,7 +1113,7 @@ calcularIva(100, 0.10);  // 110
 
 JavaScript no protesta si llamas con menos argumentos de los declarados: el que falta vale `undefined`, y el cálculo acaba en `NaN`. Los valores por defecto evitan la mitad de esos casos.
 
-### Ámbito: dónde vive cada variable
+#### Ámbito: dónde vive cada variable
 
 ```javascript
 const iva = 0.21;                 // global del módulo
@@ -1136,7 +1132,7 @@ Lo declarado dentro de una función solo existe dentro. Lo de fuera se ve desde 
 
 `let` y `const` viven dentro de las llaves donde se declaran, incluidas las de un `if` o un `for`. Es otra razón para no usar `var`, que se escapa del bloque.
 
-### Funciones pequeñas, con un cometido
+#### Funciones pequeñas, con un cometido
 
 ```javascript
 // Difícil de probar y de reutilizar
@@ -1150,9 +1146,9 @@ function calcularEnvio(importe) { }
 
 Una señal fiable: si al describir qué hace una función necesitas la palabra «y» dos veces, probablemente son dos funciones.
 
-### Tarea 7 · Refactoriza en funciones
+#### Tarea 7 · Refactoriza en funciones
 
-Sobre tu solución de la sesión 6:
+Sobre tu solución de la sesión 2:
 
 1. Extrae `calcularSubtotal`, `aplicarDescuento` y `calcularEnvio`.
 2. Que ninguna imprima: todas devuelven.
@@ -1167,7 +1163,7 @@ Sobre tu solución de la sesión 6:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 7</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Tus funciones devuelven valores y no imprimen.</li>
     <li>Sabes qué ocurre si llamas con menos argumentos.</li>
@@ -1192,15 +1188,14 @@ Sobre tu solución de la sesión 6:
   <p>3 · Un valor que toma el parámetro cuando quien llama no lo proporciona.</p>
 </details>
 
----
 
-## Sesión 8 · Funciones flecha y funciones como valor
+### Bloque 2 · Funciones flecha y funciones como valor
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> La sintaxis de flecha, y la idea de que una función es un valor más.</li>
-    <li><strong>2. Haz:</strong> Escribe funciones que reciben funciones, la base de lo que viene en la semana 4.</li>
+    <li><strong>2. Haz:</strong> Escribe funciones que reciben funciones, la base de lo que viene en la sesión 4.</li>
     <li><strong>3. Comprueba:</strong> Lees sin dudar una función flecha escrita por otra persona.</li>
   </ol>
 </div>
@@ -1214,7 +1209,7 @@ Sobre tu solución de la sesión 6:
   </ol>
 </div>
 
-### La misma función, tres formas
+#### La misma función, tres formas
 
 ```javascript
 // Declaración
@@ -1240,9 +1235,9 @@ const etiquetar = (producto) => {
 };
 ```
 
-### Una función es un valor
+#### Una función es un valor
 
-Esta es la idea que abre la semana 4:
+Esta es la idea que abre la sesión 4:
 
 ```javascript
 const operaciones = {
@@ -1273,7 +1268,7 @@ Acabas de escribir a mano lo que la semana que viene hará `map`. Merece la pena
 
 Una función que se le pasa a otra para que la llame ella. En la UD4 será «lo que hay que hacer cuando el usuario pulse»; en la UD6, «lo que hay que hacer cuando llegue la respuesta».
 
-### Cuándo usar cada forma
+#### Cuándo usar cada forma
 
 | Forma | Úsala para |
 | ----- | ---------- |
@@ -1282,9 +1277,9 @@ Una función que se le pasa a otra para que la llame ella. En la UD4 será «lo 
 
 No mezcles por gusto: dentro de un mismo fichero, mantén un criterio.
 
-### Tarea 8 · Funciones que reciben funciones
+#### Tarea 8 · Funciones que reciben funciones
 
-1. Reescribe tres de tus funciones de la sesión 7 como flechas y comprueba que siguen dando lo mismo.
+1. Reescribe tres de tus funciones de la sesión 3 como flechas y comprueba que siguen dando lo mismo.
 2. Escribe `aplicarATodos` y úsala para subir un 10 % todos los precios.
 3. Escribe `filtrarPor(lista, condicion)` y úsala con dos condiciones distintas.
 4. Escribe `contarSi(lista, condicion)`.
@@ -1297,7 +1292,7 @@ No mezcles por gusto: dentro de un mismo fichero, mantén un criterio.
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 8</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Lees y escribes funciones flecha con y sin llaves.</li>
     <li>Entiendes que una función puede guardarse y pasarse.</li>
@@ -1322,9 +1317,8 @@ No mezcles por gusto: dentro de un mismo fichero, mantén un criterio.
   <p>3 · Una función que se pasa a otra para que la llame cuando corresponda.</p>
 </details>
 
----
 
-## Sesión 9 · Depurar con criterio
+### Bloque 3 · Depurar con criterio
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1344,7 +1338,7 @@ No mezcles por gusto: dentro de un mismo fichero, mantén un criterio.
   </ol>
 </div>
 
-### Los cuatro tipos de error
+#### Los cuatro tipos de error
 
 | Tipo | Qué es | Ejemplo |
 | ---- | ------ | ------- |
@@ -1355,7 +1349,7 @@ No mezcles por gusto: dentro de un mismo fichero, mantén un criterio.
 
 Los tres primeros los encuentra el navegador. El cuarto solo lo encuentras tú, y es el que de verdad importa.
 
-### La consola, más allá de `console.log`
+#### La consola, más allá de `console.log`
 
 ```javascript
 console.log(producto);            // lo normal
@@ -1367,7 +1361,7 @@ console.log({ subtotal, envio, total });   // nombre y valor de cada uno
 
 El último truco vale su peso en oro: envolviendo las variables en llaves, la consola imprime **el nombre junto al valor**, y se acabaron los seis números sueltos que no sabes de quién son.
 
-### Puntos de interrupción
+#### Puntos de interrupción
 
 `console.log` te dice el valor en un punto. Un punto de interrupción te deja **parar el programa** y mirarlo todo a la vez.
 
@@ -1390,7 +1384,7 @@ También puedes escribir `debugger;` en el código: con DevTools abierto, el pro
   <p>Cambiar líneas a ver si suena la flauta puede arreglar el síntoma de hoy y dejar la causa dentro.</p>
 </div>
 
-### Tarea 9 · Tres programas rotos
+#### Tarea 9 · Tres programas rotos
 
 Recibirás tres ficheros con un fallo cada uno: uno de referencia, uno de tipo y uno lógico. Para cada uno:
 
@@ -1407,7 +1401,7 @@ Recibirás tres ficheros con un fallo cada uno: uno de referencia, uno de tipo y
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 3</p>
+  <p class="checkpoint-label">Cierre de la sesión 3</p>
   <ul class="checklist">
     <li>Tu programa está hecho de funciones pequeñas que devuelven valores.</li>
     <li>Sabes pasar una función como argumento.</li>
@@ -1435,11 +1429,11 @@ Recibirás tres ficheros con un fallo cada uno: uno de referencia, uno de tipo y
 </div>
 ---
 
-## Semana 4 · Arrays y objetos
+## Sesión 4 · Arrays y objetos
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Arrays</strong>, <strong>Métodos declarativos</strong> y <strong>Objetos y JSON</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 10 · Arrays
+### Bloque 1 · Arrays
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1453,13 +1447,13 @@ Recibirás tres ficheros con un fallo cada uno: uno de referencia, uno de tipo y
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>En la sesión 6 usaste tres listas paralelas. ¿Qué problema tiene eso?</li>
+    <li>En la sesión 2 usaste tres listas paralelas. ¿Qué problema tiene eso?</li>
     <li>¿Cómo pedirías «el tercer producto»?</li>
     <li>¿Qué pasa si pides el elemento número cien de una lista de tres?</li>
   </ol>
 </div>
 
-### Una lista ordenada de valores
+#### Una lista ordenada de valores
 
 ```javascript
 const categorias = ["teclados", "ratones", "monitores"];
@@ -1473,7 +1467,7 @@ categorias.at(-1)       // "monitores"  ← el último, sin calcular índices
 
 Que pedir un índice inexistente devuelva `undefined` en lugar de fallar es cómodo y peligroso a partes iguales: el programa sigue, y el `undefined` viaja hasta reventar tres funciones más allá.
 
-### Añadir, quitar y buscar
+#### Añadir, quitar y buscar
 
 ```javascript
 const lista = ["teclados", "ratones"];
@@ -1487,7 +1481,7 @@ lista.includes("ratones");    // true
 lista.indexOf("ratones");     // 1, o -1 si no está
 ```
 
-### Los que modifican y los que no
+#### Los que modifican y los que no
 
 <div class="rule">
   <p class="rule-label">Distingue mutar de devolver</p>
@@ -1504,7 +1498,7 @@ original;                                // [3, 1, 2], intacto
 
 Los tres puntos, el operador de propagación, copian los elementos en un array nuevo.
 
-### Recorrer con `forEach`
+#### Recorrer con `forEach`
 
 ```javascript
 categorias.forEach((categoria, indice) => {
@@ -1514,7 +1508,7 @@ categorias.forEach((categoria, indice) => {
 
 `forEach` recorre y no devuelve nada: sirve para «haz algo con cada uno». Cuando lo que quieres es **obtener** otra lista, el método es `map`, que viene en la sesión siguiente.
 
-### Tarea 10 · El catálogo como lista
+#### Tarea 10 · El catálogo como lista
 
 Crea `js/datos.js`:
 
@@ -1531,7 +1525,7 @@ Crea `js/datos.js`:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 10</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Accedes a los elementos por índice y conoces <code>length</code>.</li>
     <li>Distingues los métodos que mutan de los que devuelven.</li>
@@ -1556,9 +1550,8 @@ Crea `js/datos.js`:
   <p>3 · Crea un array nuevo con los mismos elementos: una copia superficial.</p>
 </details>
 
----
 
-## Sesión 11 · Métodos declarativos
+### Bloque 2 · Métodos declarativos
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1572,13 +1565,13 @@ Crea `js/datos.js`:
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
-    <li>En la sesión 8 escribiste <code>aplicarATodos</code> y <code>filtrarPor</code>. ¿Qué devolvía cada una?</li>
+    <li>En la sesión 3 escribiste <code>aplicarATodos</code> y <code>filtrarPor</code>. ¿Qué devolvía cada una?</li>
     <li>¿Qué diferencia hay entre «quiero los caros» y «quiero el primero caro»?</li>
     <li>¿Y entre «quiero saber si hay alguno caro» y «quiero los caros»?</li>
   </ol>
 </div>
 
-### Cada método devuelve una cosa distinta
+#### Cada método devuelve una cosa distinta
 
 | Método | Devuelve | Pregunta que responde |
 | ------ | -------- | --------------------- |
@@ -1597,7 +1590,7 @@ Crea `js/datos.js`:
   <p>Pregúntate qué quieres tener después: ¿otra lista, un elemento, un sí o un no, o un número?</p>
 </div>
 
-### En código
+#### En código
 
 ```javascript
 const productos = [
@@ -1613,7 +1606,7 @@ const hayAgotados = productos.some((p) => p.stock === 0);
 const todosBaratos = productos.every((p) => p.precio < 500);
 ```
 
-### `sort` y su trampa
+#### `sort` y su trampa
 
 ```javascript
 [10, 9, 100].sort();                  // [10, 100, 9]  ← compara como texto
@@ -1628,15 +1621,15 @@ productos.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
 Recuerda además que `sort` **muta**: ordena sobre una copia si el orden original importa.
 
-### `reduce`, el que da más miedo
+#### `reduce`, el que da más miedo
 
 ```javascript
 const total = productos.reduce((suma, p) => suma + p.precio * p.stock, 0);
 ```
 
-Se lee así: empieza con `0`, y por cada producto, quédate con lo que llevabas más lo que aporta este. Es el acumulador de la sesión 5, escrito en una línea. Si te cuesta leerlo, escríbelo primero con `for...of` y tradúcelo después.
+Se lee así: empieza con `0`, y por cada producto, quédate con lo que llevabas más lo que aporta este. Es el acumulador de la sesión 2, escrito en una línea. Si te cuesta leerlo, escríbelo primero con `for...of` y tradúcelo después.
 
-### Encadenar
+#### Encadenar
 
 ```javascript
 const resumen = productos
@@ -1647,7 +1640,7 @@ const resumen = productos
 
 Cada método devuelve un array, así que el siguiente puede trabajar sobre él. Se lee de arriba abajo como una frase: filtra, ordena, formatea. Con `sort` en medio, ojo: aquí es seguro porque `filter` ya devolvió un array nuevo.
 
-### Tarea 11 · Consultas del catálogo
+#### Tarea 11 · Consultas del catálogo
 
 En `js/catalogo.js`, sobre tu lista de productos:
 
@@ -1656,7 +1649,7 @@ En `js/catalogo.js`, sobre tu lista de productos:
 3. `hayAgotados(productos)` con `some`.
 4. `valorAlmacen(productos)` con `reduce`.
 5. `ordenarPorPrecio(productos, ascendente)` que no mute el original.
-6. Reescribe dos de tus bucles de la semana 2 con estos métodos y comenta cuál se lee mejor.
+6. Reescribe dos de tus bucles de la sesión 2 con estos métodos y comenta cuál se lee mejor.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Las cinco funciones, cada una con el método adecuado.</span></div>
@@ -1665,7 +1658,7 @@ En `js/catalogo.js`, sobre tu lista de productos:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 11</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Eliges el método por lo que devuelve.</li>
     <li>Pasas función de comparación a <code>sort</code> con números.</li>
@@ -1690,9 +1683,8 @@ En `js/catalogo.js`, sobre tu lista de productos:
   <p>3 · <code>some</code> devuelve un booleano; <code>filter</code>, un array con los que cumplen.</p>
 </details>
 
----
 
-## Sesión 12 · Objetos y JSON
+### Bloque 3 · Objetos y JSON
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1712,7 +1704,7 @@ En `js/catalogo.js`, sobre tu lista de productos:
   </ol>
 </div>
 
-### Un objeto agrupa datos con nombre
+#### Un objeto agrupa datos con nombre
 
 ```javascript
 const producto = {
@@ -1740,7 +1732,7 @@ const catalogo = [
 
 Esta es la estructura que vas a usar durante el resto del módulo: en la UD4 la pintarás en la página, en la UD5 la guardarás en un fichero y en la UD6 la servirá tu API.
 
-### Modificar, añadir y borrar propiedades
+#### Modificar, añadir y borrar propiedades
 
 ```javascript
 producto.stock = 3;              // modificar
@@ -1758,7 +1750,7 @@ Object.entries(producto);        // pares [clave, valor]
   <p>De ahí sale otro clásico: dos variables que apuntan al mismo objeto. Modificar una cambia «las dos», porque siempre fue una. Para copiar de verdad: <code>{ ...producto }</code>.</p>
 </div>
 
-### Anidar y acceder con seguridad
+#### Anidar y acceder con seguridad
 
 ```javascript
 const pedido = {
@@ -1775,7 +1767,7 @@ pedido.envio?.direccion          // undefined, sin romper nada
 
 El interrogante es el **encadenamiento opcional**: si lo de la izquierda no existe, devuelve `undefined` en lugar de lanzar un error. Es el remedio a un fallo que verás mucho al consumir datos ajenos.
 
-### Desestructurar
+#### Desestructurar
 
 ```javascript
 const { nombre, precio } = producto;
@@ -1788,7 +1780,7 @@ function describir({ nombre, precio }) {
 
 Sacar las propiedades que necesitas y darles nombre. Ahorra repetir `producto.` diez veces y hace explícito qué usa cada función.
 
-### JSON, el formato de intercambio
+#### JSON, el formato de intercambio
 
 <p class="term">JSON</p>
 
@@ -1812,14 +1804,14 @@ Sus reglas son más estrictas que las de JavaScript:
 }
 ```
 
-Las claves van **siempre entre comillas dobles**, no se admiten comillas simples, ni comas finales, ni comentarios, ni funciones, ni `undefined`. Y `JSON.parse` de un texto mal formado lanza un error: en la sesión 14 lo trataremos como se debe.
+Las claves van **siempre entre comillas dobles**, no se admiten comillas simples, ni comas finales, ni comentarios, ni funciones, ni `undefined`. Y `JSON.parse` de un texto mal formado lanza un error: en la sesión 5 lo trataremos como se debe.
 
-### Tarea 12 · El catálogo de verdad
+#### Tarea 12 · El catálogo de verdad
 
 Reescribe `js/datos.js`:
 
 1. Convierte tus arrays paralelos en un array de al menos ocho objetos, con `id`, `nombre`, `precio`, `categoria`, `stock` y `descripcion`.
-2. Adapta las funciones de la sesión 11 a la nueva estructura.
+2. Adapta las funciones de la sesión 4 a la nueva estructura.
 3. Escribe `describir(producto)` usando desestructuración en el parámetro.
 4. Convierte el catálogo a JSON con sangría y obsérvalo.
 5. Vuelve a convertirlo a objeto y comprueba que todo sigue igual.
@@ -1832,7 +1824,7 @@ Reescribe `js/datos.js`:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 4</p>
+  <p class="checkpoint-label">Cierre de la sesión 4</p>
   <ul class="checklist">
     <li>Tu catálogo es un array de objetos, no listas paralelas.</li>
     <li>Consultas ese catálogo con métodos declarativos.</li>
@@ -1860,11 +1852,11 @@ Reescribe `js/datos.js`:
 </div>
 ---
 
-## Semana 5 · Organizar y proteger el código
+## Sesión 5 · Organizar y proteger el código
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Módulos ES</strong>, <strong>Errores y programación defensiva</strong> y <strong>Fechas, textos y formato</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 13 · Módulos ES
+### Bloque 1 · Módulos ES
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -1884,7 +1876,7 @@ Reescribe `js/datos.js`:
   </ol>
 </div>
 
-### Exportar e importar
+#### Exportar e importar
 
 ```javascript
 // js/datos.js
@@ -1921,7 +1913,7 @@ En el documento se declara un único enlace, con su tipo:
 
 Con `type="module"` no hace falta `defer`: los módulos ya se ejecutan al final. Solo se enlaza el principal: los demás llegan por sus `import`.
 
-### Dos detalles que hacen perder una tarde
+#### Dos detalles que hacen perder una tarde
 
 <div class="rule">
   <p class="rule-label">La extensión se escribe, y hace falta un servidor</p>
@@ -1929,7 +1921,7 @@ Con `type="module"` no hace falta `defer`: los módulos ya se ejecutan al final.
   <p>Además, los módulos <strong>no funcionan abriendo el fichero con doble clic</strong>. Verás un error de CORS con el esquema <code>file://</code>. Hay que servir la carpeta: la extensión Live Server de VS Code, o el servidor que montarás tú mismo en la UD5.</p>
 </div>
 
-### Exportación por defecto
+#### Exportación por defecto
 
 ```javascript
 export default function formatearPrecio(valor) {
@@ -1943,7 +1935,7 @@ import formatearPrecio from "./formato.js";
 
 Un módulo puede tener una exportación por defecto y muchas con nombre. En este módulo preferimos las nombradas: el nombre viaja con la función y no se puede renombrar sin querer.
 
-### Qué va en cada fichero
+#### Qué va en cada fichero
 
 <figure class="diagram">
   <figcaption>El reparto de responsabilidades</figcaption>
@@ -1956,7 +1948,7 @@ Un módulo puede tener una exportación por defecto y muchas con nombre. En este
 
 Es el mismo criterio de siempre: cada fichero responde a una pregunta. El criterio anticipa la separación en capas que verás en la UD6 y en el módulo de servidor.
 
-### Tarea 13 · Tres módulos
+#### Tarea 13 · Tres módulos
 
 1. Separa tu código en `datos.js`, `catalogo.js` y `main.js`.
 2. Exporta solo lo que se use fuera; el resto, privado del módulo.
@@ -1972,7 +1964,7 @@ Es el mismo criterio de siempre: cada fichero responde a una pregunta. El criter
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 13</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Tu código está repartido en módulos con una responsabilidad cada uno.</li>
     <li>Solo enlazas el módulo principal, con <code>type="module"</code>.</li>
@@ -1997,9 +1989,8 @@ Es el mismo criterio de siempre: cada fichero responde a una pregunta. El criter
   <p>3 · La nombrada se importa entre llaves y con su nombre exacto; la de defecto se importa con el nombre que quieras.</p>
 </details>
 
----
 
-## Sesión 14 · Errores y programación defensiva
+### Bloque 2 · Errores y programación defensiva
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2019,7 +2010,7 @@ Es el mismo criterio de siempre: cada fichero responde a una pregunta. El criter
   </ol>
 </div>
 
-### Lanzar un error
+#### Lanzar un error
 
 ```javascript
 function aplicarDescuento(precio, porcentaje) {
@@ -2035,7 +2026,7 @@ function aplicarDescuento(precio, porcentaje) {
 
 `throw` detiene la función ahí mismo. Es mejor que devolver `null` en silencio: quien llama se entera del problema en el momento en que ocurre y no tres funciones más tarde.
 
-### Capturar
+#### Capturar
 
 ```javascript
 try {
@@ -2056,7 +2047,7 @@ try {
   <p>Captura solo lo que sabes tratar. Lo que no sepas tratar, déjalo subir.</p>
 </div>
 
-### Validar en el borde
+#### Validar en el borde
 
 ```javascript
 export function crearProducto(datos) {
@@ -2081,7 +2072,7 @@ Fíjate en dos decisiones. Primero, se recogen **todos** los errores y no solo e
 
 Comprobar los datos en el punto donde entran al programa —el formulario, el fichero, la respuesta del servidor— y no dentro de cada función que los usa. Después de ese punto, el resto del código puede confiar.
 
-### Tarea 14 · Blinda tu catálogo
+#### Tarea 14 · Blinda tu catálogo
 
 1. Añade validación a `crearProducto` con al menos cinco reglas.
 2. Haz que devuelva la lista completa de errores.
@@ -2096,7 +2087,7 @@ Comprobar los datos en el punto donde entran al programa —el formulario, el fi
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 14</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Lanzas errores con un mensaje que dice qué se esperaba.</li>
     <li>Capturas solo lo que sabes tratar.</li>
@@ -2121,9 +2112,8 @@ Comprobar los datos en el punto donde entran al programa —el formulario, el fi
   <p>3 · Comprobar los datos en el punto donde entran, para que el resto del código pueda confiar en ellos.</p>
 </details>
 
----
 
-## Sesión 15 · Fechas, textos y formato
+### Bloque 3 · Fechas, textos y formato
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2143,7 +2133,7 @@ Comprobar los datos en el punto donde entran al programa —el formulario, el fi
   </ol>
 </div>
 
-### Los métodos de texto que usarás
+#### Los métodos de texto que usarás
 
 ```javascript
 const texto = "  Teclado Mecánico RGB  ";
@@ -2160,7 +2150,7 @@ texto.trim().slice(0, 7)        // "Teclado"
 
 Ninguno modifica el original: los textos son inmutables, y todos devuelven uno nuevo.
 
-### Una búsqueda que no falla por tonterías
+#### Una búsqueda que no falla por tonterías
 
 ```javascript
 export function buscar(productos, consulta) {
@@ -2176,7 +2166,7 @@ export function buscar(productos, consulta) {
 
 Tres decisiones que evitan tres quejas: se recortan los espacios, se compara todo en minúsculas, y una consulta vacía devuelve todo en lugar de nada.
 
-### Fechas
+#### Fechas
 
 ```javascript
 const ahora = new Date();
@@ -2190,7 +2180,7 @@ const dias = (ahora - alta) / (1000 * 60 * 60 * 24);
 
 Que los meses empiecen en cero es la trampa histórica de las fechas en JavaScript. Restar dos fechas, por su parte, produce milisegundos y no días: el resultado debe dividirse.
 
-### Formato local
+#### Formato local
 
 ```javascript
 const precio = 1234.5;
@@ -2210,7 +2200,7 @@ new Date().toLocaleDateString("es-ES", {
   <p>Si guardas el texto formateado, no podrás sumar, ordenar ni comparar sin deshacerlo, y el día que cambies de moneda o de idioma habrá que tocar los datos. Es la misma separación entre contenido y presentación que aprendiste en la UD1 y la UD2, aplicada a los valores.</p>
 </div>
 
-### Tarea 15 · Búsqueda y presentación
+#### Tarea 15 · Búsqueda y presentación
 
 En `js/formato.js` y `js/catalogo.js`:
 
@@ -2227,7 +2217,7 @@ En `js/formato.js` y `js/catalogo.js`:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la semana 5</p>
+  <p class="checkpoint-label">Cierre de la sesión 5</p>
   <ul class="checklist">
     <li>Tu proyecto está en módulos y se sirve por HTTP.</li>
     <li>Validas los datos donde entran y tratas los errores.</li>
@@ -2255,11 +2245,11 @@ En `js/formato.js` y `js/catalogo.js`:
 </div>
 ---
 
-## Semana 6 · Integración y entrega
+## Sesión 6 · Integración y entrega
 
----
+<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Reto acumulativo · un dominio desconocido</strong>, <strong>Refactorizar y leer código ajeno</strong> y <strong>Auditoría final, revisión por pares y entrega</strong>. Cada bloque termina con su propia comprobación.</p>
 
-## Sesión 16 · Reto acumulativo · un dominio desconocido
+### Bloque 1 · Reto acumulativo · un dominio desconocido
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2279,7 +2269,7 @@ En `js/formato.js` y `js/catalogo.js`:
   </ol>
 </div>
 
-### El encargo
+#### El encargo
 
 Recibirás un enunciado con un dominio distinto del tuyo —una biblioteca, un gimnasio, una liga deportiva, una clínica— descrito en prosa, con datos de ejemplo desordenados y unas cuantas preguntas que hay que poder responder.
 
@@ -2294,7 +2284,7 @@ Recibirás un enunciado con un dominio distinto del tuyo —una biblioteca, un g
   </ol>
 </figure>
 
-### Las condiciones
+#### Las condiciones
 
 <div class="rule">
   <p class="rule-label">Sin copiar y pegar de tu proyecto</p>
@@ -2303,7 +2293,7 @@ Recibirás un enunciado con un dominio distinto del tuyo —una biblioteca, un g
 
 Las funciones deben cubrir, como mínimo: listar, buscar por texto, filtrar por un criterio numérico, ordenar por dos campos distintos, calcular un agregado y detectar un caso especial.
 
-### Entrega de la sesión
+#### Entrega de la sesión
 
 Un módulo con los datos, otro con las consultas, y un principal que responda por consola a las preguntas del enunciado. Con la lista vacía tratada.
 
@@ -2314,7 +2304,7 @@ Un módulo con los datos, otro con las consultas, y un principal que responda po
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 16</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
   <ul class="checklist">
     <li>Has modelado un dominio nuevo sin ayuda.</li>
     <li>Cada pregunta tiene su función, y cada función devuelve.</li>
@@ -2323,9 +2313,8 @@ Un módulo con los datos, otro con las consultas, y un principal que responda po
   </ul>
 </div>
 
----
 
-## Sesión 17 · Refactorizar y leer código ajeno
+### Bloque 2 · Refactorizar y leer código ajeno
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2345,7 +2334,7 @@ Un módulo con los datos, otro con las consultas, y un principal que responda po
   </ol>
 </div>
 
-### Las señales
+#### Las señales
 
 | Señal | Qué suele significar | Qué se hace |
 | ----- | -------------------- | ----------- |
@@ -2360,7 +2349,7 @@ Un módulo con los datos, otro con las consultas, y un principal que responda po
 
 Cambiar cómo está escrito un programa sin cambiar lo que hace. Si el comportamiento cambia, la operación deja de ser una refactorización y pasa a ser una modificación, que debe probarse como tal.
 
-### Salidas tempranas
+#### Salidas tempranas
 
 ```javascript
 // Antes: cuatro niveles de anidamiento
@@ -2387,13 +2376,13 @@ function precioFinal(producto) {
 
 La segunda versión se lee de arriba abajo, y cada línea responde a un caso.
 
-### Comprobar que no has roto nada
+#### Comprobar que no has roto nada
 
 Antes de tocar, escribe en un fichero las respuestas actuales del programa para media docena de entradas. Refactoriza. Vuelve a ejecutar. Si algo cambió, la refactorización introdujo un error.
 
 Eso es, en versión manual, lo que en el módulo de servidor harán los tests automáticos.
 
-### Tarea 17 · El fichero heredado
+#### Tarea 17 · El fichero heredado
 
 Recibirás un módulo de unas cien líneas que funciona pero está mal escrito:
 
@@ -2410,7 +2399,7 @@ Recibirás un módulo de unas cien líneas que funciona pero está mal escrito:
 </div>
 
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin de la sesión 17</p>
+  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
   <ul class="checklist">
     <li>Reconoces las señales de un código difícil de mantener.</li>
     <li>Refactorizas en pasos pequeños y comprobables.</li>
@@ -2419,9 +2408,8 @@ Recibirás un módulo de unas cien líneas que funciona pero está mal escrito:
   </ul>
 </div>
 
----
 
-## Sesión 18 · Auditoría final, revisión por pares y entrega
+### Bloque 3 · Auditoría final, revisión por pares y entrega
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
@@ -2432,7 +2420,7 @@ Recibirás un módulo de unas cien líneas que funciona pero está mal escrito:
   </ol>
 </div>
 
-### La lista de auditoría
+#### La lista de auditoría
 
 <div class="checkpoint">
   <p class="checkpoint-label">Auditoría · el código</p>
@@ -2459,7 +2447,7 @@ Recibirás un módulo de unas cien líneas que funciona pero está mal escrito:
   </ul>
 </div>
 
-### Revisión por pares
+#### Revisión por pares
 
 Intercambia proyectos. Sin preguntar nada a su autor:
 
@@ -2470,7 +2458,7 @@ Intercambia proyectos. Sin preguntar nada a su autor:
 
 Devuelve el trabajo con esas cuatro respuestas por escrito.
 
-### Defensa
+#### Defensa
 
 Prepara respuestas de un minuto para estas cuatro preguntas:
 
@@ -2486,7 +2474,7 @@ Prepara respuestas de un minuto para estas cuatro preguntas:
 
 La tercera es la importante, y es la misma pregunta que cerraba la UD1 y la UD2: si has separado datos, lógica y uso, la respuesta debería ser «solo el módulo de datos».
 
-### Evaluación
+#### Evaluación
 
 | Criterio | Puntos |
 | ---------------------------------------------------------- | -----: |
@@ -2500,7 +2488,7 @@ La tercera es la importante, y es la misma pregunta que cerraba la UD1 y la UD2:
 
 No puntúa que el código sea corto ni ingenioso. Puntúa que **se pueda leer**, que trate los casos raros —la lista vacía, el texto donde esperabas un número— y que puedas cambiar una decisión pequeña delante de alguien.
 
-### Entrega
+#### Entrega
 
 <div class="unit-deliverable">
   <p>La carpeta <code>js/</code> con <code>datos.js</code>, <code>catalogo.js</code>, <code>formato.js</code> y <code>main.js</code>; el enlace único con <code>type="module"</code>; la lista de auditoría marcada; la revisión del compañero por escrito; y un fichero <code>NOTAS.md</code> con las tres decisiones que más te costaron y por qué las tomaste así.</p>
