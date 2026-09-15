@@ -1049,16 +1049,14 @@ Un enunciado que dos personas leen distinto es exactamente lo que recibirás de 
 
 ## Sesión 3 · Funciones y depuración
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Funciones</strong>, <strong>Funciones flecha y funciones como valor</strong> y <strong>Depurar con criterio</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Funciones
+<p class="lead">Tres horas. Media hora para entender qué es una función, qué significa que una función sea un valor y cómo se para un programa para mirar dentro, y dos horas y media convirtiendo tu código en piezas reutilizables y reparando programas rotos.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es una función, qué son parámetros y retorno, y qué es el ámbito.</li>
-    <li><strong>2. Haz:</strong> Convierte el código de la semana pasada en funciones reutilizables.</li>
-    <li><strong>3. Comprueba:</strong> Cada función devuelve un valor y no imprime nada.</li>
+    <li><strong>1. Aprende:</strong> Qué son parámetros y retorno, qué es el ámbito, cómo se escribe una función flecha y cuáles son los cuatro tipos de error.</li>
+    <li><strong>2. Haz:</strong> Convierte el código de la semana pasada en funciones, escribe funciones que reciben funciones y depura tres programas que no puedes reescribir.</li>
+    <li><strong>3. Comprueba:</strong> Cada función devuelve un valor y no imprime, y encuentras la causa de un fallo antes de tocar el código.</li>
   </ol>
 </div>
 
@@ -1067,9 +1065,15 @@ Un enunciado que dos personas leen distinto es exactamente lo que recibirás de 
   <ol>
     <li>En tu código de la semana pasada, ¿qué trozo has escrito más de una vez?</li>
     <li>Si mañana cambia el porcentaje de IVA, ¿cuántos sitios tendrías que tocar?</li>
-    <li>¿Qué es «devolver» un valor?</li>
+    <li>¿Qué haces ahora mismo cuando algo no funciona?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Dos ideas grandes y una herramienta. Las ideas: una función devuelve en lugar de imprimir, y una función es un valor que se puede guardar y pasar. La herramienta: parar el programa en una línea y mirar todas las variables a la vez.
 
 #### Declarar y llamar
 
@@ -1088,8 +1092,6 @@ Tres piezas: el **nombre**, que dice qué hace; los **parámetros**, que son lo 
   <p>Una función que hace <code>console.log</code> en lugar de <code>return</code> solo sirve para lo que estás haciendo hoy. La que devuelve un valor sirve para imprimirlo, para sumarlo, para pintarlo en la UD4 y para enviarlo al servidor en la UD6.</p>
   <p>Regla del módulo: las funciones calculan y devuelven; imprimir es cosa de quien las llama.</p>
 </div>
-
-#### Valores por defecto y número de argumentos
 
 ```javascript
 function calcularIva(base, tipo = 0.21) {
@@ -1121,7 +1123,7 @@ Lo declarado dentro de una función solo existe dentro. Lo de fuera se ve desde 
 
 `let` y `const` viven dentro de las llaves donde se declaran, incluidas las de un `if` o un `for`. Es otra razón para no usar `var`, que se escapa del bloque.
 
-#### Funciones pequeñas, con un cometido
+Las funciones, además, se quieren pequeñas y con un solo cometido:
 
 ```javascript
 // Difícil de probar y de reutilizar
@@ -1134,69 +1136,6 @@ function calcularEnvio(importe) { }
 ```
 
 Una señal fiable: si al describir qué hace una función necesitas la palabra «y» dos veces, probablemente son dos funciones.
-
-#### Tarea 7 · Refactoriza en funciones
-
-Sobre tu solución de la sesión 2:
-
-1. Extrae `calcularSubtotal`, `aplicarDescuento` y `calcularEnvio`.
-2. Que ninguna imprima: todas devuelven.
-3. Escribe una función `formatearPrecio(valor)` que devuelva el texto con dos decimales y el símbolo del euro.
-4. Añade valores por defecto a los parámetros que los admitan.
-5. Comprueba cada función por separado con tres entradas distintas.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Cuatro funciones que devuelven, probadas una a una.</span></div>
-  <div><strong>Si lo tienes</strong><span>Escribe una función que reciba otra función como parámetro y aplíquela a una lista.</span></div>
-  <div><strong>Reto</strong><span>Reduce tu programa principal a cinco líneas que solo llamen a funciones.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Tus funciones devuelven valores y no imprimen.</li>
-    <li>Sabes qué ocurre si llamas con menos argumentos.</li>
-    <li>Explicas por qué una variable de dentro no se ve desde fuera.</li>
-    <li>Cada función hace una sola cosa.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué devuelve una función que no tiene <code>return</code>?</li>
-    <li>¿Por qué preferimos devolver a imprimir?</li>
-    <li>¿Qué es un parámetro por defecto?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>undefined</code>.</p>
-  <p>2 · Porque el valor devuelto se puede reutilizar: imprimir es solo una de las cosas que se pueden hacer con él.</p>
-  <p>3 · Un valor que toma el parámetro cuando quien llama no lo proporciona.</p>
-</details>
-
-
-### Bloque 2 · Funciones flecha y funciones como valor
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> La sintaxis de flecha, y la idea de que una función es un valor más.</li>
-    <li><strong>2. Haz:</strong> Escribe funciones que reciben funciones, la base de lo que viene en la sesión 4.</li>
-    <li><strong>3. Comprueba:</strong> Lees sin dudar una función flecha escrita por otra persona.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Puede una variable guardar una función?</li>
-    <li>Si pudieras pasarle a un filtro «la regla» como parámetro, ¿qué te ahorraría?</li>
-    <li>¿Qué significa que algo se ejecute «más tarde»?</li>
-  </ol>
-</div>
 
 #### La misma función, tres formas
 
@@ -1224,9 +1163,14 @@ const etiquetar = (producto) => {
 };
 ```
 
+| Forma | Úsala para |
+| ----- | ---------- |
+| Declaración `function` | Funciones con nombre del programa, sobre todo si son largas |
+| Flecha | Funciones cortas que se pasan como argumento |
+
 #### Una función es un valor
 
-Esta es la idea que abre la sesión 4:
+Esta es la idea que abre la sesión 4. Una función puede guardarse:
 
 ```javascript
 const operaciones = {
@@ -1251,81 +1195,11 @@ function aplicarATodos(lista, transformar) {
 aplicarATodos([1, 2, 3], (n) => n * 10);   // [10, 20, 30]
 ```
 
-Acabas de escribir a mano lo que la semana que viene hará `map`. Merece la pena haberlo escrito una vez: después, `map` deja de ser magia.
+Ahí acabas de escribir a mano lo que la semana que viene hará `map`. Merece la pena haberlo escrito una vez: después, `map` deja de ser magia.
 
 <p class="term">Callback</p>
 
 Una función que se le pasa a otra para que la llame ella. En la UD4 será «lo que hay que hacer cuando el usuario pulse»; en la UD6, «lo que hay que hacer cuando llegue la respuesta».
-
-#### Cuándo usar cada forma
-
-| Forma | Úsala para |
-| ----- | ---------- |
-| Declaración `function` | Funciones con nombre del programa, sobre todo si son largas |
-| Flecha | Funciones cortas que se pasan como argumento |
-
-No mezcles por gusto: dentro de un mismo fichero, mantén un criterio.
-
-#### Tarea 8 · Funciones que reciben funciones
-
-1. Reescribe tres de tus funciones de la sesión 3 como flechas y comprueba que siguen dando lo mismo.
-2. Escribe `aplicarATodos` y úsala para subir un 10 % todos los precios.
-3. Escribe `filtrarPor(lista, condicion)` y úsala con dos condiciones distintas.
-4. Escribe `contarSi(lista, condicion)`.
-5. Guarda tres reglas de negocio en un objeto de funciones y llámalas por su nombre.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span><code>aplicarATodos</code> y <code>filtrarPor</code> funcionando con dos reglas distintas.</span></div>
-  <div><strong>Si lo tienes</strong><span>Escribe <code>reducir(lista, combinar, inicial)</code>.</span></div>
-  <div><strong>Reto</strong><span>Encadena tus tres funciones para responder a una pregunta compuesta sobre el catálogo.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Lees y escribes funciones flecha con y sin llaves.</li>
-    <li>Entiendes que una función puede guardarse y pasarse.</li>
-    <li>Has escrito tu propia versión de <code>map</code> y de <code>filter</code>.</li>
-    <li>Sabes qué es un callback.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué devuelve <code>(n) =&gt; n * 2</code>?</li>
-    <li>¿Y <code>(n) =&gt; { n * 2 }</code>?</li>
-    <li>¿Qué es un callback?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El doble de <code>n</code>: con una sola expresión, el retorno es implícito.</p>
-  <p>2 · <code>undefined</code>: al poner llaves hace falta un <code>return</code> explícito. Es un fallo muy habitual.</p>
-  <p>3 · Una función que se pasa a otra para que la llame cuando corresponda.</p>
-</details>
-
-
-### Bloque 3 · Depurar con criterio
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Los cuatro tipos de error, y cómo se para un programa para mirar dentro.</li>
-    <li><strong>2. Haz:</strong> Depura tres programas rotos que no puedes reescribir.</li>
-    <li><strong>3. Comprueba:</strong> Encuentras la causa antes de tocar el código.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué haces ahora mismo cuando algo no funciona?</li>
-    <li>¿Cuántas veces has cambiado código sin saber por qué funcionaba?</li>
-    <li>¿Qué información te daría más que un mensaje de error?</li>
-  </ol>
-</div>
 
 #### Los cuatro tipos de error
 
@@ -1338,19 +1212,7 @@ No mezcles por gusto: dentro de un mismo fichero, mantén un criterio.
 
 Los tres primeros los encuentra el navegador. El cuarto solo lo encuentras tú, y es el que de verdad importa.
 
-#### La consola, más allá de `console.log`
-
-```javascript
-console.log(producto);            // lo normal
-console.table(productos);         // una lista de objetos, en tabla
-console.warn("Stock bajo");       // aviso
-console.error("Precio inválido"); // error
-console.log({ subtotal, envio, total });   // nombre y valor de cada uno
-```
-
-El último truco vale su peso en oro: envolviendo las variables en llaves, la consola imprime **el nombre junto al valor**, y se acabaron los seis números sueltos que no sabes de quién son.
-
-#### Puntos de interrupción
+#### Parar el programa y mirar dentro
 
 `console.log` te dice el valor en un punto. Un punto de interrupción te deja **parar el programa** y mirarlo todo a la vez.
 
@@ -1373,9 +1235,38 @@ También puedes escribir `debugger;` en el código: con DevTools abierto, el pro
   <p>Cambiar líneas a ver si suena la flauta puede arreglar el síntoma de hoy y dejar la causa dentro.</p>
 </div>
 
-#### Tarea 9 · Tres programas rotos
+### Se trabaja
 
-Recibirás tres ficheros con un fallo cada uno: uno de referencia, uno de tipo y uno lógico. Para cada uno:
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto y sobre código ajeno</p>
+
+Los dos primeros pasos convierten tu código en piezas. Los tres últimos lo someten a lo que de verdad pasa en un trabajo: reparar lo que escribió otro, y dejar puesta la comprobación que lo habría avisado.
+
+#### Paso 1 · Refactoriza en funciones · 35 min
+
+Sobre tu solución de la sesión 2:
+
+1. Extrae `calcularSubtotal`, `aplicarDescuento` y `calcularEnvio`.
+2. Que ninguna imprima: todas devuelven.
+3. Escribe una función `formatearPrecio(valor)` que devuelva el texto con dos decimales y el símbolo del euro.
+4. Añade valores por defecto a los parámetros que los admitan.
+5. Comprueba cada función por separado con tres entradas distintas.
+
+**Antes de continuar:** ninguna de tus funciones contiene un `console.log`, y cada una se puede probar sola sin ejecutar el resto del programa.
+
+#### Paso 2 · Funciones que reciben funciones · 40 min
+
+1. Reescribe tres de tus funciones del paso 1 como flechas y comprueba que siguen dando lo mismo.
+2. Escribe `aplicarATodos` y úsala para subir un 10 % todos los precios.
+3. Escribe `filtrarPor(lista, condicion)` y úsala con dos condiciones distintas.
+4. Escribe `contarSi(lista, condicion)`.
+5. Guarda tres reglas de negocio en un objeto de funciones y llámalas por su nombre.
+6. Encadena `filtrarPor` y `aplicarATodos` para responder a una pregunta compuesta sobre tu catálogo.
+
+Conserva estas tres funciones: en la sesión 4 las compararás con `map`, `filter` y `reduce`, y la comparación solo funciona si las has escrito antes.
+
+#### Paso 3 · Tres programas rotos · 40 min
+
+Es el trabajo central de la sesión. Recibirás tres ficheros con un fallo cada uno: uno de referencia, uno de tipo y uno lógico. Para cada uno:
 
 1. Escribe qué debería hacer el programa.
 2. Ejecútalo y anota qué hace en realidad.
@@ -1383,29 +1274,121 @@ Recibirás tres ficheros con un fallo cada uno: uno de referencia, uno de tipo y
 4. Explica la causa **antes** de corregir.
 5. Corrige con el cambio más pequeño posible.
 
+El tercero es el que cuenta: no muestra ningún error y devuelve un número. Ahí no hay mensaje que leer, solo el método.
+
+<details class="aside aside--extra">
+<summary>Consultar · la consola más allá de <code>console.log</code></summary>
+
+```javascript
+console.log(producto);            // lo normal
+console.table(productos);         // una lista de objetos, en tabla
+console.warn("Stock bajo");       // aviso
+console.error("Precio inválido"); // error
+console.log({ subtotal, envio, total });   // nombre y valor de cada uno
+```
+
+El último truco vale su peso en oro: envolviendo las variables en llaves, la consola imprime **el nombre junto al valor**, y se acabaron los seis números sueltos que no sabes de quién son.
+
+</details>
+
+#### Paso 4 · La comprobación que lo habría detectado · 20 min
+
+Vuelve sobre los tres programas del paso anterior. Para cada uno, añade **una comprobación** que hubiera hecho visible el fallo en el momento de producirse, en lugar de mucho después.
+
+| Programa | Causa del fallo | Comprobación añadida | Qué avisa y cuándo |
+| -------- | --------------- | -------------------- | ------------------ |
+| | | | |
+
+Un criterio para escribirlas: la comprobación debe fallar **ruidosamente**. Un aviso que se pierde entre cincuenta líneas de consola no sirve; uno que detiene el cálculo y dice qué dato era, sí.
+
+Aplica después la misma idea a tu propio código: pon esa comprobación en la función donde entra el dato, no donde aparece el síntoma.
+
+#### Paso 5 · Reduce tu programa principal · 15 min
+
+Deja el cuerpo principal de `main.js` en **cinco líneas o menos**, que solo llamen a funciones. Todo lo demás vive dentro de ellas.
+
+Si no te caben en cinco, no sigas dividiendo por dividir: mira qué función hace dos cosas y sepárala. Después lee las cinco líneas en voz alta. Deberían sonar como el enunciado del problema.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto es de depuración y se puede cronometrar; el segundo prepara la sesión 4.
+
+##### Reto 1 · Rompe tu propio código
+
+Haz una copia de tu programa e introduce **tres fallos sutiles**, uno de cada tipo:
+
+* uno de **referencia** que no salte hasta que se cumple cierta condición;
+* uno de **tipo** que solo aparezca con un dato concreto;
+* uno **lógico** que no produzca ningún error y devuelva un número ligeramente equivocado.
+
+Guarda aparte la solución. Intercámbialo con un compañero y cronometrad cuánto tarda cada uno en encontrar los tres. Al terminar:
+
+1. ¿Cuál costó más? Casi siempre el lógico, y la diferencia de tiempo suele ser de un orden de magnitud.
+2. ¿Encontró la persona la causa, o solo el síntoma? Comprobadlo preguntando qué pasaría con otro dato distinto.
+3. ¿Qué comprobación, puesta en el sitio correcto, habría reducido el tiempo de búsqueda a cero?
+4. Anota qué técnica usó que tú no habías usado.
+
+##### Reto 2 · Escribe `reducir` y demuestra que lo demás sobra
+
+En el paso 2 escribiste `aplicarATodos`, `filtrarPor` y `contarSi`. Escribe ahora una cuarta función, más general que las tres:
+
+```javascript
+function reducir(lista, combinar, inicial) {
+  // recorre la lista acumulando un resultado
+}
+```
+
+1. Escríbela y pruébala sumando una lista de precios.
+2. Úsala para calcular el máximo de una lista, sin comparar con `Math.max`.
+3. Ahora la parte interesante: **reescribe `aplicarATodos` usando `reducir`**. La función que combinas devuelve una lista, no un número.
+4. Reescribe también `filtrarPor` y `contarSi` con `reducir`.
+5. Explica en tres líneas qué significa que las tres se puedan escribir con la cuarta, y por qué aun así seguimos usando las tres por separado en código real.
+
+La semana que viene aparecerán `map`, `filter` y `reduce` con esos mismos nombres. Haber escrito las cuatro a mano es la diferencia entre usarlas y entenderlas.
+
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Los tres localizados, con la causa escrita antes del arreglo.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade a cada programa una comprobación que hubiera detectado el fallo.</span></div>
-  <div><strong>Reto</strong><span>Rompe tu propio código de forma sutil, dáselo a un compañero y cronometra.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Cuatro funciones que devuelven, probadas una a una, y los tres programas rotos localizados con la causa escrita antes del arreglo.</span></div>
+  <div><strong>Si lo tienes</strong><span><code>aplicarATodos</code>, <code>filtrarPor</code> y <code>contarSi</code> funcionando, la tabla de comprobaciones rellenada y el programa principal en cinco líneas.</span></div>
+  <div><strong>Reto</strong><span>Los tres fallos sutiles intercambiados y cronometrados, y <code>reducir</code> escrita con las otras tres reconstruidas a partir de ella.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 3</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Tu programa está hecho de funciones pequeñas que devuelven valores.</li>
+    <li>Tus funciones devuelven valores y no imprimen.</li>
+    <li>Cada función hace una sola cosa, y el programa principal cabe en cinco líneas.</li>
     <li>Sabes pasar una función como argumento.</li>
+    <li>Has escrito tu propia versión de <code>map</code> y de <code>filter</code>.</li>
     <li>Usas puntos de interrupción, no solo <code>console.log</code>.</li>
     <li>Explicas la causa de un fallo antes de corregirlo.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué devuelve una función que no tiene <code>return</code>?</li>
+    <li>¿Por qué preferimos devolver a imprimir?</li>
+    <li>¿Qué devuelve <code>(n) =&gt; n * 2</code>? ¿Y <code>(n) =&gt; { n * 2 }</code>?</li>
+    <li>¿Qué es un callback?</li>
+    <li>¿Cuáles son los cuatro tipos de error, y cuál es el peligroso?</li>
+    <li>Un total sale mal y no hay ningún error en consola. ¿Cuáles son tus dos primeros pasos?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Sintaxis, referencia, tipo y lógico. El lógico es el peligroso porque no avisa.</p>
-  <p>2 · Envolviendo las variables en llaves dentro del <code>console.log</code>, para ver el nombre junto al valor.</p>
-  <p>3 · Preguntarse qué se esperaba, qué ocurre, y dónde deja de coincidir; después, dividir el recorrido en dos.</p>
+  <p>1 · <code>undefined</code>.</p>
+  <p>2 · Porque el valor devuelto se puede reutilizar: imprimir es solo una de las cosas que se pueden hacer con él.</p>
+  <p>3 · El doble de <code>n</code>, por el retorno implícito; la segunda devuelve <code>undefined</code>, porque al poner llaves hace falta un <code>return</code>.</p>
+  <p>4 · Una función que se pasa a otra para que la llame cuando corresponda.</p>
+  <p>5 · Sintaxis, referencia, tipo y lógico. El lógico es el peligroso porque no avisa.</p>
+  <p>6 · Escribir qué se esperaba y qué ocurre, y poner una comprobación a la mitad del recorrido para dividir el terreno en dos.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 3 · 5–10 minutos</p>
@@ -1416,6 +1399,7 @@ Recibirás tres ficheros con un fallo cada uno: uno de referencia, uno de tipo y
     <li>Un total sale mal y la consola no muestra ningún error. Describe los dos primeros pasos que darías.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 4 · Arrays y objetos
