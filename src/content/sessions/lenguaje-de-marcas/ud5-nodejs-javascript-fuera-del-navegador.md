@@ -833,16 +833,14 @@ Los programas de terminal valen mucho más cuando se combinan con otros. Para es
 
 ## Sesión 3 · Ficheros y datos
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Leer y escribir ficheros</strong>, <strong>Un fichero JSON como almacén</strong> y <strong>Errores, validación y trazas</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Leer y escribir ficheros
+<p class="lead">Tres horas. Media hora para aprender a leer y escribir ficheros sin corromperlos y a distinguir un fallo esperable de uno inesperado, y dos horas y media sacando el catálogo del código y poniéndolo en disco.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se leen y escriben ficheros con promesas, y cómo se componen rutas.</li>
-    <li><strong>2. Haz:</strong> Saca el catálogo del código y ponlo en un fichero JSON.</li>
-    <li><strong>3. Comprueba:</strong> Tu programa funciona igual desde cualquier carpeta y en cualquier sistema.</li>
+    <li><strong>1. Aprende:</strong> Cómo se leen y escriben ficheros con promesas, cómo se componen rutas portables, cómo se implementa un CRUD sobre un fichero sin destruirlo, y qué se hace con cada familia de error.</li>
+    <li><strong>2. Haz:</strong> Pon el catálogo en un fichero JSON, termina el almacén con sus cinco operaciones y da al proyecto un tratamiento de errores coherente.</li>
+    <li><strong>3. Comprueba:</strong> Un fallo a mitad de escritura no destruye tus datos, y ningún error deja el programa a medias en silencio.</li>
   </ol>
 </div>
 
@@ -850,15 +848,21 @@ Los programas de terminal valen mucho más cuando se combinan con otros. Para es
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>¿Qué pasa hoy con tus datos cuando el programa termina?</li>
-    <li>¿Qué separador de carpetas usa Windows? ¿Y Linux?</li>
-    <li>¿Qué debe hacer tu programa si el fichero de datos no existe?</li>
+    <li>Si el programa se interrumpe mientras escribe el fichero, ¿qué queda?</li>
+    <li>¿Es lo mismo «este producto no existe» que «el disco está lleno»?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy los datos dejan de vivir en memoria, y con eso aparecen tres problemas nuevos: dónde está el fichero, qué pasa si la escritura se corta, y qué hacer con lo que falla. Los tres tienen respuestas conocidas.
 
 #### La API de promesas
 
 ```javascript
-import { readFile, writeFile, mkdir, access } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 
 const texto = await readFile(ruta, "utf8");
 await writeFile(ruta, JSON.stringify(datos, null, 2), "utf8");
@@ -877,9 +881,6 @@ import { fileURLToPath } from "node:url";
 
 const aqui = path.dirname(fileURLToPath(import.meta.url));
 const RUTA_DATOS = path.join(aqui, "..", "datos", "productos.json");
-
-path.extname("productos.json");   // ".json"
-path.basename("/datos/productos.json");   // "productos.json"
 ```
 
 <div class="rule">
@@ -887,8 +888,6 @@ path.basename("/datos/productos.json");   // "productos.json"
   <p>Escribir <code>carpeta + "/" + fichero</code> funciona en tu máquina y falla en otra. <code>path.join</code> pone el separador que corresponde al sistema y limpia los tramos sobrantes.</p>
   <p>Y componla siempre desde la posición del fichero, no desde donde se ejecutó el programa: si dependes de <code>process.cwd()</code>, tu servidor arrancará bien desde la carpeta del proyecto y fallará desde cualquier otra.</p>
 </div>
-
-#### Los errores que vas a ver
 
 | Código | Significa |
 | ------ | --------- |
@@ -908,68 +907,6 @@ try {
 ```
 
 Ese patrón —tratar el error que sabes tratar y dejar subir el resto— es el de la UD3, ahora con nombres concretos.
-
-#### Tarea 7 · El catálogo en disco
-
-1. Crea `datos/productos.json` con tu catálogo.
-2. Escribe en `almacen.js` las funciones `leerProductos` y `guardarProductos`.
-3. Compón la ruta con `path.join` desde la posición del módulo.
-4. Trata `ENOENT` devolviendo una lista vacía.
-5. Adapta el CLI para que lea y escriba de verdad.
-6. Ejecuta el programa desde otra carpeta y comprueba que sigue funcionando.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Lectura y escritura funcionando, con rutas portables y <code>ENOENT</code> tratado.</span></div>
-  <div><strong>Si lo tienes</strong><span>Crea la carpeta de datos automáticamente si no existe.</span></div>
-  <div><strong>Reto</strong><span>Mide cuánto tarda leer un fichero de diez mil productos y compáralo con la versión síncrona.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Lees y escribes con la API de promesas.</li>
-    <li>Compones rutas con <code>path</code>, no con barras.</li>
-    <li>Distingues los códigos de error más comunes.</li>
-    <li>Tu programa funciona desde cualquier carpeta.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué no usamos la versión síncrona en un servidor?</li>
-    <li>¿Qué significa <code>ENOENT</code>?</li>
-    <li>¿Por qué <code>path.join</code> y no concatenar?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque bloquea el único hilo y deja esperando a todas las peticiones.</p>
-  <p>2 · Que el fichero o la carpeta no existe.</p>
-  <p>3 · Porque el separador cambia según el sistema y la concatenación no es portable.</p>
-</details>
-
-
-### Bloque 2 · Un fichero JSON como almacén
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se implementa un CRUD sobre un fichero sin corromperlo.</li>
-    <li><strong>2. Haz:</strong> Termina el almacén con sus cuatro operaciones.</li>
-    <li><strong>3. Comprueba:</strong> Un fallo a mitad de escritura no destruye tus datos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si el programa se interrumpe mientras escribe el fichero, ¿qué queda?</li>
-    <li>¿Cómo asignas un identificador nuevo a un producto?</li>
-    <li>¿Qué diferencia hay entre modificar el objeto y guardar el fichero?</li>
-  </ol>
-</div>
 
 #### Las cuatro operaciones
 
@@ -1002,8 +939,6 @@ export async function borrar(id) {
 
 Fíjate en dos cosas. El identificador **no** es la longitud del array, porque tras borrar el tercero de tres volvería a repetirse el 3. Y `borrar` devuelve si borró algo, para que quien llame pueda responder 404 en la UD6.
 
-#### Escribir sin romper
-
 <div class="rule">
   <p class="rule-label">Escribe en un temporal y renombra</p>
   <p>Si el proceso muere a mitad de un <code>writeFile</code>, el fichero queda cortado: un JSON inválido, es decir, la pérdida completa de los datos. La reescritura íntegra es precisamente lo que realiza este almacén en cada operación.</p>
@@ -1020,74 +955,10 @@ export async function guardarProductos(productos) {
 }
 ```
 
-#### Los límites de este almacén
-
 <div class="rule">
   <p class="rule-label">Esto no es una base de datos, y hay que saber por qué</p>
   <p>Cada operación lee el fichero entero y lo reescribe entero. Con doscientos productos resulta suficiente; con doscientos mil, no. Si además dos peticiones escriben de forma simultánea, la segunda sobrescribe el resultado de la primera, porque ambas leyeron la misma versión.</p>
   <p>Para lo que hacemos aquí es suficiente, y evita instalar y configurar un motor de base de datos. Conviene, no obstante, saber nombrar sus dos límites —tamaño y concurrencia— porque son exactamente los problemas que resuelve la base de datos del módulo de servidor.</p>
-</div>
-
-#### Tarea 8 · El almacén completo
-
-1. Implementa `listar`, `obtener`, `crear`, `actualizar` y `borrar`.
-2. Genera los identificadores sin repetirlos nunca.
-3. Escribe de forma segura, con temporal y renombrado.
-4. Guarda fechas de creación y modificación en formato ISO.
-5. Conecta el CLI con el almacén, de punta a punta.
-6. Provoca una interrupción a mitad de escritura y comprueba que los datos sobreviven.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las cinco operaciones y escritura segura.</span></div>
-  <div><strong>Si lo tienes</strong><span>Guarda una copia del fichero antes de cada escritura.</span></div>
-  <div><strong>Reto</strong><span>Demuestra con dos procesos simultáneos que una escritura pisa a la otra, y explica por qué.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Las cinco operaciones funcionan de punta a punta.</li>
-    <li>Los identificadores nunca se repiten.</li>
-    <li>Escribes con temporal y renombrado.</li>
-    <li>Sabes nombrar los dos límites de este almacén.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Por qué el identificador no puede ser la longitud del array?</li>
-    <li>¿Qué protege escribir en un temporal y renombrar?</li>
-    <li>¿Qué dos límites tiene un fichero JSON como almacén?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque tras un borrado se repetiría un identificador ya usado.</p>
-  <p>2 · Que una interrupción deje el fichero de datos cortado e ilegible.</p>
-  <p>3 · El tamaño, porque se reescribe entero, y la concurrencia, porque dos escrituras se pisan.</p>
-</details>
-
-
-### Bloque 3 · Errores, validación y trazas
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se distingue un fallo esperable de uno inesperado, y qué se registra de cada uno.</li>
-    <li><strong>2. Haz:</strong> Da a tu proyecto un tratamiento de errores coherente.</li>
-    <li><strong>3. Comprueba:</strong> Ningún fallo deja el programa a medias en silencio.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Es lo mismo «este producto no existe» que «el disco está lleno»?</li>
-    <li>¿Cuál de los dos es culpa de tu programa?</li>
-    <li>¿Qué debería quedar registrado de cada uno?</li>
-  </ol>
 </div>
 
 #### Dos familias de fallo
@@ -1103,7 +974,7 @@ export async function guardarProductos(productos) {
   <p>Esa distinción es la que en la UD6 se convierte en la diferencia entre responder 404 y responder 500.</p>
 </div>
 
-#### Errores propios
+Un tipo de error propio permite distinguir en el `catch` qué clase de fallo llegó, sin comparar mensajes de texto:
 
 ```javascript
 export class ErrorDeValidacion extends Error {
@@ -1115,8 +986,6 @@ export class ErrorDeValidacion extends Error {
 }
 ```
 
-Un tipo propio permite distinguir en el `catch` qué clase de fallo llegó, sin comparar mensajes de texto:
-
 ```javascript
 catch (error) {
   if (error instanceof ErrorDeValidacion) {
@@ -1127,7 +996,7 @@ catch (error) {
 }
 ```
 
-#### Lo que nunca debe pasar desapercibido
+Por debajo de todo hace falta, además, una red de seguridad. Una promesa rechazada que nadie captura es el fallo silencioso más común de Node: el programa sigue corriendo como si nada, con una operación que no ocurrió.
 
 ```javascript
 process.on("uncaughtException", (error) => {
@@ -1141,13 +1010,9 @@ process.on("unhandledRejection", (motivo) => {
 });
 ```
 
-Una promesa rechazada que nadie captura es el fallo silencioso más común de Node: el programa sigue corriendo como si nada, con una operación que no ocurrió. Estos dos manejadores son la red de seguridad; no son el sitio donde tratar los errores.
+Esos dos manejadores son la red, no el sitio donde tratar los errores.
 
 #### Registrar con criterio
-
-```javascript
-console.error(`[${new Date().toISOString()}] crear producto falló: ${error.message}`);
-```
 
 | Nivel | Para qué |
 | ----- | -------- |
@@ -1156,40 +1021,141 @@ console.error(`[${new Date().toISOString()}] crear producto falló: ${error.mess
 | `info` | Hitos: arranque, apagado, configuración cargada |
 | `debug` | Detalle, solo mientras se investiga |
 
+```javascript
+console.error(`[${new Date().toISOString()}] crear producto falló: ${error.message}`);
+```
+
 Una regla no admite excepción: **en los registros no se escriben contraseñas, tokens ni datos personales**. Un fichero de log acaba copiado, enviado y guardado en sitios que nadie previó.
 
-#### Tarea 9 · Errores coherentes
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · el almacén del proyecto</p>
+
+Los tres primeros pasos construyen el almacén; los dos últimos lo rompen a propósito, que es la única forma de saber si aguanta.
+
+#### Paso 1 · El catálogo en disco · 35 min
+
+1. Crea `datos/productos.json` con tu catálogo.
+2. Escribe en `almacen.js` las funciones `leerProductos` y `guardarProductos`.
+3. Compón la ruta con `path.join` desde la posición del módulo.
+4. Trata `ENOENT` devolviendo una lista vacía.
+5. Crea la carpeta de datos automáticamente si no existe.
+6. Adapta el CLI para que lea y escriba de verdad.
+
+**Antes de continuar:** ejecuta el programa desde otra carpeta distinta. Si falla, tu ruta dependía de `process.cwd()`.
+
+#### Paso 2 · El almacén completo · 45 min
+
+Es el trabajo central de la sesión.
+
+1. Implementa `listar`, `obtener`, `crear`, `actualizar` y `borrar`.
+2. Genera los identificadores sin repetirlos nunca. Compruébalo: crea tres, borra el último, crea otro y mira qué identificador recibe.
+3. Escribe de forma segura, con temporal y renombrado.
+4. Guarda fechas de creación y modificación en formato ISO.
+5. Haz que `obtener` devuelva `null` y `borrar` devuelva un booleano, en lugar de lanzar. Esos dos valores serán el 404 de la UD6.
+6. Conecta el CLI con el almacén, de punta a punta.
+
+#### Paso 3 · Errores coherentes · 40 min
 
 1. Define `ErrorDeValidacion` y `ErrorNoEncontrado`.
-2. Haz que el almacén lance el segundo y devuelva datos en los casos normales.
+2. Decide cuál de los dos usa el almacén y cuál devuelve datos. No es evidente, y la decisión que tomes aquí condiciona la UD6: escríbela.
 3. Trata en el CLI cada familia con su mensaje y su código de salida.
 4. Añade la red de seguridad de los dos manejadores de proceso.
-5. Registra cada operación con marca de tiempo.
-6. Provoca cuatro fallos distintos y comprueba el comportamiento de cada uno.
+5. Registra cada operación con marca de tiempo y el nivel que le corresponda.
+6. Revisa que en ningún registro aparece un dato que no debería salir del programa.
+
+#### Paso 4 · Provoca los fallos · 15 min
+
+Un tratamiento de errores que no se ha probado no existe. Provoca estos seis y anota qué hace tu programa con cada uno:
+
+| Fallo provocado | Cómo provocarlo | Qué debería hacer | Qué hace |
+| --------------- | --------------- | ----------------- | -------- |
+| El fichero no existe | Bórralo | | |
+| El JSON está corrupto | Métele una coma de más | | |
+| Sin permisos de escritura | Marca el fichero como solo lectura | | |
+| Producto inexistente | Pide el id 9999 | | |
+| Precio inválido | Pásale `"abc"` | | |
+| Promesa rechazada sin tratar | Quita un `await` de una llamada que falla | | |
+
+Los dos últimos son los interesantes. El quinto debe dar un mensaje y salir con código 1; el sexto, sin el manejador de proceso, no dice nada en absoluto. Pruébalo con y sin él.
+
+#### Paso 5 · Los dos límites, demostrados · 15 min
+
+1. Genera un fichero con **diez mil** productos y mide cuánto tarda una operación de crear. Anótalo.
+2. Explica por qué tarda lo que tarda: cuenta cuántas veces se lee y se escribe el fichero entero para añadir un solo producto.
+3. Interrumpe el programa a mitad de una escritura —con `Ctrl+C` bien cronometrado, o metiendo una espera antes del renombrado— y comprueba que el fichero de datos sobrevive intacto.
+4. Repite la prueba anterior **sin** el temporal, escribiendo directamente encima. Compara.
+5. Escribe en dos líneas cuál de los dos límites acabas de demostrar y cuál te queda por demostrar.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto demuestra el límite que falta, y es el más instructivo de la unidad.
+
+##### Reto 1 · Dos escrituras que se pisan
+
+El segundo límite del almacén se enuncia fácil y cuesta creerlo hasta que se ve.
+
+1. Escribe un pequeño programa que llame a `crear` un producto y termine.
+2. Lánzalo **dos veces a la vez**, desde dos terminales, o encadenando las dos llamadas en segundo plano desde una sola.
+3. Cuenta los productos que hay al terminar. Repítelo varias veces: tarde o temprano habrá uno menos de los que creaste, y ningún error se habrá mostrado.
+4. Explica exactamente qué ocurrió, siguiendo el orden de las operaciones: quién leyó, quién escribió y qué versión de la lista tenía cada uno.
+5. Este problema tiene nombre en la disciplina. Búscalo y escríbelo.
+6. Propón **dos** soluciones de naturaleza distinta: una que se pueda implementar sobre ficheros, y otra que consista en no usar ficheros. Di cuál elegirías para este proyecto y por qué. La segunda es, literalmente, el temario del módulo de servidor.
+
+##### Reto 2 · Lo que cuesta bloquear el proceso
+
+La regla dice que en un servidor no se usa la API síncrona. Compruébalo en lugar de creerlo.
+
+1. Con el fichero de diez mil productos, mide el tiempo de `readFile` de promesas y el de `readFileSync`. En un programa de terminal, la diferencia de tiempo total es pequeña.
+2. Ahora monta el escenario del servidor: un programa que, mientras lee el fichero, tiene que atender otra cosa. Usa un `setInterval` que imprima un punto cada 10 ms.
+3. Ejecuta las dos versiones y cuenta los puntos que salen durante la lectura. Con la síncrona no sale ninguno.
+4. Explica en tres líneas qué significa eso en un servidor con cincuenta peticiones simultáneas.
+5. Como segunda parte, añade a tu almacén una copia de seguridad antes de cada escritura, conservando solo las tres últimas. Decide dónde van, cómo se nombran y quién las borra.
+6. Comprueba que tu copia funciona: corrompe el fichero principal a mano y restaura desde la última copia.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Dos tipos de error propios, tratados con su código de salida.</span></div>
-  <div><strong>Si lo tienes</strong><span>Escribe los registros en un fichero además de en la terminal.</span></div>
-  <div><strong>Reto</strong><span>Provoca una promesa rechazada sin tratar y comprueba qué pasa con y sin el manejador.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Lectura y escritura con rutas portables y <code>ENOENT</code> tratado, las cinco operaciones funcionando y escritura segura con temporal.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de los seis fallos provocados contestada, y los dos tipos de error propios tratados con su código de salida.</span></div>
+  <div><strong>Reto</strong><span>La carrera de escrituras demostrada y explicada con su nombre, o la medición del bloqueo del proceso con el sistema de copias.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 3</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Tus datos viven en disco y se leen y escriben sin corromperse.</li>
-    <li>Distingues fallos esperables de inesperados.</li>
-    <li>Cada error tiene su mensaje y su código de salida.</li>
+    <li>Compones rutas con <code>path</code> y el programa funciona desde cualquier carpeta.</li>
+    <li>Los identificadores nunca se repiten.</li>
+    <li>Distingues fallos esperables de inesperados, y cada uno tiene su código de salida.</li>
+    <li>Sabes nombrar los dos límites de este almacén.</li>
     <li>Nada personal acaba en los registros.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Por qué no usamos la versión síncrona en un servidor?</li>
+    <li>¿Qué significa <code>ENOENT</code>, y qué se hace con él la primera vez que arranca el programa?</li>
+    <li>¿Por qué el identificador no puede ser la longitud del array?</li>
+    <li>¿Qué protege escribir en un temporal y renombrar?</li>
+    <li>¿Qué dos límites tiene un fichero JSON como almacén?</li>
+    <li>¿Qué diferencia hay entre un error esperable y uno inesperado?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · No: uno es un resultado posible del negocio y el otro un fallo del sistema.</p>
-  <p>2 · Con <code>instanceof</code> sobre tipos de error propios, no comparando mensajes.</p>
-  <p>3 · Que el programa siga corriendo como si la operación hubiera funcionado.</p>
+  <p>1 · Porque bloquea el único hilo y deja esperando a todas las peticiones.</p>
+  <p>2 · Que el fichero o la carpeta no existe; en el primer arranque se trata devolviendo una lista vacía.</p>
+  <p>3 · Porque tras un borrado se repetiría un identificador ya usado.</p>
+  <p>4 · Que una interrupción deje el fichero de datos cortado e ilegible.</p>
+  <p>5 · El tamaño, porque se reescribe entero, y la concurrencia, porque dos escrituras se pisan.</p>
+  <p>6 · El esperable es un resultado posible del negocio y se devuelve como dato; el inesperado es un fallo del sistema y se registra con su traza.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 3 · 5–10 minutos</p>
@@ -1200,6 +1166,7 @@ Una regla no admite excepción: **en los registros no se escriben contraseñas, 
     <li>Compón la ruta de <code>datos/productos.json</code> sin depender de la carpeta desde la que se ejecute el programa.</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 4 · El servidor a mano
