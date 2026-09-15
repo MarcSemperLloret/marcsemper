@@ -186,16 +186,14 @@ Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada blo
 
 ## Sesión 1 · La página como objetos
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>El DOM</strong>, <strong>Seleccionar elementos</strong> y <strong>Modificar el documento</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · El DOM
+<p class="lead">Tres horas. Media hora para entender qué es el DOM y cómo se localiza y se modifica un elemento, y dos horas y media preparando tu página para que el código pueda trabajar con ella sin romperse al primer cambio de diseño.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué es el DOM, por qué no es tu fichero HTML, y cómo se recorre.</li>
-    <li><strong>2. Haz:</strong> Explora el DOM de tu propia web desde la consola.</li>
-    <li><strong>3. Comprueba:</strong> Distingues lo que escribiste de lo que el navegador construyó.</li>
+    <li><strong>1. Aprende:</strong> Qué es el DOM y por qué no es tu fichero HTML, cómo se localiza un elemento, y cómo se cambia su contenido y su aspecto sin meter diseño en el código.</li>
+    <li><strong>2. Haz:</strong> Explora el DOM de tu web, prepárala con anclajes pensados para el código y cambia el estado visual del catálogo desde JavaScript.</li>
+    <li><strong>3. Comprueba:</strong> Ninguna selección depende de la posición ni de una clase de estilo, y cambias clases en lugar de estilos en línea.</li>
   </ol>
 </div>
 
@@ -203,10 +201,16 @@ Cada sesión dura tres horas, repartidas en tres bloques de una hora, y cada blo
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>Cuando el navegador lee tu HTML, ¿qué crees que hace con él?</li>
-    <li>Si cambias algo en la pestaña Elements, ¿cambia tu fichero?</li>
-    <li>¿Por qué crees que el código tiene que esperar a que el documento exista?</li>
+    <li>Si el diseñador cambia la clase <code>.tarjeta</code> por <code>.card</code>, ¿se rompe tu código?</li>
+    <li>¿Qué riesgo ves en insertar texto escrito por un usuario dentro del HTML?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+Hoy empieza la tercera capa, y la idea que la gobierna es la misma de las dos anteriores: cada cosa en su sitio. El código dice qué está pasando; el CSS, cómo se ve. Todo lo que hagamos hoy sirve para no mezclarlas.
 
 #### El documento, convertido en objetos
 
@@ -230,11 +234,8 @@ Compruébalo: en la pestaña Elements borra un párrafo; desaparece de la pantal
 
 En sentido inverso: si tu código crea diez artículos, aparecerán en Elements y no constarán en el archivo. Por eso, cuando en la sesión 3 pintes el catálogo, «ver código fuente» no te servirá de nada: hay que mirar Elements.
 
-#### El árbol y sus nodos
-
 ```javascript
 document                       // el documento entero
-document.documentElement       // el elemento raíz
 document.body                  // el cuerpo
 document.title                 // el título de la pestaña
 
@@ -247,80 +248,14 @@ main.nextElementSibling
 
 Un detalle que confunde a todo el mundo: el DOM también guarda como nodos los espacios y saltos de línea entre etiquetas. Por eso usamos siempre las propiedades que hablan de **elementos** (`children`, `firstElementChild`) y no las que hablan de nodos en general (`childNodes`, `firstChild`).
 
-#### Cuándo puede ejecutarse tu código
-
-Si el código se ejecuta antes de que exista el documento, no encontrará nada:
+Si el código se ejecuta antes de que exista el documento, además, no encontrará nada:
 
 ```javascript
 const titulo = document.querySelector("h1");
 console.log(titulo);      // null si el script se ejecutó demasiado pronto
 ```
 
-Esto ya lo resolviste en la UD3: con `defer`, o con `type="module"`, el navegador espera a tener el documento completo. Recuérdalo, porque el `null` de arriba es el error número uno de esta unidad.
-
-#### Tarea 1 · Explora tu propia web
-
-Desde la consola de tu página de productos:
-
-1. Cuenta cuántos enlaces hay: `document.querySelectorAll("a").length`.
-2. Obtén el texto del `h1`.
-3. Recorre las secciones y muestra su primer encabezado.
-4. Cambia el título de la pestaña y observa el efecto.
-5. Borra un elemento desde Elements y explica por qué el fichero no cambia.
-6. Dibuja en papel el árbol de las tres primeras ramas de tu página.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Recorres el árbol desde la consola y explicas qué es el DOM.</span></div>
-  <div><strong>Si lo tienes</strong><span>Escribe una función que imprima el árbol con sangría por niveles.</span></div>
-  <div><strong>Reto</strong><span>Explica por qué <code>childNodes</code> devuelve más cosas de las que esperabas.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Explicas la diferencia entre tu fichero y el DOM.</li>
-    <li>Te mueves por el árbol con las propiedades de elemento.</li>
-    <li>Sabes por qué el código debe esperar al documento.</li>
-    <li>Reconoces un <code>null</code> por selección prematura.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué es el DOM?</li>
-    <li>¿Por qué «ver código fuente» no muestra lo que crea tu código?</li>
-    <li>¿Qué devuelve una selección hecha antes de tiempo?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El árbol de objetos que el navegador construye a partir del HTML y que existe mientras la página está abierta.</p>
-  <p>2 · Porque el código fuente es el fichero recibido, y lo que creas después solo existe en el DOM: se ve en Elements.</p>
-  <p>3 · <code>null</code>, porque el elemento aún no existía.</p>
-</details>
-
-
-### Bloque 2 · Seleccionar elementos
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se localiza un elemento y qué devuelve cada forma de buscarlo.</li>
-    <li><strong>2. Haz:</strong> Prepara tu HTML con puntos de anclaje pensados para el código.</li>
-    <li><strong>3. Comprueba:</strong> Ninguna de tus selecciones depende de la posición ni de una clase de estilo.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si el diseñador cambia la clase <code>.tarjeta</code> por <code>.card</code>, ¿se rompe tu código?</li>
-    <li>¿Qué selectores CSS recuerdas de la UD2?</li>
-    <li>¿Qué diferencia hay entre «el primero que cumpla» y «todos los que cumplan»?</li>
-  </ol>
-</div>
+Esto ya lo resolviste en la UD3: con `defer`, o con `type="module"`, el navegador espera a tener el documento completo. Recuérdalo, porque ese `null` es el error número uno de la unidad.
 
 #### Los dos métodos que vas a usar
 
@@ -338,9 +273,7 @@ document.querySelector("[data-categoria='teclados']");
 document.querySelectorAll("article:not(.agotado)");
 ```
 
-Existen métodos más antiguos —`getElementById`, `getElementsByClassName`— que verás en tutoriales. Funcionan, pero con dos sirve, y los dos aceptan la misma sintaxis que ya sabes.
-
-#### Lo que devuelve `querySelectorAll` no es un array
+Existen métodos más antiguos —`getElementById`, `getElementsByClassName`— que verás en tutoriales; con estos dos sirve.
 
 ```javascript
 const tarjetas = document.querySelectorAll(".producto");
@@ -354,7 +287,7 @@ tarjetas.map(...)        // TypeError: no es una función
 
 Es una `NodeList`. Tiene `length` y `forEach`, pero no los métodos de la UD3. Los tres puntos la convierten en un array de verdad.
 
-Una lista vacía, además, **no es null**: si el selector no encuentra nada, `querySelectorAll` devuelve una lista de longitud cero, mientras que `querySelector` devuelve `null`. Confundir esos dos casos es el segundo error más común de la unidad.
+Una lista vacía, además, **no es `null`**: si el selector no encuentra nada, `querySelectorAll` devuelve una lista de longitud cero, mientras que `querySelector` devuelve `null`. Confundir esos dos casos es el segundo error más común de la unidad.
 
 #### Anclajes pensados para el código
 
@@ -370,12 +303,7 @@ Una lista vacía, además, **no es null**: si el selector no encuentra nada, `qu
 <p data-js="resultado" role="status"></p>
 ```
 
-```javascript
-const buscador = document.querySelector("[data-js='buscador']");
-const catalogo = document.querySelector("[data-js='catalogo']");
-```
-
-#### Guardar las referencias una sola vez
+Esas referencias se buscan **una sola vez**, al arrancar:
 
 ```javascript
 // Mal: busca en el árbol cada vez que el usuario escribe
@@ -393,76 +321,13 @@ const elementos = {
 
 Además de ser más rápido, agrupa en un sitio todo lo que tu código espera encontrar en la página. Si algo sale `null`, se ve al arrancar y no en mitad de un evento.
 
-#### Tarea 2 · Preparar el terreno
-
-Sobre tu página de productos:
-
-1. Añade atributos `data-js` a los seis elementos con los que vas a trabajar.
-2. Crea `js/dom.js` que los seleccione y los exporte en un objeto.
-3. Escribe una comprobación que avise por consola si alguno es `null`.
-4. Selecciona todas las tarjetas y cuéntalas.
-5. Convierte la `NodeList` en array y obtén sus textos con `map`.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Seis anclajes, seleccionados una vez y comprobados.</span></div>
-  <div><strong>Si lo tienes</strong><span>Haz que la comprobación diga qué anclaje falta, por su nombre.</span></div>
-  <div><strong>Reto</strong><span>Escribe una función que seleccione y lance un error claro si no encuentra el elemento.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>Usas los dos métodos de selección y sabes qué devuelve cada uno.</li>
-    <li>Seleccionas por <code>data-</code>, no por clases de estilo.</li>
-    <li>Conviertes una <code>NodeList</code> en array cuando la necesitas.</li>
-    <li>Guardas las referencias una sola vez.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué devuelve <code>querySelector</code> si no encuentra nada? ¿Y <code>querySelectorAll</code>?</li>
-    <li>¿Por qué no seleccionamos por clases de CSS?</li>
-    <li>¿Cómo se usa <code>map</code> sobre el resultado de <code>querySelectorAll</code>?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>null</code> el primero; una lista vacía el segundo.</p>
-  <p>2 · Porque las clases son del diseño y cambian: el código quedaría atado a decisiones visuales.</p>
-  <p>3 · Convirtiéndola antes en array con los tres puntos.</p>
-</details>
-
-
-### Bloque 3 · Modificar el documento
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se cambia el texto, las clases, los atributos y el estilo de un elemento.</li>
-    <li><strong>2. Haz:</strong> Cambia el estado visual de tu catálogo desde el código.</li>
-    <li><strong>3. Comprueba:</strong> Cambias clases, no estilos en línea.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>Si un producto se agota, ¿qué debería cambiar en la página?</li>
-    <li>¿Dónde está escrito cómo se ve un producto agotado: en el CSS o en el JavaScript?</li>
-    <li>¿Qué riesgo ves en insertar texto escrito por un usuario dentro del HTML?</li>
-  </ol>
-</div>
-
-#### Contenido
+#### Cambiar el contenido
 
 ```javascript
 const titulo = document.querySelector("h1");
 
-titulo.textContent = "Catálogo de productos";     // texto plano: lo habitual
-titulo.innerHTML = "Catálogo <strong>2026</strong>";  // interpreta etiquetas
+titulo.textContent = "Catálogo de productos";        // texto plano: lo habitual
+titulo.innerHTML = "Catálogo <strong>2026</strong>"; // interpreta etiquetas
 ```
 
 <div class="rule">
@@ -471,11 +336,9 @@ titulo.innerHTML = "Catálogo <strong>2026</strong>";  // interpreta etiquetas
   <p><code>textContent</code> escribe texto y solo texto: el contenido se muestra literalmente, sin interpretarse ni ejecutarse. Usa <code>innerHTML</code> únicamente con marcado que hayas escrito tú, y nunca con datos del usuario.</p>
 </div>
 
-#### Clases: el puente con el CSS
+#### Cambiar el aspecto sin escribir diseño
 
 ```javascript
-const tarjeta = document.querySelector("[data-js='producto-1']");
-
 tarjeta.classList.add("agotado");
 tarjeta.classList.remove("agotado");
 tarjeta.classList.toggle("destacado");
@@ -488,66 +351,192 @@ tarjeta.classList.contains("agotado");    // true / false
   <p>Si en lugar de eso escribes <code>elemento.style.backgroundColor = "grey"</code>, has metido una decisión de diseño dentro del comportamiento: nadie la encontrará buscando en el CSS, y no responderá al modo oscuro ni al tema de la UD2.</p>
 </div>
 
-#### Atributos y datos
-
-```javascript
-const enlace = document.querySelector("a");
-
-enlace.getAttribute("href");
-enlace.setAttribute("href", "productos.html");
-enlace.removeAttribute("target");
-enlace.hasAttribute("download");
-
-// Los atributos data- tienen su propio acceso
-const tarjeta = document.querySelector("[data-id='7']");
-tarjeta.dataset.id;            // "7"  ← siempre texto
-Number(tarjeta.dataset.id);    // 7
-tarjeta.dataset.categoria = "teclados";
-```
-
-`dataset` será la forma de saber, en la sesión 2, a qué producto corresponde el botón que se acaba de pulsar. Conviene observar de nuevo el mismo detalle: el valor llega como **texto**.
-
-#### Estilos, y el caso en que sí valen
+Hay un caso en el que tocar `style` sí es legítimo: cuando el valor es un **dato** y la regla sigue viviendo en la hoja de estilos.
 
 ```javascript
 elemento.style.setProperty("--altura-imagen", "220px");
 ```
 
-Cambiar una variable CSS de las que definiste en la UD2 sí es legítimo: el valor es un dato —una posición, una altura calculada, un porcentaje de progreso— y la regla que lo usa sigue viviendo en la hoja de estilos.
+Cambiar así una variable CSS de las que definiste en la UD2 no mete diseño en el código: mete un número, y el diseño lo sigue decidiendo el CSS.
 
-#### Tarea 3 · Estado visual desde el código
+Los atributos se leen y se escriben con sus propios métodos:
 
-En tu página de productos, con el catálogo todavía escrito a mano en HTML:
+```javascript
+enlace.getAttribute("href");
+enlace.setAttribute("href", "productos.html");
+enlace.removeAttribute("target");
+enlace.hasAttribute("download");
+```
 
-1. Marca con la clase `agotado` los productos sin stock, leyendo el dato de `dataset`.
+Y los `data-` tienen además un acceso propio, que será la forma de saber en la sesión 2 a qué producto corresponde el botón que se acaba de pulsar:
+
+```javascript
+tarjeta.dataset.id;            // "7"  ← siempre texto
+Number(tarjeta.dataset.id);    // 7
+tarjeta.dataset.categoria = "teclados";
+```
+
+Conviene observar de nuevo el mismo detalle de la UD3: el valor llega como texto.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+
+Hoy la página deja de ser algo que solo se mira y pasa a ser algo con lo que el código habla. Los dos primeros pasos preparan esa conversación; los tres últimos la ponen a prueba.
+
+#### Paso 1 · Explora tu propia web · 30 min
+
+Desde la consola de tu página de productos:
+
+1. Cuenta cuántos enlaces hay: `document.querySelectorAll("a").length`.
+2. Obtén el texto del `h1`.
+3. Recorre las secciones y muestra su primer encabezado.
+4. Cambia el título de la pestaña y observa el efecto.
+5. Borra un elemento desde Elements y explica por escrito por qué el fichero no cambia.
+6. Dibuja en papel el árbol de las tres primeras ramas de tu página.
+7. Compara `main.children` con `main.childNodes` y anota cuántos elementos devuelve cada uno y por qué no coinciden.
+
+**Antes de continuar:** puedes explicar en una frase la diferencia entre lo que escribiste y lo que el navegador construyó.
+
+#### Paso 2 · Preparar el terreno · 35 min
+
+Sobre tu página de productos:
+
+1. Añade atributos `data-js` a los seis elementos con los que vas a trabajar.
+2. Crea `js/dom.js` que los seleccione y los exporte en un objeto.
+3. Escribe una comprobación que avise por consola si alguno es `null`, **diciendo qué anclaje falta por su nombre**.
+4. Selecciona todas las tarjetas y cuéntalas.
+5. Convierte la `NodeList` en array y obtén sus textos con `map`.
+6. Quita a propósito un `data-js` del HTML y comprueba que tu aviso lo detecta al arrancar.
+
+El apartado 6 es el que importa: un anclaje que falta debe delatarse al cargar la página, no veinte minutos después dentro de un evento.
+
+#### Paso 3 · Estado visual desde el código · 40 min
+
+Es el trabajo central de la sesión. Con el catálogo todavía escrito a mano en HTML:
+
+1. Marca con la clase `agotado` los productos sin stock, leyendo el dato de `dataset`. Recuerda convertir.
 2. Escribe en un párrafo cuántos productos hay disponibles.
-3. Añade un botón que alterne una clase de vista compacta en la lista.
+3. Añade un botón que alterne una clase de vista compacta en la lista, aplicándola a todas las tarjetas de una vez.
 4. Cambia el `title` de la pestaña para incluir el número de resultados.
-5. Prueba a hacer lo mismo con `style` y explica por escrito por qué es peor.
+5. Define en el CSS cómo se ve `.agotado` y cómo se ve la vista compacta. **Todo el aspecto vive ahí**, y tu JavaScript no contiene un solo color.
+
+#### Paso 4 · Clases frente a estilos en línea · 20 min
+
+Repite el apartado 1 del paso anterior con `element.style` en lugar de `classList`, y compara las dos versiones:
+
+| Pregunta | Con `classList` | Con `style` |
+| -------- | --------------- | ----------- |
+| ¿Dónde está escrito el color del estado agotado? | | |
+| ¿Cuántos ficheros hay que tocar para cambiarlo? | | |
+| ¿Responde al modo oscuro de la UD2? | | |
+| ¿Qué gana la regla en la cascada, y por qué? | | |
+| ¿Puede el CSS sobrescribirlo sin `!important`? | | |
+
+La última fila conecta con la sesión 1 de la UD2: un estilo en línea gana a casi todo, y eso lo convierte en un problema de cascada además de en un problema de organización.
+
+Quédate con la versión de `classList` y borra la otra.
+
+#### Paso 5 · Un selector que no falla en silencio · 25 min
+
+`document.querySelector` devuelve `null` cuando no encuentra nada, y ese `null` viaja tranquilamente hasta que algo intenta usarlo. Escribe tu propia función de selección que no lo permita:
+
+```javascript
+export function seleccionar(ancla, contexto = document) {
+  // devuelve el elemento, o lanza un error que diga qué ancla faltaba
+}
+```
+
+1. Escríbela y úsala en `dom.js` para los seis anclajes.
+2. El mensaje del error debe incluir el nombre del ancla y ser suficiente para arreglarlo sin abrir el código.
+3. Escribe también `seleccionarTodos(ancla)`, que devuelva **un array** en vez de una `NodeList`. Decide si esta debe lanzar error con cero resultados, y justifica tu decisión: no es la misma que la anterior.
+4. Prueba las dos quitando anclajes del HTML.
+5. Anota en un comentario en qué caso preferirías seguir usando `querySelector` a secas.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. Los dos retos enseñan, cada uno por su lado, por qué las reglas de hoy no eran manías.
+
+##### Reto 1 · El rediseño que rompe el código
+
+Este JavaScript funciona hoy:
+
+```javascript
+const tarjetas = document.querySelectorAll(".card-azul");
+const boton = document.querySelector("main div div:nth-child(3) button");
+const titulo = document.querySelector("section.destacada h2");
+
+tarjetas[0].classList.add("primero");
+boton.textContent = "Comprar";
+```
+
+Mañana el equipo de diseño hace cuatro cambios, todos razonables y ninguno pensado para fastidiarte:
+
+```text
+1. Renombra .card-azul como .card--primaria, porque el azul cambió a verde.
+2. Envuelve el contenido en un <div class="wrapper"> más para centrarlo.
+3. La sección destacada pasa de ser <section> a <article>.
+4. El catálogo se reordena, y la tarjeta que iba primera ahora va tercera.
+```
+
+1. Para cada uno de los cuatro cambios, di qué línea del JavaScript se rompe y **qué error exacto** aparecería en consola. Dos de ellos no dan error: producen un `null` o una lista vacía y el fallo se manifiesta más tarde. Identifícalos.
+2. Reescribe las cuatro selecciones con anclajes `data-js` y comprueba que los cuatro cambios de diseño dejan de afectarte.
+3. La línea de `tarjetas[0]` sigue siendo frágil aunque uses `data-js`. Explica por qué y propón qué debería decidir cuál es «la primera».
+4. Escribe en tres líneas qué le dirías al equipo de diseño para que en el futuro sepa qué puede tocar sin avisarte. La respuesta no es «que no toque nada».
+
+##### Reto 2 · Por qué `innerHTML` con datos ajenos es un problema
+
+Monta una página mínima con un campo de texto y un contenedor donde se muestre lo escrito usando `innerHTML`.
+
+1. Escribe en el campo `<strong>hola</strong>` y observa qué aparece.
+2. Escribe ahora `<img src="x" onerror="alert('código ejecutado')">`. Anota qué pasa. No hace falta que entiendas el detalle: basta con que veas que **se ha ejecutado código que tú no escribiste**.
+3. Cambia `innerHTML` por `textContent` y repite las dos pruebas. Describe la diferencia.
+4. Ahora el caso realista: tu catálogo pinta el nombre del producto con `innerHTML` porque quieres que algunos lleven `<em>`. Un producto viene de un formulario y su nombre contiene una comilla y un signo de menor que. Propón dos soluciones distintas, y di cuál elegirías y por qué.
+5. Este ataque tiene nombre en la disciplina. Búscalo, escríbelo, y explica en dos líneas por qué el problema no está en el usuario que escribe, sino en el código que confía.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Clases aplicadas según datos, y un recuento escrito en la página.</span></div>
-  <div><strong>Si lo tienes</strong><span>Que la clase de vista compacta se aplique a todas las tarjetas de una vez.</span></div>
-  <div><strong>Reto</strong><span>Escribe un texto con etiquetas usando <code>textContent</code> y observa qué se ve. Explica por qué eso es exactamente lo que quieres.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Seis anclajes seleccionados una vez y comprobados, y clases aplicadas según los datos con todo el aspecto en el CSS.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de comparación entre <code>classList</code> y <code>style</code> contestada, y las dos funciones de selección con errores claros.</span></div>
+  <div><strong>Reto</strong><span>Los cuatro cambios de diseño diagnosticados y reparados, y la demostración de inyección con su solución razonada.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 1</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
     <li>Explicas qué es el DOM y por qué no es tu fichero.</li>
-    <li>Seleccionas por anclajes pensados para el código.</li>
+    <li>Seleccionas por anclajes pensados para el código, no por clases de estilo.</li>
+    <li>Guardas las referencias una sola vez y avisas si falta alguna.</li>
     <li>Cambias texto con <code>textContent</code> y aspecto con clases.</li>
+    <li>Tu JavaScript no contiene ningún color ni medida de diseño.</li>
     <li>Sabes por qué <code>innerHTML</code> con datos ajenos es un riesgo.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿Qué es el DOM?</li>
+    <li>¿Por qué «ver código fuente» no muestra lo que crea tu código?</li>
+    <li>¿Qué devuelve <code>querySelector</code> si no encuentra nada? ¿Y <code>querySelectorAll</code>?</li>
+    <li>¿Por qué no seleccionamos por clases de CSS?</li>
+    <li>¿Por qué cambiamos una clase en lugar de un estilo en línea?</li>
+    <li>¿De qué tipo es siempre lo que devuelve <code>dataset</code>?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque permite insertar etiquetas y código que llegan desde fuera; <code>textContent</code> los muestra como texto.</p>
-  <p>2 · Añadiendo o quitando clases, para que el aspecto siga viviendo en el CSS.</p>
-  <p>3 · Como texto: <code>dataset</code> siempre devuelve cadenas y hay que convertir.</p>
+  <p>1 · El árbol de objetos que el navegador construye a partir del HTML y que existe mientras la página está abierta.</p>
+  <p>2 · Porque el código fuente es el fichero recibido, y lo que creas después solo existe en el DOM: se ve en Elements.</p>
+  <p>3 · <code>null</code> el primero; una lista vacía el segundo.</p>
+  <p>4 · Porque las clases son del diseño y cambian: el código quedaría atado a decisiones visuales.</p>
+  <p>5 · Para que el aspecto siga viviendo en el CSS, responda al tema y se pueda sobrescribir sin pelear con la cascada.</p>
+  <p>6 · Texto. Hay que convertirlo si se va a operar con él.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 1 · 5–10 minutos</p>
@@ -558,6 +547,7 @@ En tu página de productos, con el catálogo todavía escrito a mano en HTML:
     <li>¿Por qué cambiamos una clase en lugar de un estilo en línea?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 2 · Eventos y elementos dinámicos
