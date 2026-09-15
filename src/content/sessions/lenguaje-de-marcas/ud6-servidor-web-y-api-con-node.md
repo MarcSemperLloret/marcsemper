@@ -817,16 +817,14 @@ Reproduce la carrera de la UD5, ahora con dos peticiones HTTP en lugar de dos pr
 
 ## Sesión 3 · Capas y consistencia
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Separar en capas</strong>, <strong>Persistencia y consistencia</strong> y <strong>El contrato de errores en la práctica</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Separar en capas
+<p class="lead">Tres horas. Media hora para entender qué sabe cada capa y qué no debe saber ninguna, y dos horas y media separando tu proyecto hasta poder cambiarle el almacén sin tocar una sola ruta.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Qué hace cada capa y qué no debe saber ninguna de ellas.</li>
-    <li><strong>2. Haz:</strong> Separa ruta, servicio y repositorio en tu proyecto.</li>
-    <li><strong>3. Comprueba:</strong> Puedes cambiar el almacén sin tocar una sola ruta.</li>
+    <li><strong>1. Aprende:</strong> Qué hace cada capa, cómo se sostiene la coherencia de los datos y cómo se traduce cada error interno a una respuesta HTTP en un solo sitio.</li>
+    <li><strong>2. Haz:</strong> Separa ruta, servicio y repositorio; sustituye el almacén por otro; cierra el manejador central de errores.</li>
+    <li><strong>3. Comprueba:</strong> Puedes cambiar el almacén sin tocar nada más, y ninguna ruta decide ya un código de estado por su cuenta.</li>
   </ol>
 </div>
 
@@ -834,10 +832,16 @@ Reproduce la carrera de la UD5, ahora con dos peticiones HTTP en lugar de dos pr
   <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
   <ol>
     <li>¿Cuántos ficheros tocarías hoy si cambiaras el fichero JSON por una base de datos?</li>
-    <li>¿Hay alguna función que sepa a la vez de HTTP y de ficheros?</li>
-    <li>¿Dónde vive la regla «no se puede borrar un producto con stock»?</li>
+    <li>¿Qué pasa si el fichero de datos tiene un producto sin precio, o dos con el mismo identificador?</li>
+    <li>¿Cuántos sitios de tu código deciden hoy un código de estado?</li>
   </ol>
 </div>
+
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+La sesión tiene una sola prueba, y hoy se pasa o no se pasa: **cambiar el sitio donde viven los datos sin tocar nada por encima**. Todo lo demás son las condiciones para que eso sea posible.
 
 #### Las tres capas
 
@@ -886,67 +890,10 @@ export async function borrarProducto(peticion, respuesta, next) {
 <div class="rule">
   <p class="rule-label">La prueba de que las capas están bien separadas</p>
   <p>Busca en tu servicio la palabra <code>respuesta</code>, y en tu repositorio la palabra <code>peticion</code>. Si aparecen, la separación es decorativa.</p>
-  <p>Y la prueba de fuego: si cambiar el fichero JSON por una base de datos obliga a tocar algo fuera del repositorio, todavía no están separadas. Ese es exactamente el ejercicio de la sesión siguiente.</p>
+  <p>Y la prueba de fuego: si cambiar el fichero JSON por otro almacén obliga a tocar algo fuera del repositorio, todavía no están separadas. Ese es exactamente el ejercicio de hoy.</p>
 </div>
 
-#### Por qué molestarse
-
-Con un solo recurso y un fichero, esta separación parece burocracia. Sus tres razones aparecen enseguida: se puede probar el servicio sin levantar un servidor; se puede cambiar el almacén sin tocar la API; y cuando el proyecto tiene ocho recursos, todos se organizan igual y cualquiera sabe dónde mirar.
-
-Es, además, la arquitectura que verás en el módulo de servidor con otros nombres: controlador, servicio y repositorio.
-
-#### Tarea 7 · La separación
-
-1. Crea `src/servicio/` y `src/repositorio/` y reparte tu código.
-2. Deja las rutas sin ninguna referencia a ficheros.
-3. Deja el servicio sin ninguna referencia a peticiones ni respuestas.
-4. Mueve al servicio las reglas de negocio que estaban en las rutas.
-5. Busca las dos palabras de la prueba y arregla lo que aparezca.
-6. Escribe un programa que use el servicio directamente, sin HTTP.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Tres capas separadas y la prueba de las dos palabras superada.</span></div>
-  <div><strong>Si lo tienes</strong><span>Añade una regla de negocio nueva y comprueba que solo tocas el servicio.</span></div>
-  <div><strong>Reto</strong><span>Haz que el servicio reciba el repositorio como parámetro, para poder sustituirlo.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 1</p>
-  <ul class="checklist">
-    <li>Cada capa sabe solo lo suyo.</li>
-    <li>Las reglas de negocio están en el servicio.</li>
-    <li>El servicio se puede usar sin servidor.</li>
-    <li>Sabes nombrar las tres razones de separar.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Ruta, servicio y repositorio.</p>
-  <p>2 · En el servicio, que es donde viven las reglas.</p>
-  <p>3 · Probar sin servidor, cambiar el almacén sin tocar la API y organizar igual todos los recursos.</p>
-</details>
-
-
-### Bloque 2 · Persistencia y consistencia
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se sostiene la coherencia de los datos y qué pasa cuando se pierde.</li>
-    <li><strong>2. Haz:</strong> Sustituye el repositorio por otro sin tocar nada más.</li>
-    <li><strong>3. Comprueba:</strong> La API se comporta igual con los dos.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué pasa si el fichero de datos tiene un producto sin precio?</li>
-    <li>¿Y si tiene dos con el mismo identificador?</li>
-    <li>¿Quién garantiza que eso no ocurra?</li>
-  </ol>
-</div>
+Con un solo recurso y un fichero, esta separación parece burocracia. Sus tres razones aparecen enseguida: se puede probar el servicio sin levantar un servidor; se puede cambiar el almacén sin tocar la API; y cuando el proyecto tiene ocho recursos, todos se organizan igual y cualquiera sabe dónde mirar. Es, además, la arquitectura que verás en el módulo de servidor con otros nombres: controlador, servicio y repositorio.
 
 #### El repositorio como frontera
 
@@ -958,9 +905,7 @@ export async function guardar(producto) {}
 export async function eliminar(id) {}
 ```
 
-Mientras el conjunto de funciones y lo que devuelven no cambie, el servicio no distingue si detrás hay un fichero, una base de datos o una API ajena. Eso es lo que hace posible el ejercicio de hoy.
-
-#### Datos que llegan rotos
+Mientras el conjunto de funciones y lo que devuelven no cambie, el servicio no distingue si detrás hay un fichero, una base de datos o una API ajena.
 
 ```javascript
 function normalizar(crudo) {
@@ -980,70 +925,15 @@ function normalizar(crudo) {
   <p>Normalizar al leer da al resto del programa la garantía de que un producto tiene la forma de un producto. Es la misma idea de validar en el borde, aplicada al borde de abajo.</p>
 </div>
 
-#### Sembrar y reiniciar
-
-Un proyecto que se prueba necesita poder volver a un estado conocido:
+Un proyecto que se prueba necesita además poder volver a un estado conocido, con un script que rellene el fichero con datos de ejemplo:
 
 ```json
 { "scripts": { "sembrar": "node src/herramientas/sembrar.js" } }
 ```
 
-Un script que rellena el fichero con datos de ejemplo. Sin él, cada prueba deja los datos en un estado distinto y los fallos dejan de ser reproducibles.
+Sin él, cada prueba deja los datos en un estado distinto y los fallos dejan de ser reproducibles.
 
-#### Tarea 8 · Cambiar el almacén
-
-1. Escribe la lista de funciones que el servicio espera del repositorio.
-2. Normaliza los datos al leerlos del fichero.
-3. Escribe un segundo repositorio que guarde en memoria.
-4. Cambia entre uno y otro con una variable de entorno.
-5. Comprueba que la API se comporta igual con los dos y que **no has tocado ni rutas ni servicio**.
-6. Escribe el script de siembra.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Dos repositorios intercambiables y la API idéntica con ambos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Detecta identificadores duplicados al leer y avisa por el registro.</span></div>
-  <div><strong>Reto</strong><span>Escribe un tercer repositorio contra una API externa y sostén la misma interfaz.</span></div>
-</div>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · fin del bloque 2</p>
-  <ul class="checklist">
-    <li>El repositorio tiene una interfaz clara.</li>
-    <li>Los datos se normalizan al leerse.</li>
-    <li>Has cambiado de almacén sin tocar las capas superiores.</li>
-    <li>Puedes volver a un estado conocido con un comando.</li>
-  </ul>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque puede editarse a mano o venir de otra versión: es entrada externa.</p>
-  <p>2 · Mientras se mantenga la interfaz que el servicio espera.</p>
-  <p>3 · Para poder reproducir los fallos partiendo siempre del mismo estado.</p>
-</details>
-
-
-### Bloque 3 · El contrato de errores en la práctica
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se traduce cada error interno a una respuesta HTTP, en un solo sitio.</li>
-    <li><strong>2. Haz:</strong> Cierra el manejador central y comprueba todos los casos.</li>
-    <li><strong>3. Comprueba:</strong> Ninguna ruta decide ya un código de estado por su cuenta.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Cuántos sitios de tu código deciden hoy un código de estado?</li>
-    <li>Si añades un tipo de error nuevo, ¿cuántos ficheros tocas?</li>
-    <li>¿Qué debe ver el cliente cuando el fallo es tuyo?</li>
-  </ol>
-</div>
-
-#### La traducción, en un solo sitio
+#### La traducción de errores, en un solo sitio
 
 ```javascript
 const ESTADOS = {
@@ -1072,8 +962,6 @@ export function manejadorDeErrores(error, peticion, respuesta, next) {
 
 Añadir un tipo de error nuevo se reduce a añadir una línea a la tabla, sin que ninguna ruta necesite conocer qué código corresponde a su fallo.
 
-#### El identificador de petición
-
 ```javascript
 export function identificar(peticion, respuesta, next) {
   peticion.id = crypto.randomUUID();
@@ -1088,7 +976,7 @@ export function identificar(peticion, respuesta, next) {
   <p>Es lo que permite no filtrar detalles internos sin quedarte ciego para diagnosticar.</p>
 </div>
 
-#### El cliente, del otro lado
+Al otro lado se cobra el contrato de la sesión 1: **una sola función** en el cliente sirve para toda la API, hoy y cuando añadas rutas.
 
 ```javascript
 async function pedir(url, opciones) {
@@ -1100,50 +988,158 @@ async function pedir(url, opciones) {
 }
 ```
 
-Aquí se cobra el contrato: **una sola función** en el cliente sirve para toda la API, hoy y cuando añadas rutas. Si cada error tuviera una forma distinta, esta función no podría existir.
+Si cada error tuviera una forma distinta, esta función no podría existir.
 
-#### Tarea 9 · Errores de punta a punta
+### Se trabaja
 
-1. Define los cinco tipos de error de tu aplicación.
+<p class="stage stage--guided">150 minutos · separar, sustituir y diagnosticar</p>
+
+Los tres primeros pasos construyen la separación. Los dos últimos la ponen a prueba: uno cambia el almacén de verdad, el otro recorre los cinco errores desde el navegador hasta el registro.
+
+#### Paso 1 · La separación · 40 min
+
+1. Crea `src/servicio/` y `src/repositorio/` y reparte el código que hoy está mezclado.
+2. Deja las rutas sin ninguna referencia a ficheros.
+3. Deja el servicio sin ninguna referencia a peticiones ni respuestas.
+4. Mueve al servicio las reglas de negocio que estaban en las rutas, como «no se puede borrar un producto con stock».
+5. Busca las dos palabras de la prueba —`respuesta` en el servicio, `peticion` en el repositorio— y corrige lo que aparezca.
+6. Escribe un programa que use el servicio directamente, sin HTTP, y cree y borre un producto.
+
+**Antes de continuar:** ese programa del apartado 6 funciona sin que Express esté arrancado. Si necesita el servidor, el servicio todavía depende de la capa de arriba.
+
+#### Paso 2 · Cambiar el almacén · 40 min
+
+1. Escribe en un comentario la lista exacta de funciones que el servicio espera del repositorio, con lo que recibe y lo que devuelve cada una.
+2. Normaliza los datos al leerlos del fichero, con una función `normalizar`.
+3. Escribe un segundo repositorio que guarde en memoria, con esa misma lista de funciones.
+4. Elige entre uno y otro con una variable de entorno, en un solo punto del programa.
+5. Escribe el script de siembra y añádelo a los `scripts` de `package.json`.
+6. Prueba tu fichero `.http` completo contra los dos repositorios.
+
+#### Paso 3 · Errores de punta a punta · 40 min
+
+1. Define los cinco tipos de error de tu aplicación, cada uno con su nombre y su código.
 2. Escribe la tabla de traducción y el manejador central.
-3. Añade el identificador de petición y sácalo en registro y respuesta.
-4. Elimina todos los códigos de estado repartidos por las rutas.
-5. Escribe la función `pedir` en el cliente y úsala en toda la interfaz.
-6. Provoca los cinco errores desde el cliente y comprueba qué se ve y qué se registra.
+3. Añade el identificador de petición y sácalo en el registro y en la respuesta.
+4. Elimina todos los códigos de estado repartidos por las rutas. Al terminar, `status(` no debería aparecer en ninguna ruta salvo para las respuestas correctas.
+5. Escribe la función `pedir` en el cliente y úsala en toda la interfaz, sustituyendo cada `fetch` suelto.
+6. Muestra en el formulario los detalles de validación campo por campo, aprovechando el array `detalles`.
+
+#### Paso 4 · La prueba del cambio de almacén · 15 min
+
+Hasta aquí has escrito la separación. Ahora se comprueba si es real.
+
+1. Anota el estado de tu repositorio con `git status` antes de empezar.
+2. Cambia al repositorio en memoria y ejecuta el fichero `.http` completo.
+3. Rellena la tabla con lo que ha hecho falta tocar.
+
+| Qué ha habido que tocar para cambiar de almacén | Ficheros | ¿Debería haber hecho falta? |
+| ----------------------------------------------- | -------- | --------------------------- |
+| Rutas | | |
+| Servicio | | |
+| Repositorio | | |
+| Configuración o arranque | | |
+
+4. Cualquier fila fuera del repositorio y del punto único de configuración señala una fuga: algo de arriba sabe cómo se guardan los datos. Localízala y escribe en una línea qué la causaba.
+5. Si las dos ejecuciones no dan el mismo resultado, anota en qué petición difieren. Hay una diferencia legítima entre un almacén que persiste y otro que no, y conviene saber nombrarla.
+
+#### Paso 5 · Los cinco errores, desde el navegador · 15 min
+
+Provoca cada error desde la interfaz, no desde el fichero `.http`, y recorre el camino entero.
+
+| Error provocado | Código | Qué ve la persona | Qué aparece en el registro |
+| --------------- | :----: | ----------------- | -------------------------- |
+| Precio inválido en el formulario | | | |
+| Producto que no existe | | | |
+| Borrado de un producto con stock | | | |
+| Fichero de datos corrupto a propósito | | | |
+| Excepción inesperada lanzada a mano en el servicio | | | |
+
+Las dos últimas son las que importan: comprueba que la persona ve un mensaje genérico con su identificador, que la traza completa queda solo en el registro, y que el identificador de la pantalla coincide con el del registro.
+
+Escribe al terminar, en una línea, qué habrías tenido que hacer para diagnosticar el quinto caso sin ese identificador.
+
+#### Ampliación si has completado el trabajo
+
+Primero termina y comprueba los cinco pasos. El primer reto lleva la frontera del repositorio hasta donde se rompe; el segundo convierte tus registros en una herramienta de diagnóstico.
+
+##### Reto 1 · El tercer almacén
+
+Dos repositorios que leen de un array y de un fichero se parecen demasiado para probar nada. Escribe un tercero contra algo que se comporte de otra manera: una API pública de solo lectura, o una base de datos ligera como SQLite.
+
+1. Impleméntalo con la misma lista de funciones, sin cambiar su forma.
+2. Anota cada punto en el que la interfaz se queda corta. Aparecerán varios: un almacén remoto puede tardar, puede paginar, puede fallar por red, y puede no permitir borrar.
+3. Decide qué hacer con lo que el almacén nuevo no sabe hacer. Fallar de forma explícita es una respuesta válida; fingir que ha funcionado, no.
+4. Traduce los fallos propios de ese almacén a los tipos de error de tu aplicación. El servicio no debería recibir nunca un error de red en crudo.
+5. Rediseña la interfaz si hace falta, y vuelve a probar los tres repositorios con ella. Cambiar la interfaz por culpa del tercero indica que estaba escrita a la medida del fichero.
+6. Explica en tres líneas qué has aprendido sobre tu primera interfaz. Una abstracción solo se valida con la segunda implementación, y se confirma con la tercera.
+
+##### Reto 2 · Seguir el rastro de un fallo
+
+Tus registros hoy sirven para mirarlos por encima. Conviértelos en algo sobre lo que se pueda buscar.
+
+1. Pasa el registro a formato estructurado: una línea por petición, en JSON, con identificador, método, ruta, código de estado y duración en milisegundos.
+2. Haz que el identificador llegue hasta el repositorio, de modo que una operación de escritura pueda registrarse asociada a la petición que la causó. Piensa cómo pasarlo sin que el servicio hable de HTTP.
+3. Escribe el registro en un fichero además de en la consola, y decide qué ocurre cuando ese fichero crece.
+4. Provoca veinte peticiones, tres de ellas con error, y escribe el comando que extrae de tu fichero de registro solo las que fallaron.
+5. Ahora el ejercicio de verdad: pide a un compañero que introduzca un fallo en tu código sin decirte cuál. Reprodúcelo desde la interfaz, apunta el identificador y diagnostica la causa **mirando solo el registro**, sin leer el código.
+6. Escribe qué dato te faltó en el registro para llegar antes. Añádelo, y repite el apartado 5 con un fallo distinto.
+7. Decide qué **no** debe aparecer nunca en un registro. Hay al menos tres categorías de dato que no pueden acabar ahí; nómbralas y comprueba que las tuyas están limpias.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Manejador central, identificador y cliente con función única.</span></div>
-  <div><strong>Si lo tienes</strong><span>Muestra en el formulario los detalles de validación, campo por campo.</span></div>
-  <div><strong>Reto</strong><span>Añade un tipo de error nuevo y comprueba que solo tocas la tabla.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Las tres capas separadas, dos repositorios intercambiables y el manejador central de errores con su identificador de petición.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla del cambio de almacén sin ninguna fuga, y los cinco errores recorridos de la pantalla al registro.</span></div>
+  <div><strong>Reto</strong><span>El tercer almacén con la interfaz revisada, o el registro estructurado sirviendo para diagnosticar un fallo ajeno.</span></div>
 </div>
 
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Cierre de la sesión 3</p>
+  <p class="checkpoint-label">Lista de verificación de la sesión</p>
   <ul class="checklist">
-    <li>Las tres capas están separadas de verdad.</li>
-    <li>Puedes cambiar de almacén sin tocar rutas ni servicio.</li>
+    <li>Cada capa sabe solo lo suyo, y las reglas de negocio viven en el servicio.</li>
+    <li>El servicio se puede usar sin levantar el servidor.</li>
+    <li>Los datos se normalizan al leerse del almacén.</li>
+    <li>Has cambiado de almacén sin tocar rutas ni servicio.</li>
     <li>Los errores se traducen a HTTP en un solo sitio.</li>
     <li>El cliente trata todos los errores con una sola función.</li>
   </ul>
 </div>
 
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>¿A qué capa pertenece escribir un 404, la regla del stock y leer el fichero de datos?</li>
+    <li>¿Cómo compruebas que tus capas están separadas de verdad?</li>
+    <li>¿Por qué se normalizan los datos al leerlos del almacén?</li>
+    <li>¿Qué permite sustituir un repositorio por otro?</li>
+    <li>¿Por qué el cliente nunca debe ver la traza de un error?</li>
+    <li>¿Para qué sirve el identificador de petición?</li>
+  </ol>
+</div>
+
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · En el manejador central de errores, con una tabla de traducción.</p>
-  <p>2 · Para poder relacionar lo que ve el cliente con la traza de tus registros.</p>
-  <p>3 · Un mensaje genérico: el detalle se queda en el servidor.</p>
+  <p>1 · El 404 a la ruta, la regla del stock al servicio, la lectura del fichero al repositorio.</p>
+  <p>2 · Buscando <code>respuesta</code> en el servicio y <code>peticion</code> en el repositorio, y comprobando que cambiar el almacén no obliga a tocar nada más.</p>
+  <p>3 · Porque el fichero también es entrada externa y puede llegar incompleto o con otra forma.</p>
+  <p>4 · Que los dos ofrezcan la misma lista de funciones con el mismo comportamiento.</p>
+  <p>5 · Porque revela detalles internos del servidor sin aportar nada a quien la lee.</p>
+  <p>6 · Para relacionar lo que ve la persona con la traza completa del registro.</p>
 </details>
-
 
 <div class="checkpoint checkpoint--weekly">
   <p class="checkpoint-label">Microprueba semanal 3 · 5–10 minutos</p>
   <p>Individual, sin IA y sin apuntes.</p>
   <ol>
-    <li>Di a qué capa pertenece cada cosa: escribir un 404, «no se puede borrar con stock», y leer el fichero de datos.</li>
+    <li>Di a qué capa pertenece cada cosa: escribir un 404, «no se puede borrar un producto con stock», y leer el fichero de datos.</li>
     <li>¿Cómo compruebas que tus capas están separadas de verdad?</li>
     <li>¿Por qué el cliente nunca debe ver la traza de un error?</li>
   </ol>
 </div>
+
 ---
 
 ## Sesión 4 · La web y su API
