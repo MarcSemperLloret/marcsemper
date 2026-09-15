@@ -46,21 +46,22 @@ Aprender HTML no consiste en memorizar cien etiquetas, dado que la lista está p
 
 ### Cómo es cada sesión
 
-Cada sesión dura **tres horas** y se divide en **tres bloques de una hora**, cada uno con su tema, su práctica y su comprobación final. El bloque es la unidad real de trabajo: puedes terminarlo, comprobarlo y empezar el siguiente sin arrastrar nada a medias.
-
-Dentro de cada bloque la estructura es siempre la misma, adaptable al contenido. Un concepto sencillo deja más tiempo para practicar; semántica, formularios o depuración pueden necesitar una demostración más larga.
+Cada sesión dura **tres horas** y reparte ese tiempo siempre igual: la teoría se concentra al principio y el resto de la tarde se trabaja. HTML se aprende escribiéndolo, corrigiéndolo y discutiéndolo, no escuchando la lista de etiquetas.
 
 <figure class="diagram">
-  <figcaption>El ritmo de cada bloque de una hora</figcaption>
+  <figcaption>El ritmo de cada sesión de tres horas</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>Recupera · 5 min</li>
-    <li>Aprende y observa · 10–20 min</li>
-    <li>Practica · 30–40 min</li>
-    <li>Cierra · 5 min</li>
+    <li>Se explica · 25 min</li>
+    <li>Se trabaja · 150 min</li>
+    <li>Cierre · 5 min</li>
   </ol>
 </figure>
 
-Una sesión por semana, seis semanas, dieciocho horas. Cada bloque de teoría termina con un **«Ahora tú»**, y cada dos o tres bloques hay una tarea mayor que hace avanzar el mismo proyecto. Aproximadamente dos tercios de la práctica ocurren sobre ese proyecto y un tercio sobre código ajeno, para demostrar que la decisión se puede transferir a un contexto nuevo.
+El bloque de trabajo se divide en pasos cronometrados que retiran la ayuda poco a poco: primero copias, después completas, después reparas y al final decides sin pistas. Cada paso deja algo comprobable antes de pasar al siguiente.
+
+Al final de cada sesión hay una **ampliación** con dos retos para quien termine antes. No son más de lo mismo: trabajan sobre material ajeno y piden justificar decisiones por escrito, de modo que no se resuelven tecleando deprisa.
+
+Una sesión por semana, seis semanas, dieciocho horas. Aproximadamente dos tercios de la práctica ocurren sobre tu propio proyecto y un tercio sobre código ajeno, para demostrar que la decisión se puede transferir a un contexto nuevo.
 
 Cuando aparece un concepto nuevo, la progresión habitual es esta:
 
@@ -2744,16 +2745,14 @@ Escribe los tres defectos más graves que encuentres y, para cada uno, la correc
 
 ## Sesión 6 · Depuración, validación y coevaluación
 
-<p class="lead">Tres horas repartidas en tres bloques de una hora: <strong>Accesibilidad desde HTML</strong>, <strong>Validar y depurar HTML</strong> y <strong>Auditoría final, revisión por pares y entrega</strong>. Cada bloque termina con su propia comprobación.</p>
-
-### Bloque 1 · Accesibilidad desde HTML
+<p class="lead">Tres horas. Media hora para entender qué ve cada herramienta de comprobación y qué no ve ninguna, y dos horas y media diagnosticando un documento roto, cerrando tu proyecto y auditando el de otra persona.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Que casi toda la accesibilidad de una web sale de usar bien HTML, y por qué ARIA no es el punto de partida.</li>
-    <li><strong>2. Haz:</strong> Recorre tu sitio entero sin ratón y anota dónde se rompe.</li>
-    <li><strong>3. Comprueba:</strong> Puedes alcanzar todas las partes interactivas y sabes siempre dónde está el foco.</li>
+    <li><strong>1. Aprende:</strong> Que casi toda la accesibilidad sale de usar bien HTML, por qué ARIA no es el punto de partida, y por qué un documento válido puede seguir estando mal.</li>
+    <li><strong>2. Haz:</strong> Recorre tu sitio sin ratón, repara los veinte fallos de un documento forense, pasa la lista de comprobación final y audita el proyecto de un compañero.</li>
+    <li><strong>3. Entrega:</strong> El sitio validado, la tabla forense, la matriz de coevaluación y tus decisiones.</li>
   </ol>
 </div>
 
@@ -2766,29 +2765,20 @@ Escribe los tres defectos más graves que encuentres y, para cada uno, la correc
   </ol>
 </div>
 
+### Se explica
+
+<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+
+La unidad cierra donde empezó: una página que se ve bien no demuestra nada. Hoy se añaden las herramientas que sí dictaminan, y se delimita con precisión lo que ninguna de ellas puede ver.
+
 #### Una web no se hace solo para nosotros
 
-Una web no debería funcionar únicamente para:
+Una web no debería funcionar únicamente para una persona que ve perfectamente, usa ratón, tiene una pantalla grande y navega exactamente como nosotros.
 
-> una persona que ve perfectamente, usa ratón, tiene una pantalla grande y navega exactamente como nosotros.
+La buena noticia es que **HTML bien utilizado proporciona buena parte de la accesibilidad automáticamente**. No constituye una capa que se incorpore al final, sino el resultado del trabajo de toda la unidad:
 
-La buena noticia es que **HTML bien utilizado proporciona buena parte de la accesibilidad automáticamente**. No constituye una capa que se incorpore al final, sino el resultado del trabajo de quince sesiones.
-
-##### 1 · Usa el elemento correcto
-
-```html
-<button>Comprar</button>
-```
-
-es mejor punto de partida que:
-
-```html
-<div>Comprar</div>
-```
-
-si representa una acción.
-
-##### 2 · Mantén una jerarquía lógica
+1. **Usa el elemento correcto.** `<button>Comprar</button>` es mejor punto de partida que `<div>Comprar</div>` si representa una acción.
+2. **Mantén una jerarquía lógica** de encabezados, sin saltos. Es el índice por el que se navega:
 
 ```text
 h1
@@ -2797,21 +2787,11 @@ h1
     h2
 ```
 
-Sin saltos. Es el índice por el que se navega.
+3. **Describe las imágenes** con un `alt` informativo, funcional o vacío según su función. Nunca ausente.
+4. **Etiqueta los formularios** con `label` asociado, no solo con `placeholder`.
+5. **Usa HTML semántico:** `nav`, `main`, `header`, `footer`, `section` y `article` permiten recorrer el documento por zonas.
 
-##### 3 · Describe las imágenes
-
-`alt` informativo, funcional o vacío, según su función. Nunca ausente.
-
-##### 4 · Etiqueta los formularios
-
-`label` asociado, no solo `placeholder`.
-
-##### 5 · Usa HTML semántico
-
-`nav`, `main`, `header`, `footer`, `section`, `article` informan de la estructura del documento y permiten recorrerlo por zonas.
-
-##### 6 · No uses ARIA por defecto
+#### ARIA no es el punto de partida
 
 Encontrarás código como este:
 
@@ -2825,8 +2805,6 @@ Un conjunto de atributos para describir el papel, el estado y las propiedades de
 
 No debe emplearse, sin embargo, para reconstruir manualmente algo que HTML ya proporciona. Ese `div` con `role="button"` necesita además que le programes la activación con `Enter` y con espacio, el foco, y el estado. Un `<button>` trae todo eso.
 
-El orden es siempre:
-
 <figure class="diagram">
   <figcaption>El orden correcto</figcaption>
   <ol class="flow flow--row flow--chain">
@@ -2838,66 +2816,6 @@ El orden es siempre:
 <div class="rule">
   <p class="rule-label">La primera regla de ARIA</p>
   <p>Está escrita en la propia especificación y viene a decir esto: <strong>si existe un elemento HTML con la semántica que necesitas, úsalo en lugar de reconstruirlo con ARIA</strong>. Una ARIA mal puesta deja la página peor que no poner ninguna.</p>
-</div>
-
-#### Ahora tú · La prueba del teclado, sobre tu sitio
-
-Suelta el ratón. Recorre tus cuatro páginas usando solo:
-
-```text
-Tab          avanzar
-Shift + Tab  retroceder
-Enter        activar
-Espacio      marcar casillas y pulsar botones
-```
-
-Responde a continuación:
-
-| Pregunta | Página donde falla |
-| -------- | ------------------ |
-| ¿Puedes alcanzar todas las partes interactivas? | |
-| ¿Sabes en todo momento dónde está el foco? | |
-| ¿El orden de recorrido tiene sentido? | |
-| ¿Puedes enviar el formulario sin tocar el ratón? | |
-| ¿Puedes saltar el menú para ir al contenido? | |
-
-Corrige lo que encuentres. Casi todo se arregla cambiando un elemento por el que tocaba.
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Nombra tres cosas de accesibilidad que salen gratis de usar bien HTML.</li>
-    <li>¿Por qué <code>&lt;div role="button"&gt;</code> es peor que <code>&lt;button&gt;</code>?</li>
-    <li>¿Cuándo tiene sentido usar ARIA?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Por ejemplo: navegación por encabezados, salto entre zonas con los landmarks, botones alcanzables con teclado, campos anunciados por su etiqueta, imágenes sustituidas por su <code>alt</code>. Bastan tres.</p>
-  <p>2 · Porque hay que reconstruir a mano el foco, la activación con teclado y el estado, y cualquiera de esas piezas se puede olvidar. El <code>button</code> las trae todas.</p>
-  <p>3 · Cuando construyes un componente para el que HTML no tiene un elemento equivalente. Nunca para sustituir uno que sí existe.</p>
-</details>
-
-
-### Bloque 2 · Validar y depurar HTML
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Los niveles de comprobación de un documento, qué ve cada uno y qué no ve ninguno.</li>
-    <li><strong>2. Haz:</strong> Localiza y repara los veinte fallos deliberados de un documento.</li>
-    <li><strong>3. Comprueba:</strong> El validador del W3C devuelve cero errores.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Por qué un botón nativo suele ser mejor que un <code>div</code> con ARIA?</li>
-    <li>¿Qué debe ocurrir al recorrer una página únicamente con <code>Tab</code>?</li>
-    <li>Ordena el diagnóstico: mirar el resultado, revisar Problemas y validar el documento.</li>
-  </ol>
 </div>
 
 #### Volvemos a la frase de la sesión 1
@@ -2916,41 +2834,7 @@ Los navegadores se recuperan de casi cualquier error para no fallar delante del 
   </ol>
 </figure>
 
-#### HTMLHint
-
-Mira el panel `Problems`. No ignores automáticamente los mensajes: para cada uno, tres preguntas.
-
-1. ¿Qué elemento provoca el problema?
-2. ¿Qué regla estoy incumpliendo?
-3. ¿Cómo debería solucionarse?
-
-#### Formatear el documento
-
-VS Code puede formatear HTML con `Shift + Alt + F`, o desde la paleta con `Format Document`. Compara:
-
-```html
-<main><section><h2>Productos</h2><p>Texto</p></section></main>
-```
-
-con:
-
-```html
-<main>
-    <section>
-        <h2>Productos</h2>
-
-        <p>
-            Texto
-        </p>
-    </section>
-</main>
-```
-
-Las dos son idénticas para el navegador. La segunda es la única legible para una persona, y **el código también se escribe para personas**: para tu compañero de revisión, para el profesor y para ti dentro de tres semanas.
-
-#### El validador del W3C
-
-El flujo de trabajo correcto es este:
+Ante cada aviso de HTMLHint, tres preguntas: qué elemento lo provoca, qué regla se incumple y cómo debería solucionarse. El flujo completo de depuración es este:
 
 <figure class="diagram">
   <figcaption>Cómo se depura un documento</figcaption>
@@ -2981,9 +2865,49 @@ El flujo de trabajo correcto es este:
 
 Un documento entero hecho de `<div>`, sin un solo encabezado y con todas las imágenes con `alt="foto"`, pasa el validador con cero errores. Es válido y es malo. **La validez es el suelo, no el techo.**
 
-#### Tarea 14 · HTML forense
+#### Revisar código ajeno
 
-Este documento contiene **veinte fallos deliberados**. Cópialo en `forense.html`:
+Una revisión útil no dice «está mal». Dice tres cosas: **qué**, **por qué** y **qué harías tú**.
+
+| En vez de escribir | Escribe |
+| ------------------ | ------- |
+| «La tabla está mal» | «Faltan los `scope` en los `th`: sin ellos cada celda se anuncia sin su encabezado. Añadiría `scope="col"` arriba y `scope="row"` en la primera columna» |
+| «Los alt no valen» | «El `alt` del gráfico dice “gráfico”: quien no lo vea pierde los datos. Pondría los tres valores que compara» |
+
+Una regla mantiene su validez durante toda la vida profesional: **se revisa el código, no a la persona**. «Este enlace apunta a tu disco» y «no sabes hacer enlaces» describen el mismo hecho, y solo uno sirve para algo.
+
+### Se trabaja
+
+<p class="stage stage--guided">150 minutos · diagnóstico, cierre del proyecto y revisión por pares</p>
+
+Los dos primeros pasos diagnostican: primero tu sitio sin ratón, después un documento roto a propósito. Los tres últimos cierran la unidad.
+
+#### Paso 1 · La prueba del teclado sobre tu sitio · 20 min
+
+Suelta el ratón. Recorre tus cuatro páginas usando solo:
+
+```text
+Tab          avanzar
+Shift + Tab  retroceder
+Enter        activar
+Espacio      marcar casillas y pulsar botones
+```
+
+Responde a continuación:
+
+| Pregunta | Página donde falla |
+| -------- | ------------------ |
+| ¿Puedes alcanzar todas las partes interactivas? | |
+| ¿Sabes en todo momento dónde está el foco? | |
+| ¿El orden de recorrido tiene sentido? | |
+| ¿Puedes enviar el formulario sin tocar el ratón? | |
+| ¿Puedes saltar el menú para ir al contenido? | |
+
+Corrige lo que encuentres. Casi todo se arregla cambiando un elemento por el que tocaba.
+
+#### Paso 2 · HTML forense · 45 min
+
+Es el trabajo central de la sesión. Este documento contiene **veinte fallos deliberados**. Cópialo en `forense.html`:
 
 ```html
 <html>
@@ -3023,7 +2947,7 @@ Correo: <input type="text">
 </html>
 ```
 
-Tu trabajo:
+Tu trabajo, en este orden:
 
 1. Ábrelo en el navegador y anota qué se ve mal **antes** de mirar el código. Fíjate en si algún texto aparece con caracteres extraños.
 2. Pásale HTMLHint y anota qué encuentra.
@@ -3036,12 +2960,6 @@ Tu trabajo:
 | | | | | |
 
 La columna «quién lo detectó» es la importante: al terminar tendrás la prueba, escrita por ti, de que las herramientas encuentran menos de la mitad.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Encuentra quince fallos y documenta herramienta, impacto y corrección.</span></div>
-  <div><strong>Si lo tienes</strong><span>Localiza los veinte y clasifícalos en sintaxis, semántica y accesibilidad.</span></div>
-  <div><strong>Reto</strong><span>Introduce tres fallos nuevos en una copia para que otro compañero los diagnostique.</span></div>
-</div>
 
 <details class="aside aside--help">
   <summary>Estoy atascado · llevo ocho y no encuentro más</summary>
@@ -3072,44 +2990,7 @@ La columna «quién lo detectó» es la importante: al terminar tendrás la prue
   <p>El validador del W3C detecta la sintaxis: el <code>doctype</code> que falta, la codificación no declarada, el <code>&lt;title&gt;</code> abierto, las imágenes sin <code>alt</code>, el <code>id</code> duplicado y la anidación cruzada. No dice nada de la jerarquía de encabezados, ni de la tabla muda, ni del falso botón, ni de la sopa de <code>div</code>. Poco más de la mitad la tienes que ver tú.</p>
 </details>
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 2 minutos, sin mirar</p>
-  <ol>
-    <li>Nombra dos fallos graves que un validador no detecta.</li>
-    <li>¿Por qué «válido» no es lo mismo que «correcto»?</li>
-    <li>¿Qué pasos tiene el flujo de depuración, y cuál es el que no se puede saltar?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Por ejemplo, usar <code>div</code> donde tocaba un elemento semántico, o un <code>alt</code> que no describe nada.</p>
-  <p>2 · Porque la validez comprueba la sintaxis, no el significado.</p>
-  <p>3 · Escribir, previsualizar, revisar Problems, validar, entender y corregir. El que no se puede saltar es <strong>entender</strong>.</p>
-</details>
-
-
-### Bloque 3 · Auditoría final, revisión por pares y entrega
-
-<div class="today-box">
-  <p class="today-label">Hoy · Hoja de ruta</p>
-  <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo se revisa el código de otra persona de forma útil.</li>
-    <li><strong>2. Haz:</strong> Cierra tu proyecto con la lista de comprobación y audita el de un compañero.</li>
-    <li><strong>3. Entrega:</strong> Entrega el proyecto, la matriz de coevaluación y defiende tus decisiones.</li>
-  </ol>
-</div>
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué diferencia hay entre HTML válido y HTML semánticamente correcto?</li>
-    <li>¿Qué herramienta usarías primero para un error de anidación y cuál para una decisión de significado?</li>
-    <li>Encuentra una mejora en este patrón: <code>&lt;div class="boton"&gt;Enviar&lt;/div&gt;</code>.</li>
-  </ol>
-</div>
-
-#### Tarea 15 · La lista de comprobación final
+#### Paso 3 · La lista de comprobación final · 30 min
 
 Tu proyecto debe tener una organización parecida a esta:
 
@@ -3125,7 +3006,27 @@ mi-web/
     └── ...
 ```
 
-Recorre la lista entera. Cada línea que no puedas marcar es trabajo pendiente de hoy.
+Antes de recorrer la lista, formatea las cuatro páginas con `Shift + Alt + F`, o desde la paleta con `Format Document`. Las dos versiones siguientes son idénticas para el navegador, y solo una es legible para una persona:
+
+```html
+<main><section><h2>Productos</h2><p>Texto</p></section></main>
+```
+
+```html
+<main>
+    <section>
+        <h2>Productos</h2>
+
+        <p>
+            Texto
+        </p>
+    </section>
+</main>
+```
+
+**El código también se escribe para personas:** para tu compañero de revisión, para el profesor y para ti dentro de tres semanas.
+
+Recorre después la lista entera. Cada línea que no puedas marcar es trabajo pendiente de hoy.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Documento</p>
@@ -3185,20 +3086,9 @@ Recorre la lista entera. Cada línea que no puedas marcar es trabajo pendiente d
   <p>En la siguiente unidad partiremos de este mismo proyecto para ver cómo CSS transforma su apariencia sin cambiar lo que significa cada elemento.</p>
 </div>
 
-#### Revisar código ajeno
+#### Paso 4 · Matriz de coevaluación · 30 min
 
-Una revisión útil no dice «está mal». Dice tres cosas: **qué**, **por qué** y **qué harías tú**.
-
-| En vez de escribir | Escribe |
-| ------------------ | ------- |
-| «La tabla está mal» | «Faltan los `scope` en los `th`: sin ellos cada celda se anuncia sin su encabezado. Añadiría `scope="col"` arriba y `scope="row"` en la primera columna» |
-| «Los alt no valen» | «El `alt` del gráfico dice “gráfico”: quien no lo vea pierde los datos. Pondría los tres valores que compara» |
-
-Una regla mantiene su validez durante toda la vida profesional: **se revisa el código, no a la persona**. «Este enlace apunta a tu disco» y «no sabes hacer enlaces» describen el mismo hecho, y solo uno sirve para algo.
-
-#### Tarea 16 · Matriz de coevaluación
-
-Intercambia el proyecto con otro alumno y audita el suyo:
+Intercambia el proyecto con otro alumno y audita el suyo con el formato qué / por qué / qué harías:
 
 | Aspecto auditado | Archivo | Problema detectado | Propuesta de corrección |
 | :--- | :--- | :--- | :--- |
@@ -3212,29 +3102,25 @@ Intercambia el proyecto con otro alumno y audita el suyo:
 
 Después, el autor recibe la matriz, decide **qué acepta y qué no**, y anota su decisión. Rechazar una observación justificándola bien también forma parte del ejercicio: la revisión propone, no manda.
 
-#### Producto final
+#### Paso 5 · Cerrar la entrega · 25 min
 
 Se entrega:
 
 * **A · El sitio.** Cuatro páginas enlazadas, sin CSS, validadas en el W3C.
-* **B · La tabla forense** de la sesión 6, con las correcciones justificadas.
+* **B · La tabla forense** del paso 2, con las correcciones justificadas.
 * **C · La matriz de coevaluación** del proyecto de tu compañero.
 * **D · Tus decisiones**, en media página: las tres decisiones de estructura de las que estás más seguro, y por qué.
 
 Tu proyecto debe incluir, cuando tenga sentido en tu tema: estructura completa y metadatos, navegación entre páginas, jerarquía de encabezados, párrafos y elementos de énfasis, los tres tipos de lista, enlaces internos y externos, imágenes con `figure`, estructura semántica, una tabla de datos, un formulario completo con varios tipos de campo y validación, y algún elemento moderno como `details` o `time`.
 
-#### Presentación
-
-Dispones de unos **3 minutos** y respondes a cuatro preguntas:
+Dedica los últimos minutos a preparar la defensa. Dispones de unos **3 minutos** y respondes a cuatro preguntas:
 
 * ¿Qué parte de tu estructura te costó más decidir y cómo la resolviste?
-* Enséñanos un sitio donde estuviste tentado de usar un `div` y no lo hiciste.
+* Enseña un sitio donde estuviste tentado de usar un `div` y no lo hiciste.
 * ¿Qué fallo encontraste en el proyecto de tu compañero que también tenías tú?
 * Si mañana llega el CSS, ¿qué parte de tu HTML tendrías que tocar? *(La respuesta correcta es «ninguna».)*
 
-#### Evaluación
-
-| Criterio | Puntos |
+| Criterio de evaluación | Puntos |
 | ------------------------------------------------- | -----: |
 | Estructura y validez del documento | 2 |
 | Jerarquía de encabezados y semántica estructural | 2 |
@@ -3246,16 +3132,81 @@ Dispones de unos **3 minutos** y respondes a cuatro preguntas:
 
 Durante la defensa se preguntará por **una decisión concreta** de tu proyecto. No se evalúa que hayas usado muchas etiquetas distintas, sino que sepas decir por qué elegiste cada una. Un sitio sencillo y bien justificado vale más que uno lleno de elementos puestos por si acaso.
 
+#### Ampliación si has completado el trabajo
+
+Primero termina la entrega. Los dos retos invierten el ejercicio de la sesión: en lugar de encontrar fallos ajenos, se trata de fabricarlos y de medir cuántos deja pasar una herramienta.
+
+##### Reto 1 · Fabrica tu propio documento forense
+
+Parte de una copia limpia de una de tus páginas e introduce **ocho fallos deliberados**, repartidos así:
+
+* dos que el validador del W3C detecte sin ninguna duda;
+* dos que detecte HTMLHint mientras se escribe;
+* dos que no detecte ninguna herramienta y solo se vean leyendo el significado;
+* dos que solo se manifiesten al recorrer la página con el teclado.
+
+Guarda aparte la solución, con la categoría de cada fallo. Entrégale el documento a un compañero y quédate con el suyo. Al devolvérselo, comparad dos cifras: cuántos encontró y **en qué categoría** se le escaparon. Casi siempre son las dos últimas, y esa es la conclusión de la unidad entera.
+
+##### Reto 2 · Cuántos errores tiene una web que usas todos los días
+
+Pasa por `validator.w3.org` la portada de tres sitios conocidos, usando la opción de validar por dirección.
+
+| Sitio | Errores | Avisos | El error más repetido |
+| ----- | ------: | -----: | --------------------- |
+| | | | |
+| | | | |
+| | | | |
+
+Después responde:
+
+1. ¿Alguno da cero errores? ¿Cuántos pasan de cincuenta?
+2. Elige el error más repetido de uno de ellos y explica qué consecuencia real tiene, o si no tiene ninguna.
+3. Busca en esos mismos sitios **un fallo que el validador no señale** y que tú sí sepas ver: un salto de encabezado, un falso botón, un `alt` inútil.
+4. Las tres páginas funcionan y las usan millones de personas. Formula en dos líneas qué conclusión sacas sobre la relación entre validez, calidad y funcionamiento.
+
+<div class="practice-levels">
+  <div><strong>Objetivo mínimo</strong><span>Quince de los veinte fallos documentados con herramienta, impacto y corrección, y la lista de comprobación final recorrida entera.</span></div>
+  <div><strong>Si lo tienes</strong><span>Los veinte localizados y clasificados en sintaxis, semántica y accesibilidad, y la matriz de coevaluación devuelta y contestada.</span></div>
+  <div><strong>Reto</strong><span>El documento forense propio con sus ocho fallos por categoría, y la tabla de validación de tres webs reales con su conclusión.</span></div>
+</div>
+
+### Cierre
+
+<p class="stage">5 minutos · comprobación y recuerdo</p>
+
 <div class="checkpoint">
-  <p class="checkpoint-label">Checkpoint · entrega</p>
+  <p class="checkpoint-label">Lista de verificación de la entrega</p>
   <ul class="checklist">
     <li>Las cuatro páginas validan y no contienen un solo estilo.</li>
+    <li>El sitio entero se recorre con teclado y siempre se ve dónde está el foco.</li>
     <li>La tabla forense está entregada y justificada.</li>
     <li>Has revisado el proyecto de un compañero con el formato qué / por qué / qué harías.</li>
     <li>Has decidido qué observaciones de tu revisor aceptas y cuáles no, y por qué.</li>
     <li>Puedes justificar cualquier decisión de estructura de tu sitio.</li>
   </ul>
 </div>
+
+<div class="checkpoint checkpoint--recall">
+  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
+  <ol>
+    <li>Nombra tres cosas de accesibilidad que salen gratis de usar bien HTML.</li>
+    <li>¿Por qué <code>&lt;div role="button"&gt;</code> es peor que <code>&lt;button&gt;</code>?</li>
+    <li>¿Cuándo tiene sentido usar ARIA?</li>
+    <li>Nombra dos fallos graves que un validador no detecta.</li>
+    <li>¿Por qué «válido» no es lo mismo que «correcto»?</li>
+    <li>¿Qué pasos tiene el flujo de depuración, y cuál es el que no se puede saltar?</li>
+  </ol>
+</div>
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas</summary>
+  <p>1 · Por ejemplo: navegación por encabezados, salto entre zonas con los landmarks, botones alcanzables con teclado, campos anunciados por su etiqueta, imágenes sustituidas por su <code>alt</code>. Bastan tres.</p>
+  <p>2 · Porque hay que reconstruir a mano el foco, la activación con teclado y el estado, y cualquiera de esas piezas se puede olvidar. El <code>button</code> las trae todas.</p>
+  <p>3 · Cuando construyes un componente para el que HTML no tiene un elemento equivalente. Nunca para sustituir uno que sí existe.</p>
+  <p>4 · Por ejemplo, usar <code>div</code> donde tocaba un elemento semántico, o un <code>alt</code> que no describe nada.</p>
+  <p>5 · Porque la validez comprueba la sintaxis, no el significado.</p>
+  <p>6 · Escribir, previsualizar, revisar Problems, validar, entender y corregir. El que no se puede saltar es <strong>entender</strong>.</p>
+</details>
 
 <div class="rule">
   <p class="rule-label">Demostración final · el HTML ya está preparado para CSS</p>
@@ -3268,9 +3219,10 @@ Durante la defensa se preguntará por **una decisión concreta** de tu proyecto.
   <ol>
     <li>Localiza un error de sintaxis, uno de semántica y uno de accesibilidad.</li>
     <li>Corrige solo lo imprescindible y explica el orden de diagnóstico.</li>
-    <li>Realiza un cambio nuevo solicitado por el profesor sin consultar tu proyecto.</li>
+    <li>Realiza un cambio nuevo solicitado sin consultar tu proyecto.</li>
   </ol>
 </div>
+
 
 ---
 
