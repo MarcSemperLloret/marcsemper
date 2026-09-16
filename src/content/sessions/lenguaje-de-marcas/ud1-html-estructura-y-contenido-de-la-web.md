@@ -46,18 +46,19 @@ Aprender HTML no consiste en memorizar cien etiquetas, dado que la lista está p
 
 ### Cómo es cada sesión
 
-Cada sesión dura **tres horas** y reparte ese tiempo siempre igual: la teoría se concentra al principio y el resto de la tarde se trabaja. HTML se aprende escribiéndolo, corrigiéndolo y discutiéndolo, no escuchando la lista de etiquetas.
+Cada sesión dura **tres horas** y combina una explicación breve con trabajo práctico y comprobaciones. HTML se aprende escribiéndolo, corrigiéndolo y discutiéndolo, no escuchando la lista de etiquetas.
 
 <figure class="diagram">
   <figcaption>El ritmo de cada sesión de tres horas</figcaption>
   <ol class="flow flow--row flow--chain">
-    <li>Se explica · 25 min</li>
-    <li>Se trabaja · 150 min</li>
-    <li>Cierre · 5 min</li>
+    <li>Recuerda el punto de partida</li>
+    <li>Se explica</li>
+    <li>Se trabaja</li>
+    <li>Cierre</li>
   </ol>
 </figure>
 
-El bloque de trabajo se divide en pasos cronometrados que retiran la ayuda poco a poco: primero copias, después completas, después reparas y al final decides sin pistas. Cada paso deja algo comprobable antes de pasar al siguiente.
+Los tiempos de los pasos son orientativos. Avanza cuando puedas comprobar y explicar el resultado. La ayuda se retira poco a poco: primero copias, después completas, después reparas y al final decides sin pistas. Cada paso deja algo comprobable antes de pasar al siguiente.
 
 Al final de cada sesión hay una **ampliación** con dos retos para quien termine antes. No son más de lo mismo: trabajan sobre material ajeno y piden justificar decisiones por escrito, de modo que no se resuelven tecleando deprisa.
 
@@ -135,28 +136,19 @@ Los ejemplos de estos apuntes usan siempre la misma empresa ficticia —una tien
 | **Sesión 6** | Depuración, validación y coevaluación | HTML forense, cierre del proyecto y revisión por pares | 3 h |
 | **Total** | | **Sitio multipágina validado y revisado** | **18 h** |
 
-El reparto real del tiempo es aproximadamente este, y conviene que lo sepas desde el principio:
-
-| En qué se va la unidad | Horas |
-| ---------------------- | ----: |
-| Explicación y demostraciones | 5–6 h |
-| Ejercicios guiados | 7–8 h |
-| Proyecto incremental | 3–4 h |
-| Depuración, validación y revisión por pares | 1–2 h |
-
-No son dieciocho horas explicando etiquetas.
+Durante las dieciocho horas alternarás explicaciones, ejercicios guiados, trabajo en tu sitio y revisión de código. Si completas una sesión antes, puedes continuar con el siguiente bloque una vez comprobado el resultado.
 
 ---
 
 ## Sesión 1 · El editor y el documento HTML
 
-<p class="lead">Tres horas. Media hora para entender qué es un documento HTML y dos horas y media escribiendo, rompiendo y reparando documentos en tu propio proyecto.</p>
+<p class="lead">Empezarás identificando qué es un documento HTML y construirás tu primera página. El recorrido orientativo reserva 5 minutos al punto de partida, 25 a la explicación, 140 al trabajo y 10 a comprobar lo aprendido.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> Qué hace un editor de código, qué es un linter, en qué se diferencian elemento, etiqueta y atributo, y por qué el navegador no sirve para comprobar si tu HTML está bien.</li>
-    <li><strong>2. Haz:</strong> Monta el entorno, reconstruye un documento, escribe el esqueleto a mano, repara uno roto, rómpelo a propósito y construye la portada de tu proyecto.</li>
+    <li><strong>2. Haz:</strong> Monta el entorno, reconstruye un documento, escribe el esqueleto a mano, repara uno roto, prueba cambios y construye la portada de tu proyecto.</li>
     <li><strong>3. Comprueba:</strong> El panel de problemas queda en cero, los acentos se ven bien y la portada se lee en un móvil sin ampliar.</li>
   </ol>
 </div>
@@ -182,7 +174,7 @@ Durante el módulo usaremos **Visual Studio Code**. Nos ayuda a organizar proyec
 
 Su desconocimiento previo no supone ningún obstáculo: aprender a manejar herramientas nuevas forma parte del trabajo.
 
-VS Code ya trae de serie todo lo que necesitamos para HTML: resaltado de sintaxis, sugerencias, cierre automático de etiquetas, documentación al pasar el ratón, formateo, Emmet y previsualización. **No hace falta instalar diez extensiones para empezar.**
+VS Code ya trae de serie todo lo que necesitamos para HTML: resaltado de sintaxis, sugerencias, cierre automático de etiquetas, documentación al pasar el ratón, formateo y Emmet. El resultado lo comprobaremos en el navegador. **No hace falta instalar diez extensiones para empezar.**
 
 Un sitio web está formado por un conjunto de archivos que se referencian entre sí, y no por un archivo aislado. Si abres archivos sueltos, el editor no sabe dónde está la raíz del sitio.
 
@@ -274,7 +266,7 @@ Algunos elementos están **vacíos**: no envuelven nada, aportan algo por sí mi
 
 #### El navegador no es un corrector
 
-Este documento está roto de cuatro formas: falta el `doctype`, falta el idioma, falta la codificación y hay tres etiquetas sin cerrar.
+Este documento tiene cierres importantes pendientes y le faltan las declaraciones que vamos a aprender. Observa especialmente `<title>`: si no lo cierras, el navegador puede interpretar como texto del título lo que pretendías mostrar en la página.
 
 ```html
 <html>
@@ -287,23 +279,23 @@ Este documento está roto de cuatro formas: falta el `doctype`, falta el idioma,
 </body>
 ```
 
-Ábrelo. **Se ve perfectamente.** Un navegador está diseñado para no fallar nunca delante de un usuario: ante un documento roto no muestra un error, adivina lo que querías decir y lo repara en silencio.
+Ábrelo: **el contenido no aparece en la página**, porque falta `</title>`. Añade ese cierre justo después de «PixelStore», guarda y recarga. Ahora aparece contenido, aunque todavía quedan problemas. El navegador aplica reglas para procesar HTML incompleto; algunos errores producen cambios visibles y otros pasan inadvertidos.
 
-> **Que una página se vea bien no demuestra que su HTML esté bien. Solo demuestra que el navegador ha sabido disimularlo.**
+> **Que una página se vea bien no demuestra que su HTML esté bien. Hay que revisar también su estructura.**
 
 Recuerda esta frase, porque es el hilo de toda la unidad y volveremos a ella en la sesión 6.
 
 #### Las cinco piezas del esqueleto
 
-Todo documento HTML declara siempre las mismas cinco cosas. Las escribirás a mano en el paso 3 y las romperás una a una en el paso 5; la tabla resume qué aporta cada una y qué se estropea exactamente cuando falta.
+Usaremos estas cinco piezas en el esqueleto de nuestras páginas. Las escribirás a mano en el paso 3 y comprobarás algunos cambios en el paso 5. La ausencia de una declaración no siempre produce un síntoma visible: depende también del navegador y de cómo se abra el archivo.
 
 | Pieza | Qué declara | Qué pasa si falta |
 | ----- | ----------- | ----------------- |
 | `<!doctype html>` | Que el documento es HTML estándar | Modo compatibilidad, con reglas antiguas |
-| `lang="es"` | El idioma del contenido | El lector de pantalla lo pronuncia en inglés |
-| `charset="UTF-8"` | Cómo se traducen los bytes a caracteres | «Programación» se ve como «ProgramaciÃ³n» |
-| `viewport` | Que se adapte al ancho del dispositivo | En móvil se ve la página de escritorio encogida |
-| `<title>` | El nombre del documento | Pestaña, favorito y buscador sin identificar |
+| `lang="es"` | El idioma del contenido | Las herramientas de lectura pueden no elegir la pronunciación adecuada |
+| `charset="UTF-8"` | Cómo se traducen los bytes a caracteres | Si se interpreta con una codificación incorrecta, pueden aparecer caracteres extraños |
+| `viewport` | Cómo utiliza el navegador móvil el ancho del dispositivo | En móvil puede utilizar un área de escritorio y reducir la página |
+| `<title>` | El nombre del documento | Falta un nombre descriptivo para identificar la página |
 
 <div class="rule">
   <p class="rule-label">La prueba para no confundir <code>head</code> y <code>body</code></p>
@@ -312,7 +304,7 @@ Todo documento HTML declara siempre las mismas cinco cosas. Las escribirás a ma
 
 ### Se trabaja
 
-<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+<p class="stage stage--guided">140 minutos · práctica sobre tu propio proyecto</p>
 
 Los siete pasos retiran la ayuda poco a poco: primero copias, después completas, después reparas y al final decides tú. Comprueba cada paso antes de pasar al siguiente, porque casi todos dejan algo escrito que se reutiliza más adelante.
 
@@ -416,7 +408,7 @@ Todavía no vamos a usar atajos. Escribe esto letra a letra, en `index.html`:
   <p class="lesson-demo__note">El <code>title</code> aparecería en la pestaña; dentro de la página vemos lo que contiene <code>body</code>.</p>
 </figure>
 
-Guarda con `Ctrl + S` y ábrelo en el navegador, o usa la previsualización de VS Code. Durante el desarrollo tendrás normalmente estas dos cosas a la vista:
+Guarda con `Ctrl + S`. Localiza `index.html` en el explorador de archivos y ábrelo con tu navegador. Después de cada cambio, guarda de nuevo y recarga la pestaña. Durante el desarrollo tendrás normalmente estas dos cosas a la vista:
 
 <figure class="diagram">
   <figcaption>El ciclo de trabajo</figcaption>
@@ -432,13 +424,13 @@ Guarda con `Ctrl + S` y ábrelo en el navegador, o usa la previsualización de V
 
 **`<!doctype html>`** indica al navegador que el documento es HTML moderno. Sin él, el navegador entra en *modo compatibilidad* y aplica reglas de hace veinte años.
 
-**`<html lang="es">`** es el elemento raíz: todo lo demás va dentro. El atributo `lang` declara el idioma principal, y lo usan los lectores de pantalla para elegir la voz y la pronunciación, los navegadores para ofrecer traducción, y los buscadores para clasificar la página. Sin `lang="es"`, un lector de pantalla lee el español con fonética inglesa y se vuelve incomprensible.
+**`<html lang="es">`** es el elemento raíz: todo lo demás va dentro. El atributo `lang` declara el idioma principal, y lo usan los lectores de pantalla para elegir la voz y la pronunciación, los navegadores para ofrecer traducción, y los buscadores para clasificar la página. Si no lo declaras, la herramienta puede recurrir a otra información o a su configuración y elegir una pronunciación inadecuada; no cambia necesariamente al inglés.
 
 **`<head>`** contiene información *sobre* el documento. Nada de lo que hay aquí se ve en la ventana.
 
-`<meta charset="UTF-8">` define la codificación: cómo se traducen los bytes del archivo a caracteres. Gracias a UTF-8 se escriben correctamente `á é í ó ú`, `ñ`, `€` y `¿ ?`. Si falta, «Programación» se muestra como «ProgramaciÃ³n».
+`<meta charset="UTF-8">` define la codificación: cómo se traducen los bytes del archivo a caracteres. Gracias a UTF-8 se escriben correctamente `á é í ó ú`, `ñ`, `€` y `¿ ?`. Si el archivo se interpreta con una codificación distinta de la que se utilizó al guardarlo, pueden aparecer caracteres extraños. Omitir esta declaración no produce siempre ese fallo: el navegador puede obtener la codificación por otra vía.
 
-`<meta name="viewport" content="width=device-width, initial-scale=1.0">` indica al navegador que use el ancho real del dispositivo. Sin él, un móvil muestra la página de escritorio encogida e ilegible. Se entiende del todo al estudiar CSS responsive; por ahora forma parte de la estructura fija.
+`<meta name="viewport" content="width=device-width, initial-scale=1.0">` indica al navegador que use el ancho real del dispositivo. Sin él, un navegador móvil puede utilizar un área de escritorio y reducirla para mostrarla en la pantalla. Se entiende del todo al estudiar CSS responsive; por ahora forma parte de la estructura fija.
 
 `<title>` no aparece dentro de la página: aparece en la pestaña, en los favoritos y como titular en un buscador. Compara `<title>Inicio</title>` con `<title>PixelStore | Componentes para desarrolladores</title>` e imagina cuál identifica la web en una lista de veinte pestañas abiertas.
 
@@ -458,9 +450,9 @@ Copia en un archivo `roto.html` el fragmento defectuoso de la explicación.
   <dt>¿Qué está mal?</dt>
   <dd>La etiqueta <code>&lt;title&gt;</code> se abre y nunca se cierra antes de <code>&lt;/head&gt;</code>.</dd>
   <dt>¿Qué hace el navegador con eso?</dt>
-  <dd>Cierra el título por su cuenta al encontrar <code>&lt;/head&gt;</code>. La pestaña se ve bien, así que el fallo pasa inadvertido.</dd>
+  <dd>Sigue leyendo el resto del archivo como texto del título. <code>&lt;/head&gt;</code> no sustituye a <code>&lt;/title&gt;</code>: en este ejemplo el cuerpo queda sin el contenido esperado.</dd>
   <dt>¿A quién perjudica?</dt>
-  <dd>A cualquier programa que lea el documento tal como está escrito en lugar de repararlo: buscadores, lectores de pantalla, validadores.</dd>
+  <dd>A quien visita la página: el contenido no está en el cuerpo del documento y no puede utilizarse como estaba previsto. También se altera la estructura que reciben las herramientas de accesibilidad.</dd>
   <dt>Corrección</dt>
   <dd><code>&lt;title&gt;PixelStore&lt;/title&gt;</code></dd>
 </dl>
@@ -470,50 +462,41 @@ No basta con decir «falta una etiqueta»: interesa qué consecuencia tiene, por
 ##### 4.2 · Ahora tú
 
 1. Abre el panel de problemas con `Ctrl + Shift + M` y anota qué detecta HTMLHint **y qué no**.
-2. Repara el documento entero: `doctype`, `lang`, codificación, viewport y todas las etiquetas pendientes.
-3. Al final del archivo, escribe un comentario HTML explicando los **tres fallos más graves** del original y por qué lo eran.
+2. Cierra primero `title` y comprueba el cambio. Después añade `doctype`, `lang`, codificación y viewport, y escribe explícitamente los cierres del esqueleto y del contenido.
+3. Al final del archivo, escribe un comentario HTML explicando **tres correcciones** del original: qué cambiaste, para qué sirve y si observaste un efecto en el navegador.
 
 <details class="aside aside--help">
-  <summary>Estoy atascado · no sé cuáles son los «más graves»</summary>
-  <p>Ordena por a quién afecta y cuánto:</p>
-  <ol>
-    <li>¿Impide que el documento se interprete como HTML estándar? Eso afecta a todo lo demás.</li>
-    <li>¿Hace que el texto se lea mal, en el sentido literal de que se vean caracteres incorrectos?</li>
-    <li>¿Deja al documento sin información que ningún programa puede adivinar, como el idioma?</li>
-    <li>¿Es una etiqueta sin cerrar que el navegador repara sin consecuencias visibles?</li>
-  </ol>
-  <p>Los tres primeros grupos pesan más que el cuarto, aunque el cuarto sea el que más veces aparece.</p>
+  <summary>Estoy atascado · cómo explicar una corrección</summary>
+  <p>Por ejemplo: «He añadido el cierre de title. Antes el cuerpo no mostraba el contenido; después aparecen los encabezados y el párrafo». Para lang puedes indicar que declara el idioma aunque no cambie la apariencia. Distingue lo que has observado de lo que sabes que aporta cada declaración.</p>
 </details>
 
-#### Paso 5 · Destruye la página y anota qué delata el navegador · 25 min
+#### Paso 5 · Cambia la página y observa el resultado · 25 min
 
-Sobre una **copia** de la página del paso 3, provoca estos seis fallos **de uno en uno**, y anota qué ocurre con cada uno antes de deshacerlo:
+Sobre una **copia** de la página del paso 3, realiza estos seis cambios **de uno en uno**. Guarda, recarga y observa antes de deshacer cada cambio. No todos son errores: queremos distinguir un cambio válido, un problema de estructura y una declaración ausente.
 
 1. Elimina `</h1>`.
 2. Elimina `</body>`.
 3. Escribe una etiqueta que no existe, como `<titulo>`.
-4. Duplica un elemento.
+4. Duplica un párrafo completo: `<p>Texto de prueba.</p>`.
 5. Cambia `UTF-8` por `ISO-8859-1`.
 6. Elimina `lang`.
 
 Registra cada uno en esta tabla:
 
-| Qué he roto | Qué hace el navegador | Qué dice HTMLHint |
+| Cambio realizado | Qué observas en el navegador | Qué dice HTMLHint |
 | ----------- | --------------------- | ----------------- |
 | | | |
 
-Al terminar, deja el documento correcto otra vez. Cuenta cuántos de los seis **el navegador no delata en absoluto**: esa cifra es la razón por la que existen los linters y los validadores, y lo que sostiene la frase de la explicación.
+Al terminar, restaura el documento inicial. Duplicar un párrafo es válido, aunque quizá repita contenido innecesario. En este documento, omitir `</body>` también está permitido por HTML; seguiremos escribiéndolo para reconocer mejor el esqueleto. En cambio, el encabezado necesita su cierre y `<titulo>` no es una etiqueta estándar. La codificación y el idioma requieren comprobar su función, aunque no siempre cambien lo que ves. HTMLHint solo detecta lo que contemplan sus reglas: cero avisos no demuestra que todo sea correcto.
 
 #### Paso 6 · Emmet, ahora que ya sabes escribirlo · 10 min
 
-Has escrito el esqueleto a mano, así que ya puedes abreviarlo. VS Code incluye **Emmet**: escribe `!` y pulsa `Tab` para generar la estructura completa de un documento. O escribe `ul>li*3`, que se expande a:
+Has escrito el esqueleto a mano, así que ya puedes abreviarlo. VS Code incluye **Emmet**: escribe `!` y pulsa `Tab` para generar la estructura completa de un documento. O escribe `p*3`, que genera tres párrafos:
 
 ```html
-<ul>
-    <li></li>
-    <li></li>
-    <li></li>
-</ul>
+<p></p>
+<p></p>
+<p></p>
 ```
 
 Prueba ambas abreviaturas en un archivo de pruebas y compara el resultado con lo que escribiste a mano en el paso 3.
@@ -523,7 +506,7 @@ Prueba ambas abreviaturas en un archivo de pruebas y compara el resultado con lo
   <p><strong>No uses una abreviatura cuyo resultado no seas capaz de escribir y explicar a mano.</strong> Emmet es una herramienta de productividad: te ahorra tecleo, no conocimiento.</p>
 </div>
 
-#### Paso 7 · La portada de tu proyecto · 30 min
+#### Paso 7 · La portada de tu proyecto · 20 min
 
 Construye `index.html` en la raíz de tu carpeta, ahora como portada real del sitio que entregarás dentro de seis semanas y no como un ejercicio desechable:
 
@@ -535,7 +518,7 @@ Construye `index.html` en la raíz de tu carpeta, ahora como portada real del si
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación de la portada · dos pruebas de un minuto</p>
-  <p>Escribe en algún párrafo la palabra «Programación». Si se ve correctamente, tu <code>charset</code> está bien. Después abre DevTools con <code>F12</code>, activa la vista de dispositivo móvil y comprueba que el texto se lee sin hacer zoom: si hay que ampliar, falta el <em>viewport</em>.</p>
+  <p>Comprueba en el código que declaras UTF-8 y el viewport del ejemplo. Escribe «Programación, año, 10 €», guarda y verifica que se lee correctamente. Después abre DevTools con <code>F12</code>, activa su vista de dispositivo móvil y recarga. Si el texto aparece demasiado pequeño, revisa primero el viewport; esa observación es una pista, no una prueba definitiva de su ausencia.</p>
 </div>
 
 #### Ampliación si has completado el trabajo
@@ -599,13 +582,13 @@ Responde al terminar:
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>Entorno montado, esqueleto escrito a mano, documento roto reparado y portada con cero errores en el panel de problemas.</span></div>
-  <div><strong>Si lo tienes</strong><span>La tabla de los seis fallos completa, con la cuenta de cuántos pasó por alto el navegador.</span></div>
+  <div><strong>Si lo tienes</strong><span>La tabla de los seis cambios completa, distinguiendo cambios válidos y problemas de estructura o metadatos.</span></div>
   <div><strong>Reto</strong><span>Los dos retos de ampliación resueltos: el texto del taller marcado con sus cuatro decisiones justificadas, y la tabla de las tres webs reales.</span></div>
 </div>
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobación y recuerdo</p>
+<p class="stage">10 minutos · comprobación y recuerdo</p>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lista de verificación de la sesión</p>
@@ -614,7 +597,7 @@ Responde al terminar:
     <li>HTMLHint está instalado y ves su salida en el panel Problems.</li>
     <li>Sabes abrir la paleta de comandos.</li>
     <li>Tu <code>index.html</code> tiene el esqueleto completo con los cuatro metadatos.</li>
-    <li>La tabla de los seis fallos provocados está escrita y contestada.</li>
+    <li>La tabla de los seis cambios está completa y distingue observaciones y explicaciones.</li>
     <li>La portada tiene un solo <code>h1</code>, tres <code>h2</code> y párrafos reales.</li>
   </ul>
 </div>
@@ -626,8 +609,8 @@ Responde al terminar:
     <li>¿Qué diferencia hay entre un elemento y una etiqueta?</li>
     <li>Escribe de memoria dos elementos que no se cierren.</li>
     <li>¿Por qué <code>&lt;strong&gt;a&lt;em&gt;b&lt;/strong&gt;&lt;/em&gt;</code> está mal si se ve bien?</li>
-    <li>¿Qué síntoma concreto delata que falta el <code>charset</code>?</li>
-    <li>De las seis cosas que rompiste, ¿cuántas delató el navegador?</li>
+    <li>¿Qué puede ocurrir si el archivo se interpreta con una codificación incorrecta?</li>
+    <li>¿Por qué duplicar un párrafo no equivale a escribir HTML incorrecto?</li>
   </ol>
 </div>
 
@@ -637,13 +620,13 @@ Responde al terminar:
   <p>2 · El elemento es la unidad completa: apertura, contenido y cierre. La etiqueta es la marca que lo delimita.</p>
   <p>3 · Por ejemplo <code>&lt;meta&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;br&gt;</code> o <code>&lt;hr&gt;</code>.</p>
   <p>4 · Porque rompe el orden de anidación: <code>em</code> se abrió el último y debería cerrarse el primero. El navegador reconstruye un árbol distinto del escrito, y ese árbol es el que verán el CSS, el buscador y el lector de pantalla.</p>
-  <p>5 · Los caracteres no ingleses se muestran mal: acentos, eñes y signos de apertura aparecen como símbolos extraños.</p>
-  <p>6 · Prácticamente ninguna, salvo el cambio de codificación. Ese es justo el punto de la práctica.</p>
+  <p>5 · Pueden aparecer caracteres extraños. Que los acentos se vean bien no demuestra por sí solo que hayas incluido la declaración de codificación.</p>
+  <p>6 · Dos párrafos completos pueden ser HTML válido, aunque su contenido esté repetido. La corrección de la sintaxis y la calidad del contenido son comprobaciones diferentes.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Microprueba semanal 1 · 5–10 minutos</p>
-  <p>Individual, sin IA y sin apuntes. No se califica: sirve para decidir qué necesitas recuperar.</p>
+  <p class="checkpoint-label">Comprobación individual 1 · últimos 5 minutos del cierre</p>
+  <p>Individual, sin IA y sin apuntes. Sirve para identificar qué necesitas repasar.</p>
   <ol>
     <li>Escribe de memoria el esqueleto mínimo de un documento HTML.</li>
     <li>Explica la diferencia entre elemento, etiqueta y atributo con un ejemplo.</li>
@@ -656,14 +639,14 @@ Responde al terminar:
 
 ## Sesión 2 · Texto, listas, enlaces y navegación
 
-<p class="lead">Tres horas. Media hora para entender qué relación declara cada elemento, y dos horas y media interpretando información en bruto y convirtiendo tu portada en un sitio de cuatro páginas enlazadas.</p>
+<p class="lead">Partes de la portada de la sesión anterior y la conviertes en un sitio de cuatro páginas enlazadas. El recorrido orientativo reserva 5 minutos al punto de partida, 25 a la explicación, 140 al trabajo y 10 a comprobar lo aprendido.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
     <li><strong>1. Aprende:</strong> Que los encabezados son el índice del documento, qué relación expresa cada tipo de lista, y desde dónde se resuelve una ruta relativa.</li>
     <li><strong>2. Haz:</strong> Interpreta información sin marcar, crea la segunda página, monta el sitio de cuatro páginas con su navegación y resuelve el laberinto de rutas.</li>
-    <li><strong>3. Comprueba:</strong> Ningún encabezado se salta un nivel, y el proyecto entero sigue funcionando después de moverlo de carpeta.</li>
+    <li><strong>3. Comprueba:</strong> Ningún encabezado se salta un nivel, y el proyecto entero sigue funcionando al abrir una copia en otra ubicación.</li>
   </ol>
 </div>
 
@@ -894,48 +877,31 @@ Lo que desatasca todo lo demás es de dónde parte una ruta. Cuando escribes `hr
         <li><a href="index.html">Inicio</a></li>
         <li><a href="productos.html">Productos</a></li>
         <li><a href="acerca.html">Acerca de</a></li>
-        <li><a href="contacto.html" aria-current="page">Contacto</a></li>
+        <li><a href="contacto.html" aria-current="page">Contacto (página actual)</a></li>
     </ul>
 </nav>
 ```
 
 * **`<nav>`** declara que ese bloque es navegación. Un lector de pantalla ofrece saltar a él, o saltárselo entero para ir al contenido, que es lo que hace casi todo el mundo que navega así.
 * **La lista** dice que son cuatro enlaces hermanos, y permite anunciar «lista de 4 elementos». Cuatro enlaces sueltos separados por espacios no dicen ni cuántos son ni dónde acaban.
-* **`aria-current="page"`** marca cuál es la página que se está viendo. Sin CSS es la única forma de comunicarlo.
+* **`aria-label="Navegación principal"`** da un nombre a este bloque para las tecnologías de asistencia.
+* **`aria-current="page"`** identifica el enlace de la página actual para esas tecnologías. Por sí solo no cambia su aspecto: el texto «(página actual)» ofrece también una indicación visible.
+
+El ejemplo corresponde a `contacto.html`. En cada una de las demás páginas, cambia de enlace tanto el atributo como la indicación visible; solo uno debe marcarse como actual.
 
 No elegimos las etiquetas pensando en cómo queremos que se vea. Elegimos las que representan mejor la información.
 
 ### Se trabaja
 
-<p class="stage stage--guided">150 minutos · práctica sobre tu propio proyecto</p>
+<p class="stage stage--guided">140 minutos · práctica sobre tu propio proyecto</p>
 
 Hoy el proyecto pasa de una página suelta a un sitio de cuatro páginas enlazadas. Los pasos 1 a 4 trabajan el contenido; los pasos 5 a 7, la navegación y las rutas.
 
-#### Paso 1 · Revisa la jerarquía de tu portada · 20 min
+#### Paso 1 · Revisa la jerarquía de tu portada · 10 min
 
-Antes de añadir páginas nuevas, arregla la que ya tienes.
+Antes de añadir páginas nuevas, arregla la que ya tienes. Los ejemplos siguientes presentan las marcas que podrás utilizar en este paso; no necesitas emplearlas todas.
 
-1. Dibuja en papel el índice de tu `index.html`: qué es `h1`, qué es `h2`, qué es `h3`.
-2. Comprueba que no hay ningún salto de nivel y que solo hay un `h1`.
-3. Sustituye cualquier `<br><br>` que hayas usado para separar por párrafos reales.
-4. Añade al menos un `abbr`, un `code` o un par `del`/`ins` donde tenga sentido de verdad. Si no lo tiene en tu tema, no lo fuerces: dilo en un comentario.
-
-Antes de eso, resuelve este caso y explica qué principio incumple:
-
-```html
-<p>
-    <h2>Nuestros productos</h2>
-</p>
-```
-
-<details class="aside aside--extra">
-  <summary>Ver respuesta</summary>
-  <p>Un <code>&lt;p&gt;</code> solo puede contener contenido en línea: texto, <code>strong</code>, <code>em</code>, <code>a</code>, <code>img</code>… Un encabezado es un elemento de bloque y no cabe dentro de un párrafo.</p>
-  <p>El navegador no muestra un error: cierra el párrafo por su cuenta justo antes del <code>&lt;h2&gt;</code> y deja suelto el <code>&lt;/p&gt;</code> final. Acabas con un párrafo vacío, un encabezado que no está donde creías y una etiqueta huérfana. Otra vez el mismo patrón: se ve bien, y la estructura real no es la que escribiste.</p>
-</details>
-
-<details class="aside aside--extra">
-<summary>Consultar · otros elementos de texto y entidades</summary>
+##### Consulta antes de empezar · texto y entidades
 
 | Elemento | Significa |
 | -------- | --------- |
@@ -966,6 +932,23 @@ Para escribir un `<` sin que abra una etiqueta se usan **entidades**:
 
 Es imprescindible cuando quieres mostrar código HTML dentro de una página, que es lo que hacen estos apuntes.
 
+1. Dibuja en papel el índice de tu `index.html`: qué es `h1`, qué es `h2`, qué es `h3`.
+2. Comprueba que no hay ningún salto de nivel y que solo hay un `h1`.
+3. Sustituye cualquier `<br><br>` que hayas usado para separar por párrafos reales.
+4. Añade al menos un `abbr`, un `code` o un par `del`/`ins` donde tenga sentido de verdad. Si no lo tiene en tu tema, no lo fuerces: dilo en un comentario.
+
+Antes de eso, resuelve este caso y explica qué principio incumple:
+
+```html
+<p>
+    <h2>Nuestros productos</h2>
+</p>
+```
+
+<details class="aside aside--extra">
+  <summary>Ver respuesta</summary>
+  <p>Un <code>&lt;p&gt;</code> solo puede contener contenido en línea: texto, <code>strong</code>, <code>em</code>, <code>a</code>, <code>img</code>… Un encabezado es un elemento de bloque y no cabe dentro de un párrafo.</p>
+  <p>El navegador no muestra un error: cierra el párrafo por su cuenta justo antes del <code>&lt;h2&gt;</code> y, al procesar el <code>&lt;/p&gt;</code> final, genera otro párrafo vacío. El encabezado queda fuera del párrafo, no dentro como sugiere el código. Otra vez el mismo patrón: se ve bien, y la estructura real no es la que escribiste.</p>
 </details>
 
 #### Paso 2 · De texto plano a estructura · 25 min
@@ -1010,7 +993,7 @@ DAW
 
 <details class="aside aside--extra">
   <summary>Ver respuesta</summary>
-  <p>Es una relación de pertenencia sin orden, o sea una lista dentro de otra lista:</p>
+  <p>Una solución que permite practicar la anidación es representar DAW y sus módulos mediante una lista dentro de otra:</p>
   <pre><code>&lt;ul&gt;
   &lt;li&gt;DAW
     &lt;ul&gt;
@@ -1020,7 +1003,7 @@ DAW
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
-  <p>La lista anidada va <strong>dentro</strong> del <code>&lt;li&gt;</code> de DAW. Si la sacas fuera, estás diciendo que los tres módulos son hermanos de DAW en lugar de partes suyas.</p>
+  <p>En esta solución, la lista anidada va <strong>dentro</strong> del <code>&lt;li&gt;</code> de DAW. También puedes representar DAW como un encabezado seguido de una lista de módulos; justifica la elección según el contexto de la página.</p>
 </details>
 
 #### Paso 4 · Crea `productos.html` · 25 min
@@ -1031,12 +1014,13 @@ Crea la segunda página de tu proyecto. Debe contener:
 * Varios párrafos.
 * Una lista no ordenada.
 * Una lista ordenada, donde el orden importe de verdad.
-* Una lista anidada.
+* Una lista de descripciones (`dl`), con sus términos (`dt`) y descripciones (`dd`).
+* Una lista anidada dentro de un `li`.
 * Al menos dos elementos de significado textual de la sesión anterior.
 
 Todavía no la enlazaremos con la portada: eso es el paso 5.
 
-**Antes de continuar:** las tres clases de lista están presentes y cada una declara la relación que le corresponde, no la que da el aspecto deseado.
+**Antes de continuar:** `ul`, `ol` y `dl` están presentes y cada una declara la relación que le corresponde, no la que da el aspecto deseado.
 
 #### Paso 5 · El sitio multipágina · 35 min
 
@@ -1054,7 +1038,7 @@ Requisitos:
 
 1. Las cuatro tienen el esqueleto completo y su propio `<title>` **distinto y descriptivo**.
 2. Las cuatro incluyen el mismo bloque de navegación, con los mismos enlaces en el mismo orden.
-3. Cada página marca su propio enlace con `aria-current="page"`.
+3. Cada página marca su propio enlace con `aria-current="page"` y el texto visible «(página actual)», como en el ejemplo. Quita ambas marcas de los otros enlaces.
 4. Cada página tiene un único `h1` que coincide con su tema.
 
 Recorre después el ciclo completo: Inicio → Productos → Acerca de → Contacto → Inicio. Si algún enlace falla, no lo arregles todavía: anótalo, porque es exactamente el problema que ataca el paso siguiente.
@@ -1104,42 +1088,50 @@ Abrir pestañas automáticamente no debería ser la opción por defecto. Quien n
 
 #### Paso 6 · El laberinto de rutas · 25 min
 
-Ahora el caso difícil, con carpetas de por medio:
+Este ejercicio se hace en una **carpeta independiente llamada `practica-rutas`**, junto a `mi-web`, no dentro de ella. No muevas las cuatro páginas del proyecto. Así puedes practicar con otra estructura sin romper la navegación que acabas de terminar.
+
+Crea estas carpetas y archivos desde el explorador de VS Code:
 
 ```text
-web/
+practica-rutas/
 ├── index.html
-├── img/
-│   └── logo.webp
+├── recursos/
+│   └── ayuda.html
 └── paginas/
     ├── productos.html
     └── contacto.html
 ```
 
+En cada HTML, reutiliza el esqueleto que ya conoces y escribe un `title` y un `h1` que identifiquen el archivo, por ejemplo «Ayuda» en `ayuda.html`. Guarda los cuatro antes de probar los enlaces. Todos los destinos de este ejercicio son páginas HTML; las imágenes llegarán en la sesión siguiente.
+
 ##### 6.1 · Ejemplo resuelto
 
-**Desde `productos.html`, enlazar `logo.webp`.**
+**Desde `paginas/productos.html`, enlazar `recursos/ayuda.html`.**
 
 <dl class="worked">
   <dt>¿Dónde estoy?</dt>
-  <dd>En <code>web/paginas/</code>, porque ahí vive el archivo que escribe el enlace.</dd>
+  <dd>En <code>practica-rutas/paginas/</code>, porque ahí vive el archivo que escribe el enlace.</dd>
   <dt>¿Dónde está el destino?</dt>
-  <dd>En <code>web/img/</code>.</dd>
+  <dd>En <code>practica-rutas/recursos/</code>.</dd>
   <dt>¿Cuál es el camino?</dt>
-  <dd>Subir de <code>paginas/</code> a <code>web/</code>, y desde ahí bajar a <code>img/</code>.</dd>
+  <dd>Subir de <code>paginas/</code> a <code>practica-rutas/</code>, y desde ahí bajar a <code>recursos/</code>.</dd>
   <dt>Ruta</dt>
-  <dd><code>../img/logo.webp</code></dd>
+  <dd><code>../recursos/ayuda.html</code></dd>
 </dl>
 
-No conviene resolverlo de una sola vez. El procedimiento tiene tres pasos: dónde estoy, dónde voy y cuántos niveles subo antes de empezar a bajar.
+En `paginas/productos.html`, escribe `<a href="../recursos/ayuda.html">Ayuda</a>` dentro del `body`, guarda y abre la página en el navegador. Pulsa el enlace y comprueba que aparece el encabezado «Ayuda».
+
+El procedimiento tiene tres pasos: dónde estoy, dónde voy y cuántos niveles subo antes de empezar a bajar.
 
 ##### 6.2 · Ahora tú
 
 1. Desde `productos.html`, volver a `index.html`.
-2. Desde `index.html`, mostrar la imagen `logo.webp`.
+2. Desde `index.html`, enlazar `recursos/ayuda.html`.
 3. Desde `contacto.html`, enlazar `productos.html`.
 4. Desde `index.html`, enlazar `contacto.html`.
-5. Desde `index.html`, saltar a una sección con `id="envios"` en esa misma página.
+5. Desde `index.html`, saltar a un encabezado con `id="envios"` en esa misma página. Crea primero el destino: `<h2 id="envios">Envíos</h2>`.
+
+Escribe cada enlace en el archivo de origen, dentro del `body`, con un texto que describa el destino. Guarda y prueba uno a uno; comprueba el nombre del archivo en la barra de direcciones. Si el salto a «Envíos» apenas mueve la pantalla, comprueba que la dirección termina en `#envios`: el destino puede estar ya a la vista.
 
 <details class="aside aside--extra">
   <summary>Consultar · qué significa cada forma de ruta</summary>
@@ -1158,7 +1150,7 @@ No conviene resolverlo de una sola vez. El procedimiento tiene tres pasos: dónd
 <details class="aside aside--extra">
   <summary>Ver soluciones</summary>
   <p>1 · <code>../index.html</code> — subo de <code>paginas/</code> a la raíz.</p>
-  <p>2 · <code>img/logo.webp</code> — ya estoy en la raíz, solo bajo.</p>
+  <p>2 · <code>recursos/ayuda.html</code> — ya estoy en la raíz, solo bajo.</p>
   <p>3 · <code>productos.html</code> — los dos están en <code>paginas/</code>, misma carpeta.</p>
   <p>4 · <code>paginas/contacto.html</code> — bajo un nivel desde la raíz.</p>
   <p>5 · <code>#envios</code> — sin nombre de archivo: el destino está en el documento actual.</p>
@@ -1168,10 +1160,10 @@ No conviene resolverlo de una sola vez. El procedimiento tiene tres pasos: dónd
 
 <div class="checkpoint">
   <p class="checkpoint-label">Comprobación de portabilidad · un minuto</p>
-  <p>Mueve la carpeta entera del proyecto al escritorio, o a un pendrive, y navega por todos los enlaces. Si algo deja de funcionar, esa ruta no era relativa. Es la única prueba que importa, porque es lo que le pasará al proyecto cuando lo entregues.</p>
+  <p>Vuelve a tu proyecto de cuatro páginas, <code>mi-web</code>. Copia su carpeta completa a otra ubicación, abre el <code>index.html</code> de esa copia y navega por todos los enlaces. Si algo falla, revisa el origen del enlace, la ruta y si has copiado todos los archivos. El objetivo es comprobar que el sitio no depende de su ubicación inicial.</p>
 </div>
 
-Después de moverla, recorre las cuatro páginas en los dos sentidos y anota en un comentario cuántos enlaces fallaron y por qué. Un proyecto que solo funciona en la carpeta donde se escribió no está terminado.
+En la copia, recorre las cuatro páginas en los dos sentidos y anota qué enlaces has comprobado y cualquier fallo encontrado. Verifica en la barra de direcciones que sigues dentro de la copia y no has vuelto a los archivos originales. Un proyecto que solo funciona en la carpeta donde se escribió no está terminado.
 
 #### Ampliación si has completado el trabajo
 
@@ -1183,10 +1175,10 @@ Primero termina y comprueba los siete pasos. Estos dos retos no añaden etiqueta
 tienda/
 ├── index.html
 ├── assets/
-│   ├── img/
-│   │   └── marca.webp
+│   ├── marca/
+│   │   └── historia.html
 │   └── docs/
-│       └── garantia.pdf
+│       └── garantia.html
 ├── catalogo/
 │   ├── index.html
 │   ├── portatiles.html
@@ -1199,14 +1191,14 @@ tienda/
 Escribe la ruta relativa para cada caso, aplicando los tres pasos del procedimiento. No compruebes en el navegador hasta haberlas escrito todas:
 
 1. Desde `catalogo/portatiles.html`, enlazar `fichas/portatil-14.html`.
-2. Desde `fichas/portatil-14.html`, mostrar `marca.webp`.
-3. Desde `fichas/portatil-14.html`, volver a la portada del sitio.
-4. Desde `legal/privacidad.html`, enlazar `garantia.pdf`.
-5. Desde `index.html`, enlazar `catalogo/index.html` sin escribir el nombre del archivo.
+2. Desde `catalogo/fichas/portatil-14.html`, enlazar `assets/marca/historia.html`.
+3. Desde `catalogo/fichas/portatil-14.html`, volver a la portada del sitio.
+4. Desde `legal/privacidad.html`, enlazar `assets/docs/garantia.html`.
+5. Desde `index.html`, enlazar `catalogo/index.html`, incluyendo el nombre del archivo para poder probarlo al abrir el sitio localmente.
 6. Desde `catalogo/index.html`, enlazar `privacidad.html`.
-7. Desde `fichas/portatil-14.html`, enlazar `portatiles.html`.
+7. Desde `catalogo/fichas/portatil-14.html`, enlazar `portatiles.html`.
 
-Al terminar, monta esa estructura con archivos vacíos y comprueba cuántas acertaste a la primera. Las que falles, resuélvelas otra vez escribiendo los tres pasos por separado.
+Al terminar, crea una carpeta independiente `tienda` con esa estructura. En cada archivo escribe el esqueleto HTML y un encabezado que identifique la página. Añade los enlaces en sus archivos de origen y comprueba cuántas rutas acertaste a la primera. Las que falles, resuélvelas otra vez escribiendo los tres pasos por separado.
 
 ##### Reto 2 · La navegación de una web real
 
@@ -1220,14 +1212,14 @@ Abre tres sitios que uses y examina su menú principal con `Ctrl + U` o con el i
 Los tres menús funcionan con el ratón. La pregunta de esta unidad es siempre la misma: qué le queda a quien no usa el ratón ni ve el color.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Cuatro páginas enlazadas, títulos distintos, navegación coherente y las tres clases de lista en <code>productos.html</code>.</span></div>
-  <div><strong>Si lo tienes</strong><span>La prueba de portabilidad superada después de mover la carpeta, con los fallos anotados y corregidos.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>Cuatro páginas enlazadas, títulos distintos, navegación coherente y listas ul, ol y dl en <code>productos.html</code>.</span></div>
+  <div><strong>Si lo tienes</strong><span>La prueba de portabilidad superada en una copia de la carpeta, con los fallos anotados y corregidos.</span></div>
   <div><strong>Reto</strong><span>Las siete rutas del árbol ajeno resueltas sin probar en el navegador, y la auditoría de las tres navegaciones reales.</span></div>
 </div>
 
 ### Cierre
 
-<p class="stage">5 minutos · comprobación y recuerdo</p>
+<p class="stage">10 minutos · comprobación y recuerdo</p>
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lista de verificación de la sesión</p>
@@ -1236,8 +1228,8 @@ Los tres menús funcionan con el ratón. La pregunta de esta unidad es siempre l
     <li>La elección entre <code>ul</code> y <code>ol</code> está justificada por escrito en un comentario.</li>
     <li>Las listas anidadas van dentro del <code>li</code> del que dependen.</li>
     <li>El sitio tiene cuatro páginas con títulos distintos y descriptivos.</li>
-    <li>La navegación es un <code>nav</code> con una lista, y cada página marca la suya con <code>aria-current</code>.</li>
-    <li>El proyecto sigue funcionando después de moverlo de carpeta.</li>
+    <li>La navegación es un <code>nav</code> con una lista, y cada página identifica la actual con <code>aria-current</code> y un texto visible.</li>
+    <li>El proyecto sigue funcionando al abrirlo desde una copia en otra ubicación.</li>
   </ul>
 </div>
 
@@ -1264,7 +1256,7 @@ Los tres menús funcionan con el ratón. La pregunta de esta unidad es siempre l
 </details>
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Microprueba semanal 2 · 5–10 minutos</p>
+  <p class="checkpoint-label">Comprobación individual 2 · últimos 5 minutos del cierre</p>
   <p>Individual, sin IA y sin apuntes.</p>
   <ol>
     <li>Escribe una jerarquía con un <code>h1</code>, dos apartados y un subapartado.</li>
