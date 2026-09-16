@@ -127,12 +127,12 @@ Para JSON, ese conversor utiliza **Jackson**, la biblioteca de conversión intro
     <li>Coge la primera clave del JSON, por ejemplo <code>titulo</code></li>
     <li>Busca un <em>setter</em> que le corresponda: <code>setTitulo</code></li>
     <li>Si lo encuentra, convierte el valor al tipo que pida ese <em>setter</em> y lo llama</li>
-    <li>Si no lo encuentra, <strong>pasa a la siguiente clave sin decir nada</strong></li>
+    <li>Si no hay setter, puede utilizar otros accesos configurados, como un campo inferido. Si la propiedad es desconocida, la ignora en modo tolerante o rechaza el cuerpo en modo estricto</li>
     <li>Repite hasta terminar el JSON</li>
   </ol>
 </figure>
 
-Los pasos 4 y 5 son los que hay que grabar. **Jackson recorre el JSON, no tu clase.** Lo que no esté en el JSON no se toca, y se queda con el valor por defecto de Java: `null` para objetos, `0` para números, `false` para booleanos.
+Jackson procesa las propiedades presentes en el JSON. Las omitidas conservan el valor inicial del objeto: el asignado por su constructor o inicializadores, o el valor por defecto de Java si no hay ninguno (`null`, `0` o `false`, según el tipo). Una propiedad desconocida y una propiedad omitida son casos diferentes.
 
 #### Los tres estados de un cuerpo
 
@@ -146,7 +146,7 @@ Un cuerpo que llega puede estar en tres situaciones muy distintas, y Spring las 
 
 <div class="rule">
   <p class="rule-label">La distinción que hay que interiorizar hoy</p>
-  <p><strong>Inválido</strong> es un problema de <em>sintaxis</em>: no es JSON, o no encaja con los tipos. Lo detecta Jackson y produce un 400 automático.</p>
+  <p>Un cuerpo puede fallar por sintaxis JSON incorrecta o por incompatibilidad con el tipo Java. Ambos pueden producir 400, pero sus causas y correcciones son distintas.</p>
   <p><strong>Incompleto</strong> es un problema de <em>significado</em>: es JSON perfecto y le faltan datos que tu aplicación necesita. Jackson no tiene ninguna opinión al respecto, porque nadie le ha dicho qué es una tarea válida.</p>
   <p>El primero te lo resuelve el framework. El segundo <strong>es responsabilidad tuya</strong>, y hasta la UD3 no tendrás la herramienta para resolverlo bien.</p>
 </div>
@@ -182,7 +182,7 @@ DispatcherServlet        : Completed 200 OK
 
 <dl class="worked">
   <dt>Línea 1 · llegó esto</dt>
-  <dd>El <em>DispatcherServlet</em> confirma qué método y qué ruta ha recibido, con sus parámetros. Si aquí no aparece nada, <strong>tu petición no llegó a la aplicación</strong>: te has equivocado de puerto, o el servidor no está arrancado.</dd>
+  <dd>DispatcherServlet registra método y ruta. Si no ves la línea, comprueba primero el nivel de log, la consola seleccionada y que miras la ejecución actual; después revisa dirección, puerto y arranque. La ausencia de un mensaje por sí sola no demuestra que no haya llegado una petición.</dd>
   <dt>Línea 2 · va a este método</dt>
   <dd>La decisión más importante de todo el recorrido. Te dice, con nombre y apellidos, qué método tuyo va a ejecutarse. Cuando una petición «hace algo raro», esta línea te dice si está entrando por donde crees.</dd>
   <dt>Línea 3 · lo devuelvo así</dt>
@@ -193,7 +193,7 @@ DispatcherServlet        : Completed 200 OK
 
 <div class="rule">
   <p class="rule-label">Esta es la herramienta de diagnóstico de todo el curso</p>
-  <p>De aquí en adelante, cuando una petición no haga lo que esperas, la primera pregunta ya no es «¿qué pasa?» sino <strong>«¿hasta dónde llegó?»</strong>. Si no aparece la línea 1, no llegó. Si aparece la 1 y no la 2, ninguna ruta encajó. Si aparece la 2 pero el resultado es raro, el problema está en tu método.</p>
+  <p>Relaciona las líneas con las fases del recorrido. Encontrar un método no implica que se haya ejecutado: todavía deben resolverse sus argumentos. También puede fallar la escritura de la respuesta después de ejecutarlo. Comprueba la excepción y, cuando haga falta, añade temporalmente un mensaje al principio del método para observar si entra.</p>
   <p>Déjalo encendido mientras desarrollas y apágalo cuando te moleste. Es una línea en un archivo.</p>
 </div>
 
@@ -220,7 +220,7 @@ La anotación `@PostMapping(consumes=..., produces=...)` sustituye a la anotaci�
 
 <div class="rule">
   <p class="rule-label">Los cuatro son 4xx, y eso ya te lo dice todo</p>
-  <p>Empiezan por 4, así que ninguno es un fallo del servidor: en los cuatro casos <strong>tu método ni siquiera se ha ejecutado</strong>. La petición murió por el camino. Buscar el error dentro de tu método es tiempo perdido.</p>
+  <p>Estos códigos describen el resultado HTTP, pero no bastan para deducir si se ejecutó el controlador. Con <code>consumes</code> o <code>produces</code> explícitos, Spring puede rechazar durante la selección del método. Si intenta convertir una respuesta ya devuelta, un 406 puede producirse después de ejecutarlo. Usa los logs y un mensaje temporal de entrada para comprobar la fase real.</p>
 </div>
 
 ##### `consumes` y `produces`
@@ -261,7 +261,7 @@ Al terminar, rellena esta tabla, que es el objetivo real de la sesión:
 | 3 | | | |
 | 4 | | | |
 
-La columna del medio es la interesante. En dos de los cuatro casos **sí** se encontró tu método y aun así la petición fue rechazada después. Sabe decir en cuáles y por qué.
+No presupongas cuántas filas mostrarán `Mapped to`: depende de dónde declaraste las restricciones y de los conversores instalados. En el caso del GET con `Accept: application/xml`, compara lo observado con y sin `produces="application/json"` en ese GET. Añade un mensaje temporal al inicio del método para distinguir selección, ejecución y conversión de salida; retíralo después.
 
 #### Paso 5 · Seguir una petición completa en los logs
 
@@ -314,7 +314,7 @@ Los resultados que sorprenden son estos cuatro, y conviene mirarlos despacio:
   <dt>5 y 6 · claves que no existen</dt>
   <dd><code>200</code> las dos, y en silencio. Spring Boot configura Jackson para <strong>ignorar las claves desconocidas</strong>. Resulta indiferente que se trate de una errata propia o de un campo que el cliente se ha inventado: se descarta sin avisar.</dd>
   <dt>7 · un tipo que no convierte</dt>
-  <dd><code>400</code>. <code>"quizás"</code> no es un booleano y Jackson no se lo inventa. Aquí sí protesta, porque es un problema de sintaxis.</dd>
+  <dd>400: el JSON es sintácticamente válido, pero el texto «quizás» no puede convertirse al booleano esperado. Distingue un error de conversión de un JSON mal formado.</dd>
   <dt>8 · un tipo que sí convierte</dt>
   <dd><code>200</code>, y <code>completada</code> vale <code>true</code>. El texto <code>"true"</code> entre comillas <strong>no</strong> es un booleano JSON, y aun así Jackson lo acepta y lo convierte. Es tolerante por defecto, y esa tolerancia es una decisión que se puede cambiar.</dd>
 </dl>
@@ -354,7 +354,7 @@ Reinicia y vuelve a enviar el cuerpo número 6, el del `color`. Ahora responde `
 
 <div class="rule">
   <p class="rule-label">Cuál elegir</p>
-  <p>En una API pública, con clientes que no controlas, se deja <strong>tolerante</strong>: es preferible ignorar un campo de más a romperle la aplicación a alguien por un cambio tuyo.</p>
+  <p>La tolerancia o el rechazo forman parte del contrato de la API. Ignorar campos puede facilitar compatibilidad; rechazarlos permite detectar errores de nombre. No existe una elección obligatoria por el hecho de que la API sea pública.</p>
   <p>En una API interna, o durante el desarrollo, ser <strong>estricto</strong> ahorra horas de depuración.</p>
   <p>Para este curso, déjalo estricto mientras desarrollas la UD2 y la UD3 y decide tú al llegar al proyecto. Lo que no vale es no haberlo decidido.</p>
 </div>
@@ -403,7 +403,7 @@ Funciona con el formato ISO, que es año-mes-día con guiones. Prueba a enviar `
 
 <div class="rule">
   <p class="rule-label">Una fecha siempre se escribe igual</p>
-  <p>En una API, las fechas se transmiten en formato ISO 8601 —<code>2026-09-15</code>— y no en el formato de ningún país. «15/09/2026» y «09/15/2026» son el mismo texto con dos significados distintos, y el servidor no tiene forma de saber cuál te refieres.</p>
+  <p>En este contrato, las fechas se transmiten en formato ISO 8601, como <code>2026-09-15</code>. Un texto como <code>03/04/2026</code> puede interpretarse como 3 de abril o 4 de marzo según la convención. Acordar año-mes-día evita esa ambigüedad; otros formatos requieren una configuración explícita.</p>
   <p>Dar formato a la fecha para que se lea bonita es trabajo del cliente, no tuyo.</p>
 </div>
 
@@ -414,7 +414,7 @@ Sobre tu proyecto:
 1. Amplía la clase `Proyecto` con una lista de `String` y una fecha.
 2. Crea un endpoint espejo para `Proyecto`.
 3. Construye tu propia tabla de **seis** cuerpos: dos válidos, dos inválidos y dos incompletos. Envíalos y anota código y valores resultantes.
-4. Activa `fail-on-unknown-properties` y repite los seis. Anota cuáles cambian de resultado y cuáles no.
+4. Para comparar ambas configuraciones, prueba primero con `spring.jackson.deserialization.fail-on-unknown-properties=false`, reinicia y ejecuta los seis casos. Cambia después a `true`, reinicia y repítelos. Conserva al terminar el modo estricto acordado para esta unidad.
 5. Escribe en dos frases qué configuración dejarías puesta en tu proyecto y por qué.
 
 #### Paso 12 · Comprobar y registrar el resultado del proyecto
@@ -426,45 +426,18 @@ Sobre tu proyecto:
 
 Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
 
-##### Reto · El endpoint que nunca se ejecuta
+##### Reto · Predecir qué ruta selecciona Spring
 
-Un compañero tiene esto y jura que `/tareas/nueva` le devuelve 404:
+En un controlador de diagnóstico separado, con prefijo `/diagnostico-rutas`, declara un GET `/{id}` que reciba un `int` y devuelva su valor, y otro GET `/nueva` que devuelva «Ruta literal». Utiliza un prefijo separado para no duplicar rutas de tu proyecto.
 
-```java
-@RestController
-@RequestMapping("/tareas")
-public class TareaController {
-
-    @GetMapping("/{id}")
-    public String detalle(@PathVariable(name = "id") int id) {
-        return "Tarea " + id;
-    }
-
-    @GetMapping("/nueva")
-    public String nueva() {
-        return "Formulario de tarea";
-    }
-}
-```
-
-1. Antes de tocar nada: ¿le devuelve realmente un `404`? Predice qué pasa y por qué.
-2. Reprodúcelo en tu proyecto y mira la línea `Mapped to` del registro. ¿A qué método está entrando?
-3. El código de estado que sale **no es el que tu compañero dice**. ¿Cuál es y qué significa?
-4. Explica en dos frases por qué ocurre, usando la palabra «específica».
-5. Propón dos soluciones distintas y di cuál preferirías en una API de verdad.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>El registro encendido, las cuatro líneas identificadas y los cuatro errores provocados.</span></div>
-  <div><strong>Si lo tienes</strong><span>El endpoint con ruta, parámetro y cabecera funcionando, con su traza anotada.</span></div>
-  <div><strong>Reto</strong><span>El diagnóstico completo del endpoint que no se ejecuta, con las dos soluciones comparadas.</span></div>
-</div>
+1. Predice la respuesta de `/diagnostico-rutas/nueva`, `/diagnostico-rutas/7` y `/diagnostico-rutas/abc`.
+2. Ejecuta y compara los logs: la ruta literal `/nueva` tiene prioridad frente a `/{id}`; debe responder 200 con «Ruta literal». El número entra en detalle y `abc` no se convierte a int, por lo que responde 400.
+3. Quita temporalmente solo la anotación del método `/nueva` y repite esa petición: ahora coincide con `/{id}` y falla la conversión a int.
+4. Recupera la anotación, repite y retira el controlador de diagnóstico al terminar. Explica qué diferencia hay entre seleccionar una ruta y construir los argumentos.
 
 <details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Tomcat, DispatcherServlet, búsqueda del método, resolución de los argumentos, tu método, conversión del valor devuelto y escritura de la respuesta.</p>
-  <p>2 · Ninguna ruta ha coincidido con esa petición: la URL no es la que crees, o el controlador no lo ve el escaneo de componentes. El resultado será un 404.</p>
-  <p>3 · El 415 es sobre lo que <em>envías</em>: el servidor no sabe leer ese <code>Content-Type</code>. El 406 es sobre lo que <em>pides</em>: el servidor no sabe producir el formato de tu <code>Accept</code>.</p>
-  <p>4 · Porque los cuatro se deciden en fases anteriores a la ejecución. Cuando tu método arranca, ya se ha comprobado que la ruta existe, que el método HTTP encaja y que los formatos son compatibles.</p>
+  <summary>Comprobar la explicación</summary>
+  <p>El método literal sí se ejecuta: no hay una avería en su definición. Al retirar su mapeo, la misma URL pasa a coincidir con la variable. No importa qué método se escribió antes en el archivo, sino la especificidad de la ruta.</p>
 </details>
 
 ##### Reto · El campo que desaparece
@@ -512,14 +485,14 @@ Preguntas:
 2. ¿Qué valor tiene `estado` dentro del objeto Java? ¿Y en el JSON de respuesta?
 3. ¿Qué valor tiene `urgente` dentro del objeto Java? ¿Y en el JSON de respuesta?
 4. ¿Qué ha pasado con `prioridad`?
-5. Hay un campo que **entra y no sale**, y otro que **no entra y podría salir**. Identifícalos y explica la regla que lo provoca.
+5. Comprueba si Jackson admite `estado` a pesar de que no haya setter. Con la configuración habitual puede inferir el campo privado a partir de su getter: no deduzcas el contrato mirando solo los setters. Localiza `urgente` con el depurador, porque no tiene getter para observarlo en el JSON.
 
-Cuando lo tengas escrito, cópialo al proyecto y compruébalo.
+Para este reto, prueba primero con campos desconocidos permitidos y después en modo estricto. El campo `prioridad`, que no existe, debe provocar rechazo en modo estricto. Restaura esa configuración al finalizar. Anota las diferencias observadas en lugar de asumir que quitar un setter bloquea la entrada.
 
 <div class="practice-levels">
   <div><strong>Objetivo mínimo</strong><span>El endpoint espejo funcionando y los nueve cuerpos enviados con su resultado anotado.</span></div>
   <div><strong>Si lo tienes</strong><span>El espejo de proyectos con lista y fecha, y la comparación con y sin tolerancia.</span></div>
-  <div><strong>Reto</strong><span>El JSON de respuesta de <code>Incidencia</code> predicho entero y la regla de los dos campos explicada.</span></div>
+  <div><strong>Reto</strong><span>El comportamiento de las propiedades de Incidencia comprobado con ambas configuraciones y sus diferencias explicadas.</span></div>
 </div>
 
 <details class="aside aside--extra">
@@ -536,123 +509,71 @@ Cuando lo tengas escrito, cópialo al proyecto y compruébalo.
 
 **Al terminar la sesión:**
 
-Debe ser posible explicar de dónde procede cada argumento y conservar peticiones que reproduzcan los tres casos.
+Puedes relacionar método, ruta, parámetros, cabeceras y cuerpo con su origen; distinguir JSON mal formado, conversión incompatible y datos incompletos; y reproducir el contraste entre configuración tolerante y estricta. Las entidades admiten la lista y la fecha previstas. Conserva las peticiones que demuestran los resultados y publica los cambios mediante una PR.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
 
 ## Sesión 6 · Escrituras y respuestas HTTP
 
-**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el primer workflow](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/). En Servidor continúas la implementación del mismo producto.
-
+**Punto de partida.** Tu CRUD conserva datos en memoria y ya permite crear, consultar, sustituir y borrar. Hoy añadirás PATCH y ajustarás los códigos de respuesta. Continúa sobre las dos entidades de tu proyecto; `Tarea` y `Proyecto` son los ejemplos para trasladar el procedimiento a tu dominio.
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Ya sabes cómo llegan los datos al controlador. Hoy precisarás qué significa repetir una escritura. Una operación idempotente deja el mismo estado final al repetirse; no exige que todas las respuestas sean idénticas. Usarás esa distinción para comparar PUT, PATCH y DELETE.
+#### Efecto de una petición y significado de su respuesta
 
-#### Lo que ya haces y todavía no sabes justificar
+Una operación **segura** tiene semántica de consulta: el cliente no solicita cambiar el recurso. GET es seguro, aunque el servidor pueda registrar la petición en un log. Una operación **idempotente** deja el mismo efecto solicitado al repetir una petición idéntica. Las respuestas pueden ser distintas: borrar un elemento y volver a borrarlo deja el recurso ausente en ambos casos.
 
-En la UD1 escribiste `POST`, `PUT` y `DELETE`, y funcionan. Ante la pregunta de por qué modificar corresponde a `PUT` y no a `POST`, sin embargo, la respuesta honesta hoy sería «porque lo indican los apuntes».
+| Método | Efecto en nuestro CRUD | Al repetir la misma petición |
+| --- | --- | --- |
+| GET | Consulta | No modifica el recurso. |
+| POST | Crea un registro con id asignado | Crea otro registro; esta implementación no es idempotente. |
+| PUT | Sustituye los campos editables | Deja la misma representación; es idempotente. |
+| PATCH | Modifica los campos indicados | Depende de la operación: asignar una prioridad se puede repetir; incrementar un contador cambia de nuevo el resultado. |
+| DELETE | Elimina el registro | Lo deja ausente; es idempotente. |
 
-Esta sesión pasa de la mecánica al criterio, que se apoya en dos propiedades no opinables: están definidas en la especificación de HTTP y **el resto de Internet cuenta con ellas**.
+Si se pierde una respuesta, el cliente puede necesitar reintentar. La idempotencia permite razonar sobre ese reintento, pero no significa que todos los clientes repitan automáticamente las peticiones.
 
-#### Seguro e idempotente
+**PUT** representa una sustitución completa de los datos editables acordados. En nuestro código, los campos omitidos quedan con los valores por defecto del objeto recibido. Más adelante rechazaremos una representación incompleta mediante validación. **PATCH** expresa una modificación parcial: esta primera implementación solo cambiará título y prioridad cuando reciba un valor no nulo.
 
-<p class="term">Seguro</p>
+#### Estado, cabeceras y cuerpo con ResponseEntity
 
-Una operación es *segura* cuando **no modifica nada**. Solo consulta. `GET` es seguro.
+Hasta ahora varios métodos devuelven un objeto o `null`, y Spring responde 200 incluso cuando no encuentran el recurso. **`ResponseEntity`** permite decidir el código, las cabeceras y el cuerpo. Un **contrato HTTP** describe qué debe observar el cliente en cada caso.
 
-<p class="term">Idempotente</p>
+| Construcción | Resultado |
+| --- | --- |
+| `ResponseEntity.ok(objeto)` | 200 con cuerpo. |
+| `ResponseEntity.notFound().build()` | 404 sin cuerpo. |
+| `ResponseEntity.created(uri).body(objeto)` | 201 con cuerpo y cabecera `Location`. |
+| `ResponseEntity.noContent().build()` | 204 sin cuerpo. |
 
-Una operación es *idempotente* cuando **hacerla una vez y hacerla diez veces dejan el servidor igual**. Ojo: no se trata de que devuelva lo mismo, sino de que el efecto acumulado sea el mismo.
-
-| Método | ¿Seguro? | ¿Idempotente? | Efecto de repetirlo cinco veces |
-| :--- | :---: | :---: | :--- |
-| `GET` | Sí | Sí | Nada, cinco veces |
-| `POST` | No | **No** | Cinco recursos nuevos |
-| `PUT` | No | Sí | El recurso queda igual que tras la primera |
-| `PATCH` | No | Depende | Normalmente igual, pero no está garantizado |
-| `DELETE` | No | Sí | Se borra una vez; las otras cuatro no hay nada que borrar |
-
-##### Por qué esto no es teoría
-
-Imagina esta situación, que ocurre todos los días:
-
-<figure class="diagram">
-  <figcaption>El cliente que no sabe si su petición llegó</figcaption>
-  <ol class="flow flow--before">
-    <li>El cliente envía la petición</li>
-    <li>El servidor la recibe y la procesa correctamente</li>
-    <li>La respuesta se pierde por el camino: se corta la red, expira el tiempo de espera</li>
-    <li class="is-error">El cliente no ha recibido nada. No sabe si se hizo o no</li>
-    <li>El cliente reintenta</li>
-  </ol>
-</figure>
-
-Ahí está todo el asunto. Si la operación era un `PUT`, reintentar **es seguro**: el recurso acaba en el mismo estado. Si era un `POST`, reintentar crea un segundo recurso, y acabas de duplicar una incidencia, un pedido o un cobro.
-
-<div class="rule">
-  <p class="rule-label">Por eso las reglas no son un capricho</p>
-  <p>Los navegadores, los <em>proxies</em>, las pasarelas y las librerías cliente <strong>reintentan automáticamente</strong> las operaciones idempotentes cuando fallan, y no reintentan las que no lo son. Cuentan con que respetes la semántica.</p>
-  <p>Si escribes un <code>GET</code> que crea cosas, o un <code>POST</code> donde debía ir un <code>PUT</code>, no estás rompiendo una convención de estilo: estás rompiendo suposiciones que otros programas ya están haciendo sobre tu API.</p>
-</div>
+`Location` indica la dirección del recurso recién creado. El cliente puede utilizarla en un GET sin construir esa URL por su cuenta. `body(...)` incorpora el cuerpo; `build()` termina una respuesta que no lo necesita. El tipo `ResponseEntity<Tarea>` indica el tipo del cuerpo y `ResponseEntity<Void>` expresa que no se devuelve uno.
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
+<p class="stage stage--guided">140 minutos · implementación y comprobación del contrato</p>
 
-#### Paso 1 · Retomar el proyecto y preparar la comprobación
+Los pasos reparten el trabajo en 10, 20, 25, 20, 15, 30 y 20 minutos. Son orientativos. Antes de editar, prepara una issue y una rama desde `main` actualizada, siguiendo el flujo de Intermodular. Conserva los cambios en esa rama hasta su revisión.
 
-1. Abre los métodos de escritura del controlador y sus peticiones en Postman o Bruno. Crea un registro con todos sus campos informados.
-2. Localiza el PUT que sustituye el objeto. Antes de editar, guarda un GET de detalle que permita comprobar el contenido después de cada escritura.
-3. Anota qué campos debe conservar un PATCH si no los envías y qué política tendrá tu API al borrar un id inexistente.
+#### Paso 1 · Preparar los datos y observar el contrato actual · 10 min
 
-#### Paso 2 · Comprobar que PUT sustituye la representación completa
+1. Arranca el backend y crea dos registros distintos. Anota sus ids reales: no supongas que son 1 y 2.
+2. Consulta uno de ellos y otro id que hayas comprobado que no existe. Anota estado y cuerpo.
+3. Conserva una petición PUT con todos los campos editables. Incluye los campos añadidos en la sesión 5 si forman parte de tu modelo.
 
-Aquí está el error conceptual más extendido del tema. `PUT` no significa «actualiza esto». Significa:
+#### Paso 2 · Diferenciar sustitución y modificación parcial · 20 min
 
-> **Toma esta representación completa y deja el recurso exactamente así.**
+Sobre un registro de prueba, envía un PUT solo con `titulo`. Consulta después el registro: otros campos han vuelto a sus valores por defecto. Restáuralo con el PUT completo antes de probar PATCH.
 
-Lo que no envías, no se conserva: **se pierde**, porque estás diciendo cómo debe quedar el recurso entero.
-
-Con una tarea ya creada que tenga título, prioridad y estado:
-
-```json
-PUT /tareas/1
-{
-  "titulo": "Revisar el login otra vez"
-}
-```
-
-Mira la tarea después con un `GET /tareas/1`. La prioridad ha desaparecido, y lo ha hecho **correctamente**: has dicho que la tarea, entera, es solo eso.
-
-Casi nadie quiere eso. Lo que casi todo el mundo quiere es cambiar un campo y dejar el resto en paz. Para eso existe el otro método.
-
-#### Paso 3 · `PATCH` · cambiar solo lo que envías
-
-Añade el método PATCH al controlador y el import `org.springframework.web.bind.annotation.PatchMapping`. El bloque conserva una búsqueda por id y cambia solo los campos cuyo valor recibido no sea nulo. Compruébalo con una tarea que tenga título y prioridad: envía solo el título y vuelve a consultar para verificar que conserva la prioridad. No utilices aún este procedimiento para distinguir `false` de un booleano omitido: se resuelve con un DTO específico en la sesión 11.
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">PUT · sustituye</p>
-    <p class="compare-body">«El recurso, completo, es esto.» Lo que falta en el cuerpo se pierde. Idempotente.</p>
-  </div>
-  <div>
-    <p class="compare-label">PATCH · modifica</p>
-    <p class="compare-body">«De este recurso, cambia estas cosas.» Lo que falta en el cuerpo se queda como estaba.</p>
-  </div>
-</div>
-
-La implementación es el ejemplo resuelto de hoy:
+Añade este método dentro de `TareaController` e importa `org.springframework.web.bind.annotation.PatchMapping`. Las demás anotaciones ya se utilizan en el controlador:
 
 ```java
 @PatchMapping("/{id}")
 public Tarea modificar(
         @PathVariable(name = "id") int id,
         @RequestBody Tarea cambios) {
-
     for (Tarea tarea : tareas) {
         if (tarea.getId() == id) {
             if (cambios.getTitulo() != null) {
@@ -668,199 +589,16 @@ public Tarea modificar(
 }
 ```
 
-<dl class="worked">
-  <dt>Por qué cada campo lleva su <code>if</code></dt>
-  <dd>Porque de el trabajo anterior sabes que lo que no viene en el JSON llega como <code>null</code>. Ese <code>null</code> es la señal de «no me han mandado esto», y el <code>if</code> lo traduce a «no lo toques».</dd>
-  <dt>Por qué no se toca el id</dt>
-  <dd>Igual que en <code>PUT</code>: el recurso que se modifica lo dice la ruta. Si el cuerpo trae un id, se ignora.</dd>
-  <dt>Por qué esto se vuelve pesado enseguida</dt>
-  <dd>Con cuatro campos son cuatro <code>if</code>. Con quince son quince, y hay que acordarse de añadir uno cada vez que crece el modelo. Es un olor a que falta una herramienta, y la herramienta llega en la UD3.</dd>
-</dl>
+Guarda, reinicia, recrea los datos y envía `{"titulo":"Título corregido"}` con PATCH a un id existente. El GET posterior debe conservar la prioridad anterior. Comprueba también `{"prioridad":"baja"}`.
 
 <div class="rule">
-  <p class="rule-label">Dos limitaciones de esta versión · anótalas</p>
-  <p><strong>Uno.</strong> Con este código <strong>no se puede vaciar un campo a propósito</strong>. Si envías <code>{"prioridad": null}</code> pidiendo borrar la prioridad, tu <code>if</code> lo interpreta como «no me lo han mandado» y no hace nada. No hay forma de distinguir «ausente» de «enviado como nulo», y es la misma distinción que ya apareció con <code>defaultValue</code> en la UD1.</p>
-  <p><strong>Dos.</strong> El campo <code>completada</code> es un <code>boolean</code> primitivo, que no puede valer <code>null</code>: siempre llega como <code>false</code>, y no hay manera de saber si te lo han enviado. Por eso no aparece en el código de arriba.</p>
-  <p>Las dos se resuelven con una clase distinta para la entrada, con tipos que admitan nulo. Eso es un DTO, y es la UD3.</p>
+  <p class="rule-label">Límites del PATCH inicial</p>
+  <p>Este método modifica solo los campos de texto mostrados. Un campo omitido y uno enviado como <code>null</code> se interpretan igual: no se cambian. Tampoco permite modificar <code>completada</code>, porque el tipo primitivo <code>boolean</code> no distingue omisión de <code>false</code>. En la sesión 11 un DTO con <code>Boolean</code> resolverá esa segunda limitación; distinguir un nulo explícito requerirá además registrar la presencia del campo.</p>
 </div>
 
-#### Paso 4 · Repetir DELETE y distinguir estado de los datos y respuesta
+#### Paso 3 · Devolver 200 o 404 según la existencia · 25 min
 
-```java
-@DeleteMapping("/{id}")
-public void eliminar(@PathVariable(name = "id") int id) {
-    tareas.removeIf(tarea -> tarea.getId() == id);
-}
-```
-
-Ejecútalo dos veces seguidas sobre la misma tarea. La primera borra; la segunda no encuentra nada y no hace nada. **Y eso está bien.**
-
-Es la idempotencia en acción: el resultado que pedías —que esa tarea no exista— se cumple igual la primera vez que la quinta. Un `DELETE` repetido no debe explotar ni quejarse; el estado final es el que el cliente pidió.
-
-<details class="aside aside--extra">
-  <summary>Entonces, ¿la segunda vez debería devolver 404?</summary>
-  <p>Es una discusión clásica y no hay una respuesta única. Los dos criterios son defendibles:</p>
-  <p><strong>204 siempre:</strong> el cliente pidió que no existiera, y no existe. Objetivo cumplido, no hay nada que reportar.</p>
-  <p><strong>404 la segunda vez:</strong> es información honesta, «eso que me pides borrar ya no está».</p>
-  <p>Lo importante es que sea una decisión escrita y no un accidente. La tomarás en el trabajo siguiente, cuando aprendas a fijar el código de estado.</p>
-</details>
-
-#### Paso 5 · Registrar el estado final después de repetir cada escritura
-
-Esta es la comprobación que demuestra que has entendido la sesión. Sobre tu API, ejecuta cada operación **dos veces seguidas** y anota el estado del servidor después de cada una.
-
-| Operación | Estado tras la 1.ª | Estado tras la 2.ª | ¿Idempotente? |
-| :--- | :--- | :--- | :---: |
-| `POST /tareas` con la misma tarea | | | |
-| `PUT /tareas/1` con el mismo cuerpo | | | |
-| `PATCH /tareas/1` con `{"prioridad":"baja"}` | | | |
-| `DELETE /tareas/1` | | | |
-| `GET /tareas/1` | | | |
-
-Para «estado del servidor», usa un `GET /tareas` después de cada paso y anota cuántas tareas hay y cómo están.
-
-Una de las filas debería incomodarte: **la del `POST`**. Después de dos ejecuciones tienes dos tareas idénticas con ids distintos, y tu API no tiene forma de saber que la segunda era un reintento. No lo arreglamos hoy, pero que conste que lo has visto.
-
-#### Paso 6 · Las escrituras de proyectos
-
-En el controlador de tu segunda entidad, implementa primero PUT copiando el recorrido buscar → comprobar existencia → asignar **todos** los campos editables. Después crea PATCH con asignaciones condicionadas para los campos opcionales y, por último, DELETE sobre el id. Prueba cada operación antes de añadir la siguiente. En las tablas registra también el GET posterior: repetir una respuesta correcta no demuestra por sí solo que se hayan guardado los datos esperados.
-
-1. Implementa `PUT /proyectos/{id}` con semántica de sustitución completa.
-2. Implementa `PATCH /proyectos/{id}` que solo cambie los campos enviados.
-3. Implementa `DELETE /proyectos/{id}`.
-4. Demuestra con dos peticiones consecutivas que `PUT` deja el recurso igual y que `POST` no.
-5. Escribe un comentario en el código explicando qué campo de tu modelo **no puedes modificar** con `PATCH` y por qué.
-
-#### Paso 7 · Comprobar y registrar el resultado del proyecto
-
-1. Envía dos veces el mismo PUT y consulta el recurso después de cada envío. El estado final debe ser el mismo.
-2. Envía un PATCH que cambie un único campo y verifica que conserva los demás. Repite un DELETE y explica por qué el recurso sigue ausente aunque pueda cambiar el código de respuesta.
-
-#### Ampliación si has completado el trabajo
-
-Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
-
-##### Reto · Elige el método y defiéndelo
-
-Para cada situación, di qué método HTTP usarías, qué ruta, y **qué pasaría si el cliente la repitiera por un reintento**. No hay una única respuesta correcta en todas; hay respuestas defendibles y respuestas que no lo son.
-
-1. Marcar una incidencia como resuelta.
-2. Añadir un comentario a una incidencia.
-3. Cambiar el correo de un usuario.
-4. Archivar todas las incidencias cerradas de un proyecto.
-5. Asignar una incidencia a una persona.
-6. Sustituir por completo la lista de etiquetas de una incidencia.
-
-Para las seis, escribe la respuesta en este formato:
-
-| Situación | Método | Ruta | Si se repite… | ¿Es correcto que se repita? |
-| :---: | :---: | :--- | :--- | :---: |
-
-La número 4 es la difícil, y merece un párrafo aparte explicando tu decisión: no encaja limpiamente en ninguna de las categorías de hoy, y saber decir por qué vale más que acertar.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>PUT, PATCH y DELETE implementados en tareas, con la diferencia entre los dos primeros demostrada.</span></div>
-  <div><strong>Si lo tienes</strong><span>La tabla de repeticiones completa y las tres operaciones sobre proyectos.</span></div>
-  <div><strong>Reto</strong><span>Las seis situaciones resueltas con su método, su ruta y su análisis de reintento.</span></div>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que repetirla deja el servidor en el mismo estado que hacerla una sola vez. Le importa porque, cuando una respuesta se pierde, el cliente no sabe si la petición llegó, y solo puede reintentar sin riesgo si la operación es idempotente.</p>
-  <p>2 · Se pierde. <code>PUT</code> declara cómo queda el recurso completo, así que lo que no aparece en el cuerpo deja de estar.</p>
-  <p>3 · Porque el <code>POST</code> crea un recurso nuevo cada vez y acabas con duplicados, mientras que el <code>PUT</code> deja el mismo recurso en el mismo estado, se ejecute una vez o diez.</p>
-  <p>4 · Porque un campo ausente y un campo enviado como <code>null</code> llegan los dos como <code>null</code>, y el código no puede distinguirlos. Hace falta una clase de entrada con tipos que sepan expresar esa diferencia.</p>
-</details>
-
-### Cierre
-
-<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
-
-**Al terminar la sesión:**
-
-El cliente distingue una creación, una modificación, un borrado y un recurso inexistente por la respuesta recibida.
-
-Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
-
-
-## Semana 4 · Colección ejecutable y entornos
-
-## Sesión 7 · Colección ejecutable y entornos
-
-**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). En Servidor continúas la implementación del mismo producto.
-
-
-### Se explica
-
-<p class="stage stage--guided">25 minutos · explicación y demostración</p>
-
-Tus operaciones ya tienen un comportamiento definido. Ahora controlarás también su respuesta HTTP y las convertirás en una comprobación repetible. ResponseEntity permite elegir estado, cabeceras y cuerpo; una colección agrupa peticiones y un entorno guarda valores como la dirección del servidor.
-
-#### Llevas tres unidades mintiendo
-
-Es fuerte dicho así, pero es literalmente lo que hace tu API ahora mismo:
-
-| Lo que ocurre de verdad | Lo que tu API responde | Lo que le está diciendo al cliente |
-| :--- | :---: | :--- |
-| La tarea 999 no existe | `200` con cuerpo vacío | «Aquí tienes lo que pediste» |
-| Se ha creado una tarea nueva | `200` | «Todo bien», sin decir que hay algo nuevo |
-| Se ha borrado una tarea | `200` con cuerpo vacío | «Aquí tienes lo que pediste» |
-| Han pedido modificar algo inexistente | `200` con cuerpo vacío | «Hecho» |
-
-Ninguna es un fallo técnico: la aplicación no se rompe. Son **fallos de comunicación**, y son peores, porque el cliente construye su lógica encima. Una aplicación que recibe `200` da por hecho que la operación salió bien y sigue adelante.
-
-El código de estado no es decoración. **Es la parte de la respuesta que se lee primero y sobre la que se decide.**
-
-#### El problema que ya tienes y todavía no te ha estallado
-
-Llevas tres semanas escribiendo peticiones a mano. Cada sesión reescribes las mismas URLs, vuelves a pegar los mismos cuerpos JSON y vuelves a mirar los mismos códigos.
-
-Eso tiene tres consecuencias, y ninguna es cómoda:
-
-<figure class="diagram">
-  <figcaption>Lo que cuesta trabajar con peticiones sueltas</figcaption>
-  <ol class="flow flow--before">
-    <li>Repites trabajo cada día, y con las prisas escribes mal el cuerpo y depuras un fallo que no existe</li>
-    <li>Cuando cambias algo, compruebas solo lo que has tocado</li>
-    <li class="is-error">Lo que se rompe es lo que <em>no</em> has tocado, y nadie lo mira</li>
-  </ol>
-</figure>
-
-<p class="term">Regresión</p>
-
-Algo que funcionaba y ha dejado de funcionar por culpa de un cambio en otro sitio. Es el tipo de fallo más caro que existe, porque nadie lo está buscando: se descubre tarde, y normalmente lo descubre otra persona.
-
-Hoy le ponemos remedio con la herramienta que ya tienes instalada.
-
-#### Tres conceptos y ya podemos empezar
-
-<p class="term">Colección</p>
-
-Un conjunto de peticiones guardadas, con nombre, organizadas en carpetas y **en un orden**. No constituye un repositorio desordenado, sino un guion ejecutable de principio a fin.
-
-<p class="term">Variable</p>
-
-Un valor con nombre que se escribe una vez y se usa en muchas peticiones. Se escribe entre llaves dobles: `{{baseUrl}}`.
-
-<p class="term">Entorno</p>
-
-Un juego de valores para esas variables. El entorno «local» dice que `baseUrl` es `http://localhost:8080`; mañana, el entorno «producción» dirá otra cosa. **La misma colección, ejecutada contra sitios distintos, sin tocar ni una petición.**
-
-### Se trabaja
-
-<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
-
-#### Paso 1 · Retomar el proyecto y preparar la comprobación
-
-1. Abre los controladores y las peticiones que has utilizado hasta ahora. Ejecuta una secuencia de alta, consulta y borrado para conocer la respuesta actual.
-2. Anota por operación el estado que quieres devolver. Todavía no crees los scripts de la colección: primero ajustarás esas respuestas en los controladores.
-3. Localiza la carpeta donde guardarás la colección exportada o los archivos de Bruno. Debe estar dentro del repositorio para que otra persona pueda repetirla.
-
-#### Paso 2 · `ResponseEntity` · la respuesta entera, en tus manos
-
-Importa `org.springframework.http.ResponseEntity` y sustituye el GET de detalle anterior. Cambian tanto el tipo de retorno del método como **todas sus ramas**: el caso encontrado devuelve `ok(...)` y el ausente `notFound().build()`. No dejes un `return null` de la versión anterior. Comprueba ambos casos antes de aplicar el mismo patrón a PUT y PATCH.
-
-Cuando devuelves un `ResponseEntity`, decides tú las tres cosas.
+Importa `org.springframework.http.ResponseEntity`. Sustituye el método de detalle por este, manteniendo una única ruta GET de detalle:
 
 ```java
 @GetMapping("/{id}")
@@ -874,63 +612,18 @@ public ResponseEntity<Tarea> detalle(@PathVariable(name = "id") int id) {
 }
 ```
 
-<dl class="worked">
-  <dt>El tipo devuelto</dt>
-  <dd><code>ResponseEntity&lt;Tarea&gt;</code> significa «una respuesta HTTP completa cuyo cuerpo, si lo hay, es una tarea». El objeto deja de ser la respuesta para pasar a ser una parte de ella.</dd>
-  <dt><code>ResponseEntity.ok(tarea)</code></dt>
-  <dd>Código 200 y la tarea como cuerpo. Es exactamente lo que hacía Spring solo, escrito a mano.</dd>
-  <dt><code>ResponseEntity.notFound().build()</code></dt>
-  <dd>Código 404 y sin cuerpo. <code>build()</code> cierra la construcción cuando no hay nada que poner dentro.</dd>
-  <dt>Por qué <code>build()</code> y no <code>body(null)</code></dt>
-  <dd>Porque expresa la intención: no es que el cuerpo esté vacío por accidente, es que esta respuesta no lleva cuerpo.</dd>
-</dl>
+Comprueba un id existente y uno ausente. Después adapta **todas las salidas** del PUT y del PATCH: cambia su retorno a `ResponseEntity<Tarea>`, envuelve el resultado encontrado con `ResponseEntity.ok(...)` y sustituye el `return null` final por `ResponseEntity.notFound().build()`.
 
-##### Los constructores que vas a usar
+En PUT conserva `datos.setId(id)` antes de sustituir el registro. En PATCH conserva las condiciones que dejan intactos los campos no enviados. No cambies el GET de listado: una lista vacía sigue respondiendo 200 con `[]`.
 
-| Escribes | Responde |
-| :--- | :--- |
-| `ResponseEntity.ok(objeto)` | `200` con cuerpo |
-| `ResponseEntity.status(HttpStatus.CREATED).body(objeto)` | `201` con cuerpo |
-| `ResponseEntity.created(uri).body(objeto)` | `201` con cuerpo **y cabecera `Location`** |
-| `ResponseEntity.noContent().build()` | `204` sin cuerpo |
-| `ResponseEntity.notFound().build()` | `404` sin cuerpo |
-| `ResponseEntity.badRequest().body(algo)` | `400` con cuerpo |
+**Comprueba:** GET de detalle, PUT y PATCH responden 404 para un id ausente y no crean registros por accidente.
 
-Todos siguen el mismo patrón: **primero el estado, después las cabeceras si hacen falta, y al final `body(...)` o `build()`**.
+#### Paso 4 · Crear con 201 y Location · 20 min
 
-#### Paso 3 · Un recurso que no existe
-
-Ya está hecha: es el ejemplo de arriba. Aplícala también a `PUT` y a `PATCH`, que tienen el mismo problema.
+Sustituye el POST existente por esta versión. Conserva una sola lista y un solo contador en la clase. Añade los imports `java.net.URI` y `org.springframework.web.servlet.support.ServletUriComponentsBuilder`:
 
 ```java
-@PutMapping("/{id}")
-public ResponseEntity<Tarea> reemplazar(
-        @PathVariable(name = "id") int id,
-        @RequestBody Tarea datos) {
-
-    for (int i = 0; i < tareas.size(); i++) {
-        if (tareas.get(i).getId() == id) {
-            datos.setId(id);
-            tareas.set(i, datos);
-            return ResponseEntity.ok(datos);
-        }
-    }
-    return ResponseEntity.notFound().build();
-}
-```
-
-Comprueba en Postman que `PUT /tareas/999` ahora responde `404` y no `200`.
-
-#### Paso 4 · Crear devuelve 201, y dice dónde
-
-Una creación correcta responde `201 Created`. Existe una segunda parte que suele omitirse:
-
-<p class="term">Cabecera Location</p>
-
-En una respuesta `201`, dice **en qué URL vive el recurso que se acaba de crear**. Sin ella, el cliente tiene el objeto pero no sabe a dónde volver para consultarlo o modificarlo.
-
-```java
-@PostMapping
+@PostMapping(consumes = "application/json", produces = "application/json")
 public ResponseEntity<Tarea> crear(@RequestBody Tarea tarea) {
     tarea.setId(siguienteId);
     siguienteId = siguienteId + 1;
@@ -941,20 +634,15 @@ public ResponseEntity<Tarea> crear(@RequestBody Tarea tarea) {
             .path("/{id}")
             .buildAndExpand(tarea.getId())
             .toUri();
-
     return ResponseEntity.created(ubicacion).body(tarea);
 }
 ```
 
-Necesitarás dos importaciones: `java.net.URI` y `org.springframework.web.servlet.support.ServletUriComponentsBuilder`.
+El constructor toma la URL de la petición y añade el id. Conservamos `consumes` y `produces` de la sesión 5. Tras guardar y reiniciar, crea un registro: debe responder 201 y devolver un id asignado. Abre **Headers de la respuesta**, copia `Location` y úsala en un GET. Debes recuperar el mismo registro.
 
-Ese constructor toma la URL de la petición actual —`http://localhost:8080/tareas`— y le añade el id, quedando `http://localhost:8080/tareas/4`. Se construye así, y no concatenando texto a mano, porque el servidor no siempre está en `localhost:8080`: en producción tendrá otro dominio, y esto se adapta solo.
+#### Paso 5 · Borrar con una respuesta sin cuerpo · 15 min
 
-Crea una tarea y mira la pestaña **Headers de la respuesta**. Ahí está `Location`. Copia esa URL, pégala en una petición nueva con `GET` y envíala: te devuelve la tarea que acabas de crear.
-
-Eso es una API que se explica sola. El cliente no ha tenido que construir ninguna URL: se la has dado tú.
-
-#### Paso 5 · Borrar devuelve 204
+Sustituye el DELETE anterior e importa `DeleteMapping` si falta:
 
 ```java
 @DeleteMapping("/{id}")
@@ -964,455 +652,445 @@ public ResponseEntity<Void> eliminar(@PathVariable(name = "id") int id) {
 }
 ```
 
-<p class="term">204 No Content</p>
-
-«Ha ido bien y no tengo nada que devolverte.» No constituye un error ni una respuesta vacía por omisión, sino la forma correcta de responder a una operación que no produce contenido.
-
-Fíjate en `ResponseEntity<Void>`: el tipo declara que esta respuesta **nunca** lleva cuerpo. Es documentación que además comprueba el compilador.
+El contrato del ejemplo devuelve **204 también si el recurso ya estaba ausente**. Ejecuta DELETE dos veces y un GET después de cada borrado: los DELETE dan 204 sin cuerpo y los GET dan 404. Otra API puede elegir 404 en el segundo DELETE sin dejar de ser idempotente; para nuestras pruebas mantendremos el contrato del ejemplo.
 
 <details class="aside aside--extra">
-  <summary>Y la decisión que dejamos pendiente ayer</summary>
-  <p>En la sesión 6 quedó abierto si un <code>DELETE</code> sobre algo que ya no existe debe dar <code>204</code> o <code>404</code>. Ahora ya puedes implementar las dos.</p>
-  <p><code>removeIf</code> devuelve un <code>boolean</code>: <code>true</code> si borró algo. Con eso puedes elegir. <strong>Elige una, impleméntala y escribe en un comentario por qué.</strong> Lo que no vale es que salga una u otra sin haberlo decidido.</p>
+  <summary>Comparar con una respuesta fija mediante anotación</summary>
+  <p><code>@ResponseStatus(HttpStatus.NO_CONTENT)</code>, con los imports de <code>ResponseStatus</code> y <code>HttpStatus</code>, puede fijar 204 en un método DELETE que devuelva <code>void</code>. <code>ResponseEntity</code> resulta útil cuando el método decide entre resultados o incluye cabeceras. Conserva una única implementación de cada ruta; no añadas otra ruta para probar esta alternativa.</p>
 </details>
 
-#### Paso 6 · La alternativa ligera · `@ResponseStatus`
+#### Paso 6 · Aplicar el contrato a la segunda entidad · 30 min
 
-Este bloque muestra una alternativa de anotación, no otra forma de crear registros que deba quedar publicada. Léelo comparándolo con el POST que ya funciona. Si lo ejecutas para observar `@ResponseStatus`, conserva la asignación de ids y elimina después `/rapida`: el contrato del proyecto debe mantener un único procedimiento de alta comprobado.
+Trabaja sobre la segunda entidad de tu dominio, sin empezar otro proyecto. Adapta sus operaciones una a una y prueba cada cambio antes de continuar:
 
-```java
-@PostMapping("/rapida")
-@ResponseStatus(HttpStatus.CREATED)
-public Tarea crearRapida(@RequestBody Tarea tarea) {
-    tareas.add(tarea);
-    return tarea;
-}
-```
+| Operación | Resultado que debes observar |
+| --- | --- |
+| Listado, con o sin filtro | 200 y un array, también cuando está vacío. |
+| Detalle existente / ausente | 200 con objeto / 404 sin cuerpo. |
+| Creación | 201 con objeto, id asignado y Location utilizable. |
+| PUT existente / ausente | 200 con representación sustituida / 404. |
+| PATCH existente / ausente | 200 con los campos admitidos modificados / 404. |
+| DELETE, incluido el repetido | 204 sin cuerpo. |
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">@ResponseStatus</p>
-    <p class="compare-body">Un solo código posible, siempre el mismo. Más corto y más legible. No permite cabeceras ni respuestas alternativas.</p>
-  </div>
-  <div>
-    <p class="compare-label">ResponseEntity</p>
-    <p class="compare-body">El método puede responder cosas distintas según lo que ocurra, y puede añadir cabeceras. Es lo que necesitas en cuanto hay un caso de «no encontrado».</p>
-  </div>
-</div>
+Si su CRUD estaba incompleto, termina primero el método pendiente con el patrón de la sesión 4. Aplica PATCH a campos de referencia que puedan omitirse; declara qué campos siguen sin admitirse en esta versión.
 
-Regla práctica: **si el método puede terminar de más de una manera, `ResponseEntity`**. Si no, `@ResponseStatus` y menos ruido.
+#### Paso 7 · Comprobar repeticiones y revisar la propuesta · 20 min
 
-#### Paso 7 · La tabla del contrato
-
-Esta tabla es el objetivo de la sesión. Tu API debe cumplirla entera:
-
-| Operación | Caso | Código | ¿Cuerpo? |
-| :--- | :--- | :---: | :---: |
-| `GET /tareas` | Siempre | `200` | El array, aunque esté vacío |
-| `GET /tareas/{id}` | Existe | `200` | La tarea |
-| `GET /tareas/{id}` | No existe | `404` | No |
-| `POST /tareas` | Correcto | `201` | La tarea creada, con `Location` |
-| `PUT /tareas/{id}` | Existe | `200` | La tarea sustituida |
-| `PUT /tareas/{id}` | No existe | `404` | No |
-| `PATCH /tareas/{id}` | Existe | `200` | La tarea modificada |
-| `PATCH /tareas/{id}` | No existe | `404` | No |
-| `DELETE /tareas/{id}` | Existe | `204` | No |
-| `DELETE /tareas/{id}` | No existía | `204` o `404`, tu decisión | No |
-
-Fíjate en la primera fila: **una colección vacía no es un 404**. La ruta `/tareas` existe y la respuesta correcta es un array vacío con `200`. El 404 es para un recurso concreto que no está, no para una búsqueda sin resultados.
-
-#### Paso 8 · El contrato de proyectos
-
-1. Aplica la tabla completa al `ProyectoController`.
-2. Añade la cabecera `Location` a su creación.
-3. Comprueba las diez filas en Postman y anota el código real de cada una.
-4. Provoca un caso que no esté en la tabla —por ejemplo, un `PUT` con un id en el cuerpo distinto al de la ruta— y decide qué debería responder. Impleméntalo y justifícalo en un comentario.
-
-<p class="stage">Colecciones, variables y entornos</p>
-
-#### Paso 9 · Crea la colección
-
-En Postman, `New → Collection`. Llámala **Gestor de incidencias**.
-
-Dentro, crea dos carpetas: `Tareas` y `Proyectos`.
-
-Ahora ve guardando en ellas las peticiones que ya usas. Cada vez que tengas una petición que funciona, `Save` y elige la carpeta.
-
-<div class="rule">
-  <p class="rule-label">Los nombres importan más de lo que parece</p>
-  <p>No llames a una petición «POST 1». Llámala <strong>«Crear tarea válida»</strong>, «Crear tarea sin título», «Obtener tarea inexistente».</p>
-  <p>El nombre tiene que decir <em>qué caso comprueba</em>, porque dentro de un mes la colección la va a ejecutar alguien —tú incluido— que no recuerde qué hacía la número 7. Una colección bien nombrada es la primera documentación de tu API.</p>
-</div>
-
-#### Paso 10 · Saca la dirección a una variable
-
-Ahora mismo todas tus peticiones empiezan por `http://localhost:8080`. Si mañana cambias el puerto, las reescribes todas.
-
-1. `Environments → Create Environment`, llámalo **Local**.
-2. Añade una variable: nombre `baseUrl`, valor `http://localhost:8080`.
-3. Guarda y **selecciónalo** en el desplegable de arriba a la derecha. Es el paso que se olvida: un entorno creado pero no seleccionado no hace nada.
-4. En cada petición, sustituye el principio de la URL:
-
-```text
-{{baseUrl}}/tareas/1
-```
-
-Pasa el ratón por encima de `{{baseUrl}}`: Postman te enseña el valor que va a usar. Si aparece en rojo o dice `unresolved`, es que no has seleccionado el entorno.
-
-Cambia ahora el valor de la variable a `http://localhost:8081`, cambia el puerto de la aplicación en `application.properties`, y comprueba que **toda la colección sigue funcionando sin haber tocado ni una petición**. Después devuélvelo todo al 8080.
-
-#### Paso 11 · Encadena peticiones
-
-Selecciona la petición **POST de creación**, abre Scripts → Post-response y coloca allí el código que guarda el id; no va en el cuerpo JSON ni en Pre-request. Envía el POST y comprueba la variable `tareaId` en las variables de la colección. Después cambia las URLs de detalle, edición y borrado a `{{tareaId}}`. Ejecuta primero el alta: una consulta no puede utilizar una variable que aún no has creado.
-
-La solución es guardar el id de la respuesta en una variable. En Postman, en la petición de creación, pestaña **Scripts** (o *Tests*, según la versión):
-
-```javascript
-pm.collectionVariables.set("tareaId", pm.response.json().id);
-```
-
-Una línea. Se lee así: «del JSON de la respuesta, coge el campo `id` y guárdalo en la variable `tareaId`».
-
-A partir de ahí, en las peticiones siguientes:
-
-```text
-{{baseUrl}}/tareas/{{tareaId}}
-```
-
-<div class="rule">
-  <p class="rule-label">Por qué esto lo cambia todo</p>
-  <p>Con las peticiones encadenadas, tu colección deja de ser una lista de cosas sueltas y pasa a ser <strong>un escenario completo</strong>: crear, consultar lo creado, modificarlo, borrarlo y comprobar que ya no está.</p>
-  <p>Ese escenario se ejecuta completo con una sola acción y sin intervención humana. Eso es exactamente lo que hace un test automático, que es a donde vamos en la UD4.</p>
-</div>
-
-#### Paso 12 · Comprobaciones automáticas
-
-Añade las aserciones de creación a la misma sección Post-response del POST, después de guardar el id. En las demás peticiones ajusta la aserción al resultado de **esa** petición: el GET espera 200, el DELETE 204 y el GET posterior al borrado 404. No copies la comprobación de JSON al DELETE, porque su cuerpo está vacío. Guarda cada petición antes de ejecutar la colección.
-
-```javascript
-pm.test("Responde 201", function () {
-    pm.response.to.have.status(201);
-});
-
-pm.test("Devuelve un id asignado", function () {
-    pm.expect(pm.response.json().id).to.be.above(0);
-});
-```
-
-No hace falta que sepas JavaScript: el patrón es siempre el mismo, un nombre y una comprobación. Copia, cambia el número y cambia el campo.
-
-Al enviar la petición, abajo aparece la pestaña **Test Results** con una línea verde por cada comprobación superada y roja por cada una fallida.
-
-<div class="rule">
-  <p class="rule-label">Qué comprobar y qué no</p>
-  <p>Comprueba <strong>el contrato</strong>: el código de estado, que exista un campo, que un valor sea el que enviaste. Eso es lo que has prometido y no debería cambiar.</p>
-  <p>No compruebes cosas que van a cambiar solas: que el id sea exactamente 3, que la lista tenga exactamente cinco elementos, la fecha de creación. Una prueba que falla sin que nadie haya roto nada acaba ignorándose, y una prueba ignorada es peor que no tenerla.</p>
-</div>
-
-#### Paso 13 · Ejecuta la colección entera
-
-Botón derecho sobre la colección, `Run collection`. Se abre el ejecutor: elige el orden, pulsa `Run` y en unos segundos tienes el informe completo.
-
-Verde entero significa que **todo el contrato de tu API sigue en pie**. En diez segundos, y sin haber escrito una URL a mano.
-
-<details class="aside aside--extra">
-  <summary>Si usas Bruno en lugar de Postman</summary>
-  <p>Todo lo de hoy existe igual, con dos ventajas: no pide cuenta y guarda cada petición como un archivo <code>.bru</code> de texto <strong>dentro de tu propio proyecto</strong>, así que va al repositorio con el resto del código.</p>
-  <p>El encadenado se escribe así:</p>
-  <p><code>vars:post-response { tareaId: res.body.id }</code></p>
-  <p>Y las comprobaciones así:</p>
-  <p><code>assert { res.status: eq 201 }</code></p>
-</details>
-
-#### Paso 14 · Guárdala en el repositorio
-
-Una colección que solo existe en tu portátil no es evidencia de nada.
-
-En Postman: botón derecho sobre la colección, `Export`, y guarda el `.json` en una carpeta `pruebas/` dentro del proyecto. En Bruno ya está dentro.
-
-A partir de ahora, **la colección se entrega con el código**. Forma parte del trabajo igual que el `pom.xml`.
-
-#### Paso 15 · El escenario completo
-
-Monta en la colección este escenario, en este orden, cada petición con sus comprobaciones:
-
-| # | Petición | Comprueba |
-| :---: | :--- | :--- |
-| 1 | Listar tareas | `200` y que la respuesta sea un array |
-| 2 | Crear tarea válida | `201`, que haya `Location`, y guarda el id en `{{tareaId}}` |
-| 3 | Obtener la tarea creada | `200` y que el título sea el que enviaste |
-| 4 | Modificar con `PATCH` | `200` y que el campo cambiado sea el nuevo |
-| 5 | Obtener tarea inexistente | `404` |
-| 6 | Crear con cuerpo inválido | `400` |
-| 7 | Crear con `Content-Type` incorrecto | `415` |
-| 8 | Borrar la tarea creada | `204` |
-| 9 | Obtener la tarea borrada | `404` |
-
-Ejecútalo entero. Tiene que salir verde de arriba abajo.
-
-Fíjate en que los pasos 3, 4, 8 y 9 usan `{{tareaId}}`: **ninguno tiene un número escrito a mano**. Por eso el escenario se puede ejecutar mil veces seguidas.
-
-#### Paso 16 · Rompe el código a propósito
-
-Esta es la comprobación de que la colección sirve para algo.
-
-1. Con la colección en verde, ve al código y **rompe una cosa**: cambia el `201` de la creación por un `200`.
-2. **No toques la colección.** Reinicia y ejecútala.
-3. Anota qué peticiones fallan y qué dice el informe.
-4. Repara el código y vuelve a ejecutarla.
-
-Repítelo con otras dos averías a tu elección: por ejemplo, que el borrado no borre nada, o que la consulta por id devuelva siempre la primera tarea.
-
-Escribe después una frase por avería: **¿cuánto habrías tardado en darte cuenta sin la colección?**
-
-#### Paso 17 · Comprobar y registrar el resultado del proyecto
-
-1. Ejecuta la colección completa desde un estado conocido. Debe crear su propio registro, recoger su id y usarlo en las peticiones siguientes, sin ids copiados manualmente.
-2. Comprueba 201 y Location al crear, 404 al consultar un recurso ausente y 204 sin cuerpo al borrar. Cambia únicamente la variable de dirección para repetir el recorrido en otro entorno disponible.
+1. Crea un registro de prueba y conserva su id. Repite el mismo PUT completo dos veces y consulta después de cada envío: el resultado debe ser equivalente.
+2. Repite un PATCH con la misma asignación de texto. Comprueba que no modifica los otros campos.
+3. Envía dos POST con el mismo contenido. Consulta ambos ids: son dos registros diferentes en esta implementación.
+4. Borra los registros creados. Repite un DELETE y comprueba estado, cuerpo y ausencia con GET.
+5. Publica la rama y abre su PR. Tu pareja ejecuta las peticiones sobre esa rama; integra tras atender la revisión. Los estados correctos no sustituyen la comprobación del contenido.
 
 #### Ampliación si has completado el trabajo
 
-Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
+**Diagnóstico de una regresión.** En una rama local de prueba, cambia el borrado para que no elimine nada pero siga devolviendo 204. Escribe qué petición detecta el fallo y qué comprobaría una prueba que solo mirase el estado. Restituye el método y verifica la recuperación. No integres la avería.
 
-##### Reto · Ocho situaciones y su código
-
-Para cada una, escribe el código de estado que devolverías **y una frase justificándolo**. Algunas admiten más de una respuesta defendible; lo que se evalúa es el argumento.
-
-1. Se piden todas las tareas y no hay ninguna.
-2. Se piden las tareas de un proyecto que no existe.
-3. Se crea una tarea correctamente.
-4. Se crea una tarea sin título, y tu API todavía no valida.
-5. Se pide `/tareas/abc`, con un id que no es un número.
-6. Se borra una tarea que ya se había borrado hace un minuto.
-7. Se hace un `PUT` sobre `/tareas/5` con `{"id": 9, "titulo": "Algo"}`.
-8. Salta una excepción inesperada dentro de tu método.
-
-Las dos difíciles son la 2 y la 7. En la 2, piensa qué es lo que no existe. En la 7, piensa quién manda, si la ruta o el cuerpo, y qué es peor: adivinar o rechazar.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las tres reparaciones aplicadas a tareas: 404, 201 con Location y 204.</span></div>
-  <div><strong>Si lo tienes</strong><span>La tabla del contrato cumplida entera en tareas y en proyectos, comprobada en Postman.</span></div>
-  <div><strong>Reto</strong><span>Las ocho situaciones con su código y su justificación, incluidas la 2 y la 7.</span></div>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque la ruta de la colección existe y la consulta se ha resuelto correctamente: el resultado es que no hay elementos. El 404 dice que no existe el recurso que se pedía, no que una búsqueda no haya encontrado nada.</p>
-  <p>2 · La URL donde vive el recurso recién creado. Viaja en la respuesta <code>201</code> de una creación, y evita que el cliente tenga que construir esa URL por su cuenta.</p>
-  <p>3 · El <code>204</code> declara que no hay contenido y que eso es lo correcto. Un <code>200</code> con el cuerpo vacío dice «aquí tienes lo que pediste» y no entrega nada, que es justo lo que confunde a quien llama.</p>
-  <p>4 · Cuando el método solo puede terminar de una manera y siempre devuelve el mismo código. En cuanto haya un caso alternativo, como «no encontrado», hace falta <code>ResponseEntity</code>.</p>
-</details>
-
-##### Reto · La colección de proyectos, sin guion
-
-Construye tú solo el escenario equivalente para proyectos, con estas condiciones añadidas:
-
-1. Al menos **doce** peticiones, cubriendo los casos correctos y los de error.
-2. Ninguna URL con un identificador escrito a mano.
-3. Todas con al menos una comprobación automática.
-4. Ninguna comprobación frágil, de las que fallan sola sin que nadie rompa nada.
-5. El escenario termina dejando el servidor **como estaba al empezar**: lo que creas, lo borras.
-
-La condición 5 es la difícil y es la más importante: una colección que ensucia los datos solo se puede ejecutar una vez. Explica en un comentario cómo la has resuelto.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Colección creada, entorno con <code>baseUrl</code> y las peticiones de tareas guardadas y nombradas.</span></div>
-  <div><strong>Si lo tienes</strong><span>El escenario de nueve pasos encadenado con <code>{{tareaId}}</code>, en verde, y las tres averías detectadas.</span></div>
-  <div><strong>Reto</strong><span>La colección de proyectos con doce peticiones que puede ejecutarse dos veces seguidas con el mismo resultado.</span></div>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Algo que funcionaba y ha dejado de funcionar por un cambio hecho en otro sitio. Es caro porque nadie lo está buscando: se descubre tarde y suele descubrirlo otra persona.</p>
-  <p>2 · La variable es el hueco con nombre que dejas en las peticiones; el entorno es el juego de valores que rellena esos huecos. Cambiando de entorno, la misma colección apunta a otro servidor.</p>
-  <p>3 · Porque ese valor cambia solo según lo que se haya creado antes, y la prueba fallaría sin que nadie hubiera roto nada. Una prueba que da falsas alarmas se acaba ignorando.</p>
-  <p>4 · Para poder ejecutarlo tantas veces como haga falta con el mismo resultado. Si deja datos, la segunda ejecución parte de una situación distinta y sus comprobaciones dejan de ser fiables.</p>
-</details>
+**Diseño de una operación propia.** Elige una acción real de tu proyecto, como reasignar una reserva o archivar un elemento. Define método, ruta, cuerpo y efecto de repetirla. Implementa una asignación simple con los recursos actuales y compruébala; no añadas autenticación ni nuevas entidades para este ejercicio.
 
 ### Cierre
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-**Al terminar la sesión:**
+Al terminar, las dos entidades responden según la tabla del contrato. Puedes mostrar un alta con 201 y Location, una ausencia con 404 y un borrado con 204 sin cuerpo. PUT y PATCH tienen efectos distintos comprobados mediante un GET posterior. La limitación de PATCH está identificada y el cambio está revisado en el repositorio.
 
-Una ejecución limpia crea, consulta, modifica y borra sus propios datos sin depender de pruebas anteriores.
+<dl class="answer">
+  <dt>¿Qué diferencia hay entre repetir el efecto de una operación y repetir su código de respuesta?</dt>
+  <dd></dd>
+  <dt>¿Qué comprobarías para demostrar que un 204 corresponde a un borrado real?</dt>
+  <dd></dd>
+  <dt>¿Qué permite hacer Location al cliente y qué campos no admite todavía tu PATCH?</dt>
+  <dd></dd>
+</dl>
 
-Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
+## Semana 4 · Colección ejecutable y entornos
 
+## Sesión 7 · Colección ejecutable y entornos
 
-## Sesión 8 · Contrato en memoria listo para evolucionar
-
-**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). En Servidor continúas la implementación del mismo producto.
-
+**Punto de partida.** Continúas con el contrato HTTP de la sesión 6: 201 y Location al crear, 404 para un detalle ausente y 204 al borrar. Hoy convertirás las peticiones en una colección que prepare sus datos, compruebe resultados y pueda repetirse. No necesitas crear otra API.
 
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Llegas con un CRUD en memoria y una colección que comprueba su contrato. El contrato es lo que el cliente puede esperar de cada petición. Hoy revisarás las entidades de tu proyecto con los mismos criterios y corregirás diferencias antes de cambiar su diseño en la UD3.
+#### De una petición manual a una prueba repetible
 
-#### La diferencia que importa
+Una **colección** organiza peticiones guardadas. Una **aserción** compara un resultado observado con uno esperado y falla si no coincide. Un conjunto de peticiones solo constituye una prueba útil cuando sus aserciones comprueban lo que promete el contrato: estado, datos y efectos posteriores.
 
-Tu API funciona. Eso ya no es noticia: funciona desde la UD1.
+Una **regresión** es un comportamiento que funcionaba y deja de hacerlo después de un cambio. Por ejemplo, un DELETE podría seguir respondiendo 204 aunque ya no borrase nada. Un GET posterior al borrado permite detectar ese fallo.
 
-Lo que se pide hoy es otra cosa, y es la que separa un ejercicio de un entregable:
+#### Variables, entorno y datos de prueba
 
-> **Que otra persona pueda comprobar que funciona sin que tú estés delante.**
+Una variable guarda un valor con nombre. `{{baseUrl}}` sustituye la dirección del backend y `{{tareaId}}` el identificador que acaba de devolver un POST. Así la prueba utiliza sus propios datos en lugar de depender del registro 1.
 
-Piensa en qué haría un compañero que abriese tu repositorio ahora mismo. ¿Sabría arrancarlo? ¿Sabría qué endpoints hay? ¿Sabría qué debe responder cada uno? ¿Podría comprobarlo sin escribir una sola petición a mano?
+Un **entorno** agrupa valores de configuración: hoy `baseUrl` será `http://localhost:8080`. Cambiar de puerto solo requerirá modificar ese valor. La colección seguirá teniendo las mismas rutas y comprobaciones.
 
-Si la respuesta a las cuatro no es sí, el trabajo no está terminado aunque el código sea correcto.
-
-#### Verificar un contrato sin mirar la implementación
-
-Un contrato describe qué puede pedir el cliente y qué resultado debe observar. Incluye métodos, rutas, campos y estados; también los casos de error. Puede cumplirse con una lista en memoria o con una base de datos. Precisamente por eso vamos a fijarlo antes de sustituir el almacenamiento.
-
-La comprobación comienza con datos que prepara la propia colección. Crear un recurso y guardar el identificador de su respuesta evita depender de que alguien haya dejado previamente el registro 1. Al final se limpian los datos creados o se utiliza un conjunto de prueba identificado. Una segunda ejecución debe producir resultados equivalentes.
-
-Si falla una petición, se distingue el contrato de su implementación: una ruta mal escrita es un problema de la prueba; una ruta acordada que devuelve una respuesta incorrecta es un defecto del servidor. Se conserva la petición que demuestra el problema y se corrige la pieza correspondiente. Revisar esta versión significa poder explicar ambos lados de esa comparación.
+<figure class="diagram">
+  <figcaption>Escenario que prepara y comprueba sus propios datos</figcaption>
+  <ol class="flow">
+    <li>Crear registros y guardar sus ids</li>
+    <li>Consultar y comprobar los datos</li>
+    <li>Modificar y volver a consultar</li>
+    <li>Borrar y comprobar la ausencia</li>
+    <li>Repetir sin depender de la ejecución anterior</li>
+  </ol>
+</figure>
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
+<p class="stage stage--guided">140 minutos · colección, aserciones y diagnóstico</p>
 
-#### Paso 1 · Retomar el proyecto y preparar la comprobación
+Dedica aproximadamente 15 minutos a preparar la herramienta, 15 al entorno, 25 al encadenamiento, 30 a las aserciones, 20 a ejecutar y depurar, 20 a probar una regresión y 15 a comprobar la reproducción desde otra copia. Continúa usando una rama y una PR para los cambios del proyecto.
 
-1. Abre la colección de la sesión 7 y ejecútala contra tu aplicación recién arrancada. Guarda qué comprobaciones pasan y cuáles fallan.
-2. Abre el README y los controladores de todas tus entidades. Contrasta las rutas documentadas con las que existen en el código.
-3. Prepara una tabla con requisito, petición que lo comprueba y resultado. Usa el dominio que elegiste, no una nueva aplicación de ejemplo.
+#### Paso 1 · Preparar la colección · 15 min
 
-#### Paso 2 · Revisar la versión en memoria: ejemplo de criterios de aceptación
+**Si utilizas Postman:** el cliente ligero sin cuenta de la sesión 3 permite enviar peticiones, pero para organizar colecciones y entornos necesitas iniciar sesión y entrar en un *workspace*, o espacio de trabajo. Sigue la [guía de cuenta de Postman](https://learning.postman.com/docs/getting-started/installation/account/sign-up-for-postman/). Crea un espacio personal y utiliza **New → Collection** para crear una colección con el nombre de tu proyecto. Guarda allí las peticiones anteriores mediante **Save**. Si empezaste sin cuenta, puedes trasladar el historial al espacio de trabajo al iniciar sesión.
 
-Trabaja sobre las entidades existentes. Primero comprueba el modelo contra la tabla y añade únicamente los campos que falten. Si falta `proyectoId` en Tarea, declara el atributo y sus accesos, permite enviarlo al crear y devuelve su valor al consultar; de momento es una referencia numérica, no una relación JPA. Después recorre la tabla de operaciones, asociando cada fila a un método y a una petición guardada. Corrige una fila y repítela antes de seguir.
+**Si utilizas Bruno:** selecciona **Create Collection**, escribe el nombre del proyecto y elige una carpeta dentro de su repositorio. Crea las peticiones con **New Request**, elige método y URL y guárdalas. Los archivos de la colección permanecen en esa carpeta. Sigue los bloques de Bruno de esta sesión: sus scripts no utilizan la API `pm` de Postman.
 
-##### Modelo
+Elige una herramienta y completa todo el escenario con ella. Crea una carpeta por entidad y utiliza nombres como «Crear tarea de prueba» o «Consultar tarea borrada». Arranca el backend y comprueba manualmente una creación y su consulta antes de automatizarlas.
 
-| Clase | Campos mínimos |
-| :--- | :--- |
-| `Proyecto` | `id`, `nombre`, `descripcion`, `activo` |
-| `Tarea` | `id`, `titulo`, `prioridad`, `completada`, `proyectoId` |
+#### Paso 2 · Definir y seleccionar el entorno · 15 min
 
-Los identificadores los asigna el servidor y no se repiten aunque se borren elementos.
+1. En Postman, abre **Environments**, crea uno llamado `Local` y añade `baseUrl` con valor `http://localhost:8080`. Guarda y selecciónalo en el selector de entorno.
+2. En Bruno, utiliza el selector **Environment → Configure**, crea `Local`, añade la misma variable, guarda y selecciona ese entorno.
+3. Sustituye el inicio de cada URL por `{{baseUrl}}`. El listado queda como `{{baseUrl}}/tareas`, adaptado al nombre de tu recurso.
+4. Envía el listado. Si la variable no se resuelve, comprueba su nombre, el entorno seleccionado y que has guardado el valor.
+5. Para comprobar que se aplica, añade temporalmente `server.port=8081` en `application.properties`, reinicia y cambia solo `baseUrl` a `http://localhost:8081`. Repite el GET y restaura después el puerto y el entorno a 8080.
 
-##### Endpoints exigidos
+#### Paso 3 · Guardar el identificador devuelto · 25 min
 
-| Método y ruta | Caso | Respuesta |
-| :--- | :--- | :--- |
-| `GET /proyectos` | Siempre | `200` con el array |
-| `GET /proyectos?activo=true` | Filtro opcional | `200` con los que coincidan |
-| `GET /proyectos/{id}` | Existe / no existe | `200` / `404` |
-| `POST /proyectos` | Correcto | `201`, cuerpo y `Location` |
-| `PUT /proyectos/{id}` | Existe / no existe | `200` / `404` |
-| `PATCH /proyectos/{id}` | Existe / no existe | `200` / `404` |
-| `DELETE /proyectos/{id}` | — | `204` |
-| `GET /tareas` | Siempre | `200` con el array |
-| `GET /tareas?completada=true` | Filtro opcional | `200` con las que coincidan |
-| `GET /tareas/{id}` | Existe / no existe | `200` / `404` |
-| `POST /tareas` | Correcto | `201`, cuerpo y `Location` |
-| `PUT /tareas/{id}` | Existe / no existe | `200` / `404` |
-| `PATCH /tareas/{id}` | Existe / no existe | `200` / `404` |
-| `DELETE /tareas/{id}` | — | `204` |
-| **`GET /proyectos/{id}/tareas`** | Proyecto existe | `200` con sus tareas |
-| **`GET /proyectos/{id}/tareas`** | Proyecto no existe | `404` |
+Crea una petición POST llamada «Crear tarea A», con cuerpo JSON de prueba:
 
-Las dos últimas filas son las únicas que no has hecho nunca. Piensa antes de escribir: ¿en qué controlador vive esa ruta? ¿Qué distingue «este proyecto no tiene tareas» de «este proyecto no existe», y qué debe responder cada caso?
+```json
+{
+  "titulo": "Prueba A de la colección",
+  "prioridad": "alta",
+  "completada": false
+}
+```
 
-##### Reglas que se comprueban
+Adapta campos y valores a tu dominio. Guarda antes de enviar. El cuerpo de la petición contiene datos; el script que lee la respuesta se coloca en otra sección.
 
-1. Ninguna ruta contiene un verbo. La acción la expresa el método HTTP.
-2. Ninguna operación de escritura acepta el `id` del cuerpo: manda la ruta.
-3. `PUT` sustituye por completo; `PATCH` solo toca lo que recibe.
-4. Una colección sin resultados devuelve `200` con `[]`, nunca `404`.
-5. El filtro es opcional; sin él salen todos los elementos.
+En **Postman → Scripts → Post-response**, escribe:
 
-<details class="aside aside--help">
-  <summary>Estoy atascado · la ruta anidada</summary>
-  <p>Fíjate en qué identifica y qué filtra. El <code>{id}</code> del proyecto <strong>identifica</strong>, así que va en la ruta; eso ya lo decidiste en la UD1.</p>
-  <p>Para saber qué tareas son suyas necesitas recorrer la lista de tareas comparando su <code>proyectoId</code>. Antes de eso debe comprobarse que el proyecto existe: si no existe, la respuesta no es una lista vacía.</p>
-</details>
+```javascript
+pm.collectionVariables.unset("tareaId");
+if (pm.response.code === 201) {
+    pm.collectionVariables.set("tareaId", pm.response.json().id);
+}
+```
 
-#### Paso 3 · La prueba de aceptación
+En **Bruno → Script → Post Response**, utiliza en su lugar:
 
-Prepara un escenario que cree sus propios datos: alta de proyecto → guardar id del proyecto → alta de tarea con ese id → consultas y modificaciones → borrar tarea → borrar proyecto. Guarda los ids en variables distintas. Ejecuta la secuencia dos veces sin reiniciar para detectar si depende de datos residuales; después reinicia y ejecútala otra vez para comprobar que sabe prepararse desde memoria vacía.
+```javascript
+bru.setVar("tareaId", "");
+if (res.getStatus() === 201) {
+    bru.setVar("tareaId", res.getBody().id);
+}
+```
 
-El quinto criterio es el que separa una colección de una lista de peticiones. Si la segunda ejecución falla, es que el escenario deja datos, o que da por hecho un estado inicial que ya no se cumple.
+Se borra el valor anterior para no reutilizar un id antiguo si el alta falla. Envía el POST y localiza `tareaId` en las variables de colección de Postman o en las variables de ejecución de Bruno. Crea una petición GET con `{{baseUrl}}/tareas/{{tareaId}}`: debe devolver el registro A.
 
-#### Paso 4 · Preparar la evidencia de esta versión
+Duplica el alta para crear «Tarea B», con un título distinto. Cambia su script para guardar **`tareaBId`**, sin sobrescribir `tareaId`. Tener dos registros permite detectar un controlador que devuelve siempre el primero en lugar del solicitado.
 
-En tu repositorio del módulo:
+#### Paso 4 · Añadir comprobaciones automáticas · 30 min
 
-1. **El proyecto completo**, arrancable con `mvnw spring-boot:run`.
-2. **La colección exportada**, en una carpeta `pruebas/`.
-3. Un **`README.md`** que quepa en una pantalla y responda a tres cosas: cómo se arranca, qué endpoints hay y cómo se ejecuta la colección.
-4. Un **las decisiones técnicas** con estas cuatro, cada una en dos o tres frases:
-   * Qué responde tu `DELETE` sobre algo inexistente, y por qué elegiste eso.
-   * Qué hace tu API si el `id` del cuerpo no coincide con el de la ruta.
-   * Qué devuelve `GET /proyectos/{id}/tareas` cuando el proyecto existe y no tiene tareas, y por qué no es un `404`.
-   * Si dejaste Jackson tolerante o estricto con las claves desconocidas, y qué pierdes con tu elección.
+En el POST de A, añade estas pruebas debajo del script de captura en **Postman → Post-response**:
+
+```javascript
+pm.test("Creación con 201", function () {
+    pm.response.to.have.status(201);
+});
+pm.test("Id asignado y contenido esperado", function () {
+    const cuerpo = pm.response.json();
+    pm.expect(cuerpo.id).to.be.above(0);
+    pm.expect(cuerpo.titulo).to.equal("Prueba A de la colección");
+});
+pm.test("Incluye Location", function () {
+    pm.expect(pm.response.headers.get("Location")).to.be.a("string").and.not.empty;
+});
+```
+
+En **Bruno → Tests**, las pruebas equivalentes son:
+
+```javascript
+test("Creación con 201", function () {
+    expect(res.getStatus()).to.equal(201);
+});
+test("Id asignado y contenido esperado", function () {
+    expect(res.getBody().id).to.be.above(0);
+    expect(res.getBody().titulo).to.equal("Prueba A de la colección");
+});
+test("Incluye Location", function () {
+    expect(res.getHeaders().location).to.be.a("string").and.not.empty;
+});
+```
+
+Una prueba tiene un nombre y una condición. `.equal(...)` compara valores; `.above(0)` exige un número positivo. Un fallo en una condición aparece en los resultados de pruebas de la respuesta. Para B, cambia el título esperado en su prueba y conserva su variable independiente.
+
+**Comprueba también la identidad al consultar B.** En su GET, además de exigir 200, compara id y título. En Postman:
+
+```javascript
+pm.test("Devuelve exactamente B", function () {
+    const cuerpo = pm.response.json();
+    pm.expect(cuerpo.id).to.equal(Number(pm.collectionVariables.get("tareaBId")));
+    pm.expect(cuerpo.titulo).to.equal("Prueba B de la colección");
+});
+```
+
+En Bruno:
+
+```javascript
+test("Devuelve exactamente B", function () {
+    expect(res.getBody().id).to.equal(Number(bru.getVar("tareaBId")));
+    expect(res.getBody().titulo).to.equal("Prueba B de la colección");
+});
+```
+
+Construye las demás aserciones adaptando estos ejemplos. Un listado debe ser un array; en Postman se comprueba con `pm.expect(pm.response.json()).to.be.an("array")` y en Bruno con `expect(res.getBody()).to.be.an("array")`, dentro de una prueba con nombre.
+
+En DELETE exige 204 y cuerpo vacío. Utiliza `pm.expect(pm.response.text()).to.equal("")` en Postman o `expect(res.getBody()).to.equal("")` en Bruno. No intentes interpretar ese cuerpo como JSON. Para el GET posterior al borrado, exige 404.
+
+#### Paso 5 · Ejecutar el escenario completo · 20 min
+
+Ordena estas peticiones en la carpeta de la entidad. Cada una debe contener sus propias aserciones; adapta los nombres de variables si tu recurso tiene otro nombre.
+
+| Orden | Petición | Comprobación |
+| --- | --- | --- |
+| 1 | Listado | 200 y array; puede contener datos anteriores. |
+| 2 | Crear A | 201, datos y Location; guardar `tareaId`. |
+| 3 | Crear B | 201 y título distinto; guardar `tareaBId`. |
+| 4 | Consultar B | 200, id y título de B, no de A. |
+| 5 | PATCH de A con `{"prioridad":"baja"}` | 200 y prioridad modificada. |
+| 6 | Consultar A | 200, prioridad baja y título original conservado. |
+| 7 | POST con JSON mal formado, como `{"titulo":}` | 400; todavía no confundas JSON mal formado con `{}`, que se acepta hasta incorporar validación. |
+| 8 | POST con texto y `Content-Type: text/plain` | 415. Revisa que no haya otra cabecera Content-Type activa. |
+| 9 | Borrar A | 204 y cuerpo vacío. |
+| 10 | Consultar A borrada | 404 usando el id capturado. |
+| 11 | Borrar B | 204 y cuerpo vacío. |
+| 12 | Consultar B borrada | 404. |
+
+En Postman utiliza **Run collection** y selecciona la carpeta y el orden; en Bruno, **Run** sobre la colección o carpeta y comprueba el orden antes de ejecutar. Guarda los scripts y las peticiones antes de iniciar el recorrido.
+
+Ejecuta dos veces sin reiniciar el servidor. Los ids cambiarán, pero las comprobaciones deben seguir pasando. Reinicia y repite: la colección debe preparar sus datos desde la memoria vacía. Si un POST falla, localiza primero esa causa; no interpretes los errores posteriores de variables como averías independientes.
 
 <div class="rule">
-  <p class="rule-label">El README no es burocracia</p>
-  <p>Es la parte del entregable que se lee primero y la que decide si alguien puede usar tu trabajo. Un backend excelente con un README que no explica cómo arrancarlo es, para quien llega nuevo, un backend que no funciona.</p>
+  <p class="rule-label">Alcance de un resultado correcto</p>
+  <p>Un resultado verde solo cubre las aserciones ejecutadas. Si no comparas el título o no consultas después del borrado, esas propiedades quedan sin comprobar aunque todo aparezca en verde.</p>
 </div>
 
-#### Paso 5 · Comprobar el resultado
+#### Paso 6 · Demostrar que detecta regresiones · 20 min
 
-Pásate esta lista tú mismo. Es la misma con la que se corrige.
+En una rama local de diagnóstico, introduce **una avería cada vez**. No modifiques las aserciones para adaptarlas al fallo:
 
-| Comprobación | Cómo lo verificas |
-| :--- | :--- |
-| Arranca desde cero | Clona tu propio repositorio en otra carpeta y arráncalo |
-| Los endpoints están completos | La colección cubre las dieciséis filas |
-| Los códigos son correctos | La colección está en verde |
-| Es repetible | La ejecutas dos veces seguidas |
-| Se entiende sin ti | Se lo das a un compañero y no te pregunta nada |
-| Las decisiones están escritas | las decisiones técnicas responde a las cuatro |
+1. Cambia la creación para responder 200 en lugar de 201. Reinicia y ejecuta: debe fallar la aserción del alta.
+2. Restituye el POST y comprueba la recuperación. Después quita temporalmente el borrado de la lista, conservando el 204. El GET posterior debe detectar que el recurso sigue existiendo.
+3. Restituye DELETE y prueba que el detalle devuelva siempre la primera tarea. La consulta de B debe fallar al comparar identidad y contenido.
+4. Restaura el código y ejecuta de nuevo. No integres las averías. Si una ejecución fallida dejó registros, bórralos mediante sus ids o reinicia este servidor en memoria antes de repetir la prueba.
 
-La quinta es la de verdad. **Dáselo a alguien y no le expliques nada.** Cada pregunta que te haga es una línea que le falta a tu README.
+Anota para cada avería qué aserción la detectó. Si alguna pasó inadvertida, añade una comprobación que observe el comportamiento que faltaba.
 
-#### Paso 6 · Lo que esta versión todavía hace mal
+#### Paso 7 · Conservar y reproducir el trabajo · 15 min
 
-Compruébalo y anótalo, porque es el índice de la UD3:
+En Postman, exporta la colección y el entorno local mediante sus opciones **Export** y conserva ambos en el repositorio. Incluye solo datos de prueba y la dirección local; los ids se capturan durante cada ejecución. En Bruno, guarda la colección y el entorno en su carpeta versionada. No basta con que existan únicamente en la herramienta de tu ordenador.
 
-| Prueba esto | Lo que pasa | Lo correcto | Dónde se arregla |
-| :--- | :--- | :--- | :--- |
-| `POST /tareas` con `{}` | Crea una tarea sin nada | `400` diciendo qué falta | UD3 |
-| `POST` con prioridad `"urgentísima"` | La acepta | `400`: no es un valor válido | UD3 |
-| `POST /tareas` con un `proyectoId` inexistente | La acepta | `400` o `404`, pero no un `201` | UD3 |
-| Cualquier `400` | Cuerpo genérico e inútil | Un mensaje que diga qué corregir | UD3 |
-| Añadir un campo interno al modelo | Se publica solo | Se publica lo que tú decidas | UD3, con DTO |
-| Reiniciar | Se pierde todo | Sigue ahí | UD5 |
+Comprueba desde otra copia del repositorio que se puede importar o abrir la colección, seleccionar `Local`, arrancar el backend y ejecutar el escenario. Explica esos pasos brevemente en el README. Publica la rama y solicita la revisión de las pruebas antes de integrar.
 
-Fíjate en la tercera fila: tu API acepta tareas que pertenecen a proyectos que no existen. Nada en el código lo impide, porque nadie ha escrito todavía qué es una tarea válida.
+#### Ampliación si has completado el trabajo
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las dieciséis filas implementadas con sus códigos correctos y la colección cubriéndolas.</span></div>
-  <div><strong>Si lo tienes</strong><span>La colección ejecutable dos veces seguidas, con README y DECISIONES escritos.</span></div>
-  <div><strong>Reto</strong><span>Un compañero clona tu repositorio, lo arranca y ejecuta la colección sin preguntarte nada.</span></div>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Que otra persona pueda arrancarlo y comprobar que funciona sin que tú estés delante: código, pruebas ejecutables y documentación mínima.</p>
-  <p>2 · Porque deja el servidor en un estado distinto del que suponía, así que a partir de la segunda vez sus comprobaciones dejan de significar nada.</p>
-  <p>3 · Un <code>200</code> con un array vacío. El recurso existe; lo que no hay son elementos, y eso no es un error.</p>
-  <p>4 · Porque no hay validación: nadie ha escrito todavía qué condiciones debe cumplir una tarea para ser válida, así que Jackson construye el objeto y el controlador lo guarda.</p>
-</details>
-
-#### Paso 7 · Comprobar y registrar el resultado del proyecto
-
-1. Reproduce el ciclo CRUD de la entidad principal y de las relacionadas previstas hasta ahora. Cada operación debe coincidir con su contrato documentado.
-2. Reinicia, recrea los datos mediante la colección y ejecútala de nuevo. Deja registrado que perder datos al reiniciar sigue siendo una limitación conocida de esta versión.
+Aplica el escenario a la segunda entidad utilizando variables distintas. Añade un PUT completo y comprueba que el GET posterior refleja todos sus campos editables. Diseña además un caso propio que la colección actual no detecte: escribe primero la aserción, provoca el fallo y verifica su corrección. Mantén todo en el mismo proyecto.
 
 ### Cierre
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-**Al terminar la sesión:**
+Al terminar, la colección prepara dos registros, usa sus ids reales, comprueba contenido y estados y elimina sus datos de prueba. Funciona dos veces seguidas y después de reiniciar. Puedes señalar una ejecución fallida por una regresión y su recuperación, y otra persona dispone de la colección y del entorno necesarios para reproducirla.
 
-Otra persona reproduce las operaciones principales y un fallo previsto usando únicamente el repositorio y sus instrucciones.
+<dl class="answer">
+  <dt>¿Por qué un GET de B detecta un error que consultar únicamente A podría ocultar?</dt>
+  <dd></dd>
+  <dt>¿Por qué no basta con comprobar el 204 de un DELETE?</dt>
+  <dd></dd>
+  <dt>¿Qué diferencia hay entre baseUrl y el identificador capturado después del POST?</dt>
+  <dd></dd>
+</dl>
 
-Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
+## Sesión 8 · Contrato en memoria listo para evolucionar
+
+**Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [enlaces rotos y formato](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-4/). En Servidor continúas la implementación del mismo producto.
+
+### Se explica
+
+<p class="stage stage--guided">25 minutos · explicación y demostración</p>
+
+Llegas con dos entidades, sus operaciones CRUD y una colección que comprueba un escenario completo. Hoy conectarás las entidades: consultarás los elementos que pertenecen a otro recurso y comprobarás que una persona puede utilizar esa versión desde tu repositorio.
+
+#### Una relación en memoria
+
+En el ejemplo, cada tarea guarda un `proyectoId`. Ese número identifica su proyecto: dos tareas con `proyectoId` igual a 7 pertenecen al mismo proyecto. Todavía no hay una base de datos que compruebe esa relación; el código tendrá que buscar y comparar los identificadores.
+
+`GET /proyectos/7/tareas` requiere dos decisiones, en este orden:
+
+1. Buscar el proyecto 7. Si no existe, responder `404`.
+2. Si existe, seleccionar sus tareas. Devolver `200` con ellas, o con `[]` si no tiene ninguna.
+
+Una lista vacía describe un proyecto existente sin tareas. Un `404` indica que no se ha encontrado el proyecto solicitado. Esta diferencia debe quedar en las pruebas.
+
+#### Compartir las listas entre controladores
+
+Hasta ahora cada controlador conserva su propia lista. La nueva consulta necesita leer proyectos y tareas a la vez. Crear otra lista en el controlador de proyectos no serviría: estaría vacía aunque el controlador de tareas ya hubiera guardado registros.
+
+Vamos a reunir las dos listas en una clase `MemoriaProyecto`. La anotación `@Component` permite que Spring cree y gestione una instancia compartida de esa clase. Cada controlador la solicita mediante su constructor. Spring entrega la misma instancia a ambos: esta forma de recibir un objeto necesario se llama **inyección de dependencias**. En la UD4 estudiarás cómo organizar responsabilidades; hoy utilizamos este mecanismo únicamente para compartir los datos existentes.
+
+La memoria sigue siendo temporal y se vacía al reiniciar. Tampoco garantiza escrituras simultáneas seguras. Esta versión permite aprender el contrato HTTP; la persistencia llegará en la UD5.
+
+### Se trabaja
+
+<p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
+
+Adapta `Proyecto`, `Tarea` y sus nombres de campos a la relación real de tu producto. Continúa en una rama de trabajo y conserva las operaciones ya comprobadas.
+
+#### Paso 1 · Comprobar la versión anterior — 10 minutos
+
+1. Arranca el backend y ejecuta la colección de la sesión 7.
+2. Si falla, localiza la primera petición incorrecta y corrígela antes de cambiar el almacenamiento.
+3. Identifica qué controlador guarda cada lista y qué entidad contiene la referencia a la otra. En el ejemplo será `Tarea.proyectoId`.
+
+#### Paso 2 · Compartir los datos existentes — 25 minutos
+
+1. Bajo tu paquete base, junto a `model` y `controller`, crea el paquete `memoria`.
+2. Crea `MemoriaProyecto.java` con este contenido. Sustituye `com.ejemplo.gestor` por el paquete de tu aplicación.
+
+```java
+package com.ejemplo.gestor.memoria;
+
+import com.ejemplo.gestor.model.Proyecto;
+import com.ejemplo.gestor.model.Tarea;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MemoriaProyecto {
+    private final List<Proyecto> proyectos = new ArrayList<>();
+    private final List<Tarea> tareas = new ArrayList<>();
+
+    public List<Proyecto> getProyectos() { return proyectos; }
+    public List<Tarea> getTareas() { return tareas; }
+}
+```
+
+3. En `TareaController`, sustituye la declaración de su lista por este campo y constructor. Importa `MemoriaProyecto`. Conserva `siguienteId` y todos los métodos HTTP existentes.
+
+```java
+private final List<Tarea> tareas;
+
+public TareaController(MemoriaProyecto memoria) {
+    this.tareas = memoria.getTareas();
+}
+```
+
+4. En `ProyectoController`, sustituye su lista por estos campos y constructor. Importa también `Tarea`, `List` y `MemoriaProyecto` si faltan.
+
+```java
+private final List<Proyecto> proyectos;
+private final List<Tarea> tareas;
+
+public ProyectoController(MemoriaProyecto memoria) {
+    this.proyectos = memoria.getProyectos();
+    this.tareas = memoria.getTareas();
+}
+```
+
+5. Si ya había un constructor, incorpora estas asignaciones a ese constructor; no dejes dos formas distintas de construir el controlador. No conserves los antiguos `new ArrayList<>()` en esos campos ni escribas `new MemoriaProyecto()` en los controladores.
+6. Reinicia y ejecuta la colección. Las rutas y respuestas anteriores deben seguir funcionando. Si aparece un error al crear el componente, comprueba que `memoria` está debajo del paquete de la clase con `@SpringBootApplication`.
+
+#### Paso 3 · Consultar una relación — 30 minutos
+
+1. Si `Tarea` no tiene la referencia, añade `private int proyectoId;` y los métodos `getProyectoId()` y `setProyectoId(int proyectoId)`. Si ya existe, reutilízala.
+2. Permite enviarla en el POST. Si tu código guarda directamente el objeto recibido, Jackson ya la habrá asignado; si copia campos a otro objeto, añade esa copia. Conserva el identificador de la tarea asignado por el servidor.
+3. En `ProyectoController`, que ya tiene `@RequestMapping("/proyectos")`, añade este método. Importa `ArrayList` y `ResponseEntity` si faltan.
+
+```java
+@GetMapping("/{id}/tareas")
+public ResponseEntity<List<Tarea>> tareasDelProyecto(
+        @PathVariable(name = "id") int id) {
+    boolean existe = false;
+    for (Proyecto proyecto : proyectos) {
+        if (proyecto.getId() == id) {
+            existe = true;
+            break;
+        }
+    }
+    if (!existe) {
+        return ResponseEntity.notFound().build();
+    }
+
+    List<Tarea> resultado = new ArrayList<>();
+    for (Tarea tarea : tareas) {
+        if (tarea.getProyectoId() == id) {
+            resultado.add(tarea);
+        }
+    }
+    return ResponseEntity.ok(resultado);
+}
+```
+
+4. Crea dos proyectos y una tarea vinculada al primero. Consulta las tareas de ambos: el primero debe devolver esa tarea y el segundo `[]`.
+5. Borra el segundo proyecto y repite su consulta anidada: ahora debe responder `404`. Si devuelve `[]`, falta comprobar que el proyecto existe. Si ambos proyectos devuelven la misma tarea, revisa el filtro por `proyectoId`.
+
+#### Paso 4 · Automatizar la relación y completar la cobertura — 30 minutos
+
+1. Añade a la colección las altas de los dos proyectos. Captura sus ids en variables distintas, `proyectoId` y `proyectoVacioId`, siguiendo los scripts de la sesión 7.
+2. En el JSON del alta de tarea usa `"proyectoId": {{proyectoId}}`. Las llaves se sustituyen antes del envío; sin comillas exteriores el valor será un número JSON.
+3. Comprueba en la consulta del primer proyecto el estado `200`, la longitud del array y que la tarea tenga tanto el id esperado como el `proyectoId` correcto. No basta con comprobar que hay algún elemento.
+4. Comprueba `200` y array vacío para el segundo proyecto. Bórralo y comprueba `404` en su consulta anidada.
+5. Limpia primero la tarea creada y después su proyecto. Ejecuta la colección dos veces seguidas y una vez después de reiniciar. Cada ejecución prepara sus propios datos.
+6. Completa las comprobaciones de ambas entidades con esta tabla. Una fila puede requerir varias peticiones. Reutiliza las ya guardadas; añade únicamente los casos que faltan.
+
+| Operación | Resultado que debes comprobar |
+| :--- | :--- |
+| Listado y filtro opcional | `200`; todos sin filtro, solo coincidencias con filtro y `[]` si no hay resultados |
+| Detalle | `200` con el id solicitado; `404` si no existe |
+| POST | `201`, id asignado por el servidor y `Location` utilizable |
+| PUT | `200` y sustitución de los campos editables; `404` si no existe |
+| PATCH de los campos admitidos | `200`, cambio solicitado y conservación del resto; `404` si no existe |
+| DELETE | `204` sin cuerpo; el recurso deja de aparecer al consultar |
+| Consulta de la relación | Padre con elementos, padre vacío y padre inexistente diferenciados |
+
+Mantén el PATCH limitado a los campos que implementaste en la sesión 6. El booleano opcional y la separación entre datos de entrada y salida se trabajan en la UD3.
+
+#### Paso 5 · Reproducir el resultado desde otra copia — 25 minutos
+
+1. Actualiza las instrucciones del repositorio: requisitos, comando de arranque, selección del entorno y ejecución de la colección. Incluye que los datos se pierden al reiniciar.
+2. Explica brevemente las decisiones que afectan al cliente: `DELETE` devuelve `204` incluso si no existe; el servidor asigna el id al crear y la ruta determina el id al actualizar; Jackson queda en modo estricto; una relación vacía devuelve `[]`.
+3. Guarda la colección y los cambios en tu rama, súbelos y abre o actualiza la PR. En otra carpeta clona el repositorio y selecciona esa rama, ya que puede no estar integrada todavía.
+4. Arranca esa copia siguiendo sus instrucciones. Detén antes la primera aplicación para liberar el puerto 8080. Ejecuta la colección desde los archivos versionados.
+5. Corrige cualquier paso que dependiese de una configuración no incluida en el repositorio. En la revisión de la PR, reproduce al menos una petición y contrasta la respuesta con el contrato.
+
+#### Paso 6 · Identificar lo que falta — 20 minutos
+
+Haz estas pruebas por separado de la colección de aceptación, que debe seguir reflejando el contrato actual. Anota el resultado real y la mejora necesaria. Limpia los registros de prueba al acabar.
+
+| Prueba | Limitación actual | Siguiente trabajo |
+| :--- | :--- | :--- |
+| Crear con `{}` | Puede guardar datos incompletos | Validación en la UD3 |
+| Crear con una prioridad no prevista | No comprueba valores de negocio | Validación en la UD3 |
+| Crear con un id de padre inexistente | No comprueba aún la referencia al guardar | Comprobación de la relación en la UD3 |
+| Observar un `400` | El error aún no sigue un formato propio | Errores comunes en la UD3 |
+| Añadir un campo interno con getter | Puede aparecer en el JSON público | DTO en la UD3 |
+| Reiniciar | Se pierden los registros | Persistencia en la UD5 |
+
+#### Ampliación si has completado el trabajo
+
+Añade una tarea al segundo proyecto y comprueba que las consultas de ambos siguen separadas. Modifica después la referencia de una tarea mediante un PUT completo: debe desaparecer de una consulta y aparecer en la otra. Incorpora estas comprobaciones a la colección y conserva la limpieza de los datos.
+
+### Cierre
+
+<p class="stage">15 minutos · resultado comprobable y explicación individual</p>
+
+**Al terminar la sesión:** ambas entidades mantienen su CRUD, los controladores comparten la misma memoria y la consulta de la relación distingue los tres casos previstos. La colección se puede repetir desde otra copia del repositorio. Puedes explicar dónde se comprueba la existencia del padre, cómo se filtran sus elementos y qué limitaciones siguen pendientes.
 
 
 ## Lo que debes recordar
@@ -1461,13 +1139,13 @@ Tu API promete unas rutas, unos formatos y unos códigos. Mientras eso se cumpla
 
 1. Enumera las fases por las que pasa una petición desde Tomcat hasta tu método.
 2. ¿Qué es el `DispatcherServlet` y por qué no lo escribes tú?
-3. No aparece la línea `Mapped to` en el registro. ¿Qué ha ocurrido?
+3. No aparece la línea `Mapped to` en el registro. ¿Qué comprobarías antes de concluir que no se ha seleccionado el método?
 4. ¿Qué fase produce un `404`, cuál un `405`, cuál un `415` y cuál un `406`?
-5. ¿Por qué en esos cuatro casos tu método no llega a ejecutarse?
+5. ¿Cómo distinguirías un 406 producido al seleccionar la ruta de uno producido al convertir la respuesta?
 6. ¿De dónde puede salir cada parámetro de un método de controlador?
 7. ¿Recorre Jackson las claves del JSON o los campos de tu clase, y qué consecuencia tiene?
 8. Diferencia entre un cuerpo inválido y uno incompleto. ¿Quién resuelve cada uno?
-9. ¿Por qué `{}` devuelve `200` y `{,}` devuelve `400`?
+9. ¿Por qué el endpoint espejo acepta `{}` con 200 y rechaza `{,}` con 400? ¿Qué código devuelve ahora el POST de creación cuando acepta un cuerpo?
 10. ¿Qué ganas y qué pierdes al activar `fail-on-unknown-properties`?
 11. ¿En qué formato viaja una fecha en una API y por qué no en el del país?
 12. ¿Qué significa que una operación sea segura? ¿Y idempotente?
@@ -1478,7 +1156,7 @@ Tu API promete unas rutas, unos formatos y unos códigos. Mientras eso se cumpla
 17. ¿Qué información lleva la cabecera `Location` y en qué respuesta viaja?
 18. ¿Por qué una lista vacía no es un `404`?
 19. ¿Qué es una regresión y por qué es cara?
-20. ¿Por qué una comprobación que exige que el id sea exactamente 3 es una mala comprobación?
+20. ¿Por qué una colección repetible captura el id devuelto, aunque una prueba aislada con contador recién iniciado pueda esperar un número concreto?
 
 Si además puedes recibir una especificación de endpoints y traducirla a controladores con sus códigos correctos y su colección, estás listo para la UD3.
 

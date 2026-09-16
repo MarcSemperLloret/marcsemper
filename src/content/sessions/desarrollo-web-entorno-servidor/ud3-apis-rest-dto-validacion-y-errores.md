@@ -31,729 +31,365 @@ priorKnowledge:
 
 **Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el presupuesto de calidad](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-5/). En Servidor continúas la implementación del mismo producto.
 
-
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-El CRUD ya se puede comprobar. Hoy revisarás cómo nombra sus recursos y utiliza HTTP. REST es un estilo de diseño; empezaremos por una consecuencia práctica: que las rutas describan recursos y que el método HTTP exprese la operación.
+En la sesión 8 conectaste dos entidades y comprobaste sus operaciones. Hoy utilizarás esa base para diseñar una operación de tu dominio y crear elementos dentro de una relación. Revisar las rutas anteriores sirve para justificar el contrato; si ya son coherentes, se conservan.
 
-#### Tu API funciona. Eso no la hace REST
+#### Recursos, representaciones y REST
 
-En la sesión 8 entregaste dieciséis endpoints con sus códigos correctos y una colección que los verifica. El resultado funciona, es comprobable y resulta utilizable por otra persona.
+Un **recurso** es algo identificable sobre lo que trabaja la API: una tarea, un proyecto o su colección. Una **representación** describe ese recurso mediante datos, por ejemplo el JSON que devuelve `GET /tareas/7`. El objeto Java permanece dentro del servidor; el cliente recibe su representación.
 
-Aun así, ante la pregunta «¿es una API REST?» en una entrevista, la respuesta honesta hoy sería: *en parte, y no sabría decir en qué parte*.
+REST es un estilo de arquitectura descrito por Roy Fielding. Organiza la comunicación mediante restricciones como la separación cliente-servidor, las peticiones sin contexto de sesión guardado en el servidor, la caché, una interfaz uniforme y los sistemas por capas. También contempla la descarga opcional de código. Utilizar HTTP o devolver JSON no garantiza cumplirlas.
 
-Eso es lo que arreglamos esta semana. No porque la palabra sea importante, sino porque detrás de ella hay un conjunto de decisiones de diseño que hacen que una API se pueda usar sin manual, crecer sin romperse y entender sin preguntar.
+**Sin estado** no significa que el servidor no guarde tareas: guarda el estado de los recursos. Significa que una petición debe aportar el contexto necesario para interpretarla, sin depender de una conversación previa almacenada para ese cliente. Por ejemplo, `GET /proyectos/7/tareas` identifica el proyecto explícitamente.
 
-<div class="rule">
-  <p class="rule-label">El malentendido más extendido del sector</p>
-  <p>«Mi API devuelve JSON, luego es REST.» <strong>No.</strong> El formato no tiene nada que ver: se puede hacer una API REST que devuelva XML y una API terrible que devuelva JSON.</p>
-  <p>Lo que decide no es qué formato usas, sino <strong>cómo organizas lo que hay detrás de las URLs y qué significan tus métodos y tus códigos</strong>.</p>
-</div>
+La interfaz uniforme combina identificación de recursos, manipulación mediante representaciones, mensajes que describen su significado e hipermedia: enlaces que permiten descubrir operaciones siguientes. Aquí trabajamos principalmente recursos, métodos y respuestas HTTP. Consulta la [descripción original de REST](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) si quieres ampliar estas restricciones.
 
-#### Qué es REST
+#### Los niveles de Richardson como comparación
 
-<p class="term">REST</p>
+Este modelo ayuda a comparar diseños HTTP. No es una certificación de calidad ni sustituye todas las restricciones de REST.
 
-*Representational State Transfer*. Un **estilo de arquitectura** descrito por Roy Fielding en el año 2000, en la tesis donde analizaba por qué la web había funcionado a escala planetaria cuando casi ningún sistema distribuido lo consigue.
-
-Fíjate en «estilo». No es un protocolo, no es un estándar que se cumpla o se incumpla, y no es una librería que se instala. Es un conjunto de restricciones que, si las aceptas, te dan unas propiedades a cambio.
-
-Las que importan aquí son cinco:
-
-| Restricción | Qué significa | ¿Ya la cumples? |
+| Nivel | Organización | Ejemplo |
 | :--- | :--- | :--- |
-| Cliente-servidor | Quien pide y quien responde son programas separados que solo se comunican por el contrato | Sí, desde la UD1 |
-| Sin estado | Cada petición trae todo lo necesario; el servidor no recuerda la anterior | Sí, aunque sin saberlo |
-| Cacheable | La respuesta puede declarar si se puede reutilizar | No, todavía |
-| Interfaz uniforme | Todos los recursos se manipulan igual, con las mismas reglas | **Parcialmente** |
-| Sistema por capas | Puede haber intermediarios sin que el cliente se entere | Sí, gratis |
+| 0 | Una dirección recibe distintas órdenes en el cuerpo | `POST /api` con `{"accion":"obtenerTarea","id":7}` |
+| 1 | Se identifican recursos, pero no se aprovechan bien métodos y estados | `POST /tareas/7` con una acción de consulta en el cuerpo |
+| 2 | Recursos, métodos y estados expresan la operación | `GET /tareas/7` devuelve `200` o `404` |
+| 3 | La representación incluye enlaces a operaciones siguientes | La tarea ofrece enlaces de consulta y transición de estado |
 
-Tres las cumples sin haber hecho nada: te las regaló HTTP. La cuarta es el trabajo de esta unidad.
+Tu CRUD debería aprovechar ya el nivel 2. Hoy no implementarás hipermedia; comprobarás que las decisiones del proyecto son consistentes y puedes explicar sus límites.
 
-##### La interfaz uniforme, que es la que cuesta
+#### Convenciones para las rutas del proyecto
 
-Es la restricción central y se apoya en tres ideas:
+| Decisión | Convención que seguimos |
+| :--- | :--- |
+| Nombrar colecciones | Sustantivos en plural: `/tareas` |
+| Identificar un elemento | Id en la ruta: `/tareas/7` |
+| Expresar una operación | Método HTTP: `DELETE /tareas/7` |
+| Filtrar una colección | Parámetro opcional: `/tareas?completada=true` |
+| Recorrer una relación | `/proyectos/7/tareas` |
+| Mantener nombres consistentes | Minúsculas, guiones cuando hagan falta y sin extensión `.json` |
+| Mantener una URL canónica | Usamos rutas sin barra final y las documentamos así |
 
-<figure class="diagram">
-  <figcaption>Qué exige una interfaz uniforme</figcaption>
-  <ol class="flow flow--before">
-    <li><strong>Cada cosa tiene su dirección.</strong> Un recurso se identifica por una URL, y siempre la misma</li>
-    <li><strong>Se manipula a través de representaciones.</strong> No mandas el objeto: mandas una descripción de cómo debe quedar</li>
-    <li><strong>Los mensajes se explican solos.</strong> El método, el código y las cabeceras dicen qué ocurre sin necesitar documentación aparte</li>
-  </ol>
-</figure>
+Estas convenciones facilitan el uso, pero no son leyes de REST. `/tareas?proyectoId=7` también puede ser válido: filtra la colección general. La ruta anidada identifica primero un proyecto y permite distinguir si ese proyecto no existe, como comprobaste en la sesión 8. Evita encadenar relaciones innecesarias; un elemento con id propio puede tener una dirección directa.
 
-La segunda idea es la de la sesión 10 y la que más cuesta al principio. La primera y la tercera son las de esta semana.
+#### Una acción de negocio puede cambiar un recurso
 
-#### Un recurso es un sustantivo
+«Cerrar una incidencia» puede significar asignar `estado="cerrada"` mediante PATCH. «Añadir un comentario» crea un recurso mediante POST. «Solicitar un reembolso» puede crear una solicitud con su propio estado. Antes de inventar una ruta, escribe qué dato cambia, qué se crea y qué efecto tendría repetir la petición.
 
-<p class="term">Recurso</p>
-
-Cualquier cosa de la que tu API pueda hablar y a la que se pueda dar una dirección: un proyecto, una tarea, un usuario, un comentario. También una colección de ellas.
-
-Esa es toda la definición, y la consecuencia práctica es enorme: **si la URL contiene un verbo, no nombra un recurso, sino que emite una orden**. Las órdenes no se pueden identificar, ni cachear, ni relacionar entre sí.
-
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Pensar en acciones</p>
-    <p class="compare-body">Cada funcionalidad nueva inventa una ruta nueva. La API crece como una lista de órdenes que hay que memorizar, y solo la conoce quien la escribió.</p>
-  </div>
-  <div>
-    <p class="compare-label">Pensar en recursos</p>
-    <p class="compare-body">Las cosas del dominio son pocas y estables. Sobre cada una se aplican siempre los mismos cinco métodos, así que quien conoce una sabe usar las demás.</p>
-  </div>
-</div>
-
-Esa es la ganancia real, y no es estética: **una API de nivel 2 con veinte recursos se aprende una sola vez**, mientras que una de nivel 1 con veinte recursos son cien rutas distintas que hay que consultar.
-
-#### Las siete reglas de nombrado
-
-| # | Regla | Mal | Bien |
-| :---: | :--- | :--- | :--- |
-| 1 | Sustantivos, nunca verbos | `/crearTarea` | `POST /tareas` |
-| 2 | Colecciones en plural | `/tarea/3` | `/tareas/3` |
-| 3 | Minúsculas y guiones | `/ordenesDeTrabajo` | `/ordenes-de-trabajo` |
-| 4 | Sin extensión de archivo | `/tareas.json` | `/tareas` |
-| 5 | Jerarquía para la pertenencia | `/tareas?proyecto=7` | `/proyectos/7/tareas` |
-| 6 | Query string para filtrar | `/tareas/completadas` | `/tareas?completada=true` |
-| 7 | Sin barra final | `/tareas/` | `/tareas` |
-
-Las dos que de verdad se piensan son la 5 y la 6, porque son la misma decisión de la UD1 vista desde arriba.
-
-##### Jerarquía o filtro
-
-<div class="rule">
-  <p class="rule-label">La pregunta que lo resuelve</p>
-  <p><strong>¿El recurso existe por sí solo, o solo tiene sentido dentro de otro?</strong></p>
-  <p>Una tarea existe por sí sola: tiene su id y se puede consultar directamente en <code>/tareas/41</code>. Que además pertenezca a un proyecto es una <em>relación</em>, y <code>/proyectos/7/tareas</code> es una forma cómoda de recorrerla.</p>
-  <p>Un comentario de una incidencia, en cambio, no significa nada fuera de ella. Ahí la jerarquía constituye la única estructura con sentido, y no una comodidad de diseño.</p>
-</div>
-
-Existe además un límite práctico:
-
-```text
-/proyectos/7/tareas/41/comentarios/5/respuestas/2
-```
-
-Nadie escribe eso, nadie lo lee y nadie lo mantiene. **Dos niveles de profundidad es el máximo razonable.** Si un recurso tiene id propio, se accede directo:
-
-```text
-/comentarios/5/respuestas
-```
+Los ejemplos describen decisiones de diseño. Hoy implementarás una creación dentro de una relación existente; no necesitas añadir pagos, usuarios ni autenticación.
 
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
-#### Paso 1 · Retomar el proyecto y preparar la comprobación
+#### Paso 1 · Registrar el contrato que ya funciona — 15 minutos
 
-1. Ejecuta la colección de la sesión 8 antes de cambiar ninguna URL. Abre los controladores y la tabla del contrato.
-2. Haz un inventario de método, ruta, parámetros y significado de cada operación. Incluye las operaciones de negocio que no equivalen a crear o borrar un registro.
-3. Elige una ruta mejorable y escribe su propuesta antes de editar. Anota qué peticiones y qué consumidor tendrían que actualizarse.
+1. Abre una rama de trabajo y ejecuta la colección de la sesión 8 antes de editar rutas.
+2. Reutiliza tu tabla de operaciones. Añade solo la información que falte: método, ruta, cuerpo y respuestas previstas.
+3. Aplica estos criterios y conserva el resultado para compararlo en la sesión 14. Un criterio puede quedar pendiente o no aplicarse; explica el motivo.
 
-#### Paso 2 · Comparar los niveles del modelo de madurez de Richardson
+| # | Criterio | Evidencia que puedes buscar |
+| :---: | :--- | :--- |
+| 1 | Las rutas identifican recursos | Nombres y significado |
+| 2 | Cada recurso tiene una dirección estable | Consulta de detalle |
+| 3 | Las colecciones se nombran de forma consistente | Inventario de rutas |
+| 4 | El método expresa la operación | GET, POST, PUT, PATCH y DELETE |
+| 5 | GET no solicita cambios en los datos del dominio | Datos antes y después de consultar |
+| 6 | Los resultados previstos tienen estados adecuados | Aserciones de la colección |
+| 7 | Las relaciones se pueden consultar de forma coherente | Padre con datos, vacío e inexistente |
+| 8 | Un mismo dato mantiene nombre y tipo entre respuestas | JSON de listado, detalle y escrituras |
+| 9 | Los campos internos quedan fuera del JSON | Separación pendiente de la sesión 10 |
+| 10 | Las respuestas ofrecen enlaces de navegación | Hipermedia fuera del alcance de esta unidad |
 
-Hay una forma muy práctica de situar cualquier API, y sirve tanto para juzgar la tuya como para entender la de otro. Son cuatro niveles, cada uno construido sobre el anterior.
+No busques tres defectos por obligación: si una ruta ya cumple su contrato, justifica por qué la mantienes.
 
-<figure class="diagram">
-  <figcaption>Los cuatro niveles de madurez de una API</figcaption>
-  <ol class="flow flow--before">
-    <li><strong>Nivel 0 · Una sola puerta.</strong> Una URL, un método, y dentro del cuerpo se dice qué se quiere hacer</li>
-    <li><strong>Nivel 1 · Recursos.</strong> Cada cosa tiene su propia URL</li>
-    <li><strong>Nivel 2 · Verbos y códigos.</strong> El método HTTP dice la acción y el código dice el resultado</li>
-    <li><strong>Nivel 3 · Hipermedia.</strong> Las respuestas incluyen los enlaces a lo que se puede hacer después</li>
-  </ol>
-</figure>
+#### Paso 2 · Comparar decisiones antes de programar — 15 minutos
 
-Míralos con ejemplos, porque así se reconocen de un vistazo:
+Propón método, ruta y cuerpo para estas operaciones. Las cinco primeras permiten aplicar lo conocido; las dos últimas requieren justificar el diseño.
 
-##### Nivel 0 · una sola puerta
+| Operación | Propuesta inicial que debes revisar |
+| :--- | :--- |
+| Crear proyecto | `POST /crearProyecto` |
+| Consultar proyecto 7 | `GET /obtenerProyecto?id=7` |
+| Borrar proyecto 7 | `GET /borrarProyecto/7` |
+| Cambiar el nombre de un proyecto | `POST /proyecto/7/editar` |
+| Listar tareas pendientes | `GET /tareas/pendientes` |
+| Asignar una tarea a un proyecto | Elegir entre editar la referencia o modelar una asignación |
+| Archivar todos los proyectos cerrados | Decidir si se actualizan recursos o se crea una operación por lotes |
 
-```text
-POST /api
-{ "accion": "obtenerTarea", "id": 3 }
+Explica por qué el GET de borrado resulta incorrecto aunque su ruta tuviera un nombre mejor. Para las dos últimas, indica qué ocurriría al repetir exactamente la petición. No implementes la operación por lotes hoy.
 
-POST /api
-{ "accion": "borrarTarea", "id": 3 }
-```
+#### Paso 3 · Diseñar una creación dentro de la relación — 15 minutos
 
-HTTP se usa solo como sobre. Todo pasa por una URL y un método, y la intención va escondida en el cuerpo. Ni las URLs ni los códigos significan nada.
+En el ejemplo ya existe `GET /proyectos/{id}/tareas`. Añadiremos `POST /proyectos/{id}/tareas`: crea una tarea que pertenece al proyecto indicado en la ruta. Usa la relación equivalente de tu aplicación.
 
-##### Nivel 1 · recursos con nombre
+Escribe el contrato antes del código:
 
-```text
-POST /tareas/obtener
-POST /tareas/borrar
-POST /tareas/3/marcar-completada
-```
+| Caso | Decisión de esta versión |
+| :--- | :--- |
+| El proyecto existe | Crear tarea, responder `201`, devolver su cuerpo y su dirección de detalle en `Location` |
+| El proyecto no existe | Responder `404` sin guardar una tarea |
+| El cuerpo trae otro `proyectoId` | Usar el proyecto de la ruta |
+| El cuerpo trae un id de tarea | Ignorarlo y asignar uno nuevo en el servidor |
+| Se repite el POST correcto | Crear una segunda tarea con otro id |
 
-Existen ya URLs distintas para recursos distintos, lo que constituye un avance real, si bien la acción permanece en la ruta y toda operación emplea `POST`.
+Conservamos también el POST general de tareas. Ambos deben consultar el mismo contador y la misma lista. Una tarea nueva tiene una sola dirección de detalle: `/tareas/{id}`, independientemente de dónde se haya creado.
 
-Reconoce esto, porque **es exactamente lo que escribe todo el mundo la primera vez**, y es lo que la UD1 te prohibió sin explicarte del todo por qué.
+#### Paso 4 · Implementar sin duplicar el contador — 40 minutos
 
-##### Nivel 2 · el método y el código hacen su trabajo
+1. Abre `TareaController`. Mantiene la lista de tareas y su contador, por lo que alojará ambas formas de crearlas.
+2. Añade `private final List<Proyecto> proyectos;`, importa `Proyecto` y, en su constructor existente, añade `this.proyectos = memoria.getProyectos();`. Reutiliza el componente de la sesión 8.
+3. Cambia el prefijo de clase `@RequestMapping("/tareas")` por `@RequestMapping` y escribe el prefijo explícitamente en sus métodos. `@GetMapping` pasa a `@GetMapping("/tareas")`; `@GetMapping("/{id}")`, a `@GetMapping("/tareas/{id}")`. Haz lo equivalente en POST, PUT, PATCH y DELETE. Conserva sus parámetros `consumes` y `produces`.
+4. Reinicia y ejecuta la colección: las URLs públicas deben ser exactamente las mismas. Cambiaste dónde se compone la ruta en el código, no el contrato.
+5. Añade este método al mismo controlador. Importa `URI` de `java.net` y `ServletUriComponentsBuilder` si faltan. Utiliza el nombre real de tu contador si es distinto.
 
-```text
-GET    /tareas/3        → 200
-DELETE /tareas/3        → 204
-POST   /tareas          → 201
-PATCH  /tareas/3        → 200
-```
+```java
+@PostMapping(value = "/proyectos/{proyectoId}/tareas",
+        consumes = "application/json", produces = "application/json")
+public ResponseEntity<Tarea> crearEnProyecto(
+        @PathVariable(name = "proyectoId") int proyectoId,
+        @RequestBody Tarea nueva) {
+    boolean existe = false;
+    for (Proyecto proyecto : proyectos) {
+        if (proyecto.getId() == proyectoId) {
+            existe = true;
+            break;
+        }
+    }
+    if (!existe) {
+        return ResponseEntity.notFound().build();
+    }
 
-La ruta dice **sobre qué**, el método dice **qué**, y el código dice **cómo ha ido**. Aquí es donde vive la inmensa mayoría de las APIs profesionales, y donde debe estar la tuya al terminar la unidad.
-
-##### Nivel 3 · la respuesta te dice qué puedes hacer ahora
-
-```json
-{
-  "id": 3,
-  "titulo": "Revisar el login",
-  "estado": "abierta",
-  "_links": {
-    "self":    { "href": "/tareas/3" },
-    "cerrar":  { "href": "/tareas/3/cierre", "method": "POST" },
-    "proyecto":{ "href": "/proyectos/7" }
-  }
+    nueva.setId(siguienteId++);
+    nueva.setProyectoId(proyectoId);
+    tareas.add(nueva);
+    URI ubicacion = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/tareas/{id}").buildAndExpand(nueva.getId()).toUri();
+    return ResponseEntity.created(ubicacion).body(nueva);
 }
 ```
 
-El cliente no necesita saberse las rutas: las va descubriendo en las respuestas, igual que tú navegas por una web siguiendo enlaces sin conocer sus URLs.
+`fromCurrentContextPath()` parte de la dirección de la aplicación. Añadimos la ruta de detalle `/tareas/{id}`: añadir simplemente `/{id}` a la petición anidada produciría otra URL que no has implementado.
 
-<div class="rule">
-  <p class="rule-label">Honestidad sobre el nivel 3</p>
-  <p>Es el nivel que Fielding considera imprescindible para llamar «REST» a una API, y a la vez <strong>es el que casi nadie implementa</strong>. Añade complejidad y muy pocos clientes la aprovechan.</p>
-  <p>En este módulo llegaremos al nivel 2 y lo haremos bien. Del 3 tienes que saber que existe, por qué existe y por qué se decide no usarlo: eso es exactamente lo que se espera de un profesional junior.</p>
-</div>
+6. Crea una tarea desde cada POST y comprueba que tienen ids distintos. No declares otro contador dentro del nuevo método ni en `ProyectoController`.
+7. Si corregiste alguna URL del inventario inicial, actualiza las peticiones afectadas. `baseUrl` cambia el servidor, pero no cambia el resto de la ruta: revisa también los enlaces que utiliza el cliente de Intermodular.
 
-#### Paso 3 · Dónde está tu API ahora mismo
+#### Paso 5 · Comprobar la operación con casos distintos — 35 minutos
 
-Cógela y sitúala. Esta es la rúbrica:
+Amplía la colección utilizando ids capturados, nunca números fijos:
 
-| # | Criterio | Sí / No |
-| :---: | :--- | :---: |
-| 1 | Ninguna ruta contiene un verbo | |
-| 2 | Cada recurso tiene una URL propia y estable | |
-| 3 | Las colecciones se nombran en plural | |
-| 4 | La acción la expresa siempre el método HTTP | |
-| 5 | `GET` nunca modifica nada | |
-| 6 | Cada final posible tiene su código de estado | |
-| 7 | Los recursos relacionados se expresan con jerarquía en la ruta | |
-| 8 | El mismo tipo de dato se representa igual en todos los endpoints | |
-| 9 | La API no publica campos internos del modelo | |
-| 10 | Las respuestas incluyen enlaces a operaciones relacionadas | |
+1. Crea dos proyectos, A y B. Crea una tarea desde la ruta de A enviando el id de B en el cuerpo. Comprueba que la respuesta contiene el id de A.
+2. Sigue la cabecera `Location` con un GET. Debe devolver la tarea creada y su id. Puedes guardar la cabecera en una variable con el mismo mecanismo que empleaste para los ids.
+3. Consulta las tareas de A y de B: solo A debe contener la nueva tarea.
+4. Repite el POST de A: debe crear otra tarea con id distinto. Comprueba también que no colisiona con una creada desde el POST general.
+5. Borra B y utiliza su id en un POST anidado. Espera `404`; compara el listado antes y después para verificar que no se añadió ningún registro.
+6. Limpia primero todas las tareas creadas y luego los proyectos. Ejecuta dos veces la secuencia completa.
 
-<dl class="worked">
-  <dt>Del 1 al 6</dt>
-  <dd>Deberías tenerlos ya. La UD1 y la UD2 te los impusieron como reglas sueltas, sin decirte que juntas formaban el nivel 2.</dd>
-  <dt>El 7 y el 8</dt>
-  <dd>Es donde se decide la sesión 9. Probablemente tengas el 7 a medias, con la ruta anidada de tareas de un proyecto, y el 8 sin comprobar nunca.</dd>
-  <dt>El 9</dt>
-  <dd>Casi seguro que es un no, y es el tema de la sesión 10. Tu API publica exactamente los campos que tenga la clase, sin que nadie lo haya decidido.</dd>
-  <dt>El 10</dt>
-  <dd>Es un no, y va a seguir siéndolo. Es el nivel 3, y ya sabes por qué no vamos.</dd>
-</dl>
+Si la respuesta es correcta pero `Location` devuelve `404`, revisa la construcción de la dirección. Si al crear por rutas distintas se repite un id, localiza dónde has duplicado el contador.
 
-#### Paso 4 · Comparar tres diseños de rutas para las mismas operaciones
+#### Paso 6 · Revisar el cambio — 20 minutos
 
-Aquí tienes la misma funcionalidad —consultar una incidencia, cerrarla y listar las de un proyecto— escrita en tres niveles.
-
-```text
-POST /servicio
-{ "op": "getIncidencia", "id": 41 }
-
-POST /servicio
-{ "op": "cerrarIncidencia", "id": 41 }
-
-POST /servicio
-{ "op": "listarIncidencias", "proyecto": 7 }
-```
-
-```text
-POST /incidencia/get/41
-POST /incidencia/cerrar/41
-POST /incidencias/listar/7
-```
-
-```text
-GET   /incidencias/41
-PATCH /incidencias/41          { "estado": "cerrada" }
-GET   /proyectos/7/incidencias
-```
-
-Responde por escrito, comparando las tres columnas:
-
-1. En el nivel 0, ¿puede un intermediario —una caché, un cortafuegos— saber si una petición modifica datos? ¿Y en el nivel 2?
-2. En el nivel 1, ¿qué pasa si el navegador reintenta una petición que se quedó sin respuesta?
-3. ¿Cuántas rutas nuevas hace falta inventar en cada nivel para añadir «reabrir una incidencia»?
-4. Un desarrollador nuevo llega al equipo. ¿En cuál de los tres puede adivinar cómo se borra una incidencia sin preguntar?
-
-La pregunta 4 es la que resume la unidad. **Una API bien diseñada es la que se puede adivinar.**
-
-#### Paso 5 · Audita tu propia API
-
-1. Pasa la rúbrica de diez criterios a tu API de la UD2, endpoint por endpoint. Sé duro: un «a medias» es un no.
-2. Sitúa tu API en el mapa de niveles y justifica la posición en tres frases.
-3. Haz una lista de **todo lo que incumples**, ordenada por lo que costaría arreglarlo, de más barato a más caro.
-4. Para los tres más baratos, escribe exactamente qué cambiarías.
-
-Guarda esta auditoría: en la sesión 14 volverás a pasarla y la diferencia entre las dos es parte de la entrega de la unidad.
-
-<p class="stage">Recursos y REST</p>
-
-#### Paso 6 · Lo que no es un CRUD
-
-Aquí está la parte difícil y la que separa una API pensada de una API copiada. ¿Qué haces con «archivar un proyecto», «cerrar una incidencia», «enviar un aviso» o «iniciar sesión»?
-
-Ninguna consiste en crear, leer, actualizar ni borrar, y sin embargo deben exponerse. Hay tres estrategias, en este orden de preferencia:
-
-La mayoría de las «acciones» son en realidad un campo que cambia de valor.
-
-```text
-PATCH /incidencias/41
-{ "estado": "cerrada" }
-```
-
-«Cerrar» consiste en asignar el valor `cerrada` al estado, y no constituye una operación independiente. Si el dominio ya tiene ese campo, no hace falta inventar nada.
-
-A veces la acción esconde una cosa que merece existir por sí misma.
-
-```text
-POST /incidencias/41/comentarios
-POST /proyectos/7/miembros
-```
-
-«Comentar» equivale a **crear un comentario**, y no a un verbo que se cuelga de la incidencia. En cuanto lo ves así, aparece una colección que además se puede listar, paginar y borrar.
-
-Cuando lo anterior no encaja, se expone la acción como un recurso propio y se documenta:
-
-```text
-POST /incidencias/41/cierre
-POST /pedidos/12/reembolso
-POST /sesiones
-```
-
-Conviene observar que siguen siendo sustantivos —el *cierre*, el *reembolso*, la *sesión*— y que se ejecutan con `POST`, por no ser idempotentes.
-
-<div class="rule">
-  <p class="rule-label">Cuándo está bien salirse de la norma</p>
-  <p>La estrategia 3 no es una derrota. Hay operaciones —un pago, un envío de correo, un proceso largo— que <strong>no son el cambio de un campo</strong> y forzarlas a serlo produce una API peor y más confusa.</p>
-  <p>Lo que no vale es usarla por defecto porque es la más fácil. La regla: <strong>intenta la 1, luego la 2, y solo entonces la 3 — y cuando uses la 3, escribe por qué.</strong></p>
-</div>
-
-<details class="aside aside--extra">
-  <summary>El caso del <em>login</em>, que todo el mundo pregunta</summary>
-  <p>Iniciar sesión no es CRUD por ninguna parte, y aun así encaja en la estrategia 2 si lo miras bien: lo que se crea es <strong>una sesión</strong>.</p>
-  <p><code>POST /sesiones</code> crea una, <code>DELETE /sesiones/actual</code> la cierra. Verás también <code>POST /auth/login</code>, que es la estrategia 3, y es perfectamente común.</p>
-  <p>Lo trabajaremos de verdad en la UD9. Hoy solo interesa que veas que hasta el caso más raro tiene un sustantivo detrás si lo buscas.</p>
-</details>
-
-#### Paso 7 · Proponer métodos y rutas coherentes para doce operaciones
-
-Reescribe cada una al nivel 2. Indica **método y ruta**, y en las que lo necesiten, qué va en el cuerpo.
-
-| # | Ruta original | Qué hace |
-| :---: | :--- | :--- |
-| 1 | `POST /crearProyecto` | Crea un proyecto |
-| 2 | `GET /obtenerProyecto?id=7` | Devuelve el proyecto 7 |
-| 3 | `GET /borrarProyecto/7` | Borra el proyecto 7 |
-| 4 | `POST /proyecto/7/editar` | Cambia el nombre del proyecto 7 |
-| 5 | `GET /listadoDeTareas` | Todas las tareas |
-| 6 | `GET /tareasDelProyecto/7` | Las tareas del proyecto 7 |
-| 7 | `GET /tareas/pendientes` | Las tareas no completadas |
-| 8 | `POST /tarea/41/marcarCompletada` | Marca la tarea 41 como completada |
-| 9 | `POST /tarea/41/asignarUsuario/3` | Asigna la tarea 41 al usuario 3 |
-| 10 | `POST /añadirComentario` | Añade un comentario a una incidencia |
-| 11 | `GET /proyectos.json` | Todos los proyectos |
-| 12 | `POST /archivarProyectosCerrados` | Archiva todos los proyectos cerrados |
-
-Tres avisos, para que no las despaches en cinco minutos:
-
-* La **3** tiene un problema mucho más grave que el nombre. Ya sabes cuál desde la UD1.
-* La **9** admite al menos dos soluciones buenas y distintas. Escribe las dos y elige una argumentando.
-* La **12** no encaja limpiamente en ninguna estrategia. Es a propósito: resuélvela como puedas y explica qué te chirría.
-
-#### Paso 8 · El contrato de recursos del gestor
-
-Usa la tabla como formato de documentación, no como obligación de añadir cinco entidades nuevas hoy. Sustituye sus filas por las entidades de tu propuesta y rellena colección, detalle y relaciones reales. Para cada ruta escribe un ejemplo con un id concreto y otro con un filtro. Señala qué rutas ya funcionan y cuáles están previstas: una ruta documentada como futura todavía no debe aparecer como superada en la colección.
-
-| Recurso | Colección | Elemento | Relaciones |
-| :--- | :--- | :--- | :--- |
-| Proyecto | `/proyectos` | `/proyectos/{id}` | `/proyectos/{id}/tareas` |
-| Tarea | `/tareas` | `/tareas/{id}` | — |
-| Usuario | | | |
-| Comentario | | | |
-| Etiqueta | | | |
-
-Para cada recurso, decide además:
-
-1. Qué métodos acepta la colección y qué métodos acepta el elemento. **No todos tienen que aceptar los cinco**: un recurso que no se borra nunca no expone `DELETE`, y decirlo es diseñar.
-2. Qué filtros admite la colección, en query string.
-3. Si alguna relación merece ruta anidada o basta con un filtro.
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · las etiquetas</summary>
-  <p>Una etiqueta es un recurso propio: existe aunque ninguna tarea la use, se lista y se borra. Hasta ahí, fácil.</p>
-  <p>Lo difícil es la relación: una tarea tiene varias etiquetas y una etiqueta está en varias tareas. Piensa qué URL representa «las etiquetas de la tarea 41», y qué método usarías para añadirle una que ya existe. Ojo: añadir una etiqueta existente a una tarea <strong>no crea una etiqueta nueva</strong>.</p>
-</details>
-
-#### Paso 9 · Aplica el contrato a tu código
-
-Haz el cambio ruta por ruta: modifica la anotación del controlador, reinicia, actualiza la petición guardada y comprueba su resultado. Para una colección anidada como comentarios de una tarea, crea el modelo con id, texto e id de su recurso padre; el GET filtra por el id de la ruta y el POST asigna esa referencia desde la ruta. Rechaza el padre inexistente antes de guardar. Si tu dominio ya tiene una relación equivalente, aplica el procedimiento a esa colección en lugar de crear Comentario por copiar el ejemplo.
-
-1. Renombra en tu proyecto todas las rutas que incumplan alguna de las siete reglas.
-2. Actualiza la colección de Postman para que siga en verde con las rutas nuevas. Si sacaste el servidor a `{{baseUrl}}`, esto es rápido; si no, ya sabes por qué se hacía.
-3. Añade el recurso `Comentario` a la API, anidado donde corresponda, con al menos listar y crear.
-4. Anota en las decisiones técnicas qué rutas cambiaron y por qué.
-
-#### Paso 10 · Comprobar y registrar el resultado del proyecto
-
-1. Compara el inventario anterior con el nuevo y justifica cada cambio por su significado, sin basarte solo en preferencias de nombres.
-2. Actualiza y ejecuta la colección con las nuevas rutas. Si Intermodular ya utiliza alguna, registra y coordina el cambio de contrato con ese cliente.
+1. Actualiza el contrato con la operación nueva y sus casos de error. Distingue la comprobación del padre, ya implementada en esta ruta, de la validación de campos, pendiente de las próximas sesiones.
+2. Ejecuta también las pruebas anteriores de filtros, PUT, PATCH y DELETE. Un cambio en las anotaciones no debe dejar una operación inaccesible.
+3. Revisa el diff: las modificaciones deben corresponder a decisiones identificadas en el contrato. Guarda y sube los cambios de la rama; abre o actualiza su PR.
+4. En la revisión, explica por qué ambos POST comparten contador, qué dato manda cuando cuerpo y ruta discrepan y qué prueba demuestra que un padre inexistente no produce escrituras.
 
 #### Ampliación si has completado el trabajo
 
-Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
-
-##### Reto · Diagnostica una API ajena
-
-Estas son rutas reales de una API interna de una empresa ficticia:
-
-```text
-POST /api/getUsuarios
-POST /api/getUsuarioById
-POST /api/user/create
-GET  /api/borrarUsuario?id=12
-POST /api/usuarios/12/update
-GET  /api/usuario/12/pedidos/listado
-POST /api/actualizarEstadoPedido
-GET  /api/pedidos?borrarCancelados=true
-```
-
-1. Sitúa esta API en el mapa y justifícalo.
-2. Señala **la ruta más peligrosa de todas** y explica qué puede llegar a ocurrir con ella un día cualquiera. Hay dos candidatas y una es claramente peor.
-3. Reescribe las ocho como nivel 2. Alguna se convertirá en la misma ruta que otra: dilo y explica por qué eso es bueno.
-4. Cuenta cuántas rutas quedan al final y explica en una frase a qué se debe la diferencia.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Los cuatro niveles reconocidos y la rúbrica pasada a tu API con su lista de incumplimientos.</span></div>
-  <div><strong>Si lo tienes</strong><span>Las cuatro preguntas de la comparación respondidas y los tres arreglos más baratos escritos.</span></div>
-  <div><strong>Reto</strong><span>La API ajena diagnosticada, reescrita a nivel 2 y con la ruta peligrosa identificada y argumentada.</span></div>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque REST no dice nada del formato: habla de cómo se identifican los recursos, cómo se manipulan y qué significan los mensajes. Se puede devolver JSON con un diseño de nivel 0.</p>
-  <p>2 · Cliente-servidor, sin estado y sistema por capas. Las tres vienen dadas por el propio protocolo.</p>
-  <p>3 · En el nivel 1 cada cosa ya tiene su URL, pero la acción sigue metida en la ruta y todo se hace con el mismo método. En el nivel 2 la acción la expresa el método HTTP y el resultado lo expresa el código de estado.</p>
-  <p>4 · Porque añade complejidad al servidor y muy pocos clientes aprovechan los enlaces: la mayoría se escriben conociendo las rutas de antemano. Es una decisión de coste y beneficio, no un olvido.</p>
-</details>
-
-##### Reto · La prueba de que se puede adivinar
-
-Este es el examen real de una API bien nombrada.
-
-1. Dale a un compañero **solo tres rutas** de tu API, ninguna de comentarios.
-2. Pídele que escriba, sin verte y sin preguntarte: cómo listaría los comentarios de una incidencia, cómo crearía uno, cómo borraría uno, y cómo listaría solo los de un autor.
-3. Compara sus cuatro respuestas con tus rutas reales.
-4. Cada acierto es una regla que tu API cumple. **Cada fallo es una decisión tuya que no era adivinable**: anótala y decide si el nombre malo es el suyo o el tuyo.
-
-Hazlo también al revés, con la API de él.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Las doce rutas reparadas y el contrato de recursos con proyectos, tareas y comentarios.</span></div>
-  <div><strong>Si lo tienes</strong><span>El contrato completo con usuarios y etiquetas, y las rutas de tu código renombradas con la colección en verde.</span></div>
-  <div><strong>Reto</strong><span>La prueba de adivinanza hecha en las dos direcciones, con los fallos analizados.</span></div>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque la URL identifica una cosa y la acción ya la expresa el método HTTP. Con el verbo en la ruta, cada funcionalidad nueva inventa una dirección nueva y la API deja de ser adivinable.</p>
-  <p>2 · Anidada cuando el recurso pertenece a otro o solo tiene sentido dentro de él; filtro cuando se trata de acotar una colección que existe por sí sola.</p>
-  <p>3 · Tratarlo como un cambio de estado con <code>PATCH</code>; descubrir que hay un recurso nuevo que crear; y, si nada de eso encaja, exponer la acción como un sustantivo propio con <code>POST</code> y documentar por qué.</p>
-  <p>4 · Que se aprende una vez. Sobre cada recurso se aplican siempre los mismos métodos, así que quien sabe usar uno sabe usar los demás sin consultar nada.</p>
-</details>
+Elige una acción real de tu producto que todavía no esté cubierta: archivar, reservar o cambiar una prioridad, por ejemplo. Describe su efecto y decide si corresponde a una actualización o a un recurso nuevo. Implementa una sola operación con datos ya disponibles y comprueba su repetición y el caso de recurso inexistente. Mantén las reglas de validación y autenticación que aún no has implementado como pendientes explícitos.
 
 ### Cierre
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-**Al terminar la sesión:**
-
-Cada ruta tiene un recurso o una operación de negocio justificable; la colección sigue funcionando.
-
-Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
+**Al terminar la sesión:** el contrato conserva las rutas que ya eran adecuadas e incorpora una creación anidada comprobada. La ruta determina la relación, los ids no se duplican entre formas de creación y `Location` conduce al detalle. Puedes justificar el método elegido y mostrar una prueba de éxito y otra que verifica que un error no modifica los datos.
 
 
 ## Sesión 10 · Representaciones y DTO
 
 **Proyecto compartido.** En el taller de Intermodular que abre esta semana has trabajado [el presupuesto de calidad](/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-5/). En Servidor continúas la implementación del mismo producto.
 
-
 ### Se explica
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Las rutas ya están revisadas, pero devolver directamente tu modelo permite que un cambio interno altere la respuesta. Un DTO, objeto para transferir datos, define qué campos cruzan la API. Hoy separarás la representación de salida del objeto que utilizas dentro del servidor.
+Tu API ya tiene rutas y respuestas comprobadas. Sin embargo, devuelve los mismos objetos que utiliza internamente. Añadir al modelo un getter para un dato interno puede hacer que Jackson lo incluya en el JSON sin haber cambiado el controlador. Hoy definirás explícitamente los datos públicos de salida.
 
-#### Un recurso no es un objeto
+#### Modelo y representación
 
-<p class="term">Representación</p>
+El **modelo** es el objeto que utiliza el servidor: una instancia de `Tarea` guardada en la lista. La **representación** es el JSON que recibe el cliente. Pueden contener datos distintos. Por ejemplo, una observación interna de revisión puede pertenecer al modelo sin formar parte de la respuesta pública.
 
-Lo que viaja por la red cuando alguien pide un recurso. **No constituye el recurso**, sino una descripción suya en un formato concreto, con los datos que se ha decidido incluir.
+Un **DTO**, del inglés *Data Transfer Object*, es un tipo destinado a transportar datos. `TareaResponse` describirá los campos que devolvemos. Un método de **mapeo** copiará esos campos desde `Tarea` al DTO. Si un dato no se incluye en esa conversión, no aparecerá por accidente en la respuesta.
 
-Es la segunda idea de la interfaz uniforme que viste en la sesión 9, y ahora se puede decir con precisión:
+```text
+Lista en memoria → Tarea → conversión a TareaResponse → Jackson → JSON
+```
 
-<figure class="diagram">
-  <figcaption>Tres cosas distintas que se confunden</figcaption>
-  <ol class="flow flow--before">
-    <li><strong>El recurso:</strong> «la tarea 41», una idea del dominio</li>
-    <li><strong>El modelo:</strong> la clase <code>Tarea</code> en tu memoria, con lo que tu código necesita</li>
-    <li><strong>La representación:</strong> el JSON que envías, con lo que el cliente necesita</li>
-  </ol>
-</figure>
+Un DTO de salida no cambia por sí mismo las entradas: POST, PUT y PATCH todavía reciben el modelo. Separaremos esas entradas en la sesión 11. Tampoco sustituye a las comprobaciones: hay que aplicar el DTO en todas las rutas que devuelven ese recurso.
 
-Ahora mismo tienes las dos últimas acopladas: tu representación **es** tu modelo, de modo que al modificar una de las dos cambias la otra sin advertirlo.
+#### Un record para la respuesta
 
-#### Los tres daños concretos
+Un `record` de Java declara componentes y genera constructor, accesos, igualdad y representación textual. Sus componentes no se reasignan después de construirlo; si contienen una lista mutable, esa lista no se vuelve inmutable por utilizar un record. Es adecuado aquí porque construimos una respuesta a partir de los datos actuales y la enviamos.
 
-No es una cuestión de pureza. Son tres problemas que vas a sufrir:
+Jackson puede serializar sus componentes. El modelo sigue siendo una clase mutable, porque nuestras operaciones la modifican. No necesitas sustituir los modelos por records.
 
-<dl class="worked">
-  <dt>1 · Publicas lo que no querías</dt>
-  <dd>Lo acabas de ver con <code>notaInterna</code>. Cuando en la UD9 la clase <code>Usuario</code> tenga la contraseña, el mismo mecanismo la publicará sin preguntar. No es hipotético: es una de las filtraciones de datos más habituales que existen.</dd>
-  <dt>2 · No puedes tocar tu código sin romper el de otros</dt>
-  <dd>Renombrar <code>titulo</code> a <code>nombre</code> es una mejora interna de dos segundos. Con el modelo publicado, es un cambio del contrato que rompe a todos los clientes. Acabas no renombrando nada por miedo, y el código se pudre.</dd>
-  <dt>3 · No puedes dar respuestas distintas</dt>
-  <dd>El listado quiere pocos campos y rápido; el detalle quiere todo. Con una sola clase publicada, o mandas de más en el listado o mandas de menos en el detalle.</dd>
-</dl>
+#### Mantener el contrato al separar la salida
 
-<div class="rule">
-  <p class="rule-label">La regla, de una vez</p>
-  <p><strong>Tu modelo interno es asunto tuyo. Tu contrato es un compromiso con otros.</strong> Son dos cosas con motivos de cambio distintos, y por eso tienen que ser dos clases distintas.</p>
-  <p>Cuando en la UD5 el modelo pase a ser una entidad de base de datos, con relaciones y carga perezosa, publicarlo directamente pasará de ser incómodo a ser inviable. Lo separamos ahora, mientras es barato.</p>
-</div>
+Introducir DTO no debe eliminar campos públicos por descuido. Debes conservar también filtros, códigos, `Location` y referencias entre entidades. La colección anterior sirve como prueba de regresión: detecta si algo que funcionaba deja de hacerlo.
 
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
-#### Paso 1 · Retomar el proyecto y preparar la comprobación
+#### Paso 1 · Registrar las salidas actuales — 10 minutos
 
-1. Abre el modelo, el controlador y una respuesta GET guardada. Anota exactamente sus campos actuales.
-2. Localiza qué método devuelve directamente el modelo. Crea el paquete `dto` bajo tu paquete base para los tipos de respuesta del ejercicio.
-3. Elige un dato interno de prueba que no deba aparecer en la respuesta. No utilices contraseñas ni datos reales para demostrar el problema.
+1. Abre una rama de trabajo y ejecuta la colección actual.
+2. Crea un registro completo, con los campos añadidos en la sesión 5 y su relación de la sesión 8. Conserva su JSON de petición para recrearlo cuando reinicies.
+3. Compara las respuestas de listado, detalle, POST, PUT, PATCH y consulta anidada. Haz una lista de los campos públicos que deben mantenerse.
+4. En el ejemplo son `id`, `titulo`, `prioridad`, `completada`, `proyectoId`, `etiquetas`, `vencimiento` y `responsable`. Adapta esta lista al contrato real de tu producto.
 
-#### Paso 2 · Observar qué campos internos se exponen al devolver el modelo
+#### Paso 2 · Reproducir una exposición accidental — 10 minutos
 
-Abre la clase `Tarea` y añade lo siguiente:
+Añade a `Tarea` un dato ficticio y su getter:
 
 ```java
-private String notaInterna = "revisar con el jefe de proyecto";
+private String notaInterna = "pendiente de revisión interna";
 
 public String getNotaInterna() {
     return notaInterna;
 }
 ```
 
-Reinicia y pide `GET /tareas`.
+Reinicia. La lista está vacía: **vuelve a crear el registro con tu petición guardada antes de consultar**. Comprueba la respuesta del POST y después el GET de detalle. La nota debe aparecer aunque no hayas cambiado esos métodos.
 
-```json
-[{"id":1,"titulo":"Revisar el login","prioridad":"alta",
-  "completada":false,"notaInterna":"revisar con el jefe de proyecto"}]
-```
+Este comportamiento se observa en tu servidor local; no hace falta publicar datos reales para demostrarlo. Conserva el campo durante el ejercicio para comprobar que el DTO lo excluye.
 
-Ahí está, publicado en internet. **Tú no has tocado el controlador.** No has decidido publicarlo, no lo has añadido a ninguna respuesta y nadie te ha avisado.
+#### Paso 3 · Definir la representación y su conversión — 25 minutos
 
-Esa es la situación real de tu API desde la UD1: **publica exactamente lo que tenga la clase**, y la clase la tocas por motivos que no tienen nada que ver con lo que quieres publicar.
-
-#### Paso 3 · Crear el DTO de respuesta con los campos públicos
-
-<p class="term">DTO</p>
-
-*Data Transfer Object*. Una clase cuyo único trabajo es **transportar datos entre dos sitios**. No tiene lógica, no tiene reglas: define qué campos viajan y con qué nombres.
-
-Crea el paquete `com.ejemplo.gestor.dto` y dentro:
+1. Bajo tu paquete base crea `dto`. Los siguientes archivos utilizan `com.ejemplo.gestor`; sustituye ese prefijo si tu aplicación usa otro.
+2. El objeto `responsable` también necesita una representación si lo mantienes público. Crea `dto/ResponsableResponse.java`:
 
 ```java
 package com.ejemplo.gestor.dto;
 
-public record TareaResponse(
-        int id,
-        String titulo,
-        String prioridad,
-        boolean completada) {
+import com.ejemplo.gestor.model.Responsable;
+
+public record ResponsableResponse(String nombre, String email) {
+    public static ResponsableResponse desde(Responsable responsable) {
+        if (responsable == null) {
+            return null;
+        }
+        return new ResponsableResponse(
+                responsable.getNombre(), responsable.getEmail());
+    }
 }
 ```
 
-Cuatro líneas. En este caso **sí corresponde un `record`**, a diferencia del modelo. La diferencia importa y conviene entenderla:
+La comprobación de `null` permite que una tarea sin responsable siga siendo representable. Devolver directamente `Responsable` trasladaría el problema de exposición de campos al objeto anidado.
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">El modelo · clase</p>
-    <p class="compare-body">Cambia con el tiempo, se modifica campo a campo, y en la UD5 tendrá que ser una clase con constructor vacío para que JPA la construya.</p>
-  </div>
-  <div>
-    <p class="compare-label">La respuesta · record</p>
-    <p class="compare-body">Se crea, se envía y se olvida. Nadie la modifica después. Un <code>record</code> es exactamente eso: datos inmutables y sin ceremonia.</p>
-  </div>
-</div>
-
-Jackson serializa un `record` igual de bien, leyendo sus componentes.
-
-#### Paso 4 · Convertir el modelo al DTO de respuesta
-
-1. Abre `dto/TareaResponse.java` y añade el método estático `desde` dentro del record. Importa `com.ejemplo.gestor.model.Tarea`; conserva la lista de componentes del record.
-2. En `TareaController`, importa `TareaResponse` y sustituye detalle y listado por sus versiones con DTO. Si la lista necesita `ArrayList`, conserva su import de `java.util`.
-3. Crea un registro después del reinicio y compara listado y detalle: ambos deben contener los mismos campos públicos y ninguno debe exponer la nota interna.
+3. Crea `dto/TareaResponse.java`. La lista de parámetros de `new TareaResponse(...)` debe seguir el mismo orden que los componentes del record.
 
 ```java
+package com.ejemplo.gestor.dto;
+
+import com.ejemplo.gestor.model.Tarea;
+import java.time.LocalDate;
+import java.util.List;
+
 public record TareaResponse(
         int id,
         String titulo,
         String prioridad,
-        boolean completada) {
+        boolean completada,
+        int proyectoId,
+        List<String> etiquetas,
+        LocalDate vencimiento,
+        ResponsableResponse responsable) {
 
     public static TareaResponse desde(Tarea tarea) {
         return new TareaResponse(
                 tarea.getId(),
                 tarea.getTitulo(),
                 tarea.getPrioridad(),
-                tarea.isCompletada());
+                tarea.isCompletada(),
+                tarea.getProyectoId(),
+                tarea.getEtiquetas(),
+                tarea.getVencimiento(),
+                ResponsableResponse.desde(tarea.getResponsable()));
     }
 }
 ```
 
-El controlador cambia lo mínimo:
+4. Comprueba que cada getter existe en tu modelo. Si tu dominio usa otros campos o tipos, adapta conjuntamente los componentes y el mapeo; no borres campos públicos solo para copiar el ejemplo. `notaInterna` queda fuera deliberadamente.
+
+#### Paso 4 · Convertir todas las respuestas de tareas — 35 minutos
+
+Importa `TareaResponse` en los dos controladores que devuelven tareas. Conserva las anotaciones y rutas de la sesión 9. Cambia una operación cada vez y compruébala.
+
+**Detalle:** cambia el retorno a `ResponseEntity<TareaResponse>`. En el caso encontrado usa `ResponseEntity.ok(TareaResponse.desde(tarea))`; el `404` sigue siendo `ResponseEntity.notFound().build()`.
+
+**Listado:** convierte cada elemento que supera el filtro. Dentro de `TareaController`, cuya anotación de clase ya no añade `/tareas`, el método queda así:
 
 ```java
-@GetMapping("/{id}")
-public ResponseEntity<TareaResponse> detalle(@PathVariable(name = "id") int id) {
-    for (Tarea tarea : tareas) {
-        if (tarea.getId() == id) {
-            return ResponseEntity.ok(TareaResponse.desde(tarea));
-        }
-    }
-    return ResponseEntity.notFound().build();
-}
-```
-
-Para la colección, se convierte cada elemento:
-
-```java
-@GetMapping
-public List<TareaResponse> lista() {
+@GetMapping("/tareas")
+public List<TareaResponse> lista(
+        @RequestParam(name = "completada", required = false) Boolean completada) {
     List<TareaResponse> respuesta = new ArrayList<>();
     for (Tarea tarea : tareas) {
-        respuesta.add(TareaResponse.desde(tarea));
+        if (completada == null || tarea.isCompletada() == completada) {
+            respuesta.add(TareaResponse.desde(tarea));
+        }
     }
     return respuesta;
 }
 ```
 
-<details class="aside aside--extra">
-  <summary>La versión corta, con <em>streams</em></summary>
-  <p>Lo mismo se escribe en una línea:</p>
-  <p><code>return tareas.stream().map(TareaResponse::desde).toList();</code></p>
-  <p>Si ya manejas <em>streams</em>, úsalo. Si no, el bucle es igual de correcto y se entiende mejor: no cambies a una sintaxis que no sabrías explicar en una defensa.</p>
-</details>
+Conserva los imports de `List`, `ArrayList` y `RequestParam`. Si tu listado tenía `produces`, mantén esa restricción en la anotación. El filtro se ejecuta antes de convertir: separar la representación no debe hacer que el listado ignore sus parámetros.
 
-#### Paso 5 · Comprobar que un cambio interno no altera el JSON público
+**Operaciones restantes:** utiliza esta tabla para localizar cada salida. Mantén el modelo dentro de las listas; solo se convierte al responder.
 
-Esta es la prueba de que ha servido para algo, y hay que hacerla:
-
-`GET /tareas`. El campo `notaInterna` ha desaparecido, sin haberlo borrado de la clase. Sigue ahí, para tu código, y ya no se publica.
-
-En la clase `Tarea`, renombra el atributo `titulo` a `nombre`, y su *getter* a `getNombre()`. El proyecto dejará de compilar en un sitio: **el método de conversión**. Arréglalo ahí, cambiando `tarea.getTitulo()` por `tarea.getNombre()`.
-
-```json
-{"id":1,"titulo":"Revisar el login","prioridad":"alta","completada":false}
-```
-
-**La clave sigue llamándose `titulo`.** Has renombrado un campo del modelo y el contrato no se ha enterado. Ejecuta la colección de Postman: sigue en verde, sin tocar una sola petición.
-
-<div class="rule">
-  <p class="rule-label">Lo que acaba de pasar</p>
-  <p>El compilador te ha llevado <strong>al único sitio</strong> donde había que tocar, y los clientes no se han enterado de nada. Eso es lo que compras con la separación: <strong>libertad para cambiar por dentro</strong>.</p>
-  <p>Antes de esta sesión, ese mismo renombrado habría roto silenciosamente a todo el que consumiera tu API, y no te habrías enterado hasta que alguien se quejara.</p>
-</div>
-
-Deja el modelo con `titulo`, como estaba, antes de seguir.
-
-#### Paso 6 · Identificar las conversiones que requiere mantener DTO separados
-
-Sería deshonesto vendértelo como gratis:
-
-| Ganas | Pagas |
+| Operación | Cambio en la respuesta |
 | :--- | :--- |
-| Decides exactamente qué publicas | Una clase más por cada recurso |
-| Puedes refactorizar el modelo sin miedo | Código de conversión que mantener |
-| Puedes dar vistas distintas del mismo recurso | Un sitio más que tocar al añadir un campo |
+| POST general y POST dentro del proyecto | Retorno `ResponseEntity<TareaResponse>` y `ResponseEntity.created(ubicacion).body(TareaResponse.desde(tarea))`, usando el nombre real de la variable creada |
+| PUT y PATCH | Retorno `ResponseEntity<TareaResponse>` y conversión del objeto actualizado dentro de `ResponseEntity.ok(...)` |
+| GET de tareas del proyecto, en `ProyectoController` | Retorno `ResponseEntity<List<TareaResponse>>`; lista resultado de DTO y `resultado.add(TareaResponse.desde(tarea))` tras comprobar el filtro |
+| DELETE | Sin cambios: sigue devolviendo `204` sin cuerpo |
+| Caso de recurso inexistente | Conserva el `404` sin cuerpo |
 
-En una aplicación de tres clases el coste resulta perceptible y la ganancia no. En una de treinta sucede lo contrario, y para entonces la separación tiene un coste muy superior.
+Al terminar, busca métodos que todavía devuelvan `Tarea` o `List<Tarea>`. Las listas internas y los cuerpos de entrada siguen usando el modelo; las respuestas públicas de recursos deben usar DTO. Retira los endpoints espejo temporales de la sesión 5 si siguen presentes: devolvían el modelo únicamente para diagnosticar su conversión.
+
+#### Paso 5 · Comprobar campos y detectar una regresión — 25 minutos
+
+1. Reinicia y recrea los datos completos mediante la colección. Verifica cada salida de la tabla: la nota interna no aparece y los campos públicos mantienen sus valores y tipos.
+2. Añade una prueba de ausencia de la nota y otra de conservación de una referencia. En Postman, dentro de `pm.test(...)`, utiliza `pm.expect(pm.response.json()).not.to.have.property("notaInterna")`. En Bruno, dentro de `test(...)`, utiliza `expect(res.getBody()).not.to.have.property("notaInterna")`.
+3. Para los listados aplica esa condición a **cada elemento** del array, no al array en sí. Repite la comprobación con la consulta anidada.
+4. Crea una tarea completada y otra pendiente. Comprueba los filtros `true`, `false` y la ausencia de filtro; utiliza los ids capturados para distinguirlas.
+5. En una modificación temporal, haz que el POST vuelva a devolver el modelo. Adapta temporalmente también su tipo de retorno para que compile. La prueba de ausencia de `notaInterna` debe fallar. Recupera el DTO, reinicia, recrea los datos y verifica que vuelve a pasar. No guardes la avería en la PR.
 
 <div class="rule">
-  <p class="rule-label">Y todavía falta la mitad</p>
-  <p>Hoy solo has separado <strong>la salida</strong>. La entrada sigue recibiendo el modelo directamente con <code>@RequestBody Tarea</code>, con todo lo que eso implica: el cliente todavía puede mandarte el <code>id</code>, o campos que no debería poder tocar.</p>
-  <p>Esa es la sesión 11. El código de conversión, escrito aquí a mano y destinado a crecer, se ordena en la 17.</p>
+  <p class="rule-label">Alcance de la separación</p>
+  <p>No renombres todavía los getters de entrada para demostrar esta separación: POST, PUT y PATCH siguen recibiendo el modelo y podrían cambiar su contrato. La prueba de hoy demuestra que añadir información interna no altera las salidas protegidas. La sesión 11 separa también las entradas y organiza el mapeo.</p>
 </div>
 
-#### Paso 7 · La representación de proyectos
+#### Paso 6 · Aplicarlo a la otra entidad y revisar — 35 minutos
 
-En `dto/ProyectoResponse.java`, declara primero los componentes que utiliza el cliente. Añade un método `desde(Proyecto proyecto)` que copie esos campos; después cambia el detalle y convierte uno a uno los elementos del listado. Busca todos los `return proyecto` del controlador para no dejar una salida directa del modelo. Comprueba el campo interno con un registro creado después de reiniciar y restaura cualquier renombrado experimental antes de continuar.
-
-1. Crea `ProyectoResponse` con los campos que **decidas** publicar, y justifica en un comentario cuál dejas fuera y por qué.
-2. Cambia el controlador de proyectos para devolverlo, en el elemento y en la colección.
-3. Añade a `Proyecto` un campo interno que no deba publicarse —por ejemplo `presupuestoInterno`— y comprueba que no aparece.
-4. Repite el paso 2 de la comprobación: renombra un campo del modelo y verifica que la colección de Postman sigue en verde.
-
-#### Paso 8 · Comprobar y registrar el resultado del proyecto
-
-1. Añade el dato interno al modelo y verifica que el JSON público sigue conteniendo solo los campos del DTO.
-2. Comprueba listado y detalle, tanto para la entidad del ejemplo adaptada como para otra de tu dominio. Actualiza la colección si has decidido cambiar el contrato.
+1. Crea el DTO de respuesta de la segunda entidad. Conserva los campos públicos de tu inventario, incluidas las listas y fechas añadidas previamente.
+2. Añade su método `desde` y convierte listado, detalle y respuestas de escritura. Mantén los filtros y los estados; no sustituyas las listas internas por listas de DTO.
+3. Añade un campo interno ficticio al modelo y repite las pruebas de ausencia en todas sus salidas.
+4. Ejecuta la colección completa: incluye las dos formas de crear tareas, las relaciones y las comprobaciones de la sesión 9. Verifica también que `Location` sigue resolviendo el detalle correcto.
+5. Guarda y sube los cambios de la rama. En la PR explica qué datos se publican, cuáles quedan fuera y qué prueba detectaría una salida directa del modelo.
 
 #### Ampliación si has completado el trabajo
 
-Primero termina y verifica los pasos anteriores. Estos retos profundizan en el mismo contenido; no sustituyen la entrega ni obligan a iniciar otro proyecto.
-
-##### Reto · Dos vistas del mismo recurso
-
-El listado de tareas de un proyecto grande devuelve doscientas tareas con todos sus campos. Es lento y el cliente solo necesita pintar una lista con el título y el estado.
-
-1. Crea una segunda representación, `TareaResumen`, con solo lo imprescindible.
-2. Úsala en la colección `GET /tareas` y deja `TareaResponse` para el detalle `GET /tareas/{id}`.
-3. Comprueba en Postman la diferencia de tamaño entre las dos respuestas.
-4. Responde por escrito, y esta es la parte importante:
-   * ¿Qué campos son «imprescindibles» y quién debería decidirlo, tú o quien consume la API?
-   * Si el cliente necesita un campo más en el listado, ¿qué tiene que pasar? ¿Es eso un problema?
-   * ¿Qué alternativa se te ocurre a tener dos clases, y qué inconveniente tendría?
-
-La tercera pregunta no tiene una respuesta cerrada. Existen APIs que dejan al cliente elegir los campos con un parámetro, y otras que exponen dos rutas. Las dos decisiones son defendibles; lo que se evalúa es que veas que hay una decisión.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span><code>TareaResponse</code> creado y usado, con la nota interna ya fuera del JSON.</span></div>
-  <div><strong>Si lo tienes</strong><span>Proyectos con su representación propia y el renombrado del modelo demostrado con la colección en verde.</span></div>
-  <div><strong>Reto</strong><span>Las dos vistas funcionando y las tres preguntas respondidas.</span></div>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · El recurso es la idea del dominio; el modelo es la clase que tu código necesita en memoria; la representación es el JSON concreto que envías, con los campos que hayas decidido publicar.</p>
-  <p>2 · Publicas datos que no querías, no puedes cambiar el modelo sin romper a tus clientes, y no puedes dar respuestas distintas del mismo recurso.</p>
-  <p>3 · El modelo cambia campo a campo y tendrá que ser construible por JPA; la respuesta se crea, se envía y nadie la modifica, así que la inmutabilidad de un <code>record</code> encaja y ahorra código.</p>
-  <p>4 · La entrada. El cuerpo de las peticiones sigue llegando directamente al modelo, y eso permite al cliente mandar campos que no debería poder tocar.</p>
-</details>
+Crea una representación resumida con id, título y estado. Pruébala en una ruta experimental de listado de tu rama y compara el tamaño del JSON con la representación completa usando los mismos registros. Decide qué datos necesitaría el cliente y qué pruebas habría que actualizar si adoptases ese contrato. Retira la ruta experimental antes de integrar si no va a formar parte del contrato acordado.
 
 ### Cierre
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-**Al terminar la sesión:**
-
-Una modificación interna no añade campos accidentalmente a la respuesta JSON.
-
-Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
+**Al terminar la sesión:** ambas entidades utilizan DTO en todas sus salidas de recursos, conservan los campos públicos y mantienen filtros, relaciones y códigos. La colección comprueba la ausencia de datos internos. Puedes señalar el método de conversión y explicar por qué las entradas todavía requieren el trabajo de la sesión 11.
 
 
 ## Semana 6 · Entradas, salidas y mapeo
@@ -780,7 +416,7 @@ public ResponseEntity<TareaResponse> crear(@RequestBody Tarea tarea) {
 
 Ese `@RequestBody Tarea` significa, literalmente: **«cliente, rellena tú mi objeto interno»**. Cualquier campo que exista en la clase `Tarea`, el cliente puede intentar enviarlo.
 
-Hoy da lo mismo, porque `Tarea` tiene cuatro campos inocentes. Cuando tenga `creadoPor`, `fechaDeCreacion` o `esDePago`, dejará de darlo.
+Tu modelo ya tiene datos de uso interno. Campos como `creadoPor`, `fechaDeCreacion` o `esDePago` necesitan reglas explícitas sobre quién puede asignarlos; recibir el modelo completo no expresa esas reglas.
 
 <div class="rule">
   <p class="rule-label">El fallo que esto produce tiene nombre</p>
@@ -827,7 +463,7 @@ Es la objeción sensata, y la respuesta honesta es «depende».
   </div>
 </div>
 
-En este módulo se hacen las tres **siempre**, por el mismo motivo por el que en la UD1 se escribía el HTML a mano antes de usar Emmet: primero se aprende a hacerlo, y después se decide cuándo saltárselo.
+En este proyecto practicamos la separación entre entrada, modelo y salida para poder justificar qué datos admite y publica cada operación.
 
 #### Cuenta los sitios
 
@@ -864,6 +500,9 @@ Si mañana publicas la misma aplicación por otro canal, el modelo se reutiliza 
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
+
+**Continuidad del proyecto.** Conserva las rutas de la sesión 9, los DTO de salida completos de la sesión 10 y sus filtros. Los fragmentos siguientes se centran en los campos de entrada: adapta el mapeo a todos los componentes de tus records, sin borrar campos públicos. Aplica la separación a ambos POST y a PUT y PATCH. Si una entrada deja de admitir un campo, actualiza explícitamente su contrato y las peticiones de la colección; mantén las aserciones de salida.
+
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
@@ -917,11 +556,11 @@ Conviene observar lo que **no** aparece: no hay `id` ni `completada`. En esa aus
 
 <div class="rule">
   <p class="rule-label">Lo que no existe no se puede asignar</p>
-  <p>Si el cliente envía <code>{"id": 999, "titulo": "Algo"}</code>, Jackson busca un <em>setter</em> para <code>id</code> en <code>TareaRequest</code>, no lo encuentra, y —como aprendiste en la UD2— <strong>lo ignora en silencio</strong>.</p>
-  <p>Ese silencio que en la UD2 era un peligro, aquí es exactamente la protección que necesitas. <strong>El DTO de entrada define qué campos existen para el cliente</strong>, y todo lo demás deja de ser un problema, sin escribir una sola comprobación.</p>
+  <p>El DTO de entrada no declara <code>id</code>. Con el modo estricto que conservaste en la UD2, enviarlo produce <code>400</code> por propiedad desconocida. En modo tolerante se ignoraría, pero no cambiarás a ese modo para superar la prueba.</p>
+  <p>El DTO define los campos admitidos y la configuración de Jackson determina cómo se trata una propiedad desconocida. El servidor sigue asignando el identificador; los valores permitidos de los demás campos se validarán por separado.</p>
 </div>
 
-Otro detalle tampoco es casual: se trata de una **clase**, no de un `record`. Jackson necesita construirla vacía y rellenarla con los *setters*, y en la sesión 12 le colgaremos anotaciones de validación campo a campo.
+Utilizamos una clase con constructor vacío y setters para practicar la asignación de campos y añadir validaciones en la sesión 12. Jackson también admite records y otras formas de construcción; esta es la opción elegida para el ejercicio.
 
 ##### El controlador
 
@@ -934,6 +573,9 @@ public ResponseEntity<TareaResponse> crear(@RequestBody TareaRequest peticion) {
     tarea.setTitulo(peticion.getTitulo());
     tarea.setPrioridad(peticion.getPrioridad());
     tarea.setCompletada(false);
+    if (peticion.getProyectoId() != null) {
+        tarea.setProyectoId(peticion.getProyectoId());
+    }
     tareas.add(tarea);
 
     URI ubicacion = ServletUriComponentsBuilder
@@ -953,7 +595,7 @@ POST /tareas
 { "id": 999, "titulo": "Colarme un id", "completada": true }
 ```
 
-Responde `201`, con `id` asignado por el servidor y `completada` en `false`. Los dos campos que sobraban se han ignorado, sin una sola línea de comprobación.
+Con el modo estricto, esta petición responde `400`: `id` y `completada` no forman parte del DTO de creación. Elimina esos dos campos, incluye los demás datos del contrato y repite. La petición válida responde `201`, con id asignado por el servidor y `completada` en `false`. Actualiza las altas de la colección para que envíen solo los campos admitidos.
 
 #### Paso 3 · El DTO que arregla el `PATCH`
 
@@ -1005,7 +647,7 @@ public ResponseEntity<TareaResponse> modificar(
 <div class="rule">
   <p class="rule-label">Una limitación se ha resuelto, la otra no</p>
   <p>Ya puedes marcar y desmarcar una tarea. Lo que sigue sin poderse es <strong>vaciar un campo a propósito</strong>: <code>{"prioridad": null}</code> llega como <code>null</code> igual que si no lo hubieras enviado.</p>
-  <p>Se resuelve, y la solución habitual es declarar los campos como <code>Optional&lt;String&gt;</code>: entonces «no enviado» llega como <code>null</code> y «enviado como nulo» llega como <code>Optional.empty()</code>. No lo vamos a implementar, pero <strong>sabe que existe y por qué hace falta</strong>: es una pregunta de entrevista frecuente.</p>
+  <p>Distinguir un campo ausente de un nulo explícito requiere registrar su presencia, por ejemplo mediante un tipo específico o una lectura del árbol JSON. Declarar <code>Optional</code> por sí solo no garantiza esa distinción con cualquier configuración de Jackson. Este PATCH interpreta ambos casos como «sin cambio» y conserva esa limitación documentada.</p>
 </div>
 
 #### Paso 4 · La entrada de proyectos
@@ -1022,42 +664,17 @@ public ResponseEntity<TareaResponse> modificar(
 
 No es un problema estético. Vamos a producirlo a propósito para que lo veas.
 
-Añade `proyectoId` a `Tarea` y a `TareaResponse`, con sus accesos.
+Reutiliza `proyectoId`, que ya existe desde la sesión 8. En una modificación temporal, sustituye únicamente la conversión del listado por una construcción manual de `TareaResponse` que ponga `0` en el componente `proyectoId` y copie correctamente todos los demás. Conserva el filtro, la ruta y los ocho componentes de la respuesta del ejemplo; no dupliques el método GET.
 
-Actualiza `TareaResponse.desde()` para que lo incluya. A continuación, **omite deliberadamente** el listado: deja el `GET /tareas` construyendo la respuesta a mano con `null` en el nuevo componente. Omitir el quinto argumento impediría compilar; el fallo que vamos a observar es pasar un valor incorrecto:
+Reinicia y crea una tarea vinculada a un proyecto existente. El detalle mostrará el id correcto del proyecto, mientras que el listado mostrará 0. Ambas respuestas pueden tener estado 200, pero sus datos son incoherentes.
 
-```java
-@GetMapping
-public List<TareaResponse> lista() {
-    List<TareaResponse> respuesta = new ArrayList<>();
-    for (Tarea tarea : tareas) {
-        respuesta.add(new TareaResponse(
-                tarea.getId(),
-                tarea.getTitulo(),
-                tarea.getPrioridad(),
-                tarea.isCompletada(),
-                null)); // Fallo intencionado: debería copiar tarea.getProyectoId()
-    }
-    return respuesta;
-}
-```
+Ejecuta las aserciones de relación incorporadas en la sesión 10: deben detectar la diferencia. Si no la detectan, añade una comparación entre el `proyectoId` esperado y el devuelto por cada elemento del listado. Recupera la conversión correcta antes de continuar.
 
-```json
-GET /tareas      → [{"id":1,"titulo":"Revisar","prioridad":"alta","completada":false,"proyectoId":null}]
-GET /tareas/1    → {"id":1,"titulo":"Revisar","prioridad":"alta","completada":false,"proyectoId":7}
-```
-
-**El mismo recurso, dos representaciones distintas.** El cliente que pinta la lista no ve el proyecto; el que abre el detalle sí. Ningún mecanismo falla ni advierte del problema: los dos endpoints responden `200`.
-
-<div class="rule">
-  <p class="rule-label">Por qué este fallo es de los peores</p>
-  <p>No lo detecta el compilador, no lo detecta el linter y no lo detecta tu colección, porque las dos respuestas son válidas. Lo detecta un cliente, semanas después, preguntando «¿por qué a veces viene el proyecto y a veces no?».</p>
-  <p>La causa no es un descuido: <strong>existían dos lugares donde aplicar el mismo cambio</strong> y solo uno era obligatorio.</p>
-</div>
+Este experimento muestra por qué conviene mantener una sola implementación de cada conversión. Un error de datos puede compilar y responder 200; las pruebas de contenido permiten detectarlo.
 
 #### Paso 6 · Reunir la conversión de objetos en un mapper
 
-Crea `mapper/TareaMapper.java` con el bloque completo y revisa los imports de los tres DTO y del modelo. Antes de usarlo, comprueba que `proyectoId` existe tanto en Tarea como en TareaResponse y que el constructor del record recibe sus cinco componentes en el mismo orden. Después sustituye las conversiones del controlador por llamadas al mapper y elimina `TareaResponse.desde` cuando ya no tenga usos: la conversión tendrá una sola implementación.
+Crea `mapper/TareaMapper.java` con el bloque completo y revisa los imports. Conserva todos los componentes de tu DTO de salida y su orden: el ejemplo de la sesión 10 tiene ocho. Sustituye las conversiones de ambos controladores por llamadas al mapper, incluida la consulta anidada, y elimina `TareaResponse.desde` cuando ya no tenga usos. Conserva el filtro del listado antes de llamar a `aRespuestas`.
 
 <p class="term">Mapper</p>
 
@@ -1068,6 +685,7 @@ Crea el paquete `com.ejemplo.gestor.mapper`:
 ```java
 package com.ejemplo.gestor.mapper;
 
+import com.ejemplo.gestor.dto.ResponsableResponse;
 import com.ejemplo.gestor.dto.TareaPatchRequest;
 import com.ejemplo.gestor.dto.TareaRequest;
 import com.ejemplo.gestor.dto.TareaResponse;
@@ -1086,7 +704,9 @@ public class TareaMapper {
         Tarea tarea = new Tarea();
         tarea.setTitulo(peticion.getTitulo());
         tarea.setPrioridad(peticion.getPrioridad());
-        tarea.setProyectoId(peticion.getProyectoId());
+        if (peticion.getProyectoId() != null) {
+            tarea.setProyectoId(peticion.getProyectoId());
+        }
         tarea.setCompletada(false);
         return tarea;
     }
@@ -1098,7 +718,10 @@ public class TareaMapper {
                 tarea.getTitulo(),
                 tarea.getPrioridad(),
                 tarea.isCompletada(),
-                tarea.getProyectoId());
+                tarea.getProyectoId(),
+                tarea.getEtiquetas(),
+                tarea.getVencimiento(),
+                ResponsableResponse.desde(tarea.getResponsable()));
     }
 
     public static List<TareaResponse> aRespuestas(List<Tarea> tareas) {
@@ -1137,15 +760,22 @@ public class TareaMapper {
 
 #### Paso 7 · El controlador, después
 
-Sustituye los métodos de listado, detalle y alta existentes por los que se muestran; no crees otra clase Controller. El método `buscar(id)` es un auxiliar privado dentro del controlador: recorre su lista, devuelve la tarea si coincide el id y devuelve `null` al terminar si no encuentra ninguna. Reutilízalo en detalle, PUT y PATCH y conserva sus comprobaciones de ausencia. Ejecuta la colección después de cambiar cada método.
+Sustituye los métodos de listado, detalle y alta existentes por los que se muestran; no crees otra clase Controller. El ejemplo conserva las rutas explícitas de la sesión 9 y el filtro del listado. El método `buscar(id)` es un auxiliar privado dentro del controlador: recorre su lista, devuelve la tarea si coincide el id y devuelve `null` al terminar si no encuentra ninguna. Reutilízalo en detalle, PUT y PATCH y conserva sus comprobaciones de ausencia. Ejecuta la colección después de cambiar cada método.
 
 ```java
-@GetMapping
-public List<TareaResponse> lista() {
-    return TareaMapper.aRespuestas(tareas);
+@GetMapping("/tareas")
+public List<TareaResponse> lista(
+        @RequestParam(name = "completada", required = false) Boolean completada) {
+    List<Tarea> seleccion = new ArrayList<>();
+    for (Tarea tarea : tareas) {
+        if (completada == null || tarea.isCompletada() == completada) {
+            seleccion.add(tarea);
+        }
+    }
+    return TareaMapper.aRespuestas(seleccion);
 }
 
-@GetMapping("/{id}")
+@GetMapping("/tareas/{id}")
 public ResponseEntity<TareaResponse> detalle(@PathVariable(name = "id") int id) {
     Tarea tarea = buscar(id);
     if (tarea == null) {
@@ -1154,7 +784,7 @@ public ResponseEntity<TareaResponse> detalle(@PathVariable(name = "id") int id) 
     return ResponseEntity.ok(TareaMapper.aRespuesta(tarea));
 }
 
-@PostMapping
+@PostMapping(value = "/tareas", consumes = "application/json", produces = "application/json")
 public ResponseEntity<TareaResponse> crear(@RequestBody TareaRequest peticion) {
     Tarea tarea = TareaMapper.aModelo(peticion);
     tarea.setId(siguienteId);
@@ -1208,7 +838,7 @@ pm.test("El proyecto sobrevive al viaje", function () {
 <div class="rule">
   <p class="rule-label">Qué acabas de construir</p>
   <p>Una prueba que recorre <strong>JSON → DTO de entrada → modelo → DTO de salida → JSON</strong> y comprueba que lo que entró es lo que sale. Si mañana alguien añade un campo al mapper y olvida una de las direcciones, esta prueba falla.</p>
-  <p>Es la primera prueba de tu proyecto que comprueba una <em>transformación</em> y no un código de estado. En la UD4 esto mismo se escribirá en Java y se ejecutará sin Postman, pero la idea no cambiará.</p>
+  <p>Esta prueba amplía las comprobaciones de contenido de las sesiones anteriores: ahora observa la transformación entre tipos de entrada y salida. En la UD7 escribirás pruebas automatizadas en Java sobre estas mismas decisiones.</p>
 </div>
 
 #### Paso 9 · El mapper de proyectos
@@ -1262,10 +892,10 @@ Responde a dos preguntas:
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque Jackson solo asigna las claves para las que encuentra un <em>setter</em>. Si el campo no existe en la clase de entrada, se ignora en silencio, así que la propia clase decide qué puede enviar el cliente.</p>
+  <p>1 · El DTO delimita las propiedades de entrada. Con la configuración estricta de este proyecto, una propiedad desconocida provoca un 400; con una configuración tolerante se ignoraría.</p>
   <p>2 · Porque el primitivo no puede valer <code>null</code> y siempre llega como <code>false</code>, de modo que no se distingue «no me lo han enviado» de «pónmelo a falso». El envoltorio sí admite <code>null</code>.</p>
   <p>3 · Entra y no sale: la contraseña. Sale y no entra: el <code>id</code>, o la fecha de creación.</p>
-  <p>4 · Vaciar un campo a propósito. Se resolvería declarándolo como <code>Optional</code>, que distingue el campo ausente del campo enviado con valor nulo.</p>
+  <p>4 · Vaciar un campo a propósito. Para distinguir esa intención de la omisión habría que registrar la presencia del campo; el DTO actual interpreta ambos casos como «sin cambio».</p>
 </details>
 
 ##### Reto · Encuentra el campo perdido
@@ -2396,16 +2026,16 @@ Vuelve a la rúbrica de la sesión 9, la misma tabla, sin cambiar ni un criterio
 
 | # | Criterio | Sesión 9 | Hoy |
 | :---: | :--- | :---: | :---: |
-| 1 | Ninguna ruta contiene un verbo | | |
-| 2 | Cada recurso tiene una URL propia y estable | | |
-| 3 | Las colecciones se nombran en plural | | |
-| 4 | La acción la expresa siempre el método HTTP | | |
-| 5 | `GET` nunca modifica nada | | |
-| 6 | Cada final posible tiene su código de estado | | |
-| 7 | Los recursos relacionados se expresan con jerarquía | | |
-| 8 | El mismo tipo de dato se representa igual en todos los endpoints | | |
-| 9 | La API no publica campos internos del modelo | | |
-| 10 | Las respuestas incluyen enlaces a operaciones relacionadas | | |
+| 1 | Las rutas identifican recursos | | |
+| 2 | Cada recurso tiene una dirección estable | | |
+| 3 | Las colecciones se nombran de forma consistente | | |
+| 4 | El método expresa la operación | | |
+| 5 | GET no solicita cambios en los datos del dominio | | |
+| 6 | Los resultados previstos tienen estados adecuados | | |
+| 7 | Las relaciones se pueden consultar de forma coherente | | |
+| 8 | Un mismo dato mantiene nombre y tipo entre respuestas | | |
+| 9 | Los campos internos quedan fuera del JSON | | |
+| 10 | Las respuestas ofrecen enlaces de navegación | | |
 
 Rellena las dos columnas y **quédate con la diferencia**: es la medida de lo que has aprendido en tres semanas, y forma parte de la entrega.
 

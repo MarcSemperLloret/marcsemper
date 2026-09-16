@@ -1423,7 +1423,7 @@ Añade después un atributo `private String notaInterna` **sin escribir su gette
 
 Un programa cuyo único trabajo es construir peticiones a mano y enseñarte la respuesta entera. Es al backend lo que el navegador al frontend: la ventana por la que ves lo que estás construyendo.
 
-Usaremos **Postman**. Si prefieres **Bruno**, que es más ligero y guarda las peticiones como archivos dentro del proyecto, todo lo de hoy funciona igual y cambian los nombres de dos botones.
+Usaremos **Postman** para los ejemplos. Puedes utilizar **Bruno** para enviar las mismas peticiones: elige método y URL, selecciona cuerpo JSON y observa estado, cabeceras y cuerpo de respuesta. En la sesión 7 encontrarás las instrucciones específicas de ambas herramientas para variables y pruebas; sus scripts no son intercambiables.
 
 <div class="rule">
   <p class="rule-label">Hoy Postman es una herramienta, no un tema</p>
@@ -1431,7 +1431,7 @@ Usaremos **Postman**. Si prefieres **Bruno**, que es más ligero y guarda las pe
   <p>Postman tiene además colecciones, entornos, variables, <em>scripts</em>, ejecución automatizada y gestión de credenciales. <strong>Nada de eso se toca hoy.</strong> Todo eso llega en la UD2, cuando ya tengas peticiones que merezca la pena guardar y repetir. Aprender la herramienta antes de tener el problema que resuelve es la forma más rápida de olvidarla.</p>
 </div>
 
-Descarga Postman de su web oficial e instálalo. Te pedirá crear una cuenta: puedes **saltártelo**, buscando el enlace pequeño de trabajar sin conexión. No necesitamos sincronizar nada.
+Instala la aplicación de escritorio de [Postman](https://www.postman.com/downloads/). Hoy puedes utilizar el cliente ligero sin iniciar sesión para enviar peticiones. En la sesión 7 necesitarás una cuenta y un espacio de trabajo para colecciones y entornos, o utilizar Bruno siguiendo su recorrido. Mantén el historial de las peticiones válidas para recuperarlas después.
 
 Antes de probar nada nuevo, comprueba la herramienta con algo cuyo resultado ya conoces. Es una costumbre que te ahorrará muchas confusiones: si falla, sabrás que falla la herramienta y no tu código.
 
@@ -1489,7 +1489,7 @@ Lo contrario de la serialización que acabas de observar: convertir el texto JSO
 
 En este modelo con constructor vacío y setters, **para esto hacía falta el constructor vacío**. Jackson necesita poder crear el objeto antes de saber qué valores va a ponerle. Si borras ese constructor, este endpoint deja de funcionar.
 
-Por la misma razón resultan necesarios los *setters*: al serializar, Jackson lee con los *getters*; al deserializar, escribe con los *setters*.
+En el modelo de este ejercicio ofrecemos getters para leer y setters para escribir. Jackson también puede utilizar campos y otras formas de construcción según su configuración: quitar un setter no garantiza que una propiedad deje de admitirse. Mantén los accesos del ejemplo y comprueba el JSON recibido y devuelto.
 
 1. Método `POST`, URL `http://localhost:8080/tareas`.
 2. Abre la pestaña **Body**, debajo de la URL.
@@ -1666,7 +1666,7 @@ public class Incidencia {
 Presta atención a las cuatro trampas: hay un *getter* renombrado, un método sin prefijo, un atributo sin *getter* y un *getter* que no corresponde a ningún atributo. Cuando lo tengas escrito, cópiala al proyecto y compruébalo.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La clase <code>Tarea</code> y las rutas de ejemplo devolviendo JSON, con el <code>Content-Type</code> comprobado.</span></div>
+  <div><strong>Comprobación del reto</strong><span>El JSON predicho coincide con la respuesta y puedes explicar cada propiedad.</span></div>
   <div><strong>Si lo tienes</strong><span>El modelo <code>Proyecto</code> completo con sus dos rutas, y explicado por qué el campo sin getter no aparece.</span></div>
   <div><strong>Reto</strong><span>El JSON de <code>Incidencia</code> predicho entero antes de ejecutarlo, con las cuatro trampas identificadas.</span></div>
 </div>
@@ -1691,8 +1691,8 @@ Un compañero te enseña estas tres respuestas de su API y te pregunta qué le p
 Después provoca las tres en tu proyecto para confirmar tus hipótesis. La tercera es la más interesante: hay al menos dos formas distintas de conseguirla.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Postman instalado, un GET repetido y un POST con cuerpo JSON que responde 200.</span></div>
-  <div><strong>Si lo tienes</strong><span>La lista en memoria funcionando en tareas y en proyectos, con la secuencia de cuatro peticiones comprobada.</span></div>
+  <div><strong>Objetivo esencial de la sesión</strong><span>Las dos entidades de tu proyecto admiten POST y conservan registros en memoria, consultables mediante listado y detalle. Has comprobado un JSON mal formado, un tipo de contenido incorrecto y la pérdida de datos al reiniciar.</span></div>
+  <div><strong>Comprobación adicional</strong><span>Un segundo registro conserva datos distintos del primero y ambos se recuperan por su id sin confundir sus respuestas.</span></div>
   <div><strong>Reto</strong><span>Las tres respuestas diagnosticadas y reproducidas, con dos causas distintas para la tercera.</span></div>
 </div>
 
@@ -1811,7 +1811,7 @@ Realiza los cambios de hoy en esa rama. No vuelvas a enviar código directamente
 
 #### Paso 2 · El primer defecto · el id lo pone el cliente
 
-En `TareaController.java`, localiza el campo que contiene la lista y declara a su lado el contador de ids. Sustituye el método POST por el del bloque siguiente; conserva los GET existentes. Crea dos tareas sin escribir `id` en el JSON y consulta el listado. Deben recibir ids distintos. Borra una y crea otra: el contador no debe reutilizar el id borrado mientras siga activo ese proceso.
+Antes de modificar el POST, reinicia para partir de la lista vacía de la sesión 3. Reproduce primero el fallo de los identificadores elegidos por el cliente con estas peticiones:
 
 1. `POST /tareas` con `"id": 1` y el título que quieras.
 2. `POST /tareas` otra vez, **también con `"id": 1`** y otro título.
@@ -1825,7 +1825,7 @@ Tienes dos tareas distintas con el mismo identificador, y la consulta solo encue
   <p>Lo que envía el cliente es el <em>contenido</em> de la tarea. Lo que devuelve el servidor es la tarea <em>ya creada</em>, con su id puesto. Por eso un <code>POST</code> devuelve el objeto: es la única forma que tiene quien llama de enterarse del identificador.</p>
 </div>
 
-La solución, en dos líneas:
+Ahora corrige el POST. En `TareaController`, conserva la lista existente, añade a su lado `private int siguienteId = 1;` y sustituye únicamente el método `crear` por esta versión:
 
 ```java
 private final List<Tarea> tareas = new ArrayList<>();
@@ -1840,7 +1840,7 @@ public Tarea crear(@RequestBody Tarea tarea) {
 }
 ```
 
-Ahora el `id` que llegue en el JSON se descarta: se sobrescribe antes de guardar. Compruébalo enviando `"id": 999` y viendo qué te devuelve.
+Guarda y reinicia para eliminar los registros duplicados de la prueba anterior. Crea dos tareas sin enviar `id`: deben recibir identificadores distintos. Envía además `"id": 999` y comprueba que el servidor lo sustituye. La prueba de borrar y crear llegará después de implementar DELETE; el contador conserva su valor solo mientras el proceso sigue en marcha.
 
 #### Paso 3 · `PUT` · sustituir una tarea entera
 
@@ -1876,7 +1876,35 @@ public Tarea actualizar(
 
 #### Paso 4 · Completar consulta individual, listado y borrado
 
-Los bloques siguientes actualizan métodos del controlador que ya abriste: reemplaza las versiones anteriores de listado y detalle si coinciden sus rutas, y añade DELETE si falta. Conserva el contador y la lista como campos de clase. No pegues un GET nuevo con la misma ruta junto al anterior. Guarda, reinicia y reconstruye los datos con POST antes de ejecutar el recorrido de aceptación.
+Conserva el GET de detalle de la sesión 3 y el POST y PUT que acabas de comprobar. Sustituye el GET de listado por el siguiente e importa `RequestParam`. El parámetro `Boolean` puede valer `null`, lo que permite distinguir «sin filtro» de `false`:
+
+```java
+@GetMapping
+public List<Tarea> lista(
+        @RequestParam(name = "completada", required = false) Boolean completada) {
+    if (completada == null) {
+        return tareas;
+    }
+    List<Tarea> resultado = new ArrayList<>();
+    for (Tarea tarea : tareas) {
+        if (tarea.isCompletada() == completada) {
+            resultado.add(tarea);
+        }
+    }
+    return resultado;
+}
+```
+
+Añade DELETE e importa `org.springframework.web.bind.annotation.DeleteMapping`:
+
+```java
+@DeleteMapping("/{id}")
+public void eliminar(@PathVariable(name = "id") int id) {
+    tareas.removeIf(tarea -> tarea.getId() == id);
+}
+```
+
+`removeIf` elimina los elementos que cumplen la condición. En este caso compara su id con el de la ruta. Guarda, reinicia y recrea los registros con POST. Comprueba listado sin filtro, filtro `true`, filtro `false` y borrado seguido de listado. No conserves dos GET con la misma ruta ni declares otra lista dentro de un método.
 
 | Método y ruta | Recibe | Devuelve |
 | :--- | :--- | :--- |
@@ -1889,7 +1917,7 @@ Los bloques siguientes actualizan métodos del controlador que ya abriste: reemp
 
 Requisitos que se comprueban:
 
-1. El identificador lo asigna el servidor y nunca se repite, ni siquiera después de borrar una tarea.
+1. El identificador lo asigna el servidor y no se repite durante esta ejecución, ni después de borrar una tarea. Tras reiniciar, la lista y el contador comienzan de nuevo.
 2. El filtro `completada` es opcional. Sin él, salen todas.
 3. `DELETE` no devuelve cuerpo. Declara el método como `void` y comprueba en Postman qué código de estado sale.
 4. Todas las rutas cuelgan de un único `@RequestMapping` a nivel de clase.
@@ -1911,7 +1939,7 @@ Requisitos que se comprueban:
 
 Una API no está terminada porque compile. Está terminada cuando **una secuencia de peticiones se comporta como se esperaba**.
 
-Ejecuta esto en Postman, en orden, y anota el código de estado y el cuerpo de cada paso. Predice cada respuesta antes de pulsar `Send`.
+Para este escenario concreto, reinicia una vez y comprueba que el listado está vacío. Ejecuta las diez peticiones sin reiniciar entre ellas. Así los ids 1 y 2 corresponden a las altas indicadas. Anota estado y cuerpo y predice cada resultado antes de enviar.
 
 | # | Petición | Qué debe ocurrir |
 | :---: | :--- | :--- |
@@ -1924,13 +1952,13 @@ Ejecuta esto en Postman, en orden, y anota el código de estado y el cuerpo de c
 | 7 | `GET /tareas?completada=true` | Solo la tarea 2 |
 | 8 | `DELETE /tareas/1` | Sin cuerpo |
 | 9 | `GET /tareas` | Solo queda la tarea 2 |
-| 10 | `POST /tareas` · una tercera | Su id **no** es 1 |
+| 10 | `POST /tareas` · una tercera | Recibe id **3**: no reutiliza el 1 borrado ni el 2 que sigue existiendo |
 
-El paso 10 es el que suspende a más gente. Si tu contador vuelve a repartir el 1, es que lo estás calculando a partir del tamaño de la lista en lugar de llevar la cuenta de cuántas has creado.
+Después del paso 10, consulta el listado: debe contener dos registros con ids distintos, 2 y 3. Si calculas el nuevo id con `tareas.size() + 1`, obtendrás 2 y duplicarás el registro existente. La prueba debe detectar también ese caso, no solo que se reutilice el 1.
 
 <div class="rule">
   <p class="rule-label">Guarda estas diez peticiones</p>
-  <p>No las borres al terminar. En la UD2 aprenderás a agruparlas en una colección, ponerles nombre, sacar la dirección del servidor a una variable y ejecutarlas todas de una vez. Esta lista de diez pasos es el primer borrador de esa colección, y es también la primera versión de lo que en la UD10 serán tests automáticos.</p>
+  <p>No las borres al terminar. En la UD2 aprenderás a agruparlas en una colección, ponerles nombre, sacar la dirección del servidor a una variable y ejecutarlas todas de una vez. Esta lista de diez pasos es el primer borrador de esa colección, y es también la primera versión de lo que en la UD7 serán tests automatizados de Java.</p>
 </div>
 
 #### Paso 6 · Lo que tu API todavía hace mal
@@ -1944,7 +1972,7 @@ Este apartado no constituye un ejercicio de autocrítica, sino el índice de las
 | `POST` correcto | Responde `200` | `201 Created` | UD2 |
 | `POST` con `"completada": "quizás"` | `400` sin explicación útil | Un error legible | UD3 |
 | Reiniciar la aplicación | Se pierde todo | Los datos siguen ahí | UD5 |
-| Un campo interno del modelo | Se publica sin querer | Solo se publica lo que decidas | UD2, con DTO |
+| Un campo interno del modelo | Se publica sin querer | Solo se publica lo que decidas | UD3, con DTO |
 
 Que sepas enumerar estos seis defectos vale tanto como haber hecho funcionar la API. **Saber qué le falta a lo que has construido es la parte difícil de este oficio.**
 
@@ -1953,18 +1981,18 @@ Que sepas enumerar estos seis defectos vale tanto como haber hecho funcionar la 
 Sube a tu repositorio del módulo:
 
 1. El proyecto completo, arrancable con `mvnw spring-boot:run`.
-2. Un archivo la tabla de comprobaciones con la tabla de las diez peticiones y el resultado real de cada una.
-3. Al final de ese archivo, tres apartados breves:
+2. El resultado real de las diez peticiones y las diferencias que hayas corregido.
+3. Una explicación breve de estas tres cuestiones:
    * **Decisiones.** Por qué el id lo pone el servidor y por qué el filtro va en la query string.
    * **Defectos conocidos.** Los seis de la tabla anterior, con tus palabras.
    * **Una pregunta.** Algo que hayas hecho funcionar sin acabar de entender del todo por qué.
 
-Ese tercer apartado no resta nota. Se lee en la primera sesión de la UD2.
+Conserva la pregunta pendiente para contrastarla con las explicaciones de la siguiente unidad.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Los cinco métodos funcionando y la secuencia de diez peticiones ejecutada entera.</span></div>
-  <div><strong>Si lo tienes</strong><span>El filtro opcional resuelto y el paso 10 correcto, con el contador independiente del tamaño de la lista.</span></div>
-  <div><strong>Reto</strong><span>La misma API completa sobre <code>Proyecto</code>, escrita sin volver a mirar la de tareas.</span></div>
+  <div><strong>Objetivo esencial</strong><span>Las dos entidades tienen su CRUD y filtro opcional comprobados. La secuencia de diez peticiones verifica también que borrar y crear no duplica identificadores.</span></div>
+  <div><strong>Comprobación adicional</strong><span>Un filtro sin coincidencias devuelve un array vacío; quitar el filtro recupera todos los registros existentes.</span></div>
+  <div><strong>Trabajo sobre tu dominio</strong><span>Completa las mismas operaciones en la segunda entidad, ya iniciada en la sesión 3. Comprueba sus ids, sustitución y borrado. Ambas se utilizarán en la sesión 6.</span></div>
 </div>
 
 <details class="aside aside--extra">
@@ -1986,7 +2014,7 @@ Ese tercer apartado no resta nota. Se lee en la primera sesión de la UD2.
 
 **Al terminar la sesión:**
 
-El CRUD funciona desde la colección HTTP y el README declara que esta primera versión pierde datos al reiniciar.
+El CRUD de ambas entidades funciona mediante las peticiones del cliente HTTP y el README declara que pierde los datos al reiniciar. La colección automatizada se construirá en la sesión 7; hoy deben quedar comprobados los efectos de cada operación.
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
