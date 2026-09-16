@@ -70,7 +70,7 @@
     ],
     "intermodular": {
       "number": 3,
-      "title": "Vuestro primer workflow",
+      "title": "El primer flujo de integración continua",
       "href": "/es/docencia/proyecto-intermodular/ud2-que-lo-compruebe-la-maquina/sesion-3/"
     },
     "evidence": "Ya has practicado issues y revisión de cambios. Hoy el portfolio incorporará su primera comprobación automática; el backend sigue desarrollándose en su propio repositorio.",

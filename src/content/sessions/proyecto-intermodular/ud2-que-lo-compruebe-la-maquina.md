@@ -33,105 +33,100 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Alcance de la evaluación: la accesibilidad como criterio medible</p>
-  <p>El diseño gráfico permanece fuera del alcance evaluativo de este módulo, con una excepción deliberada: la accesibilidad. Su inclusión no responde a criterios estéticos, sino a que constituye la única dimensión de la interfaz cuantificable mediante métricas objetivas y verificables de forma automatizada, con independencia del criterio subjetivo de quien evalúa. La tipografía, el color y la composición se evalúan en los módulos que los imparten.</p>
+  <p>En este módulo se evalúa cómo configuras, interpretas y utilizas las comprobaciones para revisar y publicar cambios. Algunas propiedades de accesibilidad pueden analizarse automáticamente, pero requieren también revisión humana. Las puntuaciones de las herramientas no certifican por sí solas que toda la web sea accesible. La calidad del diseño gráfico corresponde a los módulos que lo trabajan.</p>
 </div>
 
 ## Sesión 3 · El primer flujo de integración continua
 
-**Antes de empezar.** Ya has trabajado con issues, ramas de funcionalidad y revisión por pares. En esta sesión el portfolio incorpora su primera validación automatizada, ejecutada sobre cada propuesta de integración antes de que el código alcance la rama principal. El backend continúa su desarrollo en el repositorio del módulo de Servidor.
+**Antes de empezar.** Continúas con el portfolio y la cabecera o mejora integrada en la sesión 2. Necesitas su carpeta local, el tablero, `main` protegida y tu pareja de revisión. El backend sigue desarrollándose en Servidor; el validador de esta sesión se configura únicamente en el repositorio del portfolio.
 
 <div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Evaluación inicial · sin apuntes</p>
+  <p class="checkpoint-label">Punto de partida · primeros 3 minutos de la explicación</p>
   <ol>
-    <li>Tu página se publica con estado de éxito en GitHub Actions. ¿Qué certifica exactamente ese estado y qué queda fuera de su alcance?</li>
-    <li>Si integras un documento HTML con una etiqueta sin cerrar, ¿qué mecanismo lo detecta actualmente?</li>
-    <li>¿En qué máquina se ejecuta un workflow de GitHub Actions y qué implica eso sobre las herramientas disponibles durante la ejecución?</li>
+    <li>¿Qué has comprobado cuando el despliegue aparece en verde y abres la URL pública?</li>
+    <li>¿Quién detecta actualmente un error de HTML antes de fusionar una PR?</li>
+    <li>¿Dónde puedes consultar los pasos ejecutados por GitHub Actions?</li>
   </ol>
 </div>
 
----
-
 ### Se explica
 
-<p class="stage stage--brief">25 minutos · explicación conceptual y demostración técnica</p>
+<p class="stage stage--brief">25 minutos · punto de partida, explicación y demostración</p>
 
-#### Ausencia de validación previa a la integración
+#### Validar antes de integrar
 
-El único proceso automatizado disponible hasta ahora es el despliegue, que presenta dos limitaciones estructurales. La primera afecta a su posición en el ciclo de vida: se ejecuta **después** de la fusión, cuando el cambio ya forma parte de `main`, de modo que cualquier diagnóstico que emitiera llegaría con el defecto ya publicado. La segunda afecta a su alcance: el flujo de publicación empaqueta los archivos del repositorio y los transfiere al servidor. Un documento con etiquetas sin cerrar, imágenes sin texto alternativo o enlaces internos no resolubles supera ese proceso con estado de éxito, porque la operación de transferencia se ha completado correctamente.
+El workflow de la sesión 1 publica los archivos después de incorporar un cambio a `main`. Puede terminar correctamente aunque el HTML tenga errores: su trabajo consiste en publicar, y todavía no incluye un validador del documento. La revisión humana es actualmente la comprobación previa a la fusión.
 
-Conviene formalizar la distinción, dado que estructura el resto del ciclo de vida del software:
+Hoy añadirás un **flujo de integración continua** (CI) que comprueba el HTML cada vez que abres o actualizas una PR. Su resultado aparecerá como un **check**: una comprobación con estado pendiente, correcto o fallido. Después configurarás GitHub para impedir la fusión si ese check falla.
 
-<div class="compare-pair">
-  <div>
-    <p class="compare-label">Despliegue continuo (CD)</p>
-    <p class="compare-body">Verifica la entrega del artefacto al entorno de producción. Emite un resultado binario sobre la operación de publicación y no evalúa las propiedades del contenido entregado.</p>
-  </div>
-  <div>
-    <p class="compare-label">Integración continua (CI)</p>
-    <p class="compare-body">Verifica que el incremento propuesto satisface los criterios de calidad acordados. Se ejecuta sobre la <em>pull request</em>, con anterioridad a la fusión, y su función es impedir la integración cuando el resultado es negativo.</p>
-  </div>
-</div>
+| Archivo | Cuándo se ejecuta en este proyecto | Qué hace |
+| --- | --- | --- |
+| `.github/workflows/static.yml` | Después de un cambio en `main`, o al iniciarlo manualmente | Publica el portfolio en GitHub Pages. |
+| `.github/workflows/ci.yml` | Al abrir o actualizar una PR y tras cambios en `main` | Valida el HTML y comunica el resultado. |
 
-En esta sesión se implementa la segunda mediante un workflow redactado manualmente: a diferencia del flujo de publicación, esta definición no la genera ningún asistente del portal.
+Son dos workflows con responsabilidades distintas. **En la PR habrá un check de HTML; el despliegue de Pages se comprobará después de fusionar.** Si realizaste la ampliación de Azure, su workflow puede mostrar comprobaciones adicionales; no son el check de HTML que crearás hoy.
 
-#### El entorno de ejecución: runners efímeros y reproducibilidad
+#### Runner y herramientas del proyecto
 
-<p class="term">Runner</p>
+Un *runner* es la máquina que ejecuta un trabajo de GitHub Actions. En este ejercicio usarás `ubuntu-latest`: GitHub prepara una máquina Linux para el trabajo y la retira al terminar. Aunque tú trabajes en Windows, los comandos del workflow se ejecutarán allí.
 
-Máquina virtual que GitHub aprovisiona para ejecutar un workflow y destruye al finalizar. Su sistema de archivos parte de una imagen base estandarizada: no contiene el proyecto, ni las dependencias instaladas en la estación de trabajo local, ni la configuración personal de quien desarrolla. Cada ejecución parte del mismo estado inicial conocido.
+El runner tiene herramientas preinstaladas, pero no tu carpeta de trabajo ni sus cambios sin publicar. Por eso el job seguirá tres pasos:
 
-Esta naturaleza efímera determina las dos reglas que previenen la mayoría de los errores de esta sesión:
+1. **Descargar el código**, mediante `actions/checkout`.
+2. **Preparar Node.js**, el programa necesario para ejecutar el validador.
+3. **Ejecutar HTML-Validate**, que analiza los documentos según unas reglas y devuelve un error si encuentra incumplimientos.
 
-| Propiedad del entorno de ejecución | Consecuencia en la definición del workflow |
-| ---------------------------------- | ------------------------------------------ |
-| El runner no dispone del código fuente | La primera etapa debe clonar el repositorio, función que cumple la acción <code>actions/checkout</code> |
-| El runner no dispone de las herramientas del proyecto | Toda dependencia debe declararse e instalarse de forma explícita dentro del propio flujo |
+Declarar herramientas y versiones facilita la **reproducibilidad**: que otra ejecución pueda repetir las mismas comprobaciones. No garantiza un entorno idéntico para siempre: `ubuntu-latest` y las versiones generales como `22` o `@9` pueden recibir actualizaciones. Si local y CI difieren, compara versión, configuración, archivos y sistema operativo antes de atribuir el fallo al código.
 
-La consecuencia metodológica es la **reproducibilidad**: al partir de un estado inicial conocido, el resultado obtenido en el runner es reproducible por cualquier persona o sistema que ejecute la misma definición. Un entorno local, por el contrario, acumula dependencias globales, variables de entorno y versiones no declaradas. Esa divergencia progresiva entre entornos (*configuration drift*) constituye el origen técnico del argumento «en mi equipo funciona», que un pipeline de integración continua invalida como criterio de aceptación.
+#### Estructura de un workflow
 
-#### Estructura declarativa de un workflow
+El archivo utiliza **YAML**, un formato de configuración cuya estructura depende de la sangría. Usa espacios y conserva los niveles del ejemplo: `steps` pertenece al job `html`, y cada guion bajo `steps` inicia un paso.
 
-La especificación de GitHub Actions se articula en torno a cuatro elementos:
-
-<dl class="worked">
-  <dt><code>on</code></dt>
-  <dd>Declara los eventos que desencadenan la ejecución. En esta implementación serán la apertura o actualización de una <em>pull request</em> y la integración de cambios en <code>main</code>.</dd>
-  <dt><code>jobs</code></dt>
-  <dd>Unidades de trabajo independientes. Cada job se aprovisiona en su propia máquina virtual y se ejecuta en paralelo, salvo que se declare una dependencia explícita mediante <code>needs</code>. Cada job se publica como un <em>check</em> verificable en la pull request.</dd>
-  <dt><code>steps</code></dt>
-  <dd>Secuencia ordenada de etapas dentro de un job. El fallo de una etapa interrumpe la ejecución de las restantes.</dd>
-  <dt><code>uses</code> frente a <code>run</code></dt>
-  <dd><code>uses</code> invoca una acción reutilizable publicada por terceros; <code>run</code> ejecuta una instrucción en el intérprete de comandos del runner.</dd>
-</dl>
+| Clave | Significado en el ejemplo |
+| --- | --- |
+| `on` | Eventos que inician la ejecución: `pull_request` y envíos a `main`. |
+| `jobs` | Trabajos del workflow. Hoy habrá uno, con identificador `html`. |
+| `name` del job | Nombre visible de su check: `HTML válido`. |
+| `runs-on` | Entorno que ejecuta el job: `ubuntu-latest`. |
+| `steps` | Pasos ordenados. Normalmente, si uno falla, los siguientes se omiten. |
+| `uses` | Invoca una acción reutilizable, como descargar el repositorio. |
+| `run` | Ejecuta un comando en el runner, como lanzar el validador. |
 
 <div class="rule">
-  <p class="rule-label">Delimitación entre validación automatizada y revisión humana</p>
-  <p>La automatización asume los criterios objetivos, deterministas y repetibles: validez sintáctica del marcado, disponibilidad de los recursos enlazados, conformidad con el formato acordado y ratio de contraste mínimo. La revisión por pares asume los criterios que requieren juicio profesional: la claridad de la exposición, la pertinencia del contenido y la correspondencia entre el cambio propuesto y el requisito formulado en la issue. La confusión entre ambos planos produce dos disfunciones habituales: destinar la revisión humana a detectar defectos de formato que un analizador estático resuelve en segundos, o atribuir al estado verde del pipeline una garantía de corrección funcional que no posee.</p>
+  <p class="rule-label">Alcance de la validación automática</p>
+  <p>Un check verde indica que los archivos cumplen las reglas ejecutadas. No demuestra que el contenido responda a la issue ni que todos los enlaces funcionen. Tu pareja seguirá comprobando los criterios de aceptación. En la sesión 4 añadirás verificaciones de enlaces y formato.</p>
 </div>
-
----
 
 ### Se trabaja
 
-<p class="stage stage--guided">140 minutos · trabajo práctico guiado sobre el proyecto base</p>
+<p class="stage stage--guided">140 minutos · trabajo guiado sobre el portfolio</p>
+
+Distribución orientativa: 45 minutos para crear el workflow, 35 para provocar y corregir fallos, 25 para exigir el check y 35 para aplicar el proceso a una mejora del portfolio. Si una ejecución falla, resuelve su causa antes de pasar al bloque siguiente.
 
 #### Bloque A · Implementación del workflow de validación
 
-Antes de abrir el editor, verifica la disponibilidad del entorno de ejecución. **Node.js** permite ejecutar JavaScript fuera del navegador, **npm** es su gestor de paquetes y **npx** el ejecutor que invoca un paquete sin instalarlo de forma permanente en el sistema. En este módulo intervienen exclusivamente como herramientas de análisis estático del marcado; no guardan relación con el desarrollo del backend. Ejecuta `node --version` y `npm --version` en la terminal: la versión requerida es Node 22, idéntica a la declarada en el workflow, de modo que el entorno local y el del runner sean equivalentes. Si la instalación acaba de realizarse, abre una terminal nueva, ya que una sesión previa conserva las variables de entorno anteriores. En PowerShell, la política de ejecución puede bloquear `npm.ps1`; en ese caso invoca `npm.cmd` y `npx.cmd`.
+**1 · Comprueba el entorno local.** Abre la terminal en la raíz del portfolio, donde está `index.html`. Ejecuta:
 
-Ambos archivos se ubican en la raíz del repositorio del portfolio: `.htmlvalidate.json` y `.github/workflows/ci.yml`. En las sesiones siguientes, los nuevos trabajos de validación se incorporarán dentro de ese mismo `ci.yml`, bajo la clave `jobs`, y no en archivos independientes. El workflow de despliegue de la sesión 1 se conserva sin modificaciones: uno publica y el otro valida, y ambos resultan necesarios.
+```bash
+node --version
+npm --version
+```
 
-<p class="stage stage--solo">Trabajo individual, siguiendo el flujo de integración establecido</p>
+**Node.js** ejecuta JavaScript fuera del navegador; **npm** gestiona paquetes, y **npx** permite ejecutar una herramienta de un paquete, descargándolo si hace falta. Aquí se utilizan para analizar HTML, no para programar el backend Java. Utiliza Node **22.x**, como el workflow. Si falta, instala esa versión desde las [descargas de Node.js](https://nodejs.org/en/download) y abre una terminal nueva. Si PowerShell bloquea `npm.ps1` o `npx.ps1`, utiliza `npm.cmd` y `npx.cmd` en los comandos locales, sin cambiar la política de ejecución.
 
-**1 · Issue y rama de funcionalidad.** Crea una issue titulada «Añadir un workflow de CI que valide el HTML», con el siguiente criterio de aceptación: *cada pull request muestra un check denominado HTML válido, y ese check falla cuando el marcado contiene errores*. A continuación, genera la rama correspondiente:
+**2 · Crea la issue y su rama.** Registra «Añadir validación automática del HTML». Criterios: la PR muestra `HTML válido`, un error de HTML hace fallar el check y su corrección lo devuelve a verde. Asígnate la tarea y ponla en `In Progress`.
+
+En los ejemplos se usa el número **7**: sustitúyelo por el número real de tu issue en la rama y en la descripción de la PR. No lo deduzcas contando las tareas: las PR también consumen números.
+
+Con `git status` sin cambios pendientes, ejecuta:
 
 ```bash
 git switch main
-git pull
+git pull --ff-only
 git switch -c 7-ci-html
 ```
 
-**2 · Configuración del analizador estático.** Crea en la raíz el archivo `.htmlvalidate.json`:
+**3 · Declara las reglas.** En el explorador del editor, crea `.htmlvalidate.json` junto a `index.html` y pega:
 
 ```json
 {
@@ -139,9 +134,9 @@ git switch -c 7-ci-html
 }
 ```
 
-Esa declaración selecciona el conjunto de reglas aplicables. Sin archivo de configuración, la herramienta carece de criterio normativo con el que evaluar el documento.
+Este archivo declara explícitamente las reglas recomendadas del proyecto y permite modificarlas de forma compartida más adelante. HTML-Validate también dispone de configuración predeterminada; el archivo sirve para conservar nuestra elección en el repositorio.
 
-**3 · Definición del workflow.** Crea `.github/workflows/ci.yml`, junto al workflow de despliegue y no dentro de él: son procesos con responsabilidades distintas y se declaran en archivos independientes.
+**4 · Crea el workflow.** Dentro de la carpeta existente `.github/workflows`, crea `ci.yml`. Conserva `static.yml`: no pegues un workflow dentro del otro.
 
 ```yaml
 name: CI
@@ -150,6 +145,9 @@ on:
   pull_request:
   push:
     branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   html:
@@ -168,120 +166,169 @@ jobs:
         run: npx --yes html-validate@9 "**/*.html"
 ```
 
-**4 · Análisis de la definición antes de integrarla.** Responde sin consultar documentación externa:
+`permissions: contents: read` permite leer el repositorio. `@9` selecciona la versión mayor 9 del validador; `--yes` permite su descarga sin pedir confirmación interactiva. El patrón entre comillas busca archivos HTML también en subcarpetas.
+
+**5 · Comprueba el HTML en local.** Guarda ambos archivos y ejecuta desde la raíz:
+
+```bash
+npx --yes html-validate@9 "**/*.html"
+```
+
+La primera vez necesita conexión para descargar el paquete. Si hay errores, lee el archivo, la línea y la regla que aparecen en la salida. Por ejemplo, `element-required-attributes` junto a `html` puede indicar que falta `lang`. Corrige el archivo señalado y repite el comando; si termina sin diagnósticos, ha superado estas reglas.
+
+El documento inicial de la sesión 1 utiliza `<!doctype html>`. Con estas reglas puede aparecer `doctype-style`: cambia esa primera línea a `<!DOCTYPE html>` y repite la comprobación. Ambas formas son válidas en HTML; el diagnóstico exige la convención de estilo seleccionada por el analizador. Un incumplimiento de sus reglas no siempre significa que la sintaxis HTML sea inválida.
 
 <dl class="answer">
-  <dt>¿Cuántos jobs define el archivo y con qué nombre aparecerá el check en la pull request?</dt>
+  <dt>¿Cuántos jobs has creado y qué nombre verá tu pareja en la PR?</dt>
   <dd></dd>
-  <dt>¿Qué etapas invocan una acción de terceros y cuál ejecuta una instrucción propia?</dt>
+  <dt>¿Qué pasos utilizan uses y cuál utiliza run?</dt>
   <dd></dd>
-  <dt>Si se suprimiera la etapa de checkout, ¿qué error se produciría y cuál sería su causa?</dt>
+  <dt>¿Por qué el runner necesita checkout aunque el proyecto ya exista en tu ordenador?</dt>
   <dd></dd>
 </dl>
 
-**5 · Integración y apertura de la pull request.**
+**6 · Publica la propuesta.**
 
 ```bash
 git add .github/workflows/ci.yml .htmlvalidate.json
-git commit -m "Anadir un workflow de CI que valida el HTML"
+git commit -m "Anadir validacion automatica del HTML"
 git push -u origin 7-ci-html
 ```
 
-Abre la pull request incluyendo `Closes #7` en su descripción. La definición queda sometida a sí misma: **la propia pull request que incorpora el CI es validada por él**. En la sección de comprobaciones aparece un único check, el recién declarado; el workflow de despliegue no figura porque su evento de activación no contempla `pull_request`. Con ello queda cubierta la etapa de validación que la sesión anterior identificó como ausente en el ciclo.
+Si corregiste HTML, revisa `git diff`, añádelo por su nombre y registra también esos cambios en la misma rama antes de continuar. Abre la PR hacia `main`, indica cómo comprobar el workflow e incluye `Closes #7` con el número real.
+
+La propia PR que añade el workflow lo ejecuta. En sus comprobaciones, abre **HTML válido → Details**, o entra por **Actions → CI → ejecución de tu rama → HTML válido**. Identifica los tres pasos y espera al resultado. **Deja esta PR abierta** para hacer las pruebas del bloque B.
 
 <details class="aside aside--help">
-  <summary>Si el check resulta fallido en la primera ejecución</summary>
-  <p>Es el resultado más frecuente e indica que el analizador está evaluando efectivamente el documento. Abre la ejecución en la pestaña <strong>Actions</strong>, accede a la etapa «Validar el HTML» y localiza las líneas que comienzan por la ruta del archivo: cada una indica el número de línea y la regla incumplida. Corrige sobre la misma rama, confirma y envía los cambios; el check se reejecuta de forma automática.</p>
+  <summary>Si el check no aparece o falla</summary>
+  <p>Comprueba que el archivo se llama <code>.github/workflows/ci.yml</code>, está incluido en el commit publicado y declara <code>pull_request</code>. Si GitHub indica que el workflow no es válido, revisa la sangría y la línea señalada. Si falla «Preparar Node», revisa la versión; si falla «Validar el HTML», revisa el diagnóstico del documento. Corrige sobre la misma rama, crea un commit y ejecuta <code>git push</code>. No abras otra PR para la corrección.</p>
 </details>
 
 #### Bloque B · Provocación controlada de fallos
 
-<p class="stage stage--guided">Ejecución simultánea sobre la misma rama</p>
+Realiza las pruebas **una a una en la rama `7-ci-html`**, con la PR aún abierta. Antes de cada prueba, el check debe estar verde. Para que el diagnóstico sea claro, introduce solo el cambio indicado.
 
-Un pipeline cuyo comportamiento ante el error no ha sido observado no ofrece garantías operativas. Introduce las tres alteraciones siguientes, de forma individual, y analiza el diagnóstico que emite cada una:
+**1 · Provoca un error de cierre.** En `index.html`, cambia únicamente el cierre del encabezado principal de `</h1>` a `</h2>`. Guarda y publica:
 
-| Alteración introducida | Resultado esperado |
-| ---------------------- | ------------------ |
-| Cierre incorrecto de una etiqueta de sección | Error de sintaxis, con indicación del número de línea exacto |
-| Supresión del atributo de idioma en la etiqueta raíz | Incumplimiento de regla y no de sintaxis: el documento es sintácticamente válido pero infringe el conjunto normativo configurado |
-| Valor <code>tururu</code> en <code>node-version</code> | Fallo en una etapa previa: el job no alcanza la validación porque el aprovisionamiento del entorno no se completa |
+```bash
+git add index.html
+git commit -m "Probar deteccion de cierre HTML incorrecto"
+git push
+```
 
-<div class="rule">
-  <p class="rule-label">Lectura del registro de ejecución</p>
-  <p>El registro de una ejecución contiene un volumen elevado de información sin valor diagnóstico. El dato relevante se concentra en la etapa marcada como fallida y, dentro de ella, en sus últimas líneas, donde el proceso escribe el motivo de la terminación anómala. La lectura secuencial desde el inicio del registro es el procedimiento menos eficiente para localizar la causa.</p>
+**2 · Localiza el fallo.** Abre la ejecución que corresponde a ese último commit, no una anterior. En el job `HTML válido`, abre el paso fallido **Validar el HTML**. Identifica la ruta, el número de línea, el mensaje y la regla. Contrasta la línea con tu editor; un error puede señalar el cierre inesperado o el elemento que quedó abierto.
+
+**3 · Corrige y comprueba.** Restituye `</h1>`, guarda y ejecuta:
+
+```bash
+git add index.html
+git commit -m "Restaurar cierre correcto del encabezado"
+git push
+```
+
+Espera a que la nueva ejecución termine en verde. Los dos resultados quedan en el historial de Actions y permiten observar que el check detecta el fallo y reconoce su corrección.
+
+**4 · Repite con otros dos tipos de fallo.** Aplica el mismo recorrido: cambio → guardar → commit → push → diagnóstico → corrección → nuevo commit y push → verde.
+
+| Prueba | Cambio exacto | Qué observar | Cómo restaurar |
+| --- | --- | --- | --- |
+| Regla de calidad | Sustituye `<html lang="es">` por `<html>` en `index.html`. | El analizador informa de un atributo requerido aunque la página pueda verse igual. | Recupera `lang="es"`. |
+| Entorno de ejecución | Cambia `node-version: 22` por `node-version: tururu` en `ci.yml`. | Falla **Preparar Node**; **Validar el HTML** no llega a ejecutarse. | Recupera `node-version: 22`. |
+
+Para la segunda prueba, utiliza `git add .github/workflows/ci.yml` en lugar de `git add index.html`. Redacta mensajes que identifiquen cada prueba y su corrección. No desactives reglas del validador para obtener verde.
+
+<div class="checkpoint">
+  <p class="checkpoint-label">Resultado del diagnóstico</p>
+  <p>Puedes localizar las ejecuciones fallidas, explicar qué cambiaste y señalar la ejecución final correcta. Distingues un error del documento de un fallo al preparar la herramienta que lo analiza.</p>
 </div>
-
-Restablece el estado correcto y verifica que el check vuelve a completarse con éxito antes de continuar.
 
 #### Bloque C · Conversión del check en requisito de fusión
 
-<p class="stage stage--solo">Trabajo individual en la configuración del repositorio</p>
+**1 · Integra el workflow revisado.** Con todos los cambios de prueba corregidos y el check verde, solicita la revisión de tu pareja. Debe comprobar los archivos de configuración, ejecutar el validador en su copia y revisar las ejecuciones. Tras su aprobación, fusiona mediante **Squash and merge** y comprueba el despliegue de Pages.
 
-Una comprobación que informa pero no condiciona la integración termina siendo ignorada. La configuración siguiente la convierte en comprobación obligatoria (*required status check*).
+**2 · Exige el check en el portfolio.** Abre **Settings → Rules → Rulesets → main protegida → Edit**. Activa **Require status checks to pass**, pulsa **Add checks**, busca y selecciona **HTML válido** y guarda. Si no aparece, comprueba que la ejecución ha terminado y vuelve a abrir la configuración. Selecciona el check del job, no el nombre `CI` del workflow ni el despliegue de Pages.
 
-1. Fusiona previamente la pull request del bloque A, de modo que el check conste en el historial de `main`.
-2. Accede a **Settings → Rules → Rulesets → main protegida → Edit**.
-3. En **Require status checks to pass** —la regla que en la sesión anterior no pudo configurarse porque la lista de comprobaciones disponibles estaba vacía— selecciona **Add checks** e incorpora **HTML válido**.
-4. Guarda la configuración.
+El backend no ejecuta este validador de HTML: no añadas allí este check obligatorio, porque quedaría esperando una comprobación que nunca se ejecuta.
 
-Verificación: crea una rama con un error de marcado deliberado, abre la pull request y comprueba que la acción de fusión queda bloqueada. Cierra esa pull request sin fusionarla.
+**3 · Verifica el bloqueo.** Con la copia local limpia, prepara una rama de diagnóstico desde el nuevo `main`:
+
+```bash
+git switch main
+git pull --ff-only
+git switch -c prueba-bloqueo-html
+```
+
+Vuelve a cambiar `</h1>` por `</h2>` en `index.html` y publica la rama:
+
+```bash
+git add index.html
+git commit -m "Comprobar bloqueo de HTML invalido"
+git push -u origin prueba-bloqueo-html
+```
+
+Abre una PR de prueba hacia `main`, titulada «Comprobar bloqueo de HTML inválido», sin `Closes` para no vincularla a una tarea funcional. Espera al fallo y comprueba que GitHub impide fusionar por **HTML válido**. Si permite fusionar, revisa el ruleset y las excepciones; no pulses el botón de fusión.
+
+**4 · Cierra la prueba.** Pulsa **Close pull request**, sin fusionar, y **Delete branch** para borrar la rama remota de prueba. En local ejecuta `git switch main`: el error queda fuera de la versión integrada. La rama local de diagnóstico puede conservarse; no necesitas forzar su borrado.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lista de verificación del bloque C</p>
   <ul class="checklist">
-    <li>La pull request con marcado inválido no admite la fusión y la interfaz indica el motivo del bloqueo.</li>
-    <li>El nombre de la comprobación obligatoria coincide con el valor de <code>name</code> declarado en el job.</li>
-    <li>La rama de prueba está cerrada y eliminada.</li>
+    <li>El workflow corregido está integrado y su check es obligatorio en el portfolio.</li>
+    <li>La PR de diagnóstico mostró el bloqueo y se cerró sin fusionar.</li>
+    <li>Main y la página publicada conservan el HTML correcto.</li>
   </ul>
 </div>
 
-#### Bloque D · Primera sección del portfolio definitivo
+#### Bloque D · Mejora del portfolio con validación activa
 
-<p class="stage stage--solo">Trabajo individual, con la validación automática ya activa</p>
+**1 · Selecciona una tarea pendiente.** Conserva la cabecera creada en la sesión 2. Añade ahora una sección de presentación: un encabezado y un párrafo que expliquen tu perfil y el tipo de proyecto que estás construyendo. Si esa sección ya está terminada, elige otra mejora pendiente con un alcance equivalente. Especifica el resultado en su issue antes de editar.
 
-Concluye la fase del documento mínimo de verificación. Selecciona del tablero la issue correspondiente a la cabecera e implementa la primera sección real del portfolio con estructura semántica: un encabezado con navegación, un contenido principal y un pie de página. Sin hojas de estilo todavía: en esta fase el objetivo es la corrección estructural del documento.
+**2 · Desarrolla sobre una nueva rama.** Repite el flujo de la sesión 2: `main` actualizada → rama con el número real → edición → comprobación local → commit → publicación → PR. No reutilices las ramas de diagnóstico ni rehagas la cabecera. Ejecuta también el comando de validación local del bloque A.
+
+**3 · Integra y verifica.** En la PR comprueba **HTML válido**, solicita la revisión de tu pareja y atiende sus comentarios. Fusiona después de ambas comprobaciones. Espera al despliegue de Pages y verifica la mejora en la URL pública.
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La cabecera y una sección de presentación, integradas mediante pull request y con ambos checks en estado correcto.</span></div>
-  <div><strong>Ampliación</strong><span>La navegación enlazando las secciones aún no implementadas, registradas previamente como issues.</span></div>
-  <div><strong>Reto</strong><span>Incorporar al workflow un segundo job que verifique la ausencia de archivos con mayúsculas o espacios en el nombre, mediante una única instrucción <code>run</code>.</span></div>
+  <div><strong>Objetivo esencial</strong><span>Workflow de HTML obligatorio, pruebas de fallo y recuperación realizadas, y una mejora del portfolio integrada con revisión y validación.</span></div>
+  <div><strong>Consolidación</strong><span>Otra tarea pendiente con el mismo recorrido. Si añades navegación, enlaza únicamente secciones que ya existan.</span></div>
+  <div><strong>Continuación</strong><span>Si puedes explicar el workflow y has verificado todo el recorrido, continúa con la validación de enlaces de la sesión 4.</span></div>
 </div>
-
----
 
 ### Cierre
 
 <p class="stage">15 minutos · comprobación del resultado</p>
 
+<div class="checkpoint">
+  <p class="checkpoint-label">Resultados esperados de la sesión</p>
+  <ul class="checklist">
+    <li>El repositorio contiene la configuración del validador y el workflow CI, además del workflow de publicación.</li>
+    <li>Puedes explicar los tres pasos del job y localizar un diagnóstico de HTML y un fallo de preparación de Node.</li>
+    <li>HTML válido es obligatorio y has observado una PR bloqueada por su resultado.</li>
+    <li>La última versión de main supera el check; las pruebas incorrectas no permanecen en el código integrado.</li>
+    <li>Una mejora nueva del portfolio ha pasado revisión, validación y comprobación en la URL pública.</li>
+  </ul>
+</div>
 
 <div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Autoevaluación conceptual · sin consulta de apuntes</p>
+  <p class="checkpoint-label">Autoevaluación</p>
   <ol>
-    <li>¿Por qué la primera etapa de casi todos los jobs es <code>actions/checkout</code>?</li>
-    <li>¿Qué diferencia existe entre <code>uses</code> y <code>run</code>?</li>
-    <li>Un workflow se completa con éxito en el runner pero falla en la estación local de otra persona. ¿Cuál de los dos entornos constituye la referencia y por qué?</li>
-    <li>¿Por qué una comprobación que no bloquea la fusión pierde eficacia con el tiempo?</li>
-    <li>¿En qué punto del registro de ejecución se localiza el motivo de un fallo?</li>
+    <li>¿Qué diferencia hay entre validar una PR y publicar el cambio?</li>
+    <li>¿Qué aporta checkout y qué diferencia hay entre uses y run?</li>
+    <li>¿Qué revisarías si el mismo comando funciona en CI pero falla en tu equipo?</li>
+    <li>¿Qué condición convierte un check fallido en un bloqueo de la fusión?</li>
+    <li>¿Qué debe seguir comprobando tu pareja aunque HTML válido esté verde?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque el runner se aprovisiona a partir de una imagen base que no contiene el código fuente del repositorio; su obtención debe declararse de forma explícita.</p>
-  <p>2 · <code>uses</code> invoca una acción reutilizable ya publicada por terceros; <code>run</code> ejecuta una instrucción propia en el intérprete de comandos del runner.</p>
-  <p>3 · El runner, por tratarse de un entorno reproducible que parte de un estado inicial conocido. La estación local acumula configuración no declarada que ningún otro sistema comparte.</p>
-  <p>4 · Porque una advertencia que no condiciona la integración se omite en cuanto existe presión de entrega. Una comprobación no vinculante deja de ejercer función de control de calidad.</p>
-  <p>5 · En la etapa marcada como fallida, comenzando la lectura por sus últimas líneas.</p>
+  <p>1 · La validación analiza la propuesta antes de integrarla. La publicación de Pages sirve los archivos después de fusionar en main.</p>
+  <p>2 · Checkout obtiene el código en el runner. Uses llama a una acción reutilizable; run ejecuta un comando.</p>
+  <p>3 · Las versiones, el commit utilizado, los archivos de configuración, el directorio de ejecución y las diferencias del sistema operativo. El estado del runner no demuestra por sí solo la causa del fallo local.</p>
+  <p>4 · Un ruleset activo que incluya la rama de destino y exija ese check, sin una excepción que permita saltarlo.</p>
+  <p>5 · Que se cumplan los criterios de aceptación y que el cambio haga lo solicitado. El validador solo cubre las reglas configuradas.</p>
 </details>
 
-<div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 4</p>
-  <ul class="checklist">
-    <li>Dos issues adicionales del portfolio recorridas íntegramente fuera del aula, con ambos checks en estado correcto.</li>
-    <li>Una revisión registrada en el repositorio de tu pareja, indicando qué aspectos se verificaron.</li>
-    <li>La relación de enlaces externos que incluirá el portfolio: GitHub, LinkedIn, correo electrónico y proyectos.</li>
-  </ul>
-</div>
+Conserva las tareas pendientes en el tablero. La sesión 4 ampliará este mismo workflow para comprobar enlaces y formato; no necesitas crear otro proyecto ni completar tareas adicionales fuera del aula para empezar.
 
 ## Sesión 4 · Validación de enlaces y normalización del formato
 

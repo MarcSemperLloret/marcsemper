@@ -1188,6 +1188,18 @@ Está mal, y conviene que sepas por qué: **le estás diciendo al cliente que to
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
+**Prepara la rama antes de editar.** En Intermodular 2 has protegido `main` también en este backend. Crea aquí una issue para añadir el modelo JSON y la primera escritura, con criterios que permitan comprobar el listado y el POST. Asígnatela. En el ejemplo su número es `12`: sustitúyelo por el real en la rama y, al abrir la PR, en `Closes #12`.
+
+Abre una terminal en la carpeta del backend, donde está `pom.xml`, y comprueba con `git status` que no quedan cambios pendientes. Con el trabajo anterior publicado en `main`, ejecuta:
+
+```bash
+git switch main
+git pull --ff-only
+git switch -c 12-json-y-escritura
+```
+
+Si todavía queda una PR de trabajo anterior sin integrar, completa primero su revisión e integración. Durante esta sesión guarda los cambios en esta rama; el [procedimiento de ramas y revisión de Intermodular](/es/docencia/proyecto-intermodular/ud1-poner-el-circuito-en-marcha/sesion-2/) es el mismo para este código Java.
+
 1. Arranca el proyecto y abre una ruta de la sesión 2. Mantén el navegador para comprobar las primeras respuestas; instalarás y usarás Postman o Bruno en el paso dedicado al cliente HTTP.
 2. Crea el paquete `model` bajo tu paquete base y localiza el paquete `controller`. Las clases de datos irán en el primero y los métodos HTTP en el segundo.
 3. Escoge tres campos de tu entidad principal y un registro de ejemplo. Escribe qué tipo Java corresponde a cada campo; usarás los mismos nombres al redactar el JSON.
@@ -1727,16 +1739,19 @@ Cada integrante explica una decisión del código apoyándose en una de las comp
   <p>8 · Todo lo guardado. La lista vive en la memoria del proceso, y al reiniciar el proceso se crea de nuevo, vacía.</p>
 </details>
 
-**Antes de cerrar, sube el trabajo a GitHub.**
+**Antes de cerrar, publica la rama y abre su PR.** Comprueba que estás en la rama creada al inicio, con su número real de issue, y que `target/` está excluido por `.gitignore`.
 
 ```bash
 git status
 git add .
-git commit -m "Completar sesión 03: modelo, JSON y primera escritura"
-git push
+git diff --cached
+git commit -m "Anadir modelo JSON y primera escritura"
+git push -u origin 12-json-y-escritura
 ```
 
-Revisa en `git status` que se publican la clase del modelo y los controladores modificados hoy. Un commit por sesión mantiene el historial legible y acredita el trabajo repartido en el tiempo que evalúa Proyecto Intermodular.
+Revisa el contenido preparado con `git diff --cached` antes de confirmar. Abre la PR hacia `main`, incluye `Closes #12` con el número real y explica qué peticiones permiten comprobar el listado y la escritura. Tu pareja revisa la rama y ejecuta esas peticiones en su copia del backend; debe detener cualquier otra aplicación que ocupe el puerto 8080 antes de arrancarla. Corrige sobre la misma rama si hace falta y fusiona después de la revisión. Todavía no se exige un despliegue público ni el check de HTML del portfolio.
+
+Los commits deben reflejar cambios comprensibles durante el trabajo; no necesitas limitarte a uno al final de la sesión. El resultado evaluable es el código y sus comprobaciones en Servidor, y el recorrido de la issue, la rama y la revisión en Intermodular.
 
 
 ## Sesión 4 · Primera versión CRUD en memoria
@@ -1777,6 +1792,18 @@ Hoy la colección vive en el proceso Java. El reinicio elimina sus datos y es un
 <p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
+
+**Continúa con el flujo del backend.** Comprueba que la PR de la sesión 3 está revisada e integrada. Crea una issue para completar el CRUD en memoria, indicando las operaciones que comprobarás. En los comandos se usa el número `13`: sustitúyelo por el número real de tu nueva issue.
+
+En la carpeta del backend, con `git status` sin cambios pendientes:
+
+```bash
+git switch main
+git pull --ff-only
+git switch -c 13-crud-en-memoria
+```
+
+Realiza los cambios de hoy en esa rama. No vuelvas a enviar código directamente a `main`: se integra mediante una PR, como has practicado en Intermodular.
 
 1. Abre el controlador y la clase del modelo utilizados en la sesión 3. Arranca y reproduce el alta y el listado con tu cliente HTTP.
 2. Localiza la lista que guarda los objetos y el método POST. Ahí revisarás la asignación de identificadores; conserva las rutas que ya funcionan.
@@ -1963,16 +1990,17 @@ El CRUD funciona desde la colección HTTP y el README declara que esta primera v
 
 Cada integrante explica una decisión del código apoyándose en una de las comprobaciones realizadas.
 
-**Antes de cerrar, sube el trabajo a GitHub.** Es la última sesión de la unidad: lo que quede sin publicar no forma parte de la entrega.
+**Antes de cerrar, publica la rama y abre su PR.** Utiliza el nombre de rama con el número real de la issue creada al inicio.
 
 ```bash
 git status
 git add .
-git commit -m "Completar sesión 04: CRUD en memoria"
-git push
+git diff --cached
+git commit -m "Completar CRUD en memoria"
+git push -u origin 13-crud-en-memoria
 ```
 
-Comprueba además que el README publicado declara la pérdida de datos al reiniciar. Es la única advertencia que recibe quien abra el repositorio sin haber estado en clase.
+Antes del commit, revisa que solo preparas los archivos del proyecto y que `target/` queda excluido. En la PR hacia `main`, incluye `Closes #13` con el número real y los pasos para comprobar crear, listar, consultar, modificar y borrar. Solicita la revisión sobre la rama, atiende las correcciones y fusiona cuando se hayan comprobado los criterios. Comprueba además que el README integrado declara la pérdida de datos al reiniciar. La revisión se realiza sobre el backend local; su puesta en producción llegará más adelante en Intermodular.
 
 
 ## Lo que debes recordar
