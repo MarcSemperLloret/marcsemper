@@ -1162,26 +1162,6 @@ Si existe también un método GET para esa ruta, el navegador ejecutará ese GET
   </ol>
 </figure>
 
-#### Distinguir el estado de HTTP del estado de la aplicación
-
-##### ¿Por qué se conserva la lista, si HTTP no recuerda nada?
-
-HTTP trata cada petición como un intercambio independiente. Sin embargo, el programa puede conservar datos entre peticiones: hoy lo observarás al añadir una tarea a una lista y consultarla después.
-
-No hay contradicción. Lo que no recuerda nada es **el protocolo**: la petición número 3 no sabe que existió la número 2. Pero **el programa sigue vivo entre una y otra**, con su memoria intacta, y tu `ArrayList` es un atributo de un objeto que Spring creó una sola vez al arrancar y reutiliza para todas las peticiones.
-
-<div class="rule">
-  <p class="rule-label">Compruébalo de la peor manera posible</p>
-  <p>Crea dos o tres tareas. Después <strong>para la aplicación y vuelve a arrancarla</strong>. Pide <code>GET /tareas</code>.</p>
-  <p>Vacío. Todo perdido. La memoria es del proceso, y el proceso ha muerto. El comportamiento no constituye un defecto del trabajo realizado, sino exactamente el problema que resuelve una base de datos, y por eso existe la UD5.</p>
-</div>
-
-##### ¿Por qué `GET /tareas/999` no da error?
-
-Pruébalo. Devuelve `200` y un cuerpo vacío, porque tu método devuelve `null` y Spring no tiene nada que serializar.
-
-Está mal, y conviene que sepas por qué: **le estás diciendo al cliente que todo ha ido bien cuando no has encontrado lo que pedía**. Lo correcto sería un `404`. Todavía no sabemos fijar el código de estado a mano —eso es la UD2—, así que hoy lo dejamos anotado como defecto conocido.
-
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · implementación guiada sobre el proyecto propio</p>
@@ -1202,7 +1182,13 @@ Si todavía queda una PR de trabajo anterior sin integrar, completa primero su r
 
 1. Arranca el proyecto y abre una ruta de la sesión 2. Mantén el navegador para comprobar las primeras respuestas; instalarás y usarás Postman o Bruno en el paso dedicado al cliente HTTP.
 2. Crea el paquete `model` bajo tu paquete base y localiza el paquete `controller`. Las clases de datos irán en el primero y los métodos HTTP en el segundo.
-3. Escoge tres campos de tu entidad principal y un registro de ejemplo. Escribe qué tipo Java corresponde a cada campo; usarás los mismos nombres al redactar el JSON.
+3. Identifica las dos entidades de tu proyecto y sus controladores. El recorrido utiliza `Tarea` y `Proyecto`: primero comprobarás la salida JSON de ambas; después añadirás la entrada y el almacenamiento a `Tarea` y aplicarás el mismo procedimiento a `Proyecto`.
+
+**Mantén los nombres de tu proyecto.** Si elegiste otro dominio en la sesión 1, anota antes de seguir qué entidad corresponde a `Tarea` y cuál a `Proyecto`, junto con sus clases, campos y rutas. Sustituye esos nombres de forma consistente en el código, las URL y los cuerpos JSON. No necesitas crear un segundo proyecto Spring Boot ni entidades adicionales solo para copiar el ejemplo.
+
+**Localiza tu paquete base.** Es el que aparece en la línea `package` de la clase principal con `@SpringBootApplication`. Los ejemplos usan `com.ejemplo.gestor`: si el tuyo es `com.ejemplo.biblioteca`, utiliza `com.ejemplo.biblioteca.model` y `com.ejemplo.biblioteca.controller`, cambia los imports y guarda los archivos bajo `src/main/java/com/ejemplo/biblioteca/`. Mantén los paquetes `model` y `controller` dentro de ese paquete base.
+
+Durante la práctica, **reiniciar** significa guardar los archivos, detener la ejecución anterior y volver a arrancar la aplicación como en la sesión 1. Espera a que termine el arranque antes de enviar peticiones. Modificar el JSON en el cliente HTTP no requiere reiniciar el servidor.
 
 #### Paso 2 · El modelo · una clase Java normal
 
@@ -1262,7 +1248,7 @@ public class Tarea {
 }
 ```
 
-Esta clase utiliza Java sin anotaciones: cuatro atributos privados, dos constructores y métodos para leer y cambiar los valores. Guarda el archivo en `src/main/java/com/ejemplo/gestor/model/Tarea.java`. Si lo adaptas a otra entidad, conserva la correspondencia entre nombre de clase, archivo, atributos y métodos de acceso.
+Esta clase utiliza Java sin anotaciones: cuatro atributos privados, dos constructores y métodos para leer y cambiar los valores. Guarda el archivo en `src/main/java/com/ejemplo/gestor/model/Tarea.java`, ajustando el paquete y la entidad según el paso 1. Conserva la correspondencia entre nombre de clase, archivo, atributos y métodos de acceso.
 
 Fíjate solo en dos detalles, porque los dos van a importar:
 
@@ -1326,7 +1312,7 @@ Recuerda el reparto de la sesión 1. Cuando tu método termina, Spring tiene un 
 
 Convertir un objeto en memoria a un formato de texto que se pueda transmitir o guardar. Lo contrario —texto a objeto— es *deserializar*, y llega en el trabajo siguiente.
 
-#### Paso 4 · Jackson lee los getters, no los atributos
+#### Paso 4 · Los getters y las claves del JSON en este modelo
 
 El experimento se hace en el modelo, no en el controlador: cambia temporalmente un getter de `Tarea.java`, guarda, reinicia y consulta `/tareas/ejemplo`. Compara las claves del JSON con las que tenía antes. Restaura el getter al terminar para que los pasos de entrada de datos partan del modelo completo. No cambies simultáneamente el nombre del campo y el de la ruta.
 
@@ -1338,11 +1324,11 @@ Escribe qué clave esperas ver en el JSON: ¿`titulo` o `nombre`?
 {"id":1,"nombre":"Revisar el login","prioridad":"alta","completada":false}
 ```
 
-La clave es `nombre`. Jackson nunca miró el atributo privado: recorrió los métodos públicos que empiezan por `get` o por `is`, les quitó ese prefijo y pasó a minúscula la primera letra.
+La clave es `nombre`. En este modelo, con atributos privados y sin anotaciones de Jackson, los getters permiten detectar las propiedades de salida. Para estos nombres, `getNombre()` produce `nombre` e `isCompletada()` produce `completada`. Jackson también admite campos públicos, anotaciones y otras configuraciones; aquí comprobamos el comportamiento de la clase que acabas de escribir.
 
 <dl class="worked">
   <dt>Qué significa en la práctica</dt>
-  <dd>El JSON que ve el cliente lo determinan tus <em>getters</em>, no tus atributos. Renombrar un <em>getter</em> es un cambio visible desde fuera.</dd>
+  <dd>En este ejemplo, renombrar un <em>getter</em> cambia una clave que ve el cliente, aunque conserves el nombre del atributo privado.</dd>
   <dt>Por qué <code>completada</code> aparece bien</dt>
   <dd>Porque para los <code>boolean</code> la convención es <code>is</code>, y Jackson también quita ese prefijo. Si lo hubieras llamado <code>getCompletada()</code>, la clave seguiría siendo <code>completada</code>. Si lo llamas <code>estaCompletada()</code>, sin prefijo reconocible, <strong>el campo desaparece del JSON</strong> sin ningún error.</dd>
   <dt>El fallo típico que provoca</dt>
@@ -1359,7 +1345,7 @@ Deja `getTitulo()` como estaba antes de seguir.
 
 #### Paso 5 · Devolver varias tareas
 
-Añade el método de listado al mismo `TareaController`, conservando `/ejemplo`. Importa `java.util.List` al principio del archivo. Esta primera lista contiene objetos escritos en el código para observar un array JSON; en el paso 11 se sustituirá por una lista mutable compartida entre peticiones. Comprueba en el navegador que los corchetes exteriores indican varios objetos y las llaves delimitan cada uno.
+Añade el método de listado al mismo `TareaController`, conservando `/ejemplo`. Si ya tienes un método con `@GetMapping` sin ruta adicional, sustituye ese método: solo debe quedar uno que atienda `GET /tareas`. Importa `java.util.List` al principio del archivo. Esta primera lista contiene objetos escritos en el código para observar un array JSON; en el paso 11 se sustituirá por una lista mutable compartida entre peticiones.
 
 ```java
 @GetMapping
@@ -1371,7 +1357,7 @@ public List<Tarea> lista() {
 }
 ```
 
-Recuerda importar `java.util.List`.
+Guarda y reinicia. Abre `http://localhost:8080/tareas` y comprueba que los corchetes exteriores indican una lista y las llaves delimitan cada objeto.
 
 `GET /tareas` responde:
 
@@ -1390,30 +1376,32 @@ El navegador lo mostrará todo seguido en una línea. No se trata de un defecto:
 
 #### Paso 6 · Cuando un campo vale null
 
-Prueba a devolver una tarea con la prioridad sin asignar:
+En `TareaController.java`, localiza el método `ejemplo()` del paso 3 y sustituye únicamente su línea `return` por esta. Conserva el método `lista()` del paso 5:
 
 ```java
 return new Tarea(1, "Revisar el login", null, false);
 ```
 
+Guarda, reinicia y abre `http://localhost:8080/tareas/ejemplo`. La respuesta debe contener:
+
 ```json
 {"id":1,"titulo":"Revisar el login","prioridad":null,"completada":false}
 ```
 
-La clave aparece con el valor `null`: el campo está presente y no tiene valor. Distingue ese caso de omitir la clave y de enviar una cadena vacía `""`. No son lo mismo, aunque una configuración concreta pueda tratarlos de forma equivalente. Volveremos a esta distinción al validar entradas en la UD3.
+La clave aparece con el valor `null`: el campo está presente y no tiene valor. Distingue ese caso de omitir la clave y de enviar una cadena vacía `""`. No son lo mismo, aunque una configuración concreta pueda tratarlos de forma equivalente. Volveremos a esta distinción al validar entradas en la UD3. Al terminar, restaura `"alta"` en esa línea, guarda y reinicia para continuar con el ejemplo inicial.
 
-#### Paso 7 · Definir el modelo de tu propio dominio
+#### Paso 7 · Preparar la salida JSON de la segunda entidad
 
-Aplica la clase de ejemplo a tu entidad: escribe primero sus campos y tipos, después el constructor vacío, el constructor con datos y los métodos de acceso. Revisa que una propiedad `nombre` tenga `getNombre()` y `setNombre(...)`. Crea un objeto en el endpoint `/ejemplo` y compara campo a campo su JSON con los valores del constructor antes de pasar al POST.
+Conserva `Tarea.java` y `TareaController.java`: volverás a ellos en el paso 8. Ahora prepara la segunda entidad, `Proyecto` en el ejemplo, en archivos independientes. Escribe primero sus campos y tipos, después el constructor vacío, el constructor con datos y los métodos de acceso. Revisa que una propiedad `nombre` tenga `getNombre()` y `setNombre(...)`.
 
 1. Crea la clase `Proyecto` en el paquete `model`, con al menos: `id`, `nombre`, `descripcion`, `activo` y `numeroDeIncidencias`.
-2. Escribe un `ProyectoController` con dos rutas:
+2. En el paquete `controller`, crea `ProyectoController` o edita el que ya preparaste en la sesión 2. Utiliza `@RestController` y `@RequestMapping("/proyectos")`. Sustituye las respuestas de texto de estas dos rutas por objetos, sin duplicar sus métodos:
    * `GET /proyectos` devuelve una lista con tres proyectos inventados.
    * `GET /proyectos/{id}` devuelve **uno solo**, construido con el `id` recibido.
-3. Comprueba las dos en el navegador y anota, del panel de red, el código de estado y el `Content-Type`.
+3. Guarda, reinicia y abre `http://localhost:8080/proyectos` y `http://localhost:8080/proyectos/1`. Compara las claves y los valores del JSON con los objetos que construiste. Anota, del panel de red, el código de estado y el `Content-Type`.
 4. Escribe en un comentario qué claves exactas tiene tu JSON y de qué método sale cada una.
 
-Añade después un atributo `private String notaInterna` **sin escribir su getter**. Reinicia, mira el JSON y explica en una frase por qué no aparece.
+Añade después a `Proyecto.java` un atributo `private String notaInterna` **sin escribir su getter**. Reinicia, consulta `/proyectos/1` y explica en una frase por qué no aparece. Después retira ese atributo experimental. Deja los dos archivos de `Proyecto` guardados: en el paso 12 les añadirás el almacenamiento. Los pasos 8–11 continúan sobre `TareaController`.
 
 <p class="stage">Postman y la primera escritura</p>
 
@@ -1433,7 +1421,7 @@ Usaremos **Postman** para los ejemplos. Puedes utilizar **Bruno** para enviar la
 
 Instala la aplicación de escritorio de [Postman](https://www.postman.com/downloads/). Hoy puedes utilizar el cliente ligero sin iniciar sesión para enviar peticiones. En la sesión 7 necesitarás una cuenta y un espacio de trabajo para colecciones y entornos, o utilizar Bruno siguiendo su recorrido. Mantén el historial de las peticiones válidas para recuperarlas después.
 
-Antes de probar nada nuevo, comprueba la herramienta con algo cuyo resultado ya conoces. Es una costumbre que te ahorrará muchas confusiones: si falla, sabrás que falla la herramienta y no tu código.
+Mantén el servidor arrancado. Antes de probar nada nuevo, consulta desde Postman el listado que ya funciona en el navegador. Si las respuestas difieren, compara el método, la URL y el puerto antes de cambiar el código.
 
 1. Crea una petición nueva.
 2. Deja el método en `GET`.
@@ -1451,7 +1439,16 @@ Abajo aparece la respuesta. Localiza estas cuatro cosas, que son las mismas de l
 
 Compara ese JSON con el que veías en el navegador. Es el mismo texto: lo único que cambia es que aquí se lee.
 
-Antes de enviar POST, añade a `TareaController` el método temporal `crear()` de la demostración, dentro de la clase. Añade también `import org.springframework.web.bind.annotation.PostMapping;` junto a los demás imports. Guarda y reinicia. Cambia entonces el método de `GET` a `POST` en el desplegable, sin tocar la URL, y pulsa `Send`.
+Antes de enviar POST, abre `TareaController.java`. Conserva `ejemplo()` y `lista()` y añade este método dentro de la clase, antes de su última llave. Si ya copiaste el método de la demostración, utiliza ese; no lo dupliques.
+
+```java
+@PostMapping
+public String crear() {
+    return "Alguien ha hecho un POST";
+}
+```
+
+Añade `import org.springframework.web.bind.annotation.PostMapping;` junto a los demás imports. Guarda y reinicia. En Postman, cambia el método de `GET` a `POST`, mantén `http://localhost:8080/tareas` y deja **Body → none**: esta primera prueba no necesita cuerpo. Pulsa **Send**. Debes recibir `200 OK` y este texto:
 
 ```text
 Alguien ha hecho un POST
@@ -1487,7 +1484,7 @@ Lo contrario de la serialización que acabas de observar: convertir el texto JSO
   </ol>
 </figure>
 
-En este modelo con constructor vacío y setters, **para esto hacía falta el constructor vacío**. Jackson necesita poder crear el objeto antes de saber qué valores va a ponerle. Si borras ese constructor, este endpoint deja de funcionar.
+En este modelo con constructor vacío y setters, Jackson puede crear primero la instancia y asignarle después los valores recibidos. Conserva el constructor vacío para seguir este procedimiento. No es un requisito universal de Jackson: otras clases pueden usar records o constructores configurados para recibir las propiedades, pero aquí no necesitas cambiar la forma de construcción.
 
 En el modelo de este ejercicio ofrecemos getters para leer y setters para escribir. Jackson también puede utilizar campos y otras formas de construcción según su configuración: quitar un setter no garantiza que una propiedad deje de admitirse. Mantén los accesos del ejemplo y comprueba el JSON recibido y devuelto.
 
@@ -1508,7 +1505,7 @@ En el modelo de este ejercicio ofrecemos getters para leer y setters para escrib
 
 6. `Send`.
 
-La respuesta devuelve el mismo objeto. Ha hecho un viaje completo: texto JSON, objeto Java, texto JSON otra vez.
+La respuesta debe mostrar `200 OK` y devolver los mismos valores en JSON, aunque cambien el orden de las claves o los espacios. Ha hecho un viaje completo: texto JSON, objeto Java, texto JSON otra vez. Todavía no se guarda nada: `GET /tareas` sigue devolviendo los dos objetos escritos en el código. El almacenamiento se añade en el paso 11.
 
 <div class="rule">
   <p class="rule-label">El paso 4 es el que se olvida</p>
@@ -1547,7 +1544,9 @@ Responde `200`, y la prioridad llega como `null`. Nadie te avisa de nada.
 
 #### Paso 11 · Guardar las tareas en memoria
 
-Hasta ahora el POST devolvía el objeto recibido sin almacenarlo. Sustituye el contenido de `TareaController.java` por esta versión, que conserva una lista entre peticiones. El ejemplo incluye los imports y todos los métodos necesarios: no lo pegues dentro de la clase anterior. Si ya adaptaste el modelo a tu dominio, mantén esos mismos nombres y campos.
+Hasta ahora el POST devolvía el objeto recibido sin almacenarlo. Sustituye el contenido de `TareaController.java` por esta versión, que conserva una lista entre peticiones. El ejemplo incluye los imports y todos los métodos necesarios: no lo pegues dentro de la clase anterior. Mantén el paquete y los nombres de tu dominio acordados en el paso 1. Conserva el modelo `Tarea.java` y los archivos de la segunda entidad.
+
+Este cambio sustituye el listado fijo y el POST anterior, añade la consulta por identificador y retira el método `/ejemplo`. Desde ahora comprobarás `GET /tareas`, `POST /tareas` y `GET /tareas/{id}`. La dirección `/tareas/ejemplo` deja de ser una prueba válida.
 
 ```java
 package com.ejemplo.gestor.controller;
@@ -1592,9 +1591,9 @@ public class TareaController {
 }
 ```
 
-Es Java corriente: una `ArrayList`, un bucle y un `add`. Toda la parte web son cinco anotaciones que ya conoces.
+La lista `tareas` se declara como atributo de la clase, fuera de los métodos, para que el POST y los dos GET accedan a los mismos datos. `tareas.add(tarea)` incorpora el objeto recibido; el listado devuelve la lista y el bucle de `detalle()` busca una tarea por su identificador. Si declararas una lista nueva dentro de cada método, no compartirían los registros.
 
-Ejecuta estas cuatro peticiones **en este orden** y ve prediciendo cada respuesta antes de pulsar `Send`:
+**Guarda y reinicia una vez antes de empezar.** En Postman, utiliza la base `http://localhost:8080`. Para el POST, recupera el JSON válido del paso 9, con `"id": 1`, y comprueba **Body → raw → JSON**. Ejecuta estas cuatro peticiones **en este orden, sin reiniciar ni editar código entre ellas**, y predice cada respuesta antes de pulsar **Send**. En esta versión las cuatro responden con `200 OK`:
 
 | # | Petición | Qué debe pasar |
 | :---: | :--- | :--- |
@@ -1603,16 +1602,57 @@ Ejecuta estas cuatro peticiones **en este orden** y ve prediciendo cada respuest
 | 3 | `GET /tareas` | Ahora sale un array con una tarea |
 | 4 | `GET /tareas/1` | Sale esa tarea sola, como objeto |
 
-Cuando la cuarta responda, para y date cuenta de lo que acabas de construir: **una petición ha cambiado lo que devuelve otra**. Eso ya es una aplicación, no un ejercicio.
+Cuando la cuarta responda, comprueba la diferencia con el paso 9: **el POST ha cambiado los datos que devuelven los GET posteriores**. Antes de pasar a la segunda entidad, verifica que recuperas el título y la prioridad que acabas de enviar.
+
+##### Estado de la aplicación y pérdida de datos al reiniciar
+
+HTTP trata cada petición como un intercambio independiente, pero la aplicación puede conservar datos entre peticiones. Con la configuración de este ejercicio, Spring reutiliza la misma instancia del controlador y su lista mientras la aplicación sigue ejecutándose.
+
+Detén ahora la aplicación, vuelve a arrancarla y envía `GET /tareas`. Debe devolver `[]`: la lista se crea de nuevo al arrancar y los datos anteriores solo estaban en la memoria del proceso. La persistencia en una base de datos se incorporará en la UD5. Vuelve a enviar el POST válido si necesitas recuperar la tarea para otra comprobación.
+
+##### Consulta de un identificador inexistente
+
+Envía `GET http://localhost:8080/tareas/999`, asegurándote de no haber creado una tarea con ese identificador. Observa el estado `200 OK` y el cuerpo vacío. El bucle termina sin encontrar la tarea y el método devuelve `null`.
+
+Anótalo como defecto conocido: la respuesta debería ser `404 Not Found` para indicar que el recurso no existe. En la UD2 aprenderás a establecer ese estado. Distingue este cuerpo vacío del array `[]` que devuelve un listado sin elementos.
+
+<details class="aside aside--help">
+  <summary>Diagnóstico de errores durante las comprobaciones</summary>
+  <table>
+    <thead><tr><th>Resultado observado</th><th>Primera comprobación</th></tr></thead>
+    <tbody>
+      <tr><td>Conexión rechazada o ausencia de respuesta HTTP</td><td>Comprueba que la aplicación haya terminado de arrancar y que la URL utilice el puerto mostrado en la consola. Si el puerto 8080 está ocupado, detén la ejecución anterior antes de arrancar otra.</td></tr>
+      <tr><td>La aplicación no arranca y muestra <code>Ambiguous mapping</code></td><td>Busca dos métodos con la misma combinación de ruta y método HTTP. Al sustituir un ejemplo, elimina la versión anterior; GET y POST sí pueden compartir la ruta.</td></tr>
+      <tr><td><code>404 Not Found</code> en una ruta que debería existir</td><td>Compara la URL con <code>@RequestMapping</code> y la anotación del método. Comprueba también que el controlador esté dentro del paquete base y que hayas reiniciado tras editarlo.</td></tr>
+      <tr><td><code>400 Bad Request</code> al enviar el POST</td><td>Revisa comillas dobles, comas y tipos de los valores del cuerpo. Recupera primero el JSON válido del paso 9.</td></tr>
+      <tr><td><code>415 Unsupported Media Type</code></td><td>Selecciona <strong>Body → raw → JSON</strong> y comprueba que la petición envía <code>Content-Type: application/json</code>.</td></tr>
+      <tr><td>POST correcto, pero el listado no contiene la tarea</td><td>Comprueba que <code>crear()</code> ejecute <code>tareas.add(tarea)</code>, que ambos métodos usen la lista declarada como atributo y que no hayas reiniciado entre peticiones.</td></tr>
+    </tbody>
+  </table>
+</details>
 
 #### Paso 12 · Aplicar el patrón a la segunda entidad de tu proyecto
 
-Retoma el controlador de la otra entidad que preparaste en la sesión 2, por ejemplo `ProyectoController`. Aplica el procedimiento que acabas de realizar: crea su modelo, sustituye las respuestas de texto por objetos y listas y añade el POST que conserva los objetos en memoria. Usa estos criterios para comprobarlo:
+Retoma `Proyecto.java` y `ProyectoController.java`, que dejaste preparados en el paso 7. Conserva los campos y accesos del modelo. En su controlador, aplica el almacenamiento que acabas de comprobar con `Tarea`; mantén también funcionando el controlador de tareas. Usa estos criterios para comprobarlo:
 
 1. Sustituye la lista inventada por un `ArrayList` vacío, como atributo del controlador.
-2. Deja funcionando `GET /proyectos`, `GET /proyectos/{id}` y `POST /proyectos`.
-3. Comprueba las tres en Postman siguiendo la misma secuencia de cuatro pasos de antes, y anota el código de estado de cada una.
+2. Deja funcionando `GET /proyectos`, `GET /proyectos/{id}` y `POST /proyectos`. El listado debe devolver la lista compartida, el detalle debe buscar en ella y el POST debe añadir el objeto recibido. Sustituye el detalle inventado del paso 7 por esa búsqueda.
+3. Guarda y reinicia. Comprueba las tres rutas en Postman siguiendo la misma secuencia de cuatro pasos de antes, sin reiniciar entre envíos, y anota el código de estado de cada una. Utiliza un cuerpo JSON con los campos de `Proyecto`, no los de `Tarea`.
 4. Envía un POST con **un campo mal escrito a propósito** y anota qué llega y qué responde.
+
+Para el modelo propuesto en el paso 7, puedes empezar con este cuerpo en `POST http://localhost:8080/proyectos` y recuperar después el registro con `GET http://localhost:8080/proyectos/1`:
+
+```json
+{
+  "id": 1,
+  "nombre": "Gestor de tareas",
+  "descripcion": "Organizar las tareas del equipo",
+  "activo": true,
+  "numeroDeIncidencias": 0
+}
+```
+
+Ajusta las claves y los valores si tu segunda entidad pertenece a otro dominio. Al terminar, ambos controladores deben conservar y consultar sus propios registros.
 
 #### Paso 13 · Comprobar y registrar el resultado del proyecto
 
@@ -1729,11 +1769,11 @@ Cada integrante explica una decisión del código apoyándose en una de las comp
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · De los métodos públicos que empiezan por <code>get</code> o por <code>is</code>, quitándoles el prefijo y bajando a minúscula la primera letra. No de los atributos privados.</p>
+  <p>1 · En el modelo de esta práctica, de los getters: <code>getTitulo()</code> produce <code>titulo</code> e <code>isCompletada()</code> produce <code>completada</code>. Otras configuraciones o anotaciones de Jackson pueden cambiar cómo se detectan y nombran las propiedades.</p>
   <p>2 · Que tenga <em>getter</em> y que su nombre siga la convención. Un método llamado <code>autor()</code> o <code>estaCompletada()</code> no lo es, y el campo desaparece sin ningún error.</p>
   <p>3 · Un array vacío: <code>[]</code>. Nunca <code>null</code> ni un mensaje de texto.</p>
   <p>4 · Convertir un objeto que está en memoria en texto transmisible, en nuestro caso JSON.</p>
-  <p>5 · Porque el objeto se crea primero, vacío, y solo después se le asignan los valores llamando a los <em>setters</em>. Sin constructor sin argumentos no puede darse el primer paso.</p>
+  <p>5 · En el modelo utilizado, permite crear el objeto antes de asignarle los valores recibidos. Es la forma de construcción elegida para esta práctica; Jackson también admite otras, como records o constructores configurados para recibir las propiedades.</p>
   <p>6 · <code>Content-Type: application/json</code>. Si falta, el servidor responde <code>415 Unsupported Media Type</code>. En Postman se pone sola al elegir JSON en el desplegable del cuerpo.</p>
   <p>7 · Se ignora en silencio, sin error y sin aviso. Por eso una errata en un nombre de campo deja ese valor a <code>null</code> y la petición parece correcta.</p>
   <p>8 · Todo lo guardado. La lista vive en la memoria del proceso, y al reiniciar el proceso se crea de nuevo, vacía.</p>
