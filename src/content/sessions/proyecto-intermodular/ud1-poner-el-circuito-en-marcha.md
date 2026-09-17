@@ -656,7 +656,7 @@ Una **rama de funcionalidad** (*feature branch*) permite registrar los commits d
 
 Por ejemplo, partes del portfolio publicado en `main`, creas una rama para la cabecera y trabajas allí. El sitio público conserva su versión anterior hasta que integres el cambio y termine el despliegue.
 
-Una *pull request* (PR) es una solicitud para integrar los cambios de una rama en otra. GitHub muestra las diferencias de código, llamadas *diff*, y permite añadir comentarios y revisiones. La rama **base** recibe el cambio; la rama **compare** contiene la propuesta. En esta práctica, la base siempre será `main`.
+Una *pull request* es una solicitud para integrar los cambios de una rama en otra. GitHub muestra las diferencias de código, llamadas *diff*, y permite añadir comentarios y revisiones. La rama **base** recibe el cambio; la rama **compare** contiene la propuesta. En esta práctica, la base siempre será `main`.
 
 <figure class="diagram">
   <figcaption>Recorrido de una modificación del portfolio</figcaption>
@@ -675,27 +675,27 @@ Una *pull request* (PR) es una solicitud para integrar los cambios de una rama e
 La **definición de terminado** (*Definition of Done*) reúne las condiciones comunes a todas las tareas. Los criterios de aceptación describen la cabecera concreta; esta definición describe el proceso que seguirá cualquier cambio:
 
 1. La issue describe el resultado y la rama contiene solo los cambios necesarios.
-2. La PR enlaza la issue y explica cómo comprobar el resultado.
+2. La pull request enlaza la issue y explica cómo comprobar el resultado.
 3. Tu pareja prueba la rama y deja una revisión; corriges lo necesario antes de fusionar.
 4. Tras la fusión, compruebas que la issue se cierra y que el despliegue del portfolio termina correctamente.
 5. Abres la URL pública y verificas el cambio real.
 
-Hoy aún no hay un análisis automático del HTML en las PR. Lo añadirás en la sesión 3. El backend se comprueba ejecutándolo en local hasta que llegue su taller de despliegue; no necesita una URL pública para cerrar las tareas de esta semana.
+Hoy aún no hay un análisis automático del HTML en las pull requests. Lo añadirás en la sesión 3. El backend se comprueba ejecutándolo en local hasta que llegue su taller de despliegue; no necesita una URL pública para cerrar las tareas de esta semana.
 
 #### Protección de la rama principal
 
-Un **conjunto de reglas** (*ruleset*) permite a GitHub rechazar operaciones sobre una rama. Hoy exigirás una PR para modificar `main` y bloquearás su borrado y los envíos forzados que reescriben el historial.
+Un **conjunto de reglas** (*ruleset*) permite a GitHub rechazar operaciones sobre una rama. Hoy exigirás una pull request para modificar `main` y bloquearás su borrado y los envíos forzados que reescriben el historial.
 
 <div class="rule">
   <p class="rule-label">Alcance de la protección inicial</p>
-  <p>La configuración de hoy exige una PR, pero establece cero aprobaciones obligatorias. La revisión por tu pareja es un requisito de la actividad que debes cumplir antes de fusionar; GitHub todavía no obliga a obtenerla. Exigir una aprobación desde la plataforma requiere configurar esa condición y contar con un revisor con permisos adecuados. En la sesión 3 añadirás también un check obligatorio de HTML.</p>
+  <p>La configuración de hoy exige una pull request, pero establece cero aprobaciones obligatorias. La revisión por tu pareja es un requisito de la actividad que debes cumplir antes de fusionar; GitHub todavía no obliga a obtenerla. Exigir una aprobación desde la plataforma requiere configurar esa condición y contar con un revisor con permisos adecuados. En la sesión 3 añadirás también un check obligatorio de HTML.</p>
 </div>
 
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · trabajo guiado sobre el portfolio</p>
 
-Los tiempos son orientativos: 30 minutos para el tablero, 25 para la protección y 85 para implementar y revisar cambios. El bloque D es el procedimiento de revisión que usarás dentro del bloque C; forma parte de esos 85 minutos. El resultado esencial es una PR completa. Si lo alcanzas antes, repite el recorrido con otra tarea.
+Los tiempos son orientativos: 30 minutos para el tablero, 25 para la protección y 85 para implementar y revisar cambios. El bloque D es el procedimiento de revisión que usarás dentro del bloque C; forma parte de esos 85 minutos. El resultado esencial es una pull request completa. Si lo alcanzas antes, repite el recorrido con otra tarea.
 
 #### Bloque A · Planificación en GitHub Projects y especificación de issues
 
@@ -742,7 +742,7 @@ Esta regla actúa cuando se cierra una issue del proyecto, incluido el cierre au
 
 **Activa las tres reglas antes de crear las tareas.** La incorporación automática se aplica cuando una issue se crea o se actualiza y cumple el filtro. Activar la regla no incorpora por sí solo las issues que ya existían. Puedes consultar las instrucciones de GitHub sobre [automatizaciones de Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-built-in-automations) e [incorporación automática](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/adding-items-automatically).
 
-**Comprueba el resultado con la primera tarea.** En el paso 5, crea la primera issue desde el repositorio `portfolio` y vuelve al tablero. Debe aparecer en **Todo** sin que la añadas ni le asignes el estado manualmente. Compruébalo antes de crear las otras cinco. Cuando completes esa tarea y se cierre su issue al fusionar la PR, verifica que pasa a **Done**; mantenla abierta mientras esté pendiente.
+**Comprueba el resultado con la primera tarea.** En el paso 5, crea la primera issue desde el repositorio `portfolio` y vuelve al tablero. Debe aparecer en **Todo** sin que la añadas ni le asignes el estado manualmente. Compruébalo antes de crear las otras cinco. Cuando completes esa tarea y se cierre su issue al fusionar la pull request, verifica que pasa a **Done**; mantenla abierta mientras esté pendiente.
 
 <details class="aside aside--help">
   <summary>La issue no aparece o su tarjeta no tiene estado</summary>
@@ -796,16 +796,16 @@ git commit -m "Comprobar proteccion de main"
 git push origin HEAD:main
 ```
 
-`HEAD:main` intenta enviar el commit actual directamente a la rama remota `main`, sin PR. **El resultado esperado es un rechazo por las reglas**, por ejemplo `GH013` o `GH006`, acompañado de un mensaje que exige una pull request. Un error de contraseña o de conexión no demuestra que la protección funcione.
+`HEAD:main` intenta enviar el commit actual directamente a la rama remota `main`, sin pull request. **El resultado esperado es un rechazo por las reglas**, por ejemplo `GH013` o `GH006`, acompañado de un mensaje que exige una pull request. Un error de contraseña o de conexión no demuestra que la protección funcione.
 
 Tras el rechazo, ejecuta `git switch main`. El commit de prueba queda conservado únicamente en la rama local `prueba-proteccion-main`, y tu README vuelve a la versión anterior. Puedes dejar esa rama sin utilizar; no hace falta borrar cambios ni ejecutar `git reset --hard`.
 
 <details class="aside aside--help">
   <summary>Si el envío directo se acepta</summary>
-  <p>La protección no está funcionando como se esperaba. Revisa que el ruleset esté activo, que incluya <code>main</code> y que no haya excepciones en <em>Bypass list</em>. No repitas el envío. Actualiza tu <code>main</code> local con <code>git switch main</code> y <code>git pull --ff-only</code>; elimina la línea temporal mediante una nueva rama y una PR siguiendo el bloque C. No reviertas el historial con un envío forzado.</p>
+  <p>La protección no está funcionando como se esperaba. Revisa que el ruleset esté activo, que incluya <code>main</code> y que no haya excepciones en <em>Bypass list</em>. No repitas el envío. Actualiza tu <code>main</code> local con <code>git switch main</code> y <code>git pull --ff-only</code>; elimina la línea temporal mediante una nueva rama y una pull request siguiendo el bloque C. No reviertas el historial con un envío forzado.</p>
 </details>
 
-**3 · Aplica las mismas reglas al backend.** En GitHub, abre el repositorio que contiene `pom.xml` y `src/`, y configura el mismo ruleset. Comprueba su nombre para no confundirlo con `portfolio`. A partir de las sesiones 3–4 de Servidor, sus cambios también se publican mediante ramas y PR. No copies el workflow de Pages al backend: una aplicación Java requiere otro despliegue, que se trabajará más adelante.
+**3 · Aplica las mismas reglas al backend.** En GitHub, abre el repositorio que contiene `pom.xml` y `src/`, y configura el mismo ruleset. Comprueba su nombre para no confundirlo con `portfolio`. A partir de las sesiones 3–4 de Servidor, sus cambios también se publican mediante ramas y pull requests. No copies el workflow de Pages al backend: una aplicación Java requiere otro despliegue, que se trabajará más adelante.
 
 <dl class="answer">
   <dt>¿Qué mensaje demuestra que GitHub rechazó el envío por la protección de main?</dt>
@@ -820,7 +820,7 @@ Tras el rechazo, ejecuta `git switch main`. El commit de prueba queda conservado
 
 Trabaja con una pareja de revisión: cada persona desarrolla en su repositorio y revisa el de la otra. Intercambia los enlaces de los repositorios públicos. Si trabajas en un grupo de tres, cada persona revisa a la siguiente.
 
-**1 · Selecciona la issue.** Asígnatela mediante **Assignees** y mueve su tarjeta a `In Progress`. Anota su número. En los ejemplos se utiliza `3`: **sustitúyelo por el número real en la rama y en `Closes #3`**. GitHub comparte la numeración entre issues y PR, por lo que los números pueden no ser consecutivos entre tareas.
+**1 · Selecciona la issue.** Asígnatela mediante **Assignees** y mueve su tarjeta a `In Progress`. Anota su número. En los ejemplos se utiliza `3`: **sustitúyelo por el número real en la rama y en `Closes #3`**. GitHub comparte la numeración entre issues y pull requests, por lo que los números pueden no ser consecutivos entre tareas.
 
 **2 · Prepara la rama.** En la carpeta del portfolio, comprueba con `git status` que no quedan cambios pendientes y ejecuta:
 
@@ -844,15 +844,15 @@ git push -u origin 3-cabecera-con-nombre
 
 Si tu tarea modifica otros archivos, añádelos también por su nombre. `-u` configura el seguimiento de la rama remota; los siguientes envíos de esta misma rama se realizan con `git push`.
 
-**5 · Abre la PR.** En GitHub, pulsa **Compare & pull request** o **Pull requests → New pull request**. Comprueba **base: main** y **compare: tu rama**. Escribe un título descriptivo y una descripción con el cambio, los pasos para probarlo y `Closes #3`, usando el número real. Publica la PR y comparte su enlace con tu pareja. Si no puedes seleccionarla en **Reviewers**, puede acceder mediante el enlace y revisar el repositorio público.
+**5 · Abre la pull request.** En GitHub, pulsa **Compare & pull request** o **Pull requests → New pull request**. Comprueba **base: main** y **compare: tu rama**. Escribe un título descriptivo y una descripción con el cambio, los pasos para probarlo y `Closes #3`, usando el número real. Publica la pull request y comparte su enlace con tu pareja. Si no puedes seleccionarla en **Reviewers**, puede acceder mediante el enlace y revisar el repositorio público.
 
-**6 · Revisa antes de fusionar.** Sigue ahora el **bloque D** para probar la rama de tu pareja. La URL pública todavía muestra `main`; por eso la revisión del cambio se realiza en local. Espera también su revisión sobre tu PR.
+**6 · Revisa antes de fusionar.** Sigue ahora el **bloque D** para probar la rama de tu pareja. La URL pública todavía muestra `main`; por eso la revisión del cambio se realiza en local. Espera también su revisión sobre tu pull request.
 
-**7 · Atiende las correcciones.** Si te piden cambios, edita en la misma rama, comprueba el resultado, crea otro commit y ejecuta `git push`. La PR se actualiza automáticamente; no abras otra. Solicita una nueva revisión del resultado corregido.
+**7 · Atiende las correcciones.** Si te piden cambios, edita en la misma rama, comprueba el resultado, crea otro commit y ejecuta `git push`. La pull request se actualiza automáticamente; no abras otra. Solicita una nueva revisión del resultado corregido.
 
 **8 · Fusiona.** Cuando la revisión confirme los criterios, elige **Squash and merge** en el desplegable del botón de fusión y confirma. Esta opción reúne los commits de la tarea en uno nuevo en `main`. Pulsa **Delete branch** para eliminar la rama remota ya integrada.
 
-**9 · Comprueba el resultado.** La issue debe cerrarse, su tarjeta pasar a `Done` y **Actions** iniciar el despliegue. Espera a que termine y abre la URL pública. Si el despliegue falla, la tarea aún necesita atención: anota el fallo y corrígelo mediante otra PR; que la tarjeta esté en `Done` no demuestra que la web funcione.
+**9 · Comprueba el resultado.** La issue debe cerrarse, su tarjeta pasar a `Done` y **Actions** iniciar el despliegue. Espera a que termine y abre la URL pública. Si el despliegue falla, la tarea aún necesita atención: anota el fallo y corrígelo mediante otra pull request; que la tarjeta esté en `Done` no demuestra que la web funcione.
 
 **10 · Sincroniza tu copia local.**
 
@@ -864,20 +864,20 @@ git branch -d 3-cabecera-con-nombre
 
 <details class="aside aside--help">
   <summary>Si Git no permite borrar la rama tras Squash and merge</summary>
-  <p>El squash crea un commit nuevo, por lo que Git puede no reconocer los commits originales como integrados. Puedes conservar la rama y seguir trabajando desde <code>main</code>. Si quieres eliminarla, comprueba primero en GitHub que la PR está fusionada, que no quedan commits adicionales sin publicar y que <code>main</code> contiene el resultado. Solo después usa <code>git branch -D nombre-de-la-rama</code>, sustituyendo el nombre: esta opción fuerza el borrado de esa rama local.</p>
+  <p>El squash crea un commit nuevo, por lo que Git puede no reconocer los commits originales como integrados. Puedes conservar la rama y seguir trabajando desde <code>main</code>. Si quieres eliminarla, comprueba primero en GitHub que la pull request está fusionada, que no quedan commits adicionales sin publicar y que <code>main</code> contiene el resultado. Solo después usa <code>git branch -D nombre-de-la-rama</code>, sustituyendo el nombre: esta opción fuerza el borrado de esa rama local.</p>
 </details>
 
 <div class="practice-levels">
-  <div><strong>Objetivo esencial</strong><span>Una issue completada mediante rama, PR, revisión documentada y comprobación del despliegue y la URL pública.</span></div>
+  <div><strong>Objetivo esencial</strong><span>Una issue completada mediante rama, pull request, revisión documentada y comprobación del despliegue y la URL pública.</span></div>
   <div><strong>Consolidación</strong><span>Una segunda tarea pequeña con el mismo recorrido, cambiando el número de issue y el nombre de rama en cada comando.</span></div>
   <div><strong>Continuación</strong><span>Si completas y puedes explicar ambos recorridos, continúa con la sesión 3 sobre este mismo portfolio.</span></div>
 </div>
 
 #### Bloque D · Revisión de código por pares
 
-Este bloque se realiza cuando llegas al paso 6 del bloque C. Necesitas el enlace a la PR de tu pareja y el nombre de su rama, que aparece en la cabecera de la solicitud.
+Este bloque se realiza cuando llegas al paso 6 del bloque C. Necesitas el enlace a la pull request de tu pareja y el nombre de su rama, que aparece en la cabecera de la solicitud.
 
-**1 · Lee la propuesta.** Abre la issue enlazada y la pestaña **Files changed** de la PR. Identifica qué criterios debes comprobar y qué archivos han cambiado.
+**1 · Lee la propuesta.** Abre la issue enlazada y la pestaña **Files changed** de la pull request. Identifica qué criterios debes comprobar y qué archivos han cambiado.
 
 **2 · Descarga la rama para probarla.** Desde la carpeta de tu propio portfolio, ejecuta una sola vez esta clonación, sustituyendo `USUARIO-DEL-AUTOR` por la cuenta de tu pareja:
 
@@ -889,9 +889,9 @@ git fetch origin
 git switch 3-cabecera-con-nombre
 ```
 
-Sustituye también el nombre de rama por el de la PR que revisas. En las siguientes revisiones de esa persona, entra directamente en `portfolio-auditoria`, ejecuta `git fetch origin` y cambia a la rama correspondiente. Si ya la habías descargado y recibió correcciones, actualízala con `git pull --ff-only`.
+Sustituye también el nombre de rama por el de la pull request que revisas. En las siguientes revisiones de esa persona, entra directamente en `portfolio-auditoria`, ejecuta `git fetch origin` y cambia a la rama correspondiente. Si ya la habías descargado y recibió correcciones, actualízala con `git pull --ff-only`.
 
-**3 · Comprueba el cambio.** Abre el `index.html` de **esa carpeta de auditoría** en el navegador. Verifica nombre, titulación y destino del enlace, o los criterios de la tarea que corresponda. No modifiques el código de tu pareja en esta copia: comunica los problemas en la PR.
+**3 · Comprueba el cambio.** Abre el `index.html` de **esa carpeta de auditoría** en el navegador. Verifica nombre, titulación y destino del enlace, o los criterios de la tarea que corresponda. No modifiques el código de tu pareja en esta copia: comunica los problemas en la pull request.
 
 **4 · Registra la revisión.** En **Files changed → Review changes**, selecciona:
 
@@ -914,7 +914,7 @@ Una revisión útil sería: «He abierto la rama en local. Aparecen nombre y tit
   <ul class="checklist">
     <li>El tablero contiene seis tareas con criterios claros y estados actualizados; al menos una está completada.</li>
     <li>El portfolio y el backend tienen las reglas de protección configuradas; has comprobado el rechazo del envío directo en el portfolio.</li>
-    <li>Has integrado al menos una PR después de recibir una revisión y has revisado una PR de tu pareja.</li>
+    <li>Has integrado al menos una pull request después de recibir una revisión y has revisado una pull request de tu pareja.</li>
     <li>Has verificado el despliegue y el cambio en la URL pública del portfolio.</li>
     <li>Sabes qué rama contiene tu trabajo y has sincronizado main antes de empezar otra tarea.</li>
   </ul>
@@ -926,7 +926,7 @@ Una revisión útil sería: «He abierto la rama en local. Aparecen nombre y tit
     <li>¿Qué diferencia hay entre el criterio de aceptación de una tarea y la definición de terminado?</li>
     <li>¿Dónde se escribe <code>Closes #id</code> y cuándo se cierra la issue?</li>
     <li>¿Qué obliga a hacer el ruleset actual y qué sigue dependiendo de la revisión entre compañeros?</li>
-    <li>¿Por qué debes probar la rama de la PR en lugar de la URL pública?</li>
+    <li>¿Por qué debes probar la rama de la pull request en lugar de la URL pública?</li>
     <li>¿Qué compruebas después de fusionar?</li>
   </ol>
 </div>
@@ -934,13 +934,13 @@ Una revisión útil sería: «He abierto la rama en local. Aparecen nombre y tit
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
   <p>1 · El criterio describe un resultado concreto, como el destino de un enlace. La definición de terminado establece las comprobaciones comunes a todas las tareas.</p>
-  <p>2 · En la descripción de la PR, con el número real. La issue se cierra cuando la PR se fusiona en la rama predeterminada; el tablero actualiza su estado si está activo el flujo correspondiente.</p>
-  <p>3 · Exige una PR y bloquea el borrado y los envíos forzados a main. Con cero aprobaciones obligatorias, eres responsable de obtener y atender la revisión antes de fusionar.</p>
+  <p>2 · En la descripción de la pull request, con el número real. La issue se cierra cuando la pull request se fusiona en la rama predeterminada; el tablero actualiza su estado si está activo el flujo correspondiente.</p>
+  <p>3 · Exige una pull request y bloquea el borrado y los envíos forzados a main. Con cero aprobaciones obligatorias, eres responsable de obtener y atender la revisión antes de fusionar.</p>
   <p>4 · La URL pública muestra la versión ya desplegada desde main, que todavía no incluye la propuesta.</p>
   <p>5 · El cierre de la issue, el estado del tablero, el resultado del despliegue y el funcionamiento real de la URL pública.</p>
 </details>
 
-En la sesión 3 añadirás un check de HTML a las PR. La comprobación de enlaces y formato llegará en la sesión 4, y los umbrales de calidad en la 5.
+En la sesión 3 añadirás un check de HTML a las pull requests. La comprobación de enlaces y formato llegará en la sesión 4, y los umbrales de calidad en la 5.
 
 ## Lo que debes recordar
 
