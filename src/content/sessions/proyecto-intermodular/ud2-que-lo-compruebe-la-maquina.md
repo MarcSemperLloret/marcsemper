@@ -72,15 +72,29 @@ Encontrarás tres nombres relacionados: **CI** es el workflow completo, **HTML v
 
 #### Runner y herramientas del proyecto
 
-Un *runner* es la máquina que ejecuta un trabajo de GitHub Actions. En este ejercicio usarás `ubuntu-latest`: GitHub prepara una máquina Linux para el trabajo y la retira al terminar. Aunque tú trabajes en Windows, los comandos del workflow se ejecutarán allí.
+**Dónde se comprueba tu código**
 
-El runner tiene herramientas preinstaladas, pero no tu carpeta de trabajo ni sus cambios sin publicar. Por eso el job seguirá tres pasos:
+La comprobación se ejecuta **en los servidores que GitHub pone a disposición de GitHub Actions, a través de Internet**. No se ejecuta en tu ordenador ni en el navegador.
 
-1. **Descargar el código**, mediante `actions/checkout`.
-2. **Preparar Node.js**, el programa necesario para ejecutar el validador.
-3. **Ejecutar HTML-Validate**, que analiza los documentos según unas reglas y devuelve un error si encuentra incumplimientos.
+Cuando abres la pull request, GitHub prepara un **ordenador virtual**: un entorno que funciona como un ordenador independiente, aunque utiliza los recursos de un servidor físico. Ese ordenador virtual recibe el nombre de *runner* porque ejecuta los pasos del workflow.
 
-Declarar herramientas y versiones facilita la **reproducibilidad**: que otra ejecución pueda repetir las mismas comprobaciones. No garantiza un entorno idéntico para siempre: `ubuntu-latest` y las versiones generales como `22` o `@9` pueden recibir actualizaciones. Si local y CI difieren, compara versión, configuración, archivos y sistema operativo antes de atribuir el fallo al código.
+En esta práctica, `ubuntu-latest` indica que ese entorno utiliza **Ubuntu Linux**. Aunque tú trabajes en Windows, GitHub hará la comprobación en Linux. Una vez que hayas subido el código y abierto la PR, puedes apagar tu ordenador: la comprobación continuará en GitHub.
+
+**Por qué aparece Node.js si estamos trabajando con HTML**
+
+Para revisar el HTML utilizaremos un programa llamado **HTML-Validate**. Ese programa está escrito en JavaScript y necesita **Node.js** para ejecutarse.
+
+JavaScript puede ejecutarse dentro de una página web, mediante el navegador. Node.js permite ejecutar programas escritos en JavaScript **fuera del navegador**, por ejemplo desde una terminal. Aquí sirve para ejecutar el programa que busca errores en tu HTML.
+
+No necesitas escribir JavaScript para esta actividad. Preparas Node.js para poder utilizar el validador.
+
+**Qué hará el ordenador de GitHub**
+
+1. **Obtener los archivos del portfolio.** `actions/checkout` copia desde el repositorio el código que se va a comprobar. Solo puede obtener los cambios que hayas subido; no tiene acceso a los archivos sin publicar de tu ordenador.
+2. **Preparar Node.js.** `actions/setup-node` deja disponible la versión necesaria para ejecutar el validador.
+3. **Comprobar el HTML.** El comando `npx` obtiene y ejecuta HTML-Validate, que lee tus archivos y señala los errores que encuentre según las reglas configuradas.
+
+Al terminar, GitHub muestra el resultado en la pull request y conserva el registro de la comprobación. El ordenador virtual utilizado se descarta.
 
 #### Estructura de un workflow
 
@@ -243,6 +257,12 @@ La propia PR que añade el workflow lo ejecuta. Para consultar el resultado:
 4. Espera a que termine: pendiente o en ejecución todavía no significa correcto. Si termina con éxito, el check aparece en verde; si falla, abre el paso marcado como fallido y lee su registro de ejecución (*log*).
 
 **Deja esta PR abierta y sin fusionar** para hacer las pruebas del bloque B. Copia su enlace: seguirás utilizando la misma PR después de cada corrección.
+
+<details class="aside aside--extra">
+  <summary>Repetir la comprobación: herramientas y versiones</summary>
+  <p>Ahora que has visto la ejecución, observa que el workflow deja escritas las instrucciones para obtener el código, preparar las herramientas y ejecutar el validador. Esto facilita la <strong>reproducibilidad</strong>: repetir las comprobaciones sin depender de que alguien recuerde los pasos o tenga los programas preparados en su ordenador.</p>
+  <p>No garantiza un entorno idéntico para siempre: <code>ubuntu-latest</code> puede actualizarse, <code>22</code> permite distintas actualizaciones de Node 22 y <code>@9</code> permite distintas actualizaciones de HTML-Validate 9. Si el resultado local y el de GitHub difieren, compara las versiones, la configuración, los archivos publicados y el sistema operativo.</p>
+</details>
 
 <details class="aside aside--help">
   <summary>Si el check no aparece o falla</summary>
