@@ -59,12 +59,16 @@ El workflow de la sesión 1 publica los archivos después de incorporar un cambi
 
 Hoy añadirás un **flujo de integración continua** (CI) que comprueba el HTML cada vez que abres o actualizas una PR. Su resultado aparecerá como un **check**: una comprobación con estado pendiente, correcto o fallido. Después configurarás GitHub para impedir la fusión si ese check falla.
 
+El recorrido será: **editar en tu ordenador → guardar y hacer commit → subir la rama → abrir o actualizar su PR → esperar la comprobación en GitHub**. Guardar un archivo en el editor no inicia Actions. El runner solo puede comprobar el código que has publicado.
+
 | Archivo | Cuándo se ejecuta en este proyecto | Qué hace |
 | --- | --- | --- |
 | `.github/workflows/static.yml` | Después de un cambio en `main`, o al iniciarlo manualmente | Publica el portfolio en GitHub Pages. |
 | `.github/workflows/ci.yml` | Al abrir o actualizar una PR y tras cambios en `main` | Valida el HTML y comunica el resultado. |
 
 Son dos workflows con responsabilidades distintas. **En la PR habrá un check de HTML; el despliegue de Pages se comprobará después de fusionar.** Si realizaste la ampliación de Azure, su workflow puede mostrar comprobaciones adicionales; no son el check de HTML que crearás hoy.
+
+Encontrarás tres nombres relacionados: **CI** es el workflow completo, **HTML válido** es el nombre del único trabajo (*job*) que contiene y **Validar el HTML** es el paso de ese trabajo que ejecuta el analizador. El check que exigirás para fusionar se llama **HTML válido**. Un check fallido informa del problema; el bloqueo de la fusión se configura por separado en el bloque C.
 
 #### Runner y herramientas del proyecto
 
@@ -114,6 +118,10 @@ npm --version
 
 **Node.js** ejecuta JavaScript fuera del navegador; **npm** gestiona paquetes, y **npx** permite ejecutar una herramienta de un paquete, descargándolo si hace falta. Aquí se utilizan para analizar HTML, no para programar el backend Java. Utiliza Node **22.x**, como el workflow. Si falta, instala esa versión desde las [descargas de Node.js](https://nodejs.org/en/download) y abre una terminal nueva. Si PowerShell bloquea `npm.ps1` o `npx.ps1`, utiliza `npm.cmd` y `npx.cmd` en los comandos locales, sin cambiar la política de ejecución.
 
+El primer comando debe mostrar una versión que empiece por `v22.`; el segundo, un número de versión de npm. Si aparece «comando no encontrado» o «no se reconoce», resuelve la instalación antes de seguir. Abre en el editor la carpeta completa del portfolio y utiliza su terminal integrada: al listar los archivos con `dir` en PowerShell o `ls` en macOS/Linux debes ver `index.html`. No ejecutes estos comandos en la carpeta del backend.
+
+En este ejercicio `npx` descargará el validador cuando lo necesite. No necesitas ejecutar `npm init`, crear un `package.json` ni añadir una carpeta `node_modules` al repositorio.
+
 **2 · Crea la issue y su rama.** Registra «Añadir validación automática del HTML». Criterios: la PR muestra `HTML válido`, un error de HTML hace fallar el check y su corrección lo devuelve a verde. Asígnate la tarea y ponla en `In Progress`.
 
 En los ejemplos se usa el número **7**: sustitúyelo por el número real de tu issue en la rama y en la descripción de la PR. No lo deduzcas contando las tareas: las PR también consumen números.
@@ -136,7 +144,23 @@ git switch -c 7-ci-html
 
 Este archivo declara explícitamente las reglas recomendadas del proyecto y permite modificarlas de forma compartida más adelante. HTML-Validate también dispone de configuración predeterminada; el archivo sirve para conservar nuestra elección en el repositorio.
 
+Escribe el nombre completo, incluido el punto inicial. Debe ser un archivo llamado `.htmlvalidate.json`, no una carpeta ni un archivo terminado en `.json.txt`. Guarda el contenido: este fragmento JSON se escribe en el archivo, no en la terminal.
+
 **4 · Crea el workflow.** Dentro de la carpeta existente `.github/workflows`, crea `ci.yml`. Conserva `static.yml`: no pegues un workflow dentro del otro.
+
+En el explorador del editor, abre `.github` y después `workflows`. Si no existen, crea esas dos carpetas, una dentro de la otra. La estructura debe quedar así; los demás archivos del portfolio se conservan:
+
+```text
+portfolio/
+├── index.html
+├── .htmlvalidate.json
+└── .github/
+    └── workflows/
+        ├── static.yml
+        └── ci.yml
+```
+
+Si tu workflow de publicación tiene otro nombre, conserva ese archivo. Abre `ci.yml` y pega el siguiente contenido completo, desde `name: CI` hasta el comando final:
 
 ```yaml
 name: CI
@@ -168,6 +192,10 @@ jobs:
 
 `permissions: contents: read` permite leer el repositorio. `@9` selecciona la versión mayor 9 del validador; `--yes` permite su descarga sin pedir confirmación interactiva. El patrón entre comillas busca archivos HTML también en subcarpetas.
 
+Guarda `ci.yml`. Cada nivel del ejemplo añade dos espacios; no utilices tabulaciones. `pull_request` y `push` están al mismo nivel, y `branches: [main]` pertenece únicamente a `push`. Por eso subir por primera vez `7-ci-html` no inicia este workflow hasta que abras su PR. Los siguientes envíos a esa rama actualizarán la PR e iniciarán una nueva comprobación.
+
+El comando de `run` se ejecutará en Linux: conserva `npx` en el YAML aunque en tu PowerShell utilices `npx.cmd`.
+
 **5 · Comprueba el HTML en local.** Guarda ambos archivos y ejecuta desde la raíz:
 
 ```bash
@@ -175,6 +203,10 @@ npx --yes html-validate@9 "**/*.html"
 ```
 
 La primera vez necesita conexión para descargar el paquete. Si hay errores, lee el archivo, la línea y la regla que aparecen en la salida. Por ejemplo, `element-required-attributes` junto a `html` puede indicar que falta `lang`. Corrige el archivo señalado y repite el comando; si termina sin diagnósticos, ha superado estas reglas.
+
+**Una ejecución correcta puede no imprimir ningún mensaje.** Espera a que reaparezca el indicador de la terminal. Inmediatamente después puedes consultar el código de salida: en PowerShell escribe `$LASTEXITCODE`; en macOS/Linux, `echo $?`. `0` indica que el comando terminó correctamente y un valor distinto de cero indica un fallo. Ejecuta esta consulta justo después del validador, antes de otro comando.
+
+Si aparece un diagnóstico como `index.html`, seguido de `12:5`, `error` y un nombre de regla, localiza el archivo y la línea 12, columna 5, en el editor. Los números dependen de tu documento. Corrige primero el error señalado, guarda y vuelve a ejecutar el mismo comando: abrir la página en el navegador no sustituye esta comprobación.
 
 El documento inicial de la sesión 1 utiliza `<!doctype html>`. Con estas reglas puede aparecer `doctype-style`: cambia esa primera línea a `<!DOCTYPE html>` y repite la comprobación. Ambas formas son válidas en HTML; el diagnóstico exige la convención de estilo seleccionada por el analizador. Un incumplimiento de sus reglas no siempre significa que la sintaxis HTML sea inválida.
 
@@ -187,21 +219,41 @@ El documento inicial de la sesión 1 utiliza `<!doctype html>`. Con estas reglas
   <dd></dd>
 </dl>
 
-**6 · Publica la propuesta.**
+**6 · Publica la propuesta.** Comprueba con `git status` que sigues en `7-ci-html`, utilizando tu número real, y revisa los archivos modificados. Prepara los dos archivos nuevos:
 
 ```bash
 git add .github/workflows/ci.yml .htmlvalidate.json
+```
+
+Si has corregido `index.html`, ejecuta también `git add index.html`; si corregiste otro HTML, añádelo por su ruta. Después revisa exactamente lo que vas a publicar y crea el commit:
+
+```bash
+git diff --cached
 git commit -m "Anadir validacion automatica del HTML"
 git push -u origin 7-ci-html
 ```
 
-Si corregiste HTML, revisa `git diff`, añádelo por su nombre y registra también esos cambios en la misma rama antes de continuar. Abre la PR hacia `main`, indica cómo comprobar el workflow e incluye `Closes #7` con el número real.
+En GitHub, entra en el repositorio del portfolio y abre **Pull requests → New pull request**. Selecciona **base: main** y **compare: 7-ci-html**, con tu número real. Pulsa **Create pull request**, escribe un título como «Añadir validación automática del HTML» y explica en la descripción qué comando has ejecutado y qué resultado obtuviste. Incluye `Closes #7` con el número real de la issue y confirma la creación.
 
-La propia PR que añade el workflow lo ejecuta. En sus comprobaciones, abre **HTML válido → Details**, o entra por **Actions → CI → ejecución de tu rama → HTML válido**. Identifica los tres pasos y espera al resultado. **Deja esta PR abierta** para hacer las pruebas del bloque B.
+La propia PR que añade el workflow lo ejecuta. Para consultar el resultado:
+
+1. En la PR, abre la pestaña **Checks** y selecciona **HTML válido**. También puedes desplegar las comprobaciones de **Conversation**, junto al área de fusión, y pulsar **Details** en ese check.
+2. Si accedes desde el repositorio, abre **Actions**, selecciona **CI** y entra en la ejecución correspondiente a tu rama y a tu último commit. Dentro de ella, abre **HTML válido**.
+3. Despliega **Descargar el repositorio**, **Preparar Node** y **Validar el HTML**. Además pueden aparecer pasos de preparación o limpieza añadidos automáticamente por GitHub.
+4. Espera a que termine: pendiente o en ejecución todavía no significa correcto. Si termina con éxito, el check aparece en verde; si falla, abre el paso marcado como fallido y lee su registro de ejecución (*log*).
+
+**Deja esta PR abierta y sin fusionar** para hacer las pruebas del bloque B. Copia su enlace: seguirás utilizando la misma PR después de cada corrección.
 
 <details class="aside aside--help">
   <summary>Si el check no aparece o falla</summary>
-  <p>Comprueba que el archivo se llama <code>.github/workflows/ci.yml</code>, está incluido en el commit publicado y declara <code>pull_request</code>. Si GitHub indica que el workflow no es válido, revisa la sangría y la línea señalada. Si falla «Preparar Node», revisa la versión; si falla «Validar el HTML», revisa el diagnóstico del documento. Corrige sobre la misma rama, crea un commit y ejecuta <code>git push</code>. No abras otra PR para la corrección.</p>
+  <ul>
+    <li><strong>No aparece ninguna ejecución:</strong> comprueba que la PR esté abierta, que el archivo publicado se llame <code>.github/workflows/ci.yml</code> y que declare <code>pull_request</code>. En la pestaña <strong>Code</strong>, selecciona tu rama para comprobar que el archivo llegó a GitHub. Si Actions muestra una petición explícita de habilitación o autorización, atiende ese aviso.</li>
+    <li><strong>Workflow no válido:</strong> revisa la línea señalada y la sangría del YAML. El trabajo puede no llegar a iniciarse si GitHub no puede interpretar el archivo.</li>
+    <li><strong>Falla Preparar Node:</strong> comprueba <code>node-version: 22</code>. El validador todavía no se ha ejecutado.</li>
+    <li><strong>Falla Validar el HTML:</strong> busca en el registro el archivo, la línea y la regla. Si el mensaje trata de red o descarga del paquete, distingue ese fallo de herramienta de un diagnóstico del HTML.</li>
+    <li><strong>En local pasa y en GitHub falla:</strong> comprueba que hayas guardado, añadido al commit y subido la corrección. Compara también el comando, la versión y la configuración.</li>
+  </ul>
+  <p>Corrige sobre la misma rama, añade el archivo modificado, crea un commit y ejecuta <code>git push</code>. La PR se actualiza automáticamente. Volver a ejecutar un commit fallido sin publicar la corrección comprueba el mismo código anterior.</p>
 </details>
 
 #### Bloque B · Provocación controlada de fallos
@@ -210,6 +262,18 @@ Realiza las pruebas **una a una en la rama `7-ci-html`**, con la PR aún abierta
 
 **1 · Provoca un error de cierre.** En `index.html`, cambia únicamente el cierre del encabezado principal de `</h1>` a `</h2>`. Guarda y publica:
 
+Conserva el texto real de tu cabecera. La modificación afecta solo a la etiqueta de cierre:
+
+```html
+<!-- Antes -->
+<h1>Nombre Apellido</h1>
+
+<!-- Durante la prueba: cierre incorrecto -->
+<h1>Nombre Apellido</h2>
+```
+
+No pegues las dos versiones en el archivo. El navegador puede seguir mostrando el título porque intenta recuperarse de ciertos errores; el validador comprobará el marcado escrito.
+
 ```bash
 git add index.html
 git commit -m "Probar deteccion de cierre HTML incorrecto"
@@ -217,6 +281,8 @@ git push
 ```
 
 **2 · Localiza el fallo.** Abre la ejecución que corresponde a ese último commit, no una anterior. En el job `HTML válido`, abre el paso fallido **Validar el HTML**. Identifica la ruta, el número de línea, el mensaje y la regla. Contrasta la línea con tu editor; un error puede señalar el cierre inesperado o el elemento que quedó abierto.
+
+Busca la ejecución con el mensaje «Probar deteccion de cierre HTML incorrecto» o compara su identificador de commit con `git log -1 --oneline` en tu terminal. La última línea del registro puede indicar que el proceso terminó con código `1`; la causa concreta está en los diagnósticos anteriores. Anota el enlace de esa ejecución y el mensaje que permite localizar el error.
 
 **3 · Corrige y comprueba.** Restituye `</h1>`, guarda y ejecuta:
 
@@ -246,7 +312,17 @@ Para la segunda prueba, utiliza `git add .github/workflows/ci.yml` en lugar de `
 
 **1 · Integra el workflow revisado.** Con todos los cambios de prueba corregidos y el check verde, solicita la revisión de tu pareja. Debe comprobar los archivos de configuración, ejecutar el validador en su copia y revisar las ejecuciones. Tras su aprobación, fusiona mediante **Squash and merge** y comprueba el despliegue de Pages.
 
-**2 · Exige el check en el portfolio.** Abre **Settings → Rules → Rulesets → main protegida → Edit**. Activa **Require status checks to pass**, pulsa **Add checks**, busca y selecciona **HTML válido** y guarda. Si no aparece, comprueba que la ejecución ha terminado y vuelve a abrir la configuración. Selecciona el check del job, no el nombre `CI` del workflow ni el despliegue de Pages.
+Tu pareja debe utilizar la rama de esta PR, siguiendo el procedimiento de revisión de la sesión 2: su copia de `main` todavía no contiene el workflow nuevo. Antes de fusionar, revisa **Files changed** para confirmar que `index.html` conserva su cierre correcto y su atributo `lang`, y que `ci.yml` vuelve a utilizar Node 22. En el desplegable del botón de fusión, elige **Squash and merge** y confirma. Después entra en **Actions**: la ejecución de **CI** sobre `main` debe terminar correctamente y el workflow de Pages debe completar la publicación. Abre también la URL pública.
+
+**2 · Exige el check en el portfolio.** Ahora configurarás la condición que impide fusionar si falla. En GitHub, abre el repositorio `portfolio`, no el tablero de Projects, y sigue estos pasos:
+
+1. Abre **Settings** en la barra del repositorio. En el menú lateral, entra en **Rules → Rulesets**.
+2. Abre **main protegida**, el ruleset creado en la sesión 2, y pulsa **Edit** si aparece ese botón. Si le diste otro nombre, abre el que protege `main`.
+3. Comprueba **Enforcement status → Active** y que **Target branches** incluya la rama predeterminada `main`. Conserva las reglas que ya configuraste en la sesión 2.
+4. En las reglas de la rama, marca **Require status checks to pass**. Pulsa **Add checks**, busca **HTML válido** y selecciónalo. Debe quedar en la lista de checks requeridos; escribirlo en el buscador sin seleccionarlo no lo añade.
+5. Guarda los cambios con **Save changes**. Vuelve a abrir el ruleset y comprueba que **HTML válido** sigue en la lista.
+
+Si no aparece en la búsqueda, vuelve a **Actions → CI** y comprueba que **HTML válido** haya terminado correctamente en la ejecución reciente de `main`. Después vuelve a abrir la configuración. Selecciona el check del job, no el nombre `CI` del workflow ni el despliegue de Pages. Puedes consultar la [documentación de GitHub sobre checks obligatorios](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#require-status-checks-to-pass-before-merging).
 
 El backend no ejecuta este validador de HTML: no añadas allí este check obligatorio, porque quedaría esperando una comprobación que nunca se ejecuta.
 
@@ -268,7 +344,11 @@ git push -u origin prueba-bloqueo-html
 
 Abre una PR de prueba hacia `main`, titulada «Comprobar bloqueo de HTML inválido», sin `Closes` para no vincularla a una tarea funcional. Espera al fallo y comprueba que GitHub impide fusionar por **HTML válido**. Si permite fusionar, revisa el ruleset y las excepciones; no pulses el botón de fusión.
 
+En **Conversation**, junto al área de fusión, debe figurar el check requerido como fallido y un aviso de que la integración está bloqueada. Un icono rojo por sí solo no demuestra el bloqueo: debe impedirse la fusión por esa comprobación. Si tu cuenta puede omitir las reglas, revisa **Bypass list** en el ruleset y evita utilizar esa excepción durante la prueba. Anota el enlace de la PR y el motivo de bloqueo antes de cerrarla.
+
 **4 · Cierra la prueba.** Pulsa **Close pull request**, sin fusionar, y **Delete branch** para borrar la rama remota de prueba. En local ejecuta `git switch main`: el error queda fuera de la versión integrada. La rama local de diagnóstico puede conservarse; no necesitas forzar su borrado.
+
+Comprueba con `git status` que estás en `main` y no quedan cambios pendientes. Abre `index.html` en el editor: debe recuperar `</h1>`. Cambiar de rama actualiza los archivos locales; cerrar la PR en GitHub por sí solo no cambia la rama que tienes abierta en tu ordenador.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lista de verificación del bloque C</p>
@@ -284,6 +364,25 @@ Abre una PR de prueba hacia `main`, titulada «Comprobar bloqueo de HTML inváli
 **1 · Selecciona una tarea pendiente.** Conserva la cabecera creada en la sesión 2. Añade ahora una sección de presentación: un encabezado y un párrafo que expliquen tu perfil y el tipo de proyecto que estás construyendo. Si esa sección ya está terminada, elige otra mejora pendiente con un alcance equivalente. Especifica el resultado en su issue antes de editar.
 
 **2 · Desarrolla sobre una nueva rama.** Repite el flujo de la sesión 2: `main` actualizada → rama con el número real → edición → comprobación local → commit → publicación → PR. No reutilices las ramas de diagnóstico ni rehagas la cabecera. Ejecuta también el comando de validación local del bloque A.
+
+Por ejemplo, si la issue de presentación es la **8**, prepara la rama así; sustituye ese número por el real:
+
+```bash
+git switch main
+git pull --ff-only
+git switch -c 8-presentacion-personal
+```
+
+Edita `index.html`, guarda y ejecuta `npx --yes html-validate@9 "**/*.html"` desde la raíz. En PowerShell utiliza `npx.cmd` si lo necesitaste en el bloque A. Corrige los diagnósticos antes de continuar. Abre también el HTML local en el navegador para comprobar el texto y la disposición de la sección. Después publica:
+
+```bash
+git add index.html
+git diff --cached
+git commit -m "Anadir presentacion personal al portfolio"
+git push -u origin 8-presentacion-personal
+```
+
+Si la mejora requiere otros archivos, revísalos y añádelos por su ruta antes del commit. Abre la PR con **base: main** y **compare: tu rama**, describe la mejora e incluye `Closes #8` con el número real. Los archivos del validador ya vienen de `main`: no necesitas crearlos de nuevo.
 
 **3 · Integra y verifica.** En la PR comprueba **HTML válido**, solicita la revisión de tu pareja y atiende sus comentarios. Fusiona después de ambas comprobaciones. Espera al despliegue de Pages y verifica la mejora en la URL pública.
 
