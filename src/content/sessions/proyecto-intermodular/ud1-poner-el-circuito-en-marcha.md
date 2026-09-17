@@ -705,15 +705,54 @@ Los tiempos son orientativos: 30 minutos para el tablero, 25 para la protección
 
 **3 · Comprueba los estados.** Utiliza `Todo` para tareas pendientes, `In Progress` para la que estás realizando y `Done` para tareas cerradas. Las columnas muestran el campo **Status**. Si aparecen otros nombres, identifica o configura esos tres estados antes de continuar.
 
-**4 · Configura las automatizaciones.** En el menú **··· → Workflows** del tablero, revisa estas tres reglas:
+**4 · Configura las automatizaciones.** Una automatización (*workflow*) es una regla que ejecuta una acción cuando ocurre un evento. Prepararás tres: incorporar al tablero las issues que crees en `portfolio`, asignarles el estado pendiente y actualizar su estado cuando se cierren. Estas reglas se configuran en GitHub Projects; no necesitas crear un archivo de GitHub Actions.
 
-| Regla | Configuración y resultado |
+**Abre la configuración del proyecto.** Entra en el tablero `Portfolio` que acabas de crear. En la esquina superior derecha del proyecto, pulsa **···** y selecciona **Workflows**. En la lista **Default workflows** encontrarás las reglas siguientes.
+
+**A · Añadir las issues al tablero**
+
+1. Selecciona **Auto-add to project** y pulsa **Edit**, arriba a la derecha.
+2. En **Filters**, selecciona tu repositorio `portfolio`. Comprueba también el propietario si aparece más de un repositorio con ese nombre.
+3. En el campo de filtro situado junto al repositorio, escribe `is:issue is:open`. La primera parte selecciona issues y la segunda exige que estén abiertas; juntas seleccionan únicamente issues abiertas.
+4. Pulsa **Save and turn on workflow** para guardar y activar la regla.
+
+**B · Asignar el estado inicial**
+
+1. En la lista de reglas, selecciona **Item added to project** y pulsa **Edit**.
+2. En la acción que establece el estado, selecciona **Status → Todo**. El campo **Status** indica en qué columna se muestra la tarjeta; **Todo** significa pendiente.
+3. Pulsa **Save and turn on workflow**.
+
+Añadir una issue al tablero y asignarle un estado son operaciones distintas. La regla A incorpora la tarjeta al proyecto y la regla B la sitúa en **Todo**.
+
+**C · Actualizar el estado al cerrar una issue**
+
+1. Selecciona **Item closed**.
+2. Comprueba que la regla está activada y que su acción asigna **Status → Done**. Si ya está configurada así, puedes dejarla como está.
+3. Si necesitas cambiarla o activarla, pulsa **Edit**, selecciona **Done** como estado de destino y guarda con **Save and turn on workflow**.
+
+Esta regla actúa cuando se cierra una issue del proyecto, incluido el cierre automático al fusionar una pull request vinculada. Lo practicarás más adelante en esta sesión.
+
+**Resumen de las reglas**
+
+| Cuando ocurre… | La regla realiza… |
 | --- | --- |
-| Auto-add to project | Selecciona el repositorio `portfolio`, usa el filtro `is:issue is:open` y activa el flujo. Añade las nuevas issues al tablero. |
-| Item added to project | Establece **Status → Todo** y activa el flujo. Asigna el estado inicial a los elementos añadidos. |
-| Item closed | Comprueba que está activo y asigna **Status → Done**. Actualiza la tarjeta cuando se cierra la issue. |
+| Creas una issue abierta en `portfolio` | **Auto-add to project** la incorpora al tablero. |
+| Se añade un elemento al tablero | **Item added to project** le asigna **Todo**. |
+| Se cierra una issue del tablero | **Item closed** cambia su estado a **Done**. |
 
-Añadir una issue al tablero y asignarle un estado son operaciones distintas. Activa las reglas antes de crear las tareas. Si una tarjeta aparece sin estado, revisa la segunda regla y asígnale `Todo`. Las [automatizaciones de Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-built-in-automations) permiten comprobar estas opciones.
+**Activa las tres reglas antes de crear las tareas.** La incorporación automática se aplica cuando una issue se crea o se actualiza y cumple el filtro. Activar la regla no incorpora por sí solo las issues que ya existían. Puedes consultar las instrucciones de GitHub sobre [automatizaciones de Projects](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-built-in-automations) e [incorporación automática](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/adding-items-automatically).
+
+**Comprueba el resultado con la primera tarea.** En el paso 5, crea la primera issue desde el repositorio `portfolio` y vuelve al tablero. Debe aparecer en **Todo** sin que la añadas ni le asignes el estado manualmente. Compruébalo antes de crear las otras cinco. Cuando completes esa tarea y se cierre su issue al fusionar la PR, verifica que pasa a **Done**; mantenla abierta mientras esté pendiente.
+
+<details class="aside aside--help">
+  <summary>La issue no aparece o su tarjeta no tiene estado</summary>
+  <ul>
+    <li><strong>No aparece:</strong> actualiza la página del tablero. Si sigue faltando, revisa en <strong>Auto-add to project</strong> el propietario y el repositorio seleccionados, el filtro <code>is:issue is:open</code> y que hayas guardado y activado la regla. Comprueba que la issue esté abierta.</li>
+    <li><strong>La creaste antes de activar la regla:</strong> añádela al proyecto mediante su enlace, como se indica en el paso 5. La activación no importa automáticamente las issues existentes.</li>
+    <li><strong>Aparece sin estado:</strong> revisa que <strong>Item added to project</strong> esté activado y asigne <strong>Todo</strong>. Para corregir la tarjeta ya añadida, ábrela y selecciona <strong>Todo</strong> en su campo <strong>Status</strong>; después comprueba la automatización con la siguiente issue.</li>
+    <li><strong>La issue está cerrada pero la tarjeta no pasa a Done:</strong> revisa <strong>Item closed</strong>. Corrige el estado de esa tarjeta manualmente y comprueba el comportamiento en el siguiente cierre.</li>
+  </ul>
+</details>
 
 **5 · Registra las seis issues.** En **Issues → New issue** del repositorio, escribe para cada una un título y dos o tres criterios comprobables, siguiendo el ejemplo de la explicación. Créala y observa el número que GitHub le asigna. Regresa al tablero y verifica su incorporación. Si falta una issue que creaste antes de activar el flujo, añádela mediante su enlace desde la opción de añadir elementos del tablero.
 
