@@ -7,7 +7,7 @@ export interface Publication {
   title: string;
   authors: string[];
   year: number;
-  onlineDate: string;
+  onlineDate?: string;
   type: PublicationType;
   venue: string;
   volume?: string;
@@ -19,6 +19,13 @@ export interface Publication {
   selected?: boolean;
   abstract?: string;
   metaDescription: string;
+  metaDescriptionEs?: string;
+  overviewSections?: {
+    title: string;
+    titleEs: string;
+    text: string;
+    textEs: string;
+  }[];
   plainSummary?: string;
   plainSummaryEs?: string;
   contribution?: string;
@@ -35,6 +42,64 @@ export interface Publication {
 }
 
 export const publications: Publication[] = [
+  {
+    slug: "consecutive-dry-days-trace-precipitation-archives",
+    title:
+      "Sensitivity of Consecutive-Dry-Day Trends to Trace Loss in Matched Precipitation Archives",
+    authors: ["Marc Semper", "Manuel Curado", "Jose F. Vicent", "Jorge Olcina Cantos"],
+    year: 2026,
+    type: "Journal article",
+    venue: "International Journal of Climatology",
+    doi: "10.1002/joc.70597",
+    selected: true,
+    metaDescription:
+      "How lost trace-rainfall records alter consecutive dry days and drought-trend estimates: a same-gauge archive comparison across 24 countries.",
+    metaDescriptionEs:
+      "Cómo la pérdida de trazas de lluvia altera las rachas secas y sus tendencias: comparación de archivos de las mismas estaciones en 24 países.",
+    plainSummary:
+      "A rain gauge can record a tiny amount of rain that disappears when its observations are transferred to another archive. For a dry-spell calculation, that can turn a valid dry day into a gap that breaks the sequence. This study follows versions of the same gauges across precipitation archives to identify when data handling changes the estimated evolution of dry spells. The clearest observed example involves Spanish records; most matched versions elsewhere agree.",
+    plainSummaryEs:
+      "Una estación puede registrar una lluvia inapreciable y perder esa información cuando sus observaciones pasan a otro archivo. Al calcular las rachas secas, un día observado puede convertirse así en un hueco que interrumpe la secuencia. Este trabajo sigue distintas versiones de las mismas estaciones para identificar cuándo el tratamiento de los datos modifica la evolución estimada de las rachas. El caso observado más claro corresponde a registros españoles; la mayoría de las versiones comparadas en otros países coinciden.",
+    contribution:
+      "A comparison of 8,020 station-version pairs across 24 countries holds the physical gauge fixed. Record-level checks and controlled changes to trace encoding connect differences in the daily observations to differences in the resulting dry-spell trends.",
+    contributionEs:
+      "La comparación de 8.020 pares de versiones en 24 países mantiene fija la estación física. La revisión de registros diarios y los cambios controlados en la codificación de las trazas permiten relacionar la pérdida de observaciones con las diferencias entre tendencias de rachas secas.",
+    finding:
+      "For 205 pairs involving AEMET, turning its valid traces into missing entries brought the archive trends much closer: the median absolute slope difference fell from 0.0763 to 0.0089 days per year. This experiment identifies information loss as a major explanation of the observed disagreement, rather than a universal bias affecting every archive.",
+    findingEs:
+      "En 205 pares con AEMET, convertir sus trazas válidas en datos ausentes acercó las tendencias de ambos archivos: la diferencia absoluta mediana entre pendientes pasó de 0,0763 a 0,0089 días por año. El experimento identifica la pérdida de información como una explicación importante del desacuerdo observado, sin atribuir un sesgo universal a todos los archivos.",
+    overviewSections: [
+      {
+        title: "Why a trace of rain matters for consecutive dry days",
+        titleEs: "Por qué una traza de lluvia importa al contar días secos",
+        text:
+          "Consecutive dry days (CDD) measures the longest run of days below a chosen rainfall threshold. With the 1 mm threshold used here, an observed trace still qualifies as a dry day. A missing observation has a different meaning: the rainfall amount is unknown. If the calculation stops a run at every missing day, losing a trace can divide one long spell into shorter pieces. At an illustrative Tenerife station, the encoding change reduced an annual maximum from 190 to 33 days. That example shows the mechanism, not a typical effect for all stations.",
+        textEs:
+          "El índice de días secos consecutivos (CDD) mide la racha más larga por debajo de un umbral de precipitación. Con el umbral de 1 mm utilizado aquí, una traza observada sigue contando como día seco. Un dato ausente tiene otro significado: se desconoce la cantidad de lluvia. Si el cálculo corta la racha en cada día sin dato, perder una traza puede dividir un periodo largo en varios cortos. En una estación ilustrativa de Tenerife, ese cambio redujo un máximo anual de 190 a 33 días. El ejemplo muestra el mecanismo; no representa el efecto habitual en todas las estaciones."
+      },
+      {
+        title: "What the Spanish comparison and the global experiment show",
+        titleEs: "Qué muestran la comparación española y el experimento global",
+        text:
+          "In the Spanish comparison, AEMET retains trace observations that are absent from some corresponding ECA&D and GHCN-Daily records. The impact depends on where those gaps occur: an interruption within a long summer dry spell can matter more than one within a short spell. A separate experiment used trace flags already documented in GHCN-Daily and deliberately treated those days as missing. This changed the statistical trend classification at 5.96% of the 11,101 eligible stations. That percentage describes sensitivity to an imposed change within one archive; it is not a measured global rate of errors between providers.",
+        textEs:
+          "En la comparación española, AEMET conserva trazas que no aparecen en algunos registros correspondientes de ECA&D y GHCN-Daily. Importa dónde quedan esos huecos: interrumpir una racha larga en verano puede tener más efecto que interrumpir una corta. Otro experimento utilizó las marcas de trazas ya documentadas en GHCN-Daily y trató deliberadamente esos días como ausentes. Cambió la clasificación estadística de la tendencia en el 5,96 % de las 11.101 estaciones elegibles. Ese porcentaje expresa sensibilidad a un cambio impuesto dentro de un archivo; no es una tasa mundial observada de errores entre proveedores."
+      },
+      {
+        title: "Implications for interpreting drought trends",
+        titleEs: "Qué implica para interpretar las tendencias de sequía",
+        text:
+          "The way traces are reported can also change over time. Under a policy that turns them into gaps, a decline in trace reporting can produce an apparent increase in dry-spell length. The practical response is to document the archive version, preserve observation flags and explain how missing days and year boundaries are handled. These checks help distinguish a change in the record from a change in rainfall. The study does not rule out real changes in drought, establish the same effect for every drought indicator, or recommend treating all missing observations as dry days.",
+        textEs:
+          "La práctica de registrar trazas también puede variar con los años. Cuando esas trazas se convierten en huecos, una reducción de su registro puede generar un aumento aparente de la duración de las rachas. Por eso conviene documentar la versión del archivo, conservar las marcas de observación y explicar cómo se tratan los días ausentes y los límites entre años. Estas comprobaciones ayudan a separar un cambio del registro de un cambio de la precipitación. El estudio no descarta cambios reales en la sequía, no demuestra el mismo efecto en todos sus indicadores ni propone considerar secos todos los días sin observación."
+      }
+    ],
+    topics: ["Consecutive dry days (CDD)", "Trace precipitation", "Drought trends", "Observational uncertainty", "Climate data provenance"],
+    models: ["Matched station-version comparison", "Sen slope", "Trace-loss sensitivity analysis", "Physical-station-cluster bootstrap"],
+    dataSources: ["AEMET", "ECA&D", "GHCN-Daily", "8,020 matched pairs across 24 countries"],
+    relatedSlugs: ["out-of-sample-correctability-limits-imerg-precipitation-extremes", "gpm-imerg-precipitation-extremes-valencia", "robust-post-training-model-selection"],
+    codeUrl: "https://github.com/MarcSemperLloret/Trace-precipitation"
+  },
   {
     slug: "graph-multivariable-bias-correction-era5",
     title:
@@ -133,6 +198,7 @@ export const publications: Publication[] = [
     dataSources: ["GPM IMERG Final V07", "AVAMET rain-gauge network (556 gauges, 2019-2025)"],
     relatedSlugs: [
       "graph-multivariable-bias-correction-era5",
+      "consecutive-dry-days-trace-precipitation-archives",
       "gpm-imerg-precipitation-extremes-valencia",
       "robust-post-training-model-selection"
     ]
@@ -178,6 +244,7 @@ export const publications: Publication[] = [
     models: ["GPM IMERG V07", "Sub-daily coarsening audit", "Displacement & attenuation diagnostics"],
     dataSources: ["GPM IMERG half-hourly precipitation", "AEMET & CHJ rain-gauge network"],
     relatedSlugs: [
+      "consecutive-dry-days-trace-precipitation-archives",
       "robust-post-training-model-selection",
       "global-aerosol-optical-depth"
     ],

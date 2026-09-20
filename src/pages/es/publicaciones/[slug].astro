@@ -23,12 +23,11 @@ interface Props {
 
 const { publication } = Astro.props;
 const bibtex = publicationBibtex(publication);
-const publicationDate = new Date(`${publication.onlineDate}T00:00:00`);
-const publicationDateLabel = publicationDate.toLocaleDateString("es-ES", {
+const publicationDateLabel = publication.onlineDate ? new Date(`${publication.onlineDate}T00:00:00`).toLocaleDateString("es-ES", {
   day: "numeric",
   month: "long",
   year: "numeric"
-});
+}) : undefined;
 const related = publication.relatedSlugs
   .map((slug) => publications.find((candidate) => candidate.slug === slug))
   .filter((candidate): candidate is Publication => Boolean(candidate));
@@ -40,7 +39,7 @@ const articleJsonLd = {
   url: `${site.url}/es/publicaciones/${publication.slug}/`,
   headline: publication.title,
   name: publication.title,
-  description: publication.metaDescription,
+  description: publication.metaDescriptionEs ?? publication.metaDescription,
   abstract: publication.abstract,
   datePublished: publication.onlineDate,
   author: publication.authors.map((author) =>
@@ -67,7 +66,7 @@ const articleJsonLd = {
 <BaseLayout
   lang="es"
   title={publication.title}
-  description={publication.plainSummaryEs ?? publication.metaDescription}
+  description={publication.metaDescriptionEs ?? publication.plainSummaryEs ?? publication.metaDescription}
   publication={publication}
   jsonLd={articleJsonLd}
   alternatePath={`/publications/${publication.slug}/`}
@@ -79,7 +78,7 @@ const articleJsonLd = {
         <div>
           <div class="article-kicker">
             <span>Artículo científico</span>
-            <span>Volumen {publication.year}</span>
+            <span>{publication.year}</span>
             {publication.status && <span>{publication.status}</span>}
           </div>
           <h1>{publication.title}</h1>
@@ -124,10 +123,10 @@ const articleJsonLd = {
   <article class="article-content">
     <div class="container article-layout">
       <aside>
-        <div>
+        {publicationDateLabel && <div>
           <span>Publicado online</span>
           <strong>{publicationDateLabel}</strong>
-        </div>
+        </div>}
         <div>
           <span>Revista</span>
           <strong>
@@ -192,7 +191,14 @@ const articleJsonLd = {
           </section>
         )}
 
-        {publication.abstract ? (
+        {publication.overviewSections?.length ? (
+          publication.overviewSections.map((section) => (
+            <section class="abstract-section">
+              <h2>{section.titleEs}</h2>
+              <p>{section.textEs}</p>
+            </section>
+          ))
+        ) : publication.abstract ? (
           <section class="abstract-section">
             <p class="eyebrow">Resumen del autor</p>
             <h2>Resumen del artículo</h2>

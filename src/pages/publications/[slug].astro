@@ -23,14 +23,11 @@ interface Props {
 
 const { publication } = Astro.props;
 const bibtex = publicationBibtex(publication);
-const publicationDate = new Date(
-  `${publication.onlineDate}T00:00:00`
-);
-const publicationDateLabel = publicationDate.toLocaleDateString("en-GB", {
+const publicationDateLabel = publication.onlineDate ? new Date(`${publication.onlineDate}T00:00:00`).toLocaleDateString("en-GB", {
   day: "numeric",
   month: "long",
   year: "numeric"
-});
+}) : undefined;
 const related = publication.relatedSlugs
   .map((slug) => publications.find((candidate) => candidate.slug === slug))
   .filter((candidate): candidate is Publication => Boolean(candidate));
@@ -80,7 +77,7 @@ const articleJsonLd = {
         <div>
           <div class="article-kicker">
             <span>{publication.type}</span>
-            <span>Volume year {publication.year}</span>
+            <span>{publication.year}</span>
             {publication.status && <span>{publication.status}</span>}
           </div>
           <h1>{publication.title}</h1>
@@ -125,10 +122,10 @@ const articleJsonLd = {
   <article class="article-content">
     <div class="container article-layout">
       <aside>
-        <div>
+        {publicationDateLabel && <div>
           <span>Published online</span>
           <strong>{publicationDateLabel}</strong>
-        </div>
+        </div>}
         <div>
           <span>Venue</span>
           <strong>
@@ -193,7 +190,14 @@ const articleJsonLd = {
           </section>
         )}
 
-        {publication.abstract ? (
+        {publication.overviewSections?.length ? (
+          publication.overviewSections.map((section) => (
+            <section class="abstract-section">
+              <h2>{section.title}</h2>
+              <p>{section.text}</p>
+            </section>
+          ))
+        ) : publication.abstract ? (
           <section class="abstract-section">
             <p class="eyebrow">Author-written overview</p>
             <h2>Research overview</h2>

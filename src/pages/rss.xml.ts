@@ -18,7 +18,7 @@ export const GET: APIRoute = () => {
       <title>${escapeXml(publication.title)}</title>
       <link>${site.url}/publications/${publication.slug}/</link>
       <guid isPermaLink="true">${site.url}/publications/${publication.slug}/</guid>
-      <pubDate>${new Date(`${publication.onlineDate}T12:00:00Z`).toUTCString()}</pubDate>
+      ${publication.onlineDate ? `<pubDate>${new Date(`${publication.onlineDate}T12:00:00Z`).toUTCString()}</pubDate>` : ""}
       <description>${escapeXml(publication.plainSummary ?? publication.abstract ?? "")}</description>
     </item>`
     )

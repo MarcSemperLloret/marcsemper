@@ -192,7 +192,7 @@ const serializedStructuredData = JSON.stringify(structuredData).replaceAll("<", 
         {citationPdfUrl && (
           <meta name="citation_pdf_url" content={citationPdfUrl.toString()} />
         )}
-        <meta property="article:published_time" content={publication.onlineDate} />
+        {publication.onlineDate && <meta property="article:published_time" content={publication.onlineDate} />}
       </>
     )}
 

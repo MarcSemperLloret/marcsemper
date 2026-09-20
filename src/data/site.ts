@@ -8,7 +8,7 @@ export const site = {
   url: "https://marcsemperlloret.com",
   portrait: "/marc-semper-lloret.jpg",
   defaultSocialImage: "/og-default.png",
-  lastUpdated: "2026-08-25",
+  lastUpdated: "2026-09-20",
   email: "marc.semper@ua.es",
   affiliation: "University of Alicante",
   department: "Department of Computer Science and Artificial Intelligence",
@@ -121,6 +121,7 @@ export const researchAreas = [
     methods: ["Reference perturbation", "Missing-data analysis", "Provenance", "Sensitivity analysis"],
     topics: ["Data quality", "Uncertainty", "Provenance"],
     publicationSlugs: [
+      "consecutive-dry-days-trace-precipitation-archives",
       "graph-multivariable-bias-correction-era5",
       "out-of-sample-correctability-limits-imerg-precipitation-extremes",
       "gpm-imerg-precipitation-extremes-valencia",

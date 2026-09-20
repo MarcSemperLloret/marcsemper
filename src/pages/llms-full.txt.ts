@@ -77,7 +77,7 @@ Methods and topics: ${[...area.methods, ...area.topics].join("; ")}
 
 Authors: ${publication.authors.join("; ")}
 Journal record: ${publication.venue}, ${publication.year}
-Published online: ${publication.onlineDate}
+${publication.onlineDate ? `Published online: ${publication.onlineDate}\n` : ""}
 DOI: https://doi.org/${publication.doi}
 Canonical overview: ${site.url}/publications/${publication.slug}/
 
