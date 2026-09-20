@@ -1340,7 +1340,7 @@ Deja `getTitulo()` como estaba antes de seguir.
 <details class="aside aside--help">
   <summary>Y si quiero que la clave se llame distinta al getter</summary>
   <p>Se puede, con <code>@JsonProperty("titulo_tarea")</code> sobre el <em>getter</em>. Hoy no lo usamos y conviene saber por qué: retocar el modelo para que el JSON salga bonito acaba mezclando dos cosas distintas —cómo guardas los datos y cómo los publicas—.</p>
-  <p>La solución adecuada consiste en declarar una clase independiente para lo que se publica. Se denomina DTO y constituye el contenido central de la UD2. Hasta entonces el modelo se devuelve sin transformación.</p>
+  <p>La solución adecuada consiste en declarar una clase independiente para lo que se publica. Se denomina DTO y se trabaja en la UD3. Hasta entonces el modelo se devuelve sin transformación.</p>
 </details>
 
 #### Paso 5 · Devolver varias tareas
@@ -1405,28 +1405,29 @@ Añade después a `Proyecto.java` un atributo `private String notaInterna` **sin
 
 <p class="stage">Postman y la primera escritura</p>
 
-#### Paso 8 · Postman, y solo lo imprescindible
+#### Paso 8 · Preparar y enviar tu primera petición en Postman
 
 <p class="term">Cliente HTTP</p>
 
-Un programa cuyo único trabajo es construir peticiones a mano y enseñarte la respuesta entera. Es al backend lo que el navegador al frontend: la ventana por la que ves lo que estás construyendo.
+Una aplicación que permite elegir el método HTTP, la dirección y los datos de una petición, enviarla y examinar la respuesta del servidor. Hasta ahora escribías una dirección en el navegador y este enviaba un GET. Con un cliente HTTP también puedes preparar un POST con datos en su cuerpo.
 
 Usaremos **Postman** para los ejemplos. Puedes utilizar **Bruno** para enviar las mismas peticiones: elige método y URL, selecciona cuerpo JSON y observa estado, cabeceras y cuerpo de respuesta. En la sesión 7 encontrarás las instrucciones específicas de ambas herramientas para variables y pruebas; sus scripts no son intercambiables.
 
 <div class="rule">
-  <p class="rule-label">Hoy Postman es una herramienta, no un tema</p>
+  <p class="rule-label">Operaciones básicas del cliente HTTP</p>
   <p>Vamos a dedicarle veinte minutos y vamos a aprender <strong>cuatro cosas</strong>: elegir el método, escribir la URL, enviar un cuerpo JSON y leer la respuesta.</p>
-  <p>Postman tiene además colecciones, entornos, variables, <em>scripts</em>, ejecución automatizada y gestión de credenciales. <strong>Nada de eso se toca hoy.</strong> Todo eso llega en la UD2, cuando ya tengas peticiones que merezca la pena guardar y repetir. Aprender la herramienta antes de tener el problema que resuelve es la forma más rápida de olvidarla.</p>
+  <p>En la sesión 7 organizarás las peticiones en colecciones y utilizarás variables y pruebas. Hoy basta con enviar cada petición y comprender su resultado.</p>
 </div>
 
 Instala la aplicación de escritorio de [Postman](https://www.postman.com/downloads/). Hoy puedes utilizar el cliente ligero sin iniciar sesión para enviar peticiones. En la sesión 7 necesitarás una cuenta y un espacio de trabajo para colecciones y entornos, o utilizar Bruno siguiendo su recorrido. Mantén el historial de las peticiones válidas para recuperarlas después.
 
 Mantén el servidor arrancado. Antes de probar nada nuevo, consulta desde Postman el listado que ya funciona en el navegador. Si las respuestas difieren, compara el método, la URL y el puerto antes de cambiar el código.
 
-1. Crea una petición nueva.
-2. Deja el método en `GET`.
-3. Escribe la URL: `http://localhost:8080/tareas`.
-4. Pulsa `Send`.
+1. Pulsa **+** o **Create new request** y selecciona **HTTP** como tipo de petición. Según la versión, el botón puede estar en la barra lateral o junto a las pestañas. Si aparece **New**, utiliza **New → HTTP**. Debes llegar a un editor con un selector de método, un campo de dirección y el botón **Send**.
+2. Localiza el selector de método a la izquierda del campo de dirección y selecciona `GET`.
+3. En el campo de dirección escribe **solo** `http://localhost:8080/tareas`. No escribas `GET` dentro de ese campo: el método ya está seleccionado aparte.
+4. Deja **Body → none**, porque esta consulta no necesita enviar un cuerpo.
+5. Pulsa **Send** y espera la respuesta. Escribir la dirección o cambiar el método no envía nada por sí solo.
 
 Abajo aparece la respuesta. Localiza estas cuatro cosas, que son las mismas de la sesión 1 y ahora se ven mucho mejor que en el navegador:
 
@@ -1437,7 +1438,7 @@ Abajo aparece la respuesta. Localiza estas cuatro cosas, que son las mismas de l
 | Pestaña `Body` | El **cuerpo**, con el JSON ya indentado y coloreado |
 | Pestaña `Headers` | Las **cabeceras de respuesta**, con el `Content-Type` entre ellas |
 
-Compara ese JSON con el que veías en el navegador. Es el mismo texto: lo único que cambia es que aquí se lee.
+Compara ese JSON con el que veías en el navegador: debe contener las mismas tareas. Distingue las dos zonas de Postman: **en el editor de la petición preparas lo que envías; en el panel de respuesta lees lo que devuelve el servidor**. Ambas tienen una pestaña llamada `Body`, pero solo el cuerpo de la petición sirve para enviar datos.
 
 Antes de enviar POST, abre `TareaController.java`. Conserva `ejemplo()` y `lista()` y añade este método dentro de la clase, antes de su última llave. Si ya copiaste el método de la demostración, utiliza ese; no lo dupliques.
 
@@ -1448,17 +1449,34 @@ public String crear() {
 }
 ```
 
-Añade `import org.springframework.web.bind.annotation.PostMapping;` junto a los demás imports. Guarda y reinicia. En Postman, cambia el método de `GET` a `POST`, mantén `http://localhost:8080/tareas` y deja **Body → none**: esta primera prueba no necesita cuerpo. Pulsa **Send**. Debes recibir `200 OK` y este texto:
+Añade `import org.springframework.web.bind.annotation.PostMapping;` junto a los demás imports. Guarda, reinicia el servidor y espera a que termine de arrancar. Ahora prepara el envío:
+
+1. En la misma pestaña de Postman, cambia el selector de `GET` a `POST`.
+2. Conserva la dirección `http://localhost:8080/tareas`. GET y POST pueden compartir dirección porque el método HTTP también determina qué método Java se ejecuta.
+3. En el editor de la petición, deja **Body → none**. Este método temporal no recibe datos.
+4. Pulsa **Send** una vez. En el panel de respuesta debes ver `200 OK` y el texto siguiente:
 
 ```text
 Alguien ha hecho un POST
 ```
 
-Ese método que hace un minuto era inalcanzable acaba de ejecutarse. **Eso es todo lo que Postman aporta hoy**, y es suficiente para trabajar tres semanas.
+Has comprobado que Spring ha ejecutado `crear()`: la respuesta contiene exactamente el texto de su `return`. **Elegir POST no guarda una tarea automáticamente**; el resultado depende del código de ese método. Si recibes `405 Method Not Allowed`, comprueba que has añadido `@PostMapping` y reiniciado. Si ves un listado JSON, revisa que el selector no siga en GET.
 
 #### Paso 9 · Recibir datos · `@RequestBody`
 
-Un POST que no recibe nada sirve de poco. Sustituye el método temporal `crear()` por el siguiente; no conserves los dos con la misma ruta POST. Añade `import org.springframework.web.bind.annotation.RequestBody;` al principio del archivo. Guarda y reinicia antes de enviar el JSON.
+Ahora vas a enviar los datos de una tarea. El **cuerpo de la petición** es el texto que acompaña al método y a la URL; aquí lo escribirás en JSON. Prepara primero cómo se construye el objeto y después el método que lo recibirá.
+
+En `Tarea.java`, añade `import com.fasterxml.jackson.annotation.JsonCreator;` debajo de la línea `package`. Localiza el constructor vacío que ya existe y añade la anotación justo encima; no crees otro constructor vacío:
+
+```java
+@JsonCreator
+public Tarea() {
+}
+```
+
+`@JsonCreator` indica a Jackson qué constructor debe utilizar al leer JSON. Nuestra clase tiene dos: el vacío y el que recibe todos los campos. Seleccionamos explícitamente el vacío para crear el objeto y asignar después los valores mediante sus setters. Esto evita que Jackson 3, utilizado por Spring Boot 4, elija el constructor con argumentos y rechace un cuerpo que omita un valor primitivo, como el `id` que en la próxima sesión asignará el servidor. Conserva el constructor con argumentos: lo siguen utilizando los ejemplos de GET escritos en Java.
+
+Ahora abre `TareaController.java` y sustituye el método temporal `crear()` por el siguiente; no conserves los dos con la misma ruta POST. Añade `import org.springframework.web.bind.annotation.RequestBody;` junto a los imports del controlador. Guarda ambos archivos y reinicia antes de enviar el JSON.
 
 ```java
 @PostMapping
@@ -1467,7 +1485,7 @@ public Tarea crear(@RequestBody Tarea tarea) {
 }
 ```
 
-Este método, de momento, devuelve exactamente lo que recibe. Es un espejo, y es la mejor forma de comprobar que la entrada llega bien antes de hacer nada con ella.
+Este método devuelve los datos que recibe sin guardarlos. `@RequestBody Tarea tarea` indica que Spring debe convertir el cuerpo recibido en una instancia de `Tarea` y entregársela al método. `return tarea` permite comprobar en la respuesta qué valores han llegado.
 
 <p class="term">Deserializar</p>
 
@@ -1484,15 +1502,15 @@ Lo contrario de la serialización que acabas de observar: convertir el texto JSO
   </ol>
 </figure>
 
-En este modelo con constructor vacío y setters, Jackson puede crear primero la instancia y asignarle después los valores recibidos. Conserva el constructor vacío para seguir este procedimiento. No es un requisito universal de Jackson: otras clases pueden usar records o constructores configurados para recibir las propiedades, pero aquí no necesitas cambiar la forma de construcción.
+En este modelo, el constructor vacío marcado con `@JsonCreator` permite crear primero la instancia y asignarle después los valores recibidos. Conserva esa anotación para seguir este procedimiento. No es un requisito universal de Jackson: otras clases pueden usar records o constructores configurados para recibir las propiedades, pero aquí no necesitas cambiar la forma de construcción.
 
 En el modelo de este ejercicio ofrecemos getters para leer y setters para escribir. Jackson también puede utilizar campos y otras formas de construcción según su configuración: quitar un setter no garantiza que una propiedad deje de admitirse. Mantén los accesos del ejemplo y comprueba el JSON recibido y devuelto.
 
-1. Método `POST`, URL `http://localhost:8080/tareas`.
-2. Abre la pestaña **Body**, debajo de la URL.
-3. Marca la opción **raw**.
-4. En el desplegable de la derecha, que por defecto pone `Text`, elige **JSON**.
-5. Escribe el cuerpo:
+1. En Postman, selecciona el método `POST` y conserva la URL `http://localhost:8080/tareas`.
+2. Abre la pestaña **Body del editor de la petición**, debajo de la URL. No utilices el `Body` del panel de respuesta.
+3. Marca **raw**, que permite escribir el cuerpo como texto.
+4. En el selector de formato junto a esa opción, elige **JSON**; puede aparecer inicialmente como `Text`.
+5. En el cuadro de texto que aparece, pega únicamente el objeto siguiente, desde `{` hasta `}`. No lo escribas en un archivo Java ni en el campo de dirección. Los nombres deben coincidir con las propiedades de tu modelo; si trabajas con otro dominio, adapta los campos manteniendo sus tipos.
 
 ```json
 {
@@ -1503,13 +1521,18 @@ En el modelo de este ejercicio ofrecemos getters para leer y setters para escrib
 }
 ```
 
-6. `Send`.
+6. Comprueba antes de enviar: método **POST**, dirección terminada en **/tareas**, formato **JSON** y cuerpo con comillas dobles en los nombres. `false` va sin comillas porque es un booleano.
+7. Pulsa **Send** una vez. En el panel de respuesta, localiza el estado y abre su **Body** para leer el JSON devuelto.
 
-La respuesta debe mostrar `200 OK` y devolver los mismos valores en JSON, aunque cambien el orden de las claves o los espacios. Ha hecho un viaje completo: texto JSON, objeto Java, texto JSON otra vez. Todavía no se guarda nada: `GET /tareas` sigue devolviendo los dos objetos escritos en el código. El almacenamiento se añade en el paso 11.
+La respuesta debe mostrar `200 OK` y devolver los mismos valores en JSON, aunque cambien el orden de las claves o los espacios. Por ejemplo, debes reconocer `"titulo": "Revisar el login"` y `"completada": false`. Has enviado texto JSON, el servidor lo ha convertido en un objeto Java y ha convertido ese objeto en el JSON de respuesta.
+
+Para comprobar que controlas el envío, cambia **en el cuerpo de la petición** el título por `Preparar la reunión` y pulsa **Send** de nuevo: la respuesta debe mostrar el nuevo título. Después recupera el cuerpo del ejemplo. Por ahora también envías `id`; en la sesión 4 lo asignará el servidor.
+
+Comprueba la diferencia entre responder y guardar: abre otra pestaña HTTP, selecciona **GET**, escribe `http://localhost:8080/tareas`, deja **Body → none** y pulsa **Send**. Todavía aparecen los dos objetos escritos en el código, no la tarea que acabas de enviar. Conserva las dos pestañas para alternar la escritura y la consulta. El almacenamiento se añade en el paso 11.
 
 <div class="rule">
-  <p class="rule-label">El paso 4 es el que se olvida</p>
-  <p>Elegir <strong>JSON</strong> en ese desplegable no cambia el color del texto: hace que Postman envíe la cabecera <code>Content-Type: application/json</code>. Sin ella, tu servidor no sabe cómo interpretar el cuerpo y contesta <code>415 Unsupported Media Type</code>.</p>
+  <p class="rule-label">Formato del cuerpo y cabecera Content-Type</p>
+  <p>Elegir <strong>JSON</strong> hace que Postman añada la cabecera <code>Content-Type: application/json</code> a la petición. Esa cabecera informa al servidor del formato del cuerpo; no convierte en JSON válido un texto mal escrito. Puedes comprobarla en <strong>Headers de la petición</strong>, mostrando las cabeceras automáticas si están ocultas.</p>
   <p>Compruébalo ahora: cambia el desplegable a <code>Text</code>, envía, y mira el error. Después vuelve a dejarlo en JSON. Ese 415 te va a pasar de verdad, y así lo reconocerás.</p>
 </div>
 
@@ -1593,6 +1616,8 @@ public class TareaController {
 
 La lista `tareas` se declara como atributo de la clase, fuera de los métodos, para que el POST y los dos GET accedan a los mismos datos. `tareas.add(tarea)` incorpora el objeto recibido; el listado devuelve la lista y el bucle de `detalle()` busca una tarea por su identificador. Si declararas una lista nueva dentro de cada método, no compartirían los registros.
 
+`final` impide asignar otra lista al atributo `tareas`; permite añadir, sustituir y eliminar elementos de la lista existente. Por eso `tareas.add(tarea)` es válido.
+
 **Guarda y reinicia una vez antes de empezar.** En Postman, utiliza la base `http://localhost:8080`. Para el POST, recupera el JSON válido del paso 9, con `"id": 1`, y comprueba **Body → raw → JSON**. Ejecuta estas cuatro peticiones **en este orden, sin reiniciar ni editar código entre ellas**, y predice cada respuesta antes de pulsar **Send**. En esta versión las cuatro responden con `200 OK`:
 
 | # | Petición | Qué debe pasar |
@@ -1603,6 +1628,8 @@ La lista `tareas` se declara como atributo de la clase, fuera de los métodos, p
 | 4 | `GET /tareas/1` | Sale esa tarea sola, como objeto |
 
 Cuando la cuarta responda, comprueba la diferencia con el paso 9: **el POST ha cambiado los datos que devuelven los GET posteriores**. Antes de pasar a la segunda entidad, verifica que recuperas el título y la prioridad que acabas de enviar.
+
+Cada vez que pulses **Send** en la pestaña POST, `crear()` añadirá otro objeto. Para consultar lo que ya existe, utiliza la pestaña GET; reenviar un POST no equivale a actualizar la vista. Si lo has enviado varias veces por error, reinicia y repite la secuencia desde la lista vacía.
 
 ##### Estado de la aplicación y pérdida de datos al reiniciar
 
@@ -1625,6 +1652,7 @@ Anótalo como defecto conocido: la respuesta debería ser `404 Not Found` para i
       <tr><td>La aplicación no arranca y muestra <code>Ambiguous mapping</code></td><td>Busca dos métodos con la misma combinación de ruta y método HTTP. Al sustituir un ejemplo, elimina la versión anterior; GET y POST sí pueden compartir la ruta.</td></tr>
       <tr><td><code>404 Not Found</code> en una ruta que debería existir</td><td>Compara la URL con <code>@RequestMapping</code> y la anotación del método. Comprueba también que el controlador esté dentro del paquete base y que hayas reiniciado tras editarlo.</td></tr>
       <tr><td><code>400 Bad Request</code> al enviar el POST</td><td>Revisa comillas dobles, comas y tipos de los valores del cuerpo. Recupera primero el JSON válido del paso 9.</td></tr>
+      <tr><td><code>400</code> al omitir el id u otro campo primitivo</td><td>Si la consola menciona <code>Cannot map null into type int</code> o <code>boolean</code>, comprueba que el constructor vacío del modelo lleva <code>@JsonCreator</code>, con su import, y que has reiniciado. En este ejercicio seleccionamos ese constructor para recibir los datos mediante setters.</td></tr>
       <tr><td><code>415 Unsupported Media Type</code></td><td>Selecciona <strong>Body → raw → JSON</strong> y comprueba que la petición envía <code>Content-Type: application/json</code>.</td></tr>
       <tr><td>POST correcto, pero el listado no contiene la tarea</td><td>Comprueba que <code>crear()</code> ejecute <code>tareas.add(tarea)</code>, que ambos métodos usen la lista declarada como atributo y que no hayas reiniciado entre peticiones.</td></tr>
     </tbody>
@@ -1633,7 +1661,7 @@ Anótalo como defecto conocido: la respuesta debería ser `404 Not Found` para i
 
 #### Paso 12 · Aplicar el patrón a la segunda entidad de tu proyecto
 
-Retoma `Proyecto.java` y `ProyectoController.java`, que dejaste preparados en el paso 7. Conserva los campos y accesos del modelo. En su controlador, aplica el almacenamiento que acabas de comprobar con `Tarea`; mantén también funcionando el controlador de tareas. Usa estos criterios para comprobarlo:
+Retoma `Proyecto.java` y `ProyectoController.java`, que dejaste preparados en el paso 7. Conserva los campos y accesos del modelo. En `Proyecto.java`, añade el import de `JsonCreator` y marca su constructor vacío con `@JsonCreator`, como acabas de hacer en `Tarea.java`, para utilizar el mismo procedimiento de lectura del JSON. En su controlador, aplica el almacenamiento que acabas de comprobar con `Tarea`; mantén también funcionando el controlador de tareas. Usa estos criterios para comprobarlo:
 
 1. Sustituye la lista inventada por un `ArrayList` vacío, como atributo del controlador.
 2. Deja funcionando `GET /proyectos`, `GET /proyectos/{id}` y `POST /proyectos`. El listado debe devolver la lista compartida, el detalle debe buscar en ella y el POST debe añadir el objeto recibido. Sustituye el detalle inventado del paso 7 por esa búsqueda.
@@ -1803,7 +1831,7 @@ Los commits deben reflejar cambios comprensibles durante el trabajo; no necesita
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-Ya puedes añadir y listar objetos en memoria. Hoy completas la consulta individual, la sustitución y el borrado. El identificador permitirá distinguir registros y pasará a asignarlo el servidor. PUT sustituye los datos de un recurso; DELETE solicita su eliminación.
+Ya puedes añadir, listar y consultar objetos por su identificador en memoria. Hoy conservarás esas operaciones, incorporarás la sustitución y el borrado y añadirás un filtro al listado. El identificador permitirá distinguir registros y pasará a asignarlo el servidor. PUT sustituye los datos de un recurso; DELETE solicita su eliminación.
 
 #### Dónde estamos
 
@@ -1823,7 +1851,7 @@ Hoy se cierra la tabla.
 
 Las operaciones comparten el mismo estado. Si creas un registro, tiene que aparecer en el listado y poder consultarse por su identificador; si lo modificas, las lecturas siguientes deben reflejar el cambio; si lo borras, tiene que desaparecer tanto del listado como del detalle. Cinco métodos que funcionan aislados no bastan si cada uno utiliza una colección diferente.
 
-El identificador pertenece al servidor. El cliente envía los datos que desea crear y recibe el identificador asignado; no debe poder sustituir accidentalmente otro registro eligiendo su número. En una modificación, el identificador de la ruta selecciona el registro existente. Primero se busca y después se cambia: que no exista es un caso que la aplicación debe tratar.
+En este proyecto, el servidor asignará el identificador. El cliente enviará los datos que desea crear y recibirá el identificador asignado; así evitamos que distintos clientes elijan el mismo número. En una modificación, el identificador de la ruta selecciona el registro existente. Primero se busca y después se cambia: que no exista es un caso que la aplicación debe tratar.
 
 Hoy la colección vive en el proceso Java. El reinicio elimina sus datos y es una limitación conocida de esta versión. No se corrige guardando el JSON en el navegador: la persistencia del servidor se incorporará con PostgreSQL. La prueba de hoy recorre crear, consultar, modificar, volver a consultar, borrar y comprobar la ausencia, en ese orden, sin editar el código entre peticiones.
 
@@ -1857,12 +1885,12 @@ Antes de modificar el POST, reinicia para partir de la lista vacía de la sesió
 2. `POST /tareas` otra vez, **también con `"id": 1`** y otro título.
 3. `GET /tareas/1`.
 
-Tienes dos tareas distintas con el mismo identificador, y la consulta solo encuentra una: la primera que aparece en la lista. La otra existe y es inalcanzable.
+Consulta también `GET /tareas`: hay dos tareas distintas con el mismo identificador, pero `GET /tareas/1` solo encuentra la primera de la lista. La segunda aparece en el listado, aunque no puedes seleccionarla de forma inequívoca por su id.
 
 <div class="rule">
   <p class="rule-label">Quién decide el identificador</p>
-  <p>El identificador de un recurso <strong>lo asigna siempre el servidor</strong>, nunca quien lo crea. El cliente no puede saber qué ids están libres, no puede coordinarse con los demás clientes, y no tiene ningún motivo para que le importe.</p>
-  <p>Lo que envía el cliente es el <em>contenido</em> de la tarea. Lo que devuelve el servidor es la tarea <em>ya creada</em>, con su id puesto. Por eso un <code>POST</code> devuelve el objeto: es la única forma que tiene quien llama de enterarse del identificador.</p>
+  <p><strong>En nuestra API, el servidor asigna el identificador.</strong> El cliente envía el contenido de la tarea y el servidor lleva un contador para evitar identificadores repetidos en las pruebas secuenciales de esta versión. Esta es una decisión de diseño del proyecto, no una obligación universal de HTTP.</p>
+  <p>Nuestro POST devuelve la tarea creada con su id. Lee ese valor en la respuesta para construir las siguientes consultas y modificaciones. Más adelante conocerás también la cabecera <code>Location</code>, que permite indicar la dirección del recurso creado.</p>
 </div>
 
 Ahora corrige el POST. En `TareaController`, conserva la lista existente, añade a su lado `private int siguienteId = 1;` y sustituye únicamente el método `crear` por esta versión:
@@ -1880,11 +1908,23 @@ public Tarea crear(@RequestBody Tarea tarea) {
 }
 ```
 
-Guarda y reinicia para eliminar los registros duplicados de la prueba anterior. Crea dos tareas sin enviar `id`: deben recibir identificadores distintos. Envía además `"id": 999` y comprueba que el servidor lo sustituye. La prueba de borrar y crear llegará después de implementar DELETE; el contador conserva su valor solo mientras el proceso sigue en marcha.
+La declaración de `tareas` aparece para situar el nuevo contador: **no dupliques el atributo que ya existe**. Cada alta asigna el valor actual, aumenta el contador y añade la tarea a la lista. En esta versión, el contador y la lista se reinician al arrancar la aplicación.
+
+Guarda y reinicia para eliminar los registros duplicados. En Postman prepara `POST http://localhost:8080/tareas`, selecciona **Body → raw → JSON** y envía:
+
+```json
+{
+  "titulo": "Revisar el login",
+  "prioridad": "alta",
+  "completada": false
+}
+```
+
+La respuesta debe contener esos campos y `"id": 1`. Cambia el título por `Actualizar dependencias`, la prioridad por `baja` y envía de nuevo: debe recibir `"id": 2`. Consulta el listado para ver ambas tareas. Como tercera prueba, añade `"id": 999` al cuerpo, separado del resto de campos por una coma: el servidor debe devolver `"id": 3`. La prueba de borrar y crear llegará después de implementar DELETE.
 
 #### Paso 3 · `PUT` · sustituir una tarea entera
 
-Añade el PUT dentro del controlador y los imports de `PutMapping` y `RequestBody` si faltan. Para probarlo, crea primero una tarea y copia el id devuelto: sustituye por ese número el `{id}` de la URL. Envía los campos editables completos, ejecuta el PUT y después un GET de detalle. La comprobación consiste en observar el nuevo contenido conservando la identidad del registro.
+Añade el método siguiente dentro de `TareaController`, antes de su última llave. Conserva los GET y el POST anteriores. Añade `import org.springframework.web.bind.annotation.PutMapping;` junto a los demás imports; `RequestBody` y `PathVariable` ya se utilizan en el controlador.
 
 ```java
 @PutMapping("/{id}")
@@ -1908,11 +1948,44 @@ public Tarea actualizar(
   <dd>Porque identifica <em>qué</em> tarea se sustituye. Es la regla de la sesión 2: sin ese dato la petición no significa nada. Lo que va en el cuerpo es el contenido nuevo.</dd>
   <dt>Por qué <code>datos.setId(id)</code></dt>
   <dd>Para que mande la ruta. Si el cuerpo trae un id distinto —o ninguno— y no lo forzamos, la tarea se guardaría con un identificador equivocado y desaparecería de las consultas. Cuando dos sitios dicen lo mismo, hay que decidir cuál gana y dejarlo escrito.</dd>
-  <dt>Por qué <code>set</code> y no modificar campo a campo</dt>
-  <dd>Porque <code>PUT</code> significa «sustituye el recurso por este». Si el cuerpo no trae prioridad, la tarea se queda sin prioridad, y eso es correcto. Cambiar solo algunos campos es <code>PATCH</code>, que es otra operación distinta y no la haremos hasta la UD2.</dd>
+  <dt>Qué diferencia hay entre <code>i</code> e <code>id</code></dt>
+  <dd><code>i</code> es la posición dentro de la lista y empieza en 0; <code>id</code> identifica la tarea y procede de la URL. Una lista con tareas de ids 2 y 3 tiene posiciones 0 y 1. <code>tareas.get(i)</code> obtiene el objeto de esa posición y <code>getId()</code> permite comprobar si es el que buscamos.</dd>
+  <dt>Qué cambia <code>tareas.set(i, datos)</code></dt>
+  <dd>Sustituye el objeto de la posición <code>i</code> por el objeto recibido. No añade otra tarea ni cambia el tamaño de la lista. <code>datos.setId(id)</code>, en cambio, modifica un campo de ese objeto antes de guardarlo. Son dos operaciones distintas.</dd>
+  <dt>Qué ocurre con un campo omitido</dt>
+  <dd>Este PUT sustituye todos los datos editables. En nuestro modelo, una prioridad omitida queda en <code>null</code> y una <code>completada</code> omitida queda en <code>false</code>; no se recuperan los valores anteriores. Aún falta validar los campos obligatorios, algo que se abordará en la UD3. PATCH permite modificaciones parciales y se introducirá en la UD2.</dd>
   <dt>Qué pasa si el id no existe</dt>
   <dd>Devuelve <code>null</code>, y por tanto un <code>200</code> con el cuerpo vacío. Es el mismo defecto que ya anotaste en <code>GET /tareas/{id}</code>. Sigue anotado.</dd>
 </dl>
+
+##### Primera modificación completa desde Postman
+
+1. Guarda el controlador, reinicia y espera a que arranque. El reinicio ha vaciado la lista: envía primero el POST sin id del paso 2. Debe crear la tarea 1. Un PUT a una lista vacía no puede modificarla.
+2. Abre otra pestaña HTTP en Postman. Selecciona **PUT** y escribe `http://localhost:8080/tareas/1`. Si estás utilizando otro registro, sustituye `1` por el id real de su respuesta POST; no escribas literalmente `{id}`.
+3. Selecciona **Body → raw → JSON** y escribe todos los campos editables:
+
+```json
+{
+  "titulo": "Revisar el login y cerrar la incidencia",
+  "prioridad": "baja",
+  "completada": true
+}
+```
+
+4. Pulsa **Send**. Debes recibir `200 OK` y este objeto:
+
+```json
+{
+  "id": 1,
+  "titulo": "Revisar el login y cerrar la incidencia",
+  "prioridad": "baja",
+  "completada": true
+}
+```
+
+5. En la pestaña de consultas, envía **GET** a `http://localhost:8080/tareas/1`, con **Body → none**. Debe devolver los datos modificados. Consulta después `http://localhost:8080/tareas`: debe seguir habiendo una sola tarea con el mismo id.
+
+Comprueba ahora una omisión deliberada: en el cuerpo del PUT elimina la línea de `prioridad`, manteniendo una coma entre `titulo` y `completada`. Envía el PUT y consulta el detalle: la prioridad debe ser `null`, porque has sustituido el objeto por otro que no la incluye. **Restaura el JSON completo anterior y vuelve a enviarlo** antes de continuar. Cambiar el texto en Postman sin pulsar Send no modifica los datos del servidor.
 
 #### Paso 4 · Completar consulta individual, listado y borrado
 
@@ -1935,7 +2008,9 @@ public List<Tarea> lista(
 }
 ```
 
-Añade DELETE e importa `org.springframework.web.bind.annotation.DeleteMapping`:
+La lista local `resultado` recoge las coincidencias para esta respuesta. Añadir una tarea a `resultado` no la elimina de `tareas`: al quitar el filtro volverás a ver todos los registros. Sustituye el método de listado anterior; no dejes dos métodos con `@GetMapping` sin ruta.
+
+Añade DELETE dentro del mismo controlador e importa `org.springframework.web.bind.annotation.DeleteMapping`:
 
 ```java
 @DeleteMapping("/{id}")
@@ -1944,7 +2019,15 @@ public void eliminar(@PathVariable(name = "id") int id) {
 }
 ```
 
-`removeIf` elimina los elementos que cumplen la condición. En este caso compara su id con el de la ruta. Guarda, reinicia y recrea los registros con POST. Comprueba listado sin filtro, filtro `true`, filtro `false` y borrado seguido de listado. No conserves dos GET con la misma ruta ni declares otra lista dentro de un método.
+`removeIf` recorre la lista y elimina los elementos para los que la condición resulta verdadera. La expresión `tarea -> tarea.getId() == id` es una **lambda**: a la izquierda de `->` se da un nombre al elemento que se está examinando; a la derecha se indica la comprobación. Se lee «para cada tarea, comprueba si su identificador coincide con el de la ruta». No usa la posición de la lista.
+
+Guarda y reinicia una vez. Prepara los datos y comprueba el filtro y el borrado sin editar código entre peticiones:
+
+1. Envía dos POST sin id: uno con `completada: false` y otro con `completada: true`, utilizando títulos distintos. Deben recibir ids 1 y 2.
+2. Consulta **GET** `http://localhost:8080/tareas`: deben aparecer ambas. Consulta `http://localhost:8080/tareas?completada=true`: solo debe aparecer la segunda. Cambia `true` por `false`: solo debe aparecer la primera. Quita `?completada=false`: deben volver a aparecer ambas.
+3. Abre otra pestaña HTTP, selecciona **DELETE**, escribe `http://localhost:8080/tareas/1` y deja **Body → none**. El id de la URL basta para seleccionar la tarea; no se necesita JSON. Pulsa **Send**.
+4. Debes recibir `200 OK` con el cuerpo vacío: el método Java devuelve `void`. En la UD2 ajustarás el estado a `204 No Content`. El cuerpo vacío por sí solo no demuestra que se haya borrado el registro.
+5. Envía **GET** `http://localhost:8080/tareas`: solo debe quedar la tarea 2. **GET** `http://localhost:8080/tareas/1` devuelve `200` y cuerpo vacío, la limitación conocida de la consulta de un id inexistente. **GET** `http://localhost:8080/tareas/2` debe seguir devolviendo la segunda tarea.
 
 | Método y ruta | Recibe | Devuelve |
 | :--- | :--- | :--- |
@@ -1971,15 +2054,15 @@ Requisitos que se comprueban:
 
 <details class="aside aside--help">
   <summary>Estoy atascado · el borrado</summary>
-  <p>Sobre una <code>List</code> tienes <code>removeIf</code>, que recibe la condición y devuelve <code>true</code> si ha borrado algo. Una línea.</p>
-  <p>Si prefieres el bucle, recuerda no borrar de una lista mientras la recorres con un <code>for</code> normal: es la forma clásica de saltarte elementos.</p>
+  <p><code>removeIf</code> modifica la lista y devuelve un booleano que indica si ha eliminado algún elemento. En este método no utilizamos ese resultado: <code>void</code> significa que <code>eliminar()</code> no devuelve un objeto para el cuerpo HTTP.</p>
+  <p>Si no desaparece la tarea, compara el id de la URL con el que figura en el listado. No deduzcas el identificador a partir de su posición: la primera tarea de la lista puede tener id 2 después de borrar la de id 1.</p>
 </details>
 
 #### Paso 5 · La prueba de aceptación
 
 Una API no está terminada porque compile. Está terminada cuando **una secuencia de peticiones se comporta como se esperaba**.
 
-Para este escenario concreto, reinicia una vez y comprueba que el listado está vacío. Ejecuta las diez peticiones sin reiniciar entre ellas. Así los ids 1 y 2 corresponden a las altas indicadas. Anota estado y cuerpo y predice cada resultado antes de enviar.
+Para este escenario concreto, reinicia una vez y comprueba que el listado está vacío. Ejecuta las diez peticiones sin reiniciar entre ellas. Así los ids 1 y 2 corresponden a las altas indicadas. Anota estado y cuerpo y predice cada resultado antes de enviar. En los dos primeros POST utiliza el JSON completo del paso 2, con los títulos y prioridades de la tabla y `completada: false`, sin id. En el PUT conserva el título y la prioridad de la tarea 2 y cambia solo el valor de `completada` a `true`, enviando también los demás campos.
 
 | # | Petición | Qué debe ocurrir |
 | :---: | :--- | :--- |
@@ -2001,7 +2084,50 @@ Después del paso 10, consulta el listado: debe contener dos registros con ids d
   <p>No las borres al terminar. En la UD2 aprenderás a agruparlas en una colección, ponerles nombre, sacar la dirección del servidor a una variable y ejecutarlas todas de una vez. Esta lista de diez pasos es el primer borrador de esa colección, y es también la primera versión de lo que en la UD7 serán tests automatizados de Java.</p>
 </div>
 
-#### Paso 6 · Lo que tu API todavía hace mal
+#### Paso 6 · Completar la segunda entidad del mismo proyecto
+
+Retoma `Proyecto.java` y `ProyectoController.java` de la sesión 3. Ya deben permitir crear, listar y consultar proyectos por id en memoria. Aplica ahora las mismas operaciones sobre esa entidad, manteniendo el CRUD de tareas. Si tu dominio utiliza otros nombres, conserva los que ya has elegido.
+
+1. En `ProyectoController`, localiza la lista de proyectos y añade a su lado su propio `private int siguienteId = 1;`. Modifica su POST para asignar el id, incrementar el contador y añadir el proyecto. Cada controlador mantiene su propia lista y contador; una tarea y un proyecto pueden tener ambos id 1 porque sus rutas son diferentes.
+2. Añade un PUT con `@PutMapping("/{id}")`, un id de ruta y `@RequestBody Proyecto datos`. Adapta el bucle del paso 3 para recorrer `proyectos`: busca el id, asigna ese id a `datos`, sustituye el objeto con `proyectos.set(i, datos)` y devuélvelo. Si no existe, conserva por ahora el `return null`.
+3. Sustituye el GET de listado por un filtro opcional adecuado al modelo. Para `Proyecto`, utiliza `@RequestParam(name = "activo", required = false) Boolean activo`. Sin filtro devuelve `proyectos`; con filtro recorre la lista y añade a `resultado` los proyectos cuyo `proyecto.isActivo() == activo`. El resultado debe ser una `List<Proyecto>`. Si conservabas el filtro demostrativo `estado` de la sesión 2, sustitúyelo por `activo`, que corresponde a un campo real de este modelo.
+4. Añade DELETE con el id de ruta y `proyectos.removeIf(proyecto -> proyecto.getId() == id);`. Conserva el GET de detalle que busca el proyecto en la lista. Revisa los imports de las anotaciones que acabas de añadir y los tipos: en este controlador no debe quedar ningún `Tarea` ni una referencia a la lista `tareas`.
+5. Guarda y reinicia. En Postman crea un proyecto con **POST** `http://localhost:8080/proyectos` y **Body → raw → JSON**:
+
+```json
+{
+  "nombre": "Gestor de tareas",
+  "descripcion": "Organizar las tareas del equipo",
+  "activo": true,
+  "numeroDeIncidencias": 0
+}
+```
+
+Debe recibir id 1. Crea otro con nombre `Archivo de proyectos`, descripción `Consultar proyectos terminados`, `activo: false` y `numeroDeIncidencias: 0`; debe recibir id 2. Comprueba, en este orden:
+
+| Petición | Resultado esperado |
+| :--- | :--- |
+| `GET http://localhost:8080/proyectos` | Los dos proyectos |
+| `GET http://localhost:8080/proyectos/1` | Solo el primero |
+| `GET http://localhost:8080/proyectos?activo=true` | Solo el primero |
+| `GET http://localhost:8080/proyectos?activo=false` | Solo el segundo |
+
+Envía **PUT** a `http://localhost:8080/proyectos/1`, con **Body → raw → JSON** y este cuerpo completo:
+
+```json
+{
+  "nombre": "Gestor de tareas revisado",
+  "descripcion": "Organizar y revisar las tareas del equipo",
+  "activo": false,
+  "numeroDeIncidencias": 1
+}
+```
+
+Consulta el detalle: debe conservar id 1 y mostrar los cuatro valores nuevos. El listado con `activo=true` debe devolver `[]`; al quitar el filtro vuelven a aparecer ambos proyectos. Envía **DELETE** a `http://localhost:8080/proyectos/1`, con **Body → none**, y comprueba que el listado solo contiene el segundo. Crea un tercer proyecto: debe recibir id 3. Todos estos envíos responden por ahora con `200`; el DELETE tiene el cuerpo vacío.
+
+Por último, envía un POST válido a `/tareas` y comprueba que sus rutas siguen funcionando. Las dos entidades pertenecen al mismo backend, pero todavía no están relacionadas entre sí: esa relación se incorporará más adelante. Antes de continuar debes poder crear, consultar, sustituir, filtrar y borrar en ambas.
+
+#### Paso 7 · Lo que tu API todavía hace mal
 
 Este apartado no constituye un ejercicio de autocrítica, sino el índice de las cuatro unidades siguientes. Comprueba tú mismo cada punto y anota qué responde.
 
@@ -2016,9 +2142,9 @@ Este apartado no constituye un ejercicio de autocrítica, sino el índice de las
 
 Que sepas enumerar estos seis defectos vale tanto como haber hecho funcionar la API. **Saber qué le falta a lo que has construido es la parte difícil de este oficio.**
 
-#### Paso 7 · Preparar la evidencia de esta versión
+#### Paso 8 · Revisar y explicar esta versión
 
-Sube a tu repositorio del módulo:
+Comprueba que tu repositorio contiene el proyecto completo y que puedes explicar el resultado del trabajo:
 
 1. El proyecto completo, arrancable con `mvnw spring-boot:run`.
 2. El resultado real de las diez peticiones y las diferencias que hayas corregido.
@@ -2032,21 +2158,103 @@ Conserva la pregunta pendiente para contrastarla con las explicaciones de la sig
 <div class="practice-levels">
   <div><strong>Objetivo esencial</strong><span>Las dos entidades tienen su CRUD y filtro opcional comprobados. La secuencia de diez peticiones verifica también que borrar y crear no duplica identificadores.</span></div>
   <div><strong>Comprobación adicional</strong><span>Un filtro sin coincidencias devuelve un array vacío; quitar el filtro recupera todos los registros existentes.</span></div>
-  <div><strong>Trabajo sobre tu dominio</strong><span>Completa las mismas operaciones en la segunda entidad, ya iniciada en la sesión 3. Comprueba sus ids, sustitución y borrado. Ambas se utilizarán en la sesión 6.</span></div>
+  <div><strong>Trabajo sobre tu dominio</strong><span>Comprueba que los campos y filtros de ambas entidades corresponden a tu producto y explica una secuencia real de uso. Ambas se utilizarán en la sesión 6.</span></div>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · Porque el cliente no sabe qué ids están ocupados ni puede coordinarse con los demás clientes. Dos peticiones simultáneas elegirían el mismo y una de las dos tareas quedaría inalcanzable.</p>
-  <p>2 · <code>PUT</code> sustituye el recurso entero por lo que envías, así que lo que no mandas se pierde. <code>PATCH</code> modifica solo los campos que envías.</p>
+  <p>1 · En este proyecto centralizamos la asignación para evitar que distintos clientes elijan el mismo número. El contador permite comprobarlo con peticiones secuenciales; esta versión en memoria todavía no resuelve el acceso concurrente.</p>
+  <p>2 · Nuestro PUT sustituye el objeto almacenado por el recibido. Los campos omitidos toman los valores iniciales del modelo, en lugar de conservar los anteriores. PATCH permitirá expresar una modificación parcial.</p>
   <p>3 · En cuanto borras algo. Si creas dos tareas, borras la primera y creas otra, el tamaño vuelve a ser 1 y repartes un id que ya existe.</p>
   <p>4 · Porque utiliza una consulta GET para cambiar datos. Los clientes pueden repetir o precargar consultas suponiendo que no modifican el estado; reserva las escrituras para los métodos HTTP correspondientes.</p>
 </details>
 
-#### Paso 8 · Comprobar y registrar el resultado del proyecto
+#### Paso 9 · Comprobar y registrar el resultado del proyecto
 
 1. Ejecuta en orden crear, listar, consultar por id, modificar, consultar de nuevo y borrar. Comprueba los datos después de cada escritura, no solo el estado HTTP.
 2. Crea dos registros sin elegir sus ids: el servidor debe asignar valores diferentes. Consulta un id ausente y anota la limitación que aún tenga la respuesta; los estados se ajustarán en la UD2.
+
+#### Referencia · Controlador de tareas al terminar la sesión
+
+Utiliza esta versión para contrastar el resultado de los pasos anteriores si encuentras un error de integración. Es el contenido completo de `TareaController.java`, no un fragmento para añadir al final del archivo. Mantén el paquete y los nombres de tu proyecto y conserva el modelo `Tarea.java` de la sesión 3, incluido el constructor vacío con `@JsonCreator` del paso 9. No sustituye las comprobaciones de Postman ni la adaptación del controlador de la segunda entidad.
+
+```java
+package com.ejemplo.gestor.controller;
+
+import com.ejemplo.gestor.model.Tarea;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/tareas")
+public class TareaController {
+
+    private final List<Tarea> tareas = new ArrayList<>();
+    private int siguienteId = 1;
+
+    @GetMapping
+    public List<Tarea> lista(
+            @RequestParam(name = "completada", required = false) Boolean completada) {
+        if (completada == null) {
+            return tareas;
+        }
+        List<Tarea> resultado = new ArrayList<>();
+        for (Tarea tarea : tareas) {
+            if (tarea.isCompletada() == completada) {
+                resultado.add(tarea);
+            }
+        }
+        return resultado;
+    }
+
+    @GetMapping("/{id}")
+    public Tarea detalle(@PathVariable(name = "id") int id) {
+        for (Tarea tarea : tareas) {
+            if (tarea.getId() == id) {
+                return tarea;
+            }
+        }
+        return null;
+    }
+
+    @PostMapping
+    public Tarea crear(@RequestBody Tarea tarea) {
+        tarea.setId(siguienteId);
+        siguienteId = siguienteId + 1;
+        tareas.add(tarea);
+        return tarea;
+    }
+
+    @PutMapping("/{id}")
+    public Tarea actualizar(
+            @PathVariable(name = "id") int id,
+            @RequestBody Tarea datos) {
+        for (int i = 0; i < tareas.size(); i++) {
+            if (tareas.get(i).getId() == id) {
+                datos.setId(id);
+                tareas.set(i, datos);
+                return datos;
+            }
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable(name = "id") int id) {
+        tareas.removeIf(tarea -> tarea.getId() == id);
+    }
+}
+```
 
 ### Cierre
 
