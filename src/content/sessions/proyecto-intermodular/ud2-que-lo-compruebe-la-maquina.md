@@ -520,9 +520,21 @@ Un pipeline del que se desactivan reglas cada vez que emiten un resultado incóm
 
 <p class="stage stage--solo">Trabajo individual, con issue y rama previas</p>
 
-Incorpora este job a `.github/workflows/ci.yml`, al mismo nivel de indentación que el ya existente:
+**1 · Issue y rama de funcionalidad.** Selecciona del tablero o crea la issue «Validar enlaces en el pipeline de CI» y genera su rama desde `main` debidamente actualizada:
+
+```bash
+git switch main
+git pull
+git switch -c 8-ci-enlaces
+```
+
+**2 · Incorporación del job de enlaces.** Abre `.github/workflows/ci.yml` y añade el nuevo trabajo bajo la clave `jobs:`, exactamente al mismo nivel de sangría que el job `html` existente:
 
 ```yaml
+jobs:
+  html:
+    # ... job existente de la sesión 3 ...
+
   enlaces:
     name: Enlaces vivos
     runs-on: ubuntu-latest
@@ -539,16 +551,36 @@ Incorpora este job a `.github/workflows/ci.yml`, al mismo nivel de indentación 
 
 La indentación es significativa en YAML: `enlaces` se declara con dos espacios, alineado con `html`. Una indentación mayor lo convertiría en contenido del job anterior e invalidaría la definición.
 
-Abre la pull request y analiza el resultado. Es previsible que la comprobación señale algún enlace del menú de navegación dirigido a una sección todavía no implementada: ese resultado **no constituye un falso positivo**, sino la detección correcta de un recurso no resoluble.
+**3 · Confirmación y apertura de la pull request.** Registra el cambio en Git y publícalo en tu repositorio remoto:
+
+```bash
+git add .github/workflows/ci.yml
+git commit -m "Anadir comprobacion automatica de enlaces con Lychee"
+git push -u origin 8-ci-enlaces
+```
+
+Abre la pull request indicando `Closes #8` (o el número de tu issue) y analiza la ejecución en la sección de comprobaciones. Es previsible que el check señale algún enlace del menú de navegación dirigido a una sección todavía no implementada: ese resultado **no constituye un falso positivo**, sino la detección correcta de un recurso no resoluble.
 
 <details class="aside aside--help">
-  <summary>Si un enlace externo falla pese a ser correcto</summary>
-  <p>Verifícalo primero en el navegador. Si el recurso responde, se trata de un servidor que rechaza las peticiones automatizadas. Declara la excepción añadiendo su dirección al argumento <code>--exclude</code> y documenta el motivo en la descripción de la pull request. Una exclusión sin justificación escrita impide determinar, meses después, si el recurso sigue disponible.</p>
+  <summary>Si un enlace externo falla pese a ser correcto (falsos positivos)</summary>
+  <p>Verifícalo primero en el navegador. Si el recurso responde, se trata de un servidor que rechaza las peticiones automatizadas procedentes de la nube. Declara la excepción añadiendo su dirección al argumento <code>--exclude</code> y documenta el motivo en la descripción de la pull request:</p>
+  <pre><code class="language-yaml">args: --no-progress --max-retries 2 --exclude "https://linkedin.com/.*" "**/*.html"</code></pre>
+  <p>Una exclusión sin justificación escrita impide determinar, meses después, si el recurso sigue disponible o si se introdujo por descuido.</p>
 </details>
 
 #### Bloque B · Job de verificación del formato
 
-<p class="stage stage--solo">Trabajo individual, sobre la misma rama o sobre una nueva</p>
+<p class="stage stage--solo">Trabajo individual · Fusión previa de enlaces y nueva rama</p>
+
+Tras revisar y fusionar la pull request de enlaces mediante *Squash and merge*, sincroniza tu rama principal local y bifurca la nueva tarea:
+
+```bash
+git switch main
+git pull
+git switch -c 9-ci-formato
+```
+
+**1 · Incorporación del job de formato.** Añade la comprobación a `.github/workflows/ci.yml`, alineada con las dos anteriores:
 
 ```yaml
   formato:
@@ -567,31 +599,53 @@ Abre la pull request y analiza el resultado. Es previsible que la comprobación 
         run: npx --yes prettier@3 --check "**/*.{html,css,json,md}"
 ```
 
-Esta comprobación emitirá un resultado negativo en su primera ejecución, dado que el proyecto no se ha normalizado previamente. Aplica el formato en local con la misma herramienta en modo de escritura:
+Prettier aplica de forma predeterminada su conjunto normativo estándar; no requiere archivo de configuración explícito para este proyecto.
+
+**2 · Observación del fallo en el pipeline.** Confirma y envía el workflow a la rama remota antes de normalizar los archivos en local:
+
+```bash
+git add .github/workflows/ci.yml
+git commit -m "Anadir comprobacion de formato con Prettier"
+git push -u origin 9-ci-formato
+```
+
+Abre la pull request. Esta comprobación emitirá un resultado negativo (aspa roja) en su primera ejecución, dado que el repositorio contiene archivos aún no formateados. Accede al detalle del check para comprobar cómo la herramienta enumera cada archivo con discrepancias de sangría o espaciado.
+
+**3 · Normalización del código en el entorno local.** Aplica el formato en tu máquina con la misma herramienta en modo de escritura:
 
 ```bash
 npx --yes prettier@3 --write "**/*.{html,css,json,md}"
 ```
 
-Examina las diferencias antes de confirmar los cambios: conviene identificar con precisión qué ha modificado la herramienta sobre el código fuente.
+Examina las diferencias con `git diff` antes de confirmar los cambios: conviene identificar con precisión qué ha modificado la herramienta sobre el código fuente.
 
 <div class="rule">
   <p class="rule-label">Aislamiento del commit de normalización</p>
   <p>Una operación de formateo modifica un número elevado de líneas sin alterar el comportamiento del documento. Si esas modificaciones se confunden con un cambio funcional en la misma confirmación, la revisión por pares debe localizar el cambio real entre cientos de líneas de indentación desplazada. El reformateo se registra por tanto en un commit independiente y con un mensaje explícito: «Aplicar el formato de Prettier a todo el proyecto».</p>
 </div>
 
-#### Bloque C · Incorporación de las dos comprobaciones obligatorias
+**4 · Confirmación y paso a verde.** Registra el formateo de forma aislada y sube el cambio:
+
+```bash
+git add -A
+git commit -m "Aplicar el formato de Prettier a todo el proyecto"
+git push
+```
+
+Comprueba que la pull request vuelve a ejecutarse automáticamente y que el check **Formato** concluye ahora con éxito.
+
+#### Bloque C · Incorporación de las comprobaciones obligatorias
 
 <p class="stage stage--solo">Trabajo individual, posterior a la fusión</p>
 
-Siguiendo el procedimiento de la sesión anterior: fusiona las pull requests y accede después a **Settings → Rules → Rulesets → main protegida → Edit → Require status checks** para incorporar **Enlaces vivos** y **Formato**. El conjunto queda en cuatro comprobaciones obligatorias.
+Siguiendo el procedimiento de la sesión anterior: fusiona la pull request y accede después a **Settings → Rules → Rulesets → main protegida → Edit → Require status checks** para incorporar **Enlaces vivos** y **Formato** junto al ya existente **HTML válido**. El conjunto de validación previa queda en **tres comprobaciones obligatorias**.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lista de verificación del bloque C</p>
   <ul class="checklist">
-    <li>Una pull request muestra cuatro comprobaciones identificadas con nombres legibles.</li>
-    <li>Las cuatro figuran como obligatorias en el ruleset de la rama principal.</li>
-    <li>Es posible determinar cuál de las cuatro ha fallado sin abrir el registro de ejecución.</li>
+    <li>Una pull request muestra tres comprobaciones identificadas con nombres legibles (<code>HTML válido</code>, <code>Enlaces vivos</code> y <code>Formato</code>).</li>
+    <li>Las tres figuran como obligatorias en el ruleset de la rama principal.</li>
+    <li>Es posible determinar cuál de las tres ha fallado sin abrir el registro de ejecución.</li>
   </ul>
 </div>
 
@@ -601,10 +655,15 @@ Siguiendo el procedimiento de la sesión anterior: fusiona las pull requests y a
 
 Implementa la sección de proyectos del portfolio. En esta fase contendrá una única ficha, la del propio portfolio: descripción, tecnologías empleadas, enlace al repositorio y enlace a la versión publicada. Constituye el primer proyecto documentado y verificable del expediente.
 
-Incorpora asimismo los enlaces externos previstos: GitHub, LinkedIn si procede y dirección de contacto. El job de verificación detectará los que estén mal formados antes de su publicación.
+Incorpora asimismo los enlaces externos previstos: GitHub, perfil profesional y dirección de contacto. El job de verificación detectará los que estén mal formados antes de su publicación.
+
+<div class="rule">
+  <p class="rule-label">Gestión de enlaces a redes sociales y plataformas con protección anti-bot</p>
+  <p>Determinadas plataformas (como LinkedIn) bloquean sistemáticamente las peticiones automatizadas procedentes de runners en la nube devolviendo códigos HTTP 403 o 999. Si un enlace responde correctamente en el navegador pero hace fallar el check de <code>Enlaces vivos</code>, aplica la directiva <code>--exclude</code> documentada en el bloque A.</p>
+</div>
 
 <div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La sección de proyectos con una ficha y los enlaces externos, con las cuatro comprobaciones en estado correcto.</span></div>
+  <div><strong>Objetivo mínimo</strong><span>La sección de proyectos con una ficha y los enlaces externos, con las tres comprobaciones en estado correcto.</span></div>
   <div><strong>Ampliación</strong><span>Los estilos base del portfolio, en un commit propio y en su propia pull request.</span></div>
   <div><strong>Reto</strong><span>Programar la ejecución semanal del job de enlaces sin intervención de una pull request, con el fin de detectar los recursos externos que dejan de estar disponibles. Indicación: la clave <code>on</code> admite <code>schedule</code>.</span></div>
 </div>
@@ -640,7 +699,7 @@ Incorpora asimismo los enlaces externos previstos: GitHub, LinkedIn si procede y
   <p class="checkpoint-label">Antes de la sesión 5</p>
   <ul class="checklist">
     <li>El portfolio integra cabecera, presentación y proyectos, incorporados mediante pull request.</li>
-    <li>Las cuatro comprobaciones se encuentran en estado correcto sobre <code>main</code>.</li>
+    <li>Las tres comprobaciones de validación (<code>HTML válido</code>, <code>Enlaces vivos</code> y <code>Formato</code>) se encuentran en estado correcto sobre <code>main</code> junto con el despliegue.</li>
     <li>Debe constar en el repositorio una imagen propia o del proyecto: la sesión 5 trabajará sobre ella.</li>
   </ul>
 </div>
@@ -666,7 +725,7 @@ Incorpora asimismo los enlaces externos previstos: GitHub, LinkedIn si procede y
 
 #### De la verificación binaria a la métrica cuantitativa
 
-Las cuatro comprobaciones implementadas hasta ahora emiten un resultado binario. Queda fuera de su alcance la pregunta que formula cualquier cliente y que el pipeline todavía no responde: **en qué grado**.
+Las cuatro comprobaciones implementadas hasta ahora (despliegue, marcado, enlaces y formato) emiten un resultado binario. Queda fuera de su alcance la pregunta que formula cualquier cliente y que el pipeline todavía no responde: **en qué grado**.
 
 <p class="term">Lighthouse</p>
 
