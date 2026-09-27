@@ -524,7 +524,7 @@ Cada integrante explica una decisión del código apoyándose en una de las comp
 
 #### Efecto de una petición y significado de su respuesta
 
-Una operación **segura** tiene semántica de consulta: el cliente no solicita cambiar el recurso. GET es seguro, aunque el servidor pueda registrar la petición en un log. Una operación **idempotente** deja el mismo efecto solicitado al repetir una petición idéntica. Las respuestas pueden ser distintas: borrar un elemento y volver a borrarlo deja el recurso ausente en ambos casos.
+Una operación **segura** tiene semántica de consulta: el cliente no solicita cambiar el recurso. GET es seguro, aunque el servidor pueda registrar la petición en un log. Una operación **idempotente** deja el mismo efecto en el estado del servidor al repetir una petición idéntica. Las respuestas pueden ser distintas: borrar un elemento y volver a borrarlo deja el recurso ausente en ambos casos, aunque el código de estado devuelto al cliente pueda variar (por ejemplo, 204 en el primer intento y 404 en el segundo).
 
 | Método | Efecto en nuestro CRUD | Al repetir la misma petición |
 | --- | --- | --- |
@@ -532,7 +532,7 @@ Una operación **segura** tiene semántica de consulta: el cliente no solicita c
 | POST | Crea un registro con id asignado | Crea otro registro; esta implementación no es idempotente. |
 | PUT | Sustituye los campos editables | Deja la misma representación; es idempotente. |
 | PATCH | Modifica los campos indicados | Depende de la operación: asignar una prioridad se puede repetir; incrementar un contador cambia de nuevo el resultado. |
-| DELETE | Elimina el registro | Lo deja ausente; es idempotente. |
+| DELETE | Elimina el registro | Lo deja ausente en el servidor; es idempotente. |
 
 Si se pierde una respuesta, el cliente puede necesitar reintentar. La idempotencia permite razonar sobre ese reintento, pero no significa que todos los clientes repitan automáticamente las peticiones.
 
@@ -540,7 +540,7 @@ Si se pierde una respuesta, el cliente puede necesitar reintentar. La idempotenc
 
 #### Estado, cabeceras y cuerpo con ResponseEntity
 
-Hasta ahora varios métodos devuelven un objeto o `null`, y Spring responde 200 incluso cuando no encuentran el recurso. **`ResponseEntity`** permite decidir el código, las cabeceras y el cuerpo. Un **contrato HTTP** describe qué debe observar el cliente en cada caso.
+Hasta ahora varios métodos devuelven un objeto o `null`, y Spring responde 200 incluso cuando no encuentran el recurso. La clase `ResponseEntity` (disponible en `org.springframework.http.ResponseEntity`) permite envolver y controlar con precisión las tres partes de una respuesta HTTP: **el código de estado**, **las cabeceras** y **el cuerpo**. Un **contrato HTTP** describe qué debe observar el cliente en cada caso.
 
 | Construcción | Resultado |
 | --- | --- |
@@ -549,7 +549,11 @@ Hasta ahora varios métodos devuelven un objeto o `null`, y Spring responde 200 
 | `ResponseEntity.created(uri).body(objeto)` | 201 con cuerpo y cabecera `Location`. |
 | `ResponseEntity.noContent().build()` | 204 sin cuerpo. |
 
-`Location` indica la dirección del recurso recién creado. El cliente puede utilizarla en un GET sin construir esa URL por su cuenta. `body(...)` incorpora el cuerpo; `build()` termina una respuesta que no lo necesita. El tipo `ResponseEntity<Tarea>` indica el tipo del cuerpo y `ResponseEntity<Void>` expresa que no se devuelve uno.
+Observa dos patrones de su API fluida:
+- **Respuestas con cuerpo:** terminan aportando los datos con `.body(objeto)` o mediante el atajo `ResponseEntity.ok(objeto)`. El tipo genérico indica qué viaja dentro, como `ResponseEntity<Tarea>`.
+- **Respuestas sin cuerpo:** finalizan con `.build()`, que cierra la construcción de una respuesta vacía (como 404 o 204). En la cabecera del método se escribe `ResponseEntity<Void>` con `Void` en mayúscula: en Java los tipos genéricos no admiten el tipo primitivo en minúscula y requieren la clase envoltorio `Void`.
+
+`Location` indica la dirección del recurso recién creado. El cliente puede utilizarla en un GET sin construir esa URL por su cuenta.
 
 ### Se trabaja
 
@@ -616,6 +620,52 @@ Comprueba un id existente y uno ausente. Después adapta **todas las salidas** d
 
 En PUT conserva `datos.setId(id)` antes de sustituir el registro. En PATCH conserva las condiciones que dejan intactos los campos no enviados. No cambies el GET de listado: una lista vacía sigue respondiendo 200 con `[]`.
 
+<details class="aside aside--extra">
+<summary>Comprobar cómo quedan PUT y PATCH adaptados</summary>
+
+En `actualizar` (PUT), sustituye el retorno por `ResponseEntity<Tarea>`, envuelve `datos` en `ResponseEntity.ok(datos)` y cierra con `notFound().build()`:
+
+```java
+@PutMapping("/{id}")
+public ResponseEntity<Tarea> actualizar(
+        @PathVariable(name = "id") int id,
+        @RequestBody Tarea datos) {
+
+    for (int i = 0; i < tareas.size(); i++) {
+        if (tareas.get(i).getId() == id) {
+            datos.setId(id);
+            tareas.set(i, datos);
+            return ResponseEntity.ok(datos);
+        }
+    }
+    return ResponseEntity.notFound().build();
+}
+```
+
+En `modificar` (PATCH), aplica el mismo patrón conservando la comprobación de campos no nulos:
+
+```java
+@PatchMapping("/{id}")
+public ResponseEntity<Tarea> modificar(
+        @PathVariable(name = "id") int id,
+        @RequestBody Tarea cambios) {
+
+    for (Tarea tarea : tareas) {
+        if (tarea.getId() == id) {
+            if (cambios.getTitulo() != null) {
+                tarea.setTitulo(cambios.getTitulo());
+            }
+            if (cambios.getPrioridad() != null) {
+                tarea.setPrioridad(cambios.getPrioridad());
+            }
+            return ResponseEntity.ok(tarea);
+        }
+    }
+    return ResponseEntity.notFound().build();
+}
+```
+</details>
+
 **Comprueba:** GET de detalle, PUT y PATCH responden 404 para un id ausente y no crean registros por accidente.
 
 #### Paso 4 · Crear con 201 y Location · 20 min
@@ -638,7 +688,13 @@ public ResponseEntity<Tarea> crear(@RequestBody Tarea tarea) {
 }
 ```
 
-El constructor toma la URL de la petición y añade el id. Conservamos `consumes` y `produces` de la sesión 5. Tras guardar y reiniciar, crea un registro: debe responder 201 y devolver un id asignado. Abre **Headers de la respuesta**, copia `Location` y úsala en un GET. Debes recuperar el mismo registro.
+La llamada a `ServletUriComponentsBuilder` monta la URL absoluta del recurso recién creado a partir de la petición en curso:
+- `.fromCurrentRequest()` toma la URL base recibida en la petición (por ejemplo, `http://localhost:8080/tareas`).
+- `.path("/{id}")` añade a esa ruta el segmento con la variable `{id}`.
+- `.buildAndExpand(tarea.getId())` reemplaza `{id}` por el número real asignado al registro.
+- `.toUri()` genera el objeto `URI` que `ResponseEntity.created(...)` inserta en la cabecera `Location`.
+
+Conservamos `consumes` y `produces` de la sesión 5. Tras guardar y reiniciar, crea un registro: debe responder 201 y devolver un id asignado. Abre **Headers de la respuesta**, copia `Location` y úsala en un GET. Debes recuperar el mismo registro.
 
 #### Paso 5 · Borrar con una respuesta sin cuerpo · 15 min
 
@@ -652,7 +708,9 @@ public ResponseEntity<Void> eliminar(@PathVariable(name = "id") int id) {
 }
 ```
 
-El contrato del ejemplo devuelve **204 también si el recurso ya estaba ausente**. Ejecuta DELETE dos veces y un GET después de cada borrado: los DELETE dan 204 sin cuerpo y los GET dan 404. Otra API puede elegir 404 en el segundo DELETE sin dejar de ser idempotente; para nuestras pruebas mantendremos el contrato del ejemplo.
+Usamos el método `removeIf` de Java con una lambda (`tarea -> tarea.getId() == id`) porque busca y elimina de la colección en un solo paso seguro. Si intentásemos borrar elementos con un bucle `for` tradicional mientras lo recorremos, Java lanzaría una excepción `ConcurrentModificationException`.
+
+El contrato del ejemplo devuelve **204 también si el recurso ya estaba ausente**: la operación es idempotente porque el estado final del servidor no cambia (el recurso sigue sin existir tras cualquier repetición). Ejecuta DELETE dos veces y un GET después de cada borrado: los DELETE dan 204 sin cuerpo y los GET dan 404. Otra API puede elegir 404 en el segundo DELETE sin dejar de ser idempotente en su estado; para nuestras pruebas mantendremos el contrato del ejemplo.
 
 <details class="aside aside--extra">
   <summary>Comparar con una respuesta fija mediante anotación</summary>
