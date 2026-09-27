@@ -810,6 +810,8 @@ Elige una herramienta y completa todo el escenario con ella. Crea una carpeta po
 
 #### Paso 2 · Definir y seleccionar el entorno · 15 min
 
+Un **entorno** guarda valores de configuración asociados al despliegue (como la dirección `baseUrl`), mientras que las **variables de colección** que utilizarás en el siguiente paso guardan datos dinámicos generados durante la prueba (como `tareaId`) para comunicarlos entre peticiones consecutivas.
+
 1. En Postman, abre **Environments**, crea uno llamado `Local` y añade `baseUrl` con valor `http://localhost:8080`. Guarda y selecciónalo en el selector de entorno.
 2. En Bruno, utiliza el selector **Environment → Configure**, crea `Local`, añade la misma variable, guarda y selecciona ese entorno.
 3. Sustituye el inicio de cada URL por `{{baseUrl}}`. El listado queda como `{{baseUrl}}/tareas`, adaptado al nombre de tu recurso.
@@ -906,9 +908,31 @@ test("Devuelve exactamente B", function () {
 });
 ```
 
-Construye las demás aserciones adaptando estos ejemplos. Un listado debe ser un array; en Postman se comprueba con `pm.expect(pm.response.json()).to.be.an("array")` y en Bruno con `expect(res.getBody()).to.be.an("array")`, dentro de una prueba con nombre.
+Construye las demás aserciones adaptando estos ejemplos. Ten en cuenta que las variables guardadas en la herramienta se recuperan siempre como cadenas de texto (`string`). Usamos `Number(...)` para convertir la variable a número antes de compararla; si se omite, la prueba fallará por discrepancia de tipos (`expected 2 to equal '2'`).
 
-En DELETE exige 204 y cuerpo vacío. Utiliza `pm.expect(pm.response.text()).to.equal("")` en Postman o `expect(res.getBody()).to.equal("")` en Bruno. No intentes interpretar ese cuerpo como JSON. Para el GET posterior al borrado, exige 404.
+Un listado debe ser un array; en Postman se comprueba con `pm.expect(pm.response.json()).to.be.an("array")` y en Bruno con `expect(res.getBody()).to.be.an("array")`, dentro de una prueba con nombre.
+
+En DELETE exige 204 y cuerpo vacío. No intentes llamar a `pm.response.json()`, ya que al no haber cuerpo provocará un fallo de lectura (`Unexpected end of JSON input`). Utiliza en su lugar:
+
+En **Postman**:
+
+```javascript
+pm.test("Borrado con 204 y sin cuerpo", function () {
+    pm.response.to.have.status(204);
+    pm.expect(pm.response.text()).to.equal("");
+});
+```
+
+En **Bruno**:
+
+```javascript
+test("Borrado con 204 y sin cuerpo", function () {
+    expect(res.getStatus()).to.equal(204);
+    expect(res.getBody()).to.equal("");
+});
+```
+
+Para el GET posterior al borrado, exige 404.
 
 #### Paso 5 · Ejecutar el escenario completo · 20 min
 
@@ -923,11 +947,13 @@ Ordena estas peticiones en la carpeta de la entidad. Cada una debe contener sus 
 | 5 | PATCH de A con `{"prioridad":"baja"}` | 200 y prioridad modificada. |
 | 6 | Consultar A | 200, prioridad baja y título original conservado. |
 | 7 | POST con JSON mal formado, como `{"titulo":}` | 400; todavía no confundas JSON mal formado con `{}`, que se acepta hasta incorporar validación. |
-| 8 | POST con texto y `Content-Type: text/plain` | 415. Revisa que no haya otra cabecera Content-Type activa. |
+| 8 | POST con texto y `Content-Type: text/plain` | 415. Elige `raw` y cambia el desplegable a `Text` (asigna la cabecera automáticamente). |
 | 9 | Borrar A | 204 y cuerpo vacío. |
 | 10 | Consultar A borrada | 404 usando el id capturado. |
 | 11 | Borrar B | 204 y cuerpo vacío. |
 | 12 | Consultar B borrada | 404. |
+
+Para la petición 8 (415), configura el cuerpo como `raw` y selecciona `Text` en el selector de formato de Postman o Bruno; esto ajusta la cabecera `Content-Type: text/plain` automáticamente sin necesidad de añadir cabeceras duplicadas a mano.
 
 En Postman utiliza **Run collection** y selecciona la carpeta y el orden; en Bruno, **Run** sobre la colección o carpeta y comprueba el orden antes de ejecutar. Guarda los scripts y las peticiones antes de iniciar el recorrido.
 
