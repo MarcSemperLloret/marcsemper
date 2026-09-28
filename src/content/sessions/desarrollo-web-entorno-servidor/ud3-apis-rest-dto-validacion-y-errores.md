@@ -35,50 +35,105 @@ priorKnowledge:
 
 <p class="stage stage--guided">25 minutos · explicación y demostración</p>
 
-En la sesión 8 conectaste dos entidades y comprobaste sus operaciones. Hoy utilizarás esa base para diseñar una operación de tu dominio y crear elementos dentro de una relación. Revisar las rutas anteriores sirve para justificar el contrato; si ya son coherentes, se conservan.
+Hasta ahora tenías endpoints que funcionaban y pasaban pruebas. Hoy el objetivo es que además tengan sentido como API REST: que puedas justificar por qué cada ruta y cada método están diseñados así.
 
-#### Recursos, representaciones y REST
+Imagina este caso en la pizarra antes de tocar una sola línea de código:
 
-Un **recurso** es algo identificable sobre lo que trabaja la API: una tarea, un proyecto o su colección. Una **representación** describe ese recurso mediante datos, por ejemplo el JSON que devuelve `GET /tareas/7`. El objeto Java permanece dentro del servidor; el cliente recibe su representación.
+```text
+Proyecto 7
+├── Tarea 15
+├── Tarea 16
+└── ¿cómo creamos aquí una nueva tarea?
+```
 
-REST es un estilo de arquitectura descrito por Roy Fielding. Organiza la comunicación mediante restricciones como la separación cliente-servidor, las peticiones sin contexto de sesión guardado en el servidor, la caché, una interfaz uniforme y los sistemas por capas. También contempla la descarga opcional de código. Utilizar HTTP o devolver JSON no garantiza cumplirlas.
+De esa única pregunta se deriva toda la sesión. Para responderla con rigor, dividimos el diseño en cuatro ideas fundamentales.
 
-**Sin estado** no significa que el servidor no guarde tareas: guarda el estado de los recursos. Significa que una petición debe aportar el contexto necesario para interpretarla, sin depender de una conversación previa almacenada para ese cliente. Por ejemplo, `GET /proyectos/7/tareas` identifica el proyecto explícitamente.
+#### 1. Un recurso no es un endpoint
 
-La interfaz uniforme combina identificación de recursos, manipulación mediante representaciones, mensajes que describen su significado e hipermedia: enlaces que permiten descubrir operaciones siguientes. Aquí trabajamos principalmente recursos, métodos y respuestas HTTP. Consulta la [descripción original de REST](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) si quieres ampliar estas restricciones.
+En una API HTTP es imprescindible distinguir tres conceptos que a menudo se confunden:
 
-#### Los niveles de Richardson como comparación
+- **Recurso:** una entidad o concepto del dominio sobre el que opera el sistema (`Proyecto`, `Tarea`, `Usuario`).
+- **Representación:** el formato con el que el cliente consulta o envía ese recurso (por ejemplo, el JSON que devuelve el servidor).
+- **Endpoint o ruta:** la dirección o URI mediante la cual se accede a dicho recurso (`/tareas/7`).
 
-Este modelo ayuda a comparar diseños HTTP. No es una certificación de calidad ni sustituye todas las restricciones de REST.
+```text
+GET /tareas/7  ──>  { "id": 7, "titulo": "Preparar memoria", "completada": false }
+  [Endpoint]                            [Representación JSON]
+```
 
-| Nivel | Organización | Ejemplo |
-| :--- | :--- | :--- |
-| 0 | Una dirección recibe distintas órdenes en el cuerpo | `POST /api` con `{"accion":"obtenerTarea","id":7}` |
-| 1 | Se identifican recursos, pero no se aprovechan bien métodos y estados | `POST /tareas/7` con una acción de consulta en el cuerpo |
-| 2 | Recursos, métodos y estados expresan la operación | `GET /tareas/7` devuelve `200` o `404` |
-| 3 | La representación incluye enlaces a operaciones siguientes | La tarea ofrece enlaces de consulta y transición de estado |
+La tarea es el recurso; el JSON es una representación del estado de esa tarea en ese instante. REST organiza la API alrededor de **sustantivos** (cosas del dominio), no alrededor de funciones ni procedimientos remotos.
 
-Tu CRUD debería aprovechar ya el nivel 2. Hoy no implementarás hipermedia; comprobarás que las decisiones del proyecto son consistentes y puedes explicar sus límites.
+#### 2. La URL dice «qué» y el método HTTP dice «qué haces»
 
-#### Convenciones para las rutas del proyecto
+Esta es la regla central del diseño REST. Un diseño procedimental o RPC (*Remote Procedure Call*) traslada las acciones a la URL:
 
-| Decisión | Convención que seguimos |
+```text
+POST /crearProyecto
+GET  /obtenerProyecto?id=7
+GET  /borrarProyecto/7
+POST /proyecto/7/editar
+```
+
+En una API REST la URL identifica **qué recurso** se manipula y el método HTTP indica **qué operación** se solicita:
+
+| Petición | Significado REST |
 | :--- | :--- |
-| Nombrar colecciones | Sustantivos en plural: `/tareas` |
-| Identificar un elemento | Id en la ruta: `/tareas/7` |
-| Expresar una operación | Método HTTP: `DELETE /tareas/7` |
-| Filtrar una colección | Parámetro opcional: `/tareas?completada=true` |
-| Recorrer una relación | `/proyectos/7/tareas` |
-| Mantener nombres consistentes | Minúsculas, guiones cuando hagan falta y sin extensión `.json` |
-| Mantener una URL canónica | Usamos rutas sin barra final y las documentamos así |
+| `POST /proyectos` | Crea un nuevo proyecto |
+| `GET /proyectos/7` | Obtiene el estado del proyecto 7 |
+| `PUT /proyectos/7` | Sustituye o actualiza por completo el proyecto 7 |
+| `PATCH /proyectos/7` | Modifica parcialmente el proyecto 7 |
+| `DELETE /proyectos/7` | Elimina el proyecto 7 |
 
-Estas convenciones facilitan el uso, pero no son leyes de REST. `/tareas?proyectoId=7` también puede ser válido: filtra la colección general. La ruta anidada identifica primero un proyecto y permite distinguir si ese proyecto no existe, como comprobaste en la sesión 8. Evita encadenar relaciones innecesarias; un elemento con id propio puede tener una dirección directa.
+¿Por qué `GET /borrarProyecto/7` es un grave error conceptual? No es una simple cuestión de estilo:
+- **Semántica HTTP:** `GET` debe ser una operación segura de solo lectura; nunca debe alterar el estado del servidor.
+- **Riesgo crítico en producción:** un navegador que precalienta enlaces (*prefetching*), un bot de búsqueda (*crawler*) o un proxy de caché intermedio que intente acelerar peticiones podría recorrer tus rutas `GET` y borrar accidentalmente datos de la base de datos sin confirmación.
 
-#### Una acción de negocio puede cambiar un recurso
+#### 3. Recursos relacionados: lugar de creación vs. dirección permanente
 
-«Cerrar una incidencia» puede significar asignar `estado="cerrada"` mediante PATCH. «Añadir un comentario» crea un recurso mediante POST. «Solicitar un reembolso» puede crear una solicitud con su propio estado. Antes de inventar una ruta, escribe qué dato cambia, qué se crea y qué efecto tendría repetir la petición.
+En la sesión 8 creaste `GET /proyectos/7/tareas` («dame las tareas que pertenecen al proyecto 7»). Hoy incorporamos:
 
-Los ejemplos describen decisiones de diseño. Hoy implementarás una creación dentro de una relación existente; no necesitas añadir pagos, usuarios ni autenticación.
+```text
+POST /proyectos/7/tareas  ──>  Crea una tarea asociada al proyecto 7
+```
+
+Cuando llega esta petición con el JSON `{ "titulo": "Preparar memoria" }`, el servidor sigue este flujo estricto:
+
+```text
+1. ¿Existe el proyecto 7?
+   ├─ NO  ──> Responde 404 Not Found de inmediato (y NO guarda nada)
+   └─ SÍ  ──> Continúa
+2. Genera el identificador único de la tarea (p. ej. id = 23).
+3. Fuerza la relación del dominio: proyectoId = 7.
+4. Guarda la nueva tarea en la colección.
+5. Responde 201 Created con cabecera Location: /tareas/23.
+```
+
+**La regla de oro:** *El lugar donde creo un recurso no es necesariamente su dirección permanente.*
+
+Aunque la tarea nazca a través de la relación `/proyectos/7/tareas`, una vez creada tiene identidad propia en el dominio. Su dirección canónica y definitiva de detalle es `/tareas/23`. Por eso la cabecera `Location` devuelve `/tareas/23` y no obligamos a consumir una ruta redundante como `/proyectos/7/tareas/23`.
+
+#### 4. Conflicto de fuentes: la URL manda sobre el cuerpo
+
+¿Qué ocurre si el cliente hace `POST /proyectos/7/tareas` pero envía `{ "titulo": "Tarea X", "proyectoId": 12 }`?
+
+La regla de diseño es inequívoca: **la URL define el contexto de la operación y manda sobre el cuerpo**. El servidor sobrescribe cualquier valor contradictorio:
+
+```java
+nueva.setProyectoId(proyectoId); // El 7 de la URL prevalece siempre sobre el 12 del JSON
+```
+
+Esta discrepancia anticipa directamente la necesidad de los **DTO** de la sesión 10: permitir que el cliente envíe campos como `id` o `proyectoId` que realmente controla el servidor obliga a ignorarlos o sobrescribirlos en código. En la siguiente sesión veremos cómo recibir únicamente `{ "titulo": "Tarea X" }`.
+
+#### Los niveles de Richardson en perspectiva
+
+El modelo de madurez de Richardson es una referencia comparativa para evaluar el grado de aprovechamiento de los estándares web:
+
+- **Nivel 0 (The Swamp of POX):** Una única URL para todo el sistema que recibe órdenes en el cuerpo (`POST /api`).
+- **Nivel 1 (Recursos):** Se dividen las URLs en recursos individuales (`/tareas`, `/proyectos`).
+- **Nivel 2 (Verbos y códigos HTTP):** Se aprovechan los métodos estándar (`GET`, `POST`, `PUT`, `DELETE`) y códigos de estado semánticos (`200`, `201`, `404`).
+- **Nivel 3 (Hipermedia / HATEOAS):** Las respuestas contienen enlaces autodescriptivos a las siguientes operaciones válidas.
+
+Tu objetivo formativo es dominar un **Nivel 2 sólido y coherente**. No dedicaremos la sesión a hipermedia (Nivel 3), pero tampoco nos quedaremos en endpoints desconectados de los estándares HTTP.
 
 ### Se trabaja
 
@@ -107,43 +162,42 @@ No busques tres defectos por obligación: si una ruta ya cumple su contrato, jus
 
 #### Paso 2 · Comparar decisiones antes de programar — 15 minutos
 
-Propón método, ruta y cuerpo para estas operaciones. Las cinco primeras permiten aplicar lo conocido; las dos últimas requieren justificar el diseño.
+Analiza las siguientes operaciones. Justifica el método, la ruta y el impacto de la repetición:
 
-| Operación | Propuesta inicial que debes revisar |
-| :--- | :--- |
-| Crear proyecto | `POST /crearProyecto` |
-| Consultar proyecto 7 | `GET /obtenerProyecto?id=7` |
-| Borrar proyecto 7 | `GET /borrarProyecto/7` |
-| Cambiar el nombre de un proyecto | `POST /proyecto/7/editar` |
-| Listar tareas pendientes | `GET /tareas/pendientes` |
-| Asignar una tarea a un proyecto | Elegir entre editar la referencia o modelar una asignación |
-| Archivar todos los proyectos cerrados | Decidir si se actualizan recursos o se crea una operación por lotes |
+| Operación | Propuesta inicial que debes revisar | Alternativa REST defendible |
+| :--- | :--- | :--- |
+| Crear proyecto | `POST /crearProyecto` | `POST /proyectos` |
+| Consultar proyecto 7 | `GET /obtenerProyecto?id=7` | `GET /proyectos/7` |
+| Borrar proyecto 7 | `GET /borrarProyecto/7` | `DELETE /proyectos/7` |
+| Cambiar el nombre de un proyecto | `POST /proyecto/7/editar` | `PATCH /proyectos/7` o `PUT /proyectos/7` |
+| Listar tareas pendientes | `GET /tareas/pendientes` | `GET /tareas?completada=false` |
+| Asignar una tarea a un proyecto | Modificar la referencia interna | `PUT /tareas/7` o `PATCH /tareas/7` |
+| Archivar todos los proyectos cerrados | Acción masiva por lotes | Diseñar recurso de proceso o actualización |
 
-Explica por qué el GET de borrado resulta incorrecto aunque su ruta tuviera un nombre mejor. Para las dos últimas, indica qué ocurriría al repetir exactamente la petición. No implementes la operación por lotes hoy.
+Justifica en tu cuaderno o en la PR:
+1. Por qué `GET /borrarProyecto/7` es inadmisible conceptualmente aunque cambiáramos su nombre (seguridad de lectura, prefetching, proxies de caché).
+2. Qué ocurre si repites exactamente una petición: `GET /tareas/7` es seguro y repetible; `PUT /tareas/7` es idempotente (deja el mismo estado final); `POST /tareas` no es idempotente (crea un recurso nuevo cada vez).
 
 #### Paso 3 · Diseñar una creación dentro de la relación — 15 minutos
 
-En el ejemplo ya existe `GET /proyectos/{id}/tareas`. Añadiremos `POST /proyectos/{id}/tareas`: crea una tarea que pertenece al proyecto indicado en la ruta. Usa la relación equivalente de tu aplicación.
+Ya disponías de `GET /proyectos/{id}/tareas`. Ahora diseñamos `POST /proyectos/{id}/tareas`. Define el contrato exacto antes de codificar:
 
-Escribe el contrato antes del código:
+| Caso | Entrada | Comportamiento del servidor | Respuesta HTTP |
+| :--- | :--- | :--- | :--- |
+| El proyecto existe | JSON tarea válido | Asigna ID de tarea, vincula a `proyectoId`, guarda | `201 Created` con cabecera `Location: /tareas/{id}` y JSON creado |
+| El proyecto no existe | ID inexistente | Aborta inmediatamente sin registrar nada en memoria | `404 Not Found` sin cuerpo |
+| Cuerpo con otro `proyectoId` | JSON trae `proyectoId: 12` | Manda la ruta: se sobrescribe con el ID de la URL | `201 Created` con el ID de la URL |
+| Cuerpo con un `id` | JSON trae `id: 999` | El servidor lo ignora y asigna su propio contador | `201 Created` con ID nuevo autogenerado |
+| Petición POST repetida | Mismo JSON enviado 2 veces | Crea dos tareas distintas con identificadores diferentes | `201 Created` (dos recursos distintos) |
 
-| Caso | Decisión de esta versión |
-| :--- | :--- |
-| El proyecto existe | Crear tarea, responder `201`, devolver su cuerpo y su dirección de detalle en `Location` |
-| El proyecto no existe | Responder `404` sin guardar una tarea |
-| El cuerpo trae otro `proyectoId` | Usar el proyecto de la ruta |
-| El cuerpo trae un id de tarea | Ignorarlo y asignar uno nuevo en el servidor |
-| Se repite el POST correcto | Crear una segunda tarea con otro id |
-
-Conservamos también el POST general de tareas. Ambos deben consultar el mismo contador y la misma lista. Una tarea nueva tiene una sola dirección de detalle: `/tareas/{id}`, independientemente de dónde se haya creado.
+Ambas vías (`POST /tareas` y `POST /proyectos/{id}/tareas`) son puertas de entrada para el mismo recurso: deben compartir el mismo contador y la misma lista interna. Una tarea nueva tiene una única dirección de detalle permanente: `/tareas/{id}`.
 
 #### Paso 4 · Implementar sin duplicar el contador — 40 minutos
 
-1. Abre `TareaController`. Mantiene la lista de tareas y su contador, por lo que alojará ambas formas de crearlas.
-2. Añade `private final List<Proyecto> proyectos;`, importa `Proyecto` y, en su constructor existente, añade `this.proyectos = memoria.getProyectos();`. Reutiliza el componente de la sesión 8.
-3. Cambia el prefijo de clase `@RequestMapping("/tareas")` por `@RequestMapping` y escribe el prefijo explícitamente en sus métodos. `@GetMapping` pasa a `@GetMapping("/tareas")`; `@GetMapping("/{id}")`, a `@GetMapping("/tareas/{id}")`. Haz lo equivalente en POST, PUT, PATCH y DELETE. Conserva sus parámetros `consumes` y `produces`.
-4. Reinicia y ejecuta la colección: las URLs públicas deben ser exactamente las mismas. Cambiaste dónde se compone la ruta en el código, no el contrato.
-5. Añade este método al mismo controlador. Importa `URI` de `java.net` y `ServletUriComponentsBuilder` si faltan. Utiliza el nombre real de tu contador si es distinto.
+1. Abre `TareaController`. Mantiene la lista de tareas y su contador `siguienteId`, por lo que alojará ambas formas de creación.
+2. Inyecta la lista de proyectos compartida: añade `private final List<Proyecto> proyectos;` y asígnala en el constructor desde el almacén de memoria (`this.proyectos = memoria.getProyectos();`).
+3. Para poder mapear rutas bajo `/proyectos/{proyectoId}/tareas` dentro de `TareaController`, cambia la anotación de clase `@RequestMapping("/tareas")` por `@RequestMapping` genérico y haz las rutas explícitas en cada método (`@GetMapping("/tareas")`, `@GetMapping("/tareas/{id}")`, etc.).
+4. Añade el método de creación anidada:
 
 ```java
 @PostMapping(value = "/proyectos/{proyectoId}/tareas",
@@ -151,6 +205,8 @@ Conservamos también el POST general de tareas. Ambos deben consultar el mismo c
 public ResponseEntity<Tarea> crearEnProyecto(
         @PathVariable(name = "proyectoId") int proyectoId,
         @RequestBody Tarea nueva) {
+
+    // 1. Validar existencia del recurso padre antes de cualquier efecto colateral
     boolean existe = false;
     for (Proyecto proyecto : proyectos) {
         if (proyecto.getId() == proyectoId) {
@@ -162,39 +218,49 @@ public ResponseEntity<Tarea> crearEnProyecto(
         return ResponseEntity.notFound().build();
     }
 
+    // 2. El servidor controla la identidad y la pertenencia
     nueva.setId(siguienteId++);
     nueva.setProyectoId(proyectoId);
     tareas.add(nueva);
+
+    // 3. Dirección permanente del recurso recién creado
     URI ubicacion = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/tareas/{id}").buildAndExpand(nueva.getId()).toUri();
+
     return ResponseEntity.created(ubicacion).body(nueva);
 }
 ```
 
-`fromCurrentContextPath()` parte de la dirección de la aplicación. Añadimos la ruta de detalle `/tareas/{id}`: añadir simplemente `/{id}` a la petición anidada produciría otra URL que no has implementado.
+Analiza el propósito de cada bloque:
+- **`if (!existe) return notFound()`**: Si el proyecto no existe, respondemos `404` de inmediato. Es crítico que no se guarde la tarea ni se incremente el contador.
+- **`nueva.setId(siguienteId++)`**: La identidad la genera y garantiza el servidor.
+- **`nueva.setProyectoId(proyectoId)`**: La URL manda sobre cualquier valor que viniera en el JSON.
+- **`Location: /tareas/{id}`**: `ServletUriComponentsBuilder` compone la URL canónica absoluta (p. ej. `http://localhost:8080/tareas/23`).
 
-6. Crea una tarea desde cada POST y comprueba que tienen ids distintos. No declares otro contador dentro del nuevo método ni en `ProyectoController`.
-7. Si corregiste alguna URL del inventario inicial, actualiza las peticiones afectadas. `baseUrl` cambia el servidor, pero no cambia el resto de la ruta: revisa también los enlaces que utiliza el cliente de Intermodular.
+**¿Por qué es crucial no duplicar el contador?**
+Si declararas un contador `siguienteId` en `TareaController` y otro en `ProyectoController`, una llamada a `POST /tareas` crearía la tarea 10, y otra a `POST /proyectos/4/tareas` crearía otra tarea con id 10. Habrías generado dos recursos distintos con el mismo identificador. Por eso ambas vías de creación deben operar sobre la misma lista y el mismo contador.
 
 #### Paso 5 · Comprobar la operación con casos distintos — 35 minutos
 
-Amplía la colección utilizando ids capturados, nunca números fijos:
+Amplía tu colección de Postman/Bruno utilizando identificadores dinámicos capturados:
 
-1. Crea dos proyectos, A y B. Crea una tarea desde la ruta de A enviando el id de B en el cuerpo. Comprueba que la respuesta contiene el id de A.
-2. Sigue la cabecera `Location` con un GET. Debe devolver la tarea creada y su id. Puedes guardar la cabecera en una variable con el mismo mecanismo que empleaste para los ids.
-3. Consulta las tareas de A y de B: solo A debe contener la nueva tarea.
-4. Repite el POST de A: debe crear otra tarea con id distinto. Comprueba también que no colisiona con una creada desde el POST general.
-5. Borra B y utiliza su id en un POST anidado. Espera `404`; compara el listado antes y después para verificar que no se añadió ningún registro.
-6. Limpia primero todas las tareas creadas y luego los proyectos. Ejecuta dos veces la secuencia completa.
-
-Si la respuesta es correcta pero `Location` devuelve `404`, revisa la construcción de la dirección. Si al crear por rutas distintas se repite un id, localiza dónde has duplicado el contador.
+1. **Discrepancia intencionada:** Crea los proyectos A y B. Lanza un `POST /proyectos/{idA}/tareas` enviando `{ "titulo": "...", "proyectoId": <idB> }`. Comprueba que la respuesta devuelve el código `201` y que el campo `proyectoId` contiene el valor de A, ignorando B.
+2. **Seguimiento de `Location`:** Captura el valor de la cabecera `Location` y lánzale un `GET`. Debe devolver `200 OK` con los datos de la tarea recién creada.
+3. **Aislamiento de la relación:** Consulta `GET /proyectos/{idA}/tareas` y `GET /proyectos/{idB}/tareas`. La tarea solo debe aparecer en la colección del proyecto A.
+4. **No idempotencia del POST:** Repite exactamente la misma petición `POST` al proyecto A. Comprueba que se genera una segunda tarea con un `id` incrementado. Comprueba también que un `POST /tareas` posterior no colisiona con estos identificadores.
+5. **Padre inexistente sin efectos secundarios:** Elimina el proyecto B (`DELETE /proyectos/{idB}`) y envía un `POST /proyectos/{idB}/tareas`. Espera un `404 Not Found`. Realiza un `GET /tareas` y comprueba que la lista general no ha sufrido ninguna modificación.
+6. Limpia los datos y ejecuta dos veces la secuencia completa para confirmar que es reproducible.
 
 #### Paso 6 · Revisar el cambio — 20 minutos
 
-1. Actualiza el contrato con la operación nueva y sus casos de error. Distingue la comprobación del padre, ya implementada en esta ruta, de la validación de campos, pendiente de las próximas sesiones.
-2. Ejecuta también las pruebas anteriores de filtros, PUT, PATCH y DELETE. Un cambio en las anotaciones no debe dejar una operación inaccesible.
-3. Revisa el diff: las modificaciones deben corresponder a decisiones identificadas en el contrato. Guarda y sube los cambios de la rama; abre o actualiza su PR.
-4. En la revisión, explica por qué ambos POST comparten contador, qué dato manda cuando cuerpo y ruta discrepan y qué prueba demuestra que un padre inexistente no produce escrituras.
+1. Revisa tu contrato y confirma que cumple las **cinco reglas de la sesión**:
+   - Las URLs identifican recursos (`/proyectos`, `/tareas`), no acciones.
+   - Los verbos HTTP representan operaciones (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`).
+   - Las relaciones del dominio se expresan de forma anidada (`/proyectos/7/tareas`).
+   - El servidor controla la identidad y la integridad de las relaciones (la URL prevalece).
+   - Las respuestas HTTP completan el contrato (`201 Created`, `404 Not Found`, cabecera `Location`).
+2. Verifica que las pruebas anteriores (filtros, PUT, PATCH, DELETE) siguen pasando. El cambio de anotaciones en `TareaController` no debe romper ninguna ruta existente.
+3. Revisa el diff de Git, prepara tu PR y justifica en la descripción técnica por qué `Location` apunta a `/tareas/{id}` y cómo demostraste que un padre inexistente no crea datos huérfanos.
 
 #### Ampliación si has completado el trabajo
 
@@ -204,7 +270,7 @@ Elige una acción real de tu producto que todavía no esté cubierta: archivar, 
 
 <p class="stage">15 minutos · resultado comprobable y explicación individual</p>
 
-**Al terminar la sesión:** el contrato conserva las rutas que ya eran adecuadas e incorpora una creación anidada comprobada. La ruta determina la relación, los ids no se duplican entre formas de creación y `Location` conduce al detalle. Puedes justificar el método elegido y mostrar una prueba de éxito y otra que verifica que un error no modifica los datos.
+**Al terminar la sesión:** el contrato conserva las rutas que ya eran adecuadas e incorpora una creación anidada comprobada. La ruta determina la relación, los ids no se duplican entre formas de creación y `Location` conduce al detalle canónico. Puedes justificar por qué la URL manda sobre el cuerpo, por qué `GET` nunca debe alterar datos y qué pruebas demuestran que un error `404` no deja registros huérfanos.
 
 
 ## Sesión 10 · Representaciones y DTO
