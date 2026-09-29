@@ -1014,7 +1014,7 @@ Llegas con dos entidades, sus operaciones CRUD y una colección que comprueba un
 
 En el ejemplo, cada tarea guarda un `proyectoId`. Ese número identifica su proyecto: dos tareas con `proyectoId` igual a 7 pertenecen al mismo proyecto. Todavía no hay una base de datos que compruebe esa relación; el código tendrá que buscar y comparar los identificadores.
 
-`GET /proyectos/7/tareas` requiere dos decisiones, en este orden:
+La ruta que expone esa relación es `GET /proyectos/7/tareas`. Las tareas de un proyecto forman una **subcolección**: un conjunto que no se consulta por sí mismo, sino a través del recurso del que depende. Por eso la ruta empieza por el padre y la consulta requiere dos decisiones, en este orden:
 
 1. Buscar el proyecto 7. Si no existe, responder `404`.
 2. Si existe, seleccionar sus tareas. Devolver `200` con ellas, o con `[]` si no tiene ninguna.
@@ -1025,9 +1025,15 @@ Una lista vacía describe un proyecto existente sin tareas. Un `404` indica que 
 
 Hasta ahora cada controlador conserva su propia lista. La nueva consulta necesita leer proyectos y tareas a la vez. Crear otra lista en el controlador de proyectos no serviría: estaría vacía aunque el controlador de tareas ya hubiera guardado registros.
 
-Vamos a reunir las dos listas en una clase `MemoriaProyecto`. La anotación `@Component` permite que Spring cree y gestione una instancia compartida de esa clase. Cada controlador la solicita mediante su constructor. Spring entrega la misma instancia a ambos: esta forma de recibir un objeto necesario se llama **inyección de dependencias**. En la UD4 estudiarás cómo organizar responsabilidades; hoy utilizamos este mecanismo únicamente para compartir los datos existentes.
+Reuniremos las dos listas en una clase `MemoriaProyecto` marcada con la anotación `@Component`. Ese mecanismo no es nuevo, aunque la anotación sí lo sea. Desde la UD1 tus controladores atienden peticiones sin que nadie los construya desde `main`: `@SpringBootApplication` activa el **escaneo de componentes**, Spring recorre el paquete principal y sus subpaquetes, localiza las clases marcadas, crea **una instancia de cada una** y la conserva mientras la aplicación se ejecuta. `@RestController` es una especialización de `@Component`, de modo que tus controladores ya eran clases gestionadas por Spring. Lo único nuevo hoy es que marcas tú una clase propia que no atiende rutas.
 
-La memoria sigue siendo temporal y se vacía al reiniciar. Tampoco garantiza escrituras simultáneas seguras. Esta versión permite aprender el contrato HTTP; la persistencia llegará en la UD5.
+Una vez registrada, cada controlador declara que la necesita escribiéndola como parámetro de su constructor. Spring llama a ese constructor al arrancar y le entrega la instancia que ya tiene creada. Esta forma de recibir un objeto necesario en lugar de construirlo se denomina **inyección de dependencias**, y como la instancia es única, ambos controladores reciben exactamente la misma. En la UD4 estudiarás el contenedor que hace ese trabajo y cómo organizar las responsabilidades entre capas; hoy este mecanismo sirve únicamente para compartir los datos existentes.
+
+De ahí que escribir `new MemoriaProyecto()` dentro de un controlador anule el propósito del cambio: cada `new` produce un objeto distinto, con sus dos listas recién creadas y vacías, que es el problema que la clase pretende resolver. La instancia compartida solo llega por el constructor.
+
+Queda un detalle de Java, ajeno a Spring, sobre el que se apoya toda la sesión. Cuando el controlador guarda `this.tareas = memoria.getTareas()`, no copia la lista: almacena una **referencia** al mismo objeto `ArrayList`. Por eso un `add` ejecutado desde `TareaController` resulta visible después desde `ProyectoController`. Si el método devolviera una copia, cada controlador volvería a trabajar sobre datos propios y el código compilaría y respondería igual, ocultando el fallo.
+
+La memoria sigue siendo temporal y se vacía al reiniciar. Tiene además una segunda limitación: al existir una sola instancia compartida por todas las peticiones, y atender Tomcat cada petición en un hilo distinto, dos escrituras simultáneas operan a la vez sobre la misma lista. `ArrayList` no es *thread-safe*, por lo que esta versión no garantiza escrituras concurrentes correctas. Resulta suficiente para aprender el contrato HTTP; la persistencia llegará en la UD5.
 
 ### Se trabaja
 
@@ -1088,7 +1094,17 @@ public ProyectoController(MemoriaProyecto memoria) {
 ```
 
 5. Si ya había un constructor, incorpora estas asignaciones a ese constructor; no dejes dos formas distintas de construir el controlador. No conserves los antiguos `new ArrayList<>()` en esos campos ni escribas `new MemoriaProyecto()` en los controladores.
-6. Reinicia y ejecuta la colección. Las rutas y respuestas anteriores deben seguir funcionando. Si aparece un error al crear el componente, comprueba que `memoria` está debajo del paquete de la clase con `@SpringBootApplication`.
+6. Reinicia y ejecuta la colección. Las rutas y respuestas anteriores deben seguir funcionando.
+
+<details class="aside aside--extra">
+  <summary>Errores frecuentes al compartir la memoria</summary>
+  <p>Los dos primeros impiden arrancar y el tercero no, que es lo que lo hace peligroso.</p>
+  <p><strong>1 · La aplicación no arranca y el registro termina con un bloque <code>APPLICATION FAILED TO START</code>:</strong></p>
+  <p><code>Parameter 0 of constructor in com.ejemplo.gestor.controller.TareaController required a bean of type 'com.ejemplo.gestor.memoria.MemoriaProyecto' that could not be found.</code></p>
+  <p>Spring llama <em>bean</em> a cada instancia que administra, término que estudiarás en la UD4. El mensaje dice que un controlador pide por constructor algo que nadie ha registrado, y hay dos causas posibles: falta la anotación <code>@Component</code> sobre <code>MemoriaProyecto</code>, o la clase no cuelga del paquete de la clase marcada con <code>@SpringBootApplication</code>, de modo que el escaneo de componentes no la encuentra.</p>
+  <p><strong>2 · El arranque falla indicando que hay más de un constructor.</strong> Un controlador con dos constructores no le permite a Spring decidir cuál usar. Deja uno solo, con todos los parámetros que necesite la clase.</p>
+  <p><strong>3 · La aplicación arranca, pero la consulta anidada devuelve <code>[]</code> aunque existan tareas de ese proyecto.</strong> Es el síntoma de que los datos siguen separados: revisa que ningún controlador conserve un <code>new ArrayList&lt;&gt;()</code> en esos campos ni construya su propia <code>new MemoriaProyecto()</code>. Este fallo no produce ninguna excepción, y solo se detecta comprobando el contenido de la respuesta.</p>
+</details>
 
 #### Paso 3 · Consultar una relación — 30 minutos
 
@@ -1176,6 +1192,17 @@ Añade una tarea al segundo proyecto y comprueba que las consultas de ambos sigu
 
 **Al terminar la sesión:** ambas entidades mantienen su CRUD, los controladores comparten la misma memoria y la consulta de la relación distingue los tres casos previstos. La colección se puede repetir desde otra copia del repositorio. Puedes explicar dónde se comprueba la existencia del padre, cómo se filtran sus elementos y qué limitaciones siguen pendientes.
 
+<dl class="answer">
+  <dt>¿Qué ocurriría si cada controlador construyese su propia <code>MemoriaProyecto</code> con <code>new</code>?</dt>
+  <dd></dd>
+  <dt>¿Quién llama al constructor de tu controlador, y desde cuándo viene ocurriendo eso?</dt>
+  <dd></dd>
+  <dt>Si <code>getTareas()</code> devolviera una copia de la lista en lugar de la lista, ¿qué petición dejaría de funcionar y cuál seguiría pareciendo correcta?</dt>
+  <dd></dd>
+  <dt>¿Por qué la subcolección de un proyecto inexistente no puede responder <code>200</code> con <code>[]</code>?</dt>
+  <dd></dd>
+</dl>
+
 
 ## Lo que debes recordar
 
@@ -1217,6 +1244,7 @@ Tu API promete unas rutas, unos formatos y unos códigos. Mientras eso se cumpla
 | `PUT` pierde lo que no envías | Declara el recurso completo; si quieres tocar un campo, la operación es `PATCH` |
 | El id manda desde la ruta | Si la ruta y el cuerpo discrepan hay que elegir uno, y adivinar es peor que decidir |
 | Jackson tolerante o estricto | Tolerante protege a clientes antiguos; estricto detecta erratas. Las dos son defendibles, no decidirlo no |
+| Las listas viven en una clase compartida | Dos controladores que consultan la misma relación necesitan los mismos datos, y cada `new` crearía una copia vacía |
 | La colección se entrega con el código | Una prueba que solo existe en tu portátil no demuestra nada a nadie |
 
 ### Al terminar deberías poder responder
@@ -1241,6 +1269,10 @@ Tu API promete unas rutas, unos formatos y unos códigos. Mientras eso se cumpla
 18. ¿Por qué una lista vacía no es un `404`?
 19. ¿Qué es una regresión y por qué es cara?
 20. ¿Por qué una colección repetible captura el id devuelto, aunque una prueba aislada con contador recién iniciado pueda esperar un número concreto?
+21. ¿Qué hace la anotación `@Component` y por qué `@RestController` no la necesita?
+22. Describe el recorrido de una petición hasta que dos controladores distintos leen la misma lista de tareas.
+23. ¿Por qué `new MemoriaProyecto()` dentro de un controlador no comparte nada?
+24. ¿Qué tres respuestas distintas puede dar la subcolección `/proyectos/{id}/tareas` y qué significa cada una?
 
 Si además puedes recibir una especificación de endpoints y traducirla a controladores con sus códigos correctos y su colección, estás listo para la UD3.
 
@@ -1274,6 +1306,9 @@ Si además puedes recibir una especificación de endpoints y traducirla a contro
 | Encadenar | Guardar un dato de una respuesta para usarlo en la petición siguiente |
 | Regresión | Algo que funcionaba y se ha roto por un cambio hecho en otro sitio |
 | Contrato | Las rutas, formatos y códigos que tu API promete cumplir |
+| `@Component` | Marca una clase propia para que Spring cree una instancia única y la administre |
+| Inyección de dependencias | Recibir por constructor un objeto ya creado, en lugar de construirlo con `new` |
+| Subcolección | Un conjunto que se consulta a través del recurso del que depende: `/proyectos/{id}/tareas` |
 
 ### Comprobación final del producto
 
