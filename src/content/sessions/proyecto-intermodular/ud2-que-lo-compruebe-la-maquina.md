@@ -559,7 +559,11 @@ git commit -m "Anadir comprobacion automatica de enlaces con Lychee"
 git push -u origin 8-ci-enlaces
 ```
 
-Abre la pull request indicando `Closes #8` (o el número de tu issue) y analiza la ejecución en la sección de comprobaciones. Es previsible que el check señale algún enlace del menú de navegación dirigido a una sección todavía no implementada: ese resultado **no constituye un falso positivo**, sino la detección correcta de un recurso no resoluble.
+Abre la pull request indicando `Closes #8` (o el número de tu issue) y analiza la ejecución en la sección de comprobaciones.
+
+Al desplegar el paso **Comprobar los enlaces** en el registro de la ejecución, Lychee muestra un resumen final con las rutas analizadas y sus códigos de respuesta:
+* **Cannot find file o HTTP 404:** el enlace apunta a un archivo local que aún no existe (por ejemplo, una página del menú que todavía no has creado) o a una URL externa que ha dejado de responder. Es la detección legítima de un fallo, no un error de configuración de la acción.
+* **HTTP 403 o 999:** la dirección web existe, pero el servidor remoto rechaza la petición automatizada del runner (falso positivo).
 
 <details class="aside aside--help">
   <summary>Si un enlace externo falla pese a ser correcto (falsos positivos)</summary>
@@ -580,9 +584,16 @@ git pull
 git switch -c 9-ci-formato
 ```
 
-**1 · Incorporación del job de formato.** Añade la comprobación a `.github/workflows/ci.yml`, alineada con las dos anteriores:
+**1 · Incorporación del job de formato.** Añade la comprobación a `.github/workflows/ci.yml`. Debe situarse bajo `jobs:`, alineada con `html` y `enlaces`:
 
 ```yaml
+jobs:
+  html:
+    # ... job existente de la sesión 3 ...
+
+  enlaces:
+    # ... job existente del bloque A ...
+
   formato:
     name: Formato
     runs-on: ubuntu-latest
@@ -617,6 +628,8 @@ Abre la pull request. Esta comprobación emitirá un resultado negativo (aspa ro
 npx --yes prettier@3 --write "**/*.{html,css,json,md}"
 ```
 
+Conserva las comillas dobles en `"**/*.{html,css,json,md}"` para que la terminal interprete la lista de extensiones sin expandirlas prematuramente. En PowerShell, utiliza `npx.cmd` si tu entorno bloquea la ejecución de scripts.
+
 Examina las diferencias con `git diff` antes de confirmar los cambios: conviene identificar con precisión qué ha modificado la herramienta sobre el código fuente.
 
 <div class="rule">
@@ -638,7 +651,9 @@ Comprueba que la pull request vuelve a ejecutarse automáticamente y que el chec
 
 <p class="stage stage--solo">Trabajo individual, posterior a la fusión</p>
 
-Siguiendo el procedimiento de la sesión anterior: fusiona la pull request y accede después a **Settings → Rules → Rulesets → main protegida → Edit → Require status checks** para incorporar **Enlaces vivos** y **Formato** junto al ya existente **HTML válido**. El conjunto de validación previa queda en **tres comprobaciones obligatorias**.
+Siguiendo el procedimiento de la sesión anterior: fusiona la pull request y accede después a **Settings → Rules → Rulesets → main protegida → Edit → Require status checks** para incorporar **Enlaces vivos** y **Formato** junto al ya existente **HTML válido**.
+
+En el buscador de comprobaciones, busca y selecciona cada check por su nombre exacto (**Enlaces vivos** y **Formato**, tal como figuran en la clave `name` de cada job), no por el nombre del workflow `CI` ni por el identificador del archivo YAML. Guarda los cambios con **Save changes**. El conjunto de validación previa queda en **tres comprobaciones obligatorias**.
 
 <div class="checkpoint">
   <p class="checkpoint-label">Lista de verificación del bloque C</p>
