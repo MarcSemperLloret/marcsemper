@@ -726,7 +726,7 @@ Incorpora asimismo los enlaces externos previstos: GitHub, perfil profesional y 
 <div class="checkpoint checkpoint--start">
   <p class="checkpoint-label">Evaluación inicial · sin apuntes</p>
   <ol>
-    <li>Una página «funciona». ¿Es posible expresar mediante una magnitud numérica en qué grado lo hace?</li>
+    <li>Una página «funciona». ¿Es posible expresar mediante una magnitud numérica qué nivel alcanza en determinadas dimensiones de calidad que sí pueden auditarse automáticamente?</li>
     <li>¿Cómo utilizaría tu portfolio una persona que no percibe la pantalla?</li>
     <li>Si se estableciera una puntuación mínima de accesibilidad, ¿la superaría tu página en su estado actual?</li>
   </ol>
@@ -740,11 +740,21 @@ Incorpora asimismo los enlaces externos previstos: GitHub, perfil profesional y 
 
 #### De la verificación binaria a la métrica cuantitativa
 
-Las cuatro comprobaciones implementadas hasta ahora (despliegue, marcado, enlaces y formato) emiten un resultado binario. Queda fuera de su alcance la pregunta que formula cualquier cliente y que el pipeline todavía no responde: **en qué grado**.
+Las comprobaciones implementadas hasta ahora funcionan de forma binaria:
+* **HTML válido:** ¿cumple la especificación? → sí / no
+* **Enlaces vivos:** ¿responden los destinos? → sí / no
+* **Formato:** ¿se ajusta a la convención? → sí / no
+
+Sin embargo, hay dimensiones de calidad que no se reducen a un simple sí o no. Por ejemplo: ¿qué nivel de accesibilidad ofrece el documento? ¿Presenta omisiones básicas que dificulten su indexación en buscadores? Para responder a estas cuestiones, el pipeline pasa de la comprobación binaria a evaluar **qué nivel alcanza en determinadas dimensiones de calidad que sí pueden auditarse automáticamente**.
 
 <p class="term">Lighthouse</p>
 
 Herramienta de auditoría automatizada que carga el documento en una instancia de navegador, ejecuta sobre él un conjunto de comprobaciones y emite cuatro puntuaciones normalizadas de 0 a 100: rendimiento, accesibilidad, buenas prácticas y posicionamiento (SEO). Junto a cada puntuación detalla las comprobaciones incumplidas, con la ubicación exacta del defecto en el documento.
+
+<div class="rule">
+  <p class="rule-label">Variabilidad entre mediciones</p>
+  <p>Las puntuaciones pueden variar ligeramente entre ejecuciones debido al entorno o la carga del sistema; por eso un presupuesto de calidad nunca debe fijarse exactamente en el máximo observado, sino contemplar un margen de tolerancia que evite comprobaciones frágiles.</p>
+</div>
 
 #### El presupuesto de calidad como umbral acordado
 
@@ -752,24 +762,28 @@ Herramienta de auditoría automatizada que carga el documento en una instancia d
 
 Valor mínimo pactado con antelación al desarrollo y declarado en un archivo de configuración versionado. Un resultado inferior impide la fusión. Su formalización numérica y su registro en el repositorio son precisamente lo que evita el aplazamiento indefinido de las correcciones de calidad.
 
+La puntuación mínima de Lighthouse es un criterio interno de calidad del proyecto; no constituye una certificación de conformidad con WCAG ni de cumplimiento legal.
+
 El presupuesto acordado para el portfolio es el siguiente:
 
 | Categoría | Umbral mínimo | Fundamento del valor |
 | --------- | ------------- | -------------------- |
-| Accesibilidad | 90 | Alcanzable en un sitio estático; por debajo de ese valor existen barreras de uso reales |
-| SEO | 90 | Un portfolio no indexable no cumple su función de difusión profesional |
-| Buenas prácticas | 90 | Evalúa mayoritariamente defectos cuya corrección no implica coste de desarrollo |
-| Rendimiento | advertencia | La puntuación depende de la capacidad de la máquina que ejecuta la medición; informa, pero no bloquea la integración |
+| Accesibilidad | 90 | Umbral inicial elevado pero alcanzable para el proyecto; sirve para detectar regresiones automatizables |
+| SEO | 90 | Umbral interno para evitar omisiones básicas que dificulten la indexación |
+| Buenas prácticas | 90 | Umbral interno para impedir regresiones detectadas automáticamente |
+| Rendimiento | advertencia | Mayor variabilidad entre ejecuciones |
 
 #### Fundamento de la evaluación de la accesibilidad
 
-La UD1 estableció que el diseño gráfico no forma parte del alcance evaluativo de este módulo, criterio que se mantiene. La accesibilidad constituye una excepción fundamentada en tres razones: es **objetiva**, al expresarse mediante métricas verificables de forma automática; es **exigible legalmente** en los productos destinados al sector público, conforme al Real Decreto 1112/2018 y a la norma EN 301 549, que adopta como referencia técnica las pautas WCAG 2.1 en nivel AA; y la mayoría de los defectos que reducen su puntuación son omisiones cuya corrección es inmediata.
+La UD1 estableció que el diseño gráfico no forma parte del alcance evaluativo de este módulo, criterio que se mantiene. La accesibilidad constituye un área técnica que cuenta con criterios medibles y estándares de referencia (como las pautas WCAG 2.1 y la norma EN 301 549, vinculada en el sector público al Real Decreto 1112/2018).
+
+Entre los defectos más habituales que detecta la herramienta se encuentran los siguientes:
 
 <dl class="worked">
   <dt>Imagen sin texto alternativo</dt>
-  <dd>Un lector de pantalla anuncia únicamente la existencia de una imagen, sin información sobre su contenido. Corrección: un atributo.</dd>
+  <dd>Un lector de pantalla anuncia únicamente la existencia de una imagen, sin información sobre su contenido. Corrección: un atributo <code>alt</code>.</dd>
   <dt>Idioma del documento no declarado</dt>
-  <dd>El sintetizador de voz aplica la fonética del idioma por defecto al texto en español. Corrección: un atributo.</dd>
+  <dd>El sintetizador de voz aplica la fonética del idioma por defecto al texto en español. Corrección: atributo <code>lang</code> en <code>html</code>.</dd>
   <dt>Enlace cuyo texto es «aquí»</dt>
   <dd>La navegación secuencial por enlaces, habitual con lector de pantalla, produce una lista de destinos indistinguibles entre sí. Corrección: reformular el texto del enlace.</dd>
   <dt>Contraste insuficiente entre texto y fondo</dt>
@@ -778,7 +792,7 @@ La UD1 estableció que el diseño gráfico no forma parte del alcance evaluativo
   <dd>La estructura jerárquica del documento queda inconsistente para quien navega mediante encabezados. Corrección: ajustar el nivel.</dd>
 </dl>
 
-Ninguno de los cinco defectos depende de una apreciación subjetiva y todos son detectables de forma automatizada.
+Estos defectos contienen aspectos verificables automáticamente, aunque una auditoría automática no garantiza por sí sola la accesibilidad completa del sitio. Por ejemplo, la herramienta comprueba que exista el atributo <code>alt</code>, pero no puede determinar de forma autónoma si la descripción redactada transmite con precisión el significado de la imagen.
 
 ---
 
@@ -850,7 +864,7 @@ La directiva `staticDistDir` declara que el sitio consiste en archivos estático
 
 <p class="stage stage--guided">Trabajo individual, con puesta en común de los defectos que resulten frecuentes en el grupo</p>
 
-Recorre la relación de incidencias de accesibilidad del informe en orden de prioridad y aplica las correcciones. Los cinco defectos siguientes aparecen en la práctica totalidad de los portfolios y su fundamento se ha expuesto en la parte teórica:
+Recorre la relación de incidencias de accesibilidad del informe en orden de prioridad y aplica las correcciones. Entre los defectos más habituales se encuentran los expuestos en la parte teórica:
 
 <ul class="checklist">
   <li>Imágenes sin texto alternativo. En las imágenes decorativas el atributo se declara vacío, pero debe declararse.</li>
@@ -860,11 +874,11 @@ Recorre la relación de incidencias de accesibilidad del informe en orden de pri
   <li>Encabezados que omiten un nivel de la jerarquía.</li>
 </ul>
 
-Cada corrección se registra en su propio commit. Cuando el informe deje de señalar incidencias, repite la auditoría en el navegador y compara el resultado con la medición de referencia del bloque A.
+Agrupa las correcciones en commits pequeños y coherentes. Evita mezclar modificaciones no relacionadas en una misma confirmación. Durante esta actividad, realiza al menos dos correcciones por separado para observar su efecto sobre la auditoría. Cuando el informe deje de señalar incidencias, repite la auditoría en el navegador y compara el resultado con la medición de referencia del bloque A.
 
 <div class="rule">
-  <p class="rule-label">Elevación del umbral tras alcanzar la mejora</p>
-  <p>Si la puntuación de accesibilidad alcanza 96, el mínimo declarado en el archivo debe elevarse a 95 e integrarse ese cambio. El principio aplicable es que toda mejora conseguida se protege mediante el umbral: mantenerlo en 90 permite que una incorporación posterior —una imagen sin texto alternativo, por ejemplo— degrade la puntuación hasta 92 sin que ninguna comprobación lo detecte. Un presupuesto situado por debajo del estado real del producto no ejerce ninguna función de control.</p>
+  <p class="rule-label">Política de elevación del umbral</p>
+  <p>Toda mejora consolidada debe protegerse. Si el umbral queda muy por debajo del nivel ya alcanzado, permite regresiones significativas sin detectarlas. La política de ajuste consiste en fijar el nuevo presupuesto con un margen de tolerancia que absorba la variabilidad técnica: por ejemplo, ante una puntuación estable observada de 96, se tolera un margen de 1 punto y se fija el nuevo presupuesto en 95. Mantenerlo en 90 permitiría que una degradación inadvertida hasta 92 pasara desapercibida.</p>
 </div>
 
 #### Bloque D · Cierre del primer proyecto
@@ -899,20 +913,22 @@ Cada corrección se registra en su propio commit. Cuando el informe deje de señ
   <p class="checkpoint-label">Autoevaluación conceptual · sin consulta de apuntes</p>
   <ol>
     <li>¿Qué diferencia existe entre una comprobación de resultado binario y un presupuesto de calidad?</li>
-    <li>¿Por qué la accesibilidad se evalúa en este módulo y la tipografía no?</li>
+    <li>¿Por qué utilizamos auditorías automáticas de accesibilidad como parte del pipeline, mientras que no imponemos criterios estéticos?</li>
+    <li>¿Una puntuación de accesibilidad de 100 en Lighthouse garantiza que la web sea completamente accesible?</li>
     <li>¿Por qué el rendimiento se declara como advertencia y no como bloqueo?</li>
-    <li>La puntuación ha alcanzado 96. ¿Por qué debe modificarse el archivo de configuración?</li>
+    <li>La puntuación observada ha alcanzado 96 de forma estable. ¿Por qué debe ajustarse el archivo de configuración y qué criterio se sigue?</li>
     <li>¿Qué función cumple la directiva <code>staticDistDir</code>?</li>
   </ol>
 </div>
 
 <details class="aside aside--extra">
   <summary>Ver respuestas</summary>
-  <p>1 · La primera verifica el cumplimiento de una condición y responde sí o no; el segundo mide una magnitud y la contrasta con un mínimo acordado previamente.</p>
-  <p>2 · Porque es objetiva, cuantificable y jurídicamente exigible en el sector público. La tipografía responde a criterio profesional, y ese criterio se evalúa en el módulo que lo imparte.</p>
-  <p>3 · Porque la puntuación depende de la capacidad de la máquina que ejecuta la medición, de modo que bloquearía la integración por causas ajenas al código evaluado.</p>
-  <p>4 · Porque una mejora que no se protege mediante el umbral puede perderse sin detección: con el mínimo en 90 caben sucesivas degradaciones inadvertidas.</p>
-  <p>5 · Declara que la herramienta debe servir por sí misma los archivos estáticos de esa ruta, lo que permite auditar el sitio sin haberlo desplegado previamente.</p>
+  <p>1 · La primera verifica el cumplimiento de una condición y responde sí o no; el segundo mide una magnitud y la contrasta con un umbral acordado previamente.</p>
+  <p>2 · Porque existen criterios técnicos de accesibilidad verificables automáticamente y estándares de referencia, mientras que muchas decisiones estéticas requieren valoración profesional y quedan fuera del alcance de este módulo.</p>
+  <p>3 · No. Lighthouse comprueba automáticamente un subconjunto de criterios. Una evaluación completa requiere también comprobaciones manuales y, en determinados casos, pruebas con tecnologías de asistencia.</p>
+  <p>4 · Porque la puntuación depende de la capacidad y carga de la máquina que ejecuta la medición, lo que provocaría fallos intermitentes por causas ajenas al código evaluado.</p>
+  <p>5 · Para evitar que el proyecto sufra regresiones inadvertidas. Se aplica una política con margen de tolerancia (por ejemplo, umbral en 95 ante un 96 observado) para absorber la variabilidad técnica entre ejecuciones.</p>
+  <p>6 · Declara que la herramienta debe servir por sí misma los archivos estáticos de esa ruta, lo que permite auditar el sitio sin haberlo desplegado previamente.</p>
 </details>
 
 <div class="checkpoint checkpoint--weekly">
@@ -946,7 +962,8 @@ Cada corrección se registra en su propio commit. Cuando el informe deje de señ
 | **Una comprobación por criterio** | Permite identificar el criterio incumplido sin consultar el registro y manifiesta todos los defectos en una misma ejecución |
 | **Una comprobación no vinculante pierde eficacia** | Una validación que solo informa se omite en cuanto existe presión de entrega |
 | **Las excepciones se declaran y se documentan** | Un pipeline del que se desactivan reglas cuando resultan incómodas deja de ejercer control |
-| **El umbral se eleva al alcanzar la mejora** | Un presupuesto situado por debajo del estado real permite degradaciones inadvertidas |
+| **El umbral se eleva al alcanzar la mejora** | Un presupuesto situado por debajo del estado real permite degradaciones inadvertidas; se fija con un margen prudente de tolerancia |
+| **Alcance y límites de la automatización** | La máquina solo audita lo que puede comprobar algorítmicamente: un check verde o una puntuación alta previenen regresiones mecánicas, pero no sustituyen el juicio técnico ni garantizan por sí solos la calidad integral |
 
 ### El vocabulario de la unidad
 
