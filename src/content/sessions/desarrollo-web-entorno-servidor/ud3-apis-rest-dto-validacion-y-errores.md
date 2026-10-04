@@ -297,9 +297,37 @@ Un DTO de salida no cambia por sí mismo las entradas: POST, PUT y PATCH todaví
 
 #### Un record para la respuesta
 
-Un `record` de Java declara componentes y genera constructor, accesos, igualdad y representación textual. Sus componentes no se reasignan después de construirlo; si contienen una lista mutable, esa lista no se vuelve inmutable por utilizar un record. Es adecuado aquí porque construimos una respuesta a partir de los datos actuales y la enviamos.
+Hasta ahora, tus entidades (`Tarea`, `Proyecto`, `Responsable`) son clases estándar de Java con atributos privados, constructor y métodos *getter* y *setter*. Para un DTO de salida que solo transporta datos y no cambia una vez creado, Java ofrece una estructura mucho más concisa y segura: el **`record`**.
 
-Jackson puede serializar sus componentes. El modelo sigue siendo una clase mutable, porque nuestras operaciones la modifican. No necesitas sustituir los modelos por records.
+Fíjate en la diferencia entre una clase clásica y un record:
+
+```java
+// Clase tradicional (más de 20 líneas de código repetitivo solo para transportar datos):
+public class ResponsableResponse {
+    private final String nombre;
+    private final String email;
+
+    public ResponsableResponse(String nombre, String email) {
+        this.nombre = nombre;
+        this.email = email;
+    }
+
+    public String getNombre() { return nombre; }
+    public String getEmail() { return email; }
+}
+
+// Record en Java moderno (una sola línea para exactamente lo mismo):
+public record ResponsableResponse(String nombre, String email) {}
+```
+
+¿Qué hace un `record` entre bambalinas?
+- **Componentes:** los parámetros declarados entre paréntesis `(String nombre, String email)` definen los datos del record.
+- **Lo que Java genera solo:** atributos `private final`, el constructor canónico con todos los argumentos, y las implementaciones de `equals()`, `hashCode()` y `toString()`.
+- **Diferencia clave en los métodos accesores:** en un record **no se usa el prefijo `get`**. El método de lectura se llama igual que el componente: `responsable.nombre()` y `responsable.email()`. Jackson comprende esta convención sin configuración adicional y genera las claves JSON `"nombre"` y `"email"`.
+- **Inmutabilidad:** sus componentes no se reasignan tras la construcción (inmutabilidad superficial). No tienen *setters*. (Ten en cuenta que si un componente es una lista mutable, la lista en sí puede modificarse; el record no la hace inmutable mágicamente).
+- **Cómo crearlo en el IDE:** en IntelliJ IDEA, Eclipse o VS Code, haz clic derecho sobre el paquete `dto` → *New → Java Class* → selecciona **Record** (o crea un archivo `.java` y sustituye la palabra clave `class` por `record`).
+
+El modelo interno (`Tarea`) sigue siendo una clase mutable ordinaria con getters y setters, porque nuestras operaciones modifican sus campos en memoria. Los records los reservamos para las representaciones (DTO).
 
 #### Mantener el contrato al separar la salida
 
@@ -334,8 +362,8 @@ Este comportamiento se observa en tu servidor local; no hace falta publicar dato
 
 #### Paso 3 · Definir la representación y su conversión — 25 minutos
 
-1. Bajo tu paquete base crea `dto`. Los siguientes archivos utilizan `com.ejemplo.gestor`; sustituye ese prefijo si tu aplicación usa otro.
-2. El objeto `responsable` también necesita una representación si lo mantienes público. Crea `dto/ResponsableResponse.java`:
+1. Bajo tu paquete base crea la carpeta o paquete `dto`. Los siguientes archivos utilizan `com.ejemplo.gestor`; sustituye ese prefijo si tu aplicación usa otro.
+2. El objeto `responsable` también necesita una representación si lo mantienes público. Crea el record `dto/ResponsableResponse.java`:
 
 ```java
 package com.ejemplo.gestor.dto;
@@ -353,9 +381,11 @@ public record ResponsableResponse(String nombre, String email) {
 }
 ```
 
-La comprobación de `null` permite que una tarea sin responsable siga siendo representable. Devolver directamente `Responsable` trasladaría el problema de exposición de campos al objeto anidado.
+Fíjate en dos decisiones de diseño clave:
+- El método estático `desde(...)` es una función de factoría: concentra la traducción del modelo a la representación en un único punto, evitando tener que instanciar el DTO campo a campo en cada controlador.
+- La comprobación de `null` permite que una tarea sin responsable siga siendo representable sin provocar un error `NullPointerException`. Devolver directamente `Responsable` trasladaría el problema de exposición accidental de campos al objeto anidado.
 
-3. Crea `dto/TareaResponse.java`. La lista de parámetros de `new TareaResponse(...)` debe seguir el mismo orden que los componentes del record.
+3. Crea el record `dto/TareaResponse.java`. El constructor canónico generado por el record exige pasar los argumentos exactamente en el mismo orden en que declaraste los componentes:
 
 ```java
 package com.ejemplo.gestor.dto;
@@ -394,7 +424,38 @@ public record TareaResponse(
 
 Importa `TareaResponse` en los dos controladores que devuelven tareas. Conserva las anotaciones y rutas de la sesión 9. Cambia una operación cada vez y compruébala.
 
-**Detalle:** cambia el retorno a `ResponseEntity<TareaResponse>`. En el caso encontrado usa `ResponseEntity.ok(TareaResponse.desde(tarea))`; el `404` sigue siendo `ResponseEntity.notFound().build()`.
+Para visualizar la mecánica de sustitución, observa cómo se transforma un endpoint individual de detalle:
+
+```java
+// ── Detalle: GET /tareas/{id} ──
+
+// Antes (exponía directamente la entidad interna del modelo):
+@GetMapping("/tareas/{id}")
+public ResponseEntity<Tarea> detalle(@PathVariable int id) {
+    Tarea tarea = buscarPorId(id);
+    if (tarea == null) {
+        return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(tarea);
+}
+
+// Ahora (devuelve la representación desacoplada y protegida por el DTO):
+@GetMapping("/tareas/{id}")
+public ResponseEntity<TareaResponse> detalle(@PathVariable int id) {
+    Tarea tarea = buscarPorId(id);
+    if (tarea == null) {
+        return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(TareaResponse.desde(tarea));
+}
+```
+
+En las operaciones de creación (`POST /tareas` y `POST /proyectos/{id}/tareas`), la cabecera `Location` sigue apuntando a la URI de detalle canónico del nuevo recurso y el cuerpo devuelto se envuelve con el DTO:
+
+```java
+// Retorno ResponseEntity<TareaResponse>:
+return ResponseEntity.created(ubicacion).body(TareaResponse.desde(tarea));
+```
 
 **Listado:** convierte cada elemento que supera el filtro. Dentro de `TareaController`, cuya anotación de clase ya no añade `/tareas`, el método queda así:
 
@@ -429,8 +490,34 @@ Al terminar, busca métodos que todavía devuelvan `Tarea` o `List<Tarea>`. Las 
 #### Paso 5 · Comprobar campos y detectar una regresión — 25 minutos
 
 1. Reinicia y recrea los datos completos mediante la colección. Verifica cada salida de la tabla: la nota interna no aparece y los campos públicos mantienen sus valores y tipos.
-2. Añade una prueba de ausencia de la nota y otra de conservación de una referencia. En Postman, dentro de `pm.test(...)`, utiliza `pm.expect(pm.response.json()).not.to.have.property("notaInterna")`. En Bruno, dentro de `test(...)`, utiliza `expect(res.getBody()).not.to.have.property("notaInterna")`.
-3. Para los listados aplica esa condición a **cada elemento** del array, no al array en sí. Repite la comprobación con la consulta anidada.
+2. Añade una prueba de ausencia de la nota y otra de conservación de una referencia en las respuestas individuales (detalle, POST, PUT).
+   - En Postman: `pm.expect(pm.response.json()).not.to.have.property("notaInterna");`
+   - En Bruno: `expect(res.getBody()).not.to.have.property("notaInterna");`
+3. Para los listados (`GET /tareas`), es imprescindible aplicar esa condición a **cada elemento del array**, no al array en sí. Si comprobaras directamente la lista, el test pasaría siempre como un falso positivo (porque un array `[]` nunca tiene esa propiedad; la tienen los objetos que contiene):
+
+En Postman (pestaña *Scripts / Post-response* o *Tests*):
+
+```javascript
+pm.test("Ninguna tarea del listado expone notaInterna", function () {
+    const tareas = pm.response.json();
+    tareas.forEach(function (tarea) {
+        pm.expect(tarea).not.to.have.property("notaInterna");
+    });
+});
+```
+
+En Bruno (pestaña *Tests*):
+
+```javascript
+test("Ninguna tarea del listado expone notaInterna", function() {
+    const tareas = res.getBody();
+    tareas.forEach(tarea => {
+        expect(tarea).not.to.have.property("notaInterna");
+    });
+});
+```
+
+Repite esta misma comprobación con la consulta anidada (`GET /proyectos/{id}/tareas`).
 4. Crea una tarea completada y otra pendiente. Comprueba los filtros `true`, `false` y la ausencia de filtro; utiliza los ids capturados para distinguirlas.
 5. En una modificación temporal, haz que el POST vuelva a devolver el modelo. Adapta temporalmente también su tipo de retorno para que compile. La prueba de ausencia de `notaInterna` debe fallar. Recupera el DTO, reinicia, recrea los datos y verifica que vuelve a pasar. No guardes la avería en la PR.
 
