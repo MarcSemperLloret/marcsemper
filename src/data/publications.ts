@@ -43,6 +43,90 @@ export interface Publication {
 
 export const publications: Publication[] = [
   {
+    slug: "reporting-cadence-hourly-precipitation-extremes",
+    title:
+      "How reporting cadence shapes hourly precipitation extremes",
+    authors: [
+      "Marc Semper",
+      "Manuel Curado",
+      "Jose F. Vicent",
+      "Leandro Tortosa"
+    ],
+    year: 2026,
+    onlineDate: "2026-10-03",
+    type: "Journal article",
+    venue: "Journal of Hydrology",
+    articleNumber: "136555",
+    doi: "10.1016/j.jhydrol.2026.136555",
+    status: "Available online",
+    selected: true,
+    metaDescription:
+      "How heterogeneous reporting cadences and clock-hour aggregation windows bias hourly precipitation extremes and fixed-duration annual maxima.",
+    metaDescriptionEs:
+      "Cómo la cadencia heterogénea de registro y las ventanas fijas horarias sesgan los extremos de precipitación y los máximos anuales de duración fija.",
+    plainSummary:
+      "Rain gauges record precipitation at various sub-hourly intervals, which are commonly aggregated into standard clock-hour bins for hydrological analysis. When intense convective bursts cross interval boundaries, fixed-window aggregation splits the peak volume across consecutive hours, artificially lowering the recorded maximum intensity. By conducting controlled coarsening experiments across systematically varied phase offsets, this study isolates the sampling bias caused purely by observation cadence and window timing. The results show how recording frequency governs the apparent magnitude of hourly extremes independently of physical meteorological variability.",
+    plainSummaryEs:
+      "Los pluviómetros registran precipitación con diversas cadencias subdiarias, que con frecuencia se agregan en intervalos horarios fijos de reloj para el análisis hidrológico. Si un episodio convectivo intenso coincide con el corte entre dos horas, la ventana rígida divide el volumen del pico, reduciendo de forma artificial la intensidad máxima aparente. Mediante un experimento de agregación controlada sobre distintos desfases de fase, este trabajo aísla el sesgo de muestreo debido únicamente a la cadencia de registro y a la alineación temporal. Los resultados demuestran cómo la frecuencia de captura condiciona la magnitud estimada de los extremos horarios con independencia de la dinámica meteorológica real.",
+    contribution:
+      "A controlled coarsening framework across systematic phase offsets that decouples recording cadence and window-alignment artifacts from true physical precipitation variability in hourly extreme diagnostics and fixed-duration maxima (AMS60).",
+    contributionEs:
+      "Un marco metodológico de agregación controlada con desfases de fase sistemáticos que desvincula los artefactos de la cadencia de registro y la alineación de ventana de la variabilidad física real en los diagnósticos de extremos horarios y máximos de duración fija (AMS60).",
+    finding:
+      "Fixed-interval clock-hour binning consistently attenuates peak hourly intensities when storm bursts are split across reporting boundaries. Quantifying this cadence-induced bias across phase offsets provides empirical bounds for sampling adjustment factors and clarifies observational uncertainties in sub-daily hydrological risk assessment.",
+    findingEs:
+      "La agregación en intervalos horarios rígidos atenúa de manera persistente las intensidades pico cuando las descargas de lluvia se dividen entre dos horas consecutivas. Cuantificar este sesgo inducido por la cadencia sobre distintos desfases de fase aporta límites empíricos para los factores de ajuste de muestreo y clarifica la incertidumbre observacional en la evaluación de riesgos hidrológicos subdiarios.",
+    overviewSections: [
+      {
+        title: "The mechanism of cadence and window-boundary splitting",
+        titleEs: "El mecanismo de corte de ventana y fragmentación de picos",
+        text:
+          "In short-duration, high-intensity precipitation events, rainfall volume is heavily concentrated over minutes rather than evenly spread over an hour. When gauge observations are binned into standard clock-hour windows (e.g., 10:00 to 11:00), the timing of the event relative to that boundary determines how the burst is recorded. An identical 60-minute storm can yield vastly different peak intensities depending solely on whether it falls neatly within a single bin or spans across two adjacent intervals. This window-splitting effect attenuates observed maxima and distorts statistical extreme-value metrics without any underlying physical change in rainfall intensity.",
+        textEs:
+          "En episodios torrenciales de corta duración, el volumen de lluvia se concentra en intervalos de pocos minutos en lugar de distribuirse uniformemente a lo largo de una hora. Al agregar las observaciones en ventanas horarias fijas de reloj (por ejemplo, de 10:00 a 11:00), la posición del episodio respecto a los límites de la ventana determina su registro. Una misma tormenta de 60 minutos arroja intensidades pico muy distintas según quede contenida en un único intervalo o repartida entre dos consecutivos. Este efecto de corte fragmenta el pico, atenúa los máximos observados y altera los estadísticos de extremos sin que haya variaciones físicas reales en la intensidad de la precipitación."
+      },
+      {
+        title: "Controlled coarsening across systematic phase offsets",
+        titleEs: "Agregación controlada y análisis sistemático de desfases de fase",
+        text:
+          "To isolate sampling artifacts from atmospheric variation, the study employs a controlled coarsening protocol applied to high-resolution sub-hourly gauge records. By advancing the aggregation window in discrete steps across the full cycle of phase offsets, the experiment measures the exact variability in annual maximum series (such as AMS60) and extreme thresholds attributable solely to reporting cadence. This benchmark establishes the mathematical and empirical relationship between native temporal resolution, arbitrary bin start times, and historical adjustment factors.",
+        textEs:
+          "Para aislar los artefactos de muestreo de la variabilidad atmosférica, el estudio implementa un protocolo de agregación controlada sobre registros pluviométricos subdiarios de alta resolución. Al desplazar la ventana de integración en incrementos discretos a lo largo de todo el ciclo de desfases de fase, el experimento cuantifica la variabilidad en las series de máximos anuales (como AMS60) y umbrales extremos atribuible en exclusiva a la cadencia de registro. Esta evaluación fundamenta de manera empírica la relación entre la resolución temporal nativa, la hora de inicio de las ventanas y los factores clásicos de ajuste."
+      },
+      {
+        title: "Implications for hydrological design and hazard screening",
+        titleEs: "Implicaciones para el dimensionamiento hidrológico y la evaluación de riesgos",
+        text:
+          "The findings emphasize that differences in extreme precipitation estimates across datasets often stem from heterogeneous temporal support rather than genuine regional climate differences. For flood risk screening, urban drainage infrastructure sizing, and the calibration of intensity-duration-frequency (IDF) curves, accounting for cadence bias prevents systematic underestimation of peak design storms. Furthermore, these benchmarks clarify the observational limits against which satellite products and atmospheric reanalyses can be reliably validated.",
+        textEs:
+          "Los hallazgos evidencian que las discrepancias en extremos de precipitación entre distintas bases de datos suelen originarse en un soporte temporal heterogéneo y no en diferencias climáticas regionales. Para la evaluación de riesgos de inundación, el diseño de drenaje urbano y la calibración de curvas Intensidad-Duración-Frecuencia (IDF), incorporar el sesgo de cadencia previene la subestimación sistemática de los caudales de diseño. Asimismo, estos resultados definen las fronteras observacionales necesarias para contrastar con rigor productos satelitales y reanálisis atmosféricos."
+      }
+    ],
+    topics: [
+      "Precipitation extremes",
+      "Reporting cadence bias",
+      "Observational uncertainty",
+      "Fixed-duration maxima (AMS60)",
+      "Hydrological risk"
+    ],
+    models: [
+      "Controlled coarsening experiment",
+      "Phase-offset sensitivity analysis",
+      "Sampling adjustment factor evaluation"
+    ],
+    dataSources: [
+      "Sub-hourly rain-gauge networks",
+      "AVAMET weather station network",
+      "High-resolution precipitation archives"
+    ],
+    relatedSlugs: [
+      "out-of-sample-correctability-limits-imerg-precipitation-extremes",
+      "gpm-imerg-precipitation-extremes-valencia",
+      "consecutive-dry-days-trace-precipitation-archives"
+    ],
+    manuscriptUrl: "https://ssrn.com/abstract=6254348"
+  },
+  {
     slug: "consecutive-dry-days-trace-precipitation-archives",
     title:
       "Sensitivity of Consecutive-Dry-Day Trends to Trace Loss in Matched Precipitation Archives",
@@ -97,7 +181,11 @@ export const publications: Publication[] = [
     topics: ["Consecutive dry days (CDD)", "Trace precipitation", "Drought trends", "Observational uncertainty", "Climate data provenance"],
     models: ["Matched station-version comparison", "Sen slope", "Trace-loss sensitivity analysis", "Physical-station-cluster bootstrap"],
     dataSources: ["AEMET", "ECA&D", "GHCN-Daily", "8,020 matched pairs across 24 countries"],
-    relatedSlugs: ["out-of-sample-correctability-limits-imerg-precipitation-extremes", "gpm-imerg-precipitation-extremes-valencia", "robust-post-training-model-selection"],
+    relatedSlugs: [
+      "reporting-cadence-hourly-precipitation-extremes",
+      "out-of-sample-correctability-limits-imerg-precipitation-extremes",
+      "gpm-imerg-precipitation-extremes-valencia"
+    ],
     codeUrl: "https://github.com/MarcSemperLloret/Trace-precipitation"
   },
   {
