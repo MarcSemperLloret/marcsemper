@@ -1520,22 +1520,22 @@ public record ErrorResponse(
 
 #### Paso 1 · Retomar el proyecto y preparar la comprobación
 
-1. Abre los DTO validados, sus mensajes y los controladores. Reproduce un 400 de validación y un 404; guarda ambas respuestas para compararlas.
-2. Elige una regla propia de un campo y otra que compare dos campos. Escribe un caso válido y uno inválido para cada una.
-3. Localiza dónde se generan errores de recurso ausente y de conflicto. Crearás excepciones del dominio y un manejador en un paquete de errores bajo tu paquete base.
+1. Abre tu proyecto y ejecuta la colección de peticiones de la sesión 12 en Bruno o Postman.
+2. Reproduce un `400` de validación (por ejemplo, enviando un cuerpo vacío `{}` a `POST /tareas`) y un `404` (consultando `GET /tareas/999`).
+3. Guarda ambas respuestas para compararlas: fíjate en qué estructura devuelve cada una y qué información le falta a quien consume la API.
 
 #### Paso 2 · Consultar los mensajes de validación que devuelve la API
 
-La información existe: Spring sabe perfectamente qué campo ha fallado y por qué, y lo tienes en la consola. Simplemente no se envía, porque por defecto no se publican detalles de error.
+La información existe: Spring sabe qué campo ha fallado y por qué, y lo tienes en la consola. Simplemente no se envía al cliente, porque por defecto no se publican detalles de error.
 
-En `application.properties`:
+Añade estas dos líneas en `src/main/resources/application.properties`:
 
 ```properties
 server.error.include-message=always
 server.error.include-binding-errors=always
 ```
 
-Reinicia y repite el `POST` con el cuerpo vacío:
+Reinicia la aplicación y repite el `POST /tareas` con el cuerpo vacío `{}`:
 
 ```json
 {
@@ -1556,23 +1556,49 @@ Ya se puede trabajar con eso: hay campos y hay motivos.
 
 <div class="rule">
   <p class="rule-label">Dos avisos sobre estas dos líneas</p>
-  <p><strong>Uno.</strong> Es una solución provisional. El formato lo decide Spring, no tú, y arrastra ruido como <code>defaultMessage</code> o <code>object=</code>. En la sesión 13 diseñarás tu propio formato y estas propiedades sobrarán.</p>
-  <p><strong>Dos.</strong> <code>include-message=always</code> también publica el mensaje de <strong>cualquier</strong> excepción, incluidas las inesperadas. En una aplicación real eso puede filtrar detalles internos a quien no debería verlos. Aquí se acepta porque estamos aprendiendo y porque dura una sesión.</p>
+  <p><strong>Uno.</strong> Es una solución provisional mientras construimos el manejador. El formato lo decide Spring, no tú, y arrastra ruido como <code>defaultMessage</code> o <code>object=</code>. En unos pasos diseñarás tu propio formato estructurado y estas propiedades sobrarán.</p>
+  <p><strong>Dos.</strong> <code>include-message=always</code> también publica el mensaje de <strong>cualquier</strong> excepción, incluidas las inesperadas. En una aplicación real eso puede filtrar detalles internos a quien no debería verlos. Aquí se acepta temporalmente como andamio de aprendizaje.</p>
 </div>
 
-#### Paso 3 · Crear una anotación de validación y su validador
+#### Paso 3 · Reescribir los mensajes con las cuatro reglas
 
-Crea dos archivos distintos dentro de `validacion`: `PrioridadValida.java` para la anotación y `PrioridadValidaValidator.java` para la clase que implementa `isValid`. Copia cada bloque en su archivo, con su declaración de paquete e imports. Cuando ambos compilen, sustituye `@Pattern` por `@PrioridadValida` en los DTO; conserva `@NotNull` solo donde el campo sea obligatorio. Prueba una prioridad válida, otra no admitida y un campo omitido.
+Los mensajes por defecto (`"must not be blank"`, `"must not be null"`) están en inglés y describen la regla técnica en lugar del problema del usuario.
 
-`@Pattern(regexp = "baja|media|alta")` funciona, y tiene tres problemas:
-
-1. Está repetida en `TareaRequest` y en `TareaPatchRequest`.
-2. Si mañana se añade la prioridad `crítica`, hay que acordarse de los dos sitios.
-3. No dice nada: hay que leer la expresión regular para entender la regla.
-
-Vamos a convertir esa regla del dominio en una anotación propia.
+1. Abre `TareaRequest.java` y `ProyectoRequest.java`.
+2. Añade el atributo `message` a **cada** anotación de validación, aplicando las cuatro reglas (di qué se espera, incluye los valores válidos, habla del dominio y no menciones código):
 
 ```java
+public class TareaRequest {
+
+    @NotBlank(message = "El título es obligatorio")
+    @Size(min = 3, max = 120, message = "El título debe tener entre 3 y 120 caracteres")
+    private String titulo;
+
+    @NotNull(message = "La prioridad es obligatoria")
+    private String prioridad;
+
+    @NotNull(message = "Toda tarea debe pertenecer a un proyecto")
+    @Positive(message = "El identificador de proyecto debe ser un número positivo")
+    private Integer proyectoId;
+
+    // Getters y setters...
+}
+```
+
+3. Haz lo mismo en `ProyectoRequest` (nombre obligatorio y entre 3 y 80 caracteres, descripción de hasta 500 caracteres si existe).
+4. Reinicia y repite el `POST /tareas` con `{}`. Lee el JSON devuelto: comprueba que los mensajes ahora son claros y comprensibles directamente para un usuario final.
+
+#### Paso 4 · Crear una anotación propia sobre un campo: `@PrioridadValida`
+
+En la sesión anterior usaste `@Pattern(regexp = "baja|media|alta")`. Funciona, pero tiene tres inconvenientes:
+1. Está duplicada en `TareaRequest` y en `TareaPatchRequest`.
+2. Si mañana se añade la prioridad `crítica`, hay que acordarse de modificarla en varios archivos.
+3. No expresa la intención del dominio: obliga a descifrar una expresión regular.
+
+Vamos a encapsular esa regla en una anotación propia. Crea dos archivos dentro del paquete `com.ejemplo.gestor.validacion`:
+
+```java
+// validacion/PrioridadValida.java
 package com.ejemplo.gestor.validacion;
 
 import jakarta.validation.Constraint;
@@ -1598,16 +1624,19 @@ public @interface PrioridadValida {
 
 <dl class="worked">
   <dt><code>@Target(FIELD)</code></dt>
-  <dd>Dónde se puede poner esta anotación. Aquí, sobre atributos.</dd>
+  <dd>Indica dónde se puede aplicar la anotación. Aquí, sobre atributos de clase.</dd>
   <dt><code>@Retention(RUNTIME)</code></dt>
-  <dd>Que siga existiendo mientras el programa se ejecuta. Sin esto, la anotación desaparece al compilar y nadie la ve.</dd>
+  <dd>Garantiza que la anotación siga existiendo mientras el programa se ejecuta para que el framework pueda leerla por reflexión.</dd>
   <dt><code>@Constraint(validatedBy = ...)</code></dt>
-  <dd>Qué clase contiene la comprobación de verdad. La anotación solo es la etiqueta.</dd>
+  <dd>Enlaza la anotación con la clase Java que contiene la lógica de comprobación real.</dd>
   <dt><code>groups</code> y <code>payload</code></dt>
-  <dd>La especificación de Bean Validation los exige, aunque su uso es infrecuente. Se reproducen sin modificación.</dd>
+  <dd>Parámetros exigidos por la especificación de Bean Validation. Se declaran tal cual.</dd>
 </dl>
 
+Ahora crea la clase que valida el valor:
+
 ```java
+// validacion/PrioridadValidaValidator.java
 package com.ejemplo.gestor.validacion;
 
 import jakarta.validation.ConstraintValidator;
@@ -1631,119 +1660,134 @@ public class PrioridadValidaValidator
 }
 ```
 
-Ese `if (valor == null) return true` no es un descuido: **cada anotación comprueba una sola cosa**. Si además rechazara los nulos, no podrías tener un campo opcional con esta regla, y es justo lo que necesitas en el `PATCH`.
+El condicional `if (valor == null) return true` no es un descuido: **cada anotación comprueba una sola cosa**. La presencia obligatoria es responsabilidad de `@NotNull`. Si este validador rechazara los nulos, no podrías usarlo en un campo opcional, que es exactamente lo que necesitas en una actualización parcial (`PATCH`).
 
+Aplica la nueva anotación:
+
+1. En `TareaRequest`, donde es obligatoria, se combina con `@NotNull`:
 ```java
 @NotNull(message = "La prioridad es obligatoria")
 @PrioridadValida
 private String prioridad;
 ```
 
-En `TareaPatchRequest`, donde el campo es opcional, va sola:
-
+2. En `TareaPatchRequest`, donde el campo es opcional, va sola:
 ```java
 @PrioridadValida
 private String prioridad;
 ```
 
-La regla vive ahora **en un solo sitio**, se lee sin descifrar nada, y añadir `crítica` es tocar una línea.
+Prueba en Postman: una prioridad válida (`"alta"`), una prioridad no admitida (`"urgente"`, debe devolver 400 con tu mensaje) y un campo omitido en `PATCH` (debe ser admitido).
 
 <div class="rule">
   <p class="rule-label">Y aun así, la mejor validación es la que no hace falta</p>
-  <p>Si <code>prioridad</code> fuera un <code>enum</code> en lugar de un <code>String</code>, un valor inválido sería imposible de representar: Jackson rechazaría <code>"urgentísima"</code> él solo, y no habría regla que escribir ni que mantener.</p>
-  <p><strong>Antes de validar un dato, pregúntate si puedes elegir un tipo en el que el dato incorrecto no quepa.</strong> Es una idea que vale para toda la carrera, y volveremos a ella en la UD5 al modelar la base de datos.</p>
+  <p>Si <code>prioridad</code> fuera un tipo <code>enum</code> en lugar de un <code>String</code>, un valor inválido sería imposible de representar: Jackson rechazaría <code>"urgentísima"</code> al deserializar y no habría regla que escribir ni mantener.</p>
+  <p><strong>Antes de validar un dato, pregúntate si puedes elegir un tipo en el que el dato incorrecto no quepa.</strong> Volveremos a esta idea en la UD5 al modelar la base de datos.</p>
 </div>
 
-#### Paso 4 · Reglas que miran dos campos a la vez
+#### Paso 5 · Reglas que miran dos campos a la vez: `@FechasCoherentes`
 
-Reutiliza tu ProyectoRequest: añade fechaInicio y fechaFin sin borrar sus otros campos y genera sus getters y setters. Importa LocalDate de `java.time` y NotNull de `jakarta.validation.constraints`. Después crea estos dos archivos en `validacion`:
+Hay reglas que no se pueden comprobar en un único atributo aislado. Por ejemplo: «en un proyecto, la fecha de fin no puede ser anterior a la de inicio». Para evaluar eso, el validador necesita tener acceso a ambos campos a la vez.
+
+Por eso, esta restricción no se coloca sobre un campo, sino **sobre la clase completa**:
 
 ```java
-// validacion/FechasCoherentes.java
+@FechasCoherentes
+public class ProyectoRequest {
+
+    @NotNull(message = "La fecha de inicio es obligatoria")
+    private LocalDate fechaInicio;
+
+    private LocalDate fechaFin;
+
+    // Getters y setters...
+}
+```
+
+Crea la anotación en `src/main/java/com/ejemplo/gestor/validacion/FechasCoherentes.java`. Fíjate en que ahora el objetivo es `ElementType.TYPE`:
+
+```java
 package com.ejemplo.gestor.validacion;
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import java.lang.annotation.*;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = FechasCoherentesValidator.class)
 public @interface FechasCoherentes {
+
     String message() default "La fecha de fin no puede ser anterior a la de inicio";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
 ```
 
+A continuación, crea el validador en `src/main/java/com/ejemplo/gestor/validacion/FechasCoherentesValidator.java`:
+
 ```java
-// validacion/FechasCoherentesValidator.java
 package com.ejemplo.gestor.validacion;
+
 import com.ejemplo.gestor.dto.ProyectoRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class FechasCoherentesValidator
         implements ConstraintValidator<FechasCoherentes, ProyectoRequest> {
+
     @Override
     public boolean isValid(ProyectoRequest entrada, ConstraintValidatorContext contexto) {
         if (entrada == null || entrada.getFechaInicio() == null || entrada.getFechaFin() == null) {
-            return true; // La obligatoriedad se comprueba con @NotNull.
+            return true; // Si alguna no viene, la obligatoriedad se delega a @NotNull.
         }
-        if (!entrada.getFechaFin().isBefore(entrada.getFechaInicio())) return true;
+
+        // Si la fecha de fin no es anterior a la de inicio, es válida.
+        if (!entrada.getFechaFin().isBefore(entrada.getFechaInicio())) {
+            return true;
+        }
+
+        // Si es anterior, vinculamos el mensaje de error específicamente al campo fechaFin
         contexto.disableDefaultConstraintViolation();
         contexto.buildConstraintViolationWithTemplate(contexto.getDefaultConstraintMessageTemplate())
-            .addPropertyNode("fechaFin").addConstraintViolation();
+                .addPropertyNode("fechaFin")
+                .addConstraintViolation();
+
         return false;
     }
 }
 ```
 
-La violación se asocia a fechaFin para que el manejador de errores de campo pueda mostrarla. Importa FechasCoherentes en el DTO y coloca `@FechasCoherentes` sobre la clase. En el POST de proyecto conserva `@Valid`. Prueba fechaFin posterior (aceptada), igual (aceptada), anterior (400) y omitida (aceptada si es opcional), manteniendo válidos los demás campos. Si conviertes el DTO a record más adelante, cambia los accesos a `fechaInicio()` y `fechaFin()` y conserva las restricciones que tu dominio requiera.
+<dl class="worked">
+  <dt>¿Por qué usamos <code>disableDefaultConstraintViolation</code> y <code>addPropertyNode("fechaFin")</code>?</dt>
+  <dd>Por defecto, cuando una validación se ejecuta a nivel de clase, Spring asocia el error a la clase entera (a nivel de objeto). Con estas dos líneas desactivamos el error genérico y le decimos: <em>«asocia este fallo expresamente al atributo <code>fechaFin</code>»</em>. De este modo, en el JSON de respuesta el cliente verá <code>"campo": "fechaFin"</code> y sabrá con precisión qué debe corregir.</dd>
+</dl>
 
-En la sesión 12 encontraste reglas que no encajaban en un solo campo. La más habitual: «la fecha de fin no puede ser anterior a la de inicio».
-
-Ese tipo de restricción se pone **sobre la clase**, no sobre un atributo, porque necesita ver el objeto entero:
-
-```java
-@FechasCoherentes
-public class ProyectoRequest {
-
-    @NotNull
-    private LocalDate fechaInicio;
-
-    private LocalDate fechaFin;
-}
-```
-
-Se escribe igual que la de antes, cambiando dos cosas: `@Target(TYPE)` en la anotación, y `ConstraintValidator<FechasCoherentes, ProyectoRequest>` en el validador, cuyo `isValid` recibe el objeto completo y puede comparar los dos campos.
+Anota `ProyectoRequest` con `@FechasCoherentes` y compruébalo en Postman sobre `POST /proyectos`:
+- `fechaFin` posterior a `fechaInicio` ──> Aceptada (`201 Created`).
+- `fechaFin` igual a `fechaInicio` ──> Aceptada (`201 Created`).
+- `fechaFin` anterior a `fechaInicio` ──> Rechazada (`400 Bad Request` con tu mensaje).
+- `fechaFin` omitida (nula) ──> Aceptada si el campo es opcional.
 
 <div class="rule">
   <p class="rule-label">Dónde se acaba lo que puede hacer Bean Validation</p>
-  <p>Todo lo de hoy comprueba <strong>el objeto que ha llegado, y nada más</strong>. Puede mirar un campo, o varios campos entre sí.</p>
-  <p>Lo que no puede es responder «¿existe el proyecto 7?», porque para eso hay que consultar los datos, y un validador no tiene acceso a ellos. Esa comprobación es una <strong>regla de negocio</strong>, no una regla de formato, y su sitio es otro: se resuelve con una excepción propia en la sesión 13 y encontrará su hogar definitivo en la UD4.</p>
+  <p>Todo lo que hemos hecho en estos pasos comprueba <strong>el objeto que ha llegado en la petición, y nada más</strong>. Puede mirar un campo o comparar varios entre sí.</p>
+  <p>Lo que no puede hacer es responder <em>«¿existe el proyecto 7 en el sistema?»</em>, porque para saberlo hay que consultar los datos almacenados, y un validador no debe acceder a repositorios ni servicios. Esa comprobación es una <strong>regla de negocio</strong>, no una regla de formato, y se resuelve mediante excepciones en los pasos siguientes.</p>
 </div>
-
-#### Paso 5 · Reescribe todos tus mensajes
-
-1. Activa las dos propiedades y comprueba que ves los mensajes.
-2. Recorre todos tus DTO de entrada y pon un `message` en **cada** restricción, aplicando las cuatro reglas.
-3. Envía `{}` a la creación de tareas y de proyectos, y lee el resultado como si fueras el cliente.
-4. Para cada mensaje, pregúntate: **¿podría mostrarlo literalmente a un usuario final?** Si la respuesta es no, reescríbelo.
-
-#### Paso 6 · Tu propia anotación
-
-1. Implementa `@PrioridadValida` y úsala en los dos DTO de tareas.
-2. Crea una segunda anotación propia para una regla real de **tu** dominio. Algunas ideas: un código de proyecto con un formato concreto, un nombre sin caracteres especiales, una fecha que no sea festivo.
-3. Añade a la colección una petición que la incumpla y comprueba que responde `400` con **tu** mensaje.
-4. Escribe en las decisiones técnicas por qué esa regla merece una anotación propia en lugar de un `@Pattern`.
 
 <p class="stage">Errores coherentes de API</p>
 
-#### Paso 7 · Excepciones que hablan de tu dominio
+#### Paso 6 · Excepciones que hablan de tu dominio
 
-Ahora mismo tu controlador devuelve `ResponseEntity.notFound().build()` desde dentro de un bucle. Mezcla dos cosas: **buscar** y **decidir qué responder**.
+Ahora mismo tu controlador devuelve `ResponseEntity.notFound().build()` desde dentro de un bucle. Mezcla dos responsabilidades distintas: **buscar en la colección** y **decidir qué responder por HTTP**.
 
-Sepáralas. Primero, una excepción propia:
+Sepáralas. Primero, crea una excepción propia dentro del paquete `com.ejemplo.gestor.error`:
 
 ```java
 package com.ejemplo.gestor.error;
@@ -1756,9 +1800,9 @@ public class RecursoNoEncontradoException extends RuntimeException {
 }
 ```
 
-Extiende `RuntimeException` para no tener que declararla en cada firma ni envolverla en `try`. El mensaje se construye además en un solo lugar, de modo que todos los «no encontrado» de la API se redactan igual.
+Extiende `RuntimeException` para no tener que declararla en la firma de los métodos ni envolverla en bloques `try/catch`. El mensaje se construye además en un solo lugar, de modo que todos los «no encontrado» de la API se redactan de forma idéntica.
 
-Con ella, el controlador se limita a decir la verdad y seguir:
+Con ella, el controlador se limita a comprobar si existe y seguir:
 
 ```java
 @GetMapping("/{id}")
@@ -1771,34 +1815,45 @@ public TareaResponse detalle(@PathVariable(name = "id") int id) {
 }
 ```
 
-Fíjate en dos cambios: ya no devuelve `ResponseEntity`, porque **solo tiene un final posible**; y el caso de error es una línea que se lee como una frase.
+Fíjate en dos cambios importantes:
+1. Ya no devuelve `ResponseEntity<TareaResponse>`, sino `TareaResponse` directamente, porque por la vía normal **solo tiene un final posible**.
+2. El caso de error se reduce a una sola línea que se lee como una frase del dominio.
 
-#### Paso 8 · Centralizar la traducción de excepciones a respuestas HTTP
+<div class="rule">
+  <p class="rule-label">Aviso para la comprobación intermedia</p>
+  <p>Si pruebas esta petición ahora mismo en Postman (<code>GET /tareas/999</code>), Spring devolverá un <code>500 Internal Server Error</code> con una traza roja en la consola de Java. <strong>Es normal:</strong> la excepción se ha lanzado correctamente, pero aún no hay ningún componente que la intercepte. En el siguiente paso creamos el manejador global que la convertirá en un limpio <code>404 Not Found</code>.</p>
+</div>
 
-Copia estos records antes del manejador; cada declaración pública va en el archivo que indica su nombre:
+#### Paso 7 · Centralizar la traducción de excepciones a respuestas HTTP
+
+Para interceptar las excepciones que lanzan los controladores y traducirlas a respuestas HTTP estructuradas, Spring ofrece `@RestControllerAdvice`.
+
+Primero, crea en el paquete `com.ejemplo.gestor.error` los dos records que definirán la forma del JSON de error:
 
 ```java
 // error/CampoError.java
 package com.ejemplo.gestor.error;
+
 public record CampoError(String campo, String motivo) {}
 ```
 
 ```java
 // error/ErrorResponse.java
 package com.ejemplo.gestor.error;
+
 import java.time.LocalDateTime;
 import java.util.List;
-public record ErrorResponse(LocalDateTime momento, int estado, String error,
-        String mensaje, String ruta, List<CampoError> errores) {}
+
+public record ErrorResponse(
+        LocalDateTime momento,
+        int estado,
+        String error,
+        String mensaje,
+        String ruta,
+        List<CampoError> errores) {}
 ```
 
-Comprueba que todos los métodos del manejador utilizan `List<CampoError>`. En el paso 10 se retira ErrorResponse, pero se conserva CampoError para los detalles de validación.
-
-Antes del manejador, crea en el paquete `error` los tipos que utiliza: `CampoError(String campo, String motivo)` y `ErrorResponse(LocalDateTime momento, int estado, String error, String mensaje, String ruta, List<CampoError> errores)`, cada uno como record en su propio archivo. Importa `java.time.LocalDateTime` y `java.util.List` donde se necesitan. Después crea `ManejadorDeErrores.java` con el bloque completo. En el paso 10 evolucionará a ProblemDetail: esa evolución sustituye firmas y retorno, no añade un segundo manejador para la misma excepción.
-
-<p class="term">@RestControllerAdvice</p>
-
-Una clase que atiende las excepciones de **todos** los controladores. Cuando un método tuyo lanza algo y no lo captura nadie, Spring busca aquí quién sabe convertirlo en respuesta.
+A continuación, crea la clase `ManejadorDeErrores.java` en ese mismo paquete:
 
 ```java
 package com.ejemplo.gestor.error;
@@ -1879,24 +1934,28 @@ public class ManejadorDeErrores {
 
 <dl class="worked">
   <dt>Cómo elige Spring el manejador</dt>
-  <dd>Por el tipo de la excepción, y siempre <strong>el más específico</strong>. Una <code>RecursoNoEncontradoException</code> encaja con el primero y también con el último, que atrapa cualquier <code>Exception</code>; gana el primero.</dd>
+  <dd>Por el tipo de la excepción, y siempre <strong>el más específico</strong>. Una <code>RecursoNoEncontradoException</code> encaja con el primer método y también con el último (que atrapa cualquier <code>Exception</code>); gana el específico.</dd>
   <dt>Por qué el último existe</dt>
-  <dd>Para que <strong>ningún</strong> fallo se escape con un formato ajeno. Sin él, un <code>NullPointerException</code> devolvería la página de error de Spring, que es otra forma distinta.</dd>
+  <dd>Para que <strong>ningún</strong> fallo se escape con un formato ajeno. Sin él, un <code>NullPointerException</code> imprevisto devolvería la página de error genérica de Spring, rompiendo el contrato con el cliente.</dd>
   <dt>Por qué el último no dice qué ha pasado</dt>
-  <dd>Porque no se sabe si es seguro contarlo. El mensaje de una excepción inesperada puede incluir rutas de archivos, consultas o datos de otro usuario. <strong>Al cliente, un mensaje genérico; a la consola, todo.</strong></dd>
+  <dd>Porque no se sabe si es seguro contarlo. El mensaje de una excepción inesperada puede incluir rutas de archivos internos, consultas SQL o datos de otros usuarios. <strong>Al cliente, un mensaje genérico y seguro; a la consola, el detalle completo.</strong></dd>
   <dt>Por qué se registra con <code>log.error</code></dt>
-  <dd>Porque el cliente ya no recibe el detalle, así que si no queda escrito en el servidor, se pierde. Un <code>500</code> silencioso es un fallo que nadie podrá diagnosticar.</dd>
+  <dd>Porque el cliente ya no recibe el detalle técnico, así que si no queda escrito en los registros del servidor, se pierde. Un <code>500</code> silencioso es un fallo imposible de diagnosticar.</dd>
 </dl>
 
 <div class="rule">
   <p class="rule-label">La regla del 500</p>
-  <p><strong>Nunca devuelvas una traza de excepción a un cliente.</strong> Le dice qué framework usas, qué versiones, cómo se llaman tus clases y a veces qué datos manejabas. Es información de regalo para quien busque un agujero, y ruido inútil para todos los demás.</p>
-  <p>Ahora ya puedes quitar las dos propiedades <code>server.error.*</code> de ayer: eran el andamio, y esto es el edificio.</p>
+  <p><strong>Nunca devuelvas una traza de excepción (stacktrace) a un cliente.</strong> Le dice qué framework usas, qué versiones, cómo se llaman tus clases y a veces qué datos manejabas. Es información de regalo para quien busque una vulnerabilidad, y ruido inútil para quien consume tu API de buena fe.</p>
 </div>
 
-#### Paso 9 · Antes y después
+#### Paso 8 · Antes y después: comprobar la coherencia de los errores
 
-Repite los cinco errores del principio. Ahora los cinco responden igual:
+Repite ahora las peticiones en Postman:
+1. `GET /tareas/999` (debe responder `404 Not Found` con mensaje claro).
+2. `POST /tareas` con `{}` (debe responder `400 Bad Request` con los campos fallidos en castellano).
+3. `POST /tareas` con `{,}` (debe responder `400 Bad Request` indicando que el JSON no es válido).
+
+Comprueba que todas comparten la misma estructura limpia:
 
 ```json
 {
@@ -1923,44 +1982,31 @@ Repite los cinco errores del principio. Ahora los cinco responden igual:
 }
 ```
 
-Ese es el formato que acabas de diseñar. Dentro de un momento lo pasaremos al estándar, y lo único que cambiará serán los nombres de los campos:
+Mismo formato, campos siempre en el mismo sitio y mensajes legibles. Un cliente puede programar el tratamiento de errores una sola vez para toda la aplicación.
 
-```json
-{
-  "type": "about:blank",
-  "title": "Bad Request",
-  "status": 400,
-  "detail": "Hay campos que no son válidos",
-  "instance": "/tareas",
-  "momento": "2026-09-02T10:15:03.122",
-  "invalidParams": [
-    { "campo": "titulo", "motivo": "El título es obligatorio" },
-    { "campo": "prioridad", "motivo": "La prioridad debe ser baja, media o alta" }
-  ]
-}
-```
+#### Paso 9 · El paso al estándar: RFC 7807 / RFC 9457 (`ProblemDetail`)
 
-Mismo formato, campos siempre en el mismo sitio, mensajes en tu idioma y escritos por ti. Un cliente escribe el tratamiento una vez.
+El cambio es mínimo, porque el diseño conceptual ya está hecho. Solo cambian los nombres de los atributos para ajustarse al estándar HTTP:
 
-#### Paso 10 · El último paso · pasar tu formato al estándar
-
-Convierte el manejador en este orden: importa `ProblemDetail` y `java.net.URI`; sustituye el método auxiliar `construir`; cambia los retornos de sus métodos públicos a `ProblemDetail`; comprueba que todos llaman al nuevo auxiliar. Mantén las anotaciones `@ExceptionHandler`. Ejecuta primero un 404 y luego un 400 con varios campos: los errores por campo deben seguir apareciendo en `invalidParams`, no perderse al cambiar el formato.
-
-El cambio es pequeño, porque el diseño ya está hecho. Solo cambian los nombres de los campos:
-
-| Tu `ErrorResponse` | El estándar RFC 7807 | Qué cambia |
+| Tu `ErrorResponse` | El estándar RFC 7807 / 9457 | Qué cambia |
 | :--- | :--- | :--- |
 | `estado` | `status` | Solo el nombre |
 | `error` | `title` | Solo el nombre |
 | `mensaje` | `detail` | Solo el nombre |
 | `ruta` | `instance` | Solo el nombre |
-| `momento` | propiedad extra | No es campo del estándar: se añade aparte |
+| `momento` | propiedad extra | No es campo fijo del estándar: se añade con `setProperty` |
 | `errores` | propiedad extra | Tampoco lo es; la llamaremos `invalidParams` |
 
-Spring trae la clase `ProblemDetail` de serie. No hay que añadir ninguna dependencia: elimina tu `ErrorResponse` y sustituye el método `construir` por este.
+Spring Boot 3 trae la clase `ProblemDetail` de serie (en `org.springframework.http.ProblemDetail`). No hace falta añadir ninguna librería externa.
+
+Vamos a migrar el manejador:
+
+1. Elimina el archivo `ErrorResponse.java` (conserva `CampoError.java`, que seguirá usándose para la lista de fallos de validación).
+2. En `ManejadorDeErrores.java`, sustituye el método auxiliar `construir` por este:
 
 ```java
 import org.springframework.http.ProblemDetail;
+import java.net.URI;
 
     private ProblemDetail construir(
             HttpStatus estado, String mensaje,
@@ -1971,8 +2017,7 @@ import org.springframework.http.ProblemDetail;
         problema.setTitle(estado.getReasonPhrase());
         problema.setInstance(URI.create(peticion.getRequestURI()));
 
-        // Lo que el estándar no cubre se añade como propiedad extra, y
-        // aparece en el JSON al mismo nivel que las demás.
+        // Lo que el estándar no define de serie se añade como propiedad extra
         problema.setProperty("momento", LocalDateTime.now());
         if (!campos.isEmpty()) {
             problema.setProperty("invalidParams", campos);
@@ -1981,9 +2026,9 @@ import org.springframework.http.ProblemDetail;
     }
 ```
 
-Cambia también el tipo de retorno de los cuatro manejadores, de `ResponseEntity<ErrorResponse>` a `ProblemDetail`. Ya no hace falta envolver nada en un `ResponseEntity`: Spring lee el `status` del propio `ProblemDetail` y lo usa como código de la respuesta.
+3. Cambia el tipo de retorno de los cuatro métodos `@ExceptionHandler`: de `ResponseEntity<ErrorResponse>` a `ProblemDetail`. Ya no hace falta envolverlos en `ResponseEntity`: Spring lee el código HTTP del propio `ProblemDetail`.
 
-Repite el `404` y el `400` y compara con lo que devolvías antes:
+Repite el `404` y el `400` y revisa la respuesta:
 
 ```json
 {
@@ -1996,42 +2041,30 @@ Repite el `404` y el `400` y compara con lo que devolvías antes:
 }
 ```
 
-Fíjate en dos cosas que no estaban:
-
-1. **El campo `type`.** Es una URI que identifica *la clase de problema*, no esta ocurrencia concreta. `about:blank` significa «no tengo nada más que decir que el código HTTP». Si algún día documentas tus errores de negocio, aquí va el enlace a esa documentación.
-2. **La cabecera `Content-Type` ya no es `application/json`, sino `application/problem+json`.** Compruébalo en la pestaña de cabeceras. Es lo que permite a un cliente distinguir un error estructurado de una respuesta normal sin mirar el código de estado.
+Fíjate en dos detalles nuevos fundamentales:
+1. **El campo `type`:** Es una URI que categoriza la clase de problema. `about:blank` indica que no hay documentación externa adicional más allá de la semántica del código HTTP.
+2. **La cabecera `Content-Type`:** Ya no es `application/json`, sino `application/problem+json`. Permite a cualquier cliente distinguir una respuesta de error estructurada de una respuesta de datos habitual.
 
 <div class="rule">
-  <p class="rule-label">Por qué hemos hecho el rodeo</p>
-  <p>Cabría haber empezado por <code>ProblemDetail</code>, evitando la clase propia. Esa vía habría supuesto, sin embargo, adoptar un formato sin conocer por qué define esos campos y no otros.</p>
-  <p>Haberlo diseñado tú primero es lo que hace que ahora reconozcas <code>detail</code> como «qué ha ocurrido» y <code>instance</code> como «qué se estaba pidiendo», en lugar de memorizar cinco nombres en inglés. <strong>El estándar se entiende mejor después de haber tenido el problema que resuelve.</strong></p>
-  <p>A partir de aquí, todo el curso usa este formato: los tests de la UD7 comprobarán <code>$.title</code> y <code>$.status</code>, la seguridad de la UD9 devolverá <code>401</code> y <code>403</code> con esta forma, y el cliente Angular de la UD12 leerá <code>detail</code> para mostrarlo en pantalla.</p>
+  <p class="rule-label">Por qué hemos hecho este recorrido</p>
+  <p>Podríamos haber empezado directamente con <code>ProblemDetail</code> sin crear antes la clase propia. Pero diseñar primero tu propio formato es lo que hace que ahora comprendas por qué existen <code>detail</code> (qué ha ocurrido) o <code>instance</code> (qué ruta se estaba solicitando), en lugar de memorizar nombres en inglés sin contexto. <strong>El estándar se comprende mejor tras haber experimentado la necesidad que resuelve.</strong></p>
 </div>
 
-#### Paso 11 · El error que faltaba · el conflicto
+#### Paso 10 · El error que faltaba: el conflicto (`409 Conflict`)
 
-Después de crear ConflictoException, añade este método al ManejadorDeErrores ya convertido a ProblemDetail:
+Hay una familia de errores que tu API todavía no sabe expresar: cuando la petición tiene un formato y datos válidos, pero **choca con el estado actual de los recursos en el servidor**.
 
-```java
-@ExceptionHandler(ConflictoException.class)
-public ProblemDetail conflicto(ConflictoException ex) {
-    return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-}
-```
+Ejemplos típicos:
+- Intentar registrar un proyecto con un nombre que ya está en uso.
+- Intentar borrar un proyecto que todavía contiene tareas asociadas.
 
-Provoca la regla de conflicto y comprueba 409. Sin este método específico, el manejador genérico de Exception devolvería 500.
+No es un `400 Bad Request`, porque los campos cumplen sus restricciones. Tampoco es un `404 Not Found`, porque el recurso existe. Para estos casos, el código HTTP estándar es **`409 Conflict`**.
 
-Hay una familia de errores que tu API todavía no sabe expresar: cuando la petición es correcta pero **choca con el estado actual de los datos**.
-
-Ejemplos: crear un proyecto con un nombre que ya existe, o borrar un proyecto que aún tiene tareas.
-
-No es un `400`, porque el cuerpo es válido. No es un `404`, porque el recurso existe.
-
-<p class="term">409 Conflict</p>
-
-La petición se entiende y es válida, pero no se puede aplicar en el estado actual del recurso.
+Primero, crea la excepción en `src/main/java/com/ejemplo/gestor/error/ConflictoException.java`:
 
 ```java
+package com.ejemplo.gestor.error;
+
 public class ConflictoException extends RuntimeException {
 
     public ConflictoException(String mensaje) {
@@ -2040,22 +2073,40 @@ public class ConflictoException extends RuntimeException {
 }
 ```
 
-Añade su manejador con `HttpStatus.CONFLICT` y úsalo, por ejemplo, para impedir dos proyectos con el mismo nombre.
+A continuación, añade su manejador específico dentro de `ManejadorDeErrores.java`:
 
-#### Paso 12 · Unifica toda tu API
+```java
+@ExceptionHandler(ConflictoException.class)
+public ProblemDetail conflicto(ConflictoException ex, HttpServletRequest peticion) {
+    return construir(HttpStatus.CONFLICT, ex.getMessage(), peticion, List.of());
+}
+```
 
-1. Crea el paquete `error` con las tres clases y el manejador.
-2. Sustituye **todos** los `ResponseEntity.notFound()` por la excepción.
-3. Simplifica las firmas: los métodos que ya solo tienen un final devuelven el DTO directamente.
-4. Añade `ConflictoException` y una regla que la use.
-5. Quita las propiedades `server.error.*`.
-6. Provoca los cinco errores del principio y comprueba que los cinco tienen la misma forma.
-7. Haz la migración a `ProblemDetail` del apartado anterior y vuelve a provocarlos: los cinco deben seguir teniendo la misma forma, ahora con los nombres del estándar y la cabecera `Content-Type: application/problem+json`. Guarda las cinco peticiones en tu colección: son las que la UD7 convertirá en tests automáticos.
+Úsala en tu lógica (por ejemplo, en el método de creación de proyectos si ya existe uno con el mismo nombre):
 
-#### Paso 13 · Comprobar y registrar el resultado del proyecto
+```java
+if (existeProyectoConNombre(peticion.getNombre())) {
+    throw new ConflictoException("Ya existe un proyecto con el nombre: " + peticion.getNombre());
+}
+```
 
-1. Comprueba regla propia, comparación entre campos, recurso ausente y conflicto. Deben devolver estados adecuados y la misma estructura de error, con mensajes que permitan corregir la petición.
-2. Provoca una entrada mal formada y verifica que también se presenta de forma coherente. No expongas detalles internos ni la traza de Java en el contrato público.
+Prueba a enviar dos veces seguidas la creación del mismo proyecto y comprueba que la segunda responde con `409 Conflict` y la misma estructura `application/problem+json`.
+
+#### Paso 11 · Checklist de consolidación: unificar toda tu API
+
+Repasa esta lista para verificar que tu backend ha quedado completamente limpio y cohesionado:
+
+1. **Paquete `error` ordenado:** contiene `RecursoNoEncontradoException`, `ConflictoException`, el record auxiliar `CampoError` y la clase `ManejadorDeErrores`.
+2. **Controladores limpios:** sustituye cualquier `ResponseEntity.notFound().build()` residual por el lanzamiento de `RecursoNoEncontradoException`.
+3. **Firmas simplificadas:** los métodos de los controladores que solo tengan una vía de respuesta exitosa devuelven el DTO correspondiente directamente (por ejemplo, `public TareaResponse detalle(...)`), delegando los errores en las excepciones.
+4. **Retirada del andamio provisional:** elimina las dos propiedades `server.error.*` de `application.properties`. Tu manejador global se encarga ahora del 100% de los errores con total seguridad.
+5. **Colección actualizada:** guarda en Bruno o Postman peticiones para verificar: `404` (recurso ausente), `400` (validación de campos), `400` (JSON roto) y `409` (conflicto de negocio).
+
+#### Paso 12 · Comprobar y registrar el resultado del proyecto
+
+1. Ejecuta tu colección completa y comprueba que todas las respuestas de error devuelven el código de estado adecuado y la estructura estándar `application/problem+json`.
+2. Verifica que los mensajes de validación son legibles y permiten corregir la petición sin mirar el código fuente.
+3. Provoca una entrada mal formada o una excepción imprevista y comprueba que el cliente recibe un error genérico seguro sin filtraciones de la traza de Java.
 
 #### Ampliación si has completado el trabajo
 
