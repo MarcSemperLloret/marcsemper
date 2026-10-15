@@ -42,7 +42,7 @@ const homeJsonLd = {
         height: 500
       },
       email: `mailto:${site.email}`,
-      jobTitle: "Profesor Asociado e Investigador",
+      jobTitle: site.roleEs,
       affiliation: {
         "@type": "CollegeOrUniversity",
         name: site.affiliation,
@@ -128,7 +128,7 @@ const homeJsonLd = {
       </div>
       <div class="intro-copy">
         <p>
-          Marc Semper Lloret publica sus trabajos académicos como <strong>Marc Semper</strong>. Es profesor asociado e investigador del Departamento de Ciencia de la Computación e Inteligencia Artificial de la Universidad de Alicante, y miembro del grupo de investigación ANVIDA.
+          Marc Semper Lloret publica sus trabajos académicos como <strong>Marc Semper</strong>. Es {site.roleEs.toLowerCase()} del Departamento de Ciencia de la Computación e Inteligencia Artificial de la Universidad de Alicante, y miembro del grupo de investigación ANVIDA.
         </p>
         <p>
           Su trabajo conecta aprendizaje en grafos, observación ambiental y evaluación robusta para comprender si el modelo elegido sigue siendo defendible ante incertidumbre realista en los datos y el despliegue.

@@ -73,7 +73,7 @@ const defaultJsonLd = {
       url: site.url,
       image: new URL(site.portrait, site.url).toString(),
       email: `mailto:${site.email}`,
-      jobTitle: "Associate Lecturer and Researcher",
+      jobTitle: site.role,
       affiliation: {
         "@type": "CollegeOrUniversity",
         name: site.affiliation,

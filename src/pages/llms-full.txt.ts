@@ -96,7 +96,7 @@ Topics: ${publication.topics.join("; ")}
 
   const text = `# Marc Semper Lloret — full research context
 
-Marc Semper Lloret is a researcher and associate lecturer in the Department of Computer Science and Artificial Intelligence at the University of Alicante. He is a member of the Network Data Analysis and Visualisation research group (ANVIDA) and publishes scientific work as Marc Semper.
+Marc Semper Lloret is a ${site.role.toLowerCase()} in the Department of Computer Science and Artificial Intelligence at the University of Alicante. He is a member of the Network Data Analysis and Visualisation research group (ANVIDA) and publishes scientific work as Marc Semper.
 
 Canonical identity: ${site.url}/
 ORCID: ${site.profiles.orcid}

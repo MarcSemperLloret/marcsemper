@@ -41,7 +41,7 @@ const homeJsonLd = {
         height: 500
       },
       email: `mailto:${site.email}`,
-      jobTitle: "Associate Lecturer and Researcher",
+      jobTitle: site.role,
       affiliation: {
         "@type": "CollegeOrUniversity",
         name: site.affiliation,
@@ -128,7 +128,7 @@ const homeJsonLd = {
       </div>
       <div class="intro-copy">
         <p>
-          Marc Semper Lloret publishes academically as <strong>Marc Semper</strong>. He is an associate lecturer and researcher in the
+          Marc Semper Lloret publishes academically as <strong>Marc Semper</strong>. He is a {site.role.toLowerCase()} in the
           Department of Computer Science and Artificial Intelligence at the
           University of Alicante, and a member of the Network Data Analysis and
           Visualisation research group (ANVIDA).

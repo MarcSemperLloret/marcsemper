@@ -19,7 +19,7 @@ const lastUpdated = formatSiteDate("en-GB");
       </div>
       <div class="cv-intro">
         <p>
-          Associate lecturer and researcher working on reliable spatiotemporal
+          {site.role} working on reliable spatiotemporal
           artificial intelligence, graph neural networks and environmental
           forecasting.
         </p>
@@ -35,7 +35,7 @@ const lastUpdated = formatSiteDate("en-GB");
     <div class="container identity-grid">
       <div>
         <span>Position</span>
-        <strong>Associate Lecturer and Researcher</strong>
+        <strong>{site.role}</strong>
       </div>
       <div>
         <span>Institution</span>
@@ -88,7 +88,7 @@ const lastUpdated = formatSiteDate("en-GB");
         </div>
         <div class="cv-section-content prose">
           <p>
-            Marc Semper Lloret is an associate lecturer and researcher in the
+            Marc Semper Lloret is a {site.role.toLowerCase()} in the
             Department of Computer Science and Artificial Intelligence at the
             University of Alicante, where he is a member of the Network Data
             Analysis and Visualisation research group.
@@ -113,7 +113,7 @@ const lastUpdated = formatSiteDate("en-GB");
           <article class="timeline-entry">
             <div><strong>Current</strong></div>
             <div>
-              <h3>Associate Lecturer</h3>
+              <h3>{site.appointment}</h3>
               <p>University of Alicante</p>
               <small>
                 Department of Computer Science and Artificial Intelligence ·

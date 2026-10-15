@@ -10,6 +10,12 @@ export const site = {
   defaultSocialImage: "/og-default.png",
   lastUpdated: "2026-10-04",
   email: "marc.semper@ua.es",
+  // Puesto genérico: se lee desde todas las páginas para no tener que
+  // actualizarlo en varios sitios cuando cambie la categoría contractual.
+  role: "Lecturer and researcher",
+  roleEs: "Profesor e investigador",
+  appointment: "Lecturer",
+  appointmentEs: "Profesor",
   affiliation: "University of Alicante",
   department: "Department of Computer Science and Artificial Intelligence",
   group: "Network Data Analysis and Visualisation research group (ANVIDA)",
