@@ -207,15 +207,31 @@ El segundo caso constituye la diferencia sustancial entre este pipeline y el del
 
 **Antes de empezar.** El backend de Servidor tiene CI y una versión revisada en `main`. Hoy publicarás su JAR en una EC2 de AWS Academy Learner Lab. Conservamos el repositorio y el contrato existentes.
 
+**Preparación del docente antes de esta clase.** Crear la clase Learner Lab, matricular o invitar al alumnado y comprobar un acceso de estudiante. Tener AWS Academy no significa tener ya un laboratorio asignado. La preparación de cuentas y la resolución de invitaciones se hacen antes del taller. El nombre DNS necesario para HTTPS también debe acordarse con antelación; el alumnado no tiene que comprar un dominio.
+
+**Recorrido de hoy:** descargar el JAR aprobado → entrar en el laboratorio → crear una máquina → copiar el JAR → arrancarlo → comprobar su URL → detener la máquina. En las siguientes sesiones se reutiliza esa máquina.
+
 ### Se explica
 
 <p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
 #### El entorno de este curso
 
+Vas a pasar por tres pantallas distintas. No necesitas abrir una cuenta nueva en la web comercial de AWS:
+
+| Pantalla | Cómo reconocerla | Para qué la utilizas |
+| --- | --- | --- |
+| AWS Academy / LMS | Lista de cursos y menú Módulos | Entrar en la clase a la que te ha invitado el docente |
+| Learner Lab | Botones Start Lab, End Lab, AWS Details y un temporizador | Activar la sesión, ver el presupuesto y recuperar la clave de acceso |
+| Consola AWS | Buscador de servicios y selector de región arriba | Crear y detener tu máquina EC2 |
+
+**EC2** es el servicio de máquinas virtuales; una **instancia** es tu máquina concreta. La **región** indica dónde se aloja. El **grupo de seguridad** es su filtro de conexiones. El **JAR** contiene tu aplicación Java. La clave **PEM** permite identificarte al entrar por SSH y debe mantenerse privada.
+
 Usaremos **AWS Academy Learner Lab**, sin una cuenta personal de pago. El docente debe crear la clase e invitar al alumnado antes del taller. La cuenta docente no se comparte: cada estudiante utiliza el entorno asignado. Comprueba allí el presupuesto y las fechas, sin dar por supuesto un importe universal.
 
 La sesión dura cuatro horas por defecto y puede renovarse con **Start Lab** antes de finalizar. Al terminar, EC2 se detiene; las instancias que estaban encendidas se vuelven a iniciar al abrir otra sesión, según la guía del laboratorio. El disco se conserva mientras dure el curso y haya presupuesto. La IP pública puede cambiar. Se evalúa una publicación de laboratorio comprobada durante las sesiones, con fecha, versión y evidencias conservadas; no se exige disponibilidad permanente.
+
+El temporizador mide **esta sesión**, no una cuota de cuatro horas semanales. El dinero indicado es el presupuesto total de tu laboratorio para la clase: **no se repone cada día ni al pulsar Start Lab**. El indicador de gasto puede actualizarse con retraso; un valor de cero no demuestra que todos los recursos sean gratuitos.
 
 La configuración de referencia es **Ubuntu 24.04 LTS, t3.small, 8 GiB de disco y región us-east-1**. Usaremos Java 21, Nginx y systemd. En la sesión 12 PostgreSQL utilizará el disco de esa misma máquina y escuchará solo en localhost. No necesitamos RDS, balanceador, NAT Gateway ni IP elástica. El almacenamiento puede seguir generando consumo con la instancia detenida; revisa inventario y presupuesto al cerrar.
 
@@ -258,21 +274,68 @@ Mediante PR añade estos pasos al final del job de la sesión 7, después de `ve
 
 Fusiona la PR y espera al CI de `main`. Descarga desde **Actions → ejecución correcta → Artifacts** el archivo de esa ejecución. Extrae `app.jar`, `commit.txt` y `app.jar.sha256` en una carpeta de entrega. Comprueba que el commit corresponde a `main` y que el JAR es ejecutable. No compiles otra versión para publicar. Conserva el artefacto fuera de la retención temporal de Actions si lo necesitas para recuperación.
 
+**Cómo encontrarlo:** en tu repositorio de GitHub abre **Actions**, pulsa la ejecución de **CI** asociada al último commit aprobado de `main` y espera el indicador verde. Al final de su página aparece **Artifacts**, con un archivo llamado `backend-` seguido del commit. Descárgalo y utiliza **Extraer todo** en Windows; no trabajes dentro del ZIP. Si no aparece, comprueba que estás en una ejecución posterior a la fusión en `main`, no en la ejecución de la PR, y que terminó el paso de subida del artefacto.
+
+**Antes de seguir:** debes ver tres archivos sueltos en la carpeta extraída: `app.jar`, `commit.txt` y `app.jar.sha256`. Abre `commit.txt`: es el identificador de la versión que vas a publicar. No abras ni descomprimas el JAR.
+
 #### Bloque B · Crear el entorno una sola vez
 
-1. En AWS Academy abre la clase asignada, **Módulos → Lanzamiento del laboratorio → Start Lab**. Espera el estado verde y abre **AWS**. Selecciona **us-east-1**.
-2. En **EC2 → Lanzar instancia**, usa un nombre propio, Ubuntu Server **24.04 LTS** sin opciones Pro o Marketplace, arquitectura x86, **t3.small**, una instancia y **8 GiB gp3**. El JDK de la plantilla es Java 21: si el proyecto exige otra versión, acuerda y verifica la adaptación antes de continuar.
-3. Selecciona la clave existente **vockey**. Recupera su PEM desde **AWS Details** y guárdalo fuera del repositorio y las entregas, con lectura restringida a tu usuario.
-4. Utiliza la VPC y una subred públicas predeterminadas con IP pública automática. Crea un grupo de seguridad propio: **SSH/22 solo desde la IP pública de administración del aula**, HTTP/80 para la primera prueba pública. No abras 5432 ni 8080 al exterior. Si la IP del aula cambia, actualiza su regla concreta.
-5. En **Detalles avanzados**, selecciona créditos de CPU **Estándar** para evitar consumo adicional por CPU ilimitada. Conserva IMDSv2 obligatorio. No hace falta adjuntar un rol de IAM a esta máquina.
-6. Descarga la [plantilla de preparación de EC2](/teaching/downloads/intermodular-ec2-init.sh), revisa su contenido y pégalo como **Datos de usuario**. Prepara Java, Nginx, PostgreSQL y systemd; no crea otra API ni descarga el código del alumno.
-7. Revisa y lanza. El arranque inicial instala paquetes. En **Acciones → Monitoreo y solución de problemas → Obtener registro del sistema**, busca `INTERMODULAR_INFRASTRUCTURE_READY`. Si hay errores, resuélvelos antes de copiar el JAR.
+**1 · Entrar en tu clase.** En AWS Academy abre el LMS y la clase indicada por el docente. En **Módulos**, pulsa **Lanzamiento del Laboratorio para el alumnado de AWS Academy**. Si no ves la clase o hay un requisito inicial pendiente, comunícalo al docente; no elijas otro curso ni crees una cuenta de pago.
+
+**2 · Activar la sesión.** Pulsa **Start Lab** una vez y espera. El indicador junto a **AWS** debe ponerse verde; en el primer acceso puede necesitar varios minutos. No pulses Reset. Cuando esté listo, pulsa **AWS** para abrir la consola en otra pestaña. Si el navegador bloquea esa ventana, permite la apertura de la consola para esta página. Mantén abierta la pestaña del laboratorio.
+
+**3 · Elegir la región y el servicio.** En la esquina superior derecha de la consola selecciona **Estados Unidos (Norte de Virginia) / US East (N. Virginia), us-east-1**. En el buscador superior escribe **EC2**, abre ese servicio y pulsa **Lanzar instancia / Launch instance**. Si ves recursos vacíos o errores de permisos, comprueba la región antes de crear nada más.
+
+**4 · Completar la máquina.** Despliega cada apartado del formulario y utiliza esta tabla. Cambiar la imagen del sistema puede restablecer otros campos: revisa la red otra vez al terminar.
+
+| Campo del formulario | Valor de esta práctica | Qué significa |
+| --- | --- | --- |
+| Nombre / Name | `intermodular-TU_IDENTIFICADOR` | Una etiqueta para reconocer tu máquina; sustituye el identificador |
+| Imagen / AMI | Ubuntu Server **24.04 LTS**, sin Pro ni Marketplace | El sistema operativo que instala nuestra plantilla |
+| Arquitectura | **64 bits (x86)** | Debe coincidir con la imagen y el tipo de máquina |
+| Tipo / Instance type | **t3.small** | Dos CPU virtuales y 2 GiB de memoria; no significa que sea gratis |
+| Número de instancias | **1** | No necesitas una máquina por ejecución ni por sesión |
+| Almacenamiento / Storage | **8 GiB, gp3**, un volumen | El disco donde quedan aplicación y base de datos |
+| Par de claves / Key pair | **vockey**, ya existente | La clave del laboratorio para conectarte por SSH |
+
+El JDK de la plantilla es Java 21: si el proyecto exige otra versión, acuerda y verifica la adaptación antes de continuar. Si no aparece una opción exacta, pregunta antes de elegir una máquina mayor o de pago diferente.
+
+**5 · Guardar la clave privada.** Vuelve a la pestaña Learner Lab y abre **AWS Details → Download PEM**. Guarda el archivo, normalmente `labsuser.pem`, en una carpeta privada de tu equipo, fuera del repositorio y de las entregas. También puedes usar ese PEM con OpenSSH en Windows; PPK corresponde a otras herramientas, como PuTTY. Regresa a la consola sin cerrar el laboratorio.
+
+**6 · Configurar red y acceso.** En **Configuraciones de red / Network settings**, utiliza **Editar / Edit** si necesitas ver todos los campos. Conserva la VPC predeterminada y una subred pública predeterminada, con **Asignación automática de IP pública: Habilitar / Enable**. Crea un grupo de seguridad para esta práctica. Sus únicas reglas iniciales son:
+
+| Tipo | Puerto | Origen | Uso |
+| --- | --- | --- | --- |
+| SSH | 22 | La IP pública de administración facilitada por el docente, con `/32` si es una sola IP | Tu terminal entra en Ubuntu |
+| HTTP | 80 | Anywhere-IPv4, `0.0.0.0/0` | Consultar la demo desde Internet |
+
+El menú **Mi IP / My IP** puede rellenar la dirección que ve la consola, pero debes contrastarla con la indicada para tu conexión de aula. No uses tu IP privada de Windows ni dejes SSH en **Anywhere / Cualquier lugar**. Si cambias de red, puede hacer falta actualizar esa regla. No abras 5432 ni 8080: la base y Spring Boot se comunican dentro de la máquina.
+
+**7 · Preparar el arranque.** Abre **Detalles avanzados / Advanced details**. En **Especificación de crédito / Credit specification**, elige **Estándar / Standard**. Conserva **IMDSv2 obligatorio** y deja el perfil de IAM sin seleccionar. Al final aparece **Datos de usuario / User data**: es un cuadro para un script de arranque, no tus datos personales.
+
+Descarga la [plantilla de preparación de EC2](/teaching/downloads/intermodular-ec2-init.sh). Ábrela como texto en VS Code o Bloc de notas, copia todo desde `#!/bin/bash` hasta el final y pégalo en ese cuadro. Si el enlace muestra texto en el navegador, también puedes copiarlo desde ahí. **No ejecutes el archivo en Windows**, no pegues la dirección del enlace y no marques que está codificado en base64. La plantilla prepara Java, Nginx, PostgreSQL y systemd; no crea otra API ni descarga el código del alumno.
+
+**8 · Revisar y lanzar.** Contrasta imagen, tamaño, disco, número de máquinas y reglas con las tablas anteriores. Pulsa **Lanzar instancia / Launch instance** una vez. Anota el ID que empieza por `i-` y abre sus detalles. En **Instancias / Instances**, espera a que figure **En ejecución / Running**. Ese estado solo confirma que la máquina está encendida; no garantiza que haya terminado la instalación.
+
+**9 · Comprobar la instalación.** Selecciona tu instancia y abre **Acciones → Monitoreo y solución de problemas → Obtener registro del sistema / Actions → Monitor and troubleshoot → Get system log**. Actualiza el registro hasta ver `INTERMODULAR_INFRASTRUCTURE_READY`. Es el mensaje final de nuestra plantilla. Si hay un error o no aparece tras varios minutos, conserva el mensaje y revísalo con el docente. No lances otra máquina para ocultar el fallo.
+
+**10 · Guardar la dirección.** En los detalles de la instancia copia **Dirección IPv4 pública / Public IPv4 address**. Esa dirección sustituirá `IP_ACTUAL` en los comandos. La IPv4 privada y el ID `i-...` no sirven para conectarte desde tu portátil por Internet. La página web puede devolver **502 Bad Gateway** en este punto: Nginx está preparado, pero todavía no hemos instalado el JAR.
 
 No lances otra instancia en cada sesión. Anota su ID y grupo de seguridad. La plantilla se ejecuta una vez sobre una máquina nueva, no sobre una base con datos.
 
 #### Bloque C · Publicar el JAR de esa ejecución
 
-Desde tu terminal local, en la carpeta con el artefacto extraído, sustituye ruta de clave e IP por tus valores actuales:
+**Este bloque empieza en Windows.** Abre la carpeta que contiene los tres archivos extraídos del artefacto, haz clic derecho en una zona vacía y elige **Abrir en Terminal**. Utiliza PowerShell, no la terminal del servidor ni la de otro repositorio. Ejecuta primero `Get-ChildItem`: debes ver `app.jar`, `commit.txt` y `app.jar.sha256`.
+
+Antes de copiar comandos, prepara estas sustituciones:
+
+| Marcador | Qué escribir en su lugar |
+| --- | --- |
+| `RUTA_A_LA_CLAVE.pem` | La ruta completa del PEM descargado, conservando las comillas; por ejemplo, `C:\Users\TuUsuario\Claves\labsuser.pem` |
+| `IP_ACTUAL` | La IPv4 pública que acabas de copiar; sin `http://`, sin comillas y sin el nombre de otro equipo |
+| `ubuntu` | Se conserva: es el usuario de la imagen Ubuntu de esta práctica |
+
+Escribe un comando cada vez. Espera a que termine y comprueba el resultado antes del siguiente:
 
 ```powershell
 Get-FileHash ./app.jar -Algorithm SHA256
@@ -280,18 +343,30 @@ scp -i "RUTA_A_LA_CLAVE.pem" ./app.jar ./commit.txt ./app.jar.sha256 ubuntu@IP_A
 ssh -i "RUTA_A_LA_CLAVE.pem" ubuntu@IP_ACTUAL
 ```
 
-Compara el hash local con `app.jar.sha256`. En la primera conexión contrasta la huella SSH con la publicada por la instancia en su registro de arranque antes de aceptarla. No desactives la comprobación de identidad. Dentro de Ubuntu:
+El primer comando muestra el hash: compáralo con el texto de `app.jar.sha256`; mayúsculas y minúsculas no cambian su valor. `scp` **copia archivos** y vuelve a PowerShell al terminar; `ssh` **abre una terminal en Ubuntu**. Ninguno pide la contraseña de PostgreSQL. En la primera conexión contrasta la huella SSH con la publicada por la instancia en su registro de arranque antes de aceptarla. No desactives esa comprobación.
+
+**Cambio de terminal: ahora estás en Ubuntu.** El indicador suele parecerse a `ubuntu@ip-...:~$`, en lugar de `PS C:\...>`. No copies esos indicadores ni los signos `$` de un ejemplo. Ejecuta `whoami`: debe responder `ubuntu`. Los siguientes comandos actúan en la máquina de AWS:
 
 ```bash
 cd /home/ubuntu
 sha256sum -c app.jar.sha256
 sudo install -o root -g intermodular -m 640 app.jar /opt/intermodular/app.jar
 sudo install -o root -g intermodular -m 640 commit.txt /opt/intermodular/commit.txt
-sudo systemctl enable --now intermodular
+sudo systemctl enable intermodular
 sudo systemctl restart intermodular
 sudo systemctl status intermodular --no-pager
 sudo journalctl -u intermodular -n 60 --no-pager
 ```
+
+**Qué debes ver:** `sha256sum` muestra `app.jar: OK`; `systemctl status` indica **active (running)** y los logs terminan mostrando el arranque de Spring Boot sin una excepción. Un estado activo momentáneo no basta si el proceso se reinicia continuamente: revisa también los logs. Para volver a PowerShell escribe `exit`. Cerrar SSH no detiene la API, porque la mantiene systemd.
+
+| Mensaje al conectar o copiar | Qué revisar antes de repetir |
+| --- | --- |
+| `No such file` o archivo no encontrado | Carpeta de la terminal, nombre real del archivo y ruta completa del PEM |
+| `Permission denied (publickey)` | Usuario `ubuntu`, PEM de ese laboratorio y clave `vockey` seleccionada al crear la máquina |
+| `Connection timed out` | Laboratorio activo, EC2 encendida, IP pública actual y regla SSH desde la IP correcta |
+| Aviso sobre permisos del PEM | Con el docente, restringe su lectura a tu cuenta de Windows; no compartas ni subas la clave |
+| No se reconoce `ssh` o `scp` | Comprueba la preparación del cliente OpenSSH de Windows con el docente antes de seguir |
 
 La primera publicación conserva la configuración en memoria de Servidor; no adelantes JPA ni cambies de proyecto. Si la versión ya necesita base de datos, prepara primero la configuración de la sesión 12. El servicio mantiene Java escuchando en **127.0.0.1:8080**; Nginx recibe el tráfico de Internet en el puerto 80. No uses una terminal que haya que dejar abierta para mantener la API.
 
@@ -300,6 +375,8 @@ Para actualizar, detén primero `intermodular`, conserva el JAR y `commit.txt` a
 #### Bloque D · Comprobar y diagnosticar
 
 En Ubuntu prueba una ruta real del proyecto contra `http://127.0.0.1:8080`, después contra `http://127.0.0.1` y finalmente desde otro equipo contra `http://IP_ACTUAL`. `/api/estado` pertenece solo a la demo docente y no tiene que existir en tu API.
+
+Por ejemplo, **solo si tu colección ya utiliza `/tareas`**, ejecuta en Ubuntu `curl -i http://127.0.0.1:8080/tareas` y después `curl -i http://127.0.0.1/tareas`. En tu navegador de Windows abre `http://IP_ACTUAL/tareas`, sustituyendo la IP. Si tu ruta es otra, utiliza exactamente la de tu colección en las tres comprobaciones. Un estado 200 y la respuesta esperada acreditan la consulta; una colección vacía puede devolver `[]` correctamente. Una ruta que exige permisos puede devolver 401 o 403, lo que requiere comprobar el contrato y no inventar un fallo de red.
 
 | Observación | Primera comprobación |
 | --- | --- |
@@ -331,6 +408,12 @@ Si aún no existe un nombre y certificado válidos, conserva la evidencia HTTP y
 <p class="stage">15 minutos · comprobación del resultado</p>
 
 Comprueba la ruta pública, relaciona el JAR con el commit aprobado y explica CI frente a publicación manual. Anota si HTTPS está comprobado o pendiente. Antes de cerrar, revisa presupuesto e inventario y detén la instancia desde EC2 si has terminado; cerrar SSH no la apaga. Mantén el disco para la siguiente sesión. Al reabrir el laboratorio comprueba estado, IP y URL antes de repetir la colección.
+
+**Apagado al terminar:** en **EC2 → Instancias**, selecciona solo tu máquina por nombre e ID y pulsa **Estado de la instancia → Detener instancia → Detener**. Espera a ver **Detenida / Stopped**. Después vuelve a la pestaña Learner Lab, pulsa **End Lab** y confirma el cierre. **Detener** conserva el disco; **Terminar / Terminate** elimina la máquina y puede borrar sus datos; **Reset** restablece el entorno. No son botones equivalentes. Conservar el disco mantiene un coste de almacenamiento aunque no haya cómputo.
+
+**Al empezar otro día:** abre el mismo laboratorio con **Start Lab**, espera el indicador verde y entra en EC2 en **us-east-1**. Localiza el ID guardado. Si está detenida, usa **Estado de la instancia → Iniciar instancia**; no vuelvas a pulsar Lanzar instancia. Copia la IPv4 pública actual, comprueba el arranque y actualiza los destinos de SSH, la colección y DNS si procede. Conserva `vockey` y el disco: no repitas los datos de usuario, la creación de la base ni el esquema inicial.
+
+Si la clase de AWS Academy ya terminó o se agotó el presupuesto, consulta al docente: crear otra instancia no recupera los archivos. Conserva fuera del laboratorio el código, el artefacto aprobado y las copias de datos que necesites.
 
 
 ## Sesión 9 · Comprobar el contrato publicado
@@ -522,15 +605,16 @@ PostgreSQL instalado en la EC2 se detiene con ella. No se crea un RDS que pueda 
 
 #### Bloque A · Preparar PostgreSQL en la EC2
 
-Conecta con el procedimiento de la sesión 8. La plantilla ya instaló PostgreSQL. Comprueba:
+Conecta por SSH con el procedimiento de la sesión 8. **Estos comandos se ejecutan en Ubuntu, no en PowerShell.** Si no recuerdas dónde estás, ejecuta `whoami`; debe responder `ubuntu`. La plantilla ya instaló PostgreSQL. Primero consulta el estado del servicio y los puertos:
 
 ```bash
 sudo systemctl status postgresql --no-pager
 sudo ss -lnt
-sudo -u postgres psql
 ```
 
-Revisa que 5432 escucha solo en loopback. Si aparece en todas las interfaces, corrige `listen_addresses` y revisa `pg_hba.conf` antes de continuar. En la consola SQL crea usuario y base; `\password` solicita la contraseña sin escribirla en un script ni en el historial del shell:
+Es normal que el servicio general `postgresql` aparezca como **active (exited)**: Ubuntu lo utiliza para gestionar los clústeres. Comprueba también el puerto 5432 en la salida de `ss`; una conexión SQL correcta en el siguiente paso confirma que la base responde. Debe escuchar en `127.0.0.1:5432` o `[::1]:5432`, que son direcciones del propio equipo, no en `0.0.0.0:5432`. Si aparece en todas las interfaces, revisa la configuración con el docente antes de continuar.
+
+Ahora ejecuta `sudo -u postgres psql`. **Entras en otro programa:** el indicador cambia a `postgres=#`. `sudo -u postgres` ejecuta el cliente como administrador de PostgreSQL; no cambia permanentemente el usuario SSH. Introduce las líneas siguientes una a una. Las sentencias SQL terminan con punto y coma; las órdenes que empiezan por barra inversa no lo necesitan:
 
 ```sql
 CREATE ROLE intermodular LOGIN;
@@ -541,9 +625,11 @@ CREATE DATABASE intermodular OWNER intermodular;
 
 Son comandos de primera instalación. Si la base existe, inspecciónala y reutilízala: no la borres ni repitas su creación a ciegas. El ejemplo presupone un proyecto por instancia; un servidor compartido necesita usuarios, bases y permisos propios por proyecto.
 
+**Qué debes ver:** `CREATE ROLE` tras crear el usuario y `CREATE DATABASE` tras crear la base. `\password intermodular` solicita dos veces la nueva contraseña: es normal que no aparezcan caracteres al escribir. Guárdala de forma privada porque la necesitarás en el bloque siguiente. `\q` sale de psql y te devuelve al indicador `ubuntu@...$`. Si te equivocas y psql queda esperando completar una sentencia, cancélala con Ctrl+C antes de volver a escribirla; no pegues comandos Linux en el indicador SQL.
+
 #### Bloque B · Configuración externa del servicio
 
-Edita `sudo nano /etc/intermodular.env`. El archivo lo lee systemd como root y no se versiona. Declara:
+**En la terminal Ubuntu, fuera de psql**, ejecuta `sudo nano /etc/intermodular.env`. Abres un editor de texto dentro de la terminal; ya no estás escribiendo órdenes del sistema. El archivo puede estar vacío porque lo creó la plantilla. Pega estas cinco líneas:
 
 ```text
 SPRING_DATASOURCE_URL=jdbc:postgresql://127.0.0.1:5432/intermodular
@@ -554,6 +640,8 @@ SPRING_SQL_INIT_MODE=never
 ```
 
 Sustituye el marcador por la contraseña real; para este ejercicio utiliza una contraseña aleatoria larga con letras y números. Conserva propietario root y permisos 600. El repositorio solo contiene una plantilla ficticia. No muestres el archivo en capturas ni incidencias.
+
+La contraseña debe ser **la misma** que acabas de asignar a `intermodular`; no generes una distinta para este archivo. No pegues las marcas del bloque de código ni espacios alrededor del signo `=`. En nano, guarda con **Ctrl+O**, confirma el nombre con **Enter** y sal con **Ctrl+X**. Para revisar permisos sin mostrar los secretos, ejecuta `sudo stat -c '%U %a' /etc/intermodular.env`: debe indicar `root 600`. Editar el archivo no actualiza por sí solo el proceso; lo reiniciarás después de preparar el esquema.
 
 La conexión utiliza loopback dentro del mismo sistema; no atraviesa Internet. Esta arquitectura no valida TLS de base de datos. Si más adelante separas PostgreSQL o usas RDS, revisa red, permisos y TLS: no reutilices sin cambios esta URL.
 
@@ -567,13 +655,25 @@ pg_dump --host=localhost --port=5432 --username=postgres --schema-only --no-owne
 
 Comprueba que no contiene contraseñas ni datos y revísalo mediante PR. El PostgreSQL del servidor debe admitir la versión del volcado; adapta exportación o herramientas si el proyecto utiliza una versión posterior, sin editar a ciegas un volcado incompatible.
 
+**Aquí vuelves al equipo local:** abre una segunda pestaña PowerShell en la carpeta de tu repositorio, conservando la sesión SSH en la primera. Comprueba que existe la carpeta `docs` y sustituye `gestor_db` por tu base de desarrollo real. Este `localhost` es tu portátil; el `localhost` escrito dentro de SSH es la EC2. Si PowerShell no reconoce `pg_dump`, utiliza la ruta de las herramientas PostgreSQL preparadas para Servidor con ayuda del docente.
+
 2. Copia el script aprobado a `/home/ubuntu/esquema-inicial.sql` con `scp`, como el artefacto. Confirma que la base de destino está vacía y aplícalo como el usuario del proyecto:
 
+En la pestaña **PowerShell local**, desde el repositorio, copia:
+
+```powershell
+scp -i "RUTA_A_LA_CLAVE.pem" ./docs/esquema-inicial.sql ubuntu@IP_ACTUAL:/home/ubuntu/
+```
+
+Vuelve a la pestaña **SSH de Ubuntu**. Primero ejecuta `psql -h 127.0.0.1 -U intermodular -d intermodular -W -c '\dt'`. En una base nueva debe indicar que no hay relaciones. Si ya hay tablas, detente y revisa qué se instaló; no borres nada para forzar que el ejemplo encaje. Solo para la primera instalación en una base vacía:
+
 ```bash
-psql -h 127.0.0.1 -U intermodular -d intermodular -W -v ON_ERROR_STOP=1 -f /home/ubuntu/esquema-inicial.sql
+psql -h 127.0.0.1 -U intermodular -d intermodular -W -v ON_ERROR_STOP=1 --single-transaction -f /home/ubuntu/esquema-inicial.sql
 ```
 
 La contraseña se introduce cuando se solicita, no en el comando. No vuelvas a aplicar el esquema inicial sobre tablas con datos.
+
+`-U` elige usuario, `-d` elige base, `-W` pide contraseña y `-f` lee el archivo SQL. El comando termina y vuelve al shell. Se detiene ante el primer error y utiliza una transacción para evitar dejar medio esquema aplicado. Repite la consulta `\dt` para comprobar las tablas antes de arrancar el backend.
 
 3. Publica el JAR del CI correcto de `main` con la sesión 8 y reinicia `intermodular`. Comprueba en `journalctl` que valida el esquema. Corrige las discrepancias revisando versiones; no sustituyas `validate` por `update` o `create-drop`.
 4. Para cambios posteriores prepara scripts incrementales revisados y ensayados sobre una copia. No sustituyas la API de Servidor por la demo docente.
@@ -582,7 +682,7 @@ La contraseña se introduce cuando se solicita, no en el comando. No vuelvas a a
 
 1. Crea un dato ficticio con la colección contra la URL publicada y guarda el identificador. Si la ruta necesita autenticación, utiliza HTTPS ya validado.
 2. Reinicia el backend con `sudo systemctl restart intermodular`. Espera su arranque y consulta el identificador: debe seguir presente.
-3. Reinicia PostgreSQL y el backend y repite la consulta. Registra qué reiniciaste y el resultado; esto no demuestra recuperación de un disco perdido.
+3. En Ubuntu ejecuta primero `sudo systemctl restart postgresql` y después `sudo systemctl restart intermodular`. Espera el arranque y repite la consulta desde la colección del equipo local. Registra qué reiniciaste y el resultado; esto no demuestra recuperación de un disco perdido.
 4. En una comprobación acordada con el docente, detén e inicia EC2. Espera el arranque, actualiza IP y DNS si han cambiado y consulta de nuevo. No termines la instancia ni uses Reset.
 5. Genera una copia con el usuario del proyecto y descárgala a una carpeta privada fuera del repositorio:
 
