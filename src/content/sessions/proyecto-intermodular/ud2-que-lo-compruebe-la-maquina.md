@@ -66,7 +66,7 @@ El recorrido será: **editar en tu ordenador → guardar y hacer commit → subi
 | `.github/workflows/static.yml` | Después de un cambio en `main`, o al iniciarlo manualmente | Publica el portfolio en GitHub Pages. |
 | `.github/workflows/ci.yml` | Al abrir o actualizar una PR y tras cambios en `main` | Valida el HTML y comunica el resultado. |
 
-Son dos workflows con responsabilidades distintas. **En la PR habrá un check de HTML; el despliegue de Pages se comprobará después de fusionar.** Si realizaste la ampliación de Azure, su workflow puede mostrar comprobaciones adicionales; no son el check de HTML que crearás hoy.
+Son dos workflows con responsabilidades distintas. **En la PR habrá un check de HTML; el despliegue de Pages se comprobará después de fusionar.** El backend se publicará más adelante en AWS Academy; no necesita otro proveedor para el portfolio ni modifica el check de HTML que crearás hoy.
 
 Encontrarás tres nombres relacionados: **CI** es el workflow completo, **HTML válido** es el nombre del único trabajo (*job*) que contiene y **Validar el HTML** es el paso de ese trabajo que ejecuta el analizador. El check que exigirás para fusionar se llama **HTML válido**. Un check fallido informa del problema; el bloqueo de la fusión se configura por separado en el bloque C.
 

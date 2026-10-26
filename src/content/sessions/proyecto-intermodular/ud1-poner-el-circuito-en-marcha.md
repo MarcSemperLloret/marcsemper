@@ -497,83 +497,15 @@ git push
   <p>El consorcio de investigación <a href="https://dora.dev/">DORA (DevOps Research and Assessment)</a> analiza anualmente los factores que determinan el rendimiento de los equipos de ingeniería de software. Sus cuatro métricas clave son: la frecuencia de despliegue (<em>deployment frequency</em>), el tiempo de entrega de cambios (<em>lead time for changes</em>), la tasa de fallos en producción (<em>change failure rate</em>) y el tiempo medio de recuperación (<em>time to restore service</em>). Ninguna de estas métricas evalúa líneas de código brutas ni horas de presencia, sino la agilidad y estabilidad del proceso de entrega continua.</p>
 </details>
 
-#### Bloque F · Práctica complementaria: Despliegue en Microsoft Azure
+#### Bloque F · Preparar el acceso al laboratorio del backend
 
-<p class="stage stage--solo">Opcional · Exploración práctica de provisión cloud</p>
+<p class="stage stage--solo">Opcional · Comprobación de acceso, sin crear recursos</p>
 
-El portfolio ya dispone de un entorno de producción activo en GitHub Pages. Este bloque complementario introduce el aprovisionamiento en un proveedor de infraestructura en la nube (*cloud provider*) comercial como Microsoft Azure, anticipando la arquitectura requerida para el backend en evaluaciones posteriores.
+El portfolio permanece en GitHub Pages. No se duplica en otra plataforma. El backend se publicará en AWS Academy Learner Lab a partir de la sesión 8.
 
-Al concluir este bloque dispondrás de dos pipelines independientes publicando concurrentemente el mismo repositorio en dos plataformas distintas. Ambas URLs serán plenamente funcionales.
+Si el docente ya ha creado la clase, comprueba que puedes entrar en AWS Academy y ver la invitación y los módulos del laboratorio asignado. No utilices la cuenta de otra persona ni abras una cuenta personal de pago. Anota cualquier incidencia para resolverla antes de la sesión 8; no necesitas iniciar el laboratorio ni consumir presupuesto hoy.
 
-**1 · Aprovisionamiento de la suscripción académica.**
-
-1. Accede a **azure.microsoft.com/es-es/free/students**.
-2. Selecciona **Empezar gratis** e inicia sesión con las credenciales de tu **correo institucional**, acreditando la condición de estudiante.
-3. Acepta las condiciones del servicio. Esta modalidad no requiere tarjeta de crédito.
-4. Accede a **portal.azure.com** y verifica en la sección **Suscripciones** (*Subscriptions*) la presencia activa de la suscripción *Azure for Students*.
-
-<details class="aside aside--help">
-  <summary>Incidencias en la validación de la cuenta educativa</summary>
-  <p>Si la verificación académica no se completa inmediatamente, comprueba haber utilizado la cuenta institucional del centro educativo. Si el dominio requiere validación adicional por parte del proveedor, no interrumpe el desarrollo del curso, ya que el flujo principal de CI/CD opera sobre GitHub Pages.</p>
-</details>
-
-**2 · Creación del recurso en Azure.** En la barra superior del portal de Azure, busca `Static Web Apps` y pulsa **Crear** (*Create*).
-
-**3 · Configuración de parámetros básicos.** Cumplimenta el formulario con los siguientes valores:
-
-| Campo | Valor requerido |
-| ----- | --------------- |
-| Suscripción (*Subscription*) | Azure for Students |
-| Grupo de recursos (*Resource group*) | **Crear nuevo** → <code>rg-portfolio</code> |
-| Nombre (*Name*) | <code>swa-portfolio-TUUSUARIO</code> |
-| Tipo de plan (*Hosting plan*) | **Gratuito (Free)** |
-| Región (*Region*) | West Europe |
-| Origen de la implementación (*Deployment source*) | **GitHub** |
-
-<div class="rule">
-  <p class="rule-label">Gestión de costes y planes en plataformas cloud</p>
-  <p>Asegúrate de seleccionar la modalidad <strong>Gratuito (Free)</strong>. El plan Standard aplica cargos recurrentes que consumirían el crédito asignado a la suscripción estudiantil, el cual se reservará para el aprovisionamiento de bases de datos relacionales y servicios de backend en la segunda evaluación.</p>
-</div>
-
-**4 · Vinculación con GitHub.** Pulsa **Iniciar sesión con GitHub** y concede los permisos de autorización a Azure. A continuación, selecciona en los menús desplegables:
-
-| Parámetro | Valor |
-| --------- | ----- |
-| Organización (*Organization*) | Tu cuenta de usuario de GitHub |
-| Repositorio (*Repository*) | <code>portfolio</code> |
-| Rama (*Branch*) | <code>main</code> |
-
-**5 · Parámetros de compilación (Build Presets).** Especifica la configuración técnica para sitios estáticos sin paso de empaquetado intermedio:
-
-| Parámetro | Valor requerido | Justificación técnica |
-| --------- | --------------- | --------------------- |
-| Preajustes de compilación (*Build presets*) | **Custom** | Define manualmente las rutas del proyecto. |
-| Ubicación de la aplicación (*App location*) | <code>/</code> | Los archivos fuente residen directamente en la raíz del repositorio. |
-| Ubicación de la API (*Api location*) | *vacío* | El proyecto actual carece de funciones serverless de backend. |
-| Ubicación de salida (*Output location*) | *vacío* | Al no requerir compilación (Vite, Webpack), no existe una carpeta de salida intermediaria (como <code>dist</code>). |
-
-**6 · Revisión y provisión.** Accede a la pestaña **Revisar y crear** y confirma pulsando **Crear**. El aprovisionamiento de la infraestructura tomará entre uno y dos minutos. Al finalizar, pulsa **Ir al recurso**.
-
-**7 · Monitorización del despliegue.** Regresa a tu repositorio en GitHub y accede a la pestaña **Actions**. Observarás un nuevo flujo de trabajo generado automáticamente por Azure en ejecución.
-
-**8 · Comprobación de la URL pública.** Tras completarse la ejecución con éxito, regresa a la vista general del recurso en el portal de Azure. En el campo **URL** figurará el dominio asignado (con formato `nombre-aleatorio.azurestaticapps.net`). Accede a dicho enlace para comprobar que el sitio web se encuentra en línea.
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Lista de verificación del bloque F</p>
-  <ul class="checklist">
-    <li>La URL asignada por Azure carga y muestra el documento HTML correctamente.</li>
-    <li>La pestaña Actions en GitHub registra el workflow de Azure con estado completado en verde.</li>
-    <li>Ambos proveedores (GitHub Pages y Azure Static Web Apps) publican concurrentemente el repositorio.</li>
-  </ul>
-</div>
-
-<details class="aside aside--help">
-  <summary>Diagnóstico de incidencias en Azure Static Web Apps</summary>
-  <p><strong>La URL muestra una página de bienvenida de Azure o código 404.</strong> El despliegue inicial puede requerir unos instantes adicionales para propagar el contenido a través de la red perimetral (CDN). Comprueba en Actions que el workflow ha finalizado satisfactoriamente.</p>
-  <p><strong>El repositorio no aparece en la selección de GitHub.</strong> La aplicación OAuth de Azure requiere autorización de lectura sobre tu cuenta de GitHub. Comprueba los permisos concedidos en GitHub bajo <strong>Settings → Applications → Authorized OAuth Apps</strong>.</p>
-  <p><strong>El workflow finaliza en error.</strong> Revisa el registro de ejecución en GitHub Actions. La causa habitual se debe a rutas incorrectas en <em>App location</em> u <em>Output location</em> en el paso 5.</p>
-  <p><strong>Conflicto con el nombre del recurso.</strong> Los nombres de los recursos deben ser globalmente únicos en el espacio de nombres de Azure. Añade un sufijo numérico o tus iniciales al nombre.</p>
-</details>
+La configuración de EC2, el presupuesto y la conservación de datos se explican en la [sesión 8](/es/docencia/proyecto-intermodular/ud4-poner-el-backend-en-produccion/sesion-8/). El despliegue del portfolio puede seguir comprobándose aunque AWS Academy no esté preparado todavía.
 
 ---
 

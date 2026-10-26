@@ -4,19 +4,19 @@ label: "UD4 · Conectar"
 section: "ud-04"
 order: 4
 lang: "es"
-summary: "Reutilizar el repositorio de Servidor, ejecutar su CI, publicar el backend, comprobar el contrato con la colección y preparar PostgreSQL en pruebas y producción."
+summary: "Publicar el backend de Servidor en AWS Academy: CI, artefacto trazable, EC2 y PostgreSQL local, contrato y persistencia comprobados durante las sesiones."
 duration: "18 horas · 6 sesiones de 3 h"
 modality: "Taller · 25 min de explicación, 140 min de trabajo guiado y 15 min de cierre"
 deliverable: "Backend publicado con persistencia, CI y contrato comprobados."
 date: "2026-09-09"
 outcomes: ["Configurar el CI de Java sobre el repositorio existente.", "Desplegar el artefacto y diagnosticar su arranque.", "Comprobar el contrato publicado con la colección de Servidor.", "Preparar PostgreSQL aislado para CI y persistente en producción.", "Identificar versión, configuración y evidencias del producto compartido."]
-requirements: ["Portfolio publicado con pipeline.", "Repositorio de Spring Boot creado en Servidor y su wrapper de Maven.", "Java 21 y colección de peticiones existente."]
+requirements: ["Portfolio publicado con pipeline.", "Repositorio de Spring Boot creado en Servidor y su wrapper de Maven.", "Java 21 y colección de peticiones existente.", "Clase AWS Academy Learner Lab asignada y presupuesto disponible."]
 priorKnowledge:
   - "El flujo de integración completo: issue, rama, pull request, revisión, fusión y despliegue."
   - "De Servidor: controladores REST, DTO, validación y manejo de errores."
 ---
 
-<p class="lead">La API desarrollada en Servidor se ejecuta actualmente en la estación de trabajo de quien la programó. El objeto de esta unidad es su puesta en producción bajo una URL pública, sometida al mismo flujo de integración que el portfolio y consumida desde él.</p>
+<p class="lead">La API desarrollada en Servidor se ejecuta actualmente en la estación de trabajo de quien la programó. El objeto de esta unidad es publicarla en AWS Academy Learner Lab bajo una URL comprobable durante las sesiones. El CI valida el artefacto y la publicación es manual y trazable. La integración desde el portfolio requiere HTTPS válido.</p>
 
 <div class="rule">
   <p class="rule-label">Delimitación de competencias evaluativas</p>
@@ -25,7 +25,7 @@ priorKnowledge:
 
 <div class="rule">
   <p class="rule-label">Incorporación de la persistencia dentro del trimestre</p>
-  <p>El artefacto desplegado es el mismo CRUD seleccionado y desarrollado en Servidor. La primera publicación puede mantener el estado en memoria, con la consiguiente pérdida de los datos en cada reinicio del proceso: no constituye un defecto, pero debe documentarse en el README para conocimiento de quien consulte el proyecto. PostgreSQL se incorpora en la UD5 de Servidor, dentro todavía del <strong>primer trimestre</strong>, y a partir de ese momento la versión persistente se publica mediante este mismo workflow. En ningún caso se crea una segunda API.</p>
+  <p>El artefacto desplegado es el mismo CRUD seleccionado y desarrollado en Servidor. La primera publicación puede mantener el estado en memoria, con la consiguiente pérdida de los datos en cada reinicio del proceso: no constituye un defecto, pero debe documentarse en el README para conocimiento de quien consulte el proyecto. PostgreSQL se incorpora en la UD5 de Servidor, dentro todavía del <strong>primer trimestre</strong>, y a partir de ese momento la versión persistente se publica mediante el mismo procedimiento de artefacto aprobado y despliegue manual. En ningún caso se crea una segunda API.</p>
 </div>
 
 ### Los hitos compartidos del primer trimestre
@@ -37,7 +37,7 @@ priorKnowledge:
 | CRUD con PostgreSQL y tests de repositorio, en la UD5 | Configurar la base de datos del entorno desplegado, sus variables y el entorno de pruebas del CI; publicar la misma API persistente |
 | Versión del primer trimestre revisada y defendida, en la UD6 | Identificar el mismo commit desplegado y conservar las evidencias del workflow, CI, revisiones y puesta en producción |
 
-La secuencia está coordinada con Servidor: ninguna sesión exige contenidos que no se hayan impartido allí previamente, y cada una opera sobre la versión del backend disponible en esa fecha. El flujo de integración construido en estas seis sesiones permanece operativo y se aplica a cada incremento del backend hasta el cierre del trimestre. Si al llegar a la sesión 11 la UD5 de Servidor no estuviera completa, se publica el estado disponible y las mejoras posteriores se incorporan por el mismo procedimiento. La entrega del trimestre sí requiere, en todo caso, persistencia en producción.
+La secuencia está coordinada con Servidor: ninguna sesión exige contenidos que no se hayan impartido allí previamente, y cada una opera sobre la versión del backend disponible en esa fecha. El flujo de integración construido en estas seis sesiones permanece operativo y se aplica a cada incremento del backend hasta el cierre del trimestre. Si al llegar a la sesión 11 la UD5 de Servidor no estuviera completa, se publica el estado disponible y las mejoras posteriores se incorporan por el mismo procedimiento. La entrega del trimestre requiere persistencia comprobada en el entorno publicado. La parada automática de Learner Lab no penaliza la disponibilidad fuera de las sesiones; se conservan fecha, versión y evidencias.
 
 ## Sesión 7 · El CI del repositorio de Servidor
 
@@ -205,170 +205,133 @@ El segundo caso constituye la diferencia sustancial entre este pipeline y el del
 
 ## Sesión 8 · La API en una URL
 
-**Antes de empezar.** El backend está organizado por capas y su CI ya funciona. Hoy publicarás esa versión en memoria y comprobarás su respuesta desde una URL pública.
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
-  <ol>
-    <li>La API escucha en un puerto determinado del entorno local. ¿Qué elemento del sistema establece ese número?</li>
-    <li>En producción no hay nadie mirando la consola. Si la aplicación no arranca, ¿dónde se lee el motivo?</li>
-    <li>¿Qué diferencia hay entre desplegar unos ficheros HTML y desplegar un programa que se ejecuta?</li>
-  </ol>
-</div>
-
----
+**Antes de empezar.** El backend de Servidor tiene CI y una versión revisada en `main`. Hoy publicarás su JAR en una EC2 de AWS Academy Learner Lab. Conservamos el repositorio y el contrato existentes.
 
 ### Se explica
 
 <p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-#### Del JAR a un proceso accesible
+#### El entorno de este curso
 
-Una web estática publica archivos; una aplicación Java necesita además un proceso en ejecución. El CI produce el JAR y el despliegue lo entrega al servicio. Un workflow verde no demuestra todavía que el proceso haya arrancado o responda en su ruta.
+Usaremos **AWS Academy Learner Lab**, sin una cuenta personal de pago. El docente debe crear la clase e invitar al alumnado antes del taller. La cuenta docente no se comparte: cada estudiante utiliza el entorno asignado. Comprueba allí el presupuesto y las fechas, sin dar por supuesto un importe universal.
 
-#### Puerto y configuración del runtime elegido
+La sesión dura cuatro horas por defecto y puede renovarse con **Start Lab** antes de finalizar. Al terminar, EC2 se detiene; las instancias que estaban encendidas se vuelven a iniciar al abrir otra sesión, según la guía del laboratorio. El disco se conserva mientras dure el curso y haya presupuesto. La IP pública puede cambiar. Se evalúa una publicación de laboratorio comprobada durante las sesiones, con fecha, versión y evidencias conservadas; no se exige disponibilidad permanente.
 
-Este taller emplea App Service con publicación de tipo Código y runtime Java SE, no un contenedor personalizado. El entorno Java expone la variable SERVER_PORT, cuyo valor Spring Boot puede resolver; la configuración debe mantenerse compatible con ese entorno y el puerto efectivo debe verificarse en el registro del servicio. WEBSITES_PORT pertenece a la configuración de contenedores personalizados y no se añade aquí como solución genérica. [Referencia oficial de App Service](https://learn.microsoft.com/en-us/azure/app-service/reference-app-settings).
+La configuración de referencia es **Ubuntu 24.04 LTS, t3.small, 8 GiB de disco y región us-east-1**. Usaremos Java 21, Nginx y systemd. En la sesión 12 PostgreSQL utilizará el disco de esa misma máquina y escuchará solo en localhost. No necesitamos RDS, balanceador, NAT Gateway ni IP elástica. El almacenamiento puede seguir generando consumo con la instancia detenida; revisa inventario y presupuesto al cerrar.
 
-#### Entorno de aula
+#### CI y publicación son pasos distintos
 
-Antes de aprovisionar recursos conviene verificar la oferta y los límites que declara la suscripción. El plan F1, cuando esté disponible para la combinación seleccionada, impone cuotas y puede suspender la aplicación por inactividad. La primera respuesta puede tardar más que las siguientes. Utiliza el entorno de prácticas disponible conservando el mismo repositorio y artefacto.
+GitHub Actions compila, prueba y conserva el JAR. Después, una persona publica ese mismo artefacto aprobado y registra su commit. Es **integración continua y despliegue manual trazable**, no despliegue continuo automático. Learner Lab restringe IAM: no se crean usuarios ni roles propios para conectar GitHub con AWS. No copies credenciales temporales del laboratorio a GitHub ni instales un runner persistente en una máquina expuesta.
+
+#### HTTP de prueba y HTTPS del producto
+
+La primera comprobación utiliza HTTP y datos ficticios sin autenticación. No envíes contraseñas, tokens ni datos personales por esa conexión. Antes de integrar un cliente servido por GitHub Pages o activar autenticación, hace falta **HTTPS válido**: el navegador bloquea las peticiones de una página HTTPS a una API HTTP. Abrir 443 por sí solo no instala TLS. El procedimiento de nombre y certificado aparece al final de esta sesión.
 
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
-#### Bloque A · Verificación del puerto de escucha
+#### Bloque A · Conservar el artefacto aprobado
 
-Abre application.properties y revisa si existe una propiedad server.port. En este taller puede escribirse `server.port=${SERVER_PORT:8080}`: usa el puerto del entorno cuando esté definido y 8080 en local. Conserva el resto de configuración. Arranca la API, anota el puerto de los logs y prueba una ruta conocida. Más adelante repetirás esa comprobación en el runtime Java SE del proveedor.
+Mediante PR añade estos pasos al final del job de la sesión 7, después de `verify`. El ejemplo presupone un único módulo Maven y un JAR ejecutable de Spring Boot. Si hay varios módulos, fija la ruta concreta del backend.
 
-#### Bloque B · Crear el servicio en Azure
+```yaml
+      - name: Preparar el artefacto de main
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          mkdir -p entrega
+          mapfile -t jars < <(find target -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar')
+          test "${#jars[@]}" -eq 1
+          cp "${jars[0]}" entrega/app.jar
+          printf '%s\n' "$GITHUB_SHA" > entrega/commit.txt
+          (cd entrega && sha256sum app.jar > app.jar.sha256)
 
-<p class="stage stage--guided">Todos a la vez, a la misma pantalla</p>
-
-En **portal.azure.com**, localiza `App Services` y selecciona **Crear** → **Aplicación web**.
-
-| Campo | Valor |
-| ----- | ----- |
-| Suscripción | Azure for Students |
-| Grupo de recursos | El mismo del portfolio, o uno nuevo |
-| Nombre | Prefijo <code>api-</code> seguido de un identificador propio: forma parte de la URL pública |
-| Publicar | **Código** |
-| Pila del entorno de ejecución | **La versión de Java registrada en la sesión 7**, no la propuesta por defecto |
-| Servidor web de Java | **Java SE (servidor web integrado)** |
-| Sistema operativo | **Linux** |
-| Región | West Europe |
-| Plan de precios | **F1 gratuito** |
-
-Revisar y crear. Al finalizar el aprovisionamiento, accede mediante **Ir al recurso** y abre la URL: el servicio devuelve la página predeterminada de App Service, dado que aún no se ha desplegado ningún artefacto.
-
-**Verificar el runtime.** Confirma Código, Java SE y la misma versión de Java del pom. No añadas WEBSITES_PORT: no estamos publicando una imagen propia. Después del despliegue comprueba SERVER_PORT y el puerto de arranque en el registro del servicio. Si no coincide, revisa la propiedad server.port y los argumentos de arranque antes de cambiar otras opciones.
-
-#### Bloque C · Conexión del servicio con el repositorio
-
-<p class="stage stage--guided">Ejecución simultánea</p>
-
-1. En el recurso, menú lateral → **Centro de implementación** (*Deployment Center*).
-2. Origen: **GitHub**. Autoriza el acceso si el portal lo solicita.
-3. Organización, repositorio `api-loquesea`, rama `main`.
-4. Selecciona la identidad federada del entorno de prácticas y verifica que el workflow declara los permisos y la conexión previstos. Ante un fallo de configuración, la activación de la autenticación básica no constituye una solución: sustituye un mecanismo de credenciales efímeras por uno de credenciales permanentes y oculta el defecto en lugar de corregirlo.
-5. **Guardar**.
-
-Es previsible que el centro de implementación intente escribir directamente sobre `main` y sea rechazado por la protección configurada en la UD1. El comportamiento esperado es precisamente ese. El workflow se prepara en una rama y se incorpora mediante pull request, como cualquier otro cambio; la desactivación de las reglas de protección para permitir esa escritura no es un procedimiento admisible. Las credenciales residen en Secrets o en la conexión federada, nunca en el propio archivo YAML.
-
-Conviene contrastar esta configuración con la de la sesión 1. La plantilla de GitHub Pages no requería credencial alguna porque el sistema que despliega y el que aloja pertenecen al mismo proveedor, lo que permite emitir un token efímero de ámbito interno. Aquí intervienen dos proveedores distintos, de modo que resulta necesario acreditar la identidad de uno ante el otro: es el caso de credenciales al que se aludió entonces. Obtén el archivo generado y analízalo:
-
-```bash
-git switch main
-git pull
+      - name: Conservar el JAR verificado
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-${{ github.sha }}
+          path: entrega/
+          retention-days: 14
 ```
 
-Localiza en el archivo las dos diferencias respecto al del portfolio: **existe una etapa de compilación** previa al despliegue, y **existen dos jobs**, uno de construcción y otro de publicación, declarando el segundo una dependencia sobre el primero.
+Fusiona la PR y espera al CI de `main`. Descarga desde **Actions → ejecución correcta → Artifacts** el archivo de esa ejecución. Extrae `app.jar`, `commit.txt` y `app.jar.sha256` en una carpeta de entrega. Comprueba que el commit corresponde a `main` y que el JAR es ejecutable. No compiles otra versión para publicar. Conserva el artefacto fuera de la retención temporal de Actions si lo necesitas para recuperación.
 
-<dl class="answer">
-  <dt>¿Qué comando de construcción usa el workflow que ha escrito Azure?</dt>
-  <dd></dd>
-  <dt>¿Qué se pasa del primer job al segundo, y por qué no se compila otra vez?</dt>
-  <dd></dd>
-  <dt>¿Cómo se llama el secreto que ha creado?</dt>
-  <dd></dd>
-  <dt>¿Qué versión de Java declara, y coincide con la del proyecto?</dt>
-  <dd></dd>
-</dl>
+#### Bloque B · Crear el entorno una sola vez
 
-<div class="rule">
-  <p class="rule-label">Dos workflows con responsabilidades diferenciadas</p>
-  <p>El workflow propio, <code>ci.yml</code>, se ejecuta sobre cada pull request y su función es <strong>impedir</strong> la integración de un cambio defectuoso. El generado por Azure se ejecuta una vez el cambio se ha incorporado a <code>main</code> y su función es <strong>publicar</strong>. La aparición de dos ejecuciones por cada cambio no indica un error de configuración: corresponde a la separación entre integración continua y despliegue continuo ya establecida en el portfolio.</p>
-</div>
+1. En AWS Academy abre la clase asignada, **Módulos → Lanzamiento del laboratorio → Start Lab**. Espera el estado verde y abre **AWS**. Selecciona **us-east-1**.
+2. En **EC2 → Lanzar instancia**, usa un nombre propio, Ubuntu Server **24.04 LTS** sin opciones Pro o Marketplace, arquitectura x86, **t3.small**, una instancia y **8 GiB gp3**. El JDK de la plantilla es Java 21: si el proyecto exige otra versión, acuerda y verifica la adaptación antes de continuar.
+3. Selecciona la clave existente **vockey**. Recupera su PEM desde **AWS Details** y guárdalo fuera del repositorio y las entregas, con lectura restringida a tu usuario.
+4. Utiliza la VPC y una subred públicas predeterminadas con IP pública automática. Crea un grupo de seguridad propio: **SSH/22 solo desde la IP pública de administración del aula**, HTTP/80 para la primera prueba pública. No abras 5432 ni 8080 al exterior. Si la IP del aula cambia, actualiza su regla concreta.
+5. En **Detalles avanzados**, selecciona créditos de CPU **Estándar** para evitar consumo adicional por CPU ilimitada. Conserva IMDSv2 obligatorio. No hace falta adjuntar un rol de IAM a esta máquina.
+6. Descarga la [plantilla de preparación de EC2](/teaching/downloads/intermodular-ec2-init.sh), revisa su contenido y pégalo como **Datos de usuario**. Prepara Java, Nginx, PostgreSQL y systemd; no crea otra API ni descarga el código del alumno.
+7. Revisa y lanza. El arranque inicial instala paquetes. En **Acciones → Monitoreo y solución de problemas → Obtener registro del sistema**, busca `INTERMODULAR_INFRASTRUCTURE_READY`. Si hay errores, resuélvelos antes de copiar el JAR.
 
-#### Bloque D · Verificación del arranque y diagnóstico
+No lances otra instancia en cada sesión. Anota su ID y grupo de seguridad. La plantilla se ejecuta una vez sobre una máquina nueva, no sobre una base con datos.
 
-<p class="stage stage--solo">Trabajo individual · práctica de diagnóstico en producción</p>
+#### Bloque C · Publicar el JAR de esa ejecución
 
-Una vez el workflow concluya con éxito, accede a la URL de la API por la ruta que devuelve datos. Los dos resultados posibles requieren actuaciones distintas.
+Desde tu terminal local, en la carpeta con el artefacto extraído, sustituye ruta de clave e IP por tus valores actuales:
 
-**Si responde:** repite la petición desde un dispositivo móvil con la red del operador y sin la red del centro. Esa comprobación acredita la accesibilidad pública efectiva del servicio.
+```powershell
+Get-FileHash ./app.jar -Algorithm SHA256
+scp -i "RUTA_A_LA_CLAVE.pem" ./app.jar ./commit.txt ./app.jar.sha256 ubuntu@IP_ACTUAL:/home/ubuntu/
+ssh -i "RUTA_A_LA_CLAVE.pem" ubuntu@IP_ACTUAL
+```
 
-**Si no responde:** no modifiques todavía la configuración. Accede al recurso en el portal, menú lateral → **Flujo de registro** (*Log stream*), y examina la salida que emite la aplicación. Corresponde a la salida de consola del entorno local, ahora en el entorno de producción.
+Compara el hash local con `app.jar.sha256`. En la primera conexión contrasta la huella SSH con la publicada por la instancia en su registro de arranque antes de aceptarla. No desactives la comprobación de identidad. Dentro de Ubuntu:
 
-| Salida observada en el registro | Diagnóstico |
-| ------------------------------- | ----------- |
-| La aplicación arranca e indica el puerto | El proceso se ha iniciado correctamente: el defecto está en la ruta solicitada. Verifica la URL completa |
-| Excepción durante el arranque | El defecto reside en el código o en la configuración: es el mismo error que se produciría en el entorno local |
-| Ausencia de salida y error de aplicación en la URL | Revisa el artefacto, el comando de arranque, el runtime Java SE y las variables de entorno; habilita el registro si todavía no emite información |
+```bash
+cd /home/ubuntu
+sha256sum -c app.jar.sha256
+sudo install -o root -g intermodular -m 640 app.jar /opt/intermodular/app.jar
+sudo install -o root -g intermodular -m 640 commit.txt /opt/intermodular/commit.txt
+sudo systemctl enable --now intermodular
+sudo systemctl restart intermodular
+sudo systemctl status intermodular --no-pager
+sudo journalctl -u intermodular -n 60 --no-pager
+```
 
-<div class="rule">
-  <p class="rule-label">El registro como primera herramienta de diagnóstico</p>
-  <p>La reacción habitual ante un servicio que no responde consiste en repetir el despliegue. Esa operación consume varios minutos y no aporta información diagnóstica; la consulta del registro requiere segundos y determina la causa con precisión. El principio aplicable —obtener evidencia antes de modificar el sistema— distingue la corrección fundamentada de la prueba por tanteo.</p>
-</div>
+La primera publicación conserva la configuración en memoria de Servidor; no adelantes JPA ni cambies de proyecto. Si la versión ya necesita base de datos, prepara primero la configuración de la sesión 12. El servicio mantiene Java escuchando en **127.0.0.1:8080**; Nginx recibe el tráfico de Internet en el puerto 80. No uses una terminal que haya que dejar abierta para mantener la API.
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>La API responde en su URL pública desde una red que no es la del aula.</span></div>
-  <div><strong>Ampliación</strong><span>Capacidad de consultar el registro e interpretar la salida que emite la aplicación durante el arranque.</span></div>
-  <div><strong>Reto</strong><span>Implementar un <em>endpoint</em> de estado que acredite que la aplicación se encuentra operativa y verificarlo desde la terminal con <code>curl</code>, que en PowerShell debe invocarse como <code>curl.exe</code> para no resolver al alias de <code>Invoke-WebRequest</code>.</span></div>
-</div>
+Para actualizar, detén primero `intermodular`, conserva el JAR y `commit.txt` anteriores como recuperación, verifica el nuevo hash, instala ambos archivos y arranca el servicio. Si falla la comprobación, restaura la pareja anterior y registra el incidente. Un cambio de esquema necesita además su plan de recuperación de datos.
 
-<details class="aside aside--extra">
-  <summary>Plan alternativo si el plan gratuito no da de sí</summary>
-  <p>El plan F1 impone dos límites relevantes. El primero es 1 GB de memoria. El segundo son <strong>60 minutos de CPU diarios</strong>, contabilizados por región y suscripción y compartidos entre todas las aplicaciones gratuitas de esa región: al agotarse, el servicio se detiene y responde con código 403 hasta la medianoche UTC. Una aplicación que entra en un ciclo de arranque y terminación consume esa cuota en pocas horas.</p>
-  <p>La alternativa es <strong>Azure Container Apps</strong>, que tiene franja mensual gratuita —180.000 segundos de vCPU, 360.000 de memoria y dos millones de peticiones— y que <em>escala a cero</em>: mientras nadie la usa no consume nada.</p>
-  <p>Los elementos que <strong>no</strong> varían son los determinantes: el repositorio, el flujo de integración, el CI, la resolución del puerto, la configuración de CORS y la coordinación entre ambos componentes son idénticos. La única diferencia consiste en desplegar una imagen de contenedor en lugar de un artefacto, imagen que Spring Boot construye mediante <code>./mvnw spring-boot:build-image</code> sin necesidad de redactar un Dockerfile.</p>
-  <p>La elección de plataforma se acuerda en clase y para el conjunto del grupo; no procede modificarla de forma individual.</p>
-</details>
+#### Bloque D · Comprobar y diagnosticar
 
----
+En Ubuntu prueba una ruta real del proyecto contra `http://127.0.0.1:8080`, después contra `http://127.0.0.1` y finalmente desde otro equipo contra `http://IP_ACTUAL`. `/api/estado` pertenece solo a la demo docente y no tiene que existir en tu API.
+
+| Observación | Primera comprobación |
+| --- | --- |
+| El servicio no arranca | `journalctl -u intermodular`: JDK, JAR, configuración y base de datos |
+| Spring responde directamente, pero Nginx devuelve 502 | Puerto y dirección del backend, configuración y registro de Nginx |
+| Responde dentro de EC2, pero fuera agota el tiempo | IP actual, instancia encendida y regla HTTP del grupo de seguridad |
+| Responde 404 | Ruta del contrato y prefijo; no demuestra que todo el servidor esté caído |
+
+Registra ejecución de CI, commit, hash, IP/URL, fecha y petición con resultado. Un `curl localhost` no acredita acceso público.
+
+#### Bloque E · HTTPS antes del cliente y la autenticación
+
+El docente debe proporcionar o acordar un **nombre DNS público que pueda administrar**. Su registro A debe apuntar a la IP actual de EC2. El nombre público de AWS no es un dominio que el alumno pueda administrar para emitir su propio certificado.
+
+Con el nombre preparado, cambia `server_name _;` en `/etc/nginx/sites-available/default` por ese nombre, comprueba `sudo nginx -t` y recarga Nginx. Autoriza TCP/443 en el grupo de seguridad manteniendo 80 para la validación HTTP. En Ubuntu:
+
+```bash
+sudo apt-get install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d NOMBRE_ACORDADO
+sudo certbot renew --dry-run
+```
+
+El titular debe revisar las condiciones del emisor al configurar el certificado. Comprueba desde otro equipo nombre, certificado válido y redirección a HTTPS. Si cambia la IP, actualiza DNS y comprueba de nuevo. La instalación anterior usa los paquetes de Ubuntu; consulta las [instrucciones oficiales de Certbot](https://certbot.eff.org/instructions) para otras opciones de instalación y no mezcles paquetes apt y snap.
+
+Si aún no existe un nombre y certificado válidos, conserva la evidencia HTTP y registra **HTTPS pendiente**. No presentes el cliente de GitHub Pages ni la autenticación como completados, ni resuelvas el contenido mixto desactivando protecciones. La integración posterior requiere resolver este requisito.
 
 ### Cierre
 
 <p class="stage">15 minutos · comprobación del resultado</p>
 
+Comprueba la ruta pública, relaciona el JAR con el commit aprobado y explica CI frente a publicación manual. Anota si HTTPS está comprobado o pendiente. Antes de cerrar, revisa presupuesto e inventario y detén la instancia desde EC2 si has terminado; cerrar SSH no la apaga. Mantén el disco para la siguiente sesión. Al reabrir el laboratorio comprueba estado, IP y URL antes de repetir la colección.
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>¿Qué runtime se ha seleccionado y mediante qué procedimiento se verifica el puerto efectivo?</li>
-    <li>¿Por qué el workflow de la API tiene dos jobs y el del portfolio uno?</li>
-    <li>La URL devuelve un error y el despliegue ha concluido con éxito. ¿Cuál es la primera actuación?</li>
-    <li>¿Por qué la primera petición del día tarda tanto?</li>
-  </ol>
-</div>
-
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Java SE con publicación de código. Contrastamos SERVER_PORT, la configuración de Spring Boot y los logs; WEBSITES_PORT se reserva al caso de contenedores personalizados.</p>
-  <p>2 · Porque hay que construir antes de desplegar: un job produce el artefacto y el otro lo sube.</p>
-  <p>3 · Abrir el flujo de registro del servicio. Leer antes que tocar.</p>
-  <p>4 · Porque el plan gratuito duerme el servicio tras un rato sin uso y la primera petición lo despierta.</p>
-</details>
-
-<div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 9</p>
-  <ul class="checklist">
-    <li>La API responde en su URL pública, comprobado fuera de la red del centro.</li>
-    <li>Constan registradas la URL de la API y la ruta que devuelve la colección de datos.</li>
-    <li>Consta un esquema de la interfaz del portfolio que mostrará esos datos.</li>
-  </ul>
-</div>
 
 ## Sesión 9 · Comprobar el contrato publicado
 
@@ -393,7 +356,7 @@ La demostración consiste en enviar la misma petición a dos entornos, comparar 
 #### Bloque A · Preparar dos entornos de la misma colección
 
 1. Abre la colección de Servidor. Conserva sus peticiones; crea los entornos `local` y `produccion` con una variable `baseUrl` en cada uno.
-2. Local usa `http://localhost:8080`; producción usa la URL HTTPS de Intermodular 8. Retira la barra final si las rutas ya empiezan por `/`.
+2. Local usa `http://localhost:8080`; el entorno publicado usa la URL comprobada de Intermodular 8 (HTTP solo para el laboratorio sin credenciales; HTTPS antes de autenticación o del cliente de Pages). Retira la barra final si las rutas ya empiezan por `/`.
 3. Cambia una petición a `{{baseUrl}}/tu-ruta-real`. Elige una lectura de Servidor que ya funcione, no una ruta inventada.
 4. Envía con cada entorno y anota estado, Content-Type y estructura del JSON. Los ids y datos pueden diferir; los tipos y nombres de campos deben cumplir el mismo contrato.
 
@@ -516,7 +479,7 @@ En `.github/workflows/ci.yml`, añade `services` y `env` dentro del job `build`,
       SPRING_SQL_INIT_MODE: never
 ```
 
-El ejemplo está indentado para pegarlo dentro del job. `create-drop` se permite aquí porque el contenedor es exclusivo y desechable. Nunca lo copies a las variables del App Service. El perfil `test` de Servidor 22 reutilizará este entorno; hasta entonces verifica las pruebas ya disponibles.
+El ejemplo está indentado para pegarlo dentro del job. `create-drop` se permite aquí porque el contenedor es exclusivo y desechable. Nunca lo copies a la configuración del servicio desplegado en EC2. El perfil `test` de Servidor 22 reutilizará este entorno; hasta entonces verifica las pruebas ya disponibles.
 
 #### Bloque C · Comprobar el aislamiento
 
@@ -527,7 +490,7 @@ El ejemplo está indentado para pegarlo dentro del job. `create-drop` se permite
 
 #### Bloque D · Conservar las evidencias
 
-En las comprobaciones de la sesión enlaza la ejecución correcta y el fallo controlado. Documenta por qué la contraseña del contenedor de pruebas es ficticia y dónde se configura la de producción. La siguiente sesión prepara la base pública y comprobará que sus datos sobreviven al reinicio.
+En las comprobaciones de la sesión enlaza la ejecución correcta y el fallo controlado. Documenta por qué la contraseña del contenedor de pruebas es ficticia y dónde se configura la de producción. La siguiente sesión prepara la base del backend público y comprobará que sus datos sobreviven al reinicio.
 
 ### Cierre
 
@@ -535,171 +498,109 @@ En las comprobaciones de la sesión enlaza la ejecución correcta y el fallo con
 
 **Al terminar la sesión:** El CI prepara una base aislada, ejecuta las pruebas existentes y permite localizar su resultado. Explica qué recursos crea el job y cómo distingues pruebas superadas de pruebas no ejecutadas.
 
-## Sesión 12 · La base de datos en producción
+## Sesión 12 · La base de datos del backend publicado
 
-**Antes de empezar.** La API ya trabaja con PostgreSQL y relaciones entre entidades; su entorno de pruebas está preparado en CI. Hoy conectarás la versión publicada a una base de datos persistente.
-
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · sin apuntes</p>
-  <ol>
-    <li>El proceso de la API se reinicia. ¿Qué ocurre en el estado actual con los datos almacenados?</li>
-    <li>¿En qué ubicación está registrada actualmente la contraseña de la base de datos local?</li>
-    <li>Se añade un campo a una entidad y se despliega. ¿Qué elemento del sistema modifica la tabla?</li>
-  </ol>
-</div>
-
----
+**Antes de empezar.** Servidor ya ha preparado JPA, PostgreSQL y pruebas de repositorio. CI utiliza una base aislada. Hoy publicamos esa versión con PostgreSQL en la EC2 de la sesión 8, conservando datos ficticios en su disco.
 
 ### Se explica
 
 <p class="stage stage--brief">25 minutos · explicación y demostración</p>
 
-#### Publicar el estado persistente
+#### Una base privada para una API pública
 
-Servidor 19–22 ya ha preparado JPA, PostgreSQL y pruebas de repositorio. Hoy cambia su entorno: utilizamos el mismo backend y publicamos la base de datos que necesita. No reescribimos entidades ni consultas para Intermodular.
+El cliente accede a la API, no directamente a PostgreSQL. La base escucha en **localhost:5432** y no se abre ese puerto en el grupo de seguridad. Usamos una base y un usuario exclusivos del proyecto, distintos de desarrollo y CI. La aplicación no utiliza el superusuario `postgres`.
 
-Distinguimos desarrollo, prueba/CI y producción. Cada uno tiene su propia base y configuración. La de CI se destruye al terminar; la pública conserva los datos de demostración. Un cambio de esquema debe quedar identificado y comprobado antes de aplicarlo sobre datos que queremos mantener.
+API y base comparten máquina para reducir coste y complejidad del taller. Esta decisión no proporciona alta disponibilidad: una avería o retirada del disco afecta a ambas. Detener EC2 conserva el disco; terminarla puede eliminarlo. Persistencia tras reinicio tampoco equivale a copia recuperable.
 
-#### Comprobar la oferta antes de crear
+#### Presupuesto y duración
 
-La oferta de Azure for Students establece requisitos de elegibilidad y límites por servicio. La documentación oficial contempla una cantidad gratuita de PostgreSQL durante un periodo limitado para las cuentas elegibles, sin garantizar que toda cuenta del alumnado tenga esa oferta activada. Debe verificarse la suscripción, la región, el tamaño, el almacenamiento y el coste estimado. Si la configuración no encaja, se emplea el recurso de aula acordado: la superación de la sesión no requiere la contratación de ningún plan. [Condiciones y servicios de Azure for Students](https://azure.microsoft.com/en-us/free/students/).
-
-#### Configuración y esquema
-
-Las credenciales reales se configuran en el proveedor; los nombres de variables y el procedimiento se guardan en el repositorio. Para producción seguimos la decisión de Servidor: esquema preparado y ddl-auto=validate. La creación automática update de desarrollo no se convierte en el procedimiento de actualización de producción.
+PostgreSQL instalado en la EC2 se detiene con ella. No se crea un RDS que pueda seguir consumiendo entre sesiones. El disco y la IPv4 pública cuando esté asignada tienen costes propios. Revisa el presupuesto, que puede actualizarse con retraso. El entorno no garantiza conservar datos después del final de la clase ni al agotar el presupuesto.
 
 ### Se trabaja
 
 <p class="stage stage--guided">140 minutos · trabajo guiado sobre el producto compartido</p>
 
-#### Bloque A · Crear el servidor
+#### Bloque A · Preparar PostgreSQL en la EC2
 
-<p class="stage stage--guided">Todos a la vez, a la misma pantalla</p>
+Conecta con el procedimiento de la sesión 8. La plantilla ya instaló PostgreSQL. Comprueba:
 
-En **portal.azure.com**, localiza `Azure Database for PostgreSQL` y selecciona **Servidor flexible** (*Flexible server*) → **Crear**.
+```bash
+sudo systemctl status postgresql --no-pager
+sudo ss -lnt
+sudo -u postgres psql
+```
 
-| Campo | Valor |
-| ----- | ----- |
-| Suscripción y grupo de recursos | Los mismos que la API |
-| Nombre del servidor | Prefijo <code>db-</code> seguido de un identificador propio: forma parte de una dirección pública |
-| Región | La misma en la que se aprovisionó el App Service |
-| Tipo de carga de trabajo | **Desarrollo** |
-| Proceso y almacenamiento | **Burstable B1ms**, 32 GB |
-| Nombre de usuario administrador | Un identificador propio; **no** <code>admin</code> |
-| Contraseña | De longitud suficiente y almacenada en un medio recuperable |
+Revisa que 5432 escucha solo en loopback. Si aparece en todas las interfaces, corrige `listen_addresses` y revisa `pg_hba.conf` antes de continuar. En la consola SQL crea usuario y base; `\password` solicita la contraseña sin escribirla en un script ni en el historial del shell:
 
-<div class="rule">
-  <p class="rule-label">Verificación del dimensionamiento previa al aprovisionamiento</p>
-  <p>Si la configuración no indica <strong>B1ms</strong>, debe interrumpirse el proceso. Ese es el dimensionamiento de referencia de la práctica; conviene comprobar que está cubierto por la oferta antes de crear el recurso. A diferencia de un plan de cómputo con escalado a cero, un servidor de base de datos consume recursos de forma continua, con independencia de que esté atendiendo peticiones.</p>
-</div>
+```sql
+CREATE ROLE intermodular LOGIN;
+\password intermodular
+CREATE DATABASE intermodular OWNER intermodular;
+\q
+```
 
-**Configuración de red.** En la pestaña de conectividad, selecciona acceso **público** y autoriza las direcciones de salida del App Service y la dirección IP del aula que requiera acceso. Revisa la conectividad configurada: habilitar el acceso a todos los servicios de Azure no restringe las conexiones a la propia suscripción.
+Son comandos de primera instalación. Si la base existe, inspecciónala y reutilízala: no la borres ni repitas su creación a ciegas. El ejemplo presupone un proyecto por instancia; un servidor compartido necesita usuarios, bases y permisos propios por proyecto.
 
-**Creación de la base de datos.** Una vez aprovisionado el servidor, crea en él una base de datos con el nombre del proyecto. Una instancia de servidor puede alojar varias bases de datos; la aplicación establece la conexión con una de ellas.
+#### Bloque B · Configuración externa del servicio
 
-#### Bloque B · La cadena de conexión como configuración externa
+Edita `sudo nano /etc/intermodular.env`. El archivo lo lee systemd como root y no se versiona. Declara:
 
-<p class="stage stage--solo">Trabajo individual, sin incorporar ningún valor al código fuente</p>
+```text
+SPRING_DATASOURCE_URL=jdbc:postgresql://127.0.0.1:5432/intermodular
+SPRING_DATASOURCE_USERNAME=intermodular
+SPRING_DATASOURCE_PASSWORD=CONTRASENA_REAL_SOLO_EN_EL_SERVIDOR
+SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+SPRING_SQL_INIT_MODE=never
+```
 
-En el App Service: **Configuración → Variables de entorno**. Declara tres variables nuevas:
+Sustituye el marcador por la contraseña real; para este ejercicio utiliza una contraseña aleatoria larga con letras y números. Conserva propietario root y permisos 600. El repositorio solo contiene una plantilla ficticia. No muestres el archivo en capturas ni incidencias.
 
-| Nombre | Valor |
-| ------ | ----- |
-| <code>SPRING_DATASOURCE_URL</code> | <code>jdbc:postgresql://TU-SERVIDOR.postgres.database.azure.com:5432/TU-BD?sslmode=require</code> |
-| <code>SPRING_DATASOURCE_USERNAME</code> | El usuario administrador declarado en el bloque A |
-| <code>SPRING_DATASOURCE_PASSWORD</code> | Su contraseña |
+La conexión utiliza loopback dentro del mismo sistema; no atraviesa Internet. Esta arquitectura no valida TLS de base de datos. Si más adelante separas PostgreSQL o usas RDS, revisa red, permisos y TLS: no reutilices sin cambios esta URL.
 
-<details class="aside aside--help">
-  <summary>Por qué <code>sslmode=require</code> no es opcional</summary>
-  <p>El servidor rechaza las conexiones no cifradas. Si el parámetro se omite, el mensaje de error no identifica la ausencia de TLS como causa: informa únicamente de que la conexión no ha podido establecerse, lo que orienta el diagnóstico hacia la configuración del cortafuegos. Conviene retener este caso, porque el síntoma no señala la causa.</p>
-</details>
+#### Bloque C · Crear el esquema de forma controlada
 
-**Contenido versionable.** Ninguno de los valores anteriores se incorpora al repositorio. Sí se incorpora un archivo de ejemplo con los nombres de las variables y valores ficticios, de modo que quien clone el proyecto conozca qué configuración debe aportar. Esa distinción separa un proyecto reproducible por terceros de uno que solo se ejecuta en el entorno de su autor.
-
-#### Bloque C · Creación controlada del esquema
-
-1. En la base local de ensayo, comprueba que el esquema coincide con las entidades y que los tests de Servidor 22 pasan. Genera un script de esquema a partir de esa versión, por ejemplo con pg_dump, instalado con las herramientas de PostgreSQL. En PowerShell ajusta usuario, base y ruta del ejecutable a tu instalación:
+1. Revisa y prueba el esquema de la versión de Servidor en una base vacía de ensayo. Con `pg_dump` exporta estructura sin propietarios ni privilegios. En PowerShell, desde el repositorio:
 
 ```powershell
 pg_dump --host=localhost --port=5432 --username=postgres --schema-only --no-owner --no-privileges --file=docs/esquema-inicial.sql gestor_db
 ```
 
-El comando pide la contraseña si la conexión lo necesita; no la escribas en el script. El archivo contiene estructura, no una copia de tus registros. Revisa nombres y restricciones en una PR y enlaza el commit que lo produjo.
+Comprueba que no contiene contraseñas ni datos y revísalo mediante PR. El PostgreSQL del servidor debe admitir la versión del volcado; adapta exportación o herramientas si el proyecto utiliza una versión posterior, sin editar a ciegas un volcado incompatible.
 
-2. Prueba el script en una base vacía de ensayo. No lo ejecutes sobre la base pública si ya contiene tablas. Para la primera instalación pública, comprueba que el destino esté vacío y aplica el script mediante el cliente PostgreSQL conectado con TLS.
-3. En las variables del App Service configura `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` y `SPRING_SQL_INIT_MODE=never`. Conserva URL, usuario y contraseña de su propio entorno. No copies create-drop de CI.
-4. Arranca el backend y comprueba que valida el esquema. Si falta una columna, revisa la versión de script y JAR; no cambies validate por update para ocultar la discrepancia.
-5. Carga datos ficticios mediante la colección. En las siguientes semanas los cambios de relaciones de Servidor 23–26 requieren scripts incrementales revisados y una prueba sobre copia de datos; no se vuelve a aplicar el esquema completo.
+2. Copia el script aprobado a `/home/ubuntu/esquema-inicial.sql` con `scp`, como el artefacto. Confirma que la base de destino está vacía y aplícalo como el usuario del proyecto:
 
-#### Bloque D · Verificación de la persistencia
+```bash
+psql -h 127.0.0.1 -U intermodular -d intermodular -W -v ON_ERROR_STOP=1 -f /home/ubuntu/esquema-inicial.sql
+```
 
-<p class="stage stage--solo">Trabajo individual · comprobación determinante de la sesión</p>
+La contraseña se introduce cuando se solicita, no en el comando. No vuelvas a aplicar el esquema inicial sobre tablas con datos.
 
-1. Crea un elemento mediante la colección de peticiones contra la URL pública.
-2. En el portal, **reinicia** el App Service.
-3. Espera a que el proceso arranque y consulta el mismo identificador desde la colección.
-4. El elemento debe persistir.
+3. Publica el JAR del CI correcto de `main` con la sesión 8 y reinicia `intermodular`. Comprueba en `journalctl` que valida el esquema. Corrige las discrepancias revisando versiones; no sustituyas `validate` por `update` o `create-drop`.
+4. Para cambios posteriores prepara scripts incrementales revisados y ensayados sobre una copia. No sustituyas la API de Servidor por la demo docente.
 
-La comprobación acredita que el registro sobrevive al reinicio del proceso, esto es, que el estado reside en el sistema gestor de base de datos y no en la memoria de la aplicación. Complétala verificando que el dato consta en la base pública y bajo la versión identificada.
+#### Bloque D · Verificar persistencia y conservar una copia
 
-<div class="checkpoint">
-  <p class="checkpoint-label">Lista de verificación de la sesión</p>
-  <ul class="checklist">
-    <li>El servidor de base de datos existe, es B1ms y está en la misma región que la API.</li>
-    <li>Las tres variables están en el App Service y ninguna en el repositorio.</li>
-    <li>Hay datos de ejemplo cargados.</li>
-    <li>Los datos sobreviven al reinicio del servicio, con la comprobación realizada de forma directa.</li>
-  </ul>
-</div>
+1. Crea un dato ficticio con la colección contra la URL publicada y guarda el identificador. Si la ruta necesita autenticación, utiliza HTTPS ya validado.
+2. Reinicia el backend con `sudo systemctl restart intermodular`. Espera su arranque y consulta el identificador: debe seguir presente.
+3. Reinicia PostgreSQL y el backend y repite la consulta. Registra qué reiniciaste y el resultado; esto no demuestra recuperación de un disco perdido.
+4. En una comprobación acordada con el docente, detén e inicia EC2. Espera el arranque, actualiza IP y DNS si han cambiado y consulta de nuevo. No termines la instancia ni uses Reset.
+5. Genera una copia con el usuario del proyecto y descárgala a una carpeta privada fuera del repositorio:
 
-<details class="aside aside--help">
-  <summary>Si la persistencia no está terminada todavía en Servidor</summary>
-  <p>Los bloques A y B se realizan igualmente: el aprovisionamiento del servidor y la configuración de las variables corresponden a este módulo y no dependen de que la aplicación las consuma todavía. Cuando la versión con persistencia esté disponible, se incorpora por el flujo de integración habitual y el bloque D se ejecuta en ese momento. Lo que no resulta admisible es alcanzar la entrega del trimestre sin haber verificado nunca la persistencia.</p>
-</details>
+```bash
+pg_dump -h 127.0.0.1 -U intermodular -W -d intermodular -Fc -f /home/ubuntu/intermodular.dump
+chmod 600 /home/ubuntu/intermodular.dump
+```
 
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>Servidor creado, conexión por variables de entorno y datos que sobreviven a un reinicio.</span></div>
-  <div><strong>Ampliación</strong><span>El archivo de ejemplo incorporado al repositorio, con los nombres de las variables y ningún valor real.</span></div>
-  <div><strong>Reto</strong><span>Verificar que las pruebas de repositorio de Servidor 22 se superan sobre la base aislada configurada en Intermodular 11.</span></div>
-</div>
-
-<p>El servicio PostgreSQL del CI se configuró en Intermodular 11. Reutiliza ese job y verifica que ejecuta las pruebas de repositorio de Servidor 22.</p>
-
----
+Desde el equipo local descarga con `scp -i "RUTA_A_LA_CLAVE.pem" ubuntu@IP_ACTUAL:/home/ubuntu/intermodular.dump .`. Para acreditar recuperación, restaura en una base vacía de ensayo y consulta el identificador. Una copia sin prueba de restauración solo acredita la exportación.
 
 ### Cierre
 
 <p class="stage">15 minutos · comprobación del resultado</p>
 
+Entrega JAR/commit, petición pública y comprobaciones antes y después del reinicio. Añade ubicación privada de la copia y resultado de restauración si lo has realizado. Se evalúa persistencia comprobada durante las sesiones, sin exigir disponibilidad permanente. Ninguna contraseña ni clave SSH forma parte de la entrega.
 
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · sin mirar</p>
-  <ol>
-    <li>¿Por qué la contraseña de la base de datos no puede estar en <code>application.properties</code>?</li>
-    <li>Se incorpora una credencial por error y se elimina en el commit siguiente. ¿Queda resuelta la incidencia?</li>
-    <li>Se suprime un campo de una entidad y se despliega. ¿Qué ocurre con la columna correspondiente?</li>
-    <li>¿Por qué el servidor rechaza la conexión si no se solicita cifrado TLS?</li>
-    <li>¿Qué demuestra reiniciar el servicio y volver a mirar?</li>
-  </ol>
-</div>
+Si Servidor aún no termina la persistencia, prepara base, esquema revisado y variables. Ejecuta las comprobaciones cuando esté disponible la versión persistente; la entrega del trimestre requiere realizarlas. No inventes resultados ni sustituyas el producto por un ejemplo independiente.
 
-<details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · Porque el repositorio es público y porque la dirección cambia entre entornos. Va en el entorno, y en el repositorio solo un ejemplo con valores falsos.</p>
-  <p>2 · No. Sigue en el historial. Lo único que lo resuelve es cambiar la contraseña en el servidor.</p>
-  <p>3 · Con validate, el arranque comprueba el esquema y no lo modifica. Un cambio se prepara mediante un script incremental revisado y ensayado.</p>
-  <p>4 · Porque solo acepta conexiones cifradas, y el error que da no menciona el cifrado: parece un problema de red.</p>
-  <p>5 · Que los datos viven fuera de la aplicación. Es la única comprobación que distingue persistencia de casualidad.</p>
-</details>
-
-<div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Antes de la sesión 13</p>
-  <ul class="checklist">
-    <li>Los datos de la API sobreviven al reinicio del servicio, con la comprobación realizada.</li>
-    <li>Ninguna credencial presente en ninguno de los dos repositorios, verificado sobre el historial completo y no solo sobre el estado actual de los archivos.</li>
-    <li>Un análisis escrito de las consecuencias de renombrar un campo de la API.</li>
-  </ul>
-</div>
 
 ## Lo que debes recordar
 
@@ -708,7 +609,7 @@ La comprobación acredita que el registro sobrevive al reinicio del proceso, est
 | Conservar el repositorio de Servidor | Historial, remoto y aportaciones continúan desde el comienzo |
 | Ejecutar las pruebas en CI | El informe muestra tests ejecutados y un fallo bloquea la fusión |
 | Identificar el artefacto | El despliegue corresponde a un commit y una ejecución concretos |
-| Separar despliegue y arranque | El workflow termina y después la aplicación responde en su ruta |
+| Separar construcción, publicación y arranque | El CI conserva el JAR aprobado, una persona lo publica y se comprueba la respuesta de su ruta |
 | Mantener entornos separados | Desarrollo, CI y producción usan bases y credenciales propias |
 | Preparar el esquema | validate comprueba la estructura; el script revisado prepara sus cambios |
 | Reutilizar el contrato | La misma colección se ejecuta contra local y producción |
