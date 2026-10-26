@@ -4,7 +4,7 @@ label: "UD4 · Proyecto"
 section: "ud-04"
 order: 4
 lang: "es"
-summary: "Aprende a dirigir un agente mediante una mejora del sitio ya trabajado en UD3: contexto, instrucciones, procedimientos de revisión, herramientas y verificación."
+summary: "Aprende a dirigir un agente mediante una mejora del sitio inicial abierto en local: contexto, instrucciones, procedimientos de revisión, herramientas y verificación."
 duration: "4 horas · 4 sesiones"
 modality: "Taller de una hora · 10 min de explicación, 45 min de trabajo y 5 min de cierre"
 deliverable: "Mejora del sitio asistida por IA. Una actividad acumulativa por unidad, con evidencias y aportación individual."
@@ -83,7 +83,7 @@ En cada criterio, una evidencia ausente no permite acreditar el logro; una evide
 
 Un **modelo** genera una respuesta; un **agente** puede utilizar herramientas para leer archivos, proponer cambios o ejecutar comprobaciones. Que pueda actuar no significa que conozca tu objetivo. Necesita contexto y un criterio de aceptación: una condición observable que permita decir si la tarea está resuelta.
 
-«Mejora la web» deja abiertas muchas decisiones. «Añade un enlace de contacto visible, conserva las secciones y comprueba que abre el correo indicado» delimita la tarea. Usaremos el sitio de Digitalización UD3; quien ya tenga portfolio estudiará un cambio nuevo, sin reconstruirlo ni repetir su evaluación de Intermodular.
+«Mejora la web» deja abiertas muchas decisiones. «Añade un enlace de contacto visible, conserva las secciones y comprueba que abre el correo indicado» delimita la tarea. Usaremos el sitio inicial descargable de la [guía de arranque](/es/docencia/talleres-transversales/#cloud), abierto en local; quien ya tenga portfolio estudiará un cambio nuevo, sin reconstruirlo ni repetir su evaluación de Intermodular.
 
 <details class="aside aside--extra">
 <summary>Consultar ejemplos y conceptos de esta sesión</summary>
@@ -514,7 +514,7 @@ La revisión empieza por el criterio de aceptación. Si pedimos mejorar el conta
 
 <p class="stage stage--guided">45 minutos · trabajo guiado sobre la actividad</p>
 
-1. Elige una mejora pendiente del sitio de UD3 y escribe dos criterios observables. Recupera las instrucciones y la ficha de revisión de esta unidad.
+1. Elige una mejora pendiente del sitio inicial de esta unidad y escribe dos criterios observables. Recupera las instrucciones y la ficha de revisión de esta unidad.
 2. Pide un plan acotado y revisa los archivos que pretende tocar. Aplica el cambio por partes; conserva el punto inicial para poder comparar o volver atrás.
 3. Abre la comparación de cambios en el editor. Para cada archivo explica por qué se modificó. Retira o justifica cualquier cambio fuera del alcance antes de darlo por terminado.
 4. Abre la web, prueba los criterios y revisa un comportamiento anterior que deba mantenerse. Anota paso, resultado esperado y resultado observado; no basta con copiar «tests correctos» de la conversación.

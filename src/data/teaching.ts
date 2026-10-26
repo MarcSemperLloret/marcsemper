@@ -681,14 +681,14 @@ export const teachingCourses: TeachingCourse[] = [
       {
         id: "ud-03",
         number: "UD3",
-        verb: "PUBLISH",
-        verbEs: "PUBLICAR",
+        verb: "ANALYZE",
+        verbEs: "ANALIZAR",
         title: "Cloud and modern architectures",
         titleEs: "Cloud y arquitecturas modernas",
         description:
-          "Publishing a real application: virtual machine, web server, network rules, DNS and certificates.",
+          "Written case studies on cloud services, web architecture, incidents and costs.",
         descriptionEs:
-          "Publicar una aplicación real: máquina virtual, servidor web, reglas de red, DNS y certificados.",
+          "Casos escritos sobre servicios cloud, arquitectura web, incidencias y costes. Sin cuentas ni despliegues.",
         resources: []
       },
       {

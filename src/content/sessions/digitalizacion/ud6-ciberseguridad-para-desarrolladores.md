@@ -359,7 +359,7 @@ Una aplicación puede tener código correcto y estar mal configurada. Por ejempl
 * una base de datos accesible públicamente;
 * puertos abiertos innecesariamente.
 
-Conviene recuperar lo estudiado sobre Azure:
+Conviene recuperar la arquitectura analizada en los ejercicios escritos de UD3:
 
 <figure class="diagram">
   <figcaption>La seguridad está presente en todas las capas</figcaption>
@@ -404,7 +404,7 @@ Tampoco procede almacenar sin criterio contraseñas, tokens, números de tarjeta
 
 ##### HTTPS
 
-Ya lo utilizamos en Azure. `HTTP` no proporciona por sí mismo protección TLS; con `HTTPS` obtenemos confidencialidad, integridad y autenticación del servidor mediante certificado.
+Lo analizamos en los casos escritos de UD3. `HTTP` no proporciona por sí mismo protección TLS; con `HTTPS` obtenemos confidencialidad, integridad y autenticación del servidor mediante certificado.
 
 Pero HTTPS no convierte automáticamente una aplicación insegura en segura: una web con SQL Injection sigue siendo vulnerable aunque utilice HTTPS.
 
