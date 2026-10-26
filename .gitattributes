@@ -1,0 +1,2 @@
+# Shell scripts are copied to Linux servers and must retain Unix line endings.
+*.sh text eol=lf
