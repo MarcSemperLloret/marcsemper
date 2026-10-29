@@ -1313,7 +1313,7 @@ display: grid;           /* la sesión que viene */
     </div>
     <div class="lesson-flow-item">
       <strong>display: inline-block</strong>
-      <p class="lesson-flow-sample">Texto previo <span class="box-inline-block">inline-block (140×34 px)</span> sigue en la misma línea pero respeta sus dimensiones y márgenes.</p>
+      <p class="lesson-flow-sample">Texto previo <span class="box-inline-block">caja inline-block</span> continúa en la misma línea con altura y márgenes propios.</p>
     </div>
     <div class="lesson-flow-item">
       <strong>display: block</strong>
@@ -1361,67 +1361,77 @@ La distinción que importa es **si el elemento deja o no su hueco**:
     <title id="pos-title">Comparativa de posicionamiento respecto al hueco</title>
     <desc id="pos-desc">En static las cajas fluyen en orden. En relative la caja 2 se desplaza pero conserva su hueco reservado, por lo que la caja 3 no se mueve. En absolute la caja 2 sale del flujo y la caja 3 sube inmediatamente a ocupar su lugar.</desc>
     <defs>
-      <marker id="pos-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
+      <marker id="pos-arrow-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c93b24" />
+      </marker>
+      <marker id="pos-arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#2857df" />
       </marker>
     </defs>
-    <g class="diagram-node--container">
+
+    <!-- Columna 1: static -->
+    <g class="diagram-panel--neutral">
       <rect x="30" y="44" width="200" height="186" rx="4" />
     </g>
     <text class="diagram-label" x="130" y="28">static · flujo normal</text>
-    <g class="diagram-node">
+    <g class="diagram-box--static">
       <rect x="46" y="58" width="168" height="40" rx="3" />
       <text x="130" y="78">Caja 1</text>
     </g>
-    <g class="diagram-node">
+    <g class="diagram-box--static">
       <rect x="46" y="108" width="168" height="40" rx="3" />
       <text x="130" y="128">Caja 2</text>
     </g>
-    <g class="diagram-node">
+    <g class="diagram-box--static">
       <rect x="46" y="158" width="168" height="40" rx="3" />
       <text x="130" y="178">Caja 3</text>
     </g>
     <text class="diagram-label" x="130" y="254">Ocupan su sitio en orden</text>
 
-    <g class="diagram-node--container">
+    <!-- Columna 2: relative -->
+    <g class="diagram-panel--neutral">
       <rect x="260" y="44" width="200" height="186" rx="4" />
     </g>
     <text class="diagram-label diagram-label--accent" x="360" y="28">relative · deja su hueco</text>
-    <g class="diagram-node">
+    <g class="diagram-box--static">
       <rect x="276" y="58" width="168" height="40" rx="3" />
       <text x="360" y="78">Caja 1</text>
     </g>
-    <rect x="276" y="108" width="168" height="40" rx="3" fill="none" stroke="var(--coral)" stroke-dasharray="4 3" stroke-width="1.5" />
-    <text x="360" y="128" fill="var(--coral)" font-family="var(--sans)" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">hueco reservado</text>
-    <g class="diagram-node diagram-node--accent">
+    <!-- Hueco reservado -->
+    <g class="diagram-box--reserved">
+      <rect x="276" y="108" width="168" height="40" rx="3" />
+      <text x="360" y="128">hueco reservado</text>
+    </g>
+    <!-- Caja 2 desplazada -->
+    <g class="diagram-box--moved">
       <rect x="296" y="120" width="156" height="40" rx="3" />
       <text x="374" y="140">Caja 2 (desplazada)</text>
     </g>
-    <g class="diagram-edges">
-      <path d="M 330 114 L 350 120" marker-end="url(#pos-arrow)" />
-    </g>
-    <g class="diagram-node">
+    <path d="M 320 112 L 340 120" fill="none" stroke="#c93b24" stroke-width="2" marker-end="url(#pos-arrow-coral)" />
+    <!-- Caja 3 no se mueve -->
+    <g class="diagram-box--static">
       <rect x="276" y="168" width="168" height="40" rx="3" />
       <text x="360" y="188">Caja 3</text>
     </g>
     <text class="diagram-label diagram-label--accent" x="360" y="254">Caja 3 no sube: el hueco sigue ahí</text>
 
-    <g class="diagram-node--container">
+    <!-- Columna 3: absolute -->
+    <g class="diagram-panel--neutral">
       <rect x="490" y="44" width="200" height="186" rx="4" />
     </g>
     <text class="diagram-label" x="590" y="28">absolute · sale del flujo</text>
-    <g class="diagram-node">
+    <g class="diagram-box--static">
       <rect x="506" y="58" width="168" height="40" rx="3" />
       <text x="590" y="78">Caja 1</text>
     </g>
-    <g class="diagram-node">
+    <!-- Caja 3 sube al hueco -->
+    <g class="diagram-box--static">
       <rect x="506" y="108" width="168" height="40" rx="3" />
       <text x="590" y="128">Caja 3 (sube y ocupa el hueco)</text>
     </g>
-    <g class="diagram-edges">
-      <path d="M 590 164 L 590 152" marker-end="url(#pos-arrow)" />
-    </g>
-    <g class="diagram-node diagram-node--danger">
+    <path d="M 590 162 L 590 152" fill="none" stroke="#2857df" stroke-width="2" marker-end="url(#pos-arrow-blue)" />
+    <!-- Caja 2 flotando fuera del flujo -->
+    <g class="diagram-box--absolute">
       <rect x="532" y="168" width="144" height="40" rx="3" />
       <text x="604" y="188">Caja 2 (top: 0; right: 0)</text>
     </g>
@@ -1491,64 +1501,75 @@ nav ul {
 
 <figure class="diagram">
   <figcaption>Los dos ejes de Flexbox · flex-direction decide cuál es cuál</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 290" role="img" aria-labelledby="axes-title axes-desc" preserveAspectRatio="xMidYMid meet">
+  <svg class="diagram-svg" viewBox="0 0 720 295" role="img" aria-labelledby="axes-title axes-desc" preserveAspectRatio="xMidYMid meet">
     <title id="axes-title">Comparativa de ejes en flex-direction row frente a column</title>
-    <desc id="axes-desc">En flex-direction row el eje principal es horizontal y el eje transversal es vertical. En flex-direction column el eje principal pasa a ser vertical y el transversal horizontal. Las propiedades justify-content y align-items se intercambian de dirección.</desc>
+    <desc id="axes-desc">En flex-direction row el eje principal es horizontal (coral) y el eje transversal es vertical (azul). En flex-direction column el eje principal pasa a ser vertical (coral) y el transversal horizontal (azul). Las propiedades justify-content y align-items se intercambian de dirección.</desc>
     <defs>
-      <marker id="axis-arrow-main" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" fill="var(--blue)" />
+      <marker id="axis-arrow-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c93b24" />
       </marker>
-      <marker id="axis-arrow-cross" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-soft)" />
+      <marker id="axis-arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#2857df" />
       </marker>
     </defs>
+
     <!-- Lado Izquierdo: row -->
-    <g class="diagram-node--container">
+    <g class="diagram-panel--row">
       <rect x="50" y="55" width="280" height="150" rx="4" />
     </g>
     <text class="diagram-label" x="190" y="25">flex-direction: row (por defecto)</text>
-    <path d="M 50 42 L 320 42" fill="none" stroke="var(--blue)" stroke-width="2.5" marker-end="url(#axis-arrow-main)" />
-    <text x="185" y="34" fill="var(--blue)" font-family="var(--sans)" font-size="12" font-weight="800" text-anchor="middle">Eje principal → justify-content</text>
-    <path d="M 34 55 L 34 195" fill="none" stroke="var(--ink-soft)" stroke-width="2" marker-end="url(#axis-arrow-cross)" />
-    <text x="24" y="125" fill="var(--ink-soft)" font-family="var(--sans)" font-size="11" font-weight="700" text-anchor="middle" transform="rotate(-90 24 125)">Eje transversal ↓ align-items</text>
-    <g class="diagram-node">
+    <!-- Flecha Eje Principal (horizontal, CORAL) -->
+    <path d="M 50 42 L 320 42" fill="none" stroke="#c93b24" stroke-width="2.5" marker-end="url(#axis-arrow-coral)" />
+    <text x="185" y="34" fill="#c93b24" font-family="var(--sans)" font-size="12" font-weight="800" text-anchor="middle">Eje principal (horizontal) → justify-content</text>
+    <!-- Flecha Eje Transversal (vertical, AZUL) -->
+    <path d="M 34 55 L 34 195" fill="none" stroke="#2857df" stroke-width="2" marker-end="url(#axis-arrow-blue)" />
+    <text x="24" y="125" fill="#2857df" font-family="var(--sans)" font-size="11" font-weight="800" text-anchor="middle" transform="rotate(-90 24 125)">Eje transversal (vertical) ↓ align-items</text>
+    <!-- Elementos en fila -->
+    <g class="diagram-flex-item--row">
       <rect x="70" y="85" width="65" height="90" rx="3" />
       <text x="102" y="130">1</text>
     </g>
-    <g class="diagram-node">
+    <g class="diagram-flex-item--row">
       <rect x="155" y="85" width="65" height="90" rx="3" />
       <text x="187" y="130">2</text>
     </g>
-    <g class="diagram-node">
+    <g class="diagram-flex-item--row">
       <rect x="240" y="85" width="65" height="90" rx="3" />
       <text x="272" y="130">3</text>
     </g>
-    <text class="diagram-label" x="190" y="230">Fila: los elementos avanzan en horizontal</text>
+    <text class="diagram-label" x="190" y="228">Fila: los elementos avanzan en horizontal</text>
 
     <!-- Lado Derecho: column -->
-    <g class="diagram-node--container">
+    <g class="diagram-panel--col">
       <rect x="420" y="55" width="260" height="150" rx="4" />
     </g>
     <text class="diagram-label diagram-label--accent" x="550" y="25">flex-direction: column</text>
-    <path d="M 420 42 L 670 42" fill="none" stroke="var(--ink-soft)" stroke-width="2" marker-end="url(#axis-arrow-cross)" />
-    <text x="545" y="34" fill="var(--ink-soft)" font-family="var(--sans)" font-size="11" font-weight="700" text-anchor="middle">Eje transversal → align-items</text>
-    <path d="M 404 55 L 404 195" fill="none" stroke="var(--coral)" stroke-width="2.5" marker-end="url(#axis-arrow-main)" />
-    <text x="394" y="125" fill="var(--coral)" font-family="var(--sans)" font-size="12" font-weight="800" text-anchor="middle" transform="rotate(-90 394 125)">Eje principal ↓ justify-content</text>
-    <g class="diagram-node">
+    <!-- Flecha Eje Transversal (horizontal, AZUL) -->
+    <path d="M 420 42 L 670 42" fill="none" stroke="#2857df" stroke-width="2" marker-end="url(#axis-arrow-blue)" />
+    <text x="545" y="34" fill="#2857df" font-family="var(--sans)" font-size="11" font-weight="800" text-anchor="middle">Eje transversal (horizontal) → align-items</text>
+    <!-- Flecha Eje Principal (vertical, CORAL) -->
+    <path d="M 404 55 L 404 195" fill="none" stroke="#c93b24" stroke-width="2.5" marker-end="url(#axis-arrow-coral)" />
+    <text x="394" y="125" fill="#c93b24" font-family="var(--sans)" font-size="12" font-weight="800" text-anchor="middle" transform="rotate(-90 394 125)">Eje principal (vertical) ↓ justify-content</text>
+    <!-- Elementos en columna -->
+    <g class="diagram-flex-item--col">
       <rect x="445" y="68" width="210" height="34" rx="3" />
       <text x="550" y="85">1</text>
     </g>
-    <g class="diagram-node">
+    <g class="diagram-flex-item--col">
       <rect x="445" y="112" width="210" height="34" rx="3" />
       <text x="550" y="129">2</text>
     </g>
-    <g class="diagram-node">
+    <g class="diagram-flex-item--col">
       <rect x="445" y="156" width="210" height="34" rx="3" />
       <text x="550" y="173">3</text>
     </g>
-    <text class="diagram-label diagram-label--accent" x="550" y="230">Columna: los elementos avanzan en vertical</text>
+    <text class="diagram-label diagram-label--accent" x="550" y="228">Columna: los elementos avanzan en vertical</text>
 
-    <text class="diagram-label diagram-label--accent" x="360" y="270">Al cambiar la dirección, los dos ejes y sus propiedades se intercambian</text>
+    <!-- Barra de pie explicativa -->
+    <g class="diagram-pill-footer">
+      <rect x="70" y="254" width="580" height="30" rx="15" />
+      <text x="360" y="269" text-anchor="middle" dominant-baseline="central">Al cambiar a column: justify-content (coral) pasa a vertical y align-items (azul) a horizontal</text>
+    </g>
   </svg>
 </figure>
 

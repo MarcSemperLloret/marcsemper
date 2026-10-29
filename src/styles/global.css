@@ -2070,11 +2070,12 @@ select {
   color: var(--ink-soft);
   font-family: var(--sans);
   font-size: 0.88rem;
-  line-height: 1.7;
+  line-height: 2.2;
 }
 
 .session-content .lesson-flow-sample .box-inline {
-  padding: 2px 6px;
+  display: inline;
+  padding: 3px 8px;
   border: 1px solid #f5b7ae;
   border-radius: 3px;
   background: #fce7e4;
@@ -2084,23 +2085,21 @@ select {
 
 .session-content .lesson-flow-sample .box-inline-block {
   display: inline-block;
-  width: 140px;
-  height: 34px;
-  padding: 0 8px;
+  padding: 4px 12px;
+  margin: 0 4px;
   border: 1px solid #9eaccd;
   border-radius: 3px;
   background: #dfe8fb;
   color: var(--blue-dark);
   font-size: 0.78rem;
   font-weight: 700;
-  line-height: 32px;
-  text-align: center;
-  vertical-align: middle;
+  line-height: 1.4;
+  vertical-align: baseline;
 }
 
 .session-content .lesson-flow-sample .box-block {
   display: block;
-  margin: 8px 0;
+  margin: 10px 0;
   padding: 8px 12px;
   border: 1px solid #b7bfd0;
   border-radius: 3px;
@@ -2109,6 +2108,108 @@ select {
   font-size: 0.82rem;
   font-weight: 700;
   text-align: center;
+}
+
+/* Scoped diagram colors for Session 3 */
+.session-content .diagram-panel--neutral rect {
+  fill: #ffffff;
+  stroke: #c9cdd5;
+  stroke-dasharray: 5 4;
+  stroke-width: 1.2;
+}
+
+.session-content .diagram-panel--row rect {
+  fill: #f4f7fd;
+  stroke: #9eaccd;
+  stroke-dasharray: 6 4;
+  stroke-width: 1.5;
+}
+
+.session-content .diagram-panel--col rect {
+  fill: #fff5f2;
+  stroke: #f5b7ae;
+  stroke-dasharray: 6 4;
+  stroke-width: 1.5;
+}
+
+.session-content .diagram-box--static rect {
+  fill: #eef3fd;
+  stroke: var(--blue);
+  stroke-width: 1.5;
+}
+
+.session-content .diagram-box--static text {
+  fill: var(--blue-dark);
+  font-weight: 700;
+}
+
+.session-content .diagram-box--reserved rect {
+  fill: #fdeee9;
+  stroke: var(--coral);
+  stroke-dasharray: 5 4;
+  stroke-width: 1.5;
+}
+
+.session-content .diagram-box--reserved text {
+  fill: var(--coral);
+  font-weight: 700;
+}
+
+.session-content .diagram-box--moved rect {
+  fill: var(--blue);
+  stroke: var(--blue-dark);
+  stroke-width: 1.5;
+}
+
+.session-content .diagram-box--moved text {
+  fill: var(--white);
+  font-weight: 700;
+}
+
+.session-content .diagram-box--absolute rect {
+  fill: var(--coral);
+  stroke: #a3341f;
+  stroke-width: 1.5;
+}
+
+.session-content .diagram-box--absolute text {
+  fill: var(--white);
+  font-weight: 700;
+}
+
+.session-content .diagram-flex-item--row rect {
+  fill: #ffffff;
+  stroke: var(--blue);
+  stroke-width: 2;
+}
+
+.session-content .diagram-flex-item--row text {
+  fill: var(--blue-dark);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.session-content .diagram-flex-item--col rect {
+  fill: #ffffff;
+  stroke: var(--coral);
+  stroke-width: 2;
+}
+
+.session-content .diagram-flex-item--col text {
+  fill: var(--coral);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.session-content .diagram-pill-footer rect {
+  fill: #121a2a;
+}
+
+.session-content .diagram-pill-footer text {
+  fill: #ffffff;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 /* CSS: justify-content distribution strips */
