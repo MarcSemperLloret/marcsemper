@@ -2041,6 +2041,213 @@ select {
   text-decoration: none;
 }
 
+/* CSS: Flow comparison demo (inline vs inline-block vs block) */
+.session-content .lesson-flow-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 660px;
+  margin-inline: auto;
+}
+
+.session-content .lesson-flow-item {
+  padding: 12px 14px;
+  border: 1px solid #d9dce2;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.session-content .lesson-flow-item > strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--blue-dark);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.session-content .lesson-flow-sample {
+  margin: 0;
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+.session-content .lesson-flow-sample .box-inline {
+  padding: 2px 6px;
+  border: 1px solid #f5b7ae;
+  border-radius: 3px;
+  background: #fce7e4;
+  color: var(--coral);
+  font-weight: 700;
+}
+
+.session-content .lesson-flow-sample .box-inline-block {
+  display: inline-block;
+  width: 140px;
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid #9eaccd;
+  border-radius: 3px;
+  background: #dfe8fb;
+  color: var(--blue-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 32px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.session-content .lesson-flow-sample .box-block {
+  display: block;
+  margin: 8px 0;
+  padding: 8px 12px;
+  border: 1px solid #b7bfd0;
+  border-radius: 3px;
+  background: #eef2f7;
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* CSS: justify-content distribution strips */
+.session-content .lesson-justify-demos {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 660px;
+  margin-inline: auto;
+}
+
+.session-content .lesson-justify-row {
+  display: grid;
+  gap: 6px;
+}
+
+.session-content .lesson-justify-row > strong {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+.session-content .lesson-justify-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid #d9dce2;
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      #f8f9fa,
+      #f8f9fa 6px,
+      #edf0f5 6px,
+      #edf0f5 12px
+    );
+  min-height: 48px;
+}
+
+.session-content .lesson-justify-bar--start   { justify-content: flex-start; }
+.session-content .lesson-justify-bar--center  { justify-content: center; }
+.session-content .lesson-justify-bar--end     { justify-content: flex-end; }
+.session-content .lesson-justify-bar--between { justify-content: space-between; }
+.session-content .lesson-justify-bar--around  { justify-content: space-around; }
+
+.session-content .lesson-flex-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #17369b;
+  border-radius: 3px;
+  background: #17369b;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+/* CSS: nested flex product card demo */
+.session-content .lesson-card-nested-demo {
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.session-content .lesson-card-outer {
+  display: flex;
+  gap: 18px;
+  padding: 16px;
+  border: 1px solid #17369b;
+  border-radius: 6px;
+  background: #fff;
+  position: relative;
+}
+
+.session-content .lesson-card-image {
+  flex: 0 0 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #7183ad;
+  border-radius: 4px;
+  background: #f4f6fc;
+  color: var(--blue-dark);
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-height: 100px;
+}
+
+.session-content .lesson-card-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.session-content .lesson-card-body h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.session-content .lesson-card-body p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+.session-content .lesson-card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px dashed #d9dce2;
+}
+
+.session-content .lesson-card-price {
+  font-weight: 800;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.session-content .lesson-card-btn {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 3px;
+  background: var(--coral);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .session-content .lesson-grid-catalogue {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

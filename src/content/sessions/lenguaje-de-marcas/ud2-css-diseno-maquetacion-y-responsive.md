@@ -1304,6 +1304,25 @@ display: grid;           /* la sesión que viene */
 
 `inline-block` resuelve la limitación clásica: a un elemento en línea no puedes darle `width` ni márgenes verticales útiles. Con `inline-block` sí, y sigue colocándose en la misma línea que su texto.
 
+<figure class="lesson-demo">
+  <figcaption><span>Comparativa visual</span><strong>Cómo se comportan inline, inline-block y block</strong></figcaption>
+  <div class="lesson-demo__stage lesson-flow-demo">
+    <div class="lesson-flow-item">
+      <strong>display: inline</strong>
+      <p class="lesson-flow-sample">Texto previo <span class="box-inline">inline (ignora width y height)</span> continúa el párrafo fluyendo con el texto normal.</p>
+    </div>
+    <div class="lesson-flow-item">
+      <strong>display: inline-block</strong>
+      <p class="lesson-flow-sample">Texto previo <span class="box-inline-block">inline-block (140×34 px)</span> sigue en la misma línea pero respeta sus dimensiones y márgenes.</p>
+    </div>
+    <div class="lesson-flow-item">
+      <strong>display: block</strong>
+      <p class="lesson-flow-sample">Texto previo <span class="box-block">block (salta de línea y ocupa todo el ancho)</span> texto que queda debajo en una nueva línea.</p>
+    </div>
+  </div>
+  <p class="lesson-demo__note">Fíjate en cómo <code>inline-block</code> se mantiene dentro de la línea de texto pero acepta altura, anchura y márgenes verticales, mientras que <code>block</code> rompe el flujo y ocupa todo el ancho disponible.</p>
+</figure>
+
 <div class="rule">
   <p class="rule-label"><code>display: none</code> no es «invisible»</p>
   <p>Elimina el elemento del documento: no ocupa espacio y <strong>tampoco existe para un lector de pantalla ni para el recorrido con <code>Tab</code></strong>. Eso es correcto cuando quieres ocultar algo de verdad, y es un error cuando solo querías que no se viera.</p>
@@ -1335,6 +1354,80 @@ La distinción que importa es **si el elemento deja o no su hueco**:
 .card          { position: relative; }
 .card .etiqueta{ position: absolute; top: 0; right: 0; }
 ```
+
+<figure class="diagram">
+  <figcaption>El concepto del «hueco» · static, relative y absolute</figcaption>
+  <svg class="diagram-svg" viewBox="0 0 720 280" role="img" aria-labelledby="pos-title pos-desc" preserveAspectRatio="xMidYMid meet">
+    <title id="pos-title">Comparativa de posicionamiento respecto al hueco</title>
+    <desc id="pos-desc">En static las cajas fluyen en orden. En relative la caja 2 se desplaza pero conserva su hueco reservado, por lo que la caja 3 no se mueve. En absolute la caja 2 sale del flujo y la caja 3 sube inmediatamente a ocupar su lugar.</desc>
+    <defs>
+      <marker id="pos-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" />
+      </marker>
+    </defs>
+    <g class="diagram-node--container">
+      <rect x="30" y="44" width="200" height="186" rx="4" />
+    </g>
+    <text class="diagram-label" x="130" y="28">static · flujo normal</text>
+    <g class="diagram-node">
+      <rect x="46" y="58" width="168" height="40" rx="3" />
+      <text x="130" y="78">Caja 1</text>
+    </g>
+    <g class="diagram-node">
+      <rect x="46" y="108" width="168" height="40" rx="3" />
+      <text x="130" y="128">Caja 2</text>
+    </g>
+    <g class="diagram-node">
+      <rect x="46" y="158" width="168" height="40" rx="3" />
+      <text x="130" y="178">Caja 3</text>
+    </g>
+    <text class="diagram-label" x="130" y="254">Ocupan su sitio en orden</text>
+
+    <g class="diagram-node--container">
+      <rect x="260" y="44" width="200" height="186" rx="4" />
+    </g>
+    <text class="diagram-label diagram-label--accent" x="360" y="28">relative · deja su hueco</text>
+    <g class="diagram-node">
+      <rect x="276" y="58" width="168" height="40" rx="3" />
+      <text x="360" y="78">Caja 1</text>
+    </g>
+    <rect x="276" y="108" width="168" height="40" rx="3" fill="none" stroke="var(--coral)" stroke-dasharray="4 3" stroke-width="1.5" />
+    <text x="360" y="128" fill="var(--coral)" font-family="var(--sans)" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">hueco reservado</text>
+    <g class="diagram-node diagram-node--accent">
+      <rect x="296" y="120" width="156" height="40" rx="3" />
+      <text x="374" y="140">Caja 2 (desplazada)</text>
+    </g>
+    <g class="diagram-edges">
+      <path d="M 330 114 L 350 120" marker-end="url(#pos-arrow)" />
+    </g>
+    <g class="diagram-node">
+      <rect x="276" y="168" width="168" height="40" rx="3" />
+      <text x="360" y="188">Caja 3</text>
+    </g>
+    <text class="diagram-label diagram-label--accent" x="360" y="254">Caja 3 no sube: el hueco sigue ahí</text>
+
+    <g class="diagram-node--container">
+      <rect x="490" y="44" width="200" height="186" rx="4" />
+    </g>
+    <text class="diagram-label" x="590" y="28">absolute · sale del flujo</text>
+    <g class="diagram-node">
+      <rect x="506" y="58" width="168" height="40" rx="3" />
+      <text x="590" y="78">Caja 1</text>
+    </g>
+    <g class="diagram-node">
+      <rect x="506" y="108" width="168" height="40" rx="3" />
+      <text x="590" y="128">Caja 3 (sube y ocupa el hueco)</text>
+    </g>
+    <g class="diagram-edges">
+      <path d="M 590 164 L 590 152" marker-end="url(#pos-arrow)" />
+    </g>
+    <g class="diagram-node diagram-node--danger">
+      <rect x="532" y="168" width="144" height="40" rx="3" />
+      <text x="604" y="188">Caja 2 (top: 0; right: 0)</text>
+    </g>
+    <text class="diagram-label" x="590" y="254">Caja 3 sube; Caja 2 flota sin hueco</text>
+  </svg>
+</figure>
 
 <div class="rule">
   <p class="rule-label">No se maqueta con <code>position: absolute</code></p>
@@ -1397,11 +1490,66 @@ nav ul {
 #### Los dos ejes
 
 <figure class="diagram">
-  <figcaption>Los ejes con <code>flex-direction: row</code></figcaption>
-  <ol class="flow flow--row flow--chain">
-    <li>Eje principal · horizontal</li>
-    <li>Eje transversal · vertical</li>
-  </ol>
+  <figcaption>Los dos ejes de Flexbox · flex-direction decide cuál es cuál</figcaption>
+  <svg class="diagram-svg" viewBox="0 0 720 290" role="img" aria-labelledby="axes-title axes-desc" preserveAspectRatio="xMidYMid meet">
+    <title id="axes-title">Comparativa de ejes en flex-direction row frente a column</title>
+    <desc id="axes-desc">En flex-direction row el eje principal es horizontal y el eje transversal es vertical. En flex-direction column el eje principal pasa a ser vertical y el transversal horizontal. Las propiedades justify-content y align-items se intercambian de dirección.</desc>
+    <defs>
+      <marker id="axis-arrow-main" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" fill="var(--blue)" />
+      </marker>
+      <marker id="axis-arrow-cross" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path class="diagram-arrowhead" d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-soft)" />
+      </marker>
+    </defs>
+    <!-- Lado Izquierdo: row -->
+    <g class="diagram-node--container">
+      <rect x="50" y="55" width="280" height="150" rx="4" />
+    </g>
+    <text class="diagram-label" x="190" y="25">flex-direction: row (por defecto)</text>
+    <path d="M 50 42 L 320 42" fill="none" stroke="var(--blue)" stroke-width="2.5" marker-end="url(#axis-arrow-main)" />
+    <text x="185" y="34" fill="var(--blue)" font-family="var(--sans)" font-size="12" font-weight="800" text-anchor="middle">Eje principal → justify-content</text>
+    <path d="M 34 55 L 34 195" fill="none" stroke="var(--ink-soft)" stroke-width="2" marker-end="url(#axis-arrow-cross)" />
+    <text x="24" y="125" fill="var(--ink-soft)" font-family="var(--sans)" font-size="11" font-weight="700" text-anchor="middle" transform="rotate(-90 24 125)">Eje transversal ↓ align-items</text>
+    <g class="diagram-node">
+      <rect x="70" y="85" width="65" height="90" rx="3" />
+      <text x="102" y="130">1</text>
+    </g>
+    <g class="diagram-node">
+      <rect x="155" y="85" width="65" height="90" rx="3" />
+      <text x="187" y="130">2</text>
+    </g>
+    <g class="diagram-node">
+      <rect x="240" y="85" width="65" height="90" rx="3" />
+      <text x="272" y="130">3</text>
+    </g>
+    <text class="diagram-label" x="190" y="230">Fila: los elementos avanzan en horizontal</text>
+
+    <!-- Lado Derecho: column -->
+    <g class="diagram-node--container">
+      <rect x="420" y="55" width="260" height="150" rx="4" />
+    </g>
+    <text class="diagram-label diagram-label--accent" x="550" y="25">flex-direction: column</text>
+    <path d="M 420 42 L 670 42" fill="none" stroke="var(--ink-soft)" stroke-width="2" marker-end="url(#axis-arrow-cross)" />
+    <text x="545" y="34" fill="var(--ink-soft)" font-family="var(--sans)" font-size="11" font-weight="700" text-anchor="middle">Eje transversal → align-items</text>
+    <path d="M 404 55 L 404 195" fill="none" stroke="var(--coral)" stroke-width="2.5" marker-end="url(#axis-arrow-main)" />
+    <text x="394" y="125" fill="var(--coral)" font-family="var(--sans)" font-size="12" font-weight="800" text-anchor="middle" transform="rotate(-90 394 125)">Eje principal ↓ justify-content</text>
+    <g class="diagram-node">
+      <rect x="445" y="68" width="210" height="34" rx="3" />
+      <text x="550" y="85">1</text>
+    </g>
+    <g class="diagram-node">
+      <rect x="445" y="112" width="210" height="34" rx="3" />
+      <text x="550" y="129">2</text>
+    </g>
+    <g class="diagram-node">
+      <rect x="445" y="156" width="210" height="34" rx="3" />
+      <text x="550" y="173">3</text>
+    </g>
+    <text class="diagram-label diagram-label--accent" x="550" y="230">Columna: los elementos avanzan en vertical</text>
+
+    <text class="diagram-label diagram-label--accent" x="360" y="270">Al cambiar la dirección, los dos ejes y sus propiedades se intercambian</text>
+  </svg>
 </figure>
 
 Todo Flexbox tiene un **eje principal**, que es por donde se colocan los elementos, y un **eje transversal**, el perpendicular. Cuál es cuál lo decide `flex-direction`:
@@ -1434,6 +1582,53 @@ flex-direction: column;  /* principal vertical */
 | `align-items` | Alinea los elementos **en el eje transversal** |
 | `gap` | Separación entre elementos, sin márgenes ni el último elemento sobrando |
 | `flex-wrap` | Permite que los elementos salten de línea cuando no caben |
+
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>Cómo reparte el espacio sobrante justify-content en el eje principal</strong></figcaption>
+  <div class="lesson-demo__stage lesson-justify-demos">
+    <div class="lesson-justify-row">
+      <strong>justify-content: flex-start (por defecto)</strong>
+      <div class="lesson-justify-bar lesson-justify-bar--start">
+        <span class="lesson-flex-chip">1</span>
+        <span class="lesson-flex-chip">2</span>
+        <span class="lesson-flex-chip">3</span>
+      </div>
+    </div>
+    <div class="lesson-justify-row">
+      <strong>justify-content: center</strong>
+      <div class="lesson-justify-bar lesson-justify-bar--center">
+        <span class="lesson-flex-chip">1</span>
+        <span class="lesson-flex-chip">2</span>
+        <span class="lesson-flex-chip">3</span>
+      </div>
+    </div>
+    <div class="lesson-justify-row">
+      <strong>justify-content: flex-end</strong>
+      <div class="lesson-justify-bar lesson-justify-bar--end">
+        <span class="lesson-flex-chip">1</span>
+        <span class="lesson-flex-chip">2</span>
+        <span class="lesson-flex-chip">3</span>
+      </div>
+    </div>
+    <div class="lesson-justify-row">
+      <strong>justify-content: space-between</strong>
+      <div class="lesson-justify-bar lesson-justify-bar--between">
+        <span class="lesson-flex-chip">1</span>
+        <span class="lesson-flex-chip">2</span>
+        <span class="lesson-flex-chip">3</span>
+      </div>
+    </div>
+    <div class="lesson-justify-row">
+      <strong>justify-content: space-around</strong>
+      <div class="lesson-justify-bar lesson-justify-bar--around">
+        <span class="lesson-flex-chip">1</span>
+        <span class="lesson-flex-chip">2</span>
+        <span class="lesson-flex-chip">3</span>
+      </div>
+    </div>
+  </div>
+  <p class="lesson-demo__note">El fondo rayado representa el <strong>espacio sobrante</strong>: <code>justify-content</code> no cambia el tamaño de los elementos, sino cómo y dónde se reparte ese hueco a lo largo del eje principal.</p>
+</figure>
 
 <p class="term">gap</p>
 
@@ -1489,6 +1684,11 @@ Crea un archivo de pruebas `laboratorio.html` con cuatro cajas de colores, una d
   <p>Un elemento <code>absolute</code> se coloca respecto a su <strong>ancestro posicionado más cercano</strong>, y si no encuentra ninguno, respecto al documento entero. Por eso acaba en la esquina de la página en lugar de en la de su tarjeta.</p>
   <p>La solución es la del ejemplo: darle <code>position: relative</code> al contenedor que quieres que sirva de referencia. Es prácticamente el único uso de <code>relative</code> que verás en código profesional.</p>
 </details>
+
+<div class="rule">
+  <p class="rule-label">Usa la ayuda visual de DevTools</p>
+  <p>Abre las herramientas de desarrollo del navegador (F12) y pasa el cursor por los elementos en el árbol DOM. En cuanto un elemento tenga <code>display: flex</code>, verás una pequeña insignia morada <code>flex</code> a su derecha. Haz clic en ella: el navegador proyectará una cuadrícula interactiva sobre la página dibujando las flechas del eje principal, las líneas de <code>gap</code> y las zonas de espacio sobrante. Es el mejor espejo para comprobar si el navegador ha entendido tu intención.</p>
+</div>
 
 #### Paso 2 · La navegación de tu sitio · 30 min
 
@@ -1556,7 +1756,7 @@ Reproduce los tres, aplicando el método de las tres preguntas antes de escribir
 └───────────────────────────────────┘
 ```
 
-Aquí hay **dos Flexbox anidados**, y verlo es media solución:
+Aquí hay **tres Flexbox anidados**, y verlo es media solución:
 
 1. Uno exterior en fila: imagen a un lado, información al otro.
 2. Uno interior en columna dentro de la información: título, descripción y la línea del precio.
@@ -1567,6 +1767,24 @@ Aquí hay **dos Flexbox anidados**, y verlo es media solución:
 .producto__datos { display: flex; flex-direction: column; gap: var(--space-xs); }
 .producto__pie   { display: flex; justify-content: space-between; align-items: center; }
 ```
+
+<figure class="lesson-demo">
+  <figcaption><span>Vista previa</span><strong>La tarjeta construida con tres Flexbox anidados</strong></figcaption>
+  <div class="lesson-demo__stage lesson-card-nested-demo">
+    <div class="lesson-card-outer">
+      <div class="lesson-card-image">Imagen (1D: fila)</div>
+      <div class="lesson-card-body">
+        <h4>Ratón ergonómico inalámbrico (1D: columna)</h4>
+        <p>Sensor óptico de alta precisión, conexión dual Bluetooth 5.0 y batería recargable de larga duración.</p>
+        <div class="lesson-card-foot">
+          <span class="lesson-card-price">39,90 € (1D: fila)</span>
+          <span class="lesson-card-btn">Añadir a la cesta</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="lesson-demo__note">Cada contenedor resuelve una sola dimensión: el contenedor exterior alinea en fila (foto y contenido), el bloque de contenido alinea en columna (título, descripción y pie), y la línea del pie alinea en fila (precio a la izquierda y botón a la derecha).</p>
+</figure>
 
 Anidar contenedores es normal y no es un síntoma de nada malo. Cada uno resuelve una dimensión.
 
