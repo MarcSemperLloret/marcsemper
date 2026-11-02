@@ -1254,55 +1254,35 @@ Esta hoja pertenece a un proyecto ajeno. Decide qué valores se convierten en cu
 
 ## Sesión 3 · Flujo normal y Flexbox
 
-<p class="lead">Tres horas. Media hora para entender cómo coloca el navegador cuando no le dices nada y cómo se razona un Flexbox, y dos horas y media rompiendo el flujo a propósito y construyendo los componentes de tu sitio.</p>
+<p class="lead">Tres horas para pasar de «mover cosas hasta que encajen» a entender qué reparte el espacio. Construirás una cabecera por etapas: primero observarás el flujo, después elegirás los ejes y finalmente comprobarás qué ocurre cuando el contenido deja de caber.</p>
 
 <div class="today-box">
   <p class="today-label">Hoy · Hoja de ruta</p>
   <ol class="today-steps">
-    <li><strong>1. Aprende:</strong> Cómo coloca el navegador los elementos por defecto, qué pasa cuando sacas uno de ese flujo, y los dos ejes con los que se razona cualquier Flexbox.</li>
-    <li><strong>2. Haz:</strong> Experimenta con <code>display</code> y <code>position</code>, convierte tu navegación en un Flexbox y construye tres componentes justificando cada decisión.</li>
-    <li><strong>3. Comprueba:</strong> Sabes decir para cada componente cuál es su eje principal, y nada desborda a 360 px.</li>
+    <li><strong>Observa:</strong> el mismo contenido antes y después de aplicar CSS.</li>
+    <li><strong>Predice y prueba:</strong> cambia una propiedad cada vez en el laboratorio visual.</li>
+    <li><strong>Construye y comprueba:</strong> una cabecera que soporte más enlaces, texto largo y una pantalla estrecha.</li>
   </ol>
 </div>
 
-<div class="checkpoint checkpoint--start">
-  <p class="checkpoint-label">Antes de empezar · 5 minutos, sin apuntes</p>
-  <ol>
-    <li>¿Qué problema resuelve una custom property?</li>
-    <li>¿En qué se diferencia un valor fijo de uno limitado con <code>clamp()</code>?</li>
-    <li>Predice qué cambia si sustituyes <code>var(--color-principal)</code> en la declaración de <code>:root</code>.</li>
-  </ol>
-</div>
+### Antes de empezar · 5 min
 
-### Se explica
+Sin apuntes: ¿qué diferencia hay entre `padding` y `margin`? ¿Para qué sirve una custom property? Si cambias el valor de `--color-principal` en `:root`, ¿qué elementos deberían cambiar?
 
-<p class="stage stage--brief">25 minutos · conceptos y demostración</p>
+### Se explica y se prueba · 40 min
 
-Antes de colocar nada conviene saber cómo se coloca solo. Después, dos formas de intervenir: sacar un elemento del flujo, que se usa poco y para cosas concretas, y repartir el espacio de una línea, que es Flexbox y se usa constantemente.
+#### 1 · Antes de distribuir, observa el flujo
 
-#### Antes de Flexbox y Grid está el flujo normal
-
-<p class="term">Flujo normal</p>
-
-La forma en que el navegador coloca los elementos por defecto: unos detrás de otros, siguiendo el orden del documento. Todo lo que veremos después son maneras de **modificarlo**, no de sustituirlo.
-
-Merece la pena entenderlo porque el flujo normal ya resuelve bien muchas cosas. Un artículo con sus párrafos y sus encabezados, uno debajo de otro y ocupando el ancho disponible, no necesita nada.
-
-| Comportamiento | Qué hace | Elementos típicos |
-| -------------- | -------- | ----------------- |
-| Bloque | Ocupa todo el ancho disponible y empieza en una línea nueva | `div`, `section`, `article`, `p`, `h1` |
-| En línea | Ocupa solo lo que mide su contenido y se coloca dentro del texto | `a`, `strong`, `em`, `span`, `img` |
+El navegador ya coloca el contenido siguiendo el orden del documento. En el flujo normal, los bloques empiezan en una línea nueva y, con anchura automática, suelen ocupar el ancho disponible. Los elementos en línea participan en las líneas del texto. Un artículo con títulos y párrafos puede funcionar sin Flexbox.
 
 ```css
-display: block;          /* fuerza el comportamiento de bloque */
-display: inline;         /* fuerza el de línea */
-display: inline-block;   /* fluye como texto, pero acepta ancho, alto y márgenes verticales */
-display: none;           /* lo saca del documento por completo */
-display: flex;           /* lo de hoy */
-display: grid;           /* la sesión que viene */
+/* Compara inline con inline-block en un span de texto. */
+.muestra {
+    width: 10rem;
+    height: 4rem;
+    display: inline; /* cambia a inline-block; para block prueba también width: auto */
+}
 ```
-
-`inline-block` resuelve la limitación clásica: a un elemento en línea no puedes darle `width` ni márgenes verticales útiles. Con `inline-block` sí, y sigue colocándose en la misma línea que su texto.
 
 <figure class="lesson-demo">
   <figcaption><span>Comparativa visual</span><strong>Cómo se comportan inline, inline-block y block</strong></figcaption>
@@ -1320,160 +1300,36 @@ display: grid;           /* la sesión que viene */
       <p class="lesson-flow-sample">Texto previo <span class="box-block">block (salta de línea y ocupa todo el ancho)</span> texto que queda debajo en una nueva línea.</p>
     </div>
   </div>
-  <p class="lesson-demo__note">Fíjate en cómo <code>inline-block</code> se mantiene dentro de la línea de texto pero acepta altura, anchura y márgenes verticales, mientras que <code>block</code> rompe el flujo y ocupa todo el ancho disponible.</p>
+  <p class="lesson-demo__note">Fíjate en cómo <code>inline-block</code> se mantiene dentro de la línea de texto pero acepta altura, anchura y márgenes verticales, mientras que <code>block</code> empieza una línea nueva y aquí ocupa el ancho disponible. Ambos siguen en el flujo normal.</p>
 </figure>
 
-<div class="rule">
-  <p class="rule-label"><code>display: none</code> no es «invisible»</p>
-  <p>Elimina el elemento del documento: no ocupa espacio y <strong>tampoco existe para un lector de pantalla ni para el recorrido con <code>Tab</code></strong>. Eso es correcto cuando quieres ocultar algo de verdad, y es un error cuando solo querías que no se viera.</p>
-  <p>Si necesitas que algo siga estando disponible para quien no ve la pantalla, existen otras técnicas. Si la intención era únicamente que ocupara su hueco sin verse, eso es <code>visibility: hidden</code> o una opacidad, no <code>display: none</code>.</p>
-</div>
+En un elemento en línea de texto, `width` y `height` no fijan su tamaño como lo hacen en un bloque. Un `img` es una excepción importante: es un elemento reemplazado y sí admite dimensiones aunque sea inline. `inline-block` participa en la línea y permite dimensionar su caja. Un bloque empieza otra línea; eso **forma parte del flujo**, no significa que haya salido de él.
 
-#### Sacar un elemento del flujo
+#### 2 · El mismo menú, dos distribuciones
 
-```css
-position: static;    /* el valor por defecto: sigue el flujo */
-position: relative;  /* sigue ocupando su hueco, pero se desplaza respecto a él */
-position: absolute;  /* sale del flujo y se coloca respecto a su ancestro posicionado */
-position: fixed;     /* sale del flujo y se coloca respecto al viewport */
-position: sticky;    /* sigue el flujo hasta llegar a un límite, y entonces se queda */
-```
-
-La distinción que importa es **si el elemento deja o no su hueco**:
-
-| Valor | ¿Deja hueco? | Consecuencia |
-| ----- | ------------ | ------------ |
-| `relative` | Sí | Se mueve, pero los demás siguen contando con él |
-| `absolute` | No | Los demás ocupan su sitio como si no existiera |
-| `fixed` | No | Igual, y además no se mueve al hacer scroll |
-| `sticky` | Sí | Se comporta normal hasta que toca su límite |
-
-`relative` casi nunca se usa para mover nada: se usa para crear el punto de referencia al que un `absolute` hijo se agarrará.
-
-```css
-.card          { position: relative; }
-.card .etiqueta{ position: absolute; top: 0; right: 0; }
-```
-
-<figure class="diagram">
-  <figcaption>El concepto del «hueco» · static, relative y absolute</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 280" role="img" aria-labelledby="pos-title pos-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="pos-title">Comparativa de posicionamiento respecto al hueco</title>
-    <desc id="pos-desc">En static las cajas fluyen en orden. En relative la caja 2 se desplaza pero conserva su hueco reservado, por lo que la caja 3 no se mueve. En absolute la caja 2 sale del flujo y la caja 3 sube inmediatamente a ocupar su lugar.</desc>
-    <defs>
-      <marker id="pos-arrow-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c93b24" />
-      </marker>
-      <marker id="pos-arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#2857df" />
-      </marker>
-    </defs>
-
-    <!-- Columna 1: static -->
-    <g class="diagram-panel--neutral">
-      <rect x="30" y="44" width="200" height="186" rx="4" />
-    </g>
-    <text class="diagram-label" x="130" y="28">static · flujo normal</text>
-    <g class="diagram-box--static">
-      <rect x="46" y="58" width="168" height="40" rx="3" />
-      <text x="130" y="78">Caja 1</text>
-    </g>
-    <g class="diagram-box--static">
-      <rect x="46" y="108" width="168" height="40" rx="3" />
-      <text x="130" y="128">Caja 2</text>
-    </g>
-    <g class="diagram-box--static">
-      <rect x="46" y="158" width="168" height="40" rx="3" />
-      <text x="130" y="178">Caja 3</text>
-    </g>
-    <text class="diagram-label" x="130" y="254">Ocupan su sitio en orden</text>
-
-    <!-- Columna 2: relative -->
-    <g class="diagram-panel--neutral">
-      <rect x="260" y="44" width="200" height="186" rx="4" />
-    </g>
-    <text class="diagram-label diagram-label--accent" x="360" y="28">relative · deja su hueco</text>
-    <g class="diagram-box--static">
-      <rect x="276" y="58" width="168" height="40" rx="3" />
-      <text x="360" y="78">Caja 1</text>
-    </g>
-    <!-- Hueco reservado -->
-    <g class="diagram-box--reserved">
-      <rect x="276" y="108" width="168" height="40" rx="3" />
-      <text x="360" y="128">hueco reservado</text>
-    </g>
-    <!-- Caja 2 desplazada -->
-    <g class="diagram-box--moved">
-      <rect x="296" y="120" width="156" height="40" rx="3" />
-      <text x="374" y="140">Caja 2 (desplazada)</text>
-    </g>
-    <path d="M 320 112 L 340 120" fill="none" stroke="#c93b24" stroke-width="2" marker-end="url(#pos-arrow-coral)" />
-    <!-- Caja 3 no se mueve -->
-    <g class="diagram-box--static">
-      <rect x="276" y="168" width="168" height="40" rx="3" />
-      <text x="360" y="188">Caja 3</text>
-    </g>
-    <text class="diagram-label diagram-label--accent" x="360" y="254">Caja 3 no sube: el hueco sigue ahí</text>
-
-    <!-- Columna 3: absolute -->
-    <g class="diagram-panel--neutral">
-      <rect x="490" y="44" width="200" height="186" rx="4" />
-    </g>
-    <text class="diagram-label" x="590" y="28">absolute · sale del flujo</text>
-    <g class="diagram-box--static">
-      <rect x="506" y="58" width="168" height="40" rx="3" />
-      <text x="590" y="78">Caja 1</text>
-    </g>
-    <!-- Caja 3 sube al hueco -->
-    <g class="diagram-box--static">
-      <rect x="506" y="108" width="168" height="40" rx="3" />
-      <text x="590" y="128">Caja 3 (sube y ocupa el hueco)</text>
-    </g>
-    <path d="M 590 162 L 590 152" fill="none" stroke="#2857df" stroke-width="2" marker-end="url(#pos-arrow-blue)" />
-    <!-- Caja 2 flotando fuera del flujo -->
-    <g class="diagram-box--absolute">
-      <rect x="532" y="168" width="144" height="40" rx="3" />
-      <text x="604" y="188">Caja 2 (top: 0; right: 0)</text>
-    </g>
-    <text class="diagram-label" x="590" y="254">Caja 3 sube; Caja 2 flota sin hueco</text>
-  </svg>
-</figure>
-
-<div class="rule">
-  <p class="rule-label">No se maqueta con <code>position: absolute</code></p>
-  <p>Colocar cada bloque de la página con coordenadas parece que funciona, y es la maqueta más frágil que existe: los elementos ya no saben nada unos de otros, así que en cuanto un texto crece se solapan, y en una pantalla más estrecha todo queda fuera de sitio.</p>
-  <p><code>absolute</code> es para lo que de verdad es posicionamiento: una etiqueta de «oferta» sobre una esquina, un icono dentro de un campo. La distribución de la página se hace con Flexbox y con Grid.</p>
-</div>
-
-Cuando algo no cabe, `overflow` decide qué se ve:
-
-```css
-overflow: visible;  /* por defecto: el contenido se sale y se ve */
-overflow: auto;     /* aparece barra de scroll si hace falta */
-overflow: hidden;   /* se recorta lo que no cabe */
-```
-
-`overflow: hidden` es tentador cuando algo desborda, y muchas veces es tapar el problema en lugar de resolverlo: el contenido sigue sin caber, ahora además no se puede leer. Donde sí es la respuesta correcta es en contenido que legítimamente es más ancho que la pantalla, como una tabla de datos: ahí `overflow-x: auto` en un contenedor le da su propia barra de scroll sin romper la página.
-
-#### Flexbox distribuye en una dimensión
-
-Flexbox distribuye elementos **en una línea**: o en fila, o en columna. Ese es el criterio para elegirlo, y lo veremos enfrentado a Grid en la sesión 4.
-
-En la UD1 dejaste el menú así:
+Este HTML se mantiene durante todo el ejemplo:
 
 ```html
 <nav aria-label="Navegación principal">
-    <ul>
+    <ul class="menu">
         <li><a href="index.html">Inicio</a></li>
         <li><a href="productos.html">Productos</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
     </ul>
 </nav>
 ```
 
-Con dos declaraciones deja de ser una lista vertical, **sin tocar el HTML**:
+<figure class="lesson-demo">
+  <figcaption><span>Antes → después</span><strong>Los mismos tres enlaces</strong></figcaption>
+  <div class="lesson-demo__stage css-compare">
+    <div><p class="css-demo-label">Sin Flexbox · bloques en el flujo</p><ul class="css-menu-plain"><li>Inicio</li><li>Productos</li><li>Contacto</li></ul></div>
+    <div><p class="css-demo-label">Con Flexbox · fila con separación</p><ul class="css-menu-flex"><li>Inicio</li><li>Productos</li><li>Contacto</li></ul></div>
+  </div>
+  <p class="lesson-demo__note">Flexbox distribuye los hijos directos: aquí son los <code>li</code>, no los enlaces que llevan dentro.</p>
+</figure>
 
 ```css
-nav ul {
+.menu {
     display: flex;
     gap: 1rem;
     list-style: none;
@@ -1482,476 +1338,259 @@ nav ul {
 }
 ```
 
-<figure class="lesson-demo">
-  <figcaption><span>Vista previa</span><strong>La misma lista semántica, ahora distribuida en una fila</strong></figcaption>
+`display: flex` crea un contexto de distribución para los hijos directos. `gap` separa las cajas entre sí; no añade espacio en los bordes exteriores. Las otras tres declaraciones limpian la presentación inicial de la lista.
+
+#### 3 · Toca el CSS y mira qué cambia
+
+Antes de tocar un control, predice el resultado. Cambia **una sola opción**, observa y explica si ha cambiado la dirección, el espacio libre, la alineación o el salto de línea. El ejemplo usa escritura horizontal de izquierda a derecha.
+
+<figure class="lesson-demo css-lab" data-flex-lab>
+  <figcaption><span>Laboratorio interactivo</span><strong>Una propiedad, un efecto visible</strong></figcaption>
   <div class="lesson-demo__stage">
-    <nav class="lesson-flex-nav" aria-label="Demostración de navegación con Flexbox">
-      <strong>PixelStore</strong>
-      <ul>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Productos</a></li>
-        <li><a href="#">Contacto</a></li>
-      </ul>
-    </nav>
+    <div class="css-lab-controls" data-lab-controls></div>
+    <div class="css-lab-canvas"><div class="css-lab-track" data-lab-track><span>Inicio</span><span>Productos</span><span>Contacto</span></div></div>
+    <p class="css-lab-status" data-lab-status aria-live="polite">Fila: eje principal horizontal; eje transversal vertical.</p>
   </div>
-  <p class="lesson-demo__note"><code>display: flex</code> cambia la distribución; <code>gap</code> crea únicamente el espacio entre enlaces.</p>
-</figure>
-
-#### Los dos ejes
-
-<figure class="diagram">
-  <figcaption>Los dos ejes de Flexbox · flex-direction decide cuál es cuál</figcaption>
-  <svg class="diagram-svg" viewBox="0 0 720 295" role="img" aria-labelledby="axes-title axes-desc" preserveAspectRatio="xMidYMid meet">
-    <title id="axes-title">Comparativa de ejes en flex-direction row frente a column</title>
-    <desc id="axes-desc">En flex-direction row el eje principal es horizontal (coral) y el eje transversal es vertical (azul). En flex-direction column el eje principal pasa a ser vertical (coral) y el transversal horizontal (azul). Las propiedades justify-content y align-items se intercambian de dirección.</desc>
-    <defs>
-      <marker id="axis-arrow-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c93b24" />
-      </marker>
-      <marker id="axis-arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#2857df" />
-      </marker>
-    </defs>
-
-    <!-- Lado Izquierdo: row -->
-    <g class="diagram-panel--row">
-      <rect x="50" y="55" width="280" height="150" rx="4" />
-    </g>
-    <text class="diagram-label" x="190" y="25">flex-direction: row (por defecto)</text>
-    <!-- Flecha Eje Principal (horizontal, CORAL) -->
-    <path d="M 50 42 L 320 42" fill="none" stroke="#c93b24" stroke-width="2.5" marker-end="url(#axis-arrow-coral)" />
-    <text x="185" y="34" fill="#c93b24" font-family="var(--sans)" font-size="12" font-weight="800" text-anchor="middle">Eje principal (horizontal) → justify-content</text>
-    <!-- Flecha Eje Transversal (vertical, AZUL) -->
-    <path d="M 34 55 L 34 195" fill="none" stroke="#2857df" stroke-width="2" marker-end="url(#axis-arrow-blue)" />
-    <text x="24" y="125" fill="#2857df" font-family="var(--sans)" font-size="11" font-weight="800" text-anchor="middle" transform="rotate(-90 24 125)">Eje transversal (vertical) ↓ align-items</text>
-    <!-- Elementos en fila -->
-    <g class="diagram-flex-item--row">
-      <rect x="70" y="85" width="65" height="90" rx="3" />
-      <text x="102" y="130">1</text>
-    </g>
-    <g class="diagram-flex-item--row">
-      <rect x="155" y="85" width="65" height="90" rx="3" />
-      <text x="187" y="130">2</text>
-    </g>
-    <g class="diagram-flex-item--row">
-      <rect x="240" y="85" width="65" height="90" rx="3" />
-      <text x="272" y="130">3</text>
-    </g>
-    <text class="diagram-label" x="190" y="228">Fila: los elementos avanzan en horizontal</text>
-
-    <!-- Lado Derecho: column -->
-    <g class="diagram-panel--col">
-      <rect x="420" y="55" width="260" height="150" rx="4" />
-    </g>
-    <text class="diagram-label diagram-label--accent" x="550" y="25">flex-direction: column</text>
-    <!-- Flecha Eje Transversal (horizontal, AZUL) -->
-    <path d="M 420 42 L 670 42" fill="none" stroke="#2857df" stroke-width="2" marker-end="url(#axis-arrow-blue)" />
-    <text x="545" y="34" fill="#2857df" font-family="var(--sans)" font-size="11" font-weight="800" text-anchor="middle">Eje transversal (horizontal) → align-items</text>
-    <!-- Flecha Eje Principal (vertical, CORAL) -->
-    <path d="M 404 55 L 404 195" fill="none" stroke="#c93b24" stroke-width="2.5" marker-end="url(#axis-arrow-coral)" />
-    <text x="394" y="125" fill="#c93b24" font-family="var(--sans)" font-size="12" font-weight="800" text-anchor="middle" transform="rotate(-90 394 125)">Eje principal (vertical) ↓ justify-content</text>
-    <!-- Elementos en columna -->
-    <g class="diagram-flex-item--col">
-      <rect x="445" y="68" width="210" height="34" rx="3" />
-      <text x="550" y="85">1</text>
-    </g>
-    <g class="diagram-flex-item--col">
-      <rect x="445" y="112" width="210" height="34" rx="3" />
-      <text x="550" y="129">2</text>
-    </g>
-    <g class="diagram-flex-item--col">
-      <rect x="445" y="156" width="210" height="34" rx="3" />
-      <text x="550" y="173">3</text>
-    </g>
-    <text class="diagram-label diagram-label--accent" x="550" y="228">Columna: los elementos avanzan en vertical</text>
-
-    <!-- Barra de pie explicativa -->
-    <g class="diagram-pill-footer">
-      <rect x="70" y="254" width="580" height="30" rx="15" />
-      <text x="360" y="269" text-anchor="middle" dominant-baseline="central">Al cambiar a column: justify-content (coral) pasa a vertical y align-items (azul) a horizontal</text>
-    </g>
-  </svg>
-</figure>
-
-Todo Flexbox tiene un **eje principal**, que es por donde se colocan los elementos, y un **eje transversal**, el perpendicular. Cuál es cuál lo decide `flex-direction`:
-
-```css
-flex-direction: row;     /* por defecto: principal horizontal */
-flex-direction: column;  /* principal vertical */
-```
-
-<div class="rule">
-  <p class="rule-label">La confusión que te va a pasar</p>
-  <p><code>justify-content</code> siempre actúa sobre el <strong>eje principal</strong> y <code>align-items</code> sobre el <strong>transversal</strong>. No sobre «horizontal» y «vertical».</p>
-  <p>Por eso, en cuanto pones <code>flex-direction: column</code>, las dos se intercambian: <code>justify-content</code> pasa a mover en vertical y <code>align-items</code> en horizontal. Cuando algo no se alinee como esperas, la primera pregunta es <strong>cuál es ahora el eje principal</strong>.</p>
-</div>
-
-```css
-.barra {
+  <pre><code data-lab-code>.menu {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: 1rem;
+}</code></pre>
+  <p class="lesson-demo__note">Sin JavaScript puedes ver el estado inicial y seguir los ejemplos de la página. El borde delimita el contenedor; el fondo rayado permite ver el espacio que queda libre. El ancho «estrecho» simula falta de espacio dentro del ejemplo.</p>
+</figure>
+
+| Propiedad | Pregunta que responde |
+| --- | --- |
+| `flex-direction` | ¿En qué dirección avanza el eje principal: fila o columna? |
+| `justify-content` | ¿Dónde queda el espacio libre del eje principal, después de dimensionar los hijos? |
+| `align-items` | ¿Cómo se alinean los hijos en el eje transversal de cada línea? |
+| `flex-wrap` | ¿Pueden pasar a otra línea si no caben? |
+| `gap` | ¿Qué separación hay entre las cajas? |
+
+Con `row`, el eje principal es horizontal en este ejemplo; con `column`, vertical. **Las propiedades conservan su función**: `justify-content` siempre actúa en el principal y `align-items` en el transversal. No se intercambian las propiedades; cambia la orientación de los ejes.
+
+Prueba estas tres predicciones en el laboratorio:
+
+1. Cambia `justify-content` a `space-between`. ¿Se agrandan los elementos o cambia el hueco entre ellos?
+2. Cambia a `column` conservando `justify-content`. ¿En qué dirección se reparte ahora el espacio?
+3. Vuelve a `row`, selecciona el ancho estrecho y compara `nowrap` con `wrap`. ¿Dónde aparece el espacio libre en cada línea?
+
+Flexbox trabaja en una dimensión **aunque haya varias líneas**: cada línea reparte su espacio de forma independiente. Si necesitas que las columnas coincidan entre filas, Grid suele ser más adecuado. Lo veremos en la sesión 4.
+
+<div class="rule">
+  <p class="rule-label">Para centrar tiene que haber espacio</p>
+  <p>Si el contenedor mide lo mismo que su contenido, no hay hueco donde desplazarlo. Para observar el centrado vertical, este laboratorio tiene una altura mínima. No añadas alturas fijas a toda tu web para imitarlo.</p>
+</div>
+
+#### 4 · Cuando no cabe: el tamaño también importa
+
+Alinear no resuelve por sí solo el tamaño de los hijos. `flex` resume tres decisiones:
+
+```css
+/*             grow shrink basis */
+.marca     { flex: 0    0    auto; }
+.buscador  { flex: 1    1    12rem; }
+```
+
+- `flex-grow`: proporción con la que participa en el reparto del espacio positivo. No representa un porcentaje del ancho final.
+- `flex-shrink`: factor de reducción cuando falta espacio; también interviene el tamaño de partida. Dos hijos con el mismo factor no siempre pierden la misma cantidad.
+- `flex-basis`: tamaño de partida en el eje principal, antes del reparto. Los límites mínimos y máximos siguen actuando.
+
+<figure class="lesson-demo">
+  <figcaption><span>Ejemplo visible</span><strong>La marca conserva su tamaño; el buscador recibe el resto</strong></figcaption>
+  <div class="lesson-demo__stage css-size-examples">
+    <div><p class="css-demo-label">Hay espacio disponible</p><div class="css-size-bar"><span class="css-size-brand">PixelStore</span><span class="css-size-search">Buscar productos…</span></div></div>
+    <div class="css-size-narrow"><p class="css-demo-label">Falta espacio: el buscador pasa a otra línea</p><div class="css-size-bar"><span class="css-size-brand">PixelStore</span><span class="css-size-search">Buscar productos…</span></div></div>
+  </div>
+  <p class="lesson-demo__note">Ambas barras usan el mismo CSS. Cambia únicamente el ancho disponible. El buscador es una representación visual, no un campo de formulario.</p>
+</figure>
+
+```css
+.cabecera {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
-    flex-wrap: wrap;
+}
+.marca { flex: 0 0 auto; }
+.buscador {
+    flex: 1 1 12rem;
+    min-width: 0;
 }
 ```
 
-| Propiedad | Qué hace |
-| --------- | -------- |
-| `justify-content` | Reparte el espacio sobrante **en el eje principal** |
-| `align-items` | Alinea los elementos **en el eje transversal** |
-| `gap` | Separación entre elementos, sin márgenes ni el último elemento sobrando |
-| `flex-wrap` | Permite que los elementos salten de línea cuando no caben |
+En una fila Flexbox, un hijo tiene normalmente un mínimo automático relacionado con su contenido. Una URL larga puede impedir que se reduzca como esperabas. `min-width: 0` permite reducir la caja, pero **no parte por sí solo el texto**: si hay palabras o direcciones muy largas, puede hacer falta `overflow-wrap: anywhere`. Para imágenes, controla también su tamaño.
+
+No memorices `flex: 1` como «ocupa todo»: suele equivaler en el navegador a `1 1 0%`. Si varios hijos pueden crecer, comparten el espacio según sus factores y límites.
+
+<div class="rule">
+  <p class="rule-label">Diagnóstico antes de ocultar</p>
+  <p>Si algo desborda, inspecciona qué caja no puede reducirse, sus mínimos, su contenido y si permite saltos. <code>overflow: hidden</code> recorta; no arregla el tamaño. Para una tabla que necesita más ancho, un contenedor con <code>overflow-x: auto</code> puede permitir leerla sin ensanchar la página.</p>
+</div>
+
+### Laboratorio breve · El hueco y position · 15 min
+
+Flexbox distribuye componentes. El posicionamiento permite, por ejemplo, colocar una etiqueta sobre una tarjeta. Observa la caja 2: ¿conserva su hueco?
 
 <figure class="lesson-demo">
-  <figcaption><span>Vista previa</span><strong>Cómo reparte el espacio sobrante justify-content en el eje principal</strong></figcaption>
-  <div class="lesson-demo__stage lesson-justify-demos">
-    <div class="lesson-justify-row">
-      <strong>justify-content: flex-start (por defecto)</strong>
-      <div class="lesson-justify-bar lesson-justify-bar--start">
-        <span class="lesson-flex-chip">1</span>
-        <span class="lesson-flex-chip">2</span>
-        <span class="lesson-flex-chip">3</span>
-      </div>
-    </div>
-    <div class="lesson-justify-row">
-      <strong>justify-content: center</strong>
-      <div class="lesson-justify-bar lesson-justify-bar--center">
-        <span class="lesson-flex-chip">1</span>
-        <span class="lesson-flex-chip">2</span>
-        <span class="lesson-flex-chip">3</span>
-      </div>
-    </div>
-    <div class="lesson-justify-row">
-      <strong>justify-content: flex-end</strong>
-      <div class="lesson-justify-bar lesson-justify-bar--end">
-        <span class="lesson-flex-chip">1</span>
-        <span class="lesson-flex-chip">2</span>
-        <span class="lesson-flex-chip">3</span>
-      </div>
-    </div>
-    <div class="lesson-justify-row">
-      <strong>justify-content: space-between</strong>
-      <div class="lesson-justify-bar lesson-justify-bar--between">
-        <span class="lesson-flex-chip">1</span>
-        <span class="lesson-flex-chip">2</span>
-        <span class="lesson-flex-chip">3</span>
-      </div>
-    </div>
-    <div class="lesson-justify-row">
-      <strong>justify-content: space-around</strong>
-      <div class="lesson-justify-bar lesson-justify-bar--around">
-        <span class="lesson-flex-chip">1</span>
-        <span class="lesson-flex-chip">2</span>
-        <span class="lesson-flex-chip">3</span>
-      </div>
-    </div>
+  <figcaption><span>El navegador lo dibuja</span><strong>Static, relative y absolute con cajas reales</strong></figcaption>
+  <div class="lesson-demo__stage css-position-grid">
+    <div><p class="css-demo-label">static · flujo normal</p><div class="css-position-stack"><span>Caja 1</span><span class="css-position-target">Caja 2</span><span>Caja 3</span></div><p>Las tres ocupan su lugar.</p></div>
+    <div><p class="css-demo-label">relative · conserva el hueco</p><div class="css-position-stack css-position-relative"><span>Caja 1</span><span class="css-position-target">Caja 2</span><span>Caja 3</span></div><p>La caja 2 se desplaza; la 3 conserva su posición.</p></div>
+    <div><p class="css-demo-label">absolute · sale del flujo</p><div class="css-position-stack css-position-absolute"><span>Caja 1</span><span class="css-position-target">Caja 2</span><span>Caja 3</span></div><p>La caja 2 queda arriba a la derecha; la 3 sube al segundo lugar.</p></div>
   </div>
-  <p class="lesson-demo__note">El fondo rayado representa el <strong>espacio sobrante</strong>: <code>justify-content</code> no cambia el tamaño de los elementos, sino cómo y dónde se reparte ese hueco a lo largo del eje principal.</p>
+  <p class="lesson-demo__note">Los tres contenedores tienen <code>position: relative</code>. El borde discontinuo del segundo señala el hueco original. Observa la caja 3: solo sube cuando la caja 2 deja de reservar espacio.</p>
 </figure>
-
-<p class="term">gap</p>
-
-La separación entre elementos de un contenedor Flexbox o Grid. Sustituye a los márgenes y evita su problema clásico: no deja un margen sobrante en el último elemento, y no sufre el colapso de márgenes.
-
-En los hijos, `flex` resume cuánto puede crecer un elemento, cuánto encogerse y cuál es su tamaño de partida:
 
 ```css
-.logo    { flex: 0 0 auto; }   /* no crece, no se encoge, mide lo que mida */
-.buscador{ flex: 1; }          /* se queda con todo el espacio sobrante */
+.contenedor { position: relative; }
+/* Prueba cada caso por separado en la segunda caja. */
+.caja2 { position: static; }
+.caja2 { position: relative; top: 1rem; left: 0.5rem; }
+.caja2 { position: absolute; top: 0; right: 0; }
 ```
 
-`margin-left: auto` en un hijo también tiene un efecto muy útil: empuja ese elemento y todos los siguientes hasta el final del eje. Es la forma limpia de separar un grupo del resto en una barra.
+En `laboratorio.html`, crea tres cajas y reproduce los casos. Predice qué ocurrirá con la tercera antes de aplicar cada cambio. Usa `relative` como referencia del hijo absoluto; no coloques toda la página con coordenadas, porque los elementos fuera del flujo no reservan espacio para el contenido que crece.
 
-#### El método, en tres preguntas
+`absolute` se referencia a su bloque contenedor, que en este ejemplo establece el ancestro con `position: relative`. Otras propiedades, como `transform`, también pueden establecer esa referencia. `fixed` suele referenciarse al viewport, con excepciones similares. `sticky` conserva su hueco y se ajusta al desplazamiento dentro de los límites de su contenedor; necesita un umbral, como `top: 0`, y espacio para observar el efecto.
 
-Cuando te enfrentes a un componente, no busques la propiedad: contesta esto.
-
-<figure class="diagram">
-  <figcaption>Cómo se razona un Flexbox</figcaption>
-  <ol class="flow">
-    <li>¿Qué elementos tengo que colocar en una misma línea?</li>
-    <li>¿En qué dirección van: fila o columna? Ese es el eje principal</li>
-    <li>¿Qué hago con el espacio que sobra en ese eje, y cómo alineo en el otro?</li>
-  </ol>
-</figure>
-
-Con eso, `justify-content` y `align-items` dejan de ser prueba y error.
-
-### Se trabaja
-
-<p class="stage stage--guided">150 minutos · laboratorio y componentes de tu proyecto</p>
-
-El paso 1 se hace en un archivo de pruebas, no sobre el proyecto: conviene romper cosas en un sitio donde romperlas no cueste nada. A partir del paso 2 se trabaja sobre el sitio.
-
-#### Paso 1 · Rompe el flujo · 30 min
-
-Crea un archivo de pruebas `laboratorio.html` con cuatro cajas de colores, una debajo de otra, y experimenta. Para **cada** apartado anota qué le pasa a la caja y, sobre todo, **qué le pasa al hueco que ocupaba**.
-
-1. Cambia la segunda a `display: inline`. ¿Por qué deja de hacer caso al `width`?
-2. Cambia la segunda a `display: inline-block`. ¿Qué recupera?
-3. Ponle `position: relative` y desplázala con `top: 20px`. ¿Se han movido las demás?
-4. Ponle `position: absolute` con `top: 0; right: 0`. ¿Respecto a qué se ha colocado? Ahora dale `position: relative` a su contenedor y observa la diferencia.
-5. Ponle `position: sticky; top: 0` a la primera y haz scroll.
-6. Ponle `display: none` a la tercera y compáralo con `visibility: hidden`.
-
-| Apartado | Qué le pasa al elemento | Qué le pasa a su hueco |
-| -------- | ----------------------- | ---------------------- |
-| | | |
-
-<details class="aside aside--help">
-  <summary>Estoy atascado · mi <code>absolute</code> se va a la esquina de la pantalla</summary>
-  <p>Un elemento <code>absolute</code> se coloca respecto a su <strong>ancestro posicionado más cercano</strong>, y si no encuentra ninguno, respecto al documento entero. Por eso acaba en la esquina de la página en lugar de en la de su tarjeta.</p>
-  <p>La solución es la del ejemplo: darle <code>position: relative</code> al contenedor que quieres que sirva de referencia. Es prácticamente el único uso de <code>relative</code> que verás en código profesional.</p>
+<details class="aside aside--extra">
+  <summary>Ocultar no es lo mismo que sacar del flujo</summary>
+  <p><code>display: none</code> no elimina el nodo del DOM: suprime su representación y normalmente lo excluye del árbol de accesibilidad y del recorrido con Tab. <code>visibility: hidden</code> conserva el hueco, pero también oculta el contenido a las tecnologías de asistencia. <code>opacity: 0</code> conserva el hueco y puede dejar controles enfocables e interactivos aunque no se vean. No son alternativas equivalentes.</p>
+  <p>Compara los tres en una caja que contenga un enlace, usando también Tab. Si necesitas texto disponible para lectores de pantalla pero visualmente oculto, usa una técnica específica para ese propósito.</p>
 </details>
 
-<div class="rule">
-  <p class="rule-label">Usa la ayuda visual de DevTools</p>
-  <p>Abre las herramientas de desarrollo del navegador (F12) y pasa el cursor por los elementos en el árbol DOM. En cuanto un elemento tenga <code>display: flex</code>, verás una pequeña insignia morada <code>flex</code> a su derecha. Haz clic en ella: el navegador proyectará una cuadrícula interactiva sobre la página dibujando las flechas del eje principal, las líneas de <code>gap</code> y las zonas de espacio sobrante. Es el mejor espejo para comprobar si el navegador ha entendido tu intención.</p>
-</div>
+### Se trabaja · Una cabecera que evoluciona · 80 min
 
-#### Paso 2 · La navegación de tu sitio · 30 min
+Se trabaja sobre el sitio de cuatro páginas de la UD1. No repitas la cabecera desde cero en cada paso: añade una exigencia y conserva lo que ya funciona.
 
-Transforma la cabecera de tus cuatro páginas:
+#### Paso 1 · Distribuir y explicar · 20 min
 
-1. La navegación en fila, con separación mediante `gap` y sin viñetas.
-2. El nombre del sitio a un lado y el menú al otro, en la misma línea.
-3. Los dos bloques alineados verticalmente entre sí.
-4. `flex-wrap` para que el menú no desborde cuando falte espacio.
-5. Comprueba a 360 px de ancho en DevTools que nada se sale de la pantalla.
+Aplica a tu navegación el ejemplo de `.menu`. Después crea un contenedor exterior con el nombre del sitio y la navegación como hijos directos. Usa Flexbox para colocar los dos bloques y alinearlos en el eje transversal.
 
-<div class="rule">
-  <p class="rule-label">Lo que no vale</p>
-  <p>Nada de <code>margin-left: 73px</code> para colocar cada elemento en su sitio. Si un número así aparece en tu CSS, significa que has medido la pantalla en la que estás mirando: en otra estará mal.</p>
-  <p>La forma de colocar en Flexbox es decir <strong>cómo se reparte el espacio</strong>, no dónde va cada cosa.</p>
-</div>
+Antes de escribir, contesta: **qué hijos distribuyo, cuál es el eje principal y cómo quiero repartir el espacio**. Comprueba en DevTools el contenedor y sus hijos directos; activa el indicador de Flexbox. Su aspecto depende del navegador.
 
-<details class="aside aside--help">
-  <summary>Estoy atascado · <code>align-items: center</code> no centra nada</summary>
-  <p>Comprueba dos cosas, en este orden:</p>
-  <ol>
-    <li><strong>Que lo has puesto en el contenedor</strong>, no en los hijos. <code>justify-content</code> y <code>align-items</code> van siempre en el elemento que tiene <code>display: flex</code>.</li>
-    <li><strong>Cuál es el eje principal.</strong> Si has puesto <code>flex-direction: column</code>, para centrar en vertical necesitas <code>justify-content</code>, no <code>align-items</code>.</li>
-  </ol>
-  <p>Y usa el inspector de Flexbox: junto al elemento aparece un icono <code>flex</code> en DevTools que dibuja los ejes y el espacio libre.</p>
-</details>
+#### Paso 2 · Hacer sitio al contenido · 25 min
 
-#### Paso 3 · Tres casos razonados · 20 min
+Añade dos enlaces y duplica la longitud del nombre del sitio. Antes de probar, predice qué caja necesitará más espacio. Comprueba a 360 px y con un ancho intermedio, además del escritorio.
 
-Reproduce los tres, aplicando el método de las tres preguntas antes de escribir ninguna propiedad.
+Permite saltos donde corresponda: el contenedor exterior y la lista del menú son **dos Flexbox distintos**. Poner `flex-wrap` en uno no activa los saltos del otro. Decide qué puede crecer, qué puede reducirse y qué mínimo necesita cada hijo. Si algo desborda, localiza la caja responsable antes de cambiar CSS.
 
-##### 3.1 · Una botonera
+Los píxeles no están prohibidos. Lo que debes evitar son desplazamientos arbitrarios como `margin-left: 73px` para encajar una pantalla concreta. Justifica los tamaños por su función y prueba qué ocurre al cambiar el contenido.
+
+#### Paso 3 · Transferir a una tarjeta · 25 min
+
+Construye una tarjeta con imagen e información. Dentro de la información, conserva título y descripción en el flujo normal; usa otra fila Flexbox para el precio y la acción. Si necesitas distribuir verticalmente ese contenido, justifica entonces un contenedor en columna. No todo necesita Flexbox.
 
 ```html
-<div class="acciones">
-    <button type="submit">Guardar</button>
-    <button type="button">Cancelar</button>
-</div>
+<article class="producto">
+    <img class="producto__imagen" src="img/producto.jpg" alt="Ratón ergonómico negro">
+    <div class="producto__datos">
+        <h3>Ratón ergonómico</h3>
+        <p>Conexión inalámbrica y batería recargable.</p>
+        <div class="producto__pie">
+            <span>39,90 €</span>
+            <button type="button">Añadir a la cesta</button>
+        </div>
+    </div>
+</article>
 ```
 
-<dl class="worked">
-  <dt>¿Qué coloco?</dt>
-  <dd>Dos botones, uno al lado del otro.</dd>
-  <dt>¿Eje principal?</dt>
-  <dd>Fila. Es el valor por defecto, así que no hace falta escribir <code>flex-direction</code>.</dd>
-  <dt>¿Y el espacio sobrante?</dt>
-  <dd>Depende de lo que quiera: pegados a la izquierda es <code>flex-start</code>; a la derecha, como en un formulario, es <code>flex-end</code>.</dd>
-</dl>
+Adapta la ruta y el texto alternativo a una imagen real de tu proyecto.
 
 ```css
-.acciones {
+.producto {
     display: flex;
-    justify-content: flex-end;
-    gap: var(--space-sm);
+    flex-wrap: wrap;
+    gap: 1rem;
 }
-```
-
-##### 3.2 · Una tarjeta horizontal
-
-```text
-┌───────────────────────────────────┐
-│ imagen │ título                   │
-│        │ descripción              │
-│        │ precio            botón  │
-└───────────────────────────────────┘
-```
-
-Aquí hay **tres Flexbox anidados**, y verlo es media solución:
-
-1. Uno exterior en fila: imagen a un lado, información al otro.
-2. Uno interior en columna dentro de la información: título, descripción y la línea del precio.
-3. Un tercero en fila para esa última línea, con el precio a la izquierda y el botón a la derecha.
-
-```css
-.producto        { display: flex; gap: var(--space-md); }
-.producto__datos { display: flex; flex-direction: column; gap: var(--space-xs); }
-.producto__pie   { display: flex; justify-content: space-between; align-items: center; }
+.producto__imagen {
+    flex: 0 1 8rem;
+    width: 8rem;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+.producto__datos { flex: 1 1 14rem; min-width: 0; }
+.producto__datos h3,
+.producto__datos p { overflow-wrap: anywhere; }
+.producto__pie {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
 ```
 
 <figure class="lesson-demo">
-  <figcaption><span>Vista previa</span><strong>La tarjeta construida con tres Flexbox anidados</strong></figcaption>
-  <div class="lesson-demo__stage lesson-card-nested-demo">
-    <div class="lesson-card-outer">
-      <div class="lesson-card-image">Imagen (1D: fila)</div>
-      <div class="lesson-card-body">
-        <h4>Ratón ergonómico inalámbrico (1D: columna)</h4>
-        <p>Sensor óptico de alta precisión, conexión dual Bluetooth 5.0 y batería recargable de larga duración.</p>
-        <div class="lesson-card-foot">
-          <span class="lesson-card-price">39,90 € (1D: fila)</span>
-          <span class="lesson-card-btn">Añadir a la cesta</span>
-        </div>
-      </div>
-    </div>
+  <figcaption><span>Resultado esperado</span><strong>El contenido decide cuándo cambia la tarjeta</strong></figcaption>
+  <div class="lesson-demo__stage css-product-examples">
+    <div class="css-product"><div class="css-product-image" role="img" aria-label="Imagen de producto de ejemplo">Imagen</div><div class="css-product-data"><h4>Ratón ergonómico</h4><p>Conexión inalámbrica y batería recargable.</p><div class="css-product-foot"><span>39,90 €</span><span>Añadir a la cesta</span></div></div></div>
+    <div class="css-product css-product-narrow"><div class="css-product-image" role="img" aria-label="Imagen de producto de ejemplo">Imagen</div><div class="css-product-data"><h4>Ratón ergonómico con un título mucho más largo</h4><p>La descripción crece. El precio y la acción pueden pasar a otra línea sin superponerse.</p><div class="css-product-foot"><span>39,90 €</span><span>Añadir a la cesta</span></div></div></div>
   </div>
-  <p class="lesson-demo__note">Cada contenedor resuelve una sola dimensión: el contenedor exterior alinea en fila (foto y contenido), el bloque de contenido alinea en columna (título, descripción y pie), y la línea del pie alinea en fila (precio a la izquierda y botón a la derecha).</p>
+  <p class="lesson-demo__note">La zona «Imagen» representa el recurso del proyecto. La segunda tarjeta limita el ancho para mostrar el salto; las reglas de distribución son las mismas. Los textos de acción son una vista previa, no controles de compra.</p>
 </figure>
 
-Anidar contenedores es normal y no es un síntoma de nada malo. Cada uno resuelve una dimensión.
+Duplica la descripción y añade una palabra muy larga. Explica por separado qué permite reducir la caja y qué permite partir el texto. Comprueba que la solución no depende de ocultar el contenido.
 
-##### 3.3 · Centrar
+#### Paso 4 · Una predicción y su evidencia · 10 min
 
-El problema con más recetas copiadas de internet de toda la historia de CSS. Con Flexbox son dos líneas, pero conviene entenderlas:
+Intercambia una cabecera o tarjeta con un compañero. Propón **un cambio concreto**, predice su efecto y compruébalo en DevTools. Entrega una tabla breve:
 
-```css
-.caja {
-    display: flex;
-    justify-content: center;   /* centra en el eje principal */
-    align-items: center;       /* centra en el transversal */
-}
-```
+| Cambio | Predicción y motivo | Resultado observado | Regla que lo explica |
+| --- | --- | --- | --- |
+| Ejemplo: añadir tres enlaces | El menú necesitará más de una línea | Completa tras probar | Identifica el contenedor y su regla |
 
-Centrar es simplemente **centrar en los dos ejes a la vez**. Si solo necesitas uno, solo escribes uno.
+Una justificación escrita no basta por sí sola: debe coincidir con el comportamiento observado. Si no coincide, explica qué supuesto has corregido.
 
-#### Paso 4 · Los tres centrados · 10 min
+### Pausa · 10 min
 
-Tienes tres cajas, cada una con un cuadrado dentro. Consigue, sin `position` y sin márgenes fijos:
+### Comprueba y consolida · 20 min
 
-1. El cuadrado centrado en horizontal, arriba del todo.
-2. El cuadrado centrado en vertical, pegado a la derecha.
-3. El cuadrado centrado en los dos ejes.
+Durante 15 minutos, revisa la cabecera en las cuatro páginas y la tarjeta donde corresponda:
 
-<details class="aside aside--extra">
-  <summary>Ver respuesta</summary>
-  <p>Con <code>display: flex</code> y dirección por defecto (fila):</p>
-  <p>1 · <code>justify-content: center;</code> y nada más: el eje principal es el horizontal, y sin <code>align-items</code> el hijo se queda arriba si tiene altura propia.</p>
-  <p>2 · <code>justify-content: flex-end; align-items: center;</code></p>
-  <p>3 · <code>justify-content: center; align-items: center;</code></p>
-  <p>Y la comprobación de que lo has entendido: con <code>flex-direction: column</code>, los tres se resuelven intercambiando las dos propiedades.</p>
-</details>
+- A 360 px, a un ancho intermedio y en escritorio, la página no tiene desplazamiento horizontal accidental.
+- Con más enlaces y textos largos, el contenido sigue siendo legible y no se solapa.
+- Puedes señalar los hijos directos de cada Flexbox y explicar sus dos ejes.
+- Puedes justificar un tamaño o mínimo y una decisión de salto de línea.
+- El orden visual permite seguir el orden del HTML y recorrer los enlaces con Tab.
 
-#### Paso 5 · Flexbox Challenge · 45 min
-
-Es el trabajo central de la sesión. Construye estos tres componentes usando **solo Flexbox**, y aplícalos a tu proyecto donde encajen:
-
-**A · La barra de cabecera**, con el nombre del sitio a la izquierda, la navegación a la derecha y todo alineado verticalmente.
-
-**B · La tarjeta horizontal** del paso 3.2, que debe seguir funcionando cuando la descripción sea el doble de larga.
-
-**C · Una línea de metadatos** —fecha, autor, categoría— separada por `gap`, que salte de línea con elegancia cuando no quepa.
-
-Para cada uno responde por escrito:
-
-| Componente | Eje principal | Por qué ese `justify-content` | Por qué ese `align-items` | ¿Necesitó `flex-wrap`? |
-| ---------- | ------------- | ----------------------------- | ------------------------- | ---------------------- |
-| A | | | | |
-| B | | | | |
-| C | | | | |
-
-Esa tabla es la tarea. El CSS lo puede escribir cualquiera copiando; la tabla solo la puede rellenar quien ha entendido los ejes.
-
-#### Paso 6 · Revisión cruzada de una decisión · 15 min
-
-Intercambia con un compañero únicamente una sección que ya hayas maquetado. Encuentra **una decisión de layout que no puedas justificar** y descríbela así:
-
-1. **Qué intenta resolver:** tamaño, espacio, distribución o estado.
-2. **Qué regla actúa:** compruébala en DevTools.
-3. **Qué duda queda:** por qué Flexbox, Grid o el flujo normal podrían encajar mejor.
-
-El autor decide si cambia el código o conserva la decisión y la justifica. No se valora la coincidencia de criterio estético entre ambas partes.
-
-#### Ampliación si has completado el trabajo
-
-Primero termina y comprueba los seis pasos. El primer reto se resuelve **sin escribir CSS**, y es el más difícil de los dos.
-
-##### Reto 1 · Antes de la herramienta, la pregunta
-
-Para cada uno de estos seis casos, decide si lo resolverías con el **flujo normal**, con **Flexbox**, o si necesitarás algo que todavía no hemos visto. Escribe la respuesta y el motivo antes de probar nada.
-
-1. Un artículo de blog: título, párrafos, una imagen y más párrafos.
-2. Una barra de cabecera con logotipo, buscador que ocupa el resto y dos iconos a la derecha.
-3. Una galería de doce fotos en cuadrícula regular, alineadas en filas y columnas.
-4. Una lista de etiquetas de longitud variable que fluyen y saltan de línea.
-5. Una ficha con la foto a la izquierda y cinco datos a la derecha, uno bajo otro.
-6. El esqueleto de una página: cabecera arriba, barra lateral, contenido y pie.
-
-Dos de los seis no son trabajo de Flexbox, y uno no necesita ninguna herramienta. Identifícalos y explica por qué. Después comprueba tus respuestas construyendo los que puedas con lo que ya sabes, y deja anotados los que tengas que aplazar hasta la sesión 4.
-
-##### Reto 2 · La barra que no cabe
-
-Una cabecera tiene cuatro elementos: el nombre del sitio, un menú de cinco enlaces, un buscador y un menú de usuario. A 1400 px caben todos en una línea; a 360 px, no caben ni de lejos.
-
-Construye una cabecera que degrade con dignidad **sin una sola media query** y sin ocultar nada con `display: none`. Solo puedes usar `flex-wrap`, `gap`, `flex` en los hijos, `min-width` y `max-width`.
-
-1. Decide qué elemento se queda con el espacio sobrante cuando sobra, y cuál cede primero cuando falta. Justifícalo.
-2. Consigue que el buscador nunca baje de una anchura utilizable, en lugar de encogerse hasta ser inservible.
-3. Anota las tres anchuras en las que la barra cambia de disposición. No las has escrito tú: las decide el contenido. Eso es exactamente lo que discutiremos en la sesión 4 al hablar de *breakpoints*.
-4. Comprueba que en ninguna anchura entre 320 y 1600 px aparece una barra de scroll horizontal.
-
-<div class="practice-levels">
-  <div><strong>Objetivo mínimo</strong><span>El laboratorio con su tabla de huecos, la navegación en Flexbox sin desbordar a 360 px y los tres componentes del reto construidos.</span></div>
-  <div><strong>Si lo tienes</strong><span>La tabla de ejes del paso 5 completa y la revisión cruzada contestada.</span></div>
-  <div><strong>Reto</strong><span>Los seis casos clasificados antes de escribir CSS, y la cabecera que degrada sin media queries con sus tres anchuras anotadas.</span></div>
-</div>
-
-### Cierre
-
-<p class="stage">5 minutos · comprobación y recuerdo</p>
-
-<div class="checkpoint">
-  <p class="checkpoint-label">Lista de verificación de la sesión</p>
-  <ul class="checklist">
-    <li>Sabes identificar el eje principal de cualquier Flexbox.</li>
-    <li>Sabes que <code>justify-content</code> y <code>align-items</code> se intercambian al cambiar la dirección.</li>
-    <li>Usas <code>gap</code> en lugar de márgenes para separar.</li>
-    <li>Tu navegación funciona a 360 px sin desbordar.</li>
-    <li>No hay ningún valor en píxeles colocando elementos a mano.</li>
-    <li>La tabla de ejes de los tres componentes está rellenada y justificada.</li>
-  </ul>
-</div>
-
-<div class="checkpoint checkpoint--recall">
-  <p class="checkpoint-label">Antes de cerrar · 3 minutos, sin mirar</p>
-  <ol>
-    <li>¿Qué diferencia hay entre <code>relative</code> y <code>absolute</code> respecto al hueco?</li>
-    <li>¿Por qué <code>display: none</code> no es lo mismo que «no se ve»?</li>
-    <li>¿Sobre qué eje actúa <code>justify-content</code>?</li>
-    <li>¿Qué le pasa a <code>align-items</code> si cambias a <code>flex-direction: column</code>?</li>
-    <li>Enuncia las tres preguntas con las que se razona un Flexbox.</li>
-    <li>¿Qué hace <code>margin-left: auto</code> en un hijo de un Flexbox?</li>
-  </ol>
-</div>
+Entrega el CSS y la tabla de predicción con una captura antes y otra después del cambio. En los **5 minutos finales de este bloque**, muestra a un compañero una regla que hayas corregido usando la evidencia del navegador.
 
 <details class="aside aside--extra">
-  <summary>Ver respuestas</summary>
-  <p>1 · <code>relative</code> sigue ocupando su hueco aunque se desplace; <code>absolute</code> sale del flujo y los demás elementos ocupan su sitio.</p>
-  <p>2 · Porque lo elimina del documento: deja de existir también para los lectores de pantalla y para el recorrido con <code>Tab</code>.</p>
-  <p>3 · Sobre el eje principal, sea cual sea su dirección.</p>
-  <p>4 · Pasa a alinear en horizontal, porque el eje transversal ahora es el horizontal.</p>
-  <p>5 · Qué elementos van en la misma línea, en qué dirección —ese es el eje principal— y qué hago con el espacio sobrante y con la alineación en el otro eje.</p>
-  <p>6 · Absorbe todo el espacio sobrante por ese lado, empujando ese elemento y los siguientes al final del eje.</p>
+  <summary>Ampliación · Si ya has comprobado todo</summary>
+  <p>Añade un buscador real con su etiqueta a la cabecera. Decide qué hijo recibe el espacio libre y cuál necesita conservar una anchura utilizable. Haz que la cabecera se adapte sin media queries y sin ocultar contenido.</p>
+  <p>Reduce progresivamente el ancho entre 1600 y 320 px. Anota los cambios de disposición que observes y qué contenido los desencadena: no hay un número prefijado de cambios. Explica cuándo elegirías Grid para alinear filas y columnas, y qué parte de tu componente ya resuelve el flujo normal.</p>
 </details>
+
+### Cierre · 10 min
 
 <div class="checkpoint checkpoint--weekly">
-  <p class="checkpoint-label">Microprueba semanal 3 · 5–10 minutos</p>
+  <p class="checkpoint-label">Microprueba semanal 3 · 7 minutos</p>
   <p>Individual, sin IA y sin apuntes.</p>
   <ol>
-    <li>Elige cuáles resolverías con Flexbox: navegación, botonera, tabla de datos y tarjeta horizontal.</li>
-    <li>Escribe únicamente el CSS imprescindible para una botonera que pueda saltar de línea.</li>
-    <li>Predice qué cambia al pasar de <code>row</code> a <code>column</code>.</li>
+    <li>Escribe el CSS mínimo de una botonera con separación que pueda saltar de línea.</li>
+    <li>Predice el efecto de cambiar <code>row</code> por <code>column</code> si mantienes <code>justify-content: center</code>.</li>
+    <li>Un hijo con una URL larga desborda. Explica qué comprobarías y por qué <code>min-width: 0</code> y <code>overflow-wrap</code> resuelven problemas distintos.</li>
+    <li>Al poner <code>position: absolute</code> en la segunda caja, ¿qué cambia para la tercera?</li>
   </ol>
 </div>
 
+Dedica los últimos **3 minutos** a contrastar tus respuestas:
+
+<details class="aside aside--extra">
+  <summary>Ver respuestas y explicar un error</summary>
+  <p>1 · En el contenedor: <code>display: flex; flex-wrap: wrap; gap: 1rem;</code>.</p>
+  <p>2 · Sigue centrando en el eje principal, que en escritura horizontal pasa de horizontal a vertical. Tiene que existir espacio libre para observarlo.</p>
+  <p>3 · Comprueba el mínimo del hijo y el contenido que no se parte. <code>min-width: 0</code> permite reducir la caja; <code>overflow-wrap: anywhere</code> permite partir una cadena larga.</p>
+  <p>4 · La segunda deja de reservar espacio en el flujo. La tercera se coloca después de la primera, ocupando el lugar que queda disponible.</p>
+</details>
+
+Referencias: [Flexbox y saltos de línea](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Flexible_box_layout/Wrapping_items), [tamaños mínimos de los hijos](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/min-width), [display y accesibilidad](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/display).
 
 ---
 

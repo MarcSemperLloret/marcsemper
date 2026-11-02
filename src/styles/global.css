@@ -2075,6 +2075,8 @@ select {
 
 .session-content .lesson-flow-sample .box-inline {
   display: inline;
+  width: 10rem;
+  height: 4rem;
   padding: 3px 8px;
   border: 1px solid #f5b7ae;
   border-radius: 3px;
@@ -2085,6 +2087,8 @@ select {
 
 .session-content .lesson-flow-sample .box-inline-block {
   display: inline-block;
+  width: 10rem;
+  height: 4rem;
   padding: 4px 12px;
   margin: 0 4px;
   border: 1px solid #9eaccd;
@@ -2138,21 +2142,11 @@ select {
   stroke-width: 1.5;
 }
 
-.session-content .diagram-box--static text {
-  fill: var(--blue-dark);
-  font-weight: 700;
-}
-
 .session-content .diagram-box--reserved rect {
   fill: #fdeee9;
   stroke: var(--coral);
   stroke-dasharray: 5 4;
   stroke-width: 1.5;
-}
-
-.session-content .diagram-box--reserved text {
-  fill: var(--coral);
-  font-weight: 700;
 }
 
 .session-content .diagram-box--moved rect {
@@ -2161,19 +2155,44 @@ select {
   stroke-width: 1.5;
 }
 
-.session-content .diagram-box--moved text {
-  fill: var(--white);
-  font-weight: 700;
-}
-
 .session-content .diagram-box--absolute rect {
   fill: var(--coral);
   stroke: #a3341f;
   stroke-width: 1.5;
 }
 
+.session-content .diagram-box--static text,
+.session-content .diagram-box--reserved text,
+.session-content .diagram-box--moved text,
+.session-content .diagram-box--absolute text,
+.session-content .diagram-flex-item--row text,
+.session-content .diagram-flex-item--col text {
+  font-family: var(--sans);
+  dominant-baseline: central;
+  text-anchor: middle;
+}
+
+.session-content .diagram-box--static text {
+  fill: var(--blue-dark);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.session-content .diagram-box--reserved text {
+  fill: var(--coral);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.session-content .diagram-box--moved text {
+  fill: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .session-content .diagram-box--absolute text {
   fill: var(--white);
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -2199,6 +2218,22 @@ select {
   fill: var(--coral);
   font-size: 15px;
   font-weight: 800;
+}
+
+.session-content .diagram-axis-text--coral {
+  fill: #c93b24;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 800;
+  text-anchor: middle;
+}
+
+.session-content .diagram-axis-text--blue {
+  fill: #2857df;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 800;
+  text-anchor: middle;
 }
 
 .session-content .diagram-pill-footer rect {
@@ -3255,3 +3290,56 @@ select {
 .session-content pre code.language-sql::before {
   content: "SQL";
 }
+/* Session 3: real CSS examples, scoped to teaching content. */
+.session-content .css-demo-label { font: 700 .8rem/1.5 var(--sans); margin: 0 0 .75rem; }
+.session-content .css-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1.5rem; }
+.session-content .css-compare > * { min-width: 0; }
+.session-content .css-menu-plain,
+.session-content .css-menu-flex { list-style: none; margin: 0; padding: 0; }
+.session-content .css-menu-flex { display: flex; flex-wrap: wrap; gap: 1rem; }
+.session-content .css-menu-plain li,
+.session-content .css-menu-flex li,
+.session-content .css-lab-track > span { background: #e4ebff; border: 1px solid var(--blue); color: var(--blue-dark); padding: .6rem; font: 700 .85rem/1.5 var(--sans); }
+.session-content .css-menu-plain li { margin: 0; }
+.session-content .css-lab-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: .75rem; margin-bottom: 1.25rem; }
+.session-content .css-lab-controls label { display: grid; gap: .35rem; font: 700 .8rem/1.4 var(--sans); }
+.session-content .css-lab-controls select { width: 100%; min-width: 0; padding: .6rem; background: var(--white); color: var(--ink); border: 1px solid var(--line-strong); }
+.session-content .css-lab-controls select:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.session-content .css-lab-canvas { overflow-x: auto; padding-bottom: .5rem; }
+.session-content .css-lab-track { box-sizing: border-box; display: flex; align-items: flex-start; gap: 1rem; min-height: 16rem; padding: 1rem; border: 2px solid var(--blue); background: repeating-linear-gradient(135deg, #faf8f3, #faf8f3 8px, #eeebe3 8px, #eeebe3 9px); }
+.session-content .css-lab-track > span { flex: 0 0 auto; }
+.session-content .css-lab-track.lab-direction-column { flex-direction: column; }
+.session-content .css-lab-track.lab-justify-center { justify-content: center; }
+.session-content .css-lab-track.lab-justify-flex-end { justify-content: flex-end; }
+.session-content .css-lab-track.lab-justify-space-between { justify-content: space-between; }
+.session-content .css-lab-track.lab-align-center { align-items: center; }
+.session-content .css-lab-track.lab-align-flex-end { align-items: flex-end; }
+.session-content .css-lab-track.lab-align-stretch { align-items: stretch; }
+.session-content .css-lab-track.lab-wrap-wrap { flex-wrap: wrap; }
+.session-content .css-lab-track.lab-width-estrecho { width: 14rem; }
+.session-content .css-lab-status { font: .85rem/1.5 var(--sans); margin: .75rem 0 0; }
+.session-content .css-lab pre { margin: 0; border-right: 0; border-left: 0; }
+.session-content .css-size-examples { display: grid; gap: 1.5rem; }
+.session-content .css-size-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding: .75rem; border: 1px solid var(--line-strong); }
+.session-content .css-size-brand { flex: 0 0 auto; padding: .5rem; background: #fdeee9; color: #a3341f; font-weight: 700; }
+.session-content .css-size-search { flex: 1 1 12rem; min-width: 0; padding: .5rem; background: #e4ebff; color: var(--blue-dark); overflow-wrap: anywhere; }
+.session-content .css-size-narrow { width: 16rem; max-width: 100%; }
+.session-content .css-position-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1.5rem; }
+.session-content .css-position-grid > div > p:last-child { font: .8rem/1.5 var(--sans); }
+.session-content .css-position-stack { position: relative; display: flow-root; min-height: 12rem; padding: .5rem; background: #faf8f3; border: 1px solid var(--line-strong); }
+.session-content .css-position-stack > span { display: block; padding: .5rem; margin-bottom: .5rem; border: 1px solid var(--blue); background: #e4ebff; color: var(--blue-dark); font: 700 .8rem/1.5 var(--sans); }
+.session-content .css-position-stack > .css-position-target { background: #c93b24; color: white; border-color: #a3341f; }
+.session-content .css-position-relative::before { content: ''; position: absolute; top: 3.25rem; left: .5rem; right: .5rem; height: 2.25rem; border: 2px dashed #c93b24; }
+.session-content .css-position-relative > .css-position-target { position: relative; top: 1rem; left: .5rem; }
+.session-content .css-position-absolute > .css-position-target { position: absolute; top: 0; right: 0; }
+.session-content .css-product { display: flex; flex-wrap: wrap; gap: 1rem; align-content: start; padding: 1rem; border: 1px solid var(--line-strong); }
+.session-content .css-product-image { flex: 0 1 8rem; width: 8rem; max-width: 100%; min-height: 6rem; display: grid; place-items: center; background: #e4ebff; color: var(--blue-dark); }
+.session-content .css-product-data { flex: 1 1 14rem; min-width: 0; }
+.session-content .css-product-data h4 { margin: 0 0 .5rem; }
+.session-content .css-product-data p { margin: 0 0 1rem; }
+.session-content .css-product-data h4,
+.session-content .css-product-data p { overflow-wrap: anywhere; }
+.session-content .css-product-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .75rem; font: 700 .8rem/1.5 var(--sans); }
+.session-content .css-product-foot > span:last-child { padding: .5rem; background: #c93b24; color: white; }
+.session-content .css-product-narrow { width: 18rem; max-width: 100%; box-sizing: border-box; }
+.session-content .css-product-examples { display: grid; gap: 1.5rem; }
