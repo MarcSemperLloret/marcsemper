@@ -1620,25 +1620,15 @@ Referencias: [Flexbox y saltos de línea](https://developer.mozilla.org/en-US/do
 
 <p class="stage stage--brief">25 minutos · conceptos y demostración</p>
 
-La sesión tiene una sola idea de fondo: **deja de decir cuántas columnas quieres y describe cuánto necesita cada una**. Grid es la herramienta que lo permite, y el responsive es lo que sale de aplicarla bien.
+#### Filas que comparten columnas
 
-#### Dos dimensiones a la vez
-
-Flexbox coloca en una línea. Considera ahora este problema:
-
-```text
-Producto  Producto  Producto
-Producto  Producto  Producto
-Producto  Producto  Producto
-```
-
-Aquí no hay una dirección: hay filas **y** columnas, y quieres que las columnas estén alineadas entre filas. Con Flexbox se puede aproximar, y las columnas nunca acaban de cuadrar porque cada fila reparte su espacio por su cuenta. Grid está diseñado exactamente para esto.
+Fíjate en los bordes de las tarjetas: Nova 14 y Dock One empiezan en el mismo sitio porque comparten una columna. Grid construye las columnas para todas las filas. En Flexbox con salto de línea, cada línea reparte su espacio de forma independiente.
 
 ```css
 .catalogo {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 ```
 
@@ -1657,11 +1647,11 @@ Aquí no hay una dirección: hay filas **y** columnas, y quieres que las columna
   <p class="lesson-demo__note">Grid alinea cada tarjeta con las columnas de las demás filas; por eso es una herramienta bidimensional.</p>
 </figure>
 
-Tres declaraciones y tienes una cuadrícula de tres columnas con sus filas alineadas. Fíjate en que **no has dicho cuántas filas hay**: Grid las crea según los elementos que haya.
+Si añades una séptima tarjeta, Grid crea una tercera fila y la coloca bajo Nova 14.
 
 <p class="term">fr</p>
 
-Una fracción del espacio **libre** del contenedor. `1fr 1fr 1fr` reparte lo disponible en tres partes iguales; `2fr 1fr` da el doble a la primera columna.
+Una fracción del espacio **disponible para las pistas flexibles**, una vez descontados los huecos y las pistas fijas. Prueba `2fr 1fr` en el laboratorio: con las tarjetas de muestra, la primera columna recibe dos partes del espacio y la segunda recibe una.
 
 Es distinta del porcentaje, y la diferencia importa: `33.33%` no descuenta el `gap`, así que tres columnas al 33.33 % con separación desbordan. `1fr` sí lo descuenta, porque reparte lo que queda **después** de los huecos. Por eso con Grid no tienes que hacer cuentas.
 
@@ -1673,17 +1663,19 @@ grid-template-columns: 1fr 2fr;          /* una parte y dos partes */
 
 #### El vocabulario, y por qué se cuentan líneas
 
-<figure class="diagram">
-  <figcaption>Las piezas de una cuadrícula</figcaption>
-  <ol class="flow">
-    <li>Líneas · las divisiones, numeradas desde 1</li>
-    <li>Pistas · las columnas y filas que quedan entre líneas</li>
-    <li>Celdas · el cruce de una columna con una fila</li>
-    <li>Áreas · un grupo rectangular de celdas, que puedes nombrar</li>
-  </ol>
+<figure class="lesson-demo">
+  <figcaption><strong>Un destacado de la línea 1 a la 3</strong></figcaption>
+  <div class="lesson-demo__stage" aria-hidden="true">
+    <div class="grid-line-numbers"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+    <div class="grid-line-example">
+      <div>Destacado</div><div>Celda</div>
+      <div>1.ª columna</div><div>2.ª columna</div><div>3.ª columna</div>
+    </div>
+  </div>
+  <p class="lesson-demo__note"><code>grid-column: 1 / 3</code> ocupa las dos primeras columnas. La línea 2 queda dentro del destacado.</p>
 </figure>
 
-Conviene fijarse en que **se numeran las líneas, no las columnas**. Una cuadrícula de tres columnas tiene cuatro líneas verticales: la 1 al principio y la 4 al final. Es la fuente de casi todos los desajustes de la sesión.
+Entre dos **líneas** hay una **pista** (una columna o una fila). El cruce de una columna y una fila es una **celda**. El destacado cubre un **área** de dos celdas.
 
 <div class="rule">
   <p class="rule-label">Usa siempre el inspector de Grid</p>
@@ -1691,40 +1683,74 @@ Conviene fijarse en que **se numeran las líneas, no las columnas**. Una cuadrí
   <p>No intentes imaginar mentalmente una cuadrícula compleja si el navegador puede dibujártela. Cuando un elemento no cae donde esperabas, el inspector te enseña en un segundo qué línea es la 3 de verdad.</p>
 </div>
 
-#### La línea más rentable de la unidad
+#### Laboratorio · Un catálogo que se adapta
+
+Antes de tocar los mandos, predice cuántas columnas cabrán con un mínimo de 8 rem. Después cambia el ancho del catálogo y comprueba tu predicción. El recuento mide el Grid que está dibujando el navegador.
+
+<figure class="lesson-demo css-lab" data-grid-lab>
+  <figcaption><strong>Mismas tarjetas, distintas columnas</strong></figcaption>
+  <div class="lesson-demo__stage">
+    <div class="css-lab-controls" data-grid-controls hidden></div>
+    <div class="grid-lab-track grid-lab-fit grid-lab-width-36" data-grid-track>
+      <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span>
+    </div>
+    <p class="css-lab-status" data-grid-status role="status"></p>
+  </div>
+  <pre><code data-grid-code>.catalogo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+    gap: 0.75rem;
+}</code></pre>
+</figure>
+
+1. **Fija tres columnas** y elige 12 rem. Las tres pistas siguen ahí y se estrechan. Vuelve a `auto-fit` y observa el salto a una columna.
+2. **Prueba `2fr 1fr`** y localiza qué tarjetas comparten la primera columna. Calcula qué parte del ancho disponible queda para la segunda después del `gap`.
+3. **Deja dos tarjetas** y usa un ancho de al menos 28 rem, si tu pantalla lo permite. Con `auto-fill` queda una pista vacía a la derecha. Con `auto-fit`, esa pista se colapsa y las tarjetas se ensanchan.
+
+Para tu catálogo, cambia el mínimo de la demo por el ancho que necesita una tarjeta completa. Por ejemplo:
 
 ```css
 .catalogo {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
     gap: 1.5rem;
 }
 ```
 
-Léela de dentro afuera:
-
-```text
-minmax(16rem, 1fr)    cada columna mide como poco 16rem,
-                      y crece para repartirse lo que sobre
-
-auto-fit              caben las que quepan; el número
-                      lo decide el espacio disponible
-```
-
-Es decir: **deja de decir cuántas columnas quieres y describe cuánto necesita cada una**. En un móvil cabrá una, en una tablet dos, en un monitor cuatro, y no has escrito una sola media query.
+`min(100%, 16rem)` permite que una columna baje de 16 rem cuando el contenedor entero es más estrecho. El número de columnas depende del ancho del catálogo, también cuando el catálogo está dentro de una columna lateral o de una ventana dividida.
 
 #### Áreas con nombre
 
-Para el esqueleto de una página completa hay una forma que se lee sola:
+Compara las dos formas del mismo esqueleto. Cada nombre del dibujo ocupa una celda. Al escribir `cabecera` dos veces en la misma fila, la cabecera abarca las dos columnas.
+
+<figure class="lesson-demo">
+  <figcaption><strong>La misma página en una y dos columnas</strong></figcaption>
+  <div class="lesson-demo__stage grid-area-examples">
+    <div>
+      <p>Una columna</p>
+      <div class="grid-area-example">
+        <span>Cabecera</span><span>Lateral</span><span>Principal</span><span>Pie</span>
+      </div>
+    </div>
+    <div>
+      <p>Dos columnas</p>
+      <div class="grid-area-example grid-area-example--wide">
+        <span>Cabecera</span><span>Lateral</span><span>Principal</span><span>Pie</span>
+      </div>
+    </div>
+  </div>
+  <p class="lesson-demo__note">En una columna, el lateral y el contenido se apilan. En dos columnas, la cabecera y el pie abarcan ambas pistas.</p>
+</figure>
 
 ```css
 .layout {
     display: grid;
-    grid-template-columns: 15rem 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-        "cabecera cabecera"
-        "lateral  principal"
-        "pie      pie";
+        "cabecera"
+        "lateral"
+        "principal"
+        "pie";
     gap: 1rem;
 }
 
@@ -1734,27 +1760,23 @@ main   { grid-area: principal; }
 footer { grid-area: pie; }
 ```
 
-El dibujo entre comillas **es** el layout. Se ve de un vistazo que la cabecera ocupa las dos columnas y que el lateral está a la izquierda del contenido. Para modificarlo en una pantalla estrecha basta con redibujarlo:
+Cuando hay espacio para un lateral de 15 rem y para el contenido, añade la variante de dos columnas. Aquí se prueba a partir de 48 rem:
 
 ```css
-@media (width < 48rem) {
+@media (width >= 48rem) {
     .layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: 15rem minmax(0, 1fr);
         grid-template-areas:
-            "cabecera"
-            "principal"
-            "lateral"
-            "pie";
+            "cabecera cabecera"
+            "lateral  principal"
+            "pie      pie";
     }
 }
 ```
 
-Fíjate en un detalle importante: en la pantalla estrecha el contenido va **antes** que el lateral, y el HTML no ha cambiado. Grid permite reordenar visualmente.
-
 <div class="rule">
-  <p class="rule-label">Reordenar visualmente tiene un límite</p>
-  <p>El orden del teclado sigue al <strong>HTML</strong>, no al CSS. Si mueves visualmente un bloque muy lejos de su sitio en el documento, quien navegue con <code>Tab</code> saltará de un lado a otro de la pantalla sin lógica aparente.</p>
-  <p>Reordenar el lateral y el contenido, que están contiguos, es inofensivo. Reordenar a lo grande no lo es. Si el orden visual y el del documento tienen que diferir mucho, lo que está mal es el orden del HTML.</p>
+  <p class="rule-label">Comprueba el orden de lectura</p>
+  <p><code>grid-template-areas</code> cambia la colocación visual. El orden habitual de <code>Tab</code> sigue el HTML. Si el lateral tiene enlaces o controles, recorre ambas versiones con el teclado y comprueba que el foco siga una secuencia comprensible.</p>
 </div>
 
 #### Flexbox o Grid
@@ -1829,11 +1851,11 @@ Escribir primero los estilos de la disposición más sencilla —una columna— 
   <div class="lesson-demo__stage lesson-responsive-frames">
     <div class="lesson-responsive-frame">
       <span>Base · 1 columna</span>
-      <div><i>A</i><i>B</i><i>C</i></div>
+      <div><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
     </div>
     <div class="lesson-responsive-frame lesson-responsive-frame--tablet">
       <span>≥ 48rem · 2 columnas</span>
-      <div><i>A</i><i>B</i><i>C</i><i>D</i></div>
+      <div><i>A</i><i>B</i><i>C</i><i>D</i><i>E</i><i>F</i></div>
     </div>
     <div class="lesson-responsive-frame lesson-responsive-frame--wide">
       <span>≥ 70rem · 3 columnas</span>
@@ -1870,14 +1892,14 @@ En `productos.html`, convierte el contenedor de las fichas en un Grid.
 <div class="rule">
   <p class="rule-label">Todavía no lo arregles</p>
   <p>Vas a ver columnas ridículamente estrechas, con una palabra por línea. Es lo esperado, y es el problema que resuelve el paso siguiente.</p>
-  <p>Anota qué has visto y a qué anchura ha empezado a verse mal. Ese número es tu primer <em>breakpoint</em> candidato, y lo has obtenido de la única forma legítima: mirando cuándo el contenido deja de funcionar.</p>
+  <p>Anota el ancho de la ventana y mide una tarjeta con el inspector justo antes de que su contenido empiece a verse mal. Usa el ancho de la tarjeta como referencia para el mínimo del paso siguiente.</p>
 </div>
 
 #### Paso 2 · El catálogo que se adapta solo · 25 min
 
 Aplica `auto-fit` con `minmax()` a tu página de productos. Comprueba de 320 px a 1600 px que en ningún momento hay columnas ilegibles ni tarjetas gigantes.
 
-1. Elige el mínimo de `minmax()` a partir del número que anotaste en el paso 1, no de una cifra redonda.
+1. Elige el mínimo de `minmax()` a partir del ancho de la tarjeta que mediste en el paso 1. Envuélvelo en `min(100%, …)` para que la tarjeta pueda encogerse en un contenedor más estrecho.
 2. Prueba también con `auto-fill` y explica en un comentario cuál has elegido y por qué.
 3. Comprueba con el inspector cuántas columnas hay a 320, 768, 1024 y 1600 px.
 
@@ -2086,7 +2108,7 @@ Esta hoja resuelve un catálogo y una cabecera con seis media queries. Todas fun
   <ol>
     <li>¿Por qué <code>1fr</code> no es lo mismo que <code>33.33%</code>?</li>
     <li>Una cuadrícula de cuatro columnas, ¿cuántas líneas verticales tiene?</li>
-    <li>¿Qué hace <code>repeat(auto-fit, minmax(16rem, 1fr))</code>, en una frase?</li>
+    <li>¿Qué hace <code>repeat(auto-fit, minmax(min(100%, 16rem), 1fr))</code> cuando el contenedor mide menos de 16 rem?</li>
     <li>¿Qué riesgo tiene reordenar visualmente con Grid?</li>
     <li>¿Qué significa mobile first y por qué se hace así?</li>
     <li>¿Dónde debe ir un breakpoint?</li>
